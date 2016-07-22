@@ -22,12 +22,12 @@ class Team: RealmObject {
     }
 }
 
-private protocol PathPatterns {
+private protocol PathPattern {
     static func initialLoadPathPattern() -> String
     static func teamListingsPathPattern() -> String
 }
 
-private protocol Mappings {
+private protocol Mapping {
     static func mapping() -> RKObjectMapping
     static func initialLoadConfigMapping() -> RKObjectMapping
 }
@@ -45,7 +45,8 @@ public enum TeamAttributes: String {
     case name = "name"
 }
 
-extension Team: PathPatterns {
+// MARK: - Path Pattern
+extension Team: PathPattern {
     class func initialLoadPathPattern() -> String {
         return "users/initial_load"
     }
@@ -54,8 +55,8 @@ extension Team: PathPatterns {
     }
 }
 
-// MARK: - Mappings
-extension Team: Mappings {
+// MARK: - Mapping
+extension Team: Mapping {
     override class func mapping() -> RKObjectMapping {
         let entityMapping = super.mapping()
         entityMapping.addAttributeMappingsFromDictionary(["display_name" : TeamAttributes.displayName.rawValue])
@@ -69,7 +70,7 @@ extension Team: Mappings {
     }
 }
 
-// MARK: Response Descriptors
+// MARK: - Response Descriptors
 extension Team: ResponseDescriptors {
     class func initalLoadResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),

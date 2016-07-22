@@ -1,6 +1,28 @@
+//
+//  File.swift
+//  Mattermost
+//
+//  Created by Maxim Gubin on 22/07/16.
+//  Copyright © 2016 Kilograpp. All rights reserved.
+//
+
 import Foundation
 
-@objc(File)
-public class File: _File {
-	// Custom logic goes here.
+
+class File: RealmObject {
+    
+}
+
+public enum FileAttributes: String {
+    case privateLink = "privateLink"
+    case privateMimeType = "privateMimeType"
+    case fileExtension = "fileExtension"
+    case hasPreviewImage = "hasPreviewImage"
+    case localLink = "localLink"
+    case name = "name"
+    case size = "size"
+}
+
+public enum FileRelationships: String {
+    case post = "post"
 }

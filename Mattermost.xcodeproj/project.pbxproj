@@ -19,6 +19,15 @@
 		D8087ADF1D413DB7001918E8 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087ADE1D413DB7001918E8 /* Team.swift */; };
 		D8087AE11D414A71001918E8 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE01D414A71001918E8 /* Channel.swift */; };
 		D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE41D416FDB001918E8 /* MappingUtils.swift */; };
+		D8087AE71D427E23001918E8 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE61D427E23001918E8 /* Post.swift */; };
+		D8087AE91D42808C001918E8 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE81D42808C001918E8 /* File.swift */; };
+		D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AEA1D428923001918E8 /* NSCalendar+Singleton.swift */; };
+		D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AEC1D428DE9001918E8 /* NSDate+Formatter.swift */; };
+		D8087AEF1D428E72001918E8 /* DateTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AEE1D428E72001918E8 /* DateTools.framework */; };
+		D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF01D428FF1001918E8 /* StringUtils.swift */; };
+		D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF41D429393001918E8 /* UIScreen+Size.swift */; };
+		D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AF61D429610001918E8 /* TSMarkdownParser.framework */; };
+		D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */; };
 		D8436E681D26AC3600DEF464 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E671D26AC3600DEF464 /* DataManager.swift */; };
 		D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */; };
 		D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */; };
@@ -66,6 +75,15 @@
 		D8087ADE1D413DB7001918E8 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		D8087AE01D414A71001918E8 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		D8087AE41D416FDB001918E8 /* MappingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappingUtils.swift; sourceTree = "<group>"; };
+		D8087AE61D427E23001918E8 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		D8087AE81D42808C001918E8 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		D8087AEA1D428923001918E8 /* NSCalendar+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCalendar+Singleton.swift"; sourceTree = "<group>"; };
+		D8087AEC1D428DE9001918E8 /* NSDate+Formatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Formatter.swift"; sourceTree = "<group>"; };
+		D8087AEE1D428E72001918E8 /* DateTools.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DateTools.framework; path = Carthage/Build/iOS/DateTools.framework; sourceTree = "<group>"; };
+		D8087AF01D428FF1001918E8 /* StringUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringUtils.swift; sourceTree = "<group>"; };
+		D8087AF41D429393001918E8 /* UIScreen+Size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Size.swift"; sourceTree = "<group>"; };
+		D8087AF61D429610001918E8 /* TSMarkdownParser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSMarkdownParser.framework; path = Carthage/Build/iOS/TSMarkdownParser.framework; sourceTree = "<group>"; };
+		D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TSMarkdownParser+Singleton.swift"; sourceTree = "<group>"; };
 		D8436E671D26AC3600DEF464 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKResponseDescriptor+RuntimeFinder.swift"; sourceTree = "<group>"; };
 		D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKRequestDescriptor+RuntimeFinder.swift"; sourceTree = "<group>"; };
@@ -89,6 +107,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */,
+				D8087AEF1D428E72001918E8 /* DateTools.framework in Frameworks */,
 				D85D92F01D400FB1002F8800 /* RealmSwift.framework in Frameworks */,
 				D85D92EF1D400F9E002F8800 /* Realm.framework in Frameworks */,
 				DF9FC5C0F2C2630A3253154B /* libPods-Mattermost.a in Frameworks */,
@@ -170,6 +190,7 @@
 				D8436E721D26E48C00DEF464 /* LocaleUtils.swift */,
 				D8087AD31D401FB3001918E8 /* RealmUtils.swift */,
 				D8087AE41D416FDB001918E8 /* MappingUtils.swift */,
+				D8087AF01D428FF1001918E8 /* StringUtils.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -191,6 +212,10 @@
 				D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */,
 				D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */,
 				D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */,
+				D8087AEA1D428923001918E8 /* NSCalendar+Singleton.swift */,
+				D8087AEC1D428DE9001918E8 /* NSDate+Formatter.swift */,
+				D8087AF41D429393001918E8 /* UIScreen+Size.swift */,
+				D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -221,6 +246,8 @@
 				D85D92E81D40079B002F8800 /* User.swift */,
 				D8087ADE1D413DB7001918E8 /* Team.swift */,
 				D8087AE01D414A71001918E8 /* Channel.swift */,
+				D8087AE61D427E23001918E8 /* Post.swift */,
+				D8087AE81D42808C001918E8 /* File.swift */,
 			);
 			path = Human;
 			sourceTree = "<group>";
@@ -236,6 +263,8 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D8087AF61D429610001918E8 /* TSMarkdownParser.framework */,
+				D8087AEE1D428E72001918E8 /* DateTools.framework */,
 				D85D92EE1D400F9E002F8800 /* Realm.framework */,
 				D85D92E61D400743002F8800 /* RealmSwift.framework */,
 				19B0B6EE8F5339BB25E4E127 /* libPods-Mattermost.a */,
@@ -387,6 +416,8 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/DateTools.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/TSMarkdownParser.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -412,22 +443,29 @@
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
+				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
+				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822F3066402356ECA5C1C9 /* ViewController.swift in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
+				D8087AE91D42808C001918E8 /* File.swift in Sources */,
 				D8A0969A1D23378F00B76E1A /* NSObject+Runtime.swift in Sources */,
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
+				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */,
+				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
+				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
 				D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */,
 				D8436E681D26AC3600DEF464 /* DataManager.swift in Sources */,
 				D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
+				D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
 			);

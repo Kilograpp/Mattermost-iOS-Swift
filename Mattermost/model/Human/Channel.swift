@@ -60,13 +60,13 @@ public enum ChannelRelationships: String {
     case members = "members"
 }
 
-private protocol PathPatterns {
+private protocol PathPattern {
     static func listPathPattern() -> String
     static func extraInfoPathPattern() -> String
     static func updateLastViewDatePathPattern() -> String
 }
 
-private protocol Mappings {
+private protocol Mapping {
     static func mapping() -> RKObjectMapping
     static func attendantInfoMapping() -> RKObjectMapping
 }
@@ -83,21 +83,21 @@ private protocol Support {
     static func teamIdentifierPath() -> String
 }
 
-// MARK: - Path Patterns
-extension Channel: PathPatterns {
+// MARK: - Path Pattern
+extension Channel: PathPattern {
     class func listPathPattern() -> String {
         return "teams/:\(ChannelAttributes.identifier.rawValue)/channels/"
     }
     class func extraInfoPathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier.rawValue)/extra_info"
+        return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/extra_info"
     }
     class func updateLastViewDatePathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier.rawValue)/update_last_viewed_at"
+        return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/update_last_viewed_at"
     }
 }
 
-// MARK: - Mappings
-extension Channel: Mappings {
+// MARK: - Mapping
+extension Channel: Mapping {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappingsFromDictionary([
@@ -123,7 +123,7 @@ extension Channel: Mappings {
         mapping.assignsNilForMissingRelationships = false
         mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(ChannelAttributes.identifier.rawValue)
         mapping.addAttributeMappingsFromDictionary([
-            "(\(ChannelAttributes.identifier.rawValue)).last_viewed_at" : ChannelAttributes.lastViewDate.rawValue
+            "(\(ChannelAttributes.identifier)).last_viewed_at" : ChannelAttributes.lastViewDate.rawValue
         ])
         return mapping
     }
