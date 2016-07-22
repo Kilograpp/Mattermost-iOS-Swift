@@ -1,0 +1,2 @@
+github "RestKit/RestKit" "v0.27.0"
+github "realm/realm-cocoa" "v1.0.2"
