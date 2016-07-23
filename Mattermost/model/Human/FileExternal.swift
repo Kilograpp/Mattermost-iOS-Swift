@@ -1,5 +1,5 @@
 //
-//  FileBase.swift
+//  FileExternal.swift
 //  Mattermost
 //
 //  Created by Maxim Gubin on 24/07/16.
@@ -7,7 +7,3 @@
 //
 
 import Foundation
-
-class FileBase: RealmObject {
-
-}
