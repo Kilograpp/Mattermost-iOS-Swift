@@ -9,10 +9,9 @@
 import Foundation
 
 
-class File: RealmObject {
+class FileLocal: File {
     dynamic var privateLink: String?
     dynamic var privateMimeType: String?
-    dynamic var 
 }
 
 public enum FileAttributes: String {

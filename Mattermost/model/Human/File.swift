@@ -8,6 +8,8 @@
 
 import Foundation
 
-class FileBase: RealmObject {
 
+
+class File: RealmObject {
+    
 }
