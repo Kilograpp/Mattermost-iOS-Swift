@@ -113,7 +113,7 @@ extension ObjectManager: PostRequests {
                    success: ((mappingResult: RKMappingResult) -> Void)?,
                    failure: ((error: Error) -> Void)?) {
         
-        let constructingBodyWithBlock = {(formData: AFMultipartFormData!) -> Void in
+        let constructingBodyWithBlock = {(formData: AFRKMultipartFormData!) -> Void in
             formData.appendPartWithFileData(UIImagePNGRepresentation(image), name: name, fileName: "file.png", mimeType: "image/png")
         }
         
