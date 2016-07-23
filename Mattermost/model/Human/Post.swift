@@ -7,16 +7,21 @@
 //
 
 import Foundation
+import Realm
 import RealmSwift
 import TSMarkdownParser
 
 class Post: RealmObject {
+    dynamic var privateAttributedMessageData: NSData?
     dynamic var privatePendingId: String?
     dynamic var privateChannelId: String?
     dynamic var privateAuthorId: String?
     dynamic var creationDay: NSDate?
     dynamic var createdAt: NSDate? {
-        didSet {computeDisplayDay()}
+        didSet {
+            computeDisplayDay()
+            computeCreatedAtString()
+        }
     }
     dynamic var createdAtString: String? {
         didSet {computeCreatedAtStringWidth()}
@@ -26,15 +31,26 @@ class Post: RealmObject {
     dynamic var deletedAt: NSDate?
     dynamic var identifier: String?
     dynamic var message: String? {
-        didSet {computeAttributedString()}
+        didSet {
+            computeAttributedString()
+            computeAttributedStringData()
+            computeAttributedMessageHeight()
+        }
     }
-    dynamic var attributedMessage: NSAttributedString? {
-        didSet {computeAttributedMessageHeight()}
-    }
+    lazy var attributedMessage: NSAttributedString? = {
+        return self.unarchiveAttributedMessageFromData()
+    }()
     dynamic var attributedMessageHeight: Float = 0.0
     dynamic var type: String?
     
+    var author: User? {
+        return try! Realm().objects(User).filter("%K = %@", UserAttributes.identifier.rawValue, privateAuthorId!).first
+    }
     let files = List<File>()
+    
+    override class func ignoredProperties() -> [String] {
+        return [PostAttributes.attributedMessage.rawValue]
+    }
     
     override class func primaryKey() -> String {
         return PostAttributes.identifier.rawValue
@@ -43,6 +59,13 @@ class Post: RealmObject {
     override class func indexedProperties() -> [String] {
         return [PostAttributes.identifier.rawValue]
     }
+    
+}
+
+private protocol Inteface {
+    func hasAttachments() -> Bool
+    func hasSameAuthor(post: Post!) -> Bool
+    func timeIntervalSincePost(post: Post!) -> NSTimeInterval
 }
 
 private protocol PathPattern {
@@ -61,8 +84,24 @@ private protocol RequestMapping {
     static func creationRequestMapping() -> RKObjectMapping
 }
 
+private protocol ResponseDescriptor {
+    static func firstPageResponseDescriptor() -> RKResponseDescriptor
+}
+
+private protocol Computations {
+    func computePendingId()
+    func computeCreatedAtString()
+    func computeCreatedAtStringWidth()
+    func computeAttributedString()
+    func computeAttributedStringData()
+    func computeAttributedMessageHeight()
+}
+
 private protocol Support {
     static func filesLinkPath() -> String
+    static func teamIdentifierPath() -> String
+    static func channelIdentifierPath() -> String
+    func unarchiveAttributedMessageFromData() -> NSAttributedString
 }
 
 public enum PostAttributes: String {
@@ -76,6 +115,8 @@ public enum PostAttributes: String {
     case type = "type"
     case updatedAt = "updatedAt"
     case privateAuthorId = "privateAuthorId"
+    case attributedMessage = "attributedMessage"
+    case attributedMessageHeight = "attributedMessageHeight"
 }
 
 public enum PostRelationships: String {
@@ -91,7 +132,11 @@ extension Post: PathPattern {
         return "teams/:team.identifier/channels/:identifier/posts/:lastPostId/before/:page/:size"
     }
     static func firstPagePathPattern() -> String {
-        return "teams/:team.identifier/channels/:identifier/posts/page/:page/:size"
+        let teamIdentifierPath = "\(PageWrapperAttributes.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
+        let channelIdentifierPath = "\(PageWrapperAttributes.channel).\(ChannelAttributes.identifier)"
+        let pagePath = PageWrapperAttributes.page.rawValue
+        let sizePath = PageWrapperAttributes.size.rawValue
+        return "teams/:\(teamIdentifierPath)/channels/:\(channelIdentifierPath)/posts/page/:\(pagePath)/:\(sizePath)"
     }
     static func updatePathPattern() -> String {
         return "teams/:\(teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
@@ -124,9 +169,9 @@ extension Post: Mapping {
             "(\(PostAttributes.identifier)).user_id" : PostAttributes.privateAuthorId.rawValue,
             "(\(PostAttributes.identifier)).channel_id" : PostAttributes.privateChannelId.rawValue
             ])
-        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
-            toKeyPath: PostRelationships.files.rawValue,
-            withMapping: File.mapping()))
+//        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
+//            toKeyPath: PostRelationships.files.rawValue,
+//            withMapping: File.mapping()))
         return mapping
     }
 }
@@ -145,13 +190,14 @@ extension Post: RequestMapping {
 
 }
 
-extension Post {
 
-    func timeIntervalSincePost(post: Post!) -> NSTimeInterval {
-        return createdAt!.timeIntervalSinceDate(post.createdAt!)
-    }
-    func hasAttachments() -> Bool {
-        return files.count > 0
+extension Post: ResponseDescriptor {
+    static func firstPageResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: listMapping(),
+                                     method: .GET,
+                                pathPattern: firstPagePathPattern(),
+                                    keyPath: "posts",
+                                statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
 }
 
@@ -166,7 +212,25 @@ extension Post: Support {
     class func teamIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
     }
+    private func unarchiveAttributedMessageFromData() -> NSAttributedString {
+        return NSKeyedUnarchiver.unarchiveObjectWithData(self.privateAttributedMessageData!) as! NSAttributedString
+    }
     
+}
+
+extension Post: Inteface {
+    func hasAttachments() -> Bool {
+        return files.count != 0
+    }
+    func hasSameAuthor(post: Post!) -> Bool {
+        return self.privateAuthorId == post.privateAuthorId
+    }
+    func timeIntervalSincePost(post: Post!) -> NSTimeInterval {
+        return createdAt!.timeIntervalSinceDate(post.createdAt!)
+    }
+}
+
+extension Post: Computations {
     private func computeDisplayDay() {
         let unitFlags: NSCalendarUnit = [.Year, .Month, .Day]
         let calendar = NSCalendar.sharedGregorianCalendar
@@ -185,7 +249,12 @@ extension Post: Support {
     private func computeAttributedString() {
         self.attributedMessage = TSMarkdownParser.sharedInstance.attributedStringFromMarkdown(self.message!)
     }
+    private func computeAttributedStringData() {
+        self.privateAttributedMessageData = NSKeyedArchiver.archivedDataWithRootObject(self.attributedMessage!)
+    }
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
+    
+
 }
