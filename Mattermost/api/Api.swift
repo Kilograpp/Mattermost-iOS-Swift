@@ -19,6 +19,10 @@ private protocol ChannelApi {
     func loadChannels(with completion:(error: Error?) -> Void)
 }
 
+private protocol PostApi {
+    func loadFirstPage(channel: Channel) -> Void
+}
+
 class Api: NSObject {
     static let sharedInstance = Api()
     private var _managerCache: ObjectManager?
@@ -114,5 +118,18 @@ extension Api: ChannelApi {
             
             completion(error: nil)
         }, failure: completion)
+    }
+}
+
+extension Api: PostApi {
+    func loadFirstPage(channel: Channel) {
+        let wrapper = PageWrapper(channel: channel)
+        let path = SOCStringFromStringWithObject(Post.firstPagePathPattern(), wrapper)
+        
+        self.manager.getObject(path: path, success: { (mappingResult) in
+            RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
+        }) { (error) in
+                
+        }
     }
 }
