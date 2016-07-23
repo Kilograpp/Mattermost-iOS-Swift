@@ -17,6 +17,9 @@ private protocol TeamMethods {
     static func fetchAllTeams(mappingResult: RKMappingResult) -> [Team]
 }
 
+private protocol PostMethods {
+    static func fetchPosts(mappingResult: RKMappingResult) -> [Post]
+}
 
 // MARK: - Team
 extension MappingUtils: TeamMethods {
@@ -34,5 +37,11 @@ extension MappingUtils: TeamMethods {
     
     static func fetchAllChannels(mappingResult: RKMappingResult) -> [Channel] {
         return mappingResult.array() as! [Channel]
+    }
+}
+
+extension MappingUtils: PostMethods {
+    static func fetchPosts(mappingResult: RKMappingResult) -> [Post] {
+        return mappingResult.array() as! [Post]
     }
 }
