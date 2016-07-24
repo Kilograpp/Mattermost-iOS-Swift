@@ -20,7 +20,7 @@ private protocol ChannelApi {
 }
 
 private protocol PostApi {
-    func loadFirstPage(channel: Channel) -> Void
+    func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
 }
 
 class Api: NSObject {
@@ -122,14 +122,15 @@ extension Api: ChannelApi {
 }
 
 extension Api: PostApi {
-    func loadFirstPage(channel: Channel) {
+    func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void) {
         let wrapper = PageWrapper(channel: channel)
         let path = SOCStringFromStringWithObject(Post.firstPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult) in
             RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
+            completion(error: nil)
         }) { (error) in
-                
+            completion(error: error)
         }
     }
 }
