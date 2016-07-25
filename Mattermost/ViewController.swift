@@ -15,15 +15,15 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
-        Api.sharedInstance.login("maxim@kilograpp.com", password: "loladin") { (error) in
-            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-                Api.sharedInstance.loadChannels(with: { (error) in
-                    Api.sharedInstance.loadFirstPage(try! Realm().objects(Channel).filter("privateTeamId != ''").first!)
-                })
-            })
-            
-        }
+//        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
+//        Api.sharedInstance.login("maxim@kilograpp.com", password: "loladin") { (error) in
+//            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
+//                Api.sharedInstance.loadChannels(with: { (error) in
+//                    Api.sharedInstance.loadFirstPage(try! Realm().objects(Channel).filter("privateTeamId != ''").first!)
+//                })
+//            })
+//            
+//        }
     // Do any additional setup after loading the view, typically from a nib.
     }
 

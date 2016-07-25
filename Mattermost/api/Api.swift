@@ -20,7 +20,7 @@ private protocol ChannelApi {
 }
 
 private protocol PostApi {
-    func loadFirstPage(channel: Channel) -> Void
+    func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
 }
 
 class Api: NSObject {
@@ -38,7 +38,7 @@ class Api: NSObject {
         }
         return _managerCache!;
     }
-   
+    
     private override init() {
         super.init()
         self.setupMillisecondsValueTransformer()
@@ -71,7 +71,7 @@ extension Api: UserApi {
             })
             
             completion(error: nil)
-        }, failure: completion)
+            }, failure: completion)
     }
 }
 
@@ -104,11 +104,11 @@ extension Api: ChannelApi {
             
             
             let realm = try! Realm()
-            let channels = mappingResult.dictionary()["members"] as! [Channel]
-            
+            let members = mappingResult.dictionary()["members"] as! [Channel]
+            let channels = mappingResult.dictionary()["channels"] as! [Channel]
             try! realm.write({
-                realm.add(mappingResult.dictionary()["channels"] as! [Channel], update: true)
-                for channel in channels {
+                realm.add(channels, update: true)
+                for channel in members {
                     var dictionary: [String: AnyObject] = [String: AnyObject] ()
                     dictionary[ChannelAttributes.lastViewDate.rawValue] = channel.lastViewDate
                     dictionary[ChannelAttributes.identifier.rawValue] = channel.identifier
@@ -117,19 +117,20 @@ extension Api: ChannelApi {
             })
             
             completion(error: nil)
-        }, failure: completion)
+            }, failure: completion)
     }
 }
 
 extension Api: PostApi {
-    func loadFirstPage(channel: Channel) {
+    func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void) {
         let wrapper = PageWrapper(channel: channel)
         let path = SOCStringFromStringWithObject(Post.firstPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult) in
             RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
+            completion(error: nil)
         }) { (error) in
-                
+            completion(error: error)
         }
     }
 }

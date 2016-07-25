@@ -14,8 +14,16 @@ import TSMarkdownParser
 class Post: RealmObject {
     dynamic var privateAttributedMessageData: NSData?
     dynamic var privatePendingId: String?
-    dynamic var privateChannelId: String?
-    dynamic var privateAuthorId: String?
+    dynamic var privateChannelId: String? {
+        didSet {
+            computeChannel()
+        }
+    }
+    dynamic var privateAuthorId: String? {
+        didSet {
+            computeAuthor()
+        }
+    }
     dynamic var creationDay: NSDate?
     dynamic var createdAt: NSDate? {
         didSet {
@@ -43,9 +51,9 @@ class Post: RealmObject {
     dynamic var attributedMessageHeight: Float = 0.0
     dynamic var type: String?
     
-    var author: User? {
-        return try! Realm().objects(User).filter("%K = %@", UserAttributes.identifier.rawValue, privateAuthorId!).first
-    }
+    dynamic var author: User?
+    dynamic var channel: Channel?
+    
     let files = List<File>()
     
     override class func ignoredProperties() -> [String] {
@@ -89,6 +97,8 @@ private protocol ResponseDescriptor {
 }
 
 private protocol Computations {
+    func computeAuthor()
+    func computeChannel()
     func computePendingId()
     func computeCreatedAtString()
     func computeCreatedAtStringWidth()
@@ -169,9 +179,9 @@ extension Post: Mapping {
             "(\(PostAttributes.identifier)).user_id" : PostAttributes.privateAuthorId.rawValue,
             "(\(PostAttributes.identifier)).channel_id" : PostAttributes.privateChannelId.rawValue
             ])
-//        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
-//            toKeyPath: PostRelationships.files.rawValue,
-//            withMapping: File.mapping()))
+        //        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
+        //            toKeyPath: PostRelationships.files.rawValue,
+        //            withMapping: File.mapping()))
         return mapping
     }
 }
@@ -187,17 +197,17 @@ extension Post: RequestMapping {
             ])
         return mapping
     }
-
+    
 }
 
 
 extension Post: ResponseDescriptor {
     static func firstPageResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: listMapping(),
-                                     method: .GET,
-                                pathPattern: firstPagePathPattern(),
+                                    method: .GET,
+                                    pathPattern: firstPagePathPattern(),
                                     keyPath: "posts",
-                                statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
 }
 
@@ -255,6 +265,16 @@ extension Post: Computations {
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
+    private func computeAuthor() {
+        let user = User()
+        user.identifier = self.privateAuthorId!
+        self.author = user
+    }
+    private func computeChannel() {
+        let channel = Channel()
+        channel.identifier = self.privateChannelId!
+        self.channel = channel
+    }
     
-
+    
 }
