@@ -34,9 +34,6 @@ class Channel: RealmObject {
     override class func primaryKey() -> String {
         return ChannelAttributes.identifier.rawValue
     }
-    override class func ignoredProperties() -> [String] {
-        return [ChannelRelationships.team.rawValue]
-    }
     override class func indexedProperties() -> [String] {
         return [ChannelAttributes.identifier.rawValue]
     }
@@ -172,6 +169,8 @@ extension Channel: Support {
         return ChannelRelationships.team.rawValue + "." + ChannelAttributes.identifier.rawValue
     }
     func computeTeam() {
-        self.team = self.realm!.objects(Team).filter("%K = %@", TeamAttributes.identifier.rawValue, privateTeamId!).first
+        let team = Team()
+        team.identifier = self.privateTeamId!.isEmpty ? DataManager.sharedInstance.currentTeam!.identifier : self.privateTeamId!
+        self.team = team
     }
 }

@@ -104,11 +104,11 @@ extension Api: ChannelApi {
             
             
             let realm = try! Realm()
-            let channels = mappingResult.dictionary()["members"] as! [Channel]
-            
+            let members = mappingResult.dictionary()["members"] as! [Channel]
+            let channels = mappingResult.dictionary()["channels"] as! [Channel]
             try! realm.write({
-                realm.add(mappingResult.dictionary()["channels"] as! [Channel], update: true)
-                for channel in channels {
+                realm.add(channels, update: true)
+                for channel in members {
                     var dictionary: [String: AnyObject] = [String: AnyObject] ()
                     dictionary[ChannelAttributes.lastViewDate.rawValue] = channel.lastViewDate
                     dictionary[ChannelAttributes.identifier.rawValue] = channel.identifier

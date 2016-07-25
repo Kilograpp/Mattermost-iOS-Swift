@@ -19,7 +19,9 @@ class ViewController: UIViewController {
         Api.sharedInstance.login("maxim@kilograpp.com", password: "loladin") { (error) in
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
-                    Api.sharedInstance.loadFirstPage(try! Realm().objects(Channel).filter("privateTeamId != ''").first!)
+                    Api.sharedInstance.loadFirstPage(try! Realm().objects(Channel).first!, completion: { (error) in
+                        
+                    })
                 })
             })
             
