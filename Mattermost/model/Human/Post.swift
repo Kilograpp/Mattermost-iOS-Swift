@@ -266,10 +266,10 @@ extension Post: Computations {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
     private func computeAuthor() {
-        self.author = try! Realm().objects(User).filter("%K = %@", UserAttributes.identifier.rawValue, self.privateAuthorId!).first
+        self.author = self.realm!.objects(User).filter("%K = %@", UserAttributes.identifier.rawValue, self.privateAuthorId!).first
     }
     private func computeChannel() {
-        self.channel = try! Realm().objects(Channel).filter("%K = %@", ChannelAttributes.identifier.rawValue, self.privateChannelId!).first
+        self.channel = self.realm!.objects(Channel).filter("%K = %@", ChannelAttributes.identifier.rawValue, self.privateChannelId!).first
     }
     
     

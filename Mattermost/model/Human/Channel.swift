@@ -11,7 +11,11 @@ import RealmSwift
 
 class Channel: RealmObject {
     dynamic var privateType: String?
-    dynamic var privateTeamId: String?
+    dynamic var privateTeamId: String? {
+        didSet {
+            computeTeam()
+        }
+    }
     dynamic var createdAt: NSDate?
     dynamic var lastViewDate: NSDate?
     dynamic var identifier: String?
@@ -23,9 +27,7 @@ class Channel: RealmObject {
     dynamic var displayName: String?
     
     
-    var team: Team? {
-        return try! Realm().objects(Team).filter("%K = %@", TeamAttributes.identifier.rawValue, privateTeamId!).first
-    }
+    dynamic var team: Team?
     
     let members = List<User>()
     
@@ -168,5 +170,8 @@ extension Channel: ResponseDescriptors {
 extension Channel: Support {
     class func teamIdentifierPath() -> String {
         return ChannelRelationships.team.rawValue + "." + ChannelAttributes.identifier.rawValue
+    }
+    func computeTeam() {
+        self.team = self.realm!.objects(Team).filter("%K = %@", TeamAttributes.identifier.rawValue, privateTeamId!).first
     }
 }
