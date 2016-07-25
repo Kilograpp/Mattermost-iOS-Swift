@@ -1,3 +1,4 @@
+github "facebook/SocketRocket"
 github "laptobbe/TSMarkdownParser"
 github "MatthewYork/DateTools"
 github "realm/realm-cocoa"
