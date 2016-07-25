@@ -38,7 +38,7 @@ class Api: NSObject {
         }
         return _managerCache!;
     }
-   
+    
     private override init() {
         super.init()
         self.setupMillisecondsValueTransformer()
@@ -71,7 +71,7 @@ extension Api: UserApi {
             })
             
             completion(error: nil)
-        }, failure: completion)
+            }, failure: completion)
     }
 }
 
@@ -117,7 +117,7 @@ extension Api: ChannelApi {
             })
             
             completion(error: nil)
-        }, failure: completion)
+            }, failure: completion)
     }
 }
 

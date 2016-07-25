@@ -1,3 +1,5 @@
 github "MatthewYork/DateTools" "v1.7.0"
+github "slackhq/SlackTextViewController" "v1.9.3"
 github "laptobbe/TSMarkdownParser" "2.1.1"
 github "realm/realm-cocoa" "v1.0.2"
+github "Roobiq/RBQFetchedResultsController" "v4.0.4"

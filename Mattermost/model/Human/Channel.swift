@@ -106,12 +106,12 @@ extension Channel: Mapping {
             "display_name"    : ChannelAttributes.displayName.rawValue,
             "last_post_at"    : ChannelAttributes.lastPostDate.rawValue,
             "total_msg_count" : ChannelAttributes.messagesCount.rawValue
-        ])
+            ])
         mapping.addAttributeMappingsFromArray([
             ChannelAttributes.name.rawValue,
             ChannelAttributes.header.rawValue,
             ChannelAttributes.purpose.rawValue
-        ])
+            ])
         mapping.addRelationshipMappingWithSourceKeyPath(ChannelRelationships.members.rawValue, mapping: User.mapping())
         return mapping;
     }
@@ -123,7 +123,7 @@ extension Channel: Mapping {
         mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(ChannelAttributes.identifier.rawValue)
         mapping.addAttributeMappingsFromDictionary([
             "(\(ChannelAttributes.identifier)).last_viewed_at" : ChannelAttributes.lastViewDate.rawValue
-        ])
+            ])
         return mapping
     }
 }

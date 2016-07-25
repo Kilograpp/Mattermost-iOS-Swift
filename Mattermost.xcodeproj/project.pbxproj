@@ -16,6 +16,10 @@
 		9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B8220F2E4D1D8538A51229B /* Assets.xcassets */; };
 		9B822F3066402356ECA5C1C9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822BF4FD105BFD9E26B15D /* ViewController.swift */; };
 		9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822E83696EB65A72E9F73A /* Api.swift */; };
+		D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */; };
+		D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */; };
+		D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D617E6A11D46AFB900283C0A /* ChatViewController.swift */; };
+		D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */; };
 		D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AD31D401FB3001918E8 /* RealmUtils.swift */; };
 		D8087ADF1D413DB7001918E8 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087ADE1D413DB7001918E8 /* Team.swift */; };
 		D8087AE11D414A71001918E8 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE01D414A71001918E8 /* Channel.swift */; };
@@ -74,6 +78,10 @@
 		9B822BF4FD105BFD9E26B15D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		9B822E83696EB65A72E9F73A /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		9B822FEE7A890495F4436A4C /* MattermostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MattermostTests.swift; sourceTree = "<group>"; };
+		D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SlackTextViewController.framework; path = Carthage/Build/iOS/SlackTextViewController.framework; sourceTree = "<group>"; };
+		D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftFetchedResultsController.framework; path = Carthage/Build/iOS/SwiftFetchedResultsController.framework; sourceTree = "<group>"; };
+		D617E6A11D46AFB900283C0A /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatViewController.swift; path = ViewControllers/Chat/ChatViewController.swift; sourceTree = "<group>"; };
+		D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RBQFetchedResultsController.framework; path = Carthage/Build/iOS/RBQFetchedResultsController.framework; sourceTree = "<group>"; };
 		D8087AD31D401FB3001918E8 /* RealmUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmUtils.swift; sourceTree = "<group>"; };
 		D8087ADE1D413DB7001918E8 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		D8087AE01D414A71001918E8 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
@@ -113,6 +121,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */,
+				D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */,
+				D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */,
 				D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */,
 				D8087AEF1D428E72001918E8 /* DateTools.framework in Frameworks */,
 				D85D92F01D400FB1002F8800 /* RealmSwift.framework in Frameworks */,
@@ -152,6 +163,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				D617E69B1D46AEF000283C0A /* ViewControllers */,
 				D8812AE81D43931700436B5C /* Classes */,
 				D8F6BCFF1D22E8DE000AC690 /* Supporting Files */,
 				9B822480CFCCBBED84C3A22E /* Info.plist */,
@@ -238,6 +250,22 @@
 			);
 			sourceTree = "<group>";
 		};
+		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				D617E69C1D46AF0700283C0A /* Chat */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		D617E69C1D46AF0700283C0A /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
+			);
+			name = Chat;
+			sourceTree = "<group>";
+		};
 		D8436E6E1D26DDED00DEF464 /* objc_categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -280,6 +308,9 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */,
+				D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */,
+				D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */,
 				D8087AF61D429610001918E8 /* TSMarkdownParser.framework */,
 				D8087AEE1D428E72001918E8 /* DateTools.framework */,
 				D85D92EE1D400F9E002F8800 /* Realm.framework */,
@@ -435,6 +466,9 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/DateTools.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TSMarkdownParser.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SlackTextViewController.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftFetchedResultsController.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RBQFetchedResultsController.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -488,6 +522,7 @@
 				D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
+				D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
