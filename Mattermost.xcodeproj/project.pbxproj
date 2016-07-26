@@ -20,6 +20,7 @@
 		D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */; };
 		D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D617E6A11D46AFB900283C0A /* ChatViewController.swift */; };
 		D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */; };
+		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AD31D401FB3001918E8 /* RealmUtils.swift */; };
 		D8087ADF1D413DB7001918E8 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087ADE1D413DB7001918E8 /* Team.swift */; };
 		D8087AE11D414A71001918E8 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE01D414A71001918E8 /* Channel.swift */; };
@@ -82,6 +83,7 @@
 		D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftFetchedResultsController.framework; path = Carthage/Build/iOS/SwiftFetchedResultsController.framework; sourceTree = "<group>"; };
 		D617E6A11D46AFB900283C0A /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatViewController.swift; path = ViewControllers/Chat/ChatViewController.swift; sourceTree = "<group>"; };
 		D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RBQFetchedResultsController.framework; path = Carthage/Build/iOS/RBQFetchedResultsController.framework; sourceTree = "<group>"; };
+		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D8087AD31D401FB3001918E8 /* RealmUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmUtils.swift; sourceTree = "<group>"; };
 		D8087ADE1D413DB7001918E8 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		D8087AE01D414A71001918E8 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 				D8087AD31D401FB3001918E8 /* RealmUtils.swift */,
 				D8087AE41D416FDB001918E8 /* MappingUtils.swift */,
 				D8087AF01D428FF1001918E8 /* StringUtils.swift */,
+				D6E165801D47539E0014C831 /* PostUtils.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -493,6 +496,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
+				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,

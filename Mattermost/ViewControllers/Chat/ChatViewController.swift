@@ -20,11 +20,14 @@ class ChatViewController: SLKTextViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.setupInputBar()
+        
         Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
         Api.sharedInstance.login("maxim@kilograpp.com", password: "loladin") { (error) in
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
                     self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
+                    self.title = self.channel?.displayName
                     Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
                         self.setupFetchedResultsController()
                         self.tableView?.reloadData()
@@ -62,8 +65,6 @@ class ChatViewController: SLKTextViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCellWithIdentifier("customCell", forIndexPath: indexPath)
-        
         var cell = tableView.dequeueReusableCellWithIdentifier("cell")
         
         if (cell == nil) {
@@ -81,27 +82,33 @@ class ChatViewController: SLKTextViewController {
     }
 
     
+    // MARK: - FetchedResultsController
+    
     func setupFetchedResultsController() -> FetchedResultsController<Post> {
         let predicate = NSPredicate(format: "privateChannelId = %@", self.channel?.identifier ?? "")
         let realm = try! Realm()
         let fetchRequest = FetchRequest<Post>(realm: realm, predicate: predicate)
-        
         let sortDescriptorSection = SortDescriptor(property: "createdAt", ascending: true)
-        
         fetchRequest.sortDescriptors = [sortDescriptorSection]
-        
         let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: nil, cacheName: "testCache")
-        
         fetchedResultsController.delegate = self
-        
         fetchedResultsController.performFetch()
-        
-        return fetchedResultsController
 
+        return fetchedResultsController
     }
     
     
+    // MARK: - Private
     
+    func setupInputBar() -> Void {
+        self.textInputbar.rightButton.addTarget(self, action: #selector(sendPost), forControlEvents: .TouchUpInside)
+    }
+    
+    func sendPost() -> Void {
+        PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+            print("sent");
+        }
+    }
 }
 
 
@@ -163,5 +170,4 @@ extension ChatViewController: FetchedResultsControllerDelegate {
     func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
     func controllerDidPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
 }
-
 
