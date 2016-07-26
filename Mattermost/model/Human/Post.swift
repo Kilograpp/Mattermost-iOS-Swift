@@ -24,7 +24,12 @@ class Post: RealmObject {
             computeAuthor()
         }
     }
-    dynamic var creationDay: NSDate?
+    dynamic var creationDay: NSDate? {
+        didSet {
+            computeCreationDayString()
+        }
+    }
+    dynamic var creationDayString: String?
     dynamic var createdAt: NSDate? {
         didSet {
             computeDisplayDay()
@@ -274,6 +279,9 @@ extension Post: Computations {
         let channel = Channel()
         channel.identifier = self.privateChannelId!
         self.channel = channel
+    }
+    private func computeCreationDayString() {
+        self.creationDayString = NSDateFormatter.sharedConversionSectionsDateFormatter.stringFromDate(self.creationDay!)
     }
     
     
