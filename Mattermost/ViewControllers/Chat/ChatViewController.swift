@@ -8,6 +8,7 @@
 
 import SlackTextViewController
 import RealmSwift
+import UITableView_Cache
 import SwiftFetchedResultsController
 
 class ChatViewController: SLKTextViewController {
@@ -15,12 +16,13 @@ class ChatViewController: SLKTextViewController {
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
     var realm: Realm?
     
-    //MARK: Override
+    //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupInputBar()
+        self.configureTableView()
         
         Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
         Api.sharedInstance.login("getmaxx@kilograpp.com", password: "102Aky5i") { (error) in
@@ -42,7 +44,16 @@ class ChatViewController: SLKTextViewController {
     }
     
     
-    // MARK: - Table view data source
+    //MARK: - Configuration
+    
+    func configureTableView() -> Void {
+        self.tableView?.separatorStyle = .None
+        self.tableView?.keyboardDismissMode = .OnDrag
+        self.tableView!.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
+    }
+    
+    
+    // MARK: - UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
@@ -54,6 +65,19 @@ class ChatViewController: SLKTextViewController {
         return self.fetchedResultsController.numberOfRowsForSectionIndex(section)
     }
     
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(FeedCommonTableViewCell.reuseIdentifier()) as! FeedCommonTableViewCell
+        
+        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
+        cell.transform = tableView.transform
+        cell.configureWithPost(post)
+        
+        return cell
+    }
+    
+    
+    // MARK: - UITableViewDelegate
+    
     override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         return self.fetchedResultsController.titleForHeaderInSection(section)
     }
@@ -62,21 +86,10 @@ class ChatViewController: SLKTextViewController {
         view.transform = tableView.transform
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("cell")
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
         
-        if (cell == nil) {
-            cell = UITableViewCell.init(style: .Default, reuseIdentifier: "cell")
-        }
-        
-        // Configure the cell...
-        
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
-        
-        cell!.textLabel?.text = object.message
-        cell!.transform = tableView.transform
-        
-        return cell!
+        return FeedCommonTableViewCell.heightWithPost(post)
     }
 
     
@@ -91,7 +104,6 @@ class ChatViewController: SLKTextViewController {
         let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: "creationDayString", cacheName: "testCache")
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch()
-        print("\(fetchedResultsController.fetchedObjects.count)")
 
         return fetchedResultsController
     }

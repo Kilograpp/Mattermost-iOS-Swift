@@ -21,6 +21,11 @@
 		D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D617E6A11D46AFB900283C0A /* ChatViewController.swift */; };
 		D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
+		D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* BaseTableViewCell.swift */; };
+		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
+		D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */; };
+		D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */; };
+		D6E165A21D47E32E0014C831 /* UITableView_Cache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */; };
 		D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AD31D401FB3001918E8 /* RealmUtils.swift */; };
 		D8087ADF1D413DB7001918E8 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087ADE1D413DB7001918E8 /* Team.swift */; };
 		D8087AE11D414A71001918E8 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE01D414A71001918E8 /* Channel.swift */; };
@@ -85,6 +90,11 @@
 		D617E6A11D46AFB900283C0A /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatViewController.swift; path = ViewControllers/Chat/ChatViewController.swift; sourceTree = "<group>"; };
 		D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RBQFetchedResultsController.framework; path = Carthage/Build/iOS/RBQFetchedResultsController.framework; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
+		D6E165861D47C1200014C831 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewCell.swift; path = Views/Cells/BaseTableViewCell.swift; sourceTree = "<group>"; };
+		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedBaseTableViewCell.swift; path = Views/Cells/Chat/FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
+		D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedCommonTableViewCell.swift; path = Views/Cells/Chat/FeedCommonTableViewCell.swift; sourceTree = "<group>"; };
+		D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActiveLabel.framework; path = Carthage/Build/iOS/ActiveLabel.framework; sourceTree = "<group>"; };
+		D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UITableView_Cache.framework; path = Carthage/Build/iOS/UITableView_Cache.framework; sourceTree = "<group>"; };
 		D8087AD31D401FB3001918E8 /* RealmUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmUtils.swift; sourceTree = "<group>"; };
 		D8087ADE1D413DB7001918E8 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		D8087AE01D414A71001918E8 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
@@ -125,6 +135,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6E165A21D47E32E0014C831 /* UITableView_Cache.framework in Frameworks */,
+				D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */,
 				D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */,
 				D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */,
 				D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */,
@@ -167,6 +179,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				D6E165831D47C0890014C831 /* Views */,
 				D617E69B1D46AEF000283C0A /* ViewControllers */,
 				D8812AE81D43931700436B5C /* Classes */,
 				D8F6BCFF1D22E8DE000AC690 /* Supporting Files */,
@@ -272,6 +285,32 @@
 			name = Chat;
 			sourceTree = "<group>";
 		};
+		D6E165831D47C0890014C831 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D6E165841D47C08F0014C831 /* Cells */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		D6E165841D47C08F0014C831 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				D6E165851D47C0960014C831 /* Chat */,
+				D6E165861D47C1200014C831 /* BaseTableViewCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		D6E165851D47C0960014C831 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */,
+				D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */,
+			);
+			name = Chat;
+			sourceTree = "<group>";
+		};
 		D8436E6E1D26DDED00DEF464 /* objc_categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -314,6 +353,8 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */,
+				D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */,
 				D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */,
 				D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */,
 				D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */,
@@ -475,6 +516,8 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SlackTextViewController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftFetchedResultsController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RBQFetchedResultsController.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ActiveLabel.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/UITableView_Cache.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -510,13 +553,16 @@
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822F3066402356ECA5C1C9 /* ViewController.swift in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
+				D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
 				D8087AE91D42808C001918E8 /* FileLocal.swift in Sources */,
 				D8A0969A1D23378F00B76E1A /* NSObject+Runtime.swift in Sources */,
+				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */,
+				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */,

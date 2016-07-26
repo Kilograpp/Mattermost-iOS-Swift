@@ -1,3 +1,5 @@
+github "optonaut/ActiveLabel.swift" "master"
+github "Kilograpp/UITableView-Cache" "master"
 github "Roobiq/RBQFetchedResultsController"
 github "laptobbe/TSMarkdownParser"
 github "MatthewYork/DateTools"
