@@ -14,36 +14,17 @@ class PostUtils: NSObject {
     
     static let sharedInstance = PostUtils()
     
-    func sentPostForChannel(with channel: Channel, message: String, realm: Realm, attachments: NSArray?, completion: (error: Error?) -> Void) {
-        
-//        realm.beginWrite()
-        
-//        dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-//            
-//        }
-//
+    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
         let postToSend = Post()
         
         postToSend.message = message
         postToSend.createdAt = NSDate()
 //        postToSend.channel = channel
-//        postToSend.privateChannelId = channel.identifier
+        postToSend.privateChannelId = channel.identifier
         //FIXME: fixme asap
         postToSend.identifier = message
         
-//        RealmUtils.save(postToSend)
-        
-        
-        
-        try! realm.write({ 
-            realm.add(postToSend, update: false);
-            postToSend.privateChannelId = channel.identifier
-        })
-    
-//        RLMRealmDidChangeNotification
-//        [[RBQRealmChangeLogger de] didChangeObject:self];
-        
-//        try! realm.commitWrite()
+        RealmUtils.save(postToSend)
         
         completion(error: nil)
     }

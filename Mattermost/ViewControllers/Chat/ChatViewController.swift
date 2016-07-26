@@ -12,8 +12,7 @@ import SwiftFetchedResultsController
 
 class ChatViewController: SLKTextViewController {
     private var channel : Channel?
-    private var token: NotificationToken?
-    lazy var fetchedResultsController: FetchedResultsController<Post> = self.setupFetchedResultsController()
+    lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
     var realm: Realm?
     
     //MARK: Override
@@ -30,14 +29,12 @@ class ChatViewController: SLKTextViewController {
                     self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
                     self.title = self.channel?.displayName
                     Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-                        self.setupFetchedResultsController()
+                        self.fetchedResultsController = self.realmFetchedResultsController()
                         self.tableView?.reloadData()
                     })
                 })
             })
-            
         }
-
     }
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
@@ -85,21 +82,16 @@ class ChatViewController: SLKTextViewController {
     
     // MARK: - FetchedResultsController
     
-    func setupFetchedResultsController() -> FetchedResultsController<Post> {
+    func realmFetchedResultsController() -> FetchedResultsController<Post> {
         let predicate = NSPredicate(format: "privateChannelId = %@", self.channel?.identifier ?? "")
-//        let predicate = NSPredicate(format: "")
         let realm = try! Realm()
-        self.token = realm.objects(Post).addNotificationBlock { (changes: RealmCollectionChange) in
-            print(changes)
-        }
-        self.realm = realm
         let fetchRequest = FetchRequest<Post>(realm: realm, predicate: predicate)
         let sortDescriptorSection = SortDescriptor(property: "createdAt", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptorSection]
         let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: "creationDayString", cacheName: "testCache")
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch()
-        print("NUMBER_OF_FETCHED_OBJECTS : \(fetchedResultsController.fetchedObjects.count)")
+        print("\(fetchedResultsController.fetchedObjects.count)")
 
         return fetchedResultsController
     }
@@ -113,12 +105,8 @@ class ChatViewController: SLKTextViewController {
     }
     
     func sendPost() -> Void {
-        PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, realm:self.realm!, attachments: nil) { (error) in
-            
+        PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             print("sent");
-            let post = self.realm!.objects(Post).filter("message == '\(self.textView.text)'").first!
-            print(post)
-//            self.setupFetchedResultsController()
         }
     }
 }
@@ -179,12 +167,7 @@ extension ChatViewController: FetchedResultsControllerDelegate {
         self.tableView!.endUpdates()
     }
     
-    func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {
-        
-    }
-    
-    func controllerDidPerformFetch<T : Object>(controller: FetchedResultsController<T>) {
-    
-    }
+    func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
+    func controllerDidPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
 }
 
