@@ -7,6 +7,7 @@
 //
 
 import ActiveLabel
+import WebImage
 
 class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     var avatarImageView : UIImageView?
@@ -82,7 +83,8 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     }
     
     func configureMessageOperation() -> Void {
-        messageDrawOperation = NSBlockOperation.init(block: { 
+        messageDrawOperation = NSBlockOperation.init(block: {
+            //FIXME: replace with weakSelf
             if ((self.messageDrawOperation?.cancelled)! == false) {
                 dispatch_sync(dispatch_get_main_queue(), { 
                     self.messageLabel?.attributedText = self.post?.attributedMessage
