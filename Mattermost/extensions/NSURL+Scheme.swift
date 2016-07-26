@@ -9,10 +9,10 @@
 import Foundation
 
 public enum URLScheme: String {
-    case WS    = "ws://"
-    case WSS   = "wss://"
-    case HTTP  = "http://"
-    case HTTPS = "https://"
+    case WS    = "ws"
+    case WSS   = "wss"
+    case HTTP  = "http"
+    case HTTPS = "https"
 }
 
 extension NSURL {
