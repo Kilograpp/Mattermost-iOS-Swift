@@ -1,5 +1,5 @@
+github "Roobiq/RBQFetchedResultsController"
 github "laptobbe/TSMarkdownParser"
 github "MatthewYork/DateTools"
 github "realm/realm-cocoa"
 github "slackhq/SlackTextViewController"
-github "Roobiq/RBQFetchedResultsController"

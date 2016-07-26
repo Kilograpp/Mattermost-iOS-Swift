@@ -12,6 +12,7 @@ import SwiftFetchedResultsController
 
 class ChatViewController: SLKTextViewController {
     private var channel : Channel?
+    private var token: NotificationToken?
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.setupFetchedResultsController()
     var realm: Realm?
     
@@ -23,7 +24,7 @@ class ChatViewController: SLKTextViewController {
         self.setupInputBar()
         
         Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
-        Api.sharedInstance.login("maxim@kilograpp.com", password: "loladin") { (error) in
+        Api.sharedInstance.login("getmaxx@kilograpp.com", password: "102Aky5i") { (error) in
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
                     self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
@@ -57,7 +58,7 @@ class ChatViewController: SLKTextViewController {
     }
     
     override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return "asdas"//self.fetchedResultsController.titleForHeaderInSection(section)
+        return self.fetchedResultsController.titleForHeaderInSection(section)
     }
     
     override func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
@@ -86,13 +87,19 @@ class ChatViewController: SLKTextViewController {
     
     func setupFetchedResultsController() -> FetchedResultsController<Post> {
         let predicate = NSPredicate(format: "privateChannelId = %@", self.channel?.identifier ?? "")
+//        let predicate = NSPredicate(format: "")
         let realm = try! Realm()
+        self.token = realm.objects(Post).addNotificationBlock { (changes: RealmCollectionChange) in
+            print(changes)
+        }
+        self.realm = realm
         let fetchRequest = FetchRequest<Post>(realm: realm, predicate: predicate)
-        let sortDescriptorSection = SortDescriptor(property: "createdAt", ascending: true)
+        let sortDescriptorSection = SortDescriptor(property: "createdAt", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptorSection]
-        let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: nil, cacheName: "testCache")
+        let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: "creationDayString", cacheName: "testCache")
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch()
+        print("NUMBER_OF_FETCHED_OBJECTS : \(fetchedResultsController.fetchedObjects.count)")
 
         return fetchedResultsController
     }
@@ -102,11 +109,16 @@ class ChatViewController: SLKTextViewController {
     
     func setupInputBar() -> Void {
         self.textInputbar.rightButton.addTarget(self, action: #selector(sendPost), forControlEvents: .TouchUpInside)
+        self.shouldClearTextAtRightButtonPress = false
     }
     
     func sendPost() -> Void {
-        PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+        PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, realm:self.realm!, attachments: nil) { (error) in
+            
             print("sent");
+            let post = self.realm!.objects(Post).filter("message == '\(self.textView.text)'").first!
+            print(post)
+//            self.setupFetchedResultsController()
         }
     }
 }
@@ -167,7 +179,12 @@ extension ChatViewController: FetchedResultsControllerDelegate {
         self.tableView!.endUpdates()
     }
     
-    func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
-    func controllerDidPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
+    func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {
+        
+    }
+    
+    func controllerDidPerformFetch<T : Object>(controller: FetchedResultsController<T>) {
+    
+    }
 }
 
