@@ -145,6 +145,6 @@ extension Api: Interface {
         return self.manager.HTTPClient.baseURL
     }
     func cookie() -> NSHTTPCookie? {
-        return NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies?.filter { $0.name == Constants.Http.Headers.CookieName }.first
+        return NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies?.filter { $0.name == Constants.Common.MattermostCookieName }.first
     }
 }
