@@ -8,6 +8,17 @@
 
 import Foundation
 
+public enum URLScheme: String {
+    case WS    = "ws://"
+    case WSS   = "wss://"
+    case HTTP  = "http://"
+    case HTTPS = "https://"
+}
+
 extension NSURL {
-    func URL
+    func URLWithScheme(scheme: URLScheme) -> NSURL? {
+        let components = NSURLComponents(URL: self, resolvingAgainstBaseURL: true)
+        components?.scheme = scheme.rawValue
+        return components?.URL
+    }
 }
