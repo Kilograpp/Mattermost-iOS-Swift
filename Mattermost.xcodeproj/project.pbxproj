@@ -49,6 +49,8 @@
 		D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C301D46D54F00436B5C /* SocketManager.swift */; };
 		D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C321D476DD400436B5C /* NSURL+Scheme.swift */; };
 		D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8812C341D476EB800436B5C /* Starscream.framework */; };
+		D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C361D47D69B00436B5C /* WebSocket+Cookies.swift */; };
+		D8812C391D47DDDA00436B5C /* String+JsonSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C381D47DDDA00436B5C /* String+JsonSerialization.swift */; };
 		D8A0969A1D23378F00B76E1A /* NSObject+Runtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A096991D23378F00B76E1A /* NSObject+Runtime.swift */; };
 		D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969B1D233CB400B76E1A /* Preferences.swift */; };
 		D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969D1D23E4FA00B76E1A /* Constants.swift */; };
@@ -117,6 +119,8 @@
 		D8812C301D46D54F00436B5C /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
 		D8812C321D476DD400436B5C /* NSURL+Scheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+Scheme.swift"; sourceTree = "<group>"; };
 		D8812C341D476EB800436B5C /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
+		D8812C361D47D69B00436B5C /* WebSocket+Cookies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WebSocket+Cookies.swift"; sourceTree = "<group>"; };
+		D8812C381D47DDDA00436B5C /* String+JsonSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+JsonSerialization.swift"; sourceTree = "<group>"; };
 		D8A096991D23378F00B76E1A /* NSObject+Runtime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Runtime.swift"; sourceTree = "<group>"; };
 		D8A0969B1D233CB400B76E1A /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		D8A0969D1D23E4FA00B76E1A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -247,6 +251,8 @@
 				D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */,
 				D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */,
 				D8812C321D476DD400436B5C /* NSURL+Scheme.swift */,
+				D8812C361D47D69B00436B5C /* WebSocket+Cookies.swift */,
+				D8812C381D47DDDA00436B5C /* String+JsonSerialization.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -512,6 +518,7 @@
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
+				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
@@ -538,6 +545,7 @@
 				D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
+				D8812C391D47DDDA00436B5C /* String+JsonSerialization.swift in Sources */,
 				D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
