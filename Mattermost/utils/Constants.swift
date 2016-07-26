@@ -17,6 +17,7 @@ struct Constants {
             static let ContentType = "Content-Type"
             static let RequestedWith = "X-Requested-With"
             static let AcceptLanguage = "Accept-Language"
+            static let CookieName = "MMAUTHTOKEN"
         }
     }
     struct Common {
