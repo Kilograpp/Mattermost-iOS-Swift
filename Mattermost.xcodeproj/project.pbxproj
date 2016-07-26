@@ -46,7 +46,9 @@
 		D8812AEC1D44141100436B5C /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812AEB1D44141100436B5C /* File.swift */; };
 		D8812AEE1D44149B00436B5C /* FileExternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812AED1D44149B00436B5C /* FileExternal.swift */; };
 		D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */; };
-		D8812C2F1D46D32E00436B5C /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8812C2E1D46D32E00436B5C /* SocketRocket.framework */; };
+		D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C301D46D54F00436B5C /* SocketManager.swift */; };
+		D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C321D476DD400436B5C /* NSURL+Scheme.swift */; };
+		D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8812C341D476EB800436B5C /* Starscream.framework */; };
 		D8A0969A1D23378F00B76E1A /* NSObject+Runtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A096991D23378F00B76E1A /* NSObject+Runtime.swift */; };
 		D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969B1D233CB400B76E1A /* Preferences.swift */; };
 		D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969D1D23E4FA00B76E1A /* Constants.swift */; };
@@ -112,6 +114,9 @@
 		D8812AED1D44149B00436B5C /* FileExternal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileExternal.swift; sourceTree = "<group>"; };
 		D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDateFormatter+Singleton.swift"; sourceTree = "<group>"; };
 		D8812C2E1D46D32E00436B5C /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
+		D8812C301D46D54F00436B5C /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
+		D8812C321D476DD400436B5C /* NSURL+Scheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+Scheme.swift"; sourceTree = "<group>"; };
+		D8812C341D476EB800436B5C /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		D8A096991D23378F00B76E1A /* NSObject+Runtime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Runtime.swift"; sourceTree = "<group>"; };
 		D8A0969B1D233CB400B76E1A /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		D8A0969D1D23E4FA00B76E1A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -125,7 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8812C2F1D46D32E00436B5C /* SocketRocket.framework in Frameworks */,
+				D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */,
 				D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */,
 				D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */,
 				D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */,
@@ -241,6 +246,7 @@
 				D8087AF41D429393001918E8 /* UIScreen+Size.swift */,
 				D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */,
 				D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */,
+				D8812C321D476DD400436B5C /* NSURL+Scheme.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -285,6 +291,7 @@
 			isa = PBXGroup;
 			children = (
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
+				D8812C301D46D54F00436B5C /* SocketManager.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -314,6 +321,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D8812C341D476EB800436B5C /* Starscream.framework */,
 				D8812C2E1D46D32E00436B5C /* SocketRocket.framework */,
 				D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */,
 				D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */,
@@ -476,7 +484,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SlackTextViewController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftFetchedResultsController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RBQFetchedResultsController.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SocketRocket.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -502,8 +510,10 @@
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
+				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
+				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
