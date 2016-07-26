@@ -29,7 +29,8 @@ class User: RealmObject {
 }
 
 private protocol PathPatterns {
-    static func loginPathPattern() -> String;
+    static func loginPathPattern() -> String
+    static func socketPathPattern() -> String
 }
 
 private protocol Mappings {
@@ -54,6 +55,9 @@ public enum UserAttributes: String {
 extension User: PathPatterns {
     class func loginPathPattern() -> String {
         return "users/login";
+    }
+    class func socketPathPattern() -> String {
+        return "users/websocket"
     }
 }
 
