@@ -7,6 +7,11 @@
 import Foundation
 import RealmSwift
 
+private protocol Interface {
+    func baseURL() -> NSURL!
+    func cookie() -> NSHTTPCookie?
+}
+
 private protocol UserApi {
     func login(email: String, password: String, completion: (error: Error?) -> Void)
 }
@@ -132,5 +137,14 @@ extension Api: PostApi {
         }) { (error) in
             completion(error: error)
         }
+    }
+}
+
+extension Api: Interface {
+    func baseURL() -> NSURL! {
+        return self.manager.HTTPClient.baseURL
+    }
+    func cookie() -> NSHTTPCookie? {
+        return NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies?.filter { $0.name == Constants.Http.Headers.CookieName }.first
     }
 }
