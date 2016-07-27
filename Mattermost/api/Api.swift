@@ -106,7 +106,7 @@ extension Api: ChannelApi {
             
             
             let realm = try! Realm()
-            let members = mappingResult.dictionary()["members"] as! [Channel]
+            let members  = mappingResult.dictionary()["members"]  as! [Channel]
             let channels = mappingResult.dictionary()["channels"] as! [Channel]
             try! realm.write({
                 realm.add(channels, update: true)
