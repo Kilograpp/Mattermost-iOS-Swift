@@ -57,10 +57,10 @@ class Post: RealmObject {
     dynamic var type: String?
     
     var author: User? {
-        return try! Realm().objectForPrimaryKey(User.self, key: self.privateAuthorId)
+        return RealmUtils.realmForCurrentThread().objectForPrimaryKey(User.self, key: self.privateAuthorId)
     }
     var channel: Channel? {
-        return try! Realm().objectForPrimaryKey(Channel.self, key: self.privateChannelId)
+        return RealmUtils.realmForCurrentThread().objectForPrimaryKey(Channel.self, key: self.privateChannelId)
     }
     
     let files = List<File>()
