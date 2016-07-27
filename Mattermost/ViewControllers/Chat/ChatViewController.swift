@@ -50,6 +50,7 @@ class ChatViewController: SLKTextViewController {
         self.tableView?.separatorStyle = .None
         self.tableView?.keyboardDismissMode = .OnDrag
         self.tableView!.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
+        self.tableView!.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
     }
     
     
@@ -66,7 +67,8 @@ class ChatViewController: SLKTextViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(FeedCommonTableViewCell.reuseIdentifier()) as! FeedCommonTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(FeedAttachmentsTableViewCell.reuseIdentifier()) as! FeedAttachmentsTableViewCell
+//        let cell = tableView.dequeueReusableCellWithIdentifier(FeedCommonTableViewCell.reuseIdentifier()) as! FeedCommonTableViewCell
         
         let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
         cell.transform = tableView.transform
@@ -89,7 +91,8 @@ class ChatViewController: SLKTextViewController {
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
         
-        return FeedCommonTableViewCell.heightWithPost(post)
+//        return FeedCommonTableViewCell.heightWithPost(post)
+        return FeedAttachmentsTableViewCell.heightWithPost(post)
     }
 
     

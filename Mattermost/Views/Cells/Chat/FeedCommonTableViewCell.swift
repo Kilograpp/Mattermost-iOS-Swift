@@ -79,7 +79,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     //MARK: Configuration
     
     func configureAvatarImage() -> Void {
-        self.avatarImageView?.backgroundColor = UIColor.redColor()
+        self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
     }
     
     func configureMessageOperation() -> Void {
@@ -133,7 +133,7 @@ extension FeedCommonTableViewCell {
         self.configureBasicLabels()
     }
     
-    static func heightWithPost(post: Post) -> CGFloat {
+    class func heightWithPost(post: Post) -> CGFloat {
         return CGFloat(post.attributedMessageHeight) + 44
     }
 }

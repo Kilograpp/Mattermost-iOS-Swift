@@ -20,13 +20,14 @@
 		D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */; };
 		D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D617E6A11D46AFB900283C0A /* ChatViewController.swift */; };
 		D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */; };
+		D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A31D47E99C0014C831 /* WebImage.framework */; };
+		D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* BaseTableViewCell.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
 		D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */; };
 		D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */; };
 		D6E165A21D47E32E0014C831 /* UITableView_Cache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */; };
-		D6E165A41D47E99C0014C831 /* WebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A31D47E99C0014C831 /* WebImage.framework */; };
 		D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A51D47E9B00014C831 /* MFSideMenu.framework */; };
 		D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */; };
 		D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165A91D47EA920014C831 /* UIImage+Additions.swift */; };
@@ -93,6 +94,7 @@
 		D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftFetchedResultsController.framework; path = Carthage/Build/iOS/SwiftFetchedResultsController.framework; sourceTree = "<group>"; };
 		D617E6A11D46AFB900283C0A /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatViewController.swift; path = ViewControllers/Chat/ChatViewController.swift; sourceTree = "<group>"; };
 		D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RBQFetchedResultsController.framework; path = Carthage/Build/iOS/RBQFetchedResultsController.framework; sourceTree = "<group>"; };
+		D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentsTableViewCell.swift; path = Views/Cells/Chat/FeedAttachmentsTableViewCell.swift; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D6E165861D47C1200014C831 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewCell.swift; path = Views/Cells/BaseTableViewCell.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedBaseTableViewCell.swift; path = Views/Cells/Chat/FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -143,9 +145,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
-				D6E165A41D47E99C0014C831 /* WebImage.framework in Frameworks */,
 				D6E165A21D47E32E0014C831 /* UITableView_Cache.framework in Frameworks */,
 				D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */,
 				D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */,
@@ -319,6 +321,7 @@
 			children = (
 				D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */,
 				D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */,
+				D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */,
 			);
 			name = Chat;
 			sourceTree = "<group>";
@@ -533,7 +536,9 @@
 				"$(SRCROOT)/Carthage/Build/iOS/RBQFetchedResultsController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ActiveLabel.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/UITableView_Cache.framework",
-				"$(SRCROOT)/Carhtage/Build/iOS/WebImage.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MFSideMenu.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -569,6 +574,7 @@
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822F3066402356ECA5C1C9 /* ViewController.swift in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
+				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
 				D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
