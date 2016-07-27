@@ -81,8 +81,10 @@ extension Api: TeamApi {
         let path = Team.initialLoadPathPattern()
         self.manager.getObject(path: path, success: { (mappingResult) in
             let teams = MappingUtils.fetchAllTeams(mappingResult)
+            let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
             Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
             RealmUtils.save(teams)
+            RealmUtils.save(users)
             if (teams.count == 1) {
                 Preferences.sharedInstance.currentTeamId = teams.first!.identifier
                 completion(userShouldSelectTeam: false, error: nil)
@@ -104,7 +106,7 @@ extension Api: ChannelApi {
             
             
             let realm = try! Realm()
-            let members = mappingResult.dictionary()["members"] as! [Channel]
+            let members  = mappingResult.dictionary()["members"]  as! [Channel]
             let channels = mappingResult.dictionary()["channels"] as! [Channel]
             try! realm.write({
                 realm.add(channels, update: true)

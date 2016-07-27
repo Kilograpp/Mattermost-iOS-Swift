@@ -16,10 +16,17 @@ class User: RealmObject {
     dynamic var firstName: String?
     dynamic var lastName: String?
     dynamic var identifier: String?
-    dynamic var nickname: String?
-    dynamic var username: String?
-    dynamic var privateStatus: String?
-    
+    dynamic var nickname: String? {
+        didSet {
+            computeNicknameWidth()
+        }
+    }
+    dynamic var nicknameWidth: Float = 0.0
+    dynamic var username: String? {
+        didSet {
+            computeNicknameIfRequired()
+        }
+    }
     override static func indexedProperties() -> [String] {
         return [UserAttributes.identifier.rawValue]
     }
@@ -29,15 +36,23 @@ class User: RealmObject {
 }
 
 private protocol PathPatterns {
-    static func loginPathPattern() -> String;
+    static func loginPathPattern() -> String
+    static func initialLoadPathPattern() -> String
 }
 
 private protocol Mappings {
     static func mapping() -> RKObjectMapping
+    static func directProfileMapping() -> RKObjectMapping
 }
 
 private protocol ResponseDescriptors {
     static func loginResponseDescriptor() -> RKResponseDescriptor
+    static func initialLoadResponseDescriptor() -> RKResponseDescriptor
+}
+
+private protocol Computatations {
+    func computeNicknameWidth()
+    func computeNicknameIfRequired()
 }
 
 public enum UserAttributes: String {
@@ -55,17 +70,32 @@ extension User: PathPatterns {
     class func loginPathPattern() -> String {
         return "users/login";
     }
+    class func initialLoadPathPattern() -> String {
+        return Team.initialLoadPathPattern()
+    }
 }
 
 // MARK: - Mappings
 extension User: Mappings {
     override class func mapping() -> RKObjectMapping {
-        let entityMapping = super.mapping()
-        entityMapping.addAttributeMappingsFromDictionary([
+        let mapping = super.mapping()
+        mapping.addAttributeMappingsFromDictionary([
             "first_name" : UserAttributes.firstName.rawValue,
             "last_name"  : UserAttributes.lastName.rawValue
             ])
-        return entityMapping
+        return mapping
+    }
+    class func directProfileMapping() -> RKObjectMapping {
+        let mapping = super.emptyMapping()
+        mapping.forceCollectionMapping = true
+        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(UserAttributes.identifier.rawValue)
+        mapping.addAttributeMappingsFromDictionary([
+            "(\(UserAttributes.identifier)).first_name" : UserAttributes.firstName.rawValue,
+            "(\(UserAttributes.identifier)).last_name" : UserAttributes.lastName.rawValue,
+            "(\(UserAttributes.identifier)).username" : UserAttributes.username.rawValue,
+            "(\(UserAttributes.identifier)).email" : UserAttributes.email.rawValue
+        ])
+        return mapping
     }
     
 }
@@ -78,5 +108,23 @@ extension User: ResponseDescriptors {
                                     pathPattern: loginPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+    }
+    class func initialLoadResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: directProfileMapping(),
+                                    method: .GET,
+                                    pathPattern: initialLoadPathPattern(),
+                                    keyPath: "direct_profiles",
+                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+    }
+}
+
+extension User: Computatations {
+    func computeNicknameIfRequired() {
+        if self.nickname == nil {
+            self.nickname = self.username
+        }
+    }
+    func computeNicknameWidth() {
+        self.nicknameWidth = StringUtils.widthOfString(self.nickname, font: UIFont.systemFontOfSize(12))
     }
 }

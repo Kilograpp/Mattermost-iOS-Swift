@@ -123,7 +123,7 @@ extension Channel: Mapping {
         mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(ChannelAttributes.identifier.rawValue)
         mapping.addAttributeMappingsFromDictionary([
             "(\(ChannelAttributes.identifier)).last_viewed_at" : ChannelAttributes.lastViewDate.rawValue
-            ])
+        ])
         return mapping
     }
 }
