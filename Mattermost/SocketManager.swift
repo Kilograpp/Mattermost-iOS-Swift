@@ -8,6 +8,16 @@
 
 import Foundation
 import Starscream
+private struct NotificationKeys {
+    static let ChannelIdentifier = "channel_id"
+    static let TeamIdentifier = "team_id"
+    static let UserIdentifier = "user_id"
+    static let Identifier = "id"
+    static let Post = "post"
+    static let Action = "action"
+    static let Properties = "props"
+    static let PendingPostIdentifier = "pending_post_id"
+}
 
 @objc class SocketManager: NSObject {
     private lazy var socket: WebSocket = {
