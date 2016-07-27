@@ -16,10 +16,17 @@ class User: RealmObject {
     dynamic var firstName: String?
     dynamic var lastName: String?
     dynamic var identifier: String?
-    dynamic var nickname: String?
-    dynamic var username: String?
-    dynamic var privateStatus: String?
-    
+    dynamic var nickname: String? {
+        didSet {
+            computeNicknameWidth()
+        }
+    }
+    dynamic var nicknameWidth: Float = 0.0
+    dynamic var username: String? {
+        didSet {
+            computeNicknameIfRequired()
+        }
+    }
     override static func indexedProperties() -> [String] {
         return [UserAttributes.identifier.rawValue]
     }
@@ -38,6 +45,9 @@ private protocol Mappings {
 
 private protocol ResponseDescriptors {
     static func loginResponseDescriptor() -> RKResponseDescriptor
+private protocol Computatations {
+    func computeNicknameWidth()
+    func computeNicknameIfRequired()
 }
 
 public enum UserAttributes: String {
@@ -78,5 +88,14 @@ extension User: ResponseDescriptors {
                                     pathPattern: loginPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+    }
+extension User: Computatations {
+    func computeNicknameIfRequired() {
+        if self.nickname == nil {
+            self.nickname = self.username
+        }
+    }
+    func computeNicknameWidth() {
+        self.nicknameWidth = StringUtils.widthOfString(self.nickname, font: UIFont.systemFontOfSize(12))
     }
 }
