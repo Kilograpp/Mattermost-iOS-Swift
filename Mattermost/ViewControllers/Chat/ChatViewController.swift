@@ -157,7 +157,7 @@ class ChatViewController: SLKTextViewController {
     }
     
     func configureInputViewButtons() -> Void {
-//        self.rightButton.titleLabel.font = [UIFont kg_semibold16Font];
+        self.rightButton.titleLabel!.font = FontBucket.feedSendButtonTitleFont;
         self.rightButton.setTitle("Send", forState: .Normal)
         self.textInputbar.rightButton.addTarget(self, action: #selector(sendPost), forControlEvents: .TouchUpInside)
 

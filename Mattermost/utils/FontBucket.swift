@@ -13,6 +13,7 @@ class FontBucket {
     
     @nonobjc static let postDateFont = FontBucket.regular13();
     @nonobjc static let postAuthorNameFont = FontBucket.semibold16();
+    @nonobjc static let feedSendButtonTitleFont = FontBucket.semibold16();
 }
 
 extension FontBucket {
@@ -29,7 +30,7 @@ extension FontBucket {
     }
 }
 
-struct FontNames {
+private struct FontNames {
     static let regular               = "SFUIText-Regular"
     static let semibold              = "SFUIText-Semibold"
     static let medium                = "SFUIText-Medium"
