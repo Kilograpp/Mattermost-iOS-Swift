@@ -16,7 +16,7 @@ class Post: RealmObject {
     dynamic var privatePendingId: String?
     dynamic var privateChannelId: String? {
         didSet {
-            computeChannel()
+//            computeChannel()
         }
     }
     dynamic var privateAuthorId: String? {

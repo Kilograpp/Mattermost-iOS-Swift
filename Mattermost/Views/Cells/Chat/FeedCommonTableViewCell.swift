@@ -105,9 +105,9 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let nameWidth = 150 as CGFloat
-        let dateWidth = 80 as CGFloat
+        //FIXME: replace with real one
+        let nameWidth = CGFloat((self.post?.author?.nicknameWidth)!) as CGFloat
+        let dateWidth = CGFloat(self.post!.createdAtStringWidth) as CGFloat
         let textWidth = UIScreen.screenWidth() - 61 as CGFloat
         
         self.messageLabel?.frame = CGRectMake(53, 36, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
