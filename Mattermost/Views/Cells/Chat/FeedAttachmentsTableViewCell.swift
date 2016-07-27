@@ -58,8 +58,8 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     
     //MARK: Private
     
-    private class func tableViewHeightWithPost:(post: Post) -> CGFloat {
-        
+    private class func tableViewHeightWithPost(post: Post) -> CGFloat {
+        return 200
     }
 
 }
@@ -72,7 +72,7 @@ extension FeedAttachmentsTableViewCell {
     }
     
     override class func heightWithPost(post: Post) -> CGFloat {
-        return CGFloat(post.attributedMessageHeight) + 44 + 8 +
+        return CGFloat(post.attributedMessageHeight) + 44 + 8 + FeedAttachmentsTableViewCell.tableViewHeightWithPost(post)
     }
 }
 
