@@ -26,6 +26,7 @@ private protocol ChannelApi {
 
 private protocol PostApi {
     func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
+    func updatePost(post: Post, completion: (error: Error?) -> Void)
 }
 
 class Api: NSObject {
@@ -137,6 +138,15 @@ extension Api: PostApi {
         }) { (error) in
             completion(error: error)
         }
+    }
+    
+    func updatePost(post: Post, completion: (error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(Post.updatePathPattern(), post)
+        self.manager.postObject(post, path: path, success: { (mappingResult) in
+            RealmUtils.save(post)
+            completion(error: nil)
+        }, failure: completion)
+        
     }
 }
 
