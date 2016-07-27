@@ -19,6 +19,13 @@ private struct NotificationKeys {
     static let PendingPostIdentifier = "pending_post_id"
 }
 
+enum ChannelAction: String {
+    case Typing = "typing"
+    case ChannelView = "channel_view"
+    case Posted = "posted"
+    case Unknown
+}
+
 @objc class SocketManager: NSObject {
     private lazy var socket: WebSocket = {
         let webSocket = WebSocket(url: Api.sharedInstance.baseURL())
