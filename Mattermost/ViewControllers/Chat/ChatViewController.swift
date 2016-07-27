@@ -21,7 +21,7 @@ class ChatViewController: SLKTextViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.setupInputBar()
+        self.configureInputBar()
         self.configureTableView()
         
         Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
@@ -140,17 +140,44 @@ class ChatViewController: SLKTextViewController {
     }
     
     
-    // MARK: - Private
+    // MARK: - Configuration
     
-    func setupInputBar() -> Void {
+    func configureInputBar() -> Void {
+        self.configureTextView()
+        self.configureInputViewButtons()
+        self.configureToolbar()
+    }
+    
+    func configureTextView() -> Void {
+        self.shouldClearTextAtRightButtonPress = false;
+        self.textView.delegate = self;
+        self.textView.placeholder = "Type something..."
+        self.textView.layer.borderWidth = 0;
+        self.textInputbar.textView.font = FontBucket.defaultFont;
+    }
+    
+    func configureInputViewButtons() -> Void {
+//        self.rightButton.titleLabel.font = [UIFont kg_semibold16Font];
+        self.rightButton.setTitle("Send", forState: .Normal)
         self.textInputbar.rightButton.addTarget(self, action: #selector(sendPost), forControlEvents: .TouchUpInside)
-        self.shouldClearTextAtRightButtonPress = false
+
+//        [self.leftButton setImage:[UIImage imageNamed:@"icn_upload"] forState:UIControlStateNormal];
+        self.leftButton.addTarget(self, action: #selector(assignPhotos), forControlEvents: .TouchUpInside)
+    }
+    
+    func configureToolbar() -> Void {
+        self.textInputbar.autoHideRightButton = false;
+        self.textInputbar.translucent = false;
+        // TODO: Code Review: Заменить на стиль из темы
+        self.textInputbar.barTintColor = UIColor.whiteColor()
     }
     
     func sendPost() -> Void {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
-            print("sent");
+            self.clearTextView()
         }
+    }
+    func assignPhotos() -> Void {
     }
 }
 
@@ -214,4 +241,12 @@ extension ChatViewController: FetchedResultsControllerDelegate {
     func controllerDidPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
 }
 
+
+// MARK: - Utils
+
+extension ChatViewController {
+    func clearTextView() -> Void {
+        self.textView.text = nil
+    }
+}
 

@@ -57,6 +57,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     func setupNameLabel() -> Void {
         self.nameLabel = UILabel.init()
         self.nameLabel!.backgroundColor = UIColor.whiteColor()
+        self.nameLabel?.font = FontBucket.postAuthorNameFont
         self.addSubview(self.nameLabel!)
         //fonts & coloring
     }
@@ -65,7 +66,8 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         self.dateLabel = UILabel.init()
         self.dateLabel!.backgroundColor = UIColor.whiteColor()
         self.addSubview(self.dateLabel!)
-        //fonts & coloring
+        self.dateLabel?.font = FontBucket.postDateFont
+        self.dateLabel?.textColor = UIColor.lightGrayColor()
     }
     
     func setupMessageLabel() -> Void {
@@ -73,6 +75,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         self.messageLabel!.backgroundColor = UIColor.whiteColor()
         self.messageLabel?.numberOfLines = 0;
         self.addSubview(self.messageLabel!)
+        self.configureMessageAttributedLabel()
         //fonts & coloring
         //assign closures
     }
@@ -82,17 +85,23 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     func configureAvatarImage() -> Void {
         weak var weakSelf = self
-        SDWebImageManager.sharedManager().downloadImageWithURL(self.post?.author?.avatarURL(), options: .HandleCookies, progress: nil, completed: {(image, error, cacheType, isFinished, imageUrl) in
-            weakSelf?.avatarImageView?.image = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
+        SDWebImageManager.sharedManager().downloadImageWithURL(self.post?.author?.avatarURL(),
+                                                               options: .HandleCookies,
+                                                               progress: nil,
+                   completed: {(image, error, cacheType, isFinished, imageUrl) in
+                    if (image != nil) {
+                        weakSelf?.avatarImageView?.image = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
+                    }
+                    
         })
     }
     
     func configureMessageOperation() -> Void {
+        weak var weakSelf = self
         messageDrawOperation = NSBlockOperation.init(block: {
-            //FIXME: replace with weakSelf
-            if ((self.messageDrawOperation?.cancelled)! == false) {
+            if ((weakSelf?.messageDrawOperation?.cancelled)! == false) {
                 dispatch_sync(dispatch_get_main_queue(), { 
-                    self.messageLabel?.attributedText = self.post?.attributedMessage
+                    weakSelf?.messageLabel?.attributedText = weakSelf?.post?.attributedMessage
                 })
             }
         })
@@ -110,7 +119,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        //FIXME: replace with real one
+
         let nameWidth = CGFloat((self.post?.author?.nicknameWidth)!) as CGFloat
         let dateWidth = CGFloat(self.post!.createdAtStringWidth) as CGFloat
         let textWidth = UIScreen.screenWidth() - 61 as CGFloat
@@ -121,7 +130,8 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     }
     
     override func prepareForReuse() {
-        self.avatarImageView?.image = nil
+//        self.avatarImageView?.image = nil
+        self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
         self.messageLabel?.attributedText = nil
         self.messageDrawOperation?.cancel()
     }

@@ -261,7 +261,7 @@ extension Post: Computations {
         self.createdAtString = self.createdAt!.messageTimeFormat()
     }
     private func computeCreatedAtStringWidth() {
-        self.createdAtStringWidth = StringUtils.widthOfString(self.createdAtString, font: UIFont.systemFontOfSize(12))
+        self.createdAtStringWidth = StringUtils.widthOfString(self.createdAtString, font: FontBucket.postDateFont)
     }
     private func computeAttributedString() {
         self.attributedMessage = TSMarkdownParser.sharedInstance.attributedStringFromMarkdown(self.message!)

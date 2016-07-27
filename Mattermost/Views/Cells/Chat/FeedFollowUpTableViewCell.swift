@@ -37,6 +37,7 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         self.messageLabel!.backgroundColor = UIColor.whiteColor()
         self.messageLabel?.numberOfLines = 0;
         self.addSubview(self.messageLabel!)
+        self.configureMessageAttributedLabel()
         //fonts & coloring
         //assign closures
     }

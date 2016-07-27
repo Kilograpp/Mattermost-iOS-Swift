@@ -144,7 +144,7 @@ extension User: Computatations {
         
     }
     func computeNicknameWidth() {
-        self.nicknameWidth = StringUtils.widthOfString(self.displayName, font: UIFont.systemFontOfSize(12))
+        self.nicknameWidth = StringUtils.widthOfString(self.displayName, font: FontBucket.postAuthorNameFont)
     }
     
     func computeAvatarUrl() {
