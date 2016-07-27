@@ -8,6 +8,8 @@
 
 import Foundation
 import Starscream
+import RealmSwift
+
 private struct NotificationKeys {
     static let ChannelIdentifier = "channel_id"
     static let TeamIdentifier = "team_id"
@@ -59,7 +61,7 @@ extension SocketManager: WebSocketDelegate{
         }
     }
     func websocketDidReceiveMessage(socket: Starscream.WebSocket, text: String) {
-        
+        self.handleIncomingMessage(text)
     }
 }
 
