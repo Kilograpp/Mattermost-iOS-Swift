@@ -27,9 +27,12 @@ enum ChannelAction: String {
 }
 
 @objc class SocketManager: NSObject {
+    static let sharedInstance = SocketManager()
+    
     private lazy var socket: WebSocket = {
-        let webSocket = WebSocket(url: Api.sharedInstance.baseURL())
-        webSocket.headers[Constants.Http.Headers.CookieName] = Api.sharedInstance.cookie()?.value
+        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(User.socketPathPattern()).URLWithScheme(.WSS)!)
+        webSocket.delegate = self
+        webSocket.setCookie(Api.sharedInstance.cookie())
         return webSocket
     }()
 }
