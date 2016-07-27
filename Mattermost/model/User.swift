@@ -93,6 +93,7 @@ extension User: Mappings {
             "(\(UserAttributes.identifier)).first_name" : UserAttributes.firstName.rawValue,
             "(\(UserAttributes.identifier)).last_name" : UserAttributes.lastName.rawValue,
             "(\(UserAttributes.identifier)).username" : UserAttributes.username.rawValue,
+            "(\(UserAttributes.identifier)).nickname" : UserAttributes.nickname.rawValue,
             "(\(UserAttributes.identifier)).email" : UserAttributes.email.rawValue
         ])
         return mapping
