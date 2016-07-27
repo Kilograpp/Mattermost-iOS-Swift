@@ -21,7 +21,7 @@ class Post: RealmObject {
     }
     dynamic var privateAuthorId: String? {
         didSet {
-            computeAuthor()
+//            computeAuthor()
         }
     }
     dynamic var creationDay: NSDate? {
@@ -56,13 +56,17 @@ class Post: RealmObject {
     dynamic var attributedMessageHeight: Float = 0.0
     dynamic var type: String?
     
-    dynamic var author: User?
-    dynamic var channel: Channel?
+    var author: User? {
+        return try! Realm().objectForPrimaryKey(User.self, key: self.privateAuthorId)
+    }
+    var channel: Channel? {
+        return try! Realm().objectForPrimaryKey(Channel.self, key: self.privateChannelId)
+    }
     
     let files = List<File>()
     
     override class func ignoredProperties() -> [String] {
-        return [PostAttributes.attributedMessage.rawValue]
+        return [PostAttributes.attributedMessage.rawValue, PostRelationships.author.rawValue, PostRelationships.channel.rawValue]
     }
     
     override class func primaryKey() -> String {
@@ -102,8 +106,8 @@ private protocol ResponseDescriptor {
 }
 
 private protocol Computations {
-    func computeAuthor()
-    func computeChannel()
+//    func computeAuthor()
+//    func computeChannel()
     func computePendingId()
     func computeCreatedAtString()
     func computeCreatedAtStringWidth()
@@ -270,16 +274,16 @@ extension Post: Computations {
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
-    private func computeAuthor() {
-        let user = User()
-        user.identifier = self.privateAuthorId!
-        self.author = user
-    }
-    private func computeChannel() {
-        let channel = Channel()
-        channel.identifier = self.privateChannelId!
-        self.channel = channel
-    }
+//    private func computeAuthor() {
+//        let user = User()
+//        user.identifier = self.privateAuthorId!
+//        self.author = user
+//    }
+//    private func computeChannel() {
+//        let channel = Channel()
+//        channel.identifier = self.privateChannelId!
+//        self.channel = channel
+//    }
     private func computeCreationDayString() {
         self.creationDayString = NSDateFormatter.sharedConversionSectionsDateFormatter.stringFromDate(self.creationDay!)
     }
