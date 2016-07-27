@@ -20,6 +20,15 @@
 		D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */; };
 		D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D617E6A11D46AFB900283C0A /* ChatViewController.swift */; };
 		D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */; };
+		D6330AB11D494BF9006D84F4 /* SF-UI-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AA91D494BF9006D84F4 /* SF-UI-Display-Bold.otf */; };
+		D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAA1D494BF9006D84F4 /* SF-UI-Display-Medium.otf */; };
+		D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAB1D494BF9006D84F4 /* SF-UI-Display-Regular.otf */; };
+		D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAC1D494BF9006D84F4 /* SF-UI-Text-Bold.otf */; };
+		D6330AB51D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAD1D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf */; };
+		D6330AB61D494BF9006D84F4 /* SF-UI-Text-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAE1D494BF9006D84F4 /* SF-UI-Text-Medium.otf */; };
+		D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAF1D494BF9006D84F4 /* SF-UI-Text-Regular.otf */; };
+		D6330AB81D494BF9006D84F4 /* SF-UI-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AB01D494BF9006D84F4 /* SF-UI-Text-Semibold.otf */; };
+		D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6330AB91D494CFD006D84F4 /* FontBucket.swift */; };
 		D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A31D47E99C0014C831 /* WebImage.framework */; };
 		D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */; };
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
@@ -95,6 +104,15 @@
 		D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftFetchedResultsController.framework; path = Carthage/Build/iOS/SwiftFetchedResultsController.framework; sourceTree = "<group>"; };
 		D617E6A11D46AFB900283C0A /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatViewController.swift; path = ViewControllers/Chat/ChatViewController.swift; sourceTree = "<group>"; };
 		D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RBQFetchedResultsController.framework; path = Carthage/Build/iOS/RBQFetchedResultsController.framework; sourceTree = "<group>"; };
+		D6330AA91D494BF9006D84F4 /* SF-UI-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Display-Bold.otf"; path = "resoureces/fonts/SF-UI-Display-Bold.otf"; sourceTree = "<group>"; };
+		D6330AAA1D494BF9006D84F4 /* SF-UI-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Display-Medium.otf"; path = "resoureces/fonts/SF-UI-Display-Medium.otf"; sourceTree = "<group>"; };
+		D6330AAB1D494BF9006D84F4 /* SF-UI-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Display-Regular.otf"; path = "resoureces/fonts/SF-UI-Display-Regular.otf"; sourceTree = "<group>"; };
+		D6330AAC1D494BF9006D84F4 /* SF-UI-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Bold.otf"; path = "resoureces/fonts/SF-UI-Text-Bold.otf"; sourceTree = "<group>"; };
+		D6330AAD1D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-LightItalic.otf"; path = "resoureces/fonts/SF-UI-Text-LightItalic.otf"; sourceTree = "<group>"; };
+		D6330AAE1D494BF9006D84F4 /* SF-UI-Text-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Medium.otf"; path = "resoureces/fonts/SF-UI-Text-Medium.otf"; sourceTree = "<group>"; };
+		D6330AAF1D494BF9006D84F4 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Regular.otf"; path = "resoureces/fonts/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
+		D6330AB01D494BF9006D84F4 /* SF-UI-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Semibold.otf"; path = "resoureces/fonts/SF-UI-Text-Semibold.otf"; sourceTree = "<group>"; };
+		D6330AB91D494CFD006D84F4 /* FontBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontBucket.swift; sourceTree = "<group>"; };
 		D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentsTableViewCell.swift; path = Views/Cells/Chat/FeedAttachmentsTableViewCell.swift; sourceTree = "<group>"; };
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedFollowUpTableViewCell.swift; path = Views/Cells/Chat/FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
@@ -194,6 +212,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				D6330AA71D494BE2006D84F4 /* resoureces */,
 				D6E165831D47C0890014C831 /* Views */,
 				D617E69B1D46AEF000283C0A /* ViewControllers */,
 				D8812AE81D43931700436B5C /* Classes */,
@@ -243,6 +262,7 @@
 				D8087AE41D416FDB001918E8 /* MappingUtils.swift */,
 				D8087AF01D428FF1001918E8 /* StringUtils.swift */,
 				D6E165801D47539E0014C831 /* PostUtils.swift */,
+				D6330AB91D494CFD006D84F4 /* FontBucket.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -299,6 +319,29 @@
 				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
 			);
 			name = Chat;
+			sourceTree = "<group>";
+		};
+		D6330AA71D494BE2006D84F4 /* resoureces */ = {
+			isa = PBXGroup;
+			children = (
+				D6330AA81D494BEA006D84F4 /* fonts */,
+			);
+			name = resoureces;
+			sourceTree = "<group>";
+		};
+		D6330AA81D494BEA006D84F4 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				D6330AA91D494BF9006D84F4 /* SF-UI-Display-Bold.otf */,
+				D6330AAA1D494BF9006D84F4 /* SF-UI-Display-Medium.otf */,
+				D6330AAB1D494BF9006D84F4 /* SF-UI-Display-Regular.otf */,
+				D6330AAC1D494BF9006D84F4 /* SF-UI-Text-Bold.otf */,
+				D6330AAD1D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf */,
+				D6330AAE1D494BF9006D84F4 /* SF-UI-Text-Medium.otf */,
+				D6330AAF1D494BF9006D84F4 /* SF-UI-Text-Regular.otf */,
+				D6330AB01D494BF9006D84F4 /* SF-UI-Text-Semibold.otf */,
+			);
+			name = fonts;
 			sourceTree = "<group>";
 		};
 		D6E165831D47C0890014C831 /* Views */ = {
@@ -463,8 +506,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */,
 				9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */,
+				D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */,
+				D6330AB81D494BF9006D84F4 /* SF-UI-Text-Semibold.otf in Resources */,
+				D6330AB51D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf in Resources */,
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
+				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
+				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
+				D6330AB61D494BF9006D84F4 /* SF-UI-Text-Medium.otf in Resources */,
+				D6330AB11D494BF9006D84F4 /* SF-UI-Display-Bold.otf in Resources */,
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -567,6 +618,7 @@
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
+				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
