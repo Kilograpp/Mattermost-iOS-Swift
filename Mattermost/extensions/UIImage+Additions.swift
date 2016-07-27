@@ -8,7 +8,7 @@
 import Foundation
 
 extension UIImage {
-    func roundedImageOfSize(sourceImage: UIImage, size: CGSize) -> UIImage {
+    class func roundedImageOfSize(sourceImage: UIImage, size: CGSize) -> UIImage {
         let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height) as CGRect
         UIGraphicsBeginImageContextWithOptions(size, true, 0);
         let context = UIGraphicsGetCurrentContext()! as CGContextRef

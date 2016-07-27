@@ -120,7 +120,6 @@ private protocol Support {
     static func filesLinkPath() -> String
     static func teamIdentifierPath() -> String
     static func channelIdentifierPath() -> String
-    func unarchiveAttributedMessageFromData() -> NSAttributedString
 }
 
 public enum PostAttributes: String {
@@ -206,7 +205,6 @@ extension Post: RequestMapping {
             ])
         return mapping
     }
-    
 }
 
 

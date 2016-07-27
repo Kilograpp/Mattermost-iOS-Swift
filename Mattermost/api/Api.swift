@@ -1,3 +1,4 @@
+
 //
 // Created by Maxim Gubin on 28/06/16.
 // Copyright (c) 2016 Kilograpp. All rights reserved.
@@ -82,6 +83,7 @@ extension Api: TeamApi {
         self.manager.getObject(path: path, success: { (mappingResult) in
             let teams = MappingUtils.fetchAllTeams(mappingResult)
             let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
+            users.forEach{ $0.computeDisplayName()}
             Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
             RealmUtils.save(teams)
             RealmUtils.save(users)

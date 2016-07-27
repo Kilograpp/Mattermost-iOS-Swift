@@ -9,6 +9,7 @@
 import ActiveLabel
 import WebImage
 
+
 class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     var avatarImageView : UIImageView?
     var nameLabel : UILabel?
@@ -49,6 +50,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         self.avatarImageView?.backgroundColor = UIColor.whiteColor()
         self.avatarImageView?.contentMode = .ScaleAspectFill
         self.addSubview(self.avatarImageView!)
+        self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
         //add gesture recognizer
     }
     
@@ -79,7 +81,10 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     //MARK: Configuration
     
     func configureAvatarImage() -> Void {
-        self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
+        weak var weakSelf = self
+        SDWebImageManager.sharedManager().downloadImageWithURL(self.post?.author?.avatarURL(), options: .HandleCookies, progress: nil, completed: {(image, error, cacheType, isFinished, imageUrl) in
+            weakSelf?.avatarImageView?.image = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
+        })
     }
     
     func configureMessageOperation() -> Void {
@@ -96,7 +101,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     }
     
     func configureBasicLabels() -> Void {
-        self.nameLabel?.text = self.post?.author?.nickname
+        self.nameLabel?.text = self.post?.author?.displayName
         self.dateLabel?.text = self.post?.createdAtString
     }
     

@@ -15,13 +15,23 @@ class User: RealmObject {
     dynamic var email: String?
     dynamic var firstName: String?
     dynamic var lastName: String?
-    dynamic var identifier: String?
+    dynamic var identifier: String? {
+        didSet {
+            computeAvatarUrl()
+        }
+    }
     dynamic var nickname: String? {
+        didSet {
+           // computeNicknameWidth()
+        }
+    }
+    dynamic var nicknameWidth: Float = 0.0
+    dynamic var avatarLink: String?
+    dynamic var displayName: String? {
         didSet {
             computeNicknameWidth()
         }
     }
-    dynamic var nicknameWidth: Float = 0.0
     dynamic var username: String? {
         didSet {
             computeNicknameIfRequired()
@@ -32,6 +42,10 @@ class User: RealmObject {
     }
     override static func primaryKey() -> String? {
         return UserAttributes.identifier.rawValue
+    }
+    
+    func avatarURL() -> NSURL {
+        return NSURL.init(string: self.avatarLink!)!
     }
 }
 
@@ -52,6 +66,8 @@ private protocol ResponseDescriptors {
 
 private protocol Computatations {
     func computeNicknameWidth()
+    func computeDisplayName()
+    func computeAvatarUrl()
     func computeNicknameIfRequired()
 }
 
@@ -64,6 +80,7 @@ public enum UserAttributes: String {
     case nickname = "nickname"
     case status = "status"
     case username = "username"
+    case avatarLink = "avatarLink"
 }
 
 extension User: PathPatterns {
@@ -124,8 +141,26 @@ extension User: Computatations {
         if self.nickname == nil {
             self.nickname = self.username
         }
+        
     }
     func computeNicknameWidth() {
-        self.nicknameWidth = StringUtils.widthOfString(self.nickname, font: UIFont.systemFontOfSize(12))
+        self.nicknameWidth = StringUtils.widthOfString(self.displayName, font: UIFont.systemFontOfSize(12))
+    }
+    
+    func computeAvatarUrl() {
+        self.avatarLink = "https://mattermost.kilograpp.com/api/v3/users/\(self.identifier!)/image" as String
+    }
+    
+    func computeDisplayName() {
+        if (self.nickname?.characters.count == 0) {
+            //FIXME: username > nickname
+            self.displayName = self.username
+        } else {
+            self.displayName = "\(self.firstName) \(self.lastName)"
+        }
+        
+        if self.identifier == "yjxn1ak5ab8qjciow719f515ry" {
+            print("e3424")
+        }
     }
 }

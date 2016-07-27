@@ -11,10 +11,6 @@ import RealmSwift
 import UITableView_Cache
 import SwiftFetchedResultsController
 
-private protocol Helpers {
-    func postsHaveSameAuthor(post1: Post, post2: Post) -> Bool
-}
-
 class ChatViewController: SLKTextViewController {
     private var channel : Channel?
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
@@ -31,10 +27,13 @@ class ChatViewController: SLKTextViewController {
         Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
         Api.sharedInstance.login("getmaxx@kilograpp.com", password: "102Aky5i") { (error) in
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
+                print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
                 Api.sharedInstance.loadChannels(with: { (error) in
+                    print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
                     self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
                     self.title = self.channel?.displayName
                     Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+                        print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
                         self.fetchedResultsController = self.realmFetchedResultsController()
                         self.tableView?.reloadData()
                     })
