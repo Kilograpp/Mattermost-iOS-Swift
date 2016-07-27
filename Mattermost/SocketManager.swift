@@ -79,3 +79,45 @@ extension SocketManager: StateControl {
         return !self.socket.isConnected
     }
 }
+
+
+extension SocketManager {
+    func postExistsWithIdentifier(identifier: String, pendingIdentifier: String) -> Bool {
+        let realm = try! Realm()
+        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.privatePendingId.rawValue, pendingIdentifier)
+        return realm.objects(Post).filter(predicate).first != nil
+    }
+    private func handleIncomingMessage(text: String) {
+        let dictionary = text.toDictionary()!
+        let userId     = dictionary[NotificationKeys.UserIdentifier] as! String
+        let action     = dictionary[NotificationKeys.Action] as! String
+        let channelId  = dictionary[NotificationKeys.ChannelIdentifier] as! String
+        let postString = dictionary[NotificationKeys.Properties]![NotificationKeys.Post] as? NSString
+        
+        if let postDictionary = postString?.toDictionary() {
+            let postPendingIdentifier = postDictionary[NotificationKeys.PendingPostIdentifier] as! String
+            let postIdentifier = postDictionary[NotificationKeys.Identifier] as! String
+            if !postExistsWithIdentifier(postIdentifier, pendingIdentifier: postPendingIdentifier) {
+                
+                let post = Post()
+                post.identifier = (postDictionary[NotificationKeys.Identifier] as! String)
+                post.privateChannelId = channelId
+                
+                Api.sharedInstance.updatePost(post, completion: { (error) in
+                    self.notifyWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action))
+                })
+            }
+        } else {
+            notifyWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action))
+        }
+
+    }
+    
+    private func notifyWithChannelIdentifier(channelIdentifier: String!, userIdentifier: String!, action: ChannelAction!) {
+        let notificationName = ActionsNotification.notificationNameForChannelIdentifier(channelIdentifier)
+        let notification = ActionsNotification(userIdentifier: userIdentifier, action: action)
+        NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: notification)
+        
+    }
+}
+
