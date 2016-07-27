@@ -11,6 +11,10 @@ import RealmSwift
 import UITableView_Cache
 import SwiftFetchedResultsController
 
+private protocol Helpers {
+    func postsHaveSameAuthor(post1: Post, post2: Post) -> Bool
+}
+
 class ChatViewController: SLKTextViewController {
     private var channel : Channel?
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
@@ -68,15 +72,29 @@ class ChatViewController: SLKTextViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCellWithIdentifier(FeedFollowUpTableViewCell.reuseIdentifier()) as! FeedFollowUpTableViewCell
-//        let cell = tableView.dequeueReusableCellWithIdentifier(FeedAttachmentsTableViewCell.reuseIdentifier()) as! FeedAttachmentsTableViewCell
-        let cell = tableView.dequeueReusableCellWithIdentifier(FeedCommonTableViewCell.reuseIdentifier()) as! FeedCommonTableViewCell
-        
-        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
-        cell.transform = tableView.transform
-        cell.configureWithPost(post)
-        
-        return cell
+        if (tableView.isEqual(self.tableView)) {
+            let prevIndexPath = NSIndexPath(forRow: indexPath.row + 1, inSection: indexPath.section) as NSIndexPath
+            let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
+            let prevPost = self.fetchedResultsController.objectAtIndexPath(prevIndexPath) as Post?
+            
+            var reuseIdentifier : String!
+            
+            if (prevPost != nil && post.hasSameAuthor(prevPost)) {
+                reuseIdentifier = post.hasAttachments() ? FeedAttachmentsTableViewCell.reuseIdentifier() : FeedFollowUpTableViewCell.reuseIdentifier()
+            } else {
+                reuseIdentifier = post.hasAttachments() ? FeedAttachmentsTableViewCell.reuseIdentifier() : FeedCommonTableViewCell.reuseIdentifier()
+            }
+            
+            let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedTableViewCellProtocol
+            (cell as! UITableViewCell).transform = tableView.transform
+            cell.configureWithPost(post)
+            
+            return cell as! UITableViewCell
+        } else {
+            let cell = tableView.dequeueReusableCellWithIdentifier(FeedCommonTableViewCell.reuseIdentifier()) as! FeedCommonTableViewCell
+            cell.backgroundColor = UIColor.redColor()
+            return cell
+        }
     }
     
     
@@ -91,11 +109,19 @@ class ChatViewController: SLKTextViewController {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
-        
-        return FeedCommonTableViewCell.heightWithPost(post)
-//        return FeedFollowUpTableViewCell.heightWithPost(post)
-//        return FeedAttachmentsTableViewCell.heightWithPost(post)
+        if (tableView.isEqual(self.tableView)) {
+            let prevIndexPath = NSIndexPath(forRow: indexPath.row + 1, inSection: indexPath.section) as NSIndexPath
+            let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
+            let prevPost = self.fetchedResultsController.objectAtIndexPath(prevIndexPath) as Post?
+            
+            if (prevPost != nil && post.hasSameAuthor(prevPost)) {
+                return post.hasAttachments() ? FeedAttachmentsTableViewCell.heightWithPost(post) : FeedFollowUpTableViewCell.heightWithPost(post)
+            } else {
+                return post.hasAttachments() ? FeedAttachmentsTableViewCell.heightWithPost(post) : FeedCommonTableViewCell.heightWithPost(post)
+            }
+        } else {
+            return 0
+        }
     }
 
     
@@ -188,4 +214,5 @@ extension ChatViewController: FetchedResultsControllerDelegate {
     func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
     func controllerDidPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
 }
+
 
