@@ -219,7 +219,7 @@ extension Post: ResponseDescriptor {
         return RKResponseDescriptor(mapping: listMapping(),
                                     method: .GET,
                                     pathPattern: updatePathPattern(),
-                                    keyPath: nil,
+                                    keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
 }
