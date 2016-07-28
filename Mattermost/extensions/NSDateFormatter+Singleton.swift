@@ -13,7 +13,11 @@ extension NSDateFormatter {
     
     private static func conversionSectionsDateFormatter() -> NSDateFormatter! {
         let formatter = NSDateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        formatter.dateFormat = "MMM dd,yyyy"
         return formatter
+    }
+    
+    func formattedDateForFeedSection(date: NSDate) -> String {
+        return date.formattedDateWithFormat("MMM dd,yyyy", locale: NSLocale.init(localeIdentifier: "en_US_POSIX"))
     }
 }

@@ -32,6 +32,7 @@
 		D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A31D47E99C0014C831 /* WebImage.framework */; };
 		D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */; };
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
+		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* BaseTableViewCell.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
@@ -115,6 +116,7 @@
 		D6330AB91D494CFD006D84F4 /* FontBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontBucket.swift; sourceTree = "<group>"; };
 		D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentsTableViewCell.swift; path = Views/Cells/Chat/FeedAttachmentsTableViewCell.swift; sourceTree = "<group>"; };
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedFollowUpTableViewCell.swift; path = Views/Cells/Chat/FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
+		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Views/TableSectionHeaders/Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D6E165861D47C1200014C831 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewCell.swift; path = Views/Cells/BaseTableViewCell.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedBaseTableViewCell.swift; path = Views/Cells/Chat/FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -344,9 +346,26 @@
 			name = fonts;
 			sourceTree = "<group>";
 		};
+		D65626661D49674700981057 /* TableSectionHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				D65626671D49675C00981057 /* Feed */,
+			);
+			name = TableSectionHeaders;
+			sourceTree = "<group>";
+		};
+		D65626671D49675C00981057 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */,
+			);
+			name = Feed;
+			sourceTree = "<group>";
+		};
 		D6E165831D47C0890014C831 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D65626661D49674700981057 /* TableSectionHeaders */,
 				D6E165841D47C08F0014C831 /* Cells */,
 			);
 			name = Views;
@@ -630,6 +649,7 @@
 				9B822F3066402356ECA5C1C9 /* ViewController.swift in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
+				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
 				D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,

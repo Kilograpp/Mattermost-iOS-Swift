@@ -55,18 +55,18 @@ class ChatViewController: SLKTextViewController {
         self.tableView!.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
         self.tableView!.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
         self.tableView!.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 10)
+        
+        self.tableView?.registerClass(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
     
     
     // MARK: - UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        
         return self.fetchedResultsController.numberOfSections()
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return self.fetchedResultsController.numberOfRowsForSectionIndex(section)
     }
     
@@ -99,12 +99,31 @@ class ChatViewController: SLKTextViewController {
     
     // MARK: - UITableViewDelegate
     
-    override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return self.fetchedResultsController.titleForHeaderInSection(section)
+//    override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+//        return self.fetchedResultsController.titleForHeaderInSection(section)
+//    }
+    
+//    override func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+//        view.transform = tableView.transform
+//    }
+    
+    override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(FeedTableViewSectionHeader.reuseIdentifier()) as! FeedTableViewSectionHeader
+        let frcTitleForHeader = self.fetchedResultsController.titleForHeaderInSection(section) as String
+        let titleDate = NSDateFormatter.sharedConversionSectionsDateFormatter.dateFromString(frcTitleForHeader)! as NSDate
+        let titleString = titleDate.feedSectionDateFormat()
+        view.configureWithTitle(titleString)
+        view.transform = tableView.transform
+        
+        return view
     }
     
-    override func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        view.transform = tableView.transform
+    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return FeedTableViewSectionHeader.height()
+    }
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return CGFloat.min
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
