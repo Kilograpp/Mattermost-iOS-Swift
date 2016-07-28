@@ -52,6 +52,7 @@ extension ApplicationStateManager: NotificationsSubscription {
 extension ApplicationStateManager: ApplicationDelegate {
     @objc func applicationDidEnterBackground() {
         SocketManager.sharedInstance.disconnect()
+        Preferences.sharedInstance.save()
     }
     
     @objc func applicationDidBecomeActive() {
