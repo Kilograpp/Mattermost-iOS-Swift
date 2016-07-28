@@ -20,16 +20,12 @@ class User: RealmObject {
             computeAvatarUrl()
         }
     }
-    dynamic var nickname: String? {
-        didSet {
-           // computeNicknameWidth()
-        }
-    }
-    dynamic var nicknameWidth: Float = 0.0
+    dynamic var nickname: String?
+    dynamic var displayNameWidth: Float = 0.0
     dynamic var avatarLink: String?
     dynamic var displayName: String? {
         didSet {
-            computeNicknameWidth()
+            computeDisplayNameWidth()
         }
     }
     dynamic var username: String? {
@@ -45,7 +41,7 @@ class User: RealmObject {
     }
     
     func avatarURL() -> NSURL {
-        return NSURL.init(string: self.avatarLink!)!
+        return NSURL(string: self.avatarLink!)!
     }
 }
 
@@ -66,7 +62,7 @@ private protocol ResponseDescriptors {
 }
 
 private protocol Computatations {
-    func computeNicknameWidth()
+    func computeDisplayNameWidth()
     func computeDisplayName()
     func computeAvatarUrl()
     func computeNicknameIfRequired()
@@ -102,8 +98,10 @@ extension User: Mappings {
         let mapping = super.mapping()
         mapping.addAttributeMappingsFromDictionary([
             "first_name" : UserAttributes.firstName.rawValue,
-            "last_name"  : UserAttributes.lastName.rawValue
-            ])
+            "last_name"  : UserAttributes.lastName.rawValue,
+            "username"   : UserAttributes.username.rawValue,
+            "nickname"   : UserAttributes.nickname.rawValue
+        ])
         return mapping
     }
     class func directProfileMapping() -> RKObjectMapping {
@@ -147,8 +145,8 @@ extension User: Computatations {
         }
         
     }
-    func computeNicknameWidth() {
-        self.nicknameWidth = StringUtils.widthOfString(self.displayName, font: FontBucket.postAuthorNameFont)
+    func computeDisplayNameWidth() {
+        self.displayNameWidth = StringUtils.widthOfString(self.displayName, font: FontBucket.postAuthorNameFont)
     }
     
     func computeAvatarUrl() {
@@ -156,15 +154,10 @@ extension User: Computatations {
     }
     
     func computeDisplayName() {
-        if (self.nickname?.characters.count == 0) {
-            //FIXME: username > nickname
+        if StringUtils.isEmpty(self.nickname) {
             self.displayName = self.username
         } else {
-            self.displayName = "\(self.firstName) \(self.lastName)"
-        }
-        
-        if self.identifier == "yjxn1ak5ab8qjciow719f515ry" {
-            print("e3424")
+            self.displayName = self.nickname
         }
     }
 }
