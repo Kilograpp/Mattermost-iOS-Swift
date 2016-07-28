@@ -23,6 +23,7 @@ struct Constants {
     struct Common {
         static let RestKitPrefix = "RK"
         static let MattermostCookieName = "MMAUTHTOKEN"
+        static let UserDefaultsPreferencesKey = "com.kilograpp.mattermost.preferences"
     }
     struct Socket {
         static let TimeIntervalBetweenNotifications: Double = 5.0
