@@ -52,6 +52,7 @@ class ChatViewController: SLKTextViewController {
     func configureTableView() -> Void {
         self.tableView?.separatorStyle = .None
         self.tableView?.keyboardDismissMode = .OnDrag
+        self.tableView?.backgroundColor = ColorBucket.whiteColor
         self.tableView!.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
         self.tableView!.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
         self.tableView!.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 10)
@@ -87,6 +88,7 @@ class ChatViewController: SLKTextViewController {
             let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedTableViewCellProtocol
             (cell as! UITableViewCell).transform = tableView.transform
             cell.configureWithPost(post)
+            (cell as! UITableViewCell).selectionStyle = .None
             
             return cell as! UITableViewCell
         } else {
