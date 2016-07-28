@@ -72,6 +72,7 @@ extension Api: UserApi {
             let user = mappingResult.firstObject as! User
             DataManager.sharedInstance.currentUser = user
             RealmUtils.save(user)
+            SocketManager.sharedInstance.setNeedsConnect()
             completion(error: nil)
             }, failure: completion)
     }
