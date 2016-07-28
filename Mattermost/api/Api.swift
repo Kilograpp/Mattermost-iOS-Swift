@@ -8,6 +8,7 @@ import Foundation
 import RealmSwift
 
 private protocol Interface {
+    func isSignedIn() -> Bool
     func baseURL() -> NSURL!
     func cookie() -> NSHTTPCookie?
 }
@@ -156,5 +157,8 @@ extension Api: Interface {
     }
     func cookie() -> NSHTTPCookie? {
         return NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies?.filter { $0.name == Constants.Common.MattermostCookieName }.first
+    }
+    func isSignedIn() -> Bool {
+        return self.cookie() != nil
     }
 }
