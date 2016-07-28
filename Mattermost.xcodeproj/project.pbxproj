@@ -75,10 +75,10 @@
 		D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8812C341D476EB800436B5C /* Starscream.framework */; };
 		D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C361D47D69B00436B5C /* WebSocket+Cookies.swift */; };
 		D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C381D47DDDA00436B5C /* String+Json.swift */; };
-		D8A0969A1D23378F00B76E1A /* NSObject+Runtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A096991D23378F00B76E1A /* NSObject+Runtime.swift */; };
 		D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969B1D233CB400B76E1A /* Preferences.swift */; };
 		D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969D1D23E4FA00B76E1A /* Constants.swift */; };
 		D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */; };
+		D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */; };
 		D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */; };
 		D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */; };
 		D8E98EDF1D4A15D300682922 /* ApplicationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */; };
@@ -167,16 +167,16 @@
 		D8812AEB1D44141100436B5C /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		D8812AED1D44149B00436B5C /* FileExternal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileExternal.swift; sourceTree = "<group>"; };
 		D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDateFormatter+Singleton.swift"; sourceTree = "<group>"; };
-		D8812C2E1D46D32E00436B5C /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		D8812C301D46D54F00436B5C /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
 		D8812C321D476DD400436B5C /* NSURL+Scheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+Scheme.swift"; sourceTree = "<group>"; };
 		D8812C341D476EB800436B5C /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		D8812C361D47D69B00436B5C /* WebSocket+Cookies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WebSocket+Cookies.swift"; sourceTree = "<group>"; };
 		D8812C381D47DDDA00436B5C /* String+Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Json.swift"; sourceTree = "<group>"; };
-		D8A096991D23378F00B76E1A /* NSObject+Runtime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Runtime.swift"; sourceTree = "<group>"; };
 		D8A0969B1D233CB400B76E1A /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		D8A0969D1D23E4FA00B76E1A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKValueTransformer+Milliseconds.swift"; sourceTree = "<group>"; };
+		D8B846B21D4A38D500AEE19A /* NSObject+EnumerateProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+EnumerateProperties.h"; sourceTree = "<group>"; };
+		D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+EnumerateProperties.m"; sourceTree = "<group>"; };
 		D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionsNotification.swift; sourceTree = "<group>"; };
 		D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Json.swift"; sourceTree = "<group>"; };
 		D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationStateManager.swift; sourceTree = "<group>"; };
@@ -306,7 +306,6 @@
 		9B822BE6333BBEF83F57C819 /* extensions */ = {
 			isa = PBXGroup;
 			children = (
-				D8A096991D23378F00B76E1A /* NSObject+Runtime.swift */,
 				D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */,
 				D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */,
 				D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */,
@@ -433,6 +432,8 @@
 			children = (
 				D8436E6F1D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.h */,
 				D8436E701D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m */,
+				D8B846B21D4A38D500AEE19A /* NSObject+EnumerateProperties.h */,
+				D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */,
 			);
 			name = objc_categories;
 			sourceTree = "<group>";
@@ -680,6 +681,7 @@
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
+				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
@@ -703,7 +705,6 @@
 				D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
 				D8087AE91D42808C001918E8 /* FileLocal.swift in Sources */,
-				D8A0969A1D23378F00B76E1A /* NSObject+Runtime.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
