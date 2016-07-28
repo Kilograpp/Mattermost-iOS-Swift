@@ -35,7 +35,7 @@ class Api: NSObject {
     private var _managerCache: ObjectManager?
     private var manager: ObjectManager  {
         if _managerCache == nil {
-            _managerCache = ObjectManager(baseURL: self.baseUrl())
+            _managerCache = ObjectManager(baseURL: self.computeAndReturnApiRootUrl())
             _managerCache!.HTTPClient.setDefaultHeader(Constants.Http.Headers.RequestedWith, value: "XMLHttpRequest")
             _managerCache!.HTTPClient.setDefaultHeader(Constants.Http.Headers.AcceptLanguage, value: LocaleUtils.currentLocale())
             _managerCache!.HTTPClient.setDefaultHeader(Constants.Http.Headers.ContentType, value: RKMIMETypeJSON)
@@ -57,7 +57,7 @@ class Api: NSObject {
     
     
     
-    private func baseUrl() -> NSURL! {
+    private func computeAndReturnApiRootUrl() -> NSURL! {
         return NSURL(string: Preferences.sharedInstance.serverUrl!)?.URLByAppendingPathComponent(Constants.Api.Route)
     }
 }
@@ -71,12 +71,7 @@ extension Api: UserApi {
         self.manager.postObject(path: path, parameters: parameters, success: { (mappingResult) in
             let user = mappingResult.firstObject as! User
             DataManager.sharedInstance.currentUser = user
-            
-            let realm = try! Realm()
-            try! realm.write({
-                realm.add(user, update: true)
-            })
-            
+            RealmUtils.save(user)
             completion(error: nil)
             }, failure: completion)
     }
