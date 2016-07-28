@@ -139,8 +139,8 @@ extension Api: PostApi {
     
     func updatePost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(Post.updatePathPattern(), post)
-        self.manager.postObject(post, path: path, success: { (mappingResult) in
-            RealmUtils.save(post)
+        self.manager.getObject(post, path: path, success: { (mappingResult) in
+            RealmUtils.save(MappingUtils.fetchPostFromUpdate(mappingResult))
             completion(error: nil)
         }, failure: completion)
         
