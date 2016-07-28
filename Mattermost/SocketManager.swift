@@ -42,6 +42,7 @@ enum ChannelAction: String {
     case Typing = "typing"
     case ChannelView = "channel_viewed"
     case Posted = "posted"
+    case UserAdded = "user_added"
     case Unknown
 }
 
@@ -66,7 +67,9 @@ private protocol MessageHandling {
 
 // MARK: - WebSocket Delegate
 extension SocketManager: WebSocketDelegate{
-    func websocketDidConnect(socket: WebSocket) {}
+    func websocketDidConnect(socket: WebSocket) {
+        print("Socket did connect")
+    }
     func websocketDidReceiveData(socket: Starscream.WebSocket, data: NSData) {}
     func websocketDidDisconnect(socket: Starscream.WebSocket, error: NSError?) {
         if error != nil {
@@ -111,15 +114,14 @@ extension SocketManager: MessageHandling {
                 
                 let post = Post()
                 post.identifier = (postDictionary[NotificationKeys.Identifier] as! String)
-//                post.privateChannelId = channelId
-                post.channel = try! Realm().objectForPrimaryKey(Channel.self, key: channelId)
+                post.privateChannelId = channelId
                 
                 Api.sharedInstance.updatePost(post, completion: { (error) in
                     self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action)!)
                 })
             }
         } else {
-            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action)!)
+            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action) ?? ChannelAction.Unknown)
         }
 
     }
@@ -139,6 +141,9 @@ extension SocketManager: Notifications {
     }
     
     private func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: ChannelAction) {
+        guard action != ChannelAction.Unknown else {
+            return
+        }
         let notificationName = ActionsNotification.notificationNameForChannelIdentifier(channelIdentifier)
         let notification = ActionsNotification(userIdentifier: userIdentifier, action: action)
         NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: notification)
@@ -148,7 +153,7 @@ extension SocketManager: Notifications {
 //MARK: - State Control
 extension SocketManager: StateControl {
     private func shouldConnect() -> Bool{
-        return !self.socket.isConnected && Api.sharedInstance.isSignedIn()
+        return Api.sharedInstance.isSignedIn() && !self.socket.isConnected
     }
     private func shouldSendNotification() -> Bool {
         let date = NSDate()
