@@ -8,36 +8,53 @@
 
 import Foundation
 
-class FontBucket {
-    @nonobjc static let defaultFont = FontBucket.regular15();
-    
-    @nonobjc static let postDateFont = FontBucket.regular13();
-    @nonobjc static let postAuthorNameFont = FontBucket.semibold16();
-    @nonobjc static let feedSendButtonTitleFont = FontBucket.semibold16();
+private protocol PostFonts {
+    static var messageFont: UIFont {get}
+    static var postDateFont: UIFont {get}
+    static var postAuthorNameFont: UIFont {get}
 }
 
+private protocol FeedFonts {
+    static var feedSendButtonTitleFont: UIFont {get}
+    static var inputTextViewFont: UIFont {get}
+    static var sectionTitleFont: UIFont {get}
+}
+
+class FontBucket {
+}
+
+extension FontBucket : PostFonts {
+     static let messageFont = FontBucket.regularFontOfSize(15)
+     static let postDateFont = FontBucket.regularFontOfSize(13)
+     static let postAuthorNameFont = FontBucket.semiboldFontOfSize(16)
+}
+
+extension FontBucket : FeedFonts {
+    static let feedSendButtonTitleFont = FontBucket.semiboldFontOfSize(16)
+    static let inputTextViewFont = FontBucket.regularFontOfSize(15)
+    static let sectionTitleFont = FontBucket.semiboldFontOfSize(16)
+}
+
+//MARK: Helpers
+
 extension FontBucket {
-     private static func regular15() -> UIFont {
-        return UIFont.init(name: FontNames.regular, size: 15)!
+    private class func regularFontOfSize(size: CGFloat) -> UIFont {
+        return UIFont.init(name: FontNames.Regular, size: size)!
     }
     
-    private static func regular13() -> UIFont {
-        return UIFont.init(name: FontNames.regular, size: 13)!
-    }
-    
-    private static func semibold16() -> UIFont {
-        return UIFont.init(name: FontNames.semibold, size: 16)!
+    private class func semiboldFontOfSize(size: CGFloat) -> UIFont {
+        return UIFont.init(name: FontNames.Semibold, size: size)!
     }
 }
 
 private struct FontNames {
-    static let regular               = "SFUIText-Regular"
-    static let semibold              = "SFUIText-Semibold"
-    static let medium                = "SFUIText-Medium"
-    static let bold                  = "SFUIText-Bold"
-    static let italic                = "SFUIText-LightItalic"
-    static let regularDisplay        = "SFUIDisplay-Regular"
-    static let semiboldDisplay       = "SFUIDisplay-Semibold"
-    static let boldDisplay           = "SFUIDisplay-Bold"
-    static let mediumDisplay         = "SFUIDisplay-Medium"
+    static let Regular               = "SFUIText-Regular"
+    static let Semibold              = "SFUIText-Semibold"
+    static let Medium                = "SFUIText-Medium"
+    static let Bold                  = "SFUIText-Bold"
+    static let Italic                = "SFUIText-LightItalic"
+    static let RegularDisplay        = "SFUIDisplay-Regular"
+    static let SemiboldDisplay       = "SFUIDisplay-Semibold"
+    static let BoldDisplay           = "SFUIDisplay-Bold"
+    static let MediumDisplay         = "SFUIDisplay-Medium"
 }

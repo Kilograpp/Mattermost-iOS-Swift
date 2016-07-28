@@ -33,18 +33,19 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     
     func setupContentView() -> Void {
         self.contentView.frame = self.bounds;
-        self.contentView.backgroundColor = UIColor.whiteColor()
+        self.contentView.backgroundColor = ColorBucket.whiteColor
     }
     
     func setupTitleLabel() -> Void {
         self.titleLabel = UILabel.init()
-        self.titleLabel?.font = FontBucket.postAuthorNameFont
+        self.titleLabel?.font = FontBucket.sectionTitleFont
+        self.titleLabel?.textColor = ColorBucket.blackColor
         self.addSubview(self.titleLabel!)
     }
     
     func setupBarView() -> Void {
         self.barView = UIView.init()
-        self.barView?.backgroundColor = UIColor.grayColor()
+        self.barView?.backgroundColor = ColorBucket.grayColor
         self.addSubview(self.barView!)
     }
     
@@ -63,7 +64,7 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
         let width = CGFloat(StringUtils.widthOfString(self.title, font: FontBucket.postAuthorNameFont))// as CGFloat
         self.titleLabel!.frame = CGRectMake(UIScreen.screenWidth() - 10 - ceil(width), 5, ceil(width), 15);
         if ((self.barView) != nil) {
-            self.barView!.frame = CGRectMake(0, 10, CGRectGetMinX(self.titleLabel!.frame) - 10, 1);
+            self.barView!.frame = CGRectMake(0, 12, CGRectGetMinX(self.titleLabel!.frame) - 10, 1);
         }
         
     }

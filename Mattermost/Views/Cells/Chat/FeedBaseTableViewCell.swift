@@ -22,10 +22,10 @@ protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
 //если нужна реализация
 extension FeedTableViewCellProtocol {
     func configureMessageAttributedLabel() -> Void {
-        self.messageLabel?.URLColor = UIColor.redColor()
-        self.messageLabel?.URLSelectedColor = UIColor.redColor()
-        self.messageLabel?.mentionColor = UIColor.blueColor()
-        self.messageLabel?.mentionSelectedColor = UIColor.blueColor()
-        self.messageLabel?.hashtagColor = UIColor.greenColor()
+        self.messageLabel?.URLColor = ColorBucket.blueColor
+        self.messageLabel?.URLSelectedColor = ColorBucket.blueColor
+        self.messageLabel?.mentionColor = ColorBucket.blueColor
+        self.messageLabel?.mentionSelectedColor = ColorBucket.blueColor
+        self.messageLabel?.hashtagColor = ColorBucket.blueColor
     }
 }

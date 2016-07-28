@@ -6,4 +6,5 @@
 #import <RestKit/RestKit.h>
 #import <SOCKit.h>
 #import "NSObject+RuntimeMethodsValues.h"
+#import "HexColors.h"
 //#import <UITableView_Cache/UITableView+Cache.h>

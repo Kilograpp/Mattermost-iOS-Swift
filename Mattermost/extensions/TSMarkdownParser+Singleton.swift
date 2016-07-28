@@ -30,7 +30,8 @@ extension TSMarkdownParser {
     }
     
     private func setupDefaultAttributes() -> Void {
-        self.defaultAttributes = [NSFontAttributeName : FontBucket.defaultFont]
+        self.defaultAttributes = [NSFontAttributeName : FontBucket.messageFont,
+                                  NSForegroundColorAttributeName : ColorBucket.blackColor]
     }
     
 //    private func setupAttributes() -> Void {

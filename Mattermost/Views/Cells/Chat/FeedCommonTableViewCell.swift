@@ -47,7 +47,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     func setupAvatarImageView() -> Void {
         self.avatarImageView = UIImageView.init(frame: CGRectMake(8, 8, 40, 40))
-        self.avatarImageView?.backgroundColor = UIColor.whiteColor()
+        self.avatarImageView?.backgroundColor = ColorBucket.whiteColor
         self.avatarImageView?.contentMode = .ScaleAspectFill
         self.addSubview(self.avatarImageView!)
         self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
@@ -56,7 +56,8 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     func setupNameLabel() -> Void {
         self.nameLabel = UILabel.init()
-        self.nameLabel!.backgroundColor = UIColor.whiteColor()
+        self.nameLabel!.backgroundColor = ColorBucket.whiteColor
+        self.nameLabel?.textColor = ColorBucket.blackColor
         self.nameLabel?.font = FontBucket.postAuthorNameFont
         self.addSubview(self.nameLabel!)
         //fonts & coloring
@@ -67,12 +68,12 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         self.dateLabel!.backgroundColor = UIColor.whiteColor()
         self.addSubview(self.dateLabel!)
         self.dateLabel?.font = FontBucket.postDateFont
-        self.dateLabel?.textColor = UIColor.lightGrayColor()
+        self.dateLabel?.textColor = ColorBucket.grayColor
     }
     
     func setupMessageLabel() -> Void {
         self.messageLabel = ActiveLabel.init()
-        self.messageLabel!.backgroundColor = UIColor.whiteColor()
+        self.messageLabel!.backgroundColor = ColorBucket.whiteColor
         self.messageLabel?.numberOfLines = 0;
         self.addSubview(self.messageLabel!)
         self.configureMessageAttributedLabel()

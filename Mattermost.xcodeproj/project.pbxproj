@@ -33,6 +33,8 @@
 		D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */; };
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
 		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
+		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
+		D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B41D4A0F6400C13191 /* HexColors.m */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* BaseTableViewCell.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
@@ -117,6 +119,9 @@
 		D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentsTableViewCell.swift; path = Views/Cells/Chat/FeedAttachmentsTableViewCell.swift; sourceTree = "<group>"; };
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedFollowUpTableViewCell.swift; path = Views/Cells/Chat/FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
 		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Views/TableSectionHeaders/Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
+		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
+		D6A887B31D4A0F6400C13191 /* HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColors.h; sourceTree = "<group>"; };
+		D6A887B41D4A0F6400C13191 /* HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColors.m; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D6E165861D47C1200014C831 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewCell.swift; path = Views/Cells/BaseTableViewCell.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedBaseTableViewCell.swift; path = Views/Cells/Chat/FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -257,6 +262,7 @@
 		9B822B4660CF812873267326 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				D6A887B01D4A0A1100C13191 /* ColorBucket.swift */,
 				D8A0969B1D233CB400B76E1A /* Preferences.swift */,
 				D8A0969D1D23E4FA00B76E1A /* Constants.swift */,
 				D8436E721D26E48C00DEF464 /* LocaleUtils.swift */,
@@ -362,6 +368,15 @@
 			name = Feed;
 			sourceTree = "<group>";
 		};
+		D6A887B21D4A0F5600C13191 /* HexColors */ = {
+			isa = PBXGroup;
+			children = (
+				D6A887B31D4A0F6400C13191 /* HexColors.h */,
+				D6A887B41D4A0F6400C13191 /* HexColors.m */,
+			);
+			name = HexColors;
+			sourceTree = "<group>";
+		};
 		D6E165831D47C0890014C831 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -403,6 +418,7 @@
 		D8812AE81D43931700436B5C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D6A887B21D4A0F5600C13191 /* HexColors */,
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
 			);
 			name = Classes;
@@ -640,6 +656,7 @@
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
+				D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
@@ -665,6 +682,7 @@
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */,
+				D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */,
 				D8812AEE1D44149B00436B5C /* FileExternal.swift in Sources */,
 				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
 				D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */,

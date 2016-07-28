@@ -99,14 +99,6 @@ class ChatViewController: SLKTextViewController {
     
     // MARK: - UITableViewDelegate
     
-//    override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-//        return self.fetchedResultsController.titleForHeaderInSection(section)
-//    }
-    
-//    override func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-//        view.transform = tableView.transform
-//    }
-    
     override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(FeedTableViewSectionHeader.reuseIdentifier()) as! FeedTableViewSectionHeader
         let frcTitleForHeader = self.fetchedResultsController.titleForHeaderInSection(section) as String
@@ -172,15 +164,16 @@ class ChatViewController: SLKTextViewController {
         self.textView.delegate = self;
         self.textView.placeholder = "Type something..."
         self.textView.layer.borderWidth = 0;
-        self.textInputbar.textView.font = FontBucket.defaultFont;
+        self.textInputbar.textView.font = FontBucket.inputTextViewFont;
     }
     
     func configureInputViewButtons() -> Void {
         self.rightButton.titleLabel!.font = FontBucket.feedSendButtonTitleFont;
         self.rightButton.setTitle("Send", forState: .Normal)
-        self.textInputbar.rightButton.addTarget(self, action: #selector(sendPost), forControlEvents: .TouchUpInside)
-
-//        [self.leftButton setImage:[UIImage imageNamed:@"icn_upload"] forState:UIControlStateNormal];
+        self.rightButton.addTarget(self, action: #selector(sendPost), forControlEvents: .TouchUpInside)
+        
+        self.leftButton.setImage(UIImage.init(named: "chat_photo_icon"), forState: .Normal)
+        self.leftButton.tintColor = UIColor.grayColor()
         self.leftButton.addTarget(self, action: #selector(assignPhotos), forControlEvents: .TouchUpInside)
     }
     
