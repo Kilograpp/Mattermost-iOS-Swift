@@ -40,7 +40,7 @@ private struct NotificationKeys {
 
 enum ChannelAction: String {
     case Typing = "typing"
-    case ChannelView = "channel_view"
+    case ChannelView = "channel_viewed"
     case Posted = "posted"
     case Unknown
 }
@@ -111,7 +111,8 @@ extension SocketManager: MessageHandling {
                 
                 let post = Post()
                 post.identifier = (postDictionary[NotificationKeys.Identifier] as! String)
-                post.privateChannelId = channelId
+//                post.privateChannelId = channelId
+                post.channel = try! Realm().objectForPrimaryKey(Channel.self, key: channelId)
                 
                 Api.sharedInstance.updatePost(post, completion: { (error) in
                     self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action)!)
