@@ -10,6 +10,23 @@ import Foundation
 import Starscream
 import RealmSwift
 
+private protocol Interface {
+    func sendNotificationAboutAction(action: ChannelAction, channel: Channel)
+    func setNeedsConnect()
+    func disconnect()
+}
+
+@objc class SocketManager: NSObject {
+    static let sharedInstance = SocketManager()
+    private var lastNotificationDate: NSDate?
+    private lazy var socket: WebSocket = {
+        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(User.socketPathPattern()).URLWithScheme(.WSS)!)
+        webSocket.delegate = self
+        webSocket.setCookie(Api.sharedInstance.cookie())
+        return webSocket
+    }()
+}
+
 private struct NotificationKeys {
     static let ChannelIdentifier = "channel_id"
     static let TeamIdentifier = "team_id"
@@ -28,33 +45,29 @@ enum ChannelAction: String {
     case Unknown
 }
 
-@objc class SocketManager: NSObject {
-    static let sharedInstance = SocketManager()
-    
-    private lazy var socket: WebSocket = {
-        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(User.socketPathPattern()).URLWithScheme(.WSS)!)
-        webSocket.delegate = self
-        webSocket.setCookie(Api.sharedInstance.cookie())
-        return webSocket
-    }()
-}
-
-private protocol Interface {
-    func setNeedsConnect()
-    func disconnect()
+private protocol Notifications {
+    func publishBackendNotificationAboutAction(action: ChannelAction, channel: Channel)
+    func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: ChannelAction)
 }
 
 private protocol StateControl {
     func shouldConnect() -> Bool
+    func shouldSendNotification() -> Bool
 }
 
+private protocol Validation {
+    func postExistsWithIdentifier(identifier: String, pendingIdentifier: String) -> Bool
+}
+
+private protocol MessageHandling {
+    func handleIncomingMessage(text: String)
+}
+
+
+// MARK: - WebSocket Delegate
 extension SocketManager: WebSocketDelegate{
-    func websocketDidConnect(socket: WebSocket) {
-        
-    }
-    func websocketDidReceiveData(socket: Starscream.WebSocket, data: NSData) {
-        
-    }
+    func websocketDidConnect(socket: WebSocket) {}
+    func websocketDidReceiveData(socket: Starscream.WebSocket, data: NSData) {}
     func websocketDidDisconnect(socket: Starscream.WebSocket, error: NSError?) {
         if error != nil {
             setNeedsConnect()
@@ -65,7 +78,11 @@ extension SocketManager: WebSocketDelegate{
     }
 }
 
+// MARK: - Interface Methods
 extension SocketManager: Interface {
+    func sendNotificationAboutAction(action: ChannelAction, channel: Channel) {
+        self.publishBackendNotificationAboutAction(action, channel: channel)
+    }
     func setNeedsConnect() {
         if shouldConnect() {
             self.socket.connect()
@@ -76,19 +93,9 @@ extension SocketManager: Interface {
     }
 }
 
-extension SocketManager: StateControl {
-    private func shouldConnect() -> Bool{
-        return !self.socket.isConnected
-    }
-}
 
-
-extension SocketManager {
-    func postExistsWithIdentifier(identifier: String, pendingIdentifier: String) -> Bool {
-        let realm = try! Realm()
-        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.privatePendingId.rawValue, pendingIdentifier)
-        return realm.objects(Post).filter(predicate).first != nil
-    }
+//MARK: - Incoming Messages Handling
+extension SocketManager: MessageHandling {
     private func handleIncomingMessage(text: String) {
         let dictionary = text.toDictionary()!
         let userId     = dictionary[NotificationKeys.UserIdentifier] as! String
@@ -98,7 +105,8 @@ extension SocketManager {
         
         if let postDictionary = postString?.toDictionary() {
             let postPendingIdentifier = postDictionary[NotificationKeys.PendingPostIdentifier] as! String
-            let postIdentifier = postDictionary[NotificationKeys.Identifier] as! String
+            let postIdentifier        = postDictionary[NotificationKeys.Identifier] as! String
+            
             if !postExistsWithIdentifier(postIdentifier, pendingIdentifier: postPendingIdentifier) {
                 
                 let post = Post()
@@ -106,20 +114,56 @@ extension SocketManager {
                 post.privateChannelId = channelId
                 
                 Api.sharedInstance.updatePost(post, completion: { (error) in
-                    self.notifyWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action))
+                    self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action)!)
                 })
             }
         } else {
-            notifyWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action))
+            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action)!)
         }
 
     }
+}
+
+//MARK: - Notifications
+extension SocketManager: Notifications {
+    func publishBackendNotificationAboutAction(action: ChannelAction, channel: Channel) {
+        if shouldSendNotification() {
+            let parameters = [
+                NotificationKeys.ChannelIdentifier : channel.identifier!,
+                NotificationKeys.TeamIdentifier    : DataManager.sharedInstance.currentTeam!.identifier!,
+                NotificationKeys.Action            : action.rawValue
+            ]
+            self.socket.writeData(parameters.toJsonData()!)
+        }
+    }
     
-    private func notifyWithChannelIdentifier(channelIdentifier: String!, userIdentifier: String!, action: ChannelAction!) {
+    private func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: ChannelAction) {
         let notificationName = ActionsNotification.notificationNameForChannelIdentifier(channelIdentifier)
         let notification = ActionsNotification(userIdentifier: userIdentifier, action: action)
         NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: notification)
-        
     }
 }
 
+//MARK: - State Control
+extension SocketManager: StateControl {
+    private func shouldConnect() -> Bool{
+        return !self.socket.isConnected
+    }
+    private func shouldSendNotification() -> Bool {
+        let date = NSDate()
+        if let previousDate = self.lastNotificationDate where date.timeIntervalSinceDate(previousDate) < Constants.Socket.TimeIntervalBetweenNotifications{
+            self.lastNotificationDate = date
+            return true
+        }
+        return false
+    }
+}
+
+//MARK: - Validation
+extension SocketManager: Validation {
+    func postExistsWithIdentifier(identifier: String, pendingIdentifier: String) -> Bool {
+        let realm = try! Realm()
+        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.privatePendingId.rawValue, pendingIdentifier)
+        return realm.objects(Post).filter(predicate).first != nil
+    }
+}
