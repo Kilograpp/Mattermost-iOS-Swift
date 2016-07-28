@@ -21,15 +21,27 @@ public enum PreferencesAttributes: String {
 
 class Preferences: NSObject, NSCoding {
     static let sharedInstance = Preferences.loadInstanceFromUserDefaults() ?? Preferences()
-    var serverUrl: String?
-    var currentUserId: String?
-    var currentTeamId: String?
-    var siteName: String?
+    dynamic var serverUrl: String?
+    dynamic var currentUserId: String?
+    dynamic var currentTeamId: String?
+    dynamic var siteName: String?
     
     
     private override init() {
         super.init()
+        
+#if DEBUG // Save on every move if debugging
+        self.enumeratePropertiesWithBlock { (name, type) in
+            self.addObserver(self, forKeyPath: name, options: .New, context: nil)
+        }
+#endif
     }
+    
+#if DEBUG // Save on every move if debugging
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        self.save()
+    }
+#endif
     
     required init(coder aDecoder: NSCoder) {
         super.init()
@@ -60,6 +72,8 @@ class Preferences: NSObject, NSCoding {
             }
         }
     }
+    
+
 }
 
 private protocol Persistence {
