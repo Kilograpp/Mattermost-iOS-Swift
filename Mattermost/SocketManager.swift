@@ -72,6 +72,7 @@ extension SocketManager: WebSocketDelegate{
     }
     func websocketDidReceiveData(socket: Starscream.WebSocket, data: NSData) {}
     func websocketDidDisconnect(socket: Starscream.WebSocket, error: NSError?) {
+        print("Socket did disconnect")
         if error != nil {
             setNeedsConnect()
         }
@@ -92,7 +93,7 @@ extension SocketManager: Interface {
         }
     }
     func disconnect() {
-        socket.disconnect()
+        socket.disconnect(forceTimeout: 0)
     }
 }
 
