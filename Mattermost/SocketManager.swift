@@ -147,7 +147,7 @@ extension SocketManager: Notifications {
 //MARK: - State Control
 extension SocketManager: StateControl {
     private func shouldConnect() -> Bool{
-        return !self.socket.isConnected
+        return !self.socket.isConnected && Api.sharedInstance.isSignedIn()
     }
     private func shouldSendNotification() -> Bool {
         let date = NSDate()
