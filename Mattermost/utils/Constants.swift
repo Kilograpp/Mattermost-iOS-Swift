@@ -24,4 +24,7 @@ struct Constants {
         static let RestKitPrefix = "RK"
         static let MattermostCookieName = "MMAUTHTOKEN"
     }
+    struct Socket {
+        static let TimeIntervalBetweenNotifications: Double = 5.0
+    }
 }
