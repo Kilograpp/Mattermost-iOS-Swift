@@ -57,6 +57,7 @@
 		D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */; };
 		D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */; };
 		D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */; };
+		D8E98EDF1D4A15D300682922 /* ApplicationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */; };
 		D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6BD041D22FB49000AC690 /* Error.swift */; };
 /* End PBXBuildFile section */
 
@@ -129,6 +130,7 @@
 		D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKValueTransformer+Milliseconds.swift"; sourceTree = "<group>"; };
 		D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionsNotification.swift; sourceTree = "<group>"; };
 		D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Json.swift"; sourceTree = "<group>"; };
+		D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationStateManager.swift; sourceTree = "<group>"; };
 		D8F6BD001D22E909000AC690 /* Mattermost-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Mattermost-Bridging-Header.h"; path = "api/Mattermost-Bridging-Header.h"; sourceTree = "<group>"; };
 		D8F6BD041D22FB49000AC690 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -304,6 +306,7 @@
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
 				D8812C301D46D54F00436B5C /* SocketManager.swift */,
 				D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */,
+				D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
 				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,
+				D8E98EDF1D4A15D300682922 /* ApplicationStateManager.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
