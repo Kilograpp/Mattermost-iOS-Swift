@@ -52,6 +52,7 @@ class User: RealmObject {
 private protocol PathPatterns {
     static func loginPathPattern() -> String
     static func initialLoadPathPattern() -> String
+    static func socketPathPattern() -> String
 }
 
 private protocol Mappings {
@@ -89,6 +90,9 @@ extension User: PathPatterns {
     }
     class func initialLoadPathPattern() -> String {
         return Team.initialLoadPathPattern()
+    }
+    class func socketPathPattern() -> String {
+        return "users/websocket"
     }
 }
 

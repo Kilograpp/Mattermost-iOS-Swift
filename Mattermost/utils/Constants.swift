@@ -17,9 +17,14 @@ struct Constants {
             static let ContentType = "Content-Type"
             static let RequestedWith = "X-Requested-With"
             static let AcceptLanguage = "Accept-Language"
+            static let Cookie = "Cookie"
         }
     }
     struct Common {
         static let RestKitPrefix = "RK"
+        static let MattermostCookieName = "MMAUTHTOKEN"
+    }
+    struct Socket {
+        static let TimeIntervalBetweenNotifications: Double = 5.0
     }
 }
