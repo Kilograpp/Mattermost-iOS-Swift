@@ -154,22 +154,10 @@ extension User: Computatations {
     }
     
     func computeDisplayName() {
-//<<<<<<< HEAD
-//        if ((self.nickname?.isEmpty) != nil) {
-//            //FIXME: username > nickname
-//            self.displayName = self.username
-//        } else {
-//            self.displayName = "\(self.firstName!) \(self.lastName!)"
-//        }
-//        
-//        if self.identifier == "yjxn1ak5ab8qjciow719f515ry" {
-//            print("e3424")
-//=======
         if StringUtils.isEmpty(self.nickname) {
             self.displayName = self.username
         } else {
             self.displayName = self.nickname
-//>>>>>>> eeab83befde3e973139a244907f0255a1d21646f
         }
     }
 }
