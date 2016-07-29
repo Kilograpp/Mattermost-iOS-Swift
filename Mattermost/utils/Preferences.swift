@@ -10,6 +10,12 @@ import Foundation
 
 private protocol Interface {
     func save()
+    
+    // Debug Methods
+    func predefinedLogin() -> String?
+    func predefinedPassword() -> String?
+    func predefinedServerUrl() -> String?
+    
 }
 
 public enum PreferencesAttributes: String {
@@ -26,7 +32,6 @@ class Preferences: NSObject, NSCoding {
     dynamic var currentUserId: String?
     dynamic var currentTeamId: String?
     dynamic var siteName: String?
-    
     
     private override init() {
         super.init()
@@ -97,6 +102,20 @@ extension Preferences : Persistence {
         defaults.synchronize()
     }
 }
+extension Preferences: Interface {
+    func predefinedServerUrl() -> String? {
+        return NSProcessInfo.processInfo().environment["MM_SERVER_URL"]
+    }
+    
+    func predefinedLogin() -> String? {
+        return NSProcessInfo.processInfo().environment["MM_LOGIN"]
+    }
+    
+    func predefinedPassword() -> String? {
+        return NSProcessInfo.processInfo().environment["MM_PASSWORD"]
+    }
+}
+
 
 
 
