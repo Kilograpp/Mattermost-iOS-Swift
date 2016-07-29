@@ -17,6 +17,10 @@ private protocol TeamMethods {
     static func fetchAllTeams(mappingResult: RKMappingResult) -> [Team]
 }
 
+private protocol ChannelMethods {
+    static func fetchAllChannelsFromList(mappingResult: RKMappingResult) -> [Channel]
+}
+
 private protocol PostMethods {
     static func isLastPage(mappingResult: RKMappingResult, pageSize: Int) -> Bool
     static func fetchPosts(mappingResult: RKMappingResult) -> [Post]
@@ -65,5 +69,11 @@ extension MappingUtils: UserMethod {
             return users as! [User]
         }
         return []
+    }
+}
+
+extension MappingUtils: ChannelMethods {
+    static func fetchAllChannelsFromList(mappingResult: RKMappingResult) -> [Channel] {
+        return mappingResult.dictionary()["channels"] as! [Channel]
     }
 }
