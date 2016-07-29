@@ -8,6 +8,22 @@
 
 import Foundation
 
+
+private protocol PathPatterns {
+    static func teamIdPath() -> String
+    static func channelIdPath() -> String
+    static func pagePath() -> String
+    static func sizePath() -> String
+    static func lastPostIdPath() -> String
+}
+
+public enum PageWrapperAttributes: String {
+    case channel = "channel"
+    case page = "page"
+    case size = "size"
+    case lastPostId = "lastPostId"
+}
+
 class PageWrapper: NSObject {
     let page: Int
     let size: Int
@@ -22,9 +38,20 @@ class PageWrapper: NSObject {
     }
 }
 
-public enum PageWrapperAttributes: String {
-    case channel = "channel"
-    case page = "page"
-    case size = "size"
-    case lastPostId = "lastPostId"
+extension PageWrapper: PathPatterns {
+    static func teamIdPath() -> String {
+        return "\(PageWrapperAttributes.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
+    }
+    static func channelIdPath() -> String {
+        return "\(PageWrapperAttributes.channel).\(ChannelAttributes.identifier)"
+    }
+    static func pagePath() -> String {
+        return PageWrapperAttributes.page.rawValue
+    }
+    static func sizePath() -> String {
+        return PageWrapperAttributes.size.rawValue
+    }
+    static func lastPostIdPath() -> String {
+        return PageWrapperAttributes.lastPostId.rawValue
+    }
 }
