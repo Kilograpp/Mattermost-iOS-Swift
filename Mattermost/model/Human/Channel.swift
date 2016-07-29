@@ -61,6 +61,7 @@ public enum ChannelRelationships: String {
 
 private protocol PathPattern {
     static func listPathPattern() -> String
+    static func moreListPathPattern() -> String
     static func extraInfoPathPattern() -> String
     static func updateLastViewDatePathPattern() -> String
 }
@@ -73,6 +74,7 @@ private protocol Mapping {
 private protocol ResponseDescriptors {
     static func extraInfoResponseDescriptor() -> RKResponseDescriptor
     static func channelsListResponseDescriptor() -> RKResponseDescriptor
+    static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor
     static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor
     static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor
 }
@@ -84,8 +86,11 @@ private protocol Support {
 
 // MARK: - Path Pattern
 extension Channel: PathPattern {
+    class func moreListPathPattern() -> String {
+        return "teams/:\(TeamAttributes.identifier.rawValue)/channels/more"
+    }
     class func listPathPattern() -> String {
-        return "teams/:\(ChannelAttributes.identifier.rawValue)/channels/"
+        return "teams/:\(TeamAttributes.identifier.rawValue)/channels/"
     }
     class func extraInfoPathPattern() -> String {
         return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/extra_info"
@@ -158,6 +163,13 @@ extension Channel: ResponseDescriptors {
                                     method: .POST,
                                     pathPattern: updateLastViewDatePathPattern(),
                                     keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: mapping(),
+                                    method: .GET,
+                                    pathPattern: moreListPathPattern(),
+                                    keyPath: "channels",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
 }
