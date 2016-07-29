@@ -18,6 +18,7 @@ private protocol TeamMethods {
 }
 
 private protocol PostMethods {
+    static func isLastPage(mappingResult: RKMappingResult, pageSize: Int) -> Bool
     static func fetchPosts(mappingResult: RKMappingResult) -> [Post]
     static func fetchPostFromUpdate(mappingResult: RKMappingResult) -> Post
 }
@@ -52,6 +53,9 @@ extension MappingUtils: PostMethods {
 
     static func fetchPostFromUpdate(mappingResult: RKMappingResult) -> Post {
         return mappingResult.firstObject as! Post
+    }
+    static func isLastPage(mappingResult: RKMappingResult, pageSize: Int) -> Bool {
+        return Int(mappingResult.count) < pageSize
     }
 }
 
