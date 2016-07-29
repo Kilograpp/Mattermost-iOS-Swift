@@ -102,6 +102,7 @@ private protocol RequestMapping {
 }
 
 private protocol ResponseDescriptor {
+    static func updateResponseDescriptor() -> RKResponseDescriptor
     static func firstPageResponseDescriptor() -> RKResponseDescriptor
 }
 
@@ -213,6 +214,13 @@ extension Post: ResponseDescriptor {
         return RKResponseDescriptor(mapping: listMapping(),
                                     method: .GET,
                                     pathPattern: firstPagePathPattern(),
+                                    keyPath: "posts",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func updateResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: listMapping(),
+                                    method: .GET,
+                                    pathPattern: updatePathPattern(),
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }

@@ -19,11 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     // Override point for customization after application launch
-
-//        let post = try! Realm().objects(Post)
-//        print(post)
-        RouterUtils.loadInitialScreen(false)
         
+        self.launchApplicationStateManager()
+        RouterUtils.loadInitialScreen(false)
+
         return true
     }
 
@@ -54,6 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(application: UIApplication) {
 
+    }
+    
+    func launchApplicationStateManager() {
+        ApplicationStateManager.sharedInstance
     }
 
 

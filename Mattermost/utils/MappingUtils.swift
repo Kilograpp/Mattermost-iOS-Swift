@@ -19,6 +19,7 @@ private protocol TeamMethods {
 
 private protocol PostMethods {
     static func fetchPosts(mappingResult: RKMappingResult) -> [Post]
+    static func fetchPostFromUpdate(mappingResult: RKMappingResult) -> Post
 }
 
 private protocol UserMethod {
@@ -47,6 +48,10 @@ extension MappingUtils: TeamMethods {
 extension MappingUtils: PostMethods {
     static func fetchPosts(mappingResult: RKMappingResult) -> [Post] {
         return mappingResult.array() as! [Post]
+    }
+
+    static func fetchPostFromUpdate(mappingResult: RKMappingResult) -> Post {
+        return mappingResult.firstObject as! Post
     }
 }
 

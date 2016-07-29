@@ -9,6 +9,12 @@
 import Foundation
 
 class StringUtils {
+    static func isEmpty(string: String?) -> Bool{
+        if let unwrappedString = string {
+            return unwrappedString.isEmpty
+        }
+        return true
+    }
     static func widthOfString(string: NSString!, font: UIFont!) -> Float {
         let attributes = [NSFontAttributeName : font]
         return ceilf(Float(string.sizeWithAttributes(attributes).width))
