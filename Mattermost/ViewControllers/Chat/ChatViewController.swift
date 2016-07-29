@@ -24,22 +24,14 @@ class ChatViewController: SLKTextViewController {
         self.configureInputBar()
         self.configureTableView()
         
-        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
-        Api.sharedInstance.login("getmaxx@kilograpp.com", password: "102Aky5i") { (error) in
-            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-                print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
-                Api.sharedInstance.loadChannels(with: { (error) in
-                    print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
-                    self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
-                    self.title = self.channel?.displayName
-                    Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-                        print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
-                        self.fetchedResultsController = self.realmFetchedResultsController()
-                        self.tableView?.reloadData()
-                    })
-                })
-            })
-        }
+        self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
+        self.title = self.channel?.displayName
+        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+            //                        print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
+            self.fetchedResultsController = self.realmFetchedResultsController()
+            self.tableView?.reloadData()
+        })
+
     }
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {

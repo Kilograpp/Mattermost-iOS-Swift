@@ -33,6 +33,12 @@
 		D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */; };
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
 		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
+		D66F16C41D4A54D500BCB2C0 /* LeftMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66F16C31D4A54D500BCB2C0 /* LeftMenuViewController.swift */; };
+		D66F16C81D4A5B9400BCB2C0 /* PublicChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66F16C71D4A5B9400BCB2C0 /* PublicChannelTableViewCell.swift */; };
+		D66F16CA1D4A5BBC00BCB2C0 /* PrivateChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66F16C91D4A5BBC00BCB2C0 /* PrivateChannelTableViewCell.swift */; };
+		D68784761D4B5036005FC600 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D68784751D4B5036005FC600 /* HEXColor.framework */; };
+		D68784791D4B50E4005FC600 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D68784781D4B50E4005FC600 /* Login.storyboard */; };
+		D687847C1D4B51B0005FC600 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D687847B1D4B51B0005FC600 /* LoginViewController.swift */; };
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
 		D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B41D4A0F6400C13191 /* HexColors.m */; };
 		D6A887B71D4A18D300C13191 /* RouterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B61D4A18D300C13191 /* RouterUtils.swift */; };
@@ -120,6 +126,12 @@
 		D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentsTableViewCell.swift; path = Views/Cells/Chat/FeedAttachmentsTableViewCell.swift; sourceTree = "<group>"; };
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedFollowUpTableViewCell.swift; path = Views/Cells/Chat/FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
 		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Views/TableSectionHeaders/Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
+		D66F16C31D4A54D500BCB2C0 /* LeftMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuViewController.swift; path = ViewControllers/leftMenu/LeftMenuViewController.swift; sourceTree = "<group>"; };
+		D66F16C71D4A5B9400BCB2C0 /* PublicChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PublicChannelTableViewCell.swift; path = Views/Cells/LeftMenu/PublicChannelTableViewCell.swift; sourceTree = "<group>"; };
+		D66F16C91D4A5BBC00BCB2C0 /* PrivateChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrivateChannelTableViewCell.swift; path = Views/Cells/LeftMenu/PrivateChannelTableViewCell.swift; sourceTree = "<group>"; };
+		D68784751D4B5036005FC600 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
+		D68784781D4B50E4005FC600 /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Login.storyboard; path = storyboards/Login.storyboard; sourceTree = "<group>"; };
+		D687847B1D4B51B0005FC600 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = ViewControllers/Login/LoginViewController.swift; sourceTree = "<group>"; };
 		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
 		D6A887B31D4A0F6400C13191 /* HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColors.h; sourceTree = "<group>"; };
 		D6A887B41D4A0F6400C13191 /* HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColors.m; sourceTree = "<group>"; };
@@ -174,6 +186,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D68784761D4B5036005FC600 /* HEXColor.framework in Frameworks */,
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
@@ -221,6 +234,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				D68784771D4B50A9005FC600 /* storyboards */,
 				D6330AA71D494BE2006D84F4 /* resoureces */,
 				D6E165831D47C0890014C831 /* Views */,
 				D617E69B1D46AEF000283C0A /* ViewControllers */,
@@ -230,7 +244,6 @@
 				9B8220F2E4D1D8538A51229B /* Assets.xcassets */,
 				9B82258408C03D292317D1D2 /* LaunchScreen.storyboard */,
 				9B8221EBC8202297FF772024 /* AppDelegate.swift */,
-				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
 				9B822BF4FD105BFD9E26B15D /* ViewController.swift */,
 				9B822ACBDE33A13DD8E74AB9 /* api */,
 				9B822B4660CF812873267326 /* utils */,
@@ -319,6 +332,9 @@
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				D687847A1D4B5185005FC600 /* Login */,
+				D66F16C21D4A54B300BCB2C0 /* RightMenu */,
+				D66F16C11D4A54A800BCB2C0 /* LeftMenu */,
 				D617E69C1D46AF0700283C0A /* Chat */,
 			);
 			name = ViewControllers;
@@ -371,6 +387,47 @@
 			name = Feed;
 			sourceTree = "<group>";
 		};
+		D66F16C11D4A54A800BCB2C0 /* LeftMenu */ = {
+			isa = PBXGroup;
+			children = (
+				D66F16C31D4A54D500BCB2C0 /* LeftMenuViewController.swift */,
+			);
+			name = LeftMenu;
+			sourceTree = "<group>";
+		};
+		D66F16C21D4A54B300BCB2C0 /* RightMenu */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = RightMenu;
+			sourceTree = "<group>";
+		};
+		D66F16C51D4A5B4300BCB2C0 /* LeftMenu */ = {
+			isa = PBXGroup;
+			children = (
+				D66F16C71D4A5B9400BCB2C0 /* PublicChannelTableViewCell.swift */,
+				D66F16C91D4A5BBC00BCB2C0 /* PrivateChannelTableViewCell.swift */,
+			);
+			name = LeftMenu;
+			sourceTree = "<group>";
+		};
+		D68784771D4B50A9005FC600 /* storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
+				D68784781D4B50E4005FC600 /* Login.storyboard */,
+			);
+			name = storyboards;
+			sourceTree = "<group>";
+		};
+		D687847A1D4B5185005FC600 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				D687847B1D4B51B0005FC600 /* LoginViewController.swift */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
 		D6A887B21D4A0F5600C13191 /* HexColors */ = {
 			isa = PBXGroup;
 			children = (
@@ -392,6 +449,7 @@
 		D6E165841D47C08F0014C831 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				D66F16C51D4A5B4300BCB2C0 /* LeftMenu */,
 				D6E165851D47C0960014C831 /* Chat */,
 				D6E165861D47C1200014C831 /* BaseTableViewCell.swift */,
 			);
@@ -452,6 +510,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D68784751D4B5036005FC600 /* HEXColor.framework */,
 				D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */,
 				D6E165A51D47E9B00014C831 /* MFSideMenu.framework */,
 				D6E165A31D47E99C0014C831 /* WebImage.framework */,
@@ -552,6 +611,7 @@
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
 				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
 				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
+				D68784791D4B50E4005FC600 /* Login.storyboard in Resources */,
 				D6330AB61D494BF9006D84F4 /* SF-UI-Text-Medium.otf in Resources */,
 				D6330AB11D494BF9006D84F4 /* SF-UI-Display-Bold.otf in Resources */,
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
@@ -631,6 +691,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MFSideMenu.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/HEXColor.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -666,11 +727,15 @@
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
+				D687847C1D4B51B0005FC600 /* LoginViewController.swift in Sources */,
 				9B822F3066402356ECA5C1C9 /* ViewController.swift in Sources */,
+				D66F16CA1D4A5BBC00BCB2C0 /* PrivateChannelTableViewCell.swift in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
+				D66F16C41D4A54D500BCB2C0 /* LeftMenuViewController.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
+				D66F16C81D4A5B9400BCB2C0 /* PublicChannelTableViewCell.swift in Sources */,
 				D6E165871D47C1200014C831 /* BaseTableViewCell.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
 				D8087AE91D42808C001918E8 /* FileLocal.swift in Sources */,

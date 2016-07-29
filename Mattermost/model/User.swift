@@ -152,11 +152,11 @@ extension User: Computatations {
     }
     
     func computeDisplayName() {
-        if (self.nickname?.characters.count == 0) {
+        if ((self.nickname?.isEmpty) != nil) {
             //FIXME: username > nickname
             self.displayName = self.username
         } else {
-            self.displayName = "\(self.firstName) \(self.lastName)"
+            self.displayName = "\(self.firstName!) \(self.lastName!)"
         }
         
         if self.identifier == "yjxn1ak5ab8qjciow719f515ry" {

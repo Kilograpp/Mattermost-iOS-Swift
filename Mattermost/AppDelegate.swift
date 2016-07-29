@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 //        let post = try! Realm().objects(Post)
 //        print(post)
-        RouterUtils.loadInitialScreen(true)
+        RouterUtils.loadInitialScreen(false)
         
         return true
     }

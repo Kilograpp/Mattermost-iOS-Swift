@@ -20,13 +20,18 @@ class RouterUtils {
     }
     
     private class func loadLoginScene() -> Void {
-        
+        let sb = UIStoryboard.init(name: "Login", bundle: nil)
+        let vc = sb.instantiateInitialViewController()
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.window?.rootViewController = vc
+        appDelegate.window?.makeKeyAndVisible()
     }
     
     private class func loadConversationScene() -> Void {
         let sb = UIStoryboard.init(name: "Main", bundle: nil) 
-        let initialVc = sb.instantiateInitialViewController()
-        let sideMenuContainer = RouterUtils.sideMenuContainer(initialVc!, leftMenuViewController: UITableViewController.init(), rightMenuViewController: UITableViewController.init())
+        let centerVc = sb.instantiateInitialViewController()
+        let leftVc = sb.instantiateViewControllerWithIdentifier(String(LeftMenuViewController))
+        let sideMenuContainer = RouterUtils.sideMenuContainer(centerVc!, leftMenuViewController: leftVc, rightMenuViewController: UITableViewController.init())
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.window?.rootViewController = sideMenuContainer
         appDelegate.window?.makeKeyAndVisible()

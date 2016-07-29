@@ -26,7 +26,6 @@ class Channel: RealmObject {
     dynamic var lastPostDate: String?
     dynamic var displayName: String?
     
-    
     dynamic var team: Team?
     
     let members = List<User>()
@@ -168,9 +167,21 @@ extension Channel: Support {
     class func teamIdentifierPath() -> String {
         return ChannelRelationships.team.rawValue + "." + ChannelAttributes.identifier.rawValue
     }
+    
     func computeTeam() {
         let team = Team()
         team.identifier = self.privateTeamId!.isEmpty ? DataManager.sharedInstance.currentTeam!.identifier : self.privateTeamId!
         self.team = team
+    }
+    
+    func computeDispayNameIfNeeded() {
+        if self.privateType == "D" {
+            if !(self.name?.isEmpty)! {
+                let ids = self.name?.componentsSeparatedByString("__")
+                let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
+                let user = RealmUtils.realmForCurrentThread().objects(User).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
+                self.displayName = user.displayName
+            }
+        }
     }
 }

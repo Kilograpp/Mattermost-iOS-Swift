@@ -117,6 +117,7 @@ extension Api: ChannelApi {
                     dictionary[ChannelAttributes.lastViewDate.rawValue] = channel.lastViewDate
                     dictionary[ChannelAttributes.identifier.rawValue] = channel.identifier
                     realm.create(Channel.self, value: dictionary, update: true)
+                    
                 }
             })
             
