@@ -6,7 +6,7 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-class PrivateChannelTableViewCell: UITableViewCell {
+class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol {
     @IBOutlet weak var statusView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var badgeLabel: UILabel!
@@ -19,5 +19,11 @@ class PrivateChannelTableViewCell: UITableViewCell {
     
     private func configureTitleLabel() -> Void {
         self.titleLabel.font = FontBucket.postAuthorNameFont
+    }
+}
+
+extension PrivateChannelTableViewCell {
+    func configureWithChannel(channel: Channel) -> Void {
+        
     }
 }

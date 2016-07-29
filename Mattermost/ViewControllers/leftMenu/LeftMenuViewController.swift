@@ -7,7 +7,6 @@
 //
 
 import RealmSwift
-import UITableView_Cache
 import SwiftFetchedResultsController
 
 class LeftMenuViewController: UIViewController {
@@ -28,6 +27,7 @@ class LeftMenuViewController: UIViewController {
     private func configureTableView() -> Void {
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.separatorStyle = .None
     }
     
 }
@@ -42,17 +42,19 @@ extension LeftMenuViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.init(style: .Default, reuseIdentifier: "cell")
-        var channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
-        print("\(channel?.privateType)")
-        cell.textLabel?.text = channel!.displayName!
+        let reuseIdentifier = indexPath.section == 0 ? PublicChannelTableViewCell.reuseIdentifier() : PrivateChannelTableViewCell.reuseIdentifier()
+        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! LeftMenuTableViewCellProtocol
+        let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
+        cell.configureWithChannel(channel!)
         
-        return cell
+        return cell as! UITableViewCell
     }
 }
 
 extension LeftMenuViewController : UITableViewDelegate {
-    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 42
+    }
 }
 
 extension LeftMenuViewController {

@@ -39,6 +39,7 @@
 		D68784761D4B5036005FC600 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D68784751D4B5036005FC600 /* HEXColor.framework */; };
 		D68784791D4B50E4005FC600 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D68784781D4B50E4005FC600 /* Login.storyboard */; };
 		D687847C1D4B51B0005FC600 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D687847B1D4B51B0005FC600 /* LoginViewController.swift */; };
+		D687847E1D4B6F78005FC600 /* LeftMenuTableViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D687847D1D4B6F78005FC600 /* LeftMenuTableViewCellProtocol.swift */; };
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
 		D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B41D4A0F6400C13191 /* HexColors.m */; };
 		D6A887B71D4A18D300C13191 /* RouterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B61D4A18D300C13191 /* RouterUtils.swift */; };
@@ -140,6 +141,7 @@
 		D68784751D4B5036005FC600 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		D68784781D4B50E4005FC600 /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Login.storyboard; path = storyboards/Login.storyboard; sourceTree = "<group>"; };
 		D687847B1D4B51B0005FC600 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = ViewControllers/Login/LoginViewController.swift; sourceTree = "<group>"; };
+		D687847D1D4B6F78005FC600 /* LeftMenuTableViewCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuTableViewCellProtocol.swift; path = Views/Cells/LeftMenu/LeftMenuTableViewCellProtocol.swift; sourceTree = "<group>"; };
 		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
 		D6A887B31D4A0F6400C13191 /* HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColors.h; sourceTree = "<group>"; };
 		D6A887B41D4A0F6400C13191 /* HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColors.m; sourceTree = "<group>"; };
@@ -428,6 +430,7 @@
 			children = (
 				D66F16C71D4A5B9400BCB2C0 /* PublicChannelTableViewCell.swift */,
 				D66F16C91D4A5BBC00BCB2C0 /* PrivateChannelTableViewCell.swift */,
+				D687847D1D4B6F78005FC600 /* LeftMenuTableViewCellProtocol.swift */,
 			);
 			name = LeftMenu;
 			sourceTree = "<group>";
@@ -746,6 +749,7 @@
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
+				D687847E1D4B6F78005FC600 /* LeftMenuTableViewCellProtocol.swift in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,

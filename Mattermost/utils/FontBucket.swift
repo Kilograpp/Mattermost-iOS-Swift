@@ -20,6 +20,11 @@ private protocol FeedFonts {
     static var sectionTitleFont: UIFont {get}
 }
 
+private protocol LeftMenuFonts {
+    static var normalTitleFont: UIFont {get}
+    static var highlighTedTitleFont: UIFont {get}
+}
+
 class FontBucket {
 }
 
@@ -33,6 +38,11 @@ extension FontBucket : FeedFonts {
     static let feedSendButtonTitleFont = FontBucket.semiboldFontOfSize(16)
     static let inputTextViewFont = FontBucket.regularFontOfSize(15)
     static let sectionTitleFont = FontBucket.semiboldFontOfSize(16)
+}
+
+extension FontBucket : LeftMenuFonts {
+    static let normalTitleFont = FontBucket.regularFontOfSize(18)
+    static let highlighTedTitleFont = FontBucket.semiboldFontOfSize(18)
 }
 
 //MARK: Helpers

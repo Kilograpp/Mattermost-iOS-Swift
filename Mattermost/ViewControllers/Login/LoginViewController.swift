@@ -10,6 +10,8 @@ class LoginViewController: UIViewController {
 
     @IBAction func loginAction(sender: AnyObject) {
         Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.launchApplicationStateManager()
         Api.sharedInstance.login("getmaxx@kilograpp.com", password: "102Aky5i") { (error) in
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
@@ -17,8 +19,6 @@ class LoginViewController: UIViewController {
                     try! RealmUtils.realmForCurrentThread().write({
                         channels.forEach{ $0.computeDispayNameIfNeeded()}
                     })
-
-//                    channels.forEach{ $0.computeDispayNameIfNeeded()}
                     RouterUtils.loadInitialScreen(true)
                 })
             })
