@@ -14,16 +14,30 @@ class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtoco
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        
+        self.configureContentView()
+        self.configureTitleLabel()
+        self.configureStatusView()
     }
     
-    private func configureTitleLabel() -> Void {
-        self.titleLabel.font = FontBucket.postAuthorNameFont
+    
+    func configureContentView() -> Void {
+        self.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        self.badgeLabel.hidden = true
+    }
+    
+    func configureTitleLabel() -> Void {
+        self.titleLabel.font = FontBucket.normalTitleFont
+        self.titleLabel.textColor = ColorBucket.lightGrayColor
+        self.titleLabel.backgroundColor = ColorBucket.sideMenuBackgroundColor
+    }
+    
+    func configureStatusView() -> Void {
+        self.statusView.layer.cornerRadius = 4
     }
 }
 
 extension PrivateChannelTableViewCell {
     func configureWithChannel(channel: Channel) -> Void {
-        
+        self.titleLabel.text = channel.displayName!
     }
 }

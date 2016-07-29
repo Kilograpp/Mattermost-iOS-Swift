@@ -22,15 +22,18 @@ class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol
     //MARK: - Configuration
     
     func configureContentView() -> Void {
-        self.backgroundColor = ColorBucket.blueColor
+        self.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        self.badgeLabel.hidden = true
     }
     
     func configureTitleLabel() -> Void {
         self.titleLabel.font = FontBucket.normalTitleFont
         self.titleLabel.textColor = ColorBucket.lightGrayColor
-        self.titleLabel.backgroundColor = ColorBucket.blueColor
+        self.titleLabel.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
-    
+}
+
+extension PublicChannelTableViewCell {
     func configureWithChannel(channel: Channel) -> Void {
         self.titleLabel.text = "# \(channel.displayName!)"
     }
