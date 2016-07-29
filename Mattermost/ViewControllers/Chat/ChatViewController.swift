@@ -24,8 +24,10 @@ class ChatViewController: SLKTextViewController {
         self.configureInputBar()
         self.configureTableView()
         
-        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
-        Api.sharedInstance.login("getmaxx@kilograpp.com", password: "102Aky5i") { (error) in
+
+        
+        Preferences.sharedInstance.serverUrl = Preferences.sharedInstance.predefinedServerUrl()
+        Api.sharedInstance.login(Preferences.sharedInstance.predefinedLogin()!, password: Preferences.sharedInstance.predefinedPassword()!) { (error) in
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
                 print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
                 Api.sharedInstance.loadChannels(with: { (error) in
