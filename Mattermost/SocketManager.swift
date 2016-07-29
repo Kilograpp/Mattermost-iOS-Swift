@@ -68,11 +68,11 @@ private protocol MessageHandling {
 // MARK: - WebSocket Delegate
 extension SocketManager: WebSocketDelegate{
     func websocketDidConnect(socket: WebSocket) {
-        print("Socket did connect")
+        NSLog("Socket did connect")
     }
     func websocketDidReceiveData(socket: Starscream.WebSocket, data: NSData) {}
     func websocketDidDisconnect(socket: Starscream.WebSocket, error: NSError?) {
-        print("Socket did disconnect")
+        NSLog("Socket did disconnect")
         if error != nil {
             setNeedsConnect()
         }

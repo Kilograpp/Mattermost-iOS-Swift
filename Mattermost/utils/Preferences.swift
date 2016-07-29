@@ -21,6 +21,7 @@ public enum PreferencesAttributes: String {
 
 class Preferences: NSObject, NSCoding {
     static let sharedInstance = Preferences.loadInstanceFromUserDefaults() ?? Preferences()
+    
     dynamic var serverUrl: String?
     dynamic var currentUserId: String?
     dynamic var currentTeamId: String?

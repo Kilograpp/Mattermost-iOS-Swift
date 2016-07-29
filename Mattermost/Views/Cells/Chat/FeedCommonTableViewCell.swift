@@ -121,7 +121,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        let nameWidth = CGFloat((self.post?.author?.nicknameWidth)!) as CGFloat
+        let nameWidth = CGFloat((self.post?.author?.displayNameWidth)!) as CGFloat
         let dateWidth = CGFloat(self.post!.createdAtStringWidth) as CGFloat
         let textWidth = UIScreen.screenWidth() - 61 as CGFloat
         
@@ -141,8 +141,6 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
 
 extension FeedCommonTableViewCell {
     func configureWithPost(post: Post) -> Void {
-        assert(post.isKindOfClass(Post), "Object must me instance of 'Post' class")
-        
         self.post = post
         self.configureAvatarImage()
         self.configureMessageOperation()

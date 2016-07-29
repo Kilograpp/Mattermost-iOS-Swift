@@ -71,6 +71,7 @@ extension Api: UserApi {
         let parameters = ["login_id" : email, "password": password, "token" : ""]
         self.manager.postObject(path: path, parameters: parameters, success: { (mappingResult) in
             let user = mappingResult.firstObject as! User
+            user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user
             RealmUtils.save(user)
             SocketManager.sharedInstance.setNeedsConnect()
