@@ -25,6 +25,8 @@ private protocol TeamApi {
 private protocol ChannelApi {
     func loadChannels(with completion:(error: Error?) -> Void)
     func loadExtraInfoForChannel(channel: Channel, completion:(error: Error?) -> Void)
+    func updateLastViewDateForChannel(channel: Channel, completion:(error: Error?) -> Void)
+    func loadAllChannelsWithCompletion(completion:(error: Error?) -> Void)
 }
 
 private protocol PostApi {
@@ -114,7 +116,7 @@ extension Api: ChannelApi {
         self.manager.getObject(path: path, success: { (mappingResult) in
             let realm = RealmUtils.realmForCurrentThread()
             let members  = mappingResult.dictionary()["members"]  as! [Channel]
-            let channels = mappingResult.dictionary()["channels"] as! [Channel]
+            let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
                 realm.add(channels, update: true)
                 for channel in members {
@@ -133,6 +135,24 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(Channel.extraInfoPathPattern(), channel)
         self.manager.getObject(path: path, success: { (mappingResult) in
             RealmUtils.save(mappingResult.firstObject as! Channel)
+            completion(error: nil)
+        }, failure: completion)
+    }
+    
+    func updateLastViewDateForChannel(channel: Channel, completion: (error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(Channel.updateLastViewDatePathPattern(), channel)
+        self.manager.postObject(path: path, success: { (mappingResult) in
+            try! RealmUtils.realmForCurrentThread().write({
+                channel.lastViewDate = NSDate()
+            })
+            completion(error: nil)
+        }, failure: completion)
+    }
+    
+    func loadAllChannelsWithCompletion(completion: (error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(Channel.moreListPathPattern(), DataManager.sharedInstance.currentTeam)
+        self.manager.getObject(path: path, success: { (mappingResult) in
+            RealmUtils.save(MappingUtils.fetchAllChannelsFromList(mappingResult))
             completion(error: nil)
         }, failure: completion)
     }
