@@ -20,6 +20,13 @@ private protocol FeedFonts {
     static var sectionTitleFont: UIFont {get}
 }
 
+private protocol MarkdownFonts {
+    static var emphasisFont: UIFont {get}
+    
+    static func semiboldFontOfSize(size: CGFloat) -> UIFont
+    static func regularFontOfSize(size: CGFloat) -> UIFont
+}
+
 class FontBucket {
 }
 
@@ -37,13 +44,21 @@ extension FontBucket : FeedFonts {
 
 //MARK: Helpers
 
-extension FontBucket {
-    private class func regularFontOfSize(size: CGFloat) -> UIFont {
-        return UIFont.init(name: FontNames.Regular, size: size)!
+extension FontBucket: MarkdownFonts {
+    static let emphasisFont = FontBucket.italicFontOfSize(15)
+    
+    static func regularFontOfSize(size: CGFloat) -> UIFont {
+        return UIFont(name: FontNames.Regular, size: size)!
     }
     
-    private class func semiboldFontOfSize(size: CGFloat) -> UIFont {
-        return UIFont.init(name: FontNames.Semibold, size: size)!
+    static func semiboldFontOfSize(size: CGFloat) -> UIFont {
+        return UIFont(name: FontNames.Semibold, size: size)!
+    }
+}
+
+extension FontBucket {
+    private static func italicFontOfSize(size: CGFloat) -> UIFont {
+        return UIFont(name: FontNames.Italic, size: size)!
     }
 }
 
