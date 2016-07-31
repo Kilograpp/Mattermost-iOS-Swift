@@ -57,7 +57,7 @@ class ChatViewController: SLKTextViewController {
         self.tableView?.backgroundColor = ColorBucket.whiteColor
         self.tableView!.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
         self.tableView!.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
-        self.tableView!.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 10)
+        self.tableView!.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 18)
         
         self.tableView?.registerClass(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
