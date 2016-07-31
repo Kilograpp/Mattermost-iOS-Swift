@@ -79,12 +79,12 @@ extension TSMarkdownParser {
         self.addListParsingWithMaxLevel(0, leadFormattingBlock: { (attributedString, range, level) in
             let listString = NSMutableString()
             for _ in level.stride(to: 0, by: -1) {
-                listString.appendString("\t")
+                listString.appendString("  ")
             }
-            listString.appendString("•\t")
+            listString.appendString("• ")
             attributedString.replaceCharactersInRange(range, withString: listString as String)
         }) { [unowned self] (attributedString, range, level) in
-            TSMarkdownParser.addAttributes(self.headerAttributes, atIndex: level-1, toString: attributedString, range: range)
+            TSMarkdownParser.addAttributes(self.listAttributes, atIndex: level-1, toString: attributedString, range: range)
         }
         
         self.addQuoteParsingWithMaxLevel(0, leadFormattingBlock: { (attributedString, range, level) in
@@ -97,7 +97,7 @@ extension TSMarkdownParser {
             TSMarkdownParser.addAttributes(self.quoteAttributes, atIndex: level-1, toString: attributedString, range: range)
         }
         
-        self.addLinkParsingWithLinkFormattingBlock { (attributedString, range, link) in
+        self.addLinkParsingWithLinkFormattingBlock { [unowned self] (attributedString, range, link) in
             if !self.skipLinkAttribute {
                 let preparedLink = link?.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
                 if let url = NSURL(string: preparedLink ?? StringUtils.emptyString()) {
@@ -107,7 +107,7 @@ extension TSMarkdownParser {
             attributedString.addAttributes(self.linkAttributes, range: range)
         }
         
-        self.addLinkDetectionWithLinkFormattingBlock { (attributedString, range, link) in
+        self.addLinkDetectionWithLinkFormattingBlock { [unowned self] (attributedString, range, link) in
             if !self.skipLinkAttribute {
                 if let url = NSURL(string: link ?? StringUtils.emptyString()) {
                     attributedString.addAttribute(NSLinkAttributeName, value: url, range: range)
@@ -118,9 +118,10 @@ extension TSMarkdownParser {
         
         let emphasisExpression = try! NSRegularExpression(pattern: "(?<!\\S)(_)(.*?)(_(?!\\S))", options: .CaseInsensitive)
         self.addParsingRuleWithRegularExpression(emphasisExpression) { [unowned self] (match, attributedString) in
-            attributedString.deleteCharactersInRange(match.rangeAtIndex(1))
-            attributedString.addAttributes(self.emphasisAttributes, range: match.rangeAtIndex(2))
             attributedString.deleteCharactersInRange(match.rangeAtIndex(3))
+            attributedString.addAttributes(self.emphasisAttributes, range: match.rangeAtIndex(2))
+            attributedString.deleteCharactersInRange(match.rangeAtIndex(1))
+            
         }
         
         self.addStrongParsingWithFormattingBlock { [unowned self] (attributedString, range) in
