@@ -9,6 +9,10 @@
 import Foundation
 
 class StringUtils {
+    static func emptyString() -> String {
+        return ""
+    }
+    
     static func isEmpty(string: String?) -> Bool{
         if let unwrappedString = string {
             return unwrappedString.isEmpty
