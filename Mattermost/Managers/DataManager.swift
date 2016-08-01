@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 
-class DataManager {
+final class DataManager {
     
     static let sharedInstance = DataManager();
     

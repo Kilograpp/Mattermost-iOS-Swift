@@ -15,7 +15,17 @@ extension TSMarkdownParser {
     private static func customParser() -> TSMarkdownParser {
         let defaultParser = TSMarkdownParser()
         defaultParser.setupAttributes()
+        defaultParser.configureDefaultInnerParsers()
         return defaultParser
+    }
+    
+    private static func addAttributes(attributesArray: [[String : AnyObject]], atIndex level: UInt, toString attributedString: NSMutableAttributedString, range: NSRange) {
+        guard attributesArray.count != 0 else {
+            return
+        }
+        let index = Int(level)
+        let attributes = index < attributesArray.count ? attributesArray[index] : attributesArray.last!
+        attributedString.addAttributes(attributes, range: range)
     }
 }
 
@@ -23,6 +33,8 @@ extension TSMarkdownParser {
     private func setupAttributes() -> Void {
         self.setupSettings()
         self.setupDefaultAttributes()
+        self.setupHeaderAttributes()
+        self.setupEmphasisAttributes()
     }
     
     private func setupSettings() -> Void {
@@ -34,42 +46,93 @@ extension TSMarkdownParser {
                                   NSForegroundColorAttributeName : ColorBucket.blackColor]
     }
     
-//    private func setupAttributes() -> Void {
-//        
-//    }
-//    
-//    private func setupAttributes() -> Void {
-//        
-//    }
-//    
-//    
-//    - (void)setupAttrubutes {
-//    [self setupSettings];
-//    [self setupDefaultAttrubutes];
-//    [self setupHeaderAttributes];
-//    [self setupOtherAttributes];
-//    }
-//    
-//    - (void)setupDefaultAttrubutes {
-//    self.defaultAttributes = @{ NSFontAttributeName            : [UIFont kg_regular15Font],
-//    NSForegroundColorAttributeName : [UIColor kg_blackColor] };
-//    }
-//    
-//    - (void)setupHeaderAttributes {
-//    NSMutableArray *headerAttrubutes  = [NSMutableArray array];
-//    
-//    for(int i = 0; i < 6; i++) {
-//    NSDictionary *attr = @{ NSFontAttributeName            : [UIFont kg_semiboldFontOfSize:26 - 2 * i],
-//    NSForegroundColorAttributeName : [UIColor kg_blackColor] };
-//    [headerAttrubutes addObject:attr];
-//    }
-//    
-//    self.headerAttributes = headerAttrubutes.copy;
-//    }
-//    
-//    - (void)setupOtherAttributes {
-//    self.emphasisAttributes = @{ NSFontAttributeName            : [UIFont kg_italic15Font],
-//    NSForegroundColorAttributeName : [UIColor kg_blackColor] };
-//    }
-
+    private func setupHeaderAttributes() -> Void {
+        let headerAttributes = NSMutableArray()
+        
+        for index in 0...6 {
+            let attributes = [
+                NSFontAttributeName : FontBucket.self.semiboldFontOfSize(CGFloat(26 - 2 * index)),
+                NSForegroundColorAttributeName : ColorBucket.blackColor
+            ]
+            headerAttributes.addObject(attributes)
+        }
+        
+        self.headerAttributes = headerAttributes.copy() as! [[String : AnyObject]]
+    }
+    
+    private func setupEmphasisAttributes() {
+        self.emphasisAttributes = [
+            NSFontAttributeName            : FontBucket.emphasisFont,
+            NSForegroundColorAttributeName : ColorBucket.blackColor
+        ]
+    }
+    
+    private func configureDefaultInnerParsers() {
+        self.addCodeEscapingParsing()
+        self.addEscapingParsing()
+        self.addHeaderParsingWithMaxLevel(0, leadFormattingBlock: { (attributedString, range, level) in
+            attributedString.deleteCharactersInRange(range)
+        }) { [unowned self] (attributedString, range, level) in
+            TSMarkdownParser.addAttributes(self.headerAttributes, atIndex: level-1, toString: attributedString, range: range)
+        }
+        
+        self.addListParsingWithMaxLevel(0, leadFormattingBlock: { (attributedString, range, level) in
+            let listString = NSMutableString()
+            for _ in level.stride(to: 0, by: -1) {
+                listString.appendString("  ")
+            }
+            listString.appendString("• ")
+            attributedString.replaceCharactersInRange(range, withString: listString as String)
+        }) { [unowned self] (attributedString, range, level) in
+            TSMarkdownParser.addAttributes(self.listAttributes, atIndex: level-1, toString: attributedString, range: range)
+        }
+        
+        self.addQuoteParsingWithMaxLevel(0, leadFormattingBlock: { (attributedString, range, level) in
+            let quoteString = NSMutableString()
+            for _ in level.stride(through: 0, by: -1) {
+                quoteString.appendString("\t")
+            }
+            attributedString.replaceCharactersInRange(range, withString: quoteString as String)
+        }) { [unowned self] (attributedString, range, level) in
+            TSMarkdownParser.addAttributes(self.quoteAttributes, atIndex: level-1, toString: attributedString, range: range)
+        }
+        
+        self.addLinkParsingWithLinkFormattingBlock { [unowned self] (attributedString, range, link) in
+            if !self.skipLinkAttribute {
+                let preparedLink = link?.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+                if let url = NSURL(string: preparedLink ?? StringUtils.emptyString()) {
+                    attributedString.addAttribute(NSLinkAttributeName, value: url, range: range)
+                }
+            }
+            attributedString.addAttributes(self.linkAttributes, range: range)
+        }
+        
+        self.addLinkDetectionWithLinkFormattingBlock { [unowned self] (attributedString, range, link) in
+            if !self.skipLinkAttribute {
+                if let url = NSURL(string: link ?? StringUtils.emptyString()) {
+                    attributedString.addAttribute(NSLinkAttributeName, value: url, range: range)
+                }
+            }
+            attributedString.addAttributes(self.linkAttributes, range: range)
+        }
+        
+        let emphasisExpression = try! NSRegularExpression(pattern: "(?<!\\S)(_)(.*?)(_(?!\\S))", options: .CaseInsensitive)
+        self.addParsingRuleWithRegularExpression(emphasisExpression) { [unowned self] (match, attributedString) in
+            attributedString.deleteCharactersInRange(match.rangeAtIndex(3))
+            attributedString.addAttributes(self.emphasisAttributes, range: match.rangeAtIndex(2))
+            attributedString.deleteCharactersInRange(match.rangeAtIndex(1))
+            
+        }
+        
+        self.addStrongParsingWithFormattingBlock { [unowned self] (attributedString, range) in
+            attributedString.addAttributes(self.strongAttributes, range: range)
+        }
+        
+        self.addCodeUnescapingParsingWithFormattingBlock { [unowned self] (attributedString, range) in
+            attributedString.addAttributes(self.monospaceAttributes, range: range)
+        }
+        
+        self.addUnescapingParsing()
+    }
+    
 }

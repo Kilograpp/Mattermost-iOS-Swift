@@ -8,7 +8,7 @@
 
 import Foundation
 
-private protocol Interface {
+private protocol Interface: class {
     func save()
     
     // Debug Methods
@@ -18,14 +18,14 @@ private protocol Interface {
     
 }
 
-public enum PreferencesAttributes: String {
+enum PreferencesAttributes: String {
     case siteName      = "siteName"
     case serverUrl     = "serverUrl"
     case currentUserId = "currentUserId"
     case currentTeamId = "currentTeamId"
 }
 
-class Preferences: NSObject, NSCoding {
+final class Preferences: NSObject, NSCoding {
     static let sharedInstance = Preferences.loadInstanceFromUserDefaults() ?? Preferences()
     
     dynamic var serverUrl: String?
@@ -82,7 +82,7 @@ class Preferences: NSObject, NSCoding {
 
 }
 
-private protocol Persistence {
+private protocol Persistence: class {
     func save()
     static func loadInstanceFromUserDefaults() -> Preferences?
 }

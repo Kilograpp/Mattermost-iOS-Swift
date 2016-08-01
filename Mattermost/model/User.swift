@@ -11,7 +11,7 @@ import Foundation
 import RealmSwift
 
 
-class User: RealmObject {
+final class User: RealmObject {
     dynamic var email: String?
     dynamic var firstName: String?
     dynamic var lastName: String?
@@ -45,30 +45,30 @@ class User: RealmObject {
     }
 }
 
-private protocol PathPatterns {
+private protocol PathPatterns: class {
     static func loginPathPattern() -> String
     static func initialLoadPathPattern() -> String
     static func socketPathPattern() -> String
 }
 
-private protocol Mappings {
+private protocol Mappings: class {
     static func mapping() -> RKObjectMapping
     static func directProfileMapping() -> RKObjectMapping
 }
 
-private protocol ResponseDescriptors {
+private protocol ResponseDescriptors: class {
     static func loginResponseDescriptor() -> RKResponseDescriptor
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor
 }
 
-private protocol Computatations {
+private protocol Computatations: class {
     func computeDisplayNameWidth()
     func computeDisplayName()
     func computeAvatarUrl()
     func computeNicknameIfRequired()
 }
 
-public enum UserAttributes: String {
+enum UserAttributes: String {
     case privateStatus = "privateStatus"
     case email = "email"
     case firstName = "firstName"
@@ -81,13 +81,13 @@ public enum UserAttributes: String {
 }
 
 extension User: PathPatterns {
-    class func loginPathPattern() -> String {
+    static func loginPathPattern() -> String {
         return "users/login";
     }
-    class func initialLoadPathPattern() -> String {
+    static func initialLoadPathPattern() -> String {
         return Team.initialLoadPathPattern()
     }
-    class func socketPathPattern() -> String {
+    static func socketPathPattern() -> String {
         return "users/websocket"
     }
 }
@@ -104,7 +104,7 @@ extension User: Mappings {
         ])
         return mapping
     }
-    class func directProfileMapping() -> RKObjectMapping {
+    static func directProfileMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.forceCollectionMapping = true
         mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(UserAttributes.identifier.rawValue)
@@ -122,14 +122,14 @@ extension User: Mappings {
 
 // MARK: - Response Descriptors
 extension User: ResponseDescriptors {
-    class func loginResponseDescriptor() -> RKResponseDescriptor {
+    static func loginResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                     method: .POST,
                                     pathPattern: loginPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
-    class func initialLoadResponseDescriptor() -> RKResponseDescriptor {
+    static func initialLoadResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: directProfileMapping(),
                                     method: .GET,
                                     pathPattern: initialLoadPathPattern(),

@@ -7,11 +7,52 @@
 //
 
 import Foundation
-import Realm
 import RealmSwift
 import TSMarkdownParser
 
-class Post: RealmObject {
+
+private protocol Inteface {
+    func hasAttachments() -> Bool
+    func hasSameAuthor(post: Post!) -> Bool
+    func timeIntervalSincePost(post: Post!) -> NSTimeInterval
+}
+
+private protocol Delegate {
+    func onStatusChange(handler: ((status: PostStatus) -> Void)?)
+}
+
+public enum PostAttributes: String {
+    case privatePendingId = "privatePendingId"
+    case privateChannelId = "privateChannelId"
+    case createdAt = "createdAt"
+    case creationDay = "creationDay"
+    case deletedAt = "deletedAt"
+    case identifier = "identifier"
+    case message = "message"
+    case type = "type"
+    case status = "status"
+    case updatedAt = "updatedAt"
+    case privateAuthorId = "privateAuthorId"
+    case attributedMessage = "attributedMessage"
+    case attributedMessageHeight = "attributedMessageHeight"
+    case hasObserverAttached = "hasObserverAttached"
+    
+}
+
+public enum PostRelationships: String {
+    case author = "author"
+    case channel = "channel"
+    case files = "files"
+}
+
+@objc enum PostStatus: Int {
+    case Default = 0
+    case Error = -1
+    case Sending = 1
+}
+
+
+final class Post: RealmObject {
     dynamic var privateAttributedMessageData: NSData?
     dynamic var privatePendingId: String?
     dynamic var privateChannelId: String?
@@ -34,7 +75,12 @@ class Post: RealmObject {
     dynamic var createdAtStringWidth: Float = 0.0
     dynamic var updatedAt: NSDate?
     dynamic var deletedAt: NSDate?
-    dynamic var identifier: String?
+    dynamic var status: PostStatus = .Default
+    dynamic var identifier: String? {
+        didSet {
+            resetStatus()
+        }
+    }
     dynamic var message: String? {
         didSet {
             computeAttributedString()
@@ -55,10 +101,24 @@ class Post: RealmObject {
         return RealmUtils.realmForCurrentThread().objectForPrimaryKey(Channel.self, key: self.privateChannelId)
     }
     
+    
+    
     let files = List<File>()
     
+    private var hasObserverAttached: Bool = false
+    private var statusChangeHandler: ((status: PostStatus) -> Void)?
+    
+
+    deinit {
+        self.removeStatusObserverIfNeeded()
+    }
+    
     override class func ignoredProperties() -> [String] {
-        return [PostAttributes.attributedMessage.rawValue, PostRelationships.author.rawValue, PostRelationships.channel.rawValue]
+        return [PostAttributes.attributedMessage.rawValue,
+                PostRelationships.author.rawValue,
+                PostRelationships.channel.rawValue,
+                PostAttributes.hasObserverAttached.rawValue
+        ]
     }
     
     override class func primaryKey() -> String {
@@ -71,35 +131,30 @@ class Post: RealmObject {
     
 }
 
-private protocol Inteface {
-    func hasAttachments() -> Bool
-    func hasSameAuthor(post: Post!) -> Bool
-    func timeIntervalSincePost(post: Post!) -> NSTimeInterval
-}
-
-private protocol PathPattern {
+private protocol PathPattern: class {
     static func updatePathPattern() -> String
     static func nextPagePathPattern() -> String
     static func creationPathPattern() -> String
     static func firstPagePathPattern() -> String
 }
 
-private protocol Mapping {
+private protocol ResponseMapping: class {
     static func listMapping() -> RKObjectMapping
     static func creationMapping() -> RKObjectMapping
 }
 
-private protocol RequestMapping {
+private protocol RequestMapping: class {
     static func creationRequestMapping() -> RKObjectMapping
 }
 
-private protocol ResponseDescriptor {
+private protocol ResponseDescriptor: class {
     static func updateResponseDescriptor() -> RKResponseDescriptor
     static func nextPageResponseDescriptor() -> RKResponseDescriptor
     static func firstPageResponseDescriptor() -> RKResponseDescriptor
 }
 
-private protocol Computations {
+private protocol Computations: class {
+    func resetStatus()
     func computePendingId()
     func computeCreatedAtString()
     func computeCreatedAtStringWidth()
@@ -108,35 +163,20 @@ private protocol Computations {
     func computeAttributedMessageHeight()
 }
 
-private protocol Support {
+private protocol Support: class {
     static func filesLinkPath() -> String
     static func teamIdentifierPath() -> String
     static func channelIdentifierPath() -> String
 }
 
-public enum PostAttributes: String {
-    case privatePendingId = "privatePendingId"
-    case privateChannelId = "privateChannelId"
-    case createdAt = "createdAt"
-    case creationDay = "creationDay"
-    case deletedAt = "deletedAt"
-    case identifier = "identifier"
-    case message = "message"
-    case type = "type"
-    case updatedAt = "updatedAt"
-    case privateAuthorId = "privateAuthorId"
-    case attributedMessage = "attributedMessage"
-    case attributedMessageHeight = "attributedMessageHeight"
-}
-
-public enum PostRelationships: String {
-    case author = "author"
-    case channel = "channel"
-    case files = "files"
+private protocol KVO: class {
+    func addStatusObserverIfNeeded()
+    func removeStatusObserverIfNeeded()
+    func notifyStatusObserverIfNeeded(oldStatus: PostStatus)
 }
 
 
-// MARK: - Path Pattern
+// MARK: - Path Patterns
 extension Post: PathPattern {
     static func nextPagePathPattern() -> String {
         return "teams/:\(PageWrapper.teamIdPath())/" +
@@ -158,7 +198,7 @@ extension Post: PathPattern {
 }
 
 // MARK: - Mapping
-extension Post: Mapping {
+extension Post: ResponseMapping {
     class func creationMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.addAttributeMappingsFromDictionary([
@@ -180,78 +220,36 @@ extension Post: Mapping {
             "(\(PostAttributes.identifier)).user_id" : PostAttributes.privateAuthorId.rawValue,
             "(\(PostAttributes.identifier)).channel_id" : PostAttributes.privateChannelId.rawValue
             ])
-        //        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
-        //            toKeyPath: PostRelationships.files.rawValue,
-        //            withMapping: File.mapping()))
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
+                                                           toKeyPath: PostRelationships.files.rawValue,
+                                                         withMapping: File.simplifiedMapping()))
         return mapping
     }
 }
 
-// MARK: - Request Mapping
-extension Post: RequestMapping {
-    class func creationRequestMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping.requestMapping()
-        mapping.addAttributeMappingsFromDictionary([
-            filesLinkPath() : "filenames",
-            PostAttributes.privateChannelId.rawValue : "channel_id",
-            PostAttributes.privatePendingId.rawValue : "pending_post_id"
-            ])
-        return mapping
-    }
-}
-
-
-extension Post: ResponseDescriptor {
-    static func firstPageResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: firstPagePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func updateResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: updatePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func nextPageResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: nextPagePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func creationResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: creationMapping(),
-                                    method: .POST,
-                                    pathPattern: creationPathPattern(),
-                                    keyPath: nil,
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-}
 
 //  MARK: - Support
 extension Post: Support {
-    class func filesLinkPath() -> String {
-        return PostRelationships.files.rawValue + "." + FileAttributes.privateLink.rawValue
+    private static func filesLinkPath() -> String {
+        return PostRelationships.files.rawValue + "." + FileAttributes.rawLink.rawValue
     }
-    class func channelIdentifierPath() -> String {
+    private static func channelIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelAttributes.identifier)"
     }
-    class func teamIdentifierPath() -> String {
+    private static func teamIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
     }
     private func unarchiveAttributedMessageFromData() -> NSAttributedString {
         return NSKeyedUnarchiver.unarchiveObjectWithData(self.privateAttributedMessageData!) as! NSAttributedString
     }
+
     
 }
 
+// MARK: - Inteface
 extension Post: Inteface {
     func hasAttachments() -> Bool {
-        return files.count != 0
+        return self.files.count != 0
     }
     func hasSameAuthor(post: Post!) -> Bool {
         return self.privateAuthorId == post.privateAuthorId
@@ -259,8 +257,23 @@ extension Post: Inteface {
     func timeIntervalSincePost(post: Post!) -> NSTimeInterval {
         return createdAt!.timeIntervalSinceDate(post.createdAt!)
     }
+
 }
 
+// MARK: - Delegate
+extension Post: Delegate {
+    func onStatusChange(handler: ((status: PostStatus) -> Void)?) {
+        if handler == nil {
+            self.removeStatusObserverIfNeeded()
+        } else {
+            self.addStatusObserverIfNeeded()
+        }
+        
+        self.statusChangeHandler = handler
+    }
+}
+
+// MARK: - Computations
 extension Post: Computations {
     private func computeDisplayDay() {
         let unitFlags: NSCalendarUnit = [.Year, .Month, .Day]
@@ -291,5 +304,78 @@ extension Post: Computations {
         self.creationDayString = NSDateFormatter.sharedConversionSectionsDateFormatter.stringFromDate(self.creationDay!)
     }
     
+    private func resetStatus() {
+        self.status = .Default
+    }
+}
+
+// MARK: - KVO
+extension Post: KVO {
+    private func notifyStatusObserverIfNeeded(oldStatus: PostStatus) {
+        if oldStatus != self.status {
+            self.statusChangeHandler?(status: self.status)
+        }
+    }
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        notifyStatusObserverIfNeeded(PostStatus(rawValue: change![NSKeyValueChangeOldKey]! as! Int)!)
+    }
+    private func addStatusObserverIfNeeded() {
+        if !self.hasObserverAttached {
+            self.addObserver(self, forKeyPath: PostAttributes.status.rawValue, options: .Old, context: nil)
+            self.hasObserverAttached = true
+        }
+    }
     
+    private func removeStatusObserverIfNeeded() {
+        if self.hasObserverAttached {
+            self.removeObserver(self, forKeyPath: PostAttributes.status.rawValue)
+            self.hasObserverAttached = false
+        }
+    }
+}
+
+// MARK: - Request Mapping
+extension Post: RequestMapping {
+    static func creationRequestMapping() -> RKObjectMapping {
+        let mapping = RKObjectMapping.requestMapping()
+        mapping.addAttributeMappingsFromDictionary([
+            filesLinkPath() : "filenames",
+            PostAttributes.privateChannelId.rawValue : "channel_id",
+            PostAttributes.privatePendingId.rawValue : "pending_post_id"
+            ])
+        return mapping
+    }
+}
+
+
+// MARK: - Response Descriptors
+extension Post: ResponseDescriptor {
+    static func firstPageResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: listMapping(),
+                                    method: .GET,
+                                    pathPattern: firstPagePathPattern(),
+                                    keyPath: "posts",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func updateResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: listMapping(),
+                                    method: .GET,
+                                    pathPattern: updatePathPattern(),
+                                    keyPath: "posts",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func nextPageResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: listMapping(),
+                                    method: .GET,
+                                    pathPattern: nextPagePathPattern(),
+                                    keyPath: "posts",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func creationResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: creationMapping(),
+                                    method: .POST,
+                                    pathPattern: creationPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ApplicationStateManager {
+final class ApplicationStateManager {
     static let sharedInstance = ApplicationStateManager()
     
     private init()  {
@@ -20,19 +20,19 @@ class ApplicationStateManager {
 }
 
 
-private protocol NotificationsSubscription {
+private protocol NotificationsSubscription: class {
     func subscribeForNotifications()
     func unsubscribeFromNotifications()
 }
 
-private protocol ApplicationDelegate {
+private protocol ApplicationDelegate: class {
     func applicationDidEnterBackground()
     func applicationDidBecomeActive()
 }
 
 //MARK: - Notification Subscription
 extension ApplicationStateManager: NotificationsSubscription {
-    func subscribeForNotifications() {
+    private func subscribeForNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self,
                                                          selector: #selector(applicationDidEnterBackground),
                                                          name: UIApplicationDidEnterBackgroundNotification,
@@ -43,7 +43,7 @@ extension ApplicationStateManager: NotificationsSubscription {
                                                          object: nil)
     }
     
-    func unsubscribeFromNotifications() {
+    private func unsubscribeFromNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 }

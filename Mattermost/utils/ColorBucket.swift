@@ -9,7 +9,7 @@
 import Foundation
 
 
-private protocol CommonColors {
+private protocol CommonColors: class {
     static var blackColor: UIColor {get}
     static var whiteColor: UIColor {get}
     static var blueColor: UIColor {get}
@@ -23,7 +23,7 @@ private protocol SideMenuColors {
 }
 
 
-class ColorBucket {
+final class ColorBucket {
 }
 
 extension ColorBucket : CommonColors {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class LocaleUtils {
+final class LocaleUtils {
     class func currentLocale() -> String {
         return NSLocale.preferredLanguages().first!
     }

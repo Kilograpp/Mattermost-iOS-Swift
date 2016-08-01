@@ -44,7 +44,7 @@ class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol
     
     override func setHighlighted(highlighted: Bool, animated: Bool) {
 //        self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.colorWithAlphaComponent(0.5) : ColorBucket.sideMenuBackgroundColor
-        self.highlightView.removeFromSuperview()
+//        self.highlightView.removeFromSuperview()
         super.setHighlighted(highlighted, animated: animated)
                 self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.colorWithAlphaComponent(0.5) : ColorBucket.sideMenuBackgroundColor
     }

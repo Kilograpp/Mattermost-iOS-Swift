@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-class RealmUtils {
+final class RealmUtils {
     
     private static var realmForMainThread: Realm = {
         return try! Realm()
