@@ -29,6 +29,7 @@ private protocol PostMethods: class {
 
 private protocol UserMethod: class {
     static func fetchUsersFromInitialLoad(mappingResult: RKMappingResult) -> [User]
+    static func fetchUsersFromCompleteList(mappingResult: RKMappingResult) -> [User]
 }
 
 // MARK: - Team
@@ -64,11 +65,14 @@ extension MappingUtils: PostMethods {
 }
 
 extension MappingUtils: UserMethod {
-    class func fetchUsersFromInitialLoad(mappingResult: RKMappingResult) -> [User] {
+    static func fetchUsersFromInitialLoad(mappingResult: RKMappingResult) -> [User] {
         if let users = mappingResult.dictionary()["direct_profiles"] {
             return users as! [User]
         }
         return []
+    }
+    static func fetchUsersFromCompleteList(mappingResult: RKMappingResult) -> [User] {
+        return mappingResult.array() as! [User]
     }
 }
 
