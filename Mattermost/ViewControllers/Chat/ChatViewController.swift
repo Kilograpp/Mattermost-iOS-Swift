@@ -127,7 +127,7 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     // MARK: - FetchedResultsController
     
     func realmFetchedResultsController() -> FetchedResultsController<Post> {
-        let predicate = NSPredicate(format: "privateChannelId = %@", self.channel?.identifier ?? "")
+        let predicate = NSPredicate(format: "privateChannelId = %@ && type == ''", self.channel?.identifier ?? "")
         let realm = try! Realm()
         let fetchRequest = FetchRequest<Post>(realm: realm, predicate: predicate)
         let sortDescriptorSection = SortDescriptor(property: "createdAt", ascending: false)
