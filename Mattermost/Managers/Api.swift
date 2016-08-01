@@ -151,7 +151,11 @@ extension Api: ChannelApi {
     func loadAllChannelsWithCompletion(completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(Channel.moreListPathPattern(), DataManager.sharedInstance.currentTeam)
         self.manager.getObject(path: path, success: { (mappingResult) in
-            RealmUtils.save(MappingUtils.fetchAllChannelsFromList(mappingResult))
+            let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
+            try! RealmUtils.realmForCurrentThread().write({ 
+                channels.forEach {$0.computeTeam()}
+                RealmUtils.realmForCurrentThread().add(channels, update: true)
+            })
             completion(error: nil)
         }, failure: completion)
     }
