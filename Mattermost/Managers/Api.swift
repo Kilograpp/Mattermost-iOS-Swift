@@ -16,6 +16,7 @@ private protocol Interface: class {
 
 private protocol UserApi: class {
     func login(email: String, password: String, completion: (error: Error?) -> Void)
+    func loadCompleteUsersList(completion:(error: Error?) -> Void)
 }
 
 private protocol TeamApi: class {
@@ -79,6 +80,14 @@ extension Api: UserApi {
             SocketManager.sharedInstance.setNeedsConnect()
             completion(error: nil)
             }, failure: completion)
+    }
+    
+    func loadCompleteUsersList(completion:(error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(User.completeListPathPattern(), DataManager.sharedInstance.currentTeam)
+        self.manager.getObject(path: path, success: { (mappingResult) in
+            RealmUtils.save(MappingUtils.fetchUsersFromCompleteList(mappingResult))
+            completion(error: nil)
+        }, failure: completion)
     }
 }
 
