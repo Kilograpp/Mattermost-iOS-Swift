@@ -15,6 +15,7 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     private var channel : Channel?
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
     var realm: Realm?
+    var refreshControl: UIRefreshControl?
     
     //MARK: - Lifecycle
     
@@ -23,15 +24,9 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         
         self.configureInputBar()
         self.configureTableView()
+        self.setupRefreshControl()
         
-//        self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
         ChannelObserver.sharedObserver.delegate = self
-//        self.title = self.channel?.displayName
-//        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-//            self.fetchedResultsController = self.realmFetchedResultsController()
-//            self.tableView?.reloadData()
-//        })
-
     }
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
@@ -258,11 +253,42 @@ extension ChatViewController {
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
+        self.loadFirstPageOfData()
+    }
+}
+
+
+// MARK: - UI Helpers
+
+extension ChatViewController {
+    func setupRefreshControl() {
+        let tableVc = UITableViewController.init() as UITableViewController
+        tableVc.tableView = self.tableView
+        self.refreshControl = UIRefreshControl.init()
+        self.refreshControl?.addTarget(self, action: #selector(refreshControlValueChanged), forControlEvents: .ValueChanged)
+        tableVc.refreshControl = self.refreshControl
+    }
+    
+    func refreshControlValueChanged() {
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
             self.fetchedResultsController = self.realmFetchedResultsController()
             self.tableView?.reloadData()
         })
-//        print("\(self.channel?.displayName)")
+
+    }
+    
+    func endRefreshing() {
+        self.refreshControl?.endRefreshing()
+    }
+}
+
+
+//MARK: - Requests
+
+extension ChatViewController {
+    func loadFirstPageOfData() -> Void {
+        
     }
 }
 
