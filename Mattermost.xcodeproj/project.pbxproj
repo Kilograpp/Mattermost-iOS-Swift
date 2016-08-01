@@ -19,6 +19,14 @@
 		D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */; };
 		D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D617E6A11D46AFB900283C0A /* ChatViewController.swift */; };
 		D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */; };
+		D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB871D4F2A6A00390EBC /* RouterUtils.swift */; };
+		D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */; };
+		D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */; };
+		D62FEB931D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB901D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift */; };
+		D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB911D4F2AD700390EBC /* PrivateChannelTableViewCell.swift */; };
+		D62FEB951D4F2AD700390EBC /* PublicChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB921D4F2AD700390EBC /* PublicChannelTableViewCell.swift */; };
+		D62FEB981D4F2B3400390EBC /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D62FEB971D4F2B3400390EBC /* Login.storyboard */; };
+		D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */; };
 		D6330AB11D494BF9006D84F4 /* SF-UI-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AA91D494BF9006D84F4 /* SF-UI-Display-Bold.otf */; };
 		D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAA1D494BF9006D84F4 /* SF-UI-Display-Medium.otf */; };
 		D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAB1D494BF9006D84F4 /* SF-UI-Display-Regular.otf */; };
@@ -112,6 +120,14 @@
 		D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftFetchedResultsController.framework; path = Carthage/Build/iOS/SwiftFetchedResultsController.framework; sourceTree = "<group>"; };
 		D617E6A11D46AFB900283C0A /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RBQFetchedResultsController.framework; path = Carthage/Build/iOS/RBQFetchedResultsController.framework; sourceTree = "<group>"; };
+		D62FEB871D4F2A6A00390EBC /* RouterUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RouterUtils.swift; path = Mattermost/utils/RouterUtils.swift; sourceTree = SOURCE_ROOT; };
+		D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuViewController.swift; path = LeftMenu/LeftMenuViewController.swift; sourceTree = "<group>"; };
+		D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = Login/LoginViewController.swift; sourceTree = "<group>"; };
+		D62FEB901D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuTableViewCellProtocol.swift; path = LeftMenu/LeftMenuTableViewCellProtocol.swift; sourceTree = "<group>"; };
+		D62FEB911D4F2AD700390EBC /* PrivateChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrivateChannelTableViewCell.swift; path = LeftMenu/PrivateChannelTableViewCell.swift; sourceTree = "<group>"; };
+		D62FEB921D4F2AD700390EBC /* PublicChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PublicChannelTableViewCell.swift; path = LeftMenu/PublicChannelTableViewCell.swift; sourceTree = "<group>"; };
+		D62FEB971D4F2B3400390EBC /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Login.storyboard; path = storyboards/Login.storyboard; sourceTree = "<group>"; };
+		D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelObserver.swift; sourceTree = "<group>"; };
 		D6330AA91D494BF9006D84F4 /* SF-UI-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-UI-Display-Bold.otf"; sourceTree = "<group>"; };
 		D6330AAA1D494BF9006D84F4 /* SF-UI-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-UI-Display-Medium.otf"; sourceTree = "<group>"; };
 		D6330AAB1D494BF9006D84F4 /* SF-UI-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-UI-Display-Regular.otf"; sourceTree = "<group>"; };
@@ -233,6 +249,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				D62FEB961D4F2B2200390EBC /* Storyboards */,
 				D8812AE81D43931700436B5C /* Classes */,
 				D8879B241D4EF67E00EB0957 /* Managers */,
 				9B822B9F449303D4B4A3B584 /* Model */,
@@ -282,6 +299,7 @@
 				D6E165801D47539E0014C831 /* PostUtils.swift */,
 				D8A0969B1D233CB400B76E1A /* Preferences.swift */,
 				D8087AD31D401FB3001918E8 /* RealmUtils.swift */,
+				D62FEB871D4F2A6A00390EBC /* RouterUtils.swift */,
 				D8087AF01D428FF1001918E8 /* StringUtils.swift */,
 			);
 			path = Utils;
@@ -334,6 +352,8 @@
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				D62FEB891D4F2A8200390EBC /* LeftMenu */,
+				D62FEB8A1D4F2A8D00390EBC /* Login */,
 				D617E69C1D46AF0700283C0A /* Chat */,
 			);
 			path = ViewControllers;
@@ -345,6 +365,40 @@
 				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		D62FEB891D4F2A8200390EBC /* LeftMenu */ = {
+			isa = PBXGroup;
+			children = (
+				D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */,
+			);
+			name = LeftMenu;
+			sourceTree = "<group>";
+		};
+		D62FEB8A1D4F2A8D00390EBC /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
+		D62FEB8F1D4F2AC500390EBC /* LeftMenu */ = {
+			isa = PBXGroup;
+			children = (
+				D62FEB901D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift */,
+				D62FEB911D4F2AD700390EBC /* PrivateChannelTableViewCell.swift */,
+				D62FEB921D4F2AD700390EBC /* PublicChannelTableViewCell.swift */,
+			);
+			name = LeftMenu;
+			sourceTree = "<group>";
+		};
+		D62FEB961D4F2B2200390EBC /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				D62FEB971D4F2B3400390EBC /* Login.storyboard */,
+			);
+			name = Storyboards;
 			sourceTree = "<group>";
 		};
 		D6330AA71D494BE2006D84F4 /* Resources */ = {
@@ -407,6 +461,7 @@
 		D6E165841D47C08F0014C831 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				D62FEB8F1D4F2AC500390EBC /* LeftMenu */,
 				D6E165851D47C0960014C831 /* Chat */,
 				D6E165861D47C1200014C831 /* MattermostTableViewCellProtocol.swift */,
 			);
@@ -441,6 +496,7 @@
 				D6A887B21D4A0F5600C13191 /* HexColors */,
 				D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */,
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
+				D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -569,6 +625,7 @@
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
 				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
 				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
+				D62FEB981D4F2B3400390EBC /* Login.storyboard in Resources */,
 				D6330AB61D494BF9006D84F4 /* SF-UI-Text-Medium.otf in Resources */,
 				D6330AB11D494BF9006D84F4 /* SF-UI-Display-Bold.otf in Resources */,
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
@@ -686,21 +743,27 @@
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
+				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
+				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
+				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
 				D6E165871D47C1200014C831 /* MattermostTableViewCellProtocol.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
+				D62FEB951D4F2AD700390EBC /* PublicChannelTableViewCell.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
+				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,
+				D62FEB931D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift in Sources */,
 				9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
@@ -715,6 +778,7 @@
 				D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
+				D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */,
 				D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */,
 				D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,

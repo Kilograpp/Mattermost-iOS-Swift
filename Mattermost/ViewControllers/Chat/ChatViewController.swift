@@ -11,7 +11,7 @@ import RealmSwift
 import UITableView_Cache
 import SwiftFetchedResultsController
 
-class ChatViewController: SLKTextViewController {
+class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     private var channel : Channel?
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
     var realm: Realm?
@@ -24,24 +24,14 @@ class ChatViewController: SLKTextViewController {
         self.configureInputBar()
         self.configureTableView()
         
+//        self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
+        ChannelObserver.sharedObserver.delegate = self
+//        self.title = self.channel?.displayName
+//        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+//            self.fetchedResultsController = self.realmFetchedResultsController()
+//            self.tableView?.reloadData()
+//        })
 
-        
-        Preferences.sharedInstance.serverUrl = Preferences.sharedInstance.predefinedServerUrl()
-        Api.sharedInstance.login(Preferences.sharedInstance.predefinedLogin()!, password: Preferences.sharedInstance.predefinedPassword()!) { (error) in
-            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-                print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
-                Api.sharedInstance.loadChannels(with: { (error) in
-                    print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
-                    self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
-                    self.title = self.channel?.displayName
-                    Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-                        print(RealmUtils.realmForCurrentThread().objects(User).filter("username = 'jufina'").first!)
-                        self.fetchedResultsController = self.realmFetchedResultsController()
-                        self.tableView?.reloadData()
-                    })
-                })
-            })
-        }
     }
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
@@ -264,5 +254,22 @@ extension ChatViewController {
     func clearTextView() -> Void {
         self.textView.text = nil
     }
+    
+    func didSelectChannelWithIdentifier(identifier: String!) -> Void {
+        self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
+        self.title = self.channel?.displayName
+        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+            self.fetchedResultsController = self.realmFetchedResultsController()
+            self.tableView?.reloadData()
+        })
+//        print("\(self.channel?.displayName)")
+    }
 }
+
+//extension ChatViewController : ChannelObserverDelegate {
+//    func didSelectChannelWithIdentifier(identifier: String!) -> Void {
+//        self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
+//        print("\(self.channel?.displayName)")
+//    }
+//}
 

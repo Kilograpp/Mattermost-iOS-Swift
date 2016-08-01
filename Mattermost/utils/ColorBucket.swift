@@ -18,6 +18,10 @@ private protocol CommonColors: class {
     static var darkGrayColor: UIColor {get}
 }
 
+private protocol SideMenuColors {
+        static var sideMenuBackgroundColor: UIColor {get}
+}
+
 
 final class ColorBucket {
 }
@@ -29,6 +33,10 @@ extension ColorBucket : CommonColors {
     static let grayColor = ColorBucket.gray()
     static let lightGrayColor = ColorBucket.lightGray()
     static let darkGrayColor = ColorBucket.darkGray()
+}
+
+extension ColorBucket : SideMenuColors {
+    static let sideMenuBackgroundColor = ColorBucket.deepBlue()
 }
 
 extension ColorBucket {
@@ -54,5 +62,9 @@ extension ColorBucket {
     
     private class func darkGray() -> UIColor {
         return UIColor.hx_colorWithHexRGBAString("#D8D8D8", alpha: 1)!
+    }
+    
+    private class func deepBlue() -> UIColor {
+        return UIColor.hx_colorWithHexRGBAString("#2F81B7", alpha: 1)!
     }
 }
