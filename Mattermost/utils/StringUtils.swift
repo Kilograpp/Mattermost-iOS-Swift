@@ -8,7 +8,7 @@
 
 import Foundation
 
-class StringUtils {
+final class StringUtils {
     static func emptyString() -> String {
         return ""
     }
@@ -18,6 +18,18 @@ class StringUtils {
             return unwrappedString.isEmpty
         }
         return true
+    }
+    static func isValidLink(string: String?) -> Bool {
+        let types: NSTextCheckingType = .Link
+        let detector = try? NSDataDetector(types: types.rawValue)
+        guard let detect = detector else {
+            return false
+        }
+        guard let text = string else {
+            return false
+        }
+        let matches = detect.matchesInString(text, options: .ReportCompletion, range: NSMakeRange(0, text.characters.count))
+        return matches.count > 0
     }
     static func widthOfString(string: NSString!, font: UIFont!) -> Float {
         let attributes = [NSFontAttributeName : font]
