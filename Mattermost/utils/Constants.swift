@@ -28,4 +28,8 @@ struct Constants {
     struct Socket {
         static let TimeIntervalBetweenNotifications: Double = 5.0
     }
+    
+    struct UI {
+        static let FeedCellMessageLabelPaddings = 61 as CGFloat
+    }
 }

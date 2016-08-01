@@ -28,7 +28,20 @@ final class Channel: RealmObject {
     
     dynamic var team: Team?
     
+    var isSelected: Bool! {
+        return self == ChannelObserver.sharedObserver.selectedChannel
+    }
+    
     let members = List<User>()
+    
+    func interlocuterFromPrivateChannel() -> User {
+        let ids = self.name?.componentsSeparatedByString("__")
+        let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
+        let user = RealmUtils.realmForCurrentThread().objects(User).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
+        
+        return user
+    }
+    
     
     override class func primaryKey() -> String {
         return ChannelAttributes.identifier.rawValue
@@ -189,9 +202,7 @@ extension Channel: Support {
     func computeDispayNameIfNeeded() {
         if self.privateType == "D" {
             if !(self.name?.isEmpty)! {
-                let ids = self.name?.componentsSeparatedByString("__")
-                let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
-                let user = RealmUtils.realmForCurrentThread().objects(User).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
+                let user = self.interlocuterFromPrivateChannel()
                 self.displayName = user.displayName
             }
         }

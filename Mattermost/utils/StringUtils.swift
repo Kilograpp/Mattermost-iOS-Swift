@@ -38,7 +38,7 @@ final class StringUtils {
     }
     static func heightOfAttributedString(attributedString: NSAttributedString!) -> Float {
 
-        let textWidth: CGFloat = UIScreen.screenWidth() - Constants.UI.feedCellMessageLabelPaddings;
+        let textWidth: CGFloat = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings;
         let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
         let frame = attributedString.boundingRectWithSize(CGSizeMake(textWidth, CGFloat.max), options: options, context: nil)
         return ceilf(Float(CGRectGetHeight(frame)))
