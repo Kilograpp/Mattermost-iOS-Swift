@@ -94,10 +94,10 @@ final class Post: RealmObject {
     dynamic var attributedMessageHeight: Float = 0.0
     dynamic var type: String?
     
-    var author: User? {
+    var author: User! {
         return realm?.objectForPrimaryKey(User.self, key: self.privateAuthorId)
     }
-    var channel: Channel? {
+    var channel: Channel! {
         return realm?.objectForPrimaryKey(Channel.self, key: self.privateChannelId)
     }
     
