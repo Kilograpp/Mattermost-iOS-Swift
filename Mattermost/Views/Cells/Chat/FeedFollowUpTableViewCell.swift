@@ -9,7 +9,7 @@
 import ActiveLabel
 
 class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
-    var messageLabel : ActiveLabel?
+    var messageLabel : ActiveLabel = ActiveLabel()
     var messageDrawOperation : NSBlockOperation?
     
     var post : Post?
@@ -34,9 +34,9 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     func setupMessageLabel() -> Void {
         self.messageLabel = ActiveLabel.init()
-        self.messageLabel!.backgroundColor = UIColor.whiteColor()
-        self.messageLabel?.numberOfLines = 0;
-        self.addSubview(self.messageLabel!)
+        self.messageLabel.backgroundColor = UIColor.whiteColor()
+        self.messageLabel.numberOfLines = 0;
+        self.addSubview(self.messageLabel)
         self.configureMessageAttributedLabel()
         //fonts & coloring
         //assign closures
@@ -47,7 +47,7 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
             //FIXME: replace with weakSelf
             if ((self.messageDrawOperation?.cancelled)! == false) {
                 dispatch_sync(dispatch_get_main_queue(), {
-                    self.messageLabel?.attributedText = self.post?.attributedMessage
+                    self.messageLabel.attributedText = self.post?.attributedMessage
                 })
             }
         })
@@ -59,7 +59,7 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     override func layoutSubviews() {
         super.layoutSubviews()
         let textWidth = UIScreen.screenWidth() - 61 as CGFloat
-        self.messageLabel?.frame = CGRectMake(53, 8, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
+        self.messageLabel.frame = CGRectMake(53, 8, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
     }
 
 }
