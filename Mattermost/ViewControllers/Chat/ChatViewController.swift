@@ -270,12 +270,7 @@ extension ChatViewController {
     }
     
     func refreshControlValueChanged() {
-        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
-            self.fetchedResultsController = self.realmFetchedResultsController()
-            self.tableView?.reloadData()
-        })
-
+        self.loadFirstPageOfData()
     }
     
     func endRefreshing() {
@@ -288,7 +283,12 @@ extension ChatViewController {
 
 extension ChatViewController {
     func loadFirstPageOfData() -> Void {
-        
+        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
+            self.fetchedResultsController = self.realmFetchedResultsController()
+            self.tableView?.reloadData()
+        })
+
     }
 }
 
