@@ -124,7 +124,10 @@ extension Api: ChannelApi {
             let members  = mappingResult.dictionary()["members"]  as! [Channel]
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
-                channels.forEach {$0.computeTeam()}
+                channels.forEach {
+                    $0.computeTeam()
+                    $0.computeDispayNameIfNeeded()
+                }
                 realm.add(channels, update: true)
                 for channel in members {
                     var dictionary: [String: AnyObject] = [String: AnyObject] ()
@@ -176,14 +179,7 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(Post.firstPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult) in
-            let posts = MappingUtils.fetchPosts(mappingResult)
-            try! RealmUtils.realmForCurrentThread().write({
-                posts.forEach{
-                    $0.computeChannel()
-                    $0.computeAuthor()
-                }
-                RealmUtils.realmForCurrentThread().add(posts, update: true)
-            })
+            RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
             completion( error: nil)
         }) { (error) in
             completion(error: error)
@@ -196,14 +192,7 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(Post.nextPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult) in
-            let posts = MappingUtils.fetchPosts(mappingResult)
-            try! RealmUtils.realmForCurrentThread().write({
-                posts.forEach{
-                    $0.computeChannel()
-                    $0.computeAuthor()
-                }
-                RealmUtils.realmForCurrentThread().add(posts, update: true)
-            })
+            RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
             completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
         }) { (error) in
             var isLastPage = false
@@ -216,12 +205,7 @@ extension Api: PostApi {
     func sendPost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(Post.creationPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
-            let post = mappingResult.firstObject as! Post
-            try! RealmUtils.realmForCurrentThread().write({
-                post.computeChannel()
-                post.computeAuthor()
-                RealmUtils.realmForCurrentThread().add(post, update: true)
-            })
+            RealmUtils.save(mappingResult.firstObject as! Post)
             completion(error: nil)
         }, failure: completion)
     }
@@ -229,12 +213,7 @@ extension Api: PostApi {
     func updatePost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(Post.updatePathPattern(), post)
         self.manager.getObject(post, path: path, success: { (mappingResult) in
-            let post = MappingUtils.fetchPostFromUpdate(mappingResult)
-            try! RealmUtils.realmForCurrentThread().write({
-                post.computeChannel()
-                post.computeAuthor()
-                RealmUtils.realmForCurrentThread().add(post, update: true)
-            })
+            RealmUtils.save(MappingUtils.fetchPostFromUpdate(mappingResult))
             completion(error: nil)
         }, failure: completion)
         
