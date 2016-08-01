@@ -49,6 +49,7 @@ private protocol PathPatterns: class {
     static func loginPathPattern() -> String
     static func initialLoadPathPattern() -> String
     static func socketPathPattern() -> String
+    static func completeListPathPattern() -> String
 }
 
 private protocol Mappings: class {
@@ -59,6 +60,7 @@ private protocol Mappings: class {
 private protocol ResponseDescriptors: class {
     static func loginResponseDescriptor() -> RKResponseDescriptor
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor
+    static func completeListResponseDescriptor() -> RKResponseDescriptor
 }
 
 private protocol Computatations: class {
@@ -89,6 +91,9 @@ extension User: PathPatterns {
     }
     static func socketPathPattern() -> String {
         return "users/websocket"
+    }
+    static func completeListPathPattern() -> String {
+        return "users/profiles_for_dm_list/:\(TeamAttributes.identifier)"
     }
 }
 
@@ -134,6 +139,13 @@ extension User: ResponseDescriptors {
                                     method: .GET,
                                     pathPattern: initialLoadPathPattern(),
                                     keyPath: "direct_profiles",
+                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func completeListResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: mapping(),
+                                    method: .GET,
+                                    pathPattern: completeListPathPattern(),
+                                    keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
 }
