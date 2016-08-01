@@ -17,6 +17,8 @@ class LeftMenuViewController: UIViewController {
     var realm: Realm?
 
     
+    @IBOutlet weak var teamNameLabel: UILabel!
+    @IBOutlet weak var membersListButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()

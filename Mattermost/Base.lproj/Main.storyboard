@@ -177,7 +177,9 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
                         <outlet property="headerView" destination="UxB-Xk-sVy" id="P9v-rS-h9o"/>
+                        <outlet property="membersListButton" destination="6TA-Z0-aay" id="CsY-uZ-VR9"/>
                         <outlet property="tableView" destination="Njw-R4-zkZ" id="xW2-4K-fUb"/>
+                        <outlet property="teamNameLabel" destination="Jad-yd-MFb" id="RaF-36-CYL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k6S-mR-lBE" userLabel="First Responder" sceneMemberID="firstResponder"/>
