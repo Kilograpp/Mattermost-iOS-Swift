@@ -11,7 +11,7 @@ import WebImage
 import RealmSwift
 
 class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
-    var tableView : UITableView = UITableView()
+//    var tableView : UITableView = UITableView()
     var attachments : List<File>?
     
     //MARK: Init
@@ -19,7 +19,7 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.setupTableView()
+//        self.setupTableView()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -29,16 +29,16 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     
     //MARK: Setup
     
-    func setupTableView() -> Void {
-        self.tableView = UITableView.init()
-        self.tableView.scrollsToTop = false
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.separatorStyle = .None
-        self.tableView.bounces = false
-        self.tableView.scrollEnabled = false
-        self.addSubview(self.tableView)
-    }
+//    func setupTableView() -> Void {
+//        self.tableView = UITableView.init()
+//        self.tableView.scrollsToTop = false
+//        self.tableView.delegate = self
+//        self.tableView.dataSource = self
+//        self.tableView.separatorStyle = .None
+//        self.tableView.bounces = false
+//        self.tableView.scrollEnabled = false
+//        self.addSubview(self.tableView)
+//    }
     
     
     //MARK: Lifecycle
@@ -46,10 +46,14 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-//        self.tableView.frame = CGRectMake(53, CGRectGetMaxY(self.messageLabel.frame) + 8, UIScreen.screenWidth() - 61, self.tableView.contentSize.height)
-        for file in (self.post?.files)! {
-            <#code#>
-        }
+//        var maxYCoordOfPrevAttachment = CGRectGetMaxY(self.messageLabel.frame)
+//        for file in (self.post?.files)! {
+//            let attachmentView = FeedAttachmentView.init(file: file)
+//            self.addSubview(attachmentView)
+//            attachmentView.frame = CGRectMake(53,maxYCoordOfPrevAttachment + 3, attachmentView.size!.width, attachmentView.size!.height)
+//            attachmentView.configure()
+//            maxYCoordOfPrevAttachment = CGRectGetMaxY(attachmentView.frame)
+//        }
     }
     
     override func prepareForReuse() {
@@ -62,7 +66,7 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     //MARK: Private
     
     private class func tableViewHeightWithPost(post: Post) -> CGFloat {
-        return FeedAttachmentsTableViewCell.tableViewHeightWithFiles(Array(post.files))
+        return FeedAttachmentsTableViewCell.heightForFiles(Array(post.files))
     }
 
 }
@@ -75,7 +79,8 @@ extension FeedAttachmentsTableViewCell {
     override func configureWithPost(post: Post) {
         super.configureWithPost(post)
         self.attachments = self.post?.files
-        self.tableView.reloadData()
+        self.setNeedsLayout()
+//        self.tableView.reloadData()
     }
     
     override class func heightWithPost(post: Post) -> CGFloat {
@@ -114,8 +119,16 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
 //MARK: - Private
 
 extension FeedAttachmentsTableViewCell {
-    private static func tableViewHeightWithFiles(files: Array<File>) -> CGFloat {
-        let height = CGFloat(40 * files.count)
+    private static func heightForFiles(files: Array<File>) -> CGFloat {
+        var height = 0 as CGFloat
+        
+        for file in files {
+            if file.isImage {
+                height += 105
+            } else {
+                height += 45
+            }
+        }
         
         return height
     }
