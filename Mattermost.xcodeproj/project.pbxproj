@@ -26,6 +26,7 @@
 		D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB911D4F2AD700390EBC /* PrivateChannelTableViewCell.swift */; };
 		D62FEB951D4F2AD700390EBC /* PublicChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB921D4F2AD700390EBC /* PublicChannelTableViewCell.swift */; };
 		D62FEB981D4F2B3400390EBC /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D62FEB971D4F2B3400390EBC /* Login.storyboard */; };
+		D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */; };
 		D6330AB11D494BF9006D84F4 /* SF-UI-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AA91D494BF9006D84F4 /* SF-UI-Display-Bold.otf */; };
 		D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAA1D494BF9006D84F4 /* SF-UI-Display-Medium.otf */; };
 		D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAB1D494BF9006D84F4 /* SF-UI-Display-Regular.otf */; };
@@ -126,6 +127,7 @@
 		D62FEB911D4F2AD700390EBC /* PrivateChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrivateChannelTableViewCell.swift; path = LeftMenu/PrivateChannelTableViewCell.swift; sourceTree = "<group>"; };
 		D62FEB921D4F2AD700390EBC /* PublicChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PublicChannelTableViewCell.swift; path = LeftMenu/PublicChannelTableViewCell.swift; sourceTree = "<group>"; };
 		D62FEB971D4F2B3400390EBC /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Login.storyboard; path = storyboards/Login.storyboard; sourceTree = "<group>"; };
+		D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelObserver.swift; sourceTree = "<group>"; };
 		D6330AA91D494BF9006D84F4 /* SF-UI-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-UI-Display-Bold.otf"; sourceTree = "<group>"; };
 		D6330AAA1D494BF9006D84F4 /* SF-UI-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-UI-Display-Medium.otf"; sourceTree = "<group>"; };
 		D6330AAB1D494BF9006D84F4 /* SF-UI-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-UI-Display-Regular.otf"; sourceTree = "<group>"; };
@@ -494,6 +496,7 @@
 				D6A887B21D4A0F5600C13191 /* HexColors */,
 				D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */,
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
+				D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -742,6 +745,7 @@
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
 				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
+				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,

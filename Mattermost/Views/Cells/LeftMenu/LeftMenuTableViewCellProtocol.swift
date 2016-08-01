@@ -7,16 +7,16 @@
 //
 
 protocol LeftMenuTableViewCellProtocol : class, MattermostTableViewCellProtocol {
-//    var channel : Channel? { get set }
+    var channel : Channel? { get set }
     
     func configureWithChannel(channel: Channel, selected: Bool) -> Void
 //    static func height(channel: Channel) -> CGFloat
 }
 //
 //если нужна реализация
-//extension FeedTableViewCellProtocol {
+extension FeedTableViewCellProtocol {
 //    static func height(channel: Channel) -> CGFloat {
 //        return 42
 //    }
-//}
+}
 

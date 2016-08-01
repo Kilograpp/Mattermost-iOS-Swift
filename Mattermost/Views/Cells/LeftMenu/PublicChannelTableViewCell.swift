@@ -12,6 +12,8 @@ class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var highlightView: UIView!
     
+    var channel : Channel?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -31,28 +33,34 @@ class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol
     func configureTitleLabel() -> Void {
         self.titleLabel.font = FontBucket.normalTitleFont
         self.titleLabel.textColor = ColorBucket.lightGrayColor
-//        self.titleLabel.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
     
     func configurehighlightView() -> Void {
         self.highlightView.layer.cornerRadius = 3;
     }
     
-//    override func setSelected(selected: Bool, animated: Bool) {
-//        self.highlightView.backgroundColor = selected ? ColorBucket.whiteColor : ColorBucket.sideMenuBackgroundColor
-//    }
+    
+    //MARK: - Private
+    
+    func highlightViewBackgroundColor() -> UIColor {
+        return self.channel?.isSelected == true ? ColorBucket.whiteColor : ColorBucket.sideMenuBackgroundColor
+    }
+    
+    
+    //MARK: - Override
     
     override func setHighlighted(highlighted: Bool, animated: Bool) {
-//        self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.colorWithAlphaComponent(0.5) : ColorBucket.sideMenuBackgroundColor
-//        self.highlightView.removeFromSuperview()
         super.setHighlighted(highlighted, animated: animated)
-                self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.colorWithAlphaComponent(0.5) : ColorBucket.sideMenuBackgroundColor
+        self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.colorWithAlphaComponent(0.5) : self.highlightViewBackgroundColor()
     }
 }
 
 extension PublicChannelTableViewCell {
     func configureWithChannel(channel: Channel, selected: Bool) {
+        self.channel = channel
         self.titleLabel.text = "# \(channel.displayName!)"
+        self.highlightView.backgroundColor = selected ? ColorBucket.whiteColor : ColorBucket.sideMenuBackgroundColor
+        self.titleLabel.textColor = selected ? ColorBucket.blackColor : ColorBucket.lightGrayColor
     }
 }
 

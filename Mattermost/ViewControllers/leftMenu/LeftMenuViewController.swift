@@ -22,12 +22,40 @@ class LeftMenuViewController: UIViewController {
         super.viewDidLoad()
         
         self.configureTableView()
+        self.configureInitialSelectedChannel()
     }
     
-    private func configureTableView() -> Void {
+    
+    //MARK: - Configuration
+    
+    private func configureView() {
+    }
+    
+    private func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.separatorStyle = .None
+        self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
+    }
+    
+    private func configureInitialSelectedChannel() {
+        let indexPathForFirstRow = NSIndexPath(forRow: 0, inSection: 0) as NSIndexPath
+        let initialSelectedChannel = self.fetchedResultsController.objectAtIndexPath(indexPathForFirstRow)
+        ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
+    }
+    
+    
+    //MARK: - Private
+    
+    private func didSelectChannelAtIndexPath(indexPath: NSIndexPath) -> Void {
+        let selectedChannel = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Channel
+        ChannelObserver.sharedObserver.selectedChannel = selectedChannel
+        self.tableView.reloadData()
+        self.toggleLeftSideMenu()
+    }
+    
+    private func toggleLeftSideMenu() {
+        self.menuContainerViewController.toggleLeftSideMenuCompletion(nil)
     }
 }
 
@@ -44,13 +72,17 @@ extension LeftMenuViewController : UITableViewDataSource {
         let reuseIdentifier = indexPath.section == 0 ? PublicChannelTableViewCell.reuseIdentifier() : PrivateChannelTableViewCell.reuseIdentifier()
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! LeftMenuTableViewCellProtocol
         let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
-        cell.configureWithChannel(channel!, selected: true)
+        cell.configureWithChannel(channel!, selected: (channel?.isSelected)!)
         
         return cell as! UITableViewCell
     }
 }
 
 extension LeftMenuViewController : UITableViewDelegate {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.didSelectChannelAtIndexPath(indexPath)
+    }
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 42
     }

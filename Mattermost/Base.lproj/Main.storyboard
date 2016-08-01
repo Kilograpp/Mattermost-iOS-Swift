@@ -101,13 +101,17 @@
                                             <outlet property="titleLabel" destination="hN2-Ns-zyf" id="zcH-yP-tuQ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PrivateChannelTableViewCellIdentifier" rowHeight="68" id="sgC-KB-OJe" customClass="PrivateChannelTableViewCell" customModule="Mattermost" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PrivateChannelTableViewCellIdentifier" rowHeight="68" id="sgC-KB-OJe" customClass="PrivateChannelTableViewCell" customModule="Mattermost" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="112" width="375" height="68"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sgC-KB-OJe" id="dSy-qM-Ym5">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="67"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bt2-9v-Owo">
+                                                    <rect key="frame" x="5" y="5" width="345" height="57"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2pb-CK-FwX">
                                                     <rect key="frame" x="15" y="30" width="8" height="8"/>
                                                     <color key="backgroundColor" red="0.058124493989999998" green="1" blue="0.18413049970000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -130,8 +134,12 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="bt2-9v-Owo" secondAttribute="bottom" constant="5" id="DUw-Ix-vjP"/>
+                                                <constraint firstItem="b6M-m2-mTz" firstAttribute="leading" secondItem="bt2-9v-Owo" secondAttribute="trailing" constant="5" id="I8J-KI-z5c"/>
                                                 <constraint firstAttribute="trailing" secondItem="b6M-m2-mTz" secondAttribute="trailing" constant="10" id="LN5-Zb-SxZ"/>
+                                                <constraint firstItem="bt2-9v-Owo" firstAttribute="top" secondItem="dSy-qM-Ym5" secondAttribute="top" constant="5" id="RUz-5r-TZ0"/>
                                                 <constraint firstItem="b6M-m2-mTz" firstAttribute="leading" secondItem="5Qx-U8-kCC" secondAttribute="trailing" constant="10" id="UZt-jo-PRX"/>
+                                                <constraint firstItem="bt2-9v-Owo" firstAttribute="leading" secondItem="dSy-qM-Ym5" secondAttribute="leading" constant="5" id="WZl-QW-YwA"/>
                                                 <constraint firstItem="5Qx-U8-kCC" firstAttribute="leading" secondItem="2pb-CK-FwX" secondAttribute="trailing" constant="8" id="a5m-aa-tnY"/>
                                                 <constraint firstItem="b6M-m2-mTz" firstAttribute="centerY" secondItem="dSy-qM-Ym5" secondAttribute="centerY" id="nJv-yb-24T"/>
                                                 <constraint firstItem="5Qx-U8-kCC" firstAttribute="centerY" secondItem="dSy-qM-Ym5" secondAttribute="centerY" id="scR-Mm-VLk"/>
@@ -141,6 +149,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="badgeLabel" destination="b6M-m2-mTz" id="7XC-5Q-TOY"/>
+                                            <outlet property="highlightView" destination="bt2-9v-Owo" id="leh-HR-9Pq"/>
                                             <outlet property="statusView" destination="2pb-CK-FwX" id="F5J-dQ-Ypn"/>
                                             <outlet property="titleLabel" destination="5Qx-U8-kCC" id="Qzr-Ax-Tf1"/>
                                         </connections>
