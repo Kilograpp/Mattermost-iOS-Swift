@@ -11,16 +11,21 @@ import WebImage
 
 
 class FeedCommonTableViewCell: UITableViewCell {
+    //FIXME: CodeReview: В приват все лишнее
     let avatarImageView : UIImageView = UIImageView()
     let nameLabel : UILabel = UILabel()
     let dateLabel : UILabel = UILabel()
     let messageLabel : ActiveLabel = ActiveLabel()
     var messageDrawOperation : NSBlockOperation?
     
+    //FIXME: CodeReview: Ячейка может без поста работать? Если нет, то в implicity unwrap. 
+    //FIXME: CodeReview: В приват
     var post : Post?
+    //FIXME: CodeReview: В final
     var onMentionTap: ((nickname : String) -> Void)?
     
     static var messageQueue : NSOperationQueue = {
+        //FIXME: CodeReview: Убрать инит
         let queue = NSOperationQueue.init()
         queue.maxConcurrentOperationCount = 1
         
@@ -46,10 +51,14 @@ class FeedCommonTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        let nameWidth = CGFloat((self.post?.author?.displayNameWidth)!) as CGFloat
+        //FIXME: CodeReview: Лишние кастования.
+        let nameWidth = CGFloat((self.post?.author.displayNameWidth)!) as CGFloat
         let dateWidth = CGFloat(self.post!.createdAtStringWidth) as CGFloat
+        
+        
         let textWidth = UIScreen.screenWidth() - 61 as CGFloat
         
+        //FIXME: CodeReview: Убрать лишние скобочки, анвраппинг и тп
         self.messageLabel.frame = CGRectMake(53, 36, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
         self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
@@ -80,6 +89,7 @@ protocol FeedCommonTableViewCellSetup : class {
 
 //MARK: - FeedTableViewCellProtocol
 extension FeedCommonTableViewCell : FeedTableViewCellProtocol {
+    //FIXME: CodeReview: Убрать войд
     func configureWithPost(post: Post) -> Void {
         self.post = post
         self.configureAvatarImage()
@@ -87,6 +97,7 @@ extension FeedCommonTableViewCell : FeedTableViewCellProtocol {
         self.configureBasicLabels()
     }
     
+    //FIXME: CodeReview: Заменить class на static
     class func heightWithPost(post: Post) -> CGFloat {
         return CGFloat(post.attributedMessageHeight) + 44
     }
@@ -96,6 +107,7 @@ extension FeedCommonTableViewCell : FeedTableViewCellProtocol {
 extension FeedCommonTableViewCell : FeedCommonTableViewCellSetup  {
     final func setupAvatarImageView() {
         self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
+        //FIXME: CodeReview: Конкретный цвет
         self.avatarImageView.backgroundColor = ColorBucket.whiteColor
         self.avatarImageView.contentMode = .ScaleAspectFill
         self.addSubview(self.avatarImageView)
@@ -104,7 +116,9 @@ extension FeedCommonTableViewCell : FeedCommonTableViewCellSetup  {
     }
     
     final func setupNameLabel() {
+        //FIXME: CodeReview: Заменить на конкретный цвет
         self.nameLabel.backgroundColor = ColorBucket.whiteColor
+        //FIXME: CodeReview: Заменить на конкретный цвет
         self.nameLabel.textColor = ColorBucket.blackColor
         self.nameLabel.font = FontBucket.postAuthorNameFont
         self.addSubview(self.nameLabel)
@@ -114,6 +128,7 @@ extension FeedCommonTableViewCell : FeedCommonTableViewCellSetup  {
         self.dateLabel.backgroundColor = UIColor.whiteColor()
         self.addSubview(self.dateLabel)
         self.dateLabel.font = FontBucket.postDateFont
+        //FIXME: CodeReview: Заменить на конкретный цвет
         self.dateLabel.textColor = ColorBucket.grayColor
     }
     
@@ -129,6 +144,7 @@ extension FeedCommonTableViewCell : FeedCommonTableViewCellSetup  {
 //MARK - Configuration
 extension FeedCommonTableViewCell : FeedCommonTableViewCellConfiguration {
     final func configureAvatarImage() {
+        //FIXME: CodeReview: Убрать лишние анврапы
         SDWebImageManager.sharedManager().downloadImageWithURL(self.post?.author?.avatarURL(),
                                                                options: .HandleCookies,
                                                                progress: nil,
@@ -145,6 +161,7 @@ extension FeedCommonTableViewCell : FeedCommonTableViewCellConfiguration {
         messageDrawOperation = NSBlockOperation(block: { [unowned self] in
             if self.messageDrawOperation?.cancelled == false {
                 dispatch_sync(dispatch_get_main_queue(), {
+                    //FIXME: CodeReview: Лишние анврапы
                     self.messageLabel.attributedText = self.post?.attributedMessage
                 })
             }
@@ -154,6 +171,7 @@ extension FeedCommonTableViewCell : FeedCommonTableViewCellConfiguration {
     }
     
     final func configureBasicLabels() {
+        //FIXME: CodeReview: Лишние анврапы
         self.nameLabel.text = self.post?.author?.displayName
         self.dateLabel.text = self.post?.createdAtString
     }

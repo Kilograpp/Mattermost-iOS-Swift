@@ -10,8 +10,12 @@ import ActiveLabel
 import WebImage
 import RealmSwift
 
+//FIXME: CodeReview: Final
 class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
+    //FIXME: CodeReview: Константной
+    //FIXME: CodeReview: Приват
     var tableView : UITableView = UITableView()
+    //FIXME: CodeReview: Может быть такое, что ячейка без attachment рабоотает? Если нет, то implicity unwrap
     var attachments : List<File>?
     
     //MARK: Init
@@ -82,6 +86,7 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        //FIXME: CodeReview: Убрать инит
         let cell = UITableViewCell.init(style: .Default, reuseIdentifier: "attachments")
         
         if (indexPath.row % 2 == 0) {
