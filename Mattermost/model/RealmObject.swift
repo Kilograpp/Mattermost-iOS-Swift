@@ -9,22 +9,19 @@
 import Foundation
 import RealmSwift
 
-class RealmObject: Object {
+class RealmObject: Object {}
 
-}
-
-public enum CommonAttributes: String {
+enum CommonAttributes: String {
     case identifier = "identifier"
     case username = "username"
-    
 }
 
-protocol CommonFinders {
+protocol CommonFinders: class {
     static func objectById(id: String) -> Self?
     static func objectByUsername(username: String) -> Self?
 }
 
-protocol CommonMappings {
+protocol CommonMappings: class {
     static func mapping() -> RKObjectMapping
     static func emptyResponseMapping() -> RKObjectMapping
     static func emptyMapping() -> RKObjectMapping
@@ -39,11 +36,11 @@ extension RealmObject: CommonMappings  {
         return mapping;
     }
     
-    class func emptyResponseMapping() -> RKObjectMapping {
+    static func emptyResponseMapping() -> RKObjectMapping {
         return RKObjectMapping(withClass: NSNull.self)
     }
     
-    class func emptyMapping() -> RKObjectMapping {
+    static func emptyMapping() -> RKObjectMapping {
         return RKObjectMapping(withClass: self)
     }
     
@@ -53,16 +50,16 @@ extension RealmObject: CommonMappings  {
         return mapping;
     }
 }
-//
-//// MARK: - Finders
+
+// MARK: - Finders
 extension RealmObject : CommonFinders {
-    class func objectById(id: String) -> Self? {
+    static func objectById(id: String) -> Self? {
         let realm = try! Realm()
         return realm.objectForPrimaryKey(self, key: id);
         
     }
     
-    class func objectByUsername(username: String) -> Self? {
+    static func objectByUsername(username: String) -> Self? {
         let realm = try! Realm()
         return realm.objects(self).filter(CommonAttributes.username.rawValue + " == " + username).first;
     }

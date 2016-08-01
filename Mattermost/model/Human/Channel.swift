@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-class Channel: RealmObject {
+final class Channel: RealmObject {
     dynamic var privateType: String?
     dynamic var privateTeamId: String? {
         didSet {
@@ -40,7 +40,7 @@ class Channel: RealmObject {
     
 }
 
-public enum ChannelAttributes: String {
+enum ChannelAttributes: String {
     case identifier = "identifier"
     case createdAt = "createdAt"
     case privateTeamId = "privateTeamId"
@@ -54,24 +54,24 @@ public enum ChannelAttributes: String {
     case privateType = "privateType"
 }
 
-public enum ChannelRelationships: String {
+enum ChannelRelationships: String {
     case team = "team"
     case members = "members"
 }
 
-private protocol PathPattern {
+private protocol PathPattern: class {
     static func listPathPattern() -> String
     static func moreListPathPattern() -> String
     static func extraInfoPathPattern() -> String
     static func updateLastViewDatePathPattern() -> String
 }
 
-private protocol Mapping {
+private protocol Mapping: class {
     static func mapping() -> RKObjectMapping
     static func attendantInfoMapping() -> RKObjectMapping
 }
 
-private protocol ResponseDescriptors {
+private protocol ResponseDescriptors: class {
     static func extraInfoResponseDescriptor() -> RKResponseDescriptor
     static func channelsListResponseDescriptor() -> RKResponseDescriptor
     static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor
@@ -80,22 +80,22 @@ private protocol ResponseDescriptors {
 }
 
 
-private protocol Support {
+private protocol Support: class {
     static func teamIdentifierPath() -> String
 }
 
 // MARK: - Path Pattern
 extension Channel: PathPattern {
-    class func moreListPathPattern() -> String {
+    static func moreListPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/more"
     }
-    class func listPathPattern() -> String {
+    static func listPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/"
     }
-    class func extraInfoPathPattern() -> String {
+    static func extraInfoPathPattern() -> String {
         return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/extra_info"
     }
-    class func updateLastViewDatePathPattern() -> String {
+    static func updateLastViewDatePathPattern() -> String {
         return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/update_last_viewed_at"
     }
 }
@@ -121,7 +121,7 @@ extension Channel: Mapping {
         return mapping;
     }
     
-    class func attendantInfoMapping() -> RKObjectMapping {
+    static func attendantInfoMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.forceCollectionMapping = true
         mapping.assignsNilForMissingRelationships = false
@@ -177,10 +177,10 @@ extension Channel: ResponseDescriptors {
 
 //  MARK: - Support
 extension Channel: Support {
-    class func teamIdentifierPath() -> String {
+    static func teamIdentifierPath() -> String {
         return ChannelRelationships.team.rawValue + "." + ChannelAttributes.identifier.rawValue
     }
-    func computeTeam() {
+    private func computeTeam() {
         let team = Team()
         team.identifier = self.privateTeamId!.isEmpty ? DataManager.sharedInstance.currentTeam!.identifier : self.privateTeamId!
         self.team = team

@@ -8,26 +8,26 @@
 
 import Foundation
 
-private protocol PostFonts {
+private protocol PostFonts: class {
     static var messageFont: UIFont {get}
     static var postDateFont: UIFont {get}
     static var postAuthorNameFont: UIFont {get}
 }
 
-private protocol FeedFonts {
+private protocol FeedFonts: class {
     static var feedSendButtonTitleFont: UIFont {get}
     static var inputTextViewFont: UIFont {get}
     static var sectionTitleFont: UIFont {get}
 }
 
-private protocol MarkdownFonts {
+private protocol MarkdownFonts: class {
     static var emphasisFont: UIFont {get}
     
     static func semiboldFontOfSize(size: CGFloat) -> UIFont
     static func regularFontOfSize(size: CGFloat) -> UIFont
 }
 
-class FontBucket {
+final class FontBucket {
 }
 
 extension FontBucket : PostFonts {

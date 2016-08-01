@@ -5,11 +5,9 @@
 
 import Foundation
 
+final class ObjectManager: RKObjectManager {}
 
-class ObjectManager: RKObjectManager {
-}
-
-private protocol GetRequests {
+private protocol GetRequests: class {
     func getObjectsAtPath(path: String,
                           parameters: [NSObject : AnyObject]?,
                           success: ((mappingResult: RKMappingResult) -> Void)?,
@@ -26,7 +24,7 @@ private protocol GetRequests {
                    failure: ((error: Error) -> Void)?)
 }
 
-private protocol PostRequests {
+private protocol PostRequests: class {
     func postObject(object: AnyObject?,
                     path: String!,
                     parameters: [NSObject : AnyObject]?,
@@ -41,7 +39,7 @@ private protocol PostRequests {
                    failure: ((error: Error) -> Void)?)
 }
 
-private protocol Helpers {
+private protocol Helpers: class {
     func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Error
 }
 

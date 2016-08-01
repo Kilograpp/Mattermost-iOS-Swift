@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ActionsNotification {
+final class ActionsNotification {
     let userIdentifier: String
     let action: ChannelAction
     

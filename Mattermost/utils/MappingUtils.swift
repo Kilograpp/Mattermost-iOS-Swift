@@ -9,25 +9,25 @@
 import Foundation
 
 
-class MappingUtils {}
+final class MappingUtils {}
 
-private protocol TeamMethods {
+private protocol TeamMethods: class {
     static func containsSingleTeam(mappingResult: RKMappingResult) -> Bool
     static func fetchSiteName(mappingResult: RKMappingResult) -> String?
     static func fetchAllTeams(mappingResult: RKMappingResult) -> [Team]
 }
 
-private protocol ChannelMethods {
+private protocol ChannelMethods: class {
     static func fetchAllChannelsFromList(mappingResult: RKMappingResult) -> [Channel]
 }
 
-private protocol PostMethods {
+private protocol PostMethods: class {
     static func isLastPage(mappingResult: RKMappingResult, pageSize: Int) -> Bool
     static func fetchPosts(mappingResult: RKMappingResult) -> [Post]
     static func fetchPostFromUpdate(mappingResult: RKMappingResult) -> Post
 }
 
-private protocol UserMethod {
+private protocol UserMethod: class {
     static func fetchUsersFromInitialLoad(mappingResult: RKMappingResult) -> [User]
 }
 

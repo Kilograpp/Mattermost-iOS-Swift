@@ -8,35 +8,35 @@
 import Foundation
 import RealmSwift
 
-private protocol Interface {
+private protocol Interface: class {
     func isSignedIn() -> Bool
     func baseURL() -> NSURL!
     func cookie() -> NSHTTPCookie?
 }
 
-private protocol UserApi {
+private protocol UserApi: class {
     func login(email: String, password: String, completion: (error: Error?) -> Void)
 }
 
-private protocol TeamApi {
+private protocol TeamApi: class {
     func loadTeams(with completion:(userShouldSelectTeam: Bool, error: Error?) -> Void)
 }
 
-private protocol ChannelApi {
+private protocol ChannelApi: class {
     func loadChannels(with completion:(error: Error?) -> Void)
     func loadExtraInfoForChannel(channel: Channel, completion:(error: Error?) -> Void)
     func updateLastViewDateForChannel(channel: Channel, completion:(error: Error?) -> Void)
     func loadAllChannelsWithCompletion(completion:(error: Error?) -> Void)
 }
 
-private protocol PostApi {
+private protocol PostApi: class {
     func sendPost(post: Post, completion: (error: Error?) -> Void)
     func updatePost(post: Post, completion: (error: Error?) -> Void)
     func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
     func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void)
 }
 
-class Api: NSObject {
+final class Api {
     static let sharedInstance = Api()
     private var _managerCache: ObjectManager?
     private var manager: ObjectManager  {
@@ -52,16 +52,13 @@ class Api: NSObject {
         return _managerCache!;
     }
     
-    private override init() {
-        super.init()
+    private init() {
         self.setupMillisecondsValueTransformer()
     }
-    func setupMillisecondsValueTransformer() {
+    private func setupMillisecondsValueTransformer() {
         let transformer = RKValueTransformer.millisecondsToDateValueTransformer()
         RKValueTransformer.defaultValueTransformer().insertValueTransformer(transformer, atIndex: 0)
     }
-    
-    
     
     private func computeAndReturnApiRootUrl() -> NSURL! {
         return NSURL(string: Preferences.sharedInstance.serverUrl!)?.URLByAppendingPathComponent(Constants.Api.Route)

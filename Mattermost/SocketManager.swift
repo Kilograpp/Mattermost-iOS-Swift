@@ -10,13 +10,13 @@ import Foundation
 import Starscream
 import RealmSwift
 
-private protocol Interface {
+private protocol Interface: class {
     func sendNotificationAboutAction(action: ChannelAction, channel: Channel)
     func setNeedsConnect()
     func disconnect()
 }
 
-@objc class SocketManager: NSObject {
+@objc final class SocketManager: NSObject {
     static let sharedInstance = SocketManager()
     private var lastNotificationDate: NSDate?
     private lazy var socket: WebSocket = {
@@ -46,21 +46,21 @@ enum ChannelAction: String {
     case Unknown
 }
 
-private protocol Notifications {
+private protocol Notifications: class {
     func publishBackendNotificationAboutAction(action: ChannelAction, channel: Channel)
     func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: ChannelAction)
 }
 
-private protocol StateControl {
+private protocol StateControl: class {
     func shouldConnect() -> Bool
     func shouldSendNotification() -> Bool
 }
 
-private protocol Validation {
+private protocol Validation: class {
     func postExistsWithIdentifier(identifier: String, pendingIdentifier: String) -> Bool
 }
 
-private protocol MessageHandling {
+private protocol MessageHandling: class {
     func handleIncomingMessage(text: String)
 }
 
@@ -168,7 +168,7 @@ extension SocketManager: StateControl {
 
 //MARK: - Validation
 extension SocketManager: Validation {
-    func postExistsWithIdentifier(identifier: String, pendingIdentifier: String) -> Bool {
+    private func postExistsWithIdentifier(identifier: String, pendingIdentifier: String) -> Bool {
         let realm = try! Realm()
         let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.privatePendingId.rawValue, pendingIdentifier)
         return realm.objects(Post).filter(predicate).first != nil

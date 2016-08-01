@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Realm
 import RealmSwift
 import TSMarkdownParser
 
@@ -37,6 +36,7 @@ public enum PostAttributes: String {
     case attributedMessage = "attributedMessage"
     case attributedMessageHeight = "attributedMessageHeight"
     case hasObserverAttached = "hasObserverAttached"
+    
 }
 
 public enum PostRelationships: String {
@@ -52,7 +52,7 @@ public enum PostRelationships: String {
 }
 
 
-class Post: RealmObject {
+final class Post: RealmObject {
     dynamic var privateAttributedMessageData: NSData?
     dynamic var privatePendingId: String?
     dynamic var privateChannelId: String?
@@ -101,6 +101,8 @@ class Post: RealmObject {
         return RealmUtils.realmForCurrentThread().objectForPrimaryKey(Channel.self, key: self.privateChannelId)
     }
     
+    
+    
     let files = List<File>()
     
     private var hasObserverAttached: Bool = false
@@ -129,30 +131,29 @@ class Post: RealmObject {
     
 }
 
-
-private protocol PathPattern {
+private protocol PathPattern: class {
     static func updatePathPattern() -> String
     static func nextPagePathPattern() -> String
     static func creationPathPattern() -> String
     static func firstPagePathPattern() -> String
 }
 
-private protocol Mapping {
+private protocol ResponseMapping: class {
     static func listMapping() -> RKObjectMapping
     static func creationMapping() -> RKObjectMapping
 }
 
-private protocol RequestMapping {
+private protocol RequestMapping: class {
     static func creationRequestMapping() -> RKObjectMapping
 }
 
-private protocol ResponseDescriptor {
+private protocol ResponseDescriptor: class {
     static func updateResponseDescriptor() -> RKResponseDescriptor
     static func nextPageResponseDescriptor() -> RKResponseDescriptor
     static func firstPageResponseDescriptor() -> RKResponseDescriptor
 }
 
-private protocol Computations {
+private protocol Computations: class {
     func resetStatus()
     func computePendingId()
     func computeCreatedAtString()
@@ -162,13 +163,13 @@ private protocol Computations {
     func computeAttributedMessageHeight()
 }
 
-private protocol Support {
+private protocol Support: class {
     static func filesLinkPath() -> String
     static func teamIdentifierPath() -> String
     static func channelIdentifierPath() -> String
 }
 
-private protocol KVO {
+private protocol KVO: class {
     func addStatusObserverIfNeeded()
     func removeStatusObserverIfNeeded()
     func notifyStatusObserverIfNeeded(oldStatus: PostStatus)
@@ -197,7 +198,7 @@ extension Post: PathPattern {
 }
 
 // MARK: - Mapping
-extension Post: Mapping {
+extension Post: ResponseMapping {
     class func creationMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.addAttributeMappingsFromDictionary([
@@ -219,9 +220,9 @@ extension Post: Mapping {
             "(\(PostAttributes.identifier)).user_id" : PostAttributes.privateAuthorId.rawValue,
             "(\(PostAttributes.identifier)).channel_id" : PostAttributes.privateChannelId.rawValue
             ])
-        //        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
-        //            toKeyPath: PostRelationships.files.rawValue,
-        //            withMapping: File.mapping()))
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
+                                                           toKeyPath: PostRelationships.files.rawValue,
+                                                         withMapping: File.simplifiedMapping()))
         return mapping
     }
 }
@@ -229,13 +230,13 @@ extension Post: Mapping {
 
 //  MARK: - Support
 extension Post: Support {
-    class func filesLinkPath() -> String {
-        return PostRelationships.files.rawValue + "." + FileAttributes.privateLink.rawValue
+    private static func filesLinkPath() -> String {
+        return PostRelationships.files.rawValue + "." + FileAttributes.rawLink.rawValue
     }
-    class func channelIdentifierPath() -> String {
+    private static func channelIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelAttributes.identifier)"
     }
-    class func teamIdentifierPath() -> String {
+    private static func teamIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
     }
     private func unarchiveAttributedMessageFromData() -> NSAttributedString {
@@ -248,7 +249,7 @@ extension Post: Support {
 // MARK: - Inteface
 extension Post: Inteface {
     func hasAttachments() -> Bool {
-        return files.count != 0
+        return self.files.count != 0
     }
     func hasSameAuthor(post: Post!) -> Bool {
         return self.privateAuthorId == post.privateAuthorId
@@ -335,7 +336,7 @@ extension Post: KVO {
 
 // MARK: - Request Mapping
 extension Post: RequestMapping {
-    class func creationRequestMapping() -> RKObjectMapping {
+    static func creationRequestMapping() -> RKObjectMapping {
         let mapping = RKObjectMapping.requestMapping()
         mapping.addAttributeMappingsFromDictionary([
             filesLinkPath() : "filenames",

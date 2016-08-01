@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-class Team: RealmObject {
+final class Team: RealmObject {
     dynamic var identifier: String?
     dynamic var displayName: String?
     dynamic var name: String?
@@ -22,17 +22,17 @@ class Team: RealmObject {
     }
 }
 
-private protocol PathPattern {
+private protocol PathPattern: class {
     static func initialLoadPathPattern() -> String
     static func teamListingsPathPattern() -> String
 }
 
-private protocol Mapping {
+private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
     static func initialLoadConfigMapping() -> RKObjectMapping
 }
 
-private protocol ResponseDescriptors {
+private protocol ResponseDescriptors: class {
     static func initalLoadResponseDescriptor() -> RKResponseDescriptor
     static func teamListingsResponseDescriptor() -> RKResponseDescriptor
     static func initalLoadConfigResponseDescriptor() -> RKResponseDescriptor
@@ -47,23 +47,23 @@ public enum TeamAttributes: String {
 
 // MARK: - Path Pattern
 extension Team: PathPattern {
-    class func initialLoadPathPattern() -> String {
+    static func initialLoadPathPattern() -> String {
         return "users/initial_load"
     }
-    class func teamListingsPathPattern() -> String {
+    private static func teamListingsPathPattern() -> String {
         return "teams/all_team_listings"
     }
 }
 
 // MARK: - Mapping
-extension Team: Mapping {
-    override class func mapping() -> RKObjectMapping {
+extension Team: ResponseMappings {
+    override static func mapping() -> RKObjectMapping {
         let entityMapping = super.mapping()
         entityMapping.addAttributeMappingsFromDictionary(["display_name" : TeamAttributes.displayName.rawValue])
         entityMapping.addAttributeMappingsFromArray([TeamAttributes.name.rawValue])
         return entityMapping
     }
-    class func initialLoadConfigMapping() -> RKObjectMapping {
+    private static func initialLoadConfigMapping() -> RKObjectMapping {
         let entityMapping = RKObjectMapping(forClass: NSMutableDictionary.self)
         entityMapping.addAttributeMappingsFromDictionary(["SiteName" : PreferencesAttributes.siteName.rawValue])
         return entityMapping
@@ -72,7 +72,7 @@ extension Team: Mapping {
 
 // MARK: - Response Descriptors
 extension Team: ResponseDescriptors {
-    class func initalLoadResponseDescriptor() -> RKResponseDescriptor {
+    static func initalLoadResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                     method: .GET,
                                     pathPattern: initialLoadPathPattern(),
@@ -80,7 +80,7 @@ extension Team: ResponseDescriptors {
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     
-    class func teamListingsResponseDescriptor() -> RKResponseDescriptor {
+    static func teamListingsResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: emptyMapping(),
                                     method: .GET,
                                     pathPattern: teamListingsPathPattern(),
@@ -88,7 +88,7 @@ extension Team: ResponseDescriptors {
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     
-    class func initalLoadConfigResponseDescriptor() -> RKResponseDescriptor {
+    static func initalLoadConfigResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: initialLoadConfigMapping(),
                                     method: .GET,
                                     pathPattern: initialLoadPathPattern(),

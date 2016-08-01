@@ -10,7 +10,7 @@ import Foundation
 import Realm
 import RealmSwift
 
-class PostUtils: NSObject {
+final class PostUtils: NSObject {
     
     static let sharedInstance = PostUtils()
     

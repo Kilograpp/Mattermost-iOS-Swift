@@ -9,7 +9,7 @@
 import Foundation
 
 
-private protocol PathPatterns {
+private protocol PathPatterns: class {
     static func teamIdPath() -> String
     static func channelIdPath() -> String
     static func pagePath() -> String
@@ -17,14 +17,14 @@ private protocol PathPatterns {
     static func lastPostIdPath() -> String
 }
 
-public enum PageWrapperAttributes: String {
+enum PageWrapperAttributes: String {
     case channel = "channel"
     case page = "page"
     case size = "size"
     case lastPostId = "lastPostId"
 }
 
-class PageWrapper: NSObject {
+final class PageWrapper: NSObject {
     let page: Int
     let size: Int
     let channel: Channel
