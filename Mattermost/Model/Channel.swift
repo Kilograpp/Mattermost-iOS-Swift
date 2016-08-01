@@ -180,9 +180,7 @@ extension Channel: Support {
     static func teamIdentifierPath() -> String {
         return ChannelRelationships.team.rawValue + "." + ChannelAttributes.identifier.rawValue
     }
-    private func computeTeam() {
-        let team = Team()
-        team.identifier = self.privateTeamId!.isEmpty ? DataManager.sharedInstance.currentTeam!.identifier : self.privateTeamId!
-        self.team = team
+    func computeTeam() {
+        self.team = (realm ?? RealmUtils.realmForCurrentThread()).objectForPrimaryKey(Team.self, key: self.privateTeamId!.isEmpty ? DataManager.sharedInstance.currentTeam!.identifier : self.privateTeamId!)
     }
 }

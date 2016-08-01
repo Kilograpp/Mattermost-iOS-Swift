@@ -55,8 +55,16 @@ public enum PostRelationships: String {
 final class Post: RealmObject {
     dynamic var privateAttributedMessageData: NSData?
     dynamic var privatePendingId: String?
-    dynamic var privateChannelId: String?
-    dynamic var privateAuthorId: String?
+    dynamic var privateChannelId: String? {
+        didSet {
+            computeChannel()
+        }
+    }
+    dynamic var privateAuthorId: String? {
+        didSet {
+            computeAuthor()
+        }
+    }
     dynamic var creationDay: NSDate? {
         didSet {
             computeCreationDayString()
@@ -94,15 +102,9 @@ final class Post: RealmObject {
     dynamic var attributedMessageHeight: Float = 0.0
     dynamic var type: String?
     
-    var author: User? {
-        return RealmUtils.realmForCurrentThread().objectForPrimaryKey(User.self, key: self.privateAuthorId)
-    }
-    var channel: Channel? {
-        return RealmUtils.realmForCurrentThread().objectForPrimaryKey(Channel.self, key: self.privateChannelId)
-    }
-    
-    
-    
+    dynamic var author: User?
+    dynamic var channel: Channel?
+
     let files = List<File>()
     
     private var hasObserverAttached: Bool = false
@@ -115,8 +117,6 @@ final class Post: RealmObject {
     
     override class func ignoredProperties() -> [String] {
         return [PostAttributes.attributedMessage.rawValue,
-                PostRelationships.author.rawValue,
-                PostRelationships.channel.rawValue,
                 PostAttributes.hasObserverAttached.rawValue
         ]
     }
@@ -275,6 +275,20 @@ extension Post: Delegate {
 
 // MARK: - Computations
 extension Post: Computations {
+    func computeAuthor() {
+        if let aAuthor = (realm ?? RealmUtils.realmForCurrentThread()).objectForPrimaryKey(User.self, key: self.privateAuthorId!) {
+            self.author = aAuthor
+        } else {
+            let aAuthor = User()
+            aAuthor.identifier = self.privateAuthorId
+            self.author = aAuthor
+        }
+    }
+    
+    func computeChannel() {
+        self.channel = (realm ?? RealmUtils.realmForCurrentThread()).objectForPrimaryKey(Channel.self, key: self.privateChannelId)
+    }
+    
     private func computeDisplayDay() {
         let unitFlags: NSCalendarUnit = [.Year, .Month, .Day]
         let calendar = NSCalendar.sharedGregorianCalendar
