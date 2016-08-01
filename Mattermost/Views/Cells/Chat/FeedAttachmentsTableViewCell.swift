@@ -11,7 +11,7 @@ import WebImage
 import RealmSwift
 
 class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
-    var tableView : UITableView?
+    var tableView : UITableView = UITableView()
     var attachments : List<File>?
     
     //MARK: Init
@@ -31,13 +31,13 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     
     func setupTableView() -> Void {
         self.tableView = UITableView.init()
-        self.tableView?.scrollsToTop = false
-        self.tableView?.delegate = self
-        self.tableView?.dataSource = self
-        self.tableView?.separatorStyle = .None
-        self.tableView?.bounces = false
-        self.tableView?.scrollEnabled = false
-        self.addSubview(self.tableView!)
+        self.tableView.scrollsToTop = false
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.separatorStyle = .None
+        self.tableView.bounces = false
+        self.tableView.scrollEnabled = false
+        self.addSubview(self.tableView)
     }
     
     
@@ -46,7 +46,7 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.tableView?.frame = CGRectMake(53, CGRectGetMaxY((self.messageLabel?.frame)!) + 8, UIScreen.screenWidth() - 61, (self.tableView?.contentSize.height)!)
+        self.tableView.frame = CGRectMake(53, CGRectGetMaxY(self.messageLabel.frame) + 8, UIScreen.screenWidth() - 61, self.tableView.contentSize.height)
     }
     
     override func prepareForReuse() {
@@ -68,7 +68,7 @@ extension FeedAttachmentsTableViewCell {
     override func configureWithPost(post: Post) {
         super.configureWithPost(post)
         self.attachments = self.post?.files
-        self.tableView?.reloadData()
+        self.tableView.reloadData()
     }
     
     override class func heightWithPost(post: Post) -> CGFloat {

@@ -10,11 +10,11 @@ import ActiveLabel
 import WebImage
 
 
-class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
-    var avatarImageView : UIImageView?
-    var nameLabel : UILabel?
-    var dateLabel : UILabel?
-    var messageLabel : ActiveLabel?
+class FeedCommonTableViewCell: UITableViewCell {
+    let avatarImageView : UIImageView = UIImageView()
+    let nameLabel : UILabel = UILabel()
+    let dateLabel : UILabel = UILabel()
+    let messageLabel : ActiveLabel = ActiveLabel()
     var messageDrawOperation : NSBlockOperation?
     
     var post : Post?
@@ -42,82 +42,7 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         super.init(coder: aDecoder)
     }
     
-    
-    //MARK: Setup
-    
-    func setupAvatarImageView() -> Void {
-        self.avatarImageView = UIImageView.init(frame: CGRectMake(8, 8, 40, 40))
-        self.avatarImageView?.backgroundColor = ColorBucket.whiteColor
-        self.avatarImageView?.contentMode = .ScaleAspectFill
-        self.addSubview(self.avatarImageView!)
-        self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
-        //add gesture recognizer
-    }
-    
-    func setupNameLabel() -> Void {
-        self.nameLabel = UILabel.init()
-        self.nameLabel!.backgroundColor = ColorBucket.whiteColor
-        self.nameLabel?.textColor = ColorBucket.blackColor
-        self.nameLabel?.font = FontBucket.postAuthorNameFont
-        self.addSubview(self.nameLabel!)
-        //fonts & coloring
-    }
-    
-    func setupDateLabel() -> Void {
-        self.dateLabel = UILabel.init()
-        self.dateLabel!.backgroundColor = UIColor.whiteColor()
-        self.addSubview(self.dateLabel!)
-        self.dateLabel?.font = FontBucket.postDateFont
-        self.dateLabel?.textColor = ColorBucket.grayColor
-    }
-    
-    func setupMessageLabel() -> Void {
-        self.messageLabel = ActiveLabel.init()
-        self.messageLabel!.backgroundColor = ColorBucket.whiteColor
-        self.messageLabel?.numberOfLines = 0;
-        self.addSubview(self.messageLabel!)
-        self.configureMessageAttributedLabel()
-        //fonts & coloring
-        //assign closures
-    }
-    
-    
-    //MARK: Configuration
-    
-    func configureAvatarImage() -> Void {
-        weak var weakSelf = self
-        SDWebImageManager.sharedManager().downloadImageWithURL(self.post?.author?.avatarURL(),
-                                                               options: .HandleCookies,
-                                                               progress: nil,
-                   completed: {(image, error, cacheType, isFinished, imageUrl) in
-                    if (image != nil) {
-                        weakSelf?.avatarImageView?.image = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
-                    }
-                    
-        })
-    }
-    
-    func configureMessageOperation() -> Void {
-        weak var weakSelf = self
-        messageDrawOperation = NSBlockOperation.init(block: {
-            if ((weakSelf?.messageDrawOperation?.cancelled)! == false) {
-                dispatch_sync(dispatch_get_main_queue(), { 
-                    weakSelf?.messageLabel?.attributedText = weakSelf?.post?.attributedMessage
-                })
-            }
-        })
-        
-        FeedCommonTableViewCell.messageQueue.addOperation(self.messageDrawOperation!)
-    }
-    
-    func configureBasicLabels() -> Void {
-        self.nameLabel?.text = self.post?.author?.displayName
-        self.dateLabel?.text = self.post?.createdAtString
-    }
-    
-    
     //MARK: Lifecycle
-    
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -125,21 +50,36 @@ class FeedCommonTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         let dateWidth = CGFloat(self.post!.createdAtStringWidth) as CGFloat
         let textWidth = UIScreen.screenWidth() - 61 as CGFloat
         
-        self.messageLabel?.frame = CGRectMake(53, 36, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
-        self.nameLabel?.frame = CGRectMake(53, 8, nameWidth, 20)
-        self.dateLabel?.frame = CGRectMake(CGRectGetMaxX(self.nameLabel!.frame) + 5, 8, dateWidth, 20)
+        self.messageLabel.frame = CGRectMake(53, 36, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
+        self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
+        self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
     }
     
     override func prepareForReuse() {
-//        self.avatarImageView?.image = nil
-        self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
-        self.messageLabel?.attributedText = nil
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        self.messageLabel.attributedText = nil
         self.messageDrawOperation?.cancel()
     }
 }
 
 
-extension FeedCommonTableViewCell {
+protocol FeedCommonTableViewCellConfiguration : class {
+    func configureAvatarImage()
+    func configureMessageOperation()
+    func configureBasicLabels()
+}
+
+
+protocol FeedCommonTableViewCellSetup : class {
+    func setupAvatarImageView()
+    func setupNameLabel()
+    func setupDateLabel()
+    func setupMessageLabel()
+}
+
+
+//MARK: - FeedTableViewCellProtocol
+extension FeedCommonTableViewCell : FeedTableViewCellProtocol {
     func configureWithPost(post: Post) -> Void {
         self.post = post
         self.configureAvatarImage()
@@ -150,5 +90,73 @@ extension FeedCommonTableViewCell {
     class func heightWithPost(post: Post) -> CGFloat {
         return CGFloat(post.attributedMessageHeight) + 44
     }
+}
+
+//MARK: - Setup
+extension FeedCommonTableViewCell : FeedCommonTableViewCellSetup  {
+    final func setupAvatarImageView() {
+        self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
+        self.avatarImageView.backgroundColor = ColorBucket.whiteColor
+        self.avatarImageView.contentMode = .ScaleAspectFill
+        self.addSubview(self.avatarImageView)
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        //TODO: add gesture recognizer
+    }
+    
+    final func setupNameLabel() {
+        self.nameLabel.backgroundColor = ColorBucket.whiteColor
+        self.nameLabel.textColor = ColorBucket.blackColor
+        self.nameLabel.font = FontBucket.postAuthorNameFont
+        self.addSubview(self.nameLabel)
+    }
+    
+    final func setupDateLabel() {
+        self.dateLabel.backgroundColor = UIColor.whiteColor()
+        self.addSubview(self.dateLabel)
+        self.dateLabel.font = FontBucket.postDateFont
+        self.dateLabel.textColor = ColorBucket.grayColor
+    }
+    
+    final func setupMessageLabel() {
+        self.messageLabel.backgroundColor = ColorBucket.whiteColor
+        self.messageLabel.numberOfLines = 0;
+        self.addSubview(self.messageLabel)
+        self.configureMessageAttributedLabel()
+        //TODO: assign closures
+    }
+}
+
+//MARK - Configuration
+extension FeedCommonTableViewCell : FeedCommonTableViewCellConfiguration {
+    final func configureAvatarImage() {
+        SDWebImageManager.sharedManager().downloadImageWithURL(self.post?.author?.avatarURL(),
+                                                               options: .HandleCookies,
+                                                               progress: nil,
+               completed: { [unowned self] (image, error, cacheType, isFinished, imageUrl) in
+                if image != nil {
+                    self.avatarImageView.image = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
+                }
+                
+        
+        })
+    }
+    
+    final func configureMessageOperation() {
+        messageDrawOperation = NSBlockOperation(block: { [unowned self] in
+            if self.messageDrawOperation?.cancelled == false {
+                dispatch_sync(dispatch_get_main_queue(), {
+                    self.messageLabel.attributedText = self.post?.attributedMessage
+                })
+            }
+        })
+        
+        FeedCommonTableViewCell.messageQueue.addOperation(self.messageDrawOperation!)
+    }
+    
+    final func configureBasicLabels() {
+        self.nameLabel.text = self.post?.author?.displayName
+        self.dateLabel.text = self.post?.createdAtString
+    }
+  
 }
 
