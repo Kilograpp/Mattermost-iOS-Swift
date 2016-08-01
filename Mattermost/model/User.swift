@@ -166,10 +166,6 @@ extension User: Computatations {
     }
     
     func computeDisplayName() {
-        if StringUtils.isEmpty(self.nickname) {
-            self.displayName = self.username
-        } else {
-            self.displayName = self.nickname
-        }
+        self.displayName = self.username
     }
 }
