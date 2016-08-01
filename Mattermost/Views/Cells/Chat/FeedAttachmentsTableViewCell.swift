@@ -46,7 +46,10 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.tableView.frame = CGRectMake(53, CGRectGetMaxY(self.messageLabel.frame) + 8, UIScreen.screenWidth() - 61, self.tableView.contentSize.height)
+//        self.tableView.frame = CGRectMake(53, CGRectGetMaxY(self.messageLabel.frame) + 8, UIScreen.screenWidth() - 61, self.tableView.contentSize.height)
+        for file in (self.post?.files)! {
+            <#code#>
+        }
     }
     
     override func prepareForReuse() {
@@ -59,9 +62,13 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     //MARK: Private
     
     private class func tableViewHeightWithPost(post: Post) -> CGFloat {
-        return 200
+        return FeedAttachmentsTableViewCell.tableViewHeightWithFiles(Array(post.files))
     }
 
+}
+
+private protocol Private {
+    static func tableViewHeightWithFiles(files: Array<File>) -> CGFloat
 }
 
 extension FeedAttachmentsTableViewCell {
@@ -78,7 +85,7 @@ extension FeedAttachmentsTableViewCell {
 
 extension FeedAttachmentsTableViewCell : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return (self.post?.files.count)!
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -102,4 +109,16 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
         return 40
     }
 }
+
+
+//MARK: - Private
+
+extension FeedAttachmentsTableViewCell {
+    private static func tableViewHeightWithFiles(files: Array<File>) -> CGFloat {
+        let height = CGFloat(40 * files.count)
+        
+        return height
+    }
+}
+
 

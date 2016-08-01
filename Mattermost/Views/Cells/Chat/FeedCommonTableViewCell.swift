@@ -48,9 +48,9 @@ class FeedCommonTableViewCell: UITableViewCell {
 
         let nameWidth = CGFloat((self.post?.author?.displayNameWidth)!) as CGFloat
         let dateWidth = CGFloat(self.post!.createdAtStringWidth) as CGFloat
-        let textWidth = UIScreen.screenWidth() - 61 as CGFloat
+        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings as CGFloat
         
-        self.messageLabel.frame = CGRectMake(53, 36, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
+        self.messageLabel.frame = CGRectMake(53, 36, textWidth, CGFloat((self.post?.attributedMessageHeight)!))
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
         self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
     }
@@ -62,7 +62,7 @@ class FeedCommonTableViewCell: UITableViewCell {
     }
 }
 
-
+//MARK:
 protocol FeedCommonTableViewCellConfiguration : class {
     func configureAvatarImage()
     func configureMessageOperation()
@@ -76,7 +76,6 @@ protocol FeedCommonTableViewCellSetup : class {
     func setupDateLabel()
     func setupMessageLabel()
 }
-
 
 //MARK: - FeedTableViewCellProtocol
 extension FeedCommonTableViewCell : FeedTableViewCellProtocol {
@@ -136,8 +135,6 @@ extension FeedCommonTableViewCell : FeedCommonTableViewCellConfiguration {
                 if image != nil {
                     self.avatarImageView.image = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
                 }
-                
-        
         })
     }
     
@@ -157,6 +154,4 @@ extension FeedCommonTableViewCell : FeedCommonTableViewCellConfiguration {
         self.nameLabel.text = self.post?.author?.displayName
         self.dateLabel.text = self.post?.createdAtString
     }
-  
 }
-
