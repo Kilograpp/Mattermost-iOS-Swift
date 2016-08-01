@@ -14,16 +14,8 @@ import TSMarkdownParser
 class Post: RealmObject {
     dynamic var privateAttributedMessageData: NSData?
     dynamic var privatePendingId: String?
-    dynamic var privateChannelId: String? {
-        didSet {
-//            computeChannel()
-        }
-    }
-    dynamic var privateAuthorId: String? {
-        didSet {
-//            computeAuthor()
-        }
-    }
+    dynamic var privateChannelId: String?
+    dynamic var privateAuthorId: String?
     dynamic var creationDay: NSDate? {
         didSet {
             computeCreationDayString()
@@ -103,12 +95,11 @@ private protocol RequestMapping {
 
 private protocol ResponseDescriptor {
     static func updateResponseDescriptor() -> RKResponseDescriptor
+    static func nextPageResponseDescriptor() -> RKResponseDescriptor
     static func firstPageResponseDescriptor() -> RKResponseDescriptor
 }
 
 private protocol Computations {
-//    func computeAuthor()
-//    func computeChannel()
     func computePendingId()
     func computeCreatedAtString()
     func computeCreatedAtStringWidth()
@@ -148,20 +139,21 @@ public enum PostRelationships: String {
 // MARK: - Path Pattern
 extension Post: PathPattern {
     static func nextPagePathPattern() -> String {
-        return "teams/:team.identifier/channels/:identifier/posts/:lastPostId/before/:page/:size"
+        return "teams/:\(PageWrapper.teamIdPath())/" +
+               "channels/:\(PageWrapper.channelIdPath())/" +
+               "posts/:\(PageWrapper.lastPostIdPath())/" +
+               "before/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
     }
     static func firstPagePathPattern() -> String {
-        let teamIdentifierPath = "\(PageWrapperAttributes.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
-        let channelIdentifierPath = "\(PageWrapperAttributes.channel).\(ChannelAttributes.identifier)"
-        let pagePath = PageWrapperAttributes.page.rawValue
-        let sizePath = PageWrapperAttributes.size.rawValue
-        return "teams/:\(teamIdentifierPath)/channels/:\(channelIdentifierPath)/posts/page/:\(pagePath)/:\(sizePath)"
+        return "teams/:\(PageWrapper.teamIdPath())/" +
+               "channels/:\(PageWrapper.channelIdPath())/" +
+               "posts/page/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
     }
     static func updatePathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
+        return "teams/:\(self.teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
     }
     static func creationPathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/channels/:\(channelIdentifierPath())/posts/create"
+        return "teams/:\(self.teamIdentifierPath())/channels/:\(self.channelIdentifierPath())/posts/create"
     }
 }
 
@@ -224,6 +216,20 @@ extension Post: ResponseDescriptor {
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
+    static func nextPageResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: listMapping(),
+                                    method: .GET,
+                                    pathPattern: nextPagePathPattern(),
+                                    keyPath: "posts",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func creationResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: creationMapping(),
+                                    method: .POST,
+                                    pathPattern: creationPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
 }
 
 //  MARK: - Support
@@ -280,16 +286,7 @@ extension Post: Computations {
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
-//    private func computeAuthor() {
-//        let user = User()
-//        user.identifier = self.privateAuthorId!
-//        self.author = user
-//    }
-//    private func computeChannel() {
-//        let channel = Channel()
-//        channel.identifier = self.privateChannelId!
-//        self.channel = channel
-//    }
+
     private func computeCreationDayString() {
         self.creationDayString = NSDateFormatter.sharedConversionSectionsDateFormatter.stringFromDate(self.creationDay!)
     }

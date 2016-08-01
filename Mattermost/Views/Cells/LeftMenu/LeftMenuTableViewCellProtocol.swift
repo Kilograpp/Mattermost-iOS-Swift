@@ -9,7 +9,7 @@
 protocol LeftMenuTableViewCellProtocol : class, MattermostTableViewCellProtocol {
 //    var channel : Channel? { get set }
     
-    func configureWithChannel(channel: Channel) -> Void
+    func configureWithChannel(channel: Channel, selected: Bool) -> Void
 //    static func height(channel: Channel) -> CGFloat
 }
 //

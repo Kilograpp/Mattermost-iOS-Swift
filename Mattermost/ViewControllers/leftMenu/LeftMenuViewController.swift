@@ -29,7 +29,6 @@ class LeftMenuViewController: UIViewController {
         self.tableView.dataSource = self
         self.tableView.separatorStyle = .None
     }
-    
 }
 
 extension LeftMenuViewController : UITableViewDataSource {
@@ -45,7 +44,7 @@ extension LeftMenuViewController : UITableViewDataSource {
         let reuseIdentifier = indexPath.section == 0 ? PublicChannelTableViewCell.reuseIdentifier() : PrivateChannelTableViewCell.reuseIdentifier()
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! LeftMenuTableViewCellProtocol
         let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
-        cell.configureWithChannel(channel!)
+        cell.configureWithChannel(channel!, selected: true)
         
         return cell as! UITableViewCell
     }
@@ -62,6 +61,20 @@ extension LeftMenuViewController : UITableViewDelegate {
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 20
+    }
+
+    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = UIView.init(frame: CGRectMake(0, 0, UIScreen.screenWidth(), 20))
+        view.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        
+        return view
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView.init(frame: CGRectMake(0, 0, UIScreen.screenWidth(), 20))
+        view.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        
+        return view
     }
 }
 

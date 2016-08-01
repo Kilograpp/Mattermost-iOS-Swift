@@ -37,7 +37,7 @@ class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtoco
 }
 
 extension PrivateChannelTableViewCell {
-    func configureWithChannel(channel: Channel) -> Void {
+    func configureWithChannel(channel: Channel, selected: Bool) {
         self.titleLabel.text = channel.displayName!
     }
 }

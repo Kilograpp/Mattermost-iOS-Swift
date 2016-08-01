@@ -24,11 +24,14 @@ private protocol TeamApi {
 
 private protocol ChannelApi {
     func loadChannels(with completion:(error: Error?) -> Void)
+    func loadExtraInfoForChannel(channel: Channel, completion:(error: Error?) -> Void)
 }
 
 private protocol PostApi {
-    func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
+    func sendPost(post: Post, completion: (error: Error?) -> Void)
     func updatePost(post: Post, completion: (error: Error?) -> Void)
+    func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
+    func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void)
 }
 
 class Api: NSObject {
@@ -109,9 +112,7 @@ extension Api: ChannelApi {
     func loadChannels(with completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(Channel.listPathPattern(), DataManager.sharedInstance.currentTeam)
         self.manager.getObject(path: path, success: { (mappingResult) in
-            
-            
-            let realm = try! Realm()
+            let realm = RealmUtils.realmForCurrentThread()
             let members  = mappingResult.dictionary()["members"]  as! [Channel]
             let channels = mappingResult.dictionary()["channels"] as! [Channel]
             try! realm.write({
@@ -128,6 +129,14 @@ extension Api: ChannelApi {
             completion(error: nil)
             }, failure: completion)
     }
+    
+    func loadExtraInfoForChannel(channel: Channel, completion: (error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(Channel.extraInfoPathPattern(), channel)
+        self.manager.getObject(path: path, success: { (mappingResult) in
+            RealmUtils.save(mappingResult.firstObject as! Channel)
+            completion(error: nil)
+        }, failure: completion)
+    }
 }
 
 extension Api: PostApi {
@@ -137,10 +146,34 @@ extension Api: PostApi {
         
         self.manager.getObject(path: path, success: { (mappingResult) in
             RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
-            completion(error: nil)
+            completion( error: nil)
         }) { (error) in
             completion(error: error)
         }
+    }
+    
+    func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void) {
+        let postIdentifier = fromPost.identifier!
+        let wrapper = PageWrapper(channel: channel, lastPostId: postIdentifier)
+        let path = SOCStringFromStringWithObject(Post.nextPagePathPattern(), wrapper)
+        
+        self.manager.getObject(path: path, success: { (mappingResult) in
+            RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
+            completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
+        }) { (error) in
+            var isLastPage = false
+            if error!.code == 1001 {
+                isLastPage = true
+            }
+            completion(isLastPage: isLastPage, error: error)
+        }
+    }
+    func sendPost(post: Post, completion: (error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(Post.creationPathPattern(), post)
+        self.manager.postObject(post, path: path, success: { (mappingResult) in
+            RealmUtils.save(mappingResult.firstObject as! Post)
+            completion(error: nil)
+        }, failure: completion)
     }
     
     func updatePost(post: Post, completion: (error: Error?) -> Void) {
