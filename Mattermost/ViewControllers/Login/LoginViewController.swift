@@ -13,11 +13,11 @@ class LoginViewController: UIViewController {
         Api.sharedInstance.login(Preferences.sharedInstance.predefinedLogin()!, password: Preferences.sharedInstance.predefinedPassword()!) { (error) in
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
-                    let channels = RealmUtils.realmForCurrentThread().objects(Channel)
-                    try! RealmUtils.realmForCurrentThread().write({
-                        channels.forEach{ $0.computeDispayNameIfNeeded()}
+                    Api.sharedInstance.loadCompleteUsersList({ (error) in
+                        RouterUtils.loadInitialScreen(true)
                     })
-                    RouterUtils.loadInitialScreen(true)
+                    
+                    
                 })
             })
         }
