@@ -20,7 +20,7 @@ class FeedCommonTableViewCell: UITableViewCell {
     
     //FIXME: CodeReview: Ячейка может без поста работать? Если нет, то в implicity unwrap. 
     //FIXME: CodeReview: В приват
-    var post : Post?
+    var post : Post!
     //FIXME: CodeReview: В final
     var onMentionTap: ((nickname : String) -> Void)?
     

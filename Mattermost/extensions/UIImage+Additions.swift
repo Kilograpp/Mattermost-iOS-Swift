@@ -25,7 +25,7 @@ extension UIImage {
     
     @nonobjc static let sharedAvatarPlaceholder = UIImage.avatarPlaceholder()
     
-    class func avatarPlaceholder() -> UIImage {
+    static func avatarPlaceholder() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         UIGraphicsBeginImageContext(rect.size);
         let context = UIGraphicsGetCurrentContext()! as CGContextRef

@@ -10,7 +10,7 @@ import ActiveLabel
 
 protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
     var onMentionTap: ((nickname : String) -> Void)? { get set }
-    var post : Post? { get set }
+    var post : Post! { get set }
     var messageLabel : ActiveLabel { get }
     
     static var messageQueue : NSOperationQueue {get set}

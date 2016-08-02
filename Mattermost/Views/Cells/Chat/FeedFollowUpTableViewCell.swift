@@ -12,7 +12,7 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     var messageLabel : ActiveLabel = ActiveLabel()
     var messageDrawOperation : NSBlockOperation?
     
-    var post : Post?
+    var post : Post!
     var onMentionTap: ((nickname : String) -> Void)?
     
     static var messageQueue : NSOperationQueue = {
