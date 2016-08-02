@@ -13,8 +13,12 @@ import SwiftFetchedResultsController
 
 class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     private var channel : Channel?
+    final override var tableView: UITableView! {
+        get {
+            return super.tableView
+        }
+    }
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
-    var realm: Realm?
     var refreshControl: UIRefreshControl?
     
     //MARK: - Lifecycle
@@ -37,14 +41,14 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     //MARK: - Configuration
     
     func configureTableView() -> Void {
-        self.tableView?.separatorStyle = .None
-        self.tableView?.keyboardDismissMode = .OnDrag
-        self.tableView?.backgroundColor = ColorBucket.whiteColor
-        self.tableView!.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
-        self.tableView!.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
-        self.tableView!.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 18)
+        self.tableView.separatorStyle = .None
+        self.tableView.keyboardDismissMode = .OnDrag
+        self.tableView.backgroundColor = ColorBucket.whiteColor
+        self.tableView.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
+        self.tableView.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
+        self.tableView.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 18)
         
-        self.tableView?.registerClass(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
+        self.tableView.registerClass(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
     
     
@@ -126,6 +130,11 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     
     // MARK: - FetchedResultsController
     
+    func reloadContent() {
+        self.fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "privateChannelId = %@ && type == ''", self.channel?.identifier ?? "")
+        self.fetchedResultsController.performFetch()
+    }
+    
     func realmFetchedResultsController() -> FetchedResultsController<Post> {
         let predicate = NSPredicate(format: "privateChannelId = %@ && type == ''", self.channel?.identifier ?? "")
         let realm = try! Realm()
@@ -135,7 +144,6 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: "creationDayString", cacheName: "testCache")
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch()
-
         return fetchedResultsController
     }
     
@@ -253,7 +261,10 @@ extension ChatViewController {
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
+        self.fetchedResultsController = self.realmFetchedResultsController()
+        self.tableView?.reloadData()
         self.loadFirstPageOfData()
+        
     }
 }
 
@@ -282,11 +293,17 @@ extension ChatViewController {
 //MARK: - Requests
 
 extension ChatViewController {
-    func loadFirstPageOfData() -> Void {
+    
+    func loadFirstPageAndReload() {
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
             self.fetchedResultsController = self.realmFetchedResultsController()
             self.tableView?.reloadData()
+        })
+    }
+    func loadFirstPageOfData() -> Void {
+        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
         })
 
     }
