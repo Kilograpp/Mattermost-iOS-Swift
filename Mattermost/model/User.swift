@@ -15,14 +15,14 @@ final class User: RealmObject {
     dynamic var email: String?
     dynamic var firstName: String?
     dynamic var lastName: String?
-    dynamic var identifier: String? {
+    dynamic var identifier: String! {
         didSet {
             computeAvatarUrl()
         }
     }
     dynamic var nickname: String?
     dynamic var displayNameWidth: Float = 0.0
-    dynamic var avatarLink: String?
+    dynamic var avatarLink: String!
     dynamic var displayName: String? {
         didSet {
             computeDisplayNameWidth()
@@ -41,14 +41,18 @@ final class User: RealmObject {
     }
     
     func avatarURL() -> NSURL {
-        return NSURL(string: self.avatarLink!)!
+        return NSURL(string: self.avatarLink)!
+    }
+    func smallAvatarCacheKey() -> String {
+        return self.avatarLink.stringByAppendingString("_small")
     }
 }
 
 private protocol PathPatterns: class {
     static func loginPathPattern() -> String
-    static func initialLoadPathPattern() -> String
+    static func avatarPathPattern() -> String
     static func socketPathPattern() -> String
+    static func initialLoadPathPattern() -> String
     static func completeListPathPattern() -> String
 }
 
@@ -83,6 +87,9 @@ enum UserAttributes: String {
 }
 
 extension User: PathPatterns {
+    static func avatarPathPattern() -> String {
+        return "users/:\(UserAttributes.identifier)/image"
+    }
     static func loginPathPattern() -> String {
         return "users/login";
     }
@@ -162,10 +169,11 @@ extension User: Computatations {
     }
     
     func computeAvatarUrl() {
-        self.avatarLink = "https://mattermost.kilograpp.com/api/v3/users/\(self.identifier!)/image" as String
+        self.avatarLink = Api.sharedInstance.avatarLinkForUser(self)
     }
     
     func computeDisplayName() {
         self.displayName = self.username
     }
+
 }
