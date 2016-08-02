@@ -9,7 +9,11 @@
 import Foundation
 import RealmSwift
 
-class RealmObject: Object {}
+class RealmObject: Object {
+    final var safeRealm: Realm {
+        return realm ?? RealmUtils.realmForCurrentThread()
+    }
+}
 
 enum CommonAttributes: String {
     case identifier = "identifier"

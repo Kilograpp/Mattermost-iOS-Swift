@@ -37,8 +37,7 @@ final class Channel: RealmObject {
     func interlocuterFromPrivateChannel() -> User {
         let ids = self.name?.componentsSeparatedByString("__")
         let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
-        let user = RealmUtils.realmForCurrentThread().objects(User).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
-        
+        let user = safeRealm.objects(User).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
         return user
     }
     
@@ -194,7 +193,7 @@ extension Channel: Support {
     }
 
     func computeTeam() {
-        self.team = (realm ?? RealmUtils.realmForCurrentThread()).objectForPrimaryKey(Team.self, key: self.privateTeamId!.isEmpty ? DataManager.sharedInstance.currentTeam!.identifier : self.privateTeamId!)
+        self.team = safeRealm.objectForPrimaryKey(Team.self, key: self.privateTeamId!.isEmpty ? DataManager.sharedInstance.currentTeam!.identifier : self.privateTeamId!)
     }
     
     func computeDispayNameIfNeeded() {
