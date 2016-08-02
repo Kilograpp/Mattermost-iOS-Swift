@@ -21,6 +21,7 @@ class FeedCommonTableViewCell: UITableViewCell {
     //FIXME: CodeReview: Ячейка может без поста работать? Если нет, то в implicity unwrap. 
     //FIXME: CodeReview: В приват
     var post : Post!
+    private var postIdentifier: String?
     //FIXME: CodeReview: В final
     var onMentionTap: ((nickname : String) -> Void)?
     
@@ -47,64 +48,114 @@ class FeedCommonTableViewCell: UITableViewCell {
         super.init(coder: aDecoder)
     }
     
-    //MARK: Lifecycle
-    override func layoutSubviews() {
-        super.layoutSubviews()
 
-        //FIXME: CodeReview: Лишние кастования.
-        let nameWidth = CGFloat((self.post?.author.displayNameWidth)!) as CGFloat
-        let dateWidth = CGFloat(self.post!.createdAtStringWidth) as CGFloat
-        
-        
-        let textWidth = UIScreen.screenWidth() - 61 as CGFloat
-        
-        //FIXME: CodeReview: Убрать лишние скобочки, анвраппинг и тп
-        self.messageLabel.frame = CGRectMake(53, 36, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
-        self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
-        self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
-    }
-    
-    override func prepareForReuse() {
-        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
-        self.messageLabel.attributedText = nil
-        self.messageDrawOperation?.cancel()
-    }
 }
 
 
-protocol FeedCommonTableViewCellConfiguration : class {
+protocol _FeedCommonTableViewCellConfiguration : class {
     func configureAvatarImage()
     func configureMessageOperation()
     func configureBasicLabels()
 }
 
-
-protocol FeedCommonTableViewCellSetup : class {
+protocol _FeedCommonTableViewCellSetup : class {
     func setupAvatarImageView()
     func setupNameLabel()
     func setupDateLabel()
     func setupMessageLabel()
 }
 
+protocol _FeedCommonTableViewCellLifeCycle: class {
+    func prepareForReuse()
+    func layoutSubviews()
+}
+
 
 //MARK: - FeedTableViewCellProtocol
+
 extension FeedCommonTableViewCell : FeedTableViewCellProtocol {
     //FIXME: CodeReview: Убрать войд
     func configureWithPost(post: Post) -> Void {
         self.post = post
+
         self.configureAvatarImage()
         self.configureMessageOperation()
         self.configureBasicLabels()
     }
     
-    //FIXME: CodeReview: Заменить class на static
     class func heightWithPost(post: Post) -> CGFloat {
         return CGFloat(post.attributedMessageHeight) + 44
     }
 }
 
+
+//MARK - Configuration
+
+extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
+    final func configureAvatarImage() {
+
+        let smallAvatarCacheKey = self.post.author.smallAvatarCacheKey()
+        let postIdentifier = self.post.identifier
+        self.postIdentifier = postIdentifier
+        
+        if let image = SDImageCache.sharedImageCache().imageFromMemoryCacheForKey(smallAvatarCacheKey) {
+            self.avatarImageView.image = image
+        } else {
+            self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+            let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
+                [unowned self] (image, error, cacheType, isFinished, imageUrl) in
+                dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+                    
+                    // Handle unpredictable errors
+                    guard image != nil else {
+                        print(error)
+                        return
+                    }
+                    
+                    let processedImage = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
+                    SDImageCache.sharedImageCache().storeImage(processedImage, forKey: smallAvatarCacheKey)
+                    
+                    // Ensure the post is still the same
+                    guard self.postIdentifier == postIdentifier else {
+                        return
+                    }
+                    
+                    dispatch_sync(dispatch_get_main_queue(), {
+                        self.avatarImageView.image = processedImage
+                    })
+                    
+                }
+            }
+            
+            SDWebImageManager.sharedManager().downloadImageWithURL(self.post.author.avatarURL(),
+                                                                   options: .HandleCookies ,
+                                                                   progress: nil,
+                                                                   completed: imageDownloadCompletionHandler)
+        }
+
+    }
+    
+    final func configureMessageOperation() {
+        messageDrawOperation = NSBlockOperation(block: { [unowned self] in
+            if self.messageDrawOperation?.cancelled == false {
+                dispatch_sync(dispatch_get_main_queue(), {
+                    self.messageLabel.attributedText = self.post.attributedMessage
+                })
+            }
+        })
+        
+        FeedCommonTableViewCell.messageQueue.addOperation(self.messageDrawOperation!)
+    }
+    
+    final func configureBasicLabels() {
+        self.nameLabel.text = self.post.author.displayName
+        self.dateLabel.text = self.post.createdAtString
+    }
+  
+}
+
 //MARK: - Setup
-extension FeedCommonTableViewCell : FeedCommonTableViewCellSetup  {
+extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
     final func setupAvatarImageView() {
         self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
         //FIXME: CodeReview: Конкретный цвет
@@ -141,40 +192,25 @@ extension FeedCommonTableViewCell : FeedCommonTableViewCellSetup  {
     }
 }
 
-//MARK - Configuration
-extension FeedCommonTableViewCell : FeedCommonTableViewCellConfiguration {
-    final func configureAvatarImage() {
-        //FIXME: CodeReview: Убрать лишние анврапы
-        SDWebImageManager.sharedManager().downloadImageWithURL(self.post?.author?.avatarURL(),
-                                                               options: .HandleCookies,
-                                                               progress: nil,
-               completed: { [unowned self] (image, error, cacheType, isFinished, imageUrl) in
-                if image != nil {
-                    self.avatarImageView.image = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
-                }
-                
+extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
+    override func layoutSubviews() {
+        super.layoutSubviews()
         
-        })
+        let nameWidth = CGFloat(self.post.author.displayNameWidth)
+        let dateWidth = CGFloat(self.post.createdAtStringWidth)
+        
+        let textWidth = UIScreen.screenWidth() - 61 as CGFloat
+        
+        //FIXME: CodeReview: Убрать лишние скобочки, анвраппинг и тп
+        self.messageLabel.frame = CGRectMake(53, 36, textWidth - 22, CGFloat(self.post.attributedMessageHeight))
+        self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
+        self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
     }
     
-    final func configureMessageOperation() {
-        messageDrawOperation = NSBlockOperation(block: { [unowned self] in
-            if self.messageDrawOperation?.cancelled == false {
-                dispatch_sync(dispatch_get_main_queue(), {
-                    //FIXME: CodeReview: Лишние анврапы
-                    self.messageLabel.attributedText = self.post?.attributedMessage
-                })
-            }
-        })
-        
-        FeedCommonTableViewCell.messageQueue.addOperation(self.messageDrawOperation!)
+    override func prepareForReuse() {
+        self.messageLabel.attributedText = nil
+        self.messageDrawOperation?.cancel()
     }
     
-    final func configureBasicLabels() {
-        //FIXME: CodeReview: Лишние анврапы
-        self.nameLabel.text = self.post?.author?.displayName
-        self.dateLabel.text = self.post?.createdAtString
-    }
-  
 }
 
