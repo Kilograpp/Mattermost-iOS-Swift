@@ -93,7 +93,7 @@ extension User: PathPatterns {
         return "users/websocket"
     }
     static func completeListPathPattern() -> String {
-        return "users/profiles_for_dm_list/:\(TeamAttributes.identifier)"
+        return "users/profiles/:\(TeamAttributes.identifier)"
     }
 }
 
@@ -142,7 +142,7 @@ extension User: ResponseDescriptors {
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func completeListResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: mapping(),
+        return RKResponseDescriptor(mapping: directProfileMapping(),
                                     method: .GET,
                                     pathPattern: completeListPathPattern(),
                                     keyPath: nil,

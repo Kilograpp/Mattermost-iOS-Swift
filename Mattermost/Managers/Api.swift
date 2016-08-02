@@ -85,7 +85,9 @@ extension Api: UserApi {
     func loadCompleteUsersList(completion:(error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(User.completeListPathPattern(), DataManager.sharedInstance.currentTeam)
         self.manager.getObject(path: path, success: { (mappingResult) in
-            RealmUtils.save(MappingUtils.fetchUsersFromCompleteList(mappingResult))
+            let users = MappingUtils.fetchUsersFromCompleteList(mappingResult)
+            users.forEach {$0.computeDisplayName()}
+            RealmUtils.save(users)
             completion(error: nil)
         }, failure: completion)
     }
