@@ -16,22 +16,14 @@ class FeedCommonTableViewCell: UITableViewCell {
     let nameLabel : UILabel = UILabel()
     let dateLabel : UILabel = UILabel()
     let messageLabel : ActiveLabel = ActiveLabel()
-    var messageDrawOperation : NSBlockOperation?
+    
+    private var postIdentifier: String?
     
     //FIXME: CodeReview: Ячейка может без поста работать? Если нет, то в implicity unwrap. 
     //FIXME: CodeReview: В приват
     var post : Post!
-    private var postIdentifier: String?
     //FIXME: CodeReview: В final
     var onMentionTap: ((nickname : String) -> Void)?
-    
-    static var messageQueue : NSOperationQueue = {
-        //FIXME: CodeReview: Убрать инит
-        let queue = NSOperationQueue.init()
-        queue.maxConcurrentOperationCount = 1
-        
-        return queue
-    }()
     
     //MARK: Init
     
@@ -54,7 +46,7 @@ class FeedCommonTableViewCell: UITableViewCell {
 
 protocol _FeedCommonTableViewCellConfiguration : class {
     func configureAvatarImage()
-    func configureMessageOperation()
+    func configureMessage()
     func configureBasicLabels()
 }
 
@@ -77,9 +69,8 @@ extension FeedCommonTableViewCell : FeedTableViewCellProtocol {
     //FIXME: CodeReview: Убрать войд
     func configureWithPost(post: Post) -> Void {
         self.post = post
-
         self.configureAvatarImage()
-        self.configureMessageOperation()
+        self.configureMessage()
         self.configureBasicLabels()
     }
     
@@ -135,16 +126,8 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
 
     }
     
-    final func configureMessageOperation() {
-        messageDrawOperation = NSBlockOperation(block: { [unowned self] in
-            if self.messageDrawOperation?.cancelled == false {
-                dispatch_sync(dispatch_get_main_queue(), {
-                    self.messageLabel.attributedText = self.post.attributedMessage
-                })
-            }
-        })
-        
-        FeedCommonTableViewCell.messageQueue.addOperation(self.messageDrawOperation!)
+    final func configureMessage() {
+        self.messageLabel.attributedText = self.post.attributedMessage
     }
     
     final func configureBasicLabels() {
@@ -184,6 +167,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
     }
     
     final func setupMessageLabel() {
+        //FIXME: CodeReview: Заменить на конкретный цвет
         self.messageLabel.backgroundColor = ColorBucket.whiteColor
         self.messageLabel.numberOfLines = 0;
         self.addSubview(self.messageLabel)
@@ -201,7 +185,6 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         
         let textWidth = UIScreen.screenWidth() - 61 as CGFloat
         
-        //FIXME: CodeReview: Убрать лишние скобочки, анвраппинг и тп
         self.messageLabel.frame = CGRectMake(53, 36, textWidth - 22, CGFloat(self.post.attributedMessageHeight))
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
         self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
@@ -209,7 +192,6 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
     
     override func prepareForReuse() {
         self.messageLabel.attributedText = nil
-        self.messageDrawOperation?.cancel()
     }
     
 }

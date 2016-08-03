@@ -195,7 +195,8 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
 
 extension ChatViewController: FetchedResultsControllerDelegate {
     func controllerWillChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-        self.tableView!.beginUpdates()
+        UIView.setAnimationsEnabled(false)
+        self.tableView.beginUpdates()
     }
     
     func controllerDidChangeObject<T : Object>(controller: FetchedResultsController<T>, anObject: SafeObject<T>, indexPath: NSIndexPath?, changeType: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
@@ -206,21 +207,21 @@ extension ChatViewController: FetchedResultsControllerDelegate {
             
         case .Insert:
             
-            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .None)
             
         case .Delete:
             
-            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
             
         case .Update:
             
-            tableView!.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
             
         case .Move:
             
-            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
             
-            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .None)
         }
     }
     
@@ -228,22 +229,23 @@ extension ChatViewController: FetchedResultsControllerDelegate {
         
         let tableView = self.tableView
         
-        if changeType == NSFetchedResultsChangeType.Insert {
+        if changeType == .Insert {
             
             let indexSet = NSIndexSet(index: Int(sectionIndex))
             
-            tableView!.insertSections(indexSet, withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.insertSections(indexSet, withRowAnimation: .None)
         }
-        else if changeType == NSFetchedResultsChangeType.Delete {
+        else if changeType == .Delete {
             
             let indexSet = NSIndexSet(index: Int(sectionIndex))
             
-            tableView!.deleteSections(indexSet, withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.deleteSections(indexSet, withRowAnimation: .None)
         }
     }
     
     func controllerDidChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-        self.tableView!.endUpdates()
+        self.tableView.endUpdates()
+        UIView.setAnimationsEnabled(true)
     }
     
     func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}

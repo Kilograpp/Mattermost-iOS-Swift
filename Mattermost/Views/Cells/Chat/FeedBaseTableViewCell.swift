@@ -13,7 +13,6 @@ protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
     var post : Post! { get set }
     var messageLabel : ActiveLabel { get }
     
-    static var messageQueue : NSOperationQueue {get set}
     func configureWithPost(post: Post) -> Void
     func configureMessageAttributedLabel() -> Void
     static func heightWithPost(post: Post) -> CGFloat

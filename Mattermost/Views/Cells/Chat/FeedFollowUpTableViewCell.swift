@@ -10,17 +10,10 @@ import ActiveLabel
 
 class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     var messageLabel : ActiveLabel = ActiveLabel()
-    var messageDrawOperation : NSBlockOperation?
     
     var post : Post!
     var onMentionTap: ((nickname : String) -> Void)?
-    
-    static var messageQueue : NSOperationQueue = {
-        let queue = NSOperationQueue.init()
-        queue.maxConcurrentOperationCount = 1
-        
-        return queue
-    }()
+
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -42,17 +35,8 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         //assign closures
     }
     
-    func configureMessageOperation() -> Void {
-        messageDrawOperation = NSBlockOperation.init(block: {
-            //FIXME: replace with weakSelf
-            if ((self.messageDrawOperation?.cancelled)! == false) {
-                dispatch_sync(dispatch_get_main_queue(), {
-                    self.messageLabel.attributedText = self.post?.attributedMessage
-                })
-            }
-        })
-        
-        FeedCommonTableViewCell.messageQueue.addOperation(self.messageDrawOperation!)
+    func configureMessage() -> Void {
+        self.messageLabel.attributedText = self.post.attributedMessage
     }
     
     
@@ -60,6 +44,10 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
         super.layoutSubviews()
         let textWidth = UIScreen.screenWidth() - 61 as CGFloat
         self.messageLabel.frame = CGRectMake(53, 8, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
+    }
+    
+    override func prepareForReuse() {
+        self.messageLabel.attributedText = nil
     }
 
 }
@@ -69,7 +57,7 @@ extension FeedFollowUpTableViewCell {
         assert(post.isKindOfClass(Post), "Object must me instance of 'Post' class")
         
         self.post = post
-        self.configureMessageOperation()
+        self.configureMessage()
     }
     
     class func heightWithPost(post: Post) -> CGFloat {
