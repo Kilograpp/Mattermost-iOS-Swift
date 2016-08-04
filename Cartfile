@@ -3,7 +3,6 @@ github "rs/SDWebImage" "master"
 github "jdg/MBProgressHUD" ~> 0.9.2
 github "Kilograpp/MFSideMenu" "master"
 github "optonaut/ActiveLabel.swift" "master"
-github "Kilograpp/UITableView-Cache" "master"
 github "Roobiq/RBQFetchedResultsController"
 github "daltoniam/Starscream"
 github "laptobbe/TSMarkdownParser"

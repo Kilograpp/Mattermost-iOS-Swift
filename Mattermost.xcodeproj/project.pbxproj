@@ -47,7 +47,6 @@
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
 		D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */; };
 		D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */; };
-		D6E165A21D47E32E0014C831 /* UITableView_Cache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */; };
 		D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A51D47E9B00014C831 /* MFSideMenu.framework */; };
 		D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */; };
 		D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165A91D47EA920014C831 /* UIImage+Additions.swift */; };
@@ -63,6 +62,8 @@
 		D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF41D429393001918E8 /* UIScreen+Size.swift */; };
 		D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AF61D429610001918E8 /* TSMarkdownParser.framework */; };
 		D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */; };
+		D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */; };
+		D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */ = {isa = PBXBuildFile; fileRef = D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */; };
 		D8436E681D26AC3600DEF464 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E671D26AC3600DEF464 /* DataManager.swift */; };
 		D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */; };
 		D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */; };
@@ -148,7 +149,6 @@
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
 		D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCommonTableViewCell.swift; sourceTree = "<group>"; };
 		D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActiveLabel.framework; path = Carthage/Build/iOS/ActiveLabel.framework; sourceTree = "<group>"; };
-		D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UITableView_Cache.framework; path = Carthage/Build/iOS/UITableView_Cache.framework; sourceTree = "<group>"; };
 		D6E165A31D47E99C0014C831 /* WebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebImage.framework; path = Carthage/Build/iOS/WebImage.framework; sourceTree = "<group>"; };
 		D6E165A51D47E9B00014C831 /* MFSideMenu.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MFSideMenu.framework; path = Carthage/Build/iOS/MFSideMenu.framework; sourceTree = "<group>"; };
 		D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = Carthage/Build/iOS/MBProgressHUD.framework; sourceTree = "<group>"; };
@@ -165,6 +165,9 @@
 		D8087AF41D429393001918E8 /* UIScreen+Size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Size.swift"; sourceTree = "<group>"; };
 		D8087AF61D429610001918E8 /* TSMarkdownParser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSMarkdownParser.framework; path = Carthage/Build/iOS/TSMarkdownParser.framework; sourceTree = "<group>"; };
 		D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TSMarkdownParser+Singleton.swift"; sourceTree = "<group>"; };
+		D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentImageCell.swift; sourceTree = "<group>"; };
+		D83305F21D53A4B500E92CD6 /* UITableView+Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+Cache.h"; sourceTree = "<group>"; };
+		D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+Cache.m"; sourceTree = "<group>"; };
 		D8436E671D26AC3600DEF464 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKResponseDescriptor+RuntimeFinder.swift"; sourceTree = "<group>"; };
 		D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKRequestDescriptor+RuntimeFinder.swift"; sourceTree = "<group>"; };
@@ -204,7 +207,6 @@
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
-				D6E165A21D47E32E0014C831 /* UITableView_Cache.framework in Frameworks */,
 				D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */,
 				D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */,
 				D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */,
@@ -263,7 +265,7 @@
 				9B822480CFCCBBED84C3A22E /* Info.plist */,
 				9B82258408C03D292317D1D2 /* LaunchScreen.storyboard */,
 				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
-				D8436E6E1D26DDED00DEF464 /* Objective-C Categories */,
+				D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */,
 				D8F6BCFF1D22E8DE000AC690 /* Supporting Files */,
 				D6330AA71D494BE2006D84F4 /* Resources */,
 			);
@@ -475,18 +477,22 @@
 				D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */,
 				D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */,
 				D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */,
+				D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
 		};
-		D8436E6E1D26DDED00DEF464 /* Objective-C Categories */ = {
+		D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */ = {
 			isa = PBXGroup;
 			children = (
+				D83305F21D53A4B500E92CD6 /* UITableView+Cache.h */,
+				D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */,
 				D8B846B21D4A38D500AEE19A /* NSObject+EnumerateProperties.h */,
 				D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */,
 				D8436E6F1D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.h */,
 				D8436E701D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m */,
 			);
+			name = "Objective-C Runtime";
 			path = "Objective-C Categories";
 			sourceTree = "<group>";
 		};
@@ -527,7 +533,6 @@
 				D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */,
 				D6E165A51D47E9B00014C831 /* MFSideMenu.framework */,
 				D6E165A31D47E99C0014C831 /* WebImage.framework */,
-				D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */,
 				D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */,
 				D8812C341D476EB800436B5C /* Starscream.framework */,
 				D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */,
@@ -701,7 +706,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftFetchedResultsController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RBQFetchedResultsController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ActiveLabel.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/UITableView_Cache.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MFSideMenu.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
@@ -751,8 +755,10 @@
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
+				D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */,
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
+				D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
 				D6E165871D47C1200014C831 /* MattermostTableViewCellProtocol.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
