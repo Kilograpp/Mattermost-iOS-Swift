@@ -42,8 +42,8 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let textWidth = UIScreen.screenWidth() - 61 as CGFloat
-        self.messageLabel.frame = CGRectMake(53, 8, textWidth - 22, CGFloat((self.post?.attributedMessageHeight)!))
+        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+        self.messageLabel.frame = CGRectMake(53, 8, textWidth, CGFloat(self.post.attributedMessageHeight))
     }
     
     override func prepareForReuse() {
@@ -53,9 +53,7 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
 }
 
 extension FeedFollowUpTableViewCell {
-    func configureWithPost(post: Post) -> Void {
-        assert(post.isKindOfClass(Post), "Object must me instance of 'Post' class")
-        
+    func configureWithPost(post: Post) -> Void {        
         self.post = post
         self.configureMessage()
     }

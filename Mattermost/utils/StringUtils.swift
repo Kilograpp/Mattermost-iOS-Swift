@@ -32,15 +32,17 @@ final class StringUtils {
         let matches = detect.matchesInString(text, options: .ReportCompletion, range: NSMakeRange(0, text.characters.count))
         return matches.count > 0
     }
+    
     static func widthOfString(string: NSString!, font: UIFont!) -> Float {
         let attributes = [NSFontAttributeName : font]
         return ceilf(Float(string.sizeWithAttributes(attributes).width))
     }
+    
     static func heightOfAttributedString(attributedString: NSAttributedString!) -> Float {
 
         let textWidth: CGFloat = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings;
         let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
         let frame = attributedString.boundingRectWithSize(CGSizeMake(textWidth, CGFloat.max), options: options, context: nil)
-        return ceilf(Float(CGRectGetHeight(frame)))
+        return ceilf(Float(frame.size.height))
     }
 }

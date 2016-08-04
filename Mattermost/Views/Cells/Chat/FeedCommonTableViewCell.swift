@@ -40,7 +40,6 @@ class FeedCommonTableViewCell: UITableViewCell {
         super.init(coder: aDecoder)
     }
     
-
 }
 
 
@@ -94,7 +93,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         } else {
             self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
-                [unowned self] (image, error, cacheType, isFinished, imageUrl) in
+                [weak self] (image, error, cacheType, isFinished, imageUrl) in
                 dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
                     
                     // Handle unpredictable errors
@@ -107,12 +106,12 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
                     SDImageCache.sharedImageCache().storeImage(processedImage, forKey: smallAvatarCacheKey)
                     
                     // Ensure the post is still the same
-                    guard self.postIdentifier == postIdentifier else {
+                    guard self?.postIdentifier == postIdentifier else {
                         return
                     }
                     
                     dispatch_sync(dispatch_get_main_queue(), {
-                        self.avatarImageView.image = processedImage
+                        self?.avatarImageView.image = processedImage
                     })
                     
                 }
@@ -183,9 +182,9 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         let nameWidth = CGFloat(self.post.author.displayNameWidth)
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
         
-        let textWidth = UIScreen.screenWidth() - 61 as CGFloat
+        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
         
-        self.messageLabel.frame = CGRectMake(53, 36, textWidth - 22, CGFloat(self.post.attributedMessageHeight))
+        self.messageLabel.frame = CGRectMake(53, 36, textWidth, CGFloat(self.post.attributedMessageHeight))
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
         self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
     }

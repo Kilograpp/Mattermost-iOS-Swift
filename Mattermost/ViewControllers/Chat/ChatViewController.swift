@@ -8,7 +8,6 @@
 
 import SlackTextViewController
 import RealmSwift
-import UITableView_Cache
 import SwiftFetchedResultsController
 
 class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
