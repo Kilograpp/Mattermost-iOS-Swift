@@ -14,9 +14,11 @@ import RealmSwift
 class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     //FIXME: CodeReview: Константной
     //FIXME: CodeReview: Приват
-    var tableView : UITableView = UITableView()
+    var tableView = UITableView()
     //FIXME: CodeReview: Может быть такое, что ячейка без attachment рабоотает? Если нет, то implicity unwrap
-    var attachments : List<File>?
+    var attachments : List<File>!
+    
+    
     
     //MARK: Init
     
@@ -41,6 +43,8 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         self.tableView.separatorStyle = .None
         self.tableView.bounces = false
         self.tableView.scrollEnabled = false
+        
+        self.tableView.registerClass(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier(), cacheSize: 7)
         self.addSubview(self.tableView)
     }
     
@@ -50,20 +54,24 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.tableView.frame = CGRectMake(53, CGRectGetMaxY(self.messageLabel.frame) + 8, UIScreen.screenWidth() - 61, self.tableView.contentSize.height)
+        self.tableView.frame = CGRectMake(53,
+                                          CGRectGetMaxY(self.messageLabel.frame) + 8,
+                                          UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings,
+                                          self.tableView.contentSize.height)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-//        self.tableView?.delegate = nil
-//        self.tableView?.dataSource = nil
     }
     
     
     //MARK: Private
     
     private class func tableViewHeightWithPost(post: Post) -> CGFloat {
-        return 200
+        let height =  post.files.reduce(0) {
+            (total, file) in total + (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings)*0.56 - 5
+        }
+        return height
     }
 
 }
@@ -71,7 +79,7 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
 extension FeedAttachmentsTableViewCell {
     override func configureWithPost(post: Post) {
         super.configureWithPost(post)
-        self.attachments = self.post?.files
+        self.attachments = self.post.files
         self.tableView.reloadData()
     }
     
@@ -81,30 +89,33 @@ extension FeedAttachmentsTableViewCell {
 }
 
 extension FeedAttachmentsTableViewCell : UITableViewDataSource {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return self.attachments.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //FIXME: CodeReview: Убрать инит
-        let cell = UITableViewCell.init(style: .Default, reuseIdentifier: "attachments")
-        
-        if (indexPath.row % 2 == 0) {
-            cell.backgroundColor = UIColor.redColor()
-        } else {
-            cell.backgroundColor = UIColor.blueColor()
+        let file = self.attachments[indexPath.row]
+        if file.isImage {
+            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentImageCell.reuseIdentifier()) as! AttachmentImageCell
+            cell.configureWithFile(file)
+            return cell
         }
         
-        
-        return cell
+        return UITableViewCell()
     }
 }
 
 
 extension FeedAttachmentsTableViewCell : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        //FIXME: add real one
-        return 40
+        let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+        let imageHeight = imageWidth * 0.56 - 5
+        return imageHeight
     }
 }
 
