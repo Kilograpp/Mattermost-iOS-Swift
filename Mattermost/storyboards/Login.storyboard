@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="k6n-Wu-QkU" kind="relationship" relationship="rootViewController" id="KMb-XG-jIh"/>
+                        <segue destination="k6n-Wu-QkU" kind="relationship" relationship="rootViewController" id="5YW-yd-A7b"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e3k-We-H9w" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -36,8 +36,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VBY-jz-cKC" customClass="KGTextField" customModule="Mattermost" customModuleProvider="target">
-                                <rect key="frame" x="19" y="198" width="337" height="40"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VBY-jz-cKC" customClass="KGTextField" customModule="Mattermost" customModuleProvider="target">
+                                <rect key="frame" x="19" y="165" width="337" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="smT-Db-kkJ"/>
                                 </constraints>
@@ -47,8 +47,8 @@
                                     <action selector="changeLogin:" destination="k6n-Wu-QkU" eventType="editingChanged" id="ICB-2v-ihr"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Fe4-9Z-OP6" customClass="KGTextField" customModule="Mattermost" customModuleProvider="target">
-                                <rect key="frame" x="19" y="279" width="337" height="40"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Fe4-9Z-OP6" customClass="KGTextField" customModule="Mattermost" customModuleProvider="target">
+                                <rect key="frame" x="19" y="246" width="337" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="1bE-im-T5y"/>
                                 </constraints>
@@ -75,15 +75,15 @@
                                     <constraint firstItem="QDz-lB-paO" firstAttribute="width" secondItem="IOi-YG-yKZ" secondAttribute="height" multiplier="375:130" id="teq-cP-mBM"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MwB-Xc-MT1">
-                                <rect key="frame" x="164" y="359" width="46" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MwB-Xc-MT1">
+                                <rect key="frame" x="165" y="326" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="loginAction:" destination="k6n-Wu-QkU" eventType="touchUpInside" id="hHz-Sb-Skq"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jJC-XP-PjQ">
-                                <rect key="frame" x="18" y="327" width="46" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jJC-XP-PjQ">
+                                <rect key="frame" x="18" y="294" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
                             </button>
                         </subviews>
@@ -124,7 +124,86 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mW0-wR-MrN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="836.5" y="487.5"/>
+            <point key="canvasLocation" x="1658" y="463"/>
+        </scene>
+        <!--Server Url View Controller-->
+        <scene sceneID="xsk-Jw-Ie7">
+            <objects>
+                <viewController id="Erx-Nd-Gk4" customClass="ServerUrlViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="305-6w-cDk"/>
+                        <viewControllerLayoutGuide type="bottom" id="nPu-Iw-gwG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uya-RO-Kcm">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BUP-v1-52e">
+                                <rect key="frame" x="30" y="85" width="540" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c37-lj-DJ2">
+                                <rect key="frame" x="30" y="114" width="540" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqQ-iN-Eda">
+                                <rect key="frame" x="30" y="306" width="540" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vvj-v6-Cnq">
+                                <rect key="frame" x="30" y="326" width="540" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Kwd-O2-ddM" customClass="KGTextField" customModule="Mattermost" customModuleProvider="target">
+                                <rect key="frame" x="30" y="256" width="540" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="wbj-b9-QGP"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Kwd-O2-ddM" firstAttribute="centerY" secondItem="uya-RO-Kcm" secondAttribute="centerY" constant="-25" id="1SF-uS-NKE"/>
+                            <constraint firstItem="Vvj-v6-Cnq" firstAttribute="leading" secondItem="BqQ-iN-Eda" secondAttribute="leading" id="2n0-om-qxU"/>
+                            <constraint firstItem="Kwd-O2-ddM" firstAttribute="width" secondItem="uya-RO-Kcm" secondAttribute="width" multiplier="0.9" id="49Y-J1-zdt"/>
+                            <constraint firstItem="c37-lj-DJ2" firstAttribute="trailing" secondItem="Kwd-O2-ddM" secondAttribute="trailing" id="9HZ-RY-4A5"/>
+                            <constraint firstItem="Vvj-v6-Cnq" firstAttribute="top" secondItem="Kwd-O2-ddM" secondAttribute="bottom" constant="30" id="ErK-Zp-LU1"/>
+                            <constraint firstItem="Kwd-O2-ddM" firstAttribute="top" secondItem="BUP-v1-52e" secondAttribute="bottom" constant="150" id="Jv4-c3-Jcq"/>
+                            <constraint firstItem="Vvj-v6-Cnq" firstAttribute="trailing" secondItem="BqQ-iN-Eda" secondAttribute="trailing" id="LT4-OV-KJp"/>
+                            <constraint firstItem="BqQ-iN-Eda" firstAttribute="top" secondItem="Kwd-O2-ddM" secondAttribute="bottom" constant="10" id="PGU-gh-hbc"/>
+                            <constraint firstItem="BqQ-iN-Eda" firstAttribute="leading" secondItem="Kwd-O2-ddM" secondAttribute="leading" id="Qr2-dD-S0a"/>
+                            <constraint firstItem="c37-lj-DJ2" firstAttribute="leading" secondItem="Kwd-O2-ddM" secondAttribute="leading" id="RLB-nF-YMo"/>
+                            <constraint firstItem="Kwd-O2-ddM" firstAttribute="centerX" secondItem="uya-RO-Kcm" secondAttribute="centerX" id="eBn-lh-NWm"/>
+                            <constraint firstItem="BqQ-iN-Eda" firstAttribute="trailing" secondItem="Kwd-O2-ddM" secondAttribute="trailing" id="eCg-SH-HKb"/>
+                            <constraint firstItem="BUP-v1-52e" firstAttribute="trailing" secondItem="Kwd-O2-ddM" secondAttribute="trailing" id="eN3-of-nED"/>
+                            <constraint firstItem="BUP-v1-52e" firstAttribute="leading" secondItem="Kwd-O2-ddM" secondAttribute="leading" id="gfh-C1-z4J"/>
+                            <constraint firstItem="c37-lj-DJ2" firstAttribute="top" secondItem="BUP-v1-52e" secondAttribute="bottom" constant="8" id="pRo-R2-6am"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="VDb-6S-841"/>
+                    <connections>
+                        <outlet property="nextButton" destination="Vvj-v6-Cnq" id="kgN-FE-pM0"/>
+                        <outlet property="promtLabel" destination="BqQ-iN-Eda" id="onJ-if-pfu"/>
+                        <outlet property="subtitleLabel" destination="c37-lj-DJ2" id="dEH-ly-dc6"/>
+                        <outlet property="textField" destination="Kwd-O2-ddM" id="zNE-F7-eBO"/>
+                        <outlet property="titleLabel" destination="BUP-v1-52e" id="pVt-a4-voI"/>
+                        <segue destination="k6n-Wu-QkU" kind="show" id="08y-36-psC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QAb-KV-dsv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="958.5" y="487.5"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="5YW-yd-A7b"/>
+    </inferredMetricsTieBreakers>
 </document>

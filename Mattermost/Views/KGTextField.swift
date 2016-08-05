@@ -9,7 +9,8 @@
 import Foundation
 import SkyFloatingLabelTextField
 
-class KGTextField: SkyFloatingLabelTextField, UITextFieldDelegate {
+// FIXME: CodeReview:  делегат? файнал
+final class KGTextField: SkyFloatingLabelTextField, UITextFieldDelegate {
     internal let underLineView = UIView()
     
     required init?(coder aDecoder: NSCoder) {
@@ -30,26 +31,5 @@ class KGTextField: SkyFloatingLabelTextField, UITextFieldDelegate {
         self.selectedLineHeight = 1
         
         
-    }
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-        self.underLineView.backgroundColor = ColorBucket.lightGrayColor
-        //self.addSubview(self.underLineView)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.underLineView.frame = CGRectMake(0, self.frame.size.height - 1, self.frame.size.width, 1)
-    }
-    
-    
-    //MARK: - UITextFieldDelegate
-    
-    func textFieldDidBeginEditing(textField: UITextField) {
-        self.underLineView.backgroundColor = ColorBucket.blueColor
-    }
-    
-    func textFieldDidEndEditing(textField: UITextField) {
-        self.underLineView.backgroundColor = ColorBucket.lightGrayColor
     }
 }

@@ -6,14 +6,107 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+// FIXME: CodeReview: Разнести протоколы на extension
 
+private protocol Lifecylce {
+    func viewDidLoad()
+    func viewWillAppear(animated: Bool)
+    func viewDidAppear(animated: Bool)
+}
+
+private protocol Setup {
+    func setupNavigationBar()
+    func setupTitleLabel()
+    func setupLoginButton()
+    func setupLoginTextField()
+    func setupPasswordTextField()
+    func setupRecoveryButton()
+
+}
+
+final class LoginViewController: UIViewController, UITextFieldDelegate {
+
+    
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var passwordTextField: KGTextField!
     @IBOutlet weak var loginTextField: KGTextField!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var recoveryButton: UIButton!
     
+    let titleName = "Sign In"
+    let email = "Email"
+    let password = "Password"
+    let forgotPassword = "Forgot password?"
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+    
+    //MARK - action
+    
+    @IBAction func loginAction(sender: AnyObject) {
+        // FIXME: CodeReview: мертвый кодик
+        // FIXME: CodeReview: Много логики в интерфейсном методе
+        
+        // Preferences.sharedInstance.serverUrl = Preferences.sharedInstance.predefinedServerUrl()
+//        Api.sharedInstance.login(Preferences.sharedInstance.predefinedLogin()!, password: Preferences.sharedInstance.predefinedPassword()!) { (error) in
+//            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
+//                Api.sharedInstance.loadChannels(with: { (error) in
+//                    Api.sharedInstance.loadCompleteUsersList({ (error) in
+//                        RouterUtils.loadInitialScreen(true)
+//                    })
+//                    
+//                    
+//                })
+//            })
+//        }
+        
+        // FIXME: CodeReview: Сделать как раньге подстановку, но опциональной
+        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
+        Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) {
+            (error) in
+            // FIXME: CodeReview: гуард
+            if (error != nil){
+                print("Error!")
+        } else {
+            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
+                Api.sharedInstance.loadChannels(with: { (error) in
+                    Api.sharedInstance.loadCompleteUsersList({ (error) in
+                        RouterUtils.loadInitialScreen(true)
+                    })
+                    
+                    
+                })
+            })
+            }
+        }
+    }
+    
+    // Вынести в отдельный extension и protocol
+    @IBAction func changeLogin(sender: AnyObject) {
+        
+        // FIXME: CodeReview: Guard
+        if loginTextField.text != "" && passwordTextField.text != "" {
+            self.loginButton.enabled = true
+        } else {
+            self.loginButton.enabled = false
+        }
+    }
+    @IBAction func changePassword(sender: AnyObject) {
+        
+        // FIXME: CodeReview: guard
+        if loginTextField.text != "" && passwordTextField.text != "" {
+            self.loginButton.enabled = true
+        } else {
+            self.loginButton.enabled = false
+        }
+    }
+}
+
+
+// MARK: - Lifecycle
+
+extension LoginViewController: Lifecylce {
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,125 +128,70 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         self.loginTextField.becomeFirstResponder()
     }
-    
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
-    }
-    
-    //MARK - setup
-    
-    func setupNavigationBar() {
-        let titleAttribute = [NSForegroundColorAttributeName: UIColor.whiteColor(),
-                              NSFontAttributeName: FontBucket.normalTitleFont]
+}
+
+
+// MARK: - Setup
+
+extension LoginViewController: Setup {
+    private func setupNavigationBar() {
+        let titleAttribute = [
+            NSForegroundColorAttributeName: UIColor.whiteColor(),
+            NSFontAttributeName: FontBucket.normalTitleFont
+        ]
         
-        self.navigationController?.navigationBar.titleTextAttributes = titleAttribute
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.barStyle = UIBarStyle.Black
-        self.navigationController?.navigationBar.translucent = true
-        self.navigationController?.navigationBar.backgroundColor = UIColor.clearColor()
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: UIBarMetrics.Default)
-        self.title = "Sign In"
+        guard let navigationController = self.navigationController else {
+            return
+        }
+        navigationController.navigationBar.titleTextAttributes = titleAttribute
+        navigationController.navigationBar.tintColor = UIColor.whiteColor()
+        navigationController.navigationBar.barStyle = .Black
+        navigationController.navigationBar.translucent = true
+        navigationController.navigationBar.backgroundColor = UIColor.clearColor()
+        navigationController.navigationBar.shadowImage = UIImage()
+        navigationController.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+        self.title = self.titleName
         self.navigationController?.view.bringSubviewToFront(self.titleLabel)
         self.setNeedsStatusBarAppearanceUpdate()
     }
     
-    func setupTitleLabel() {
+    private func setupTitleLabel() {
         self.titleLabel.font = FontBucket.titleLoginFont
         self.titleLabel.textColor = ColorBucket.whiteColor
     }
     
-    func setupLoginButton() {
+    private func setupLoginButton() {
         self.loginButton.layer.cornerRadius = 2
-        self.loginButton.setTitle("Sign In", forState: UIControlState.Normal)
+        self.loginButton.setTitle(self.titleName, forState: .Normal)
         self.loginButton.titleLabel?.font = FontBucket.loginButtonFont
         self.loginButton.enabled = false
     }
     
-    func setupLoginTextField() {
+    private func setupLoginTextField() {
         self.loginTextField.delegate = self;
         self.loginTextField.textColor = ColorBucket.blackColor
         self.loginTextField.font = FontBucket.loginTextFieldFont
-        self.loginTextField.placeholder = "Email";
-        self.loginTextField.keyboardType = UIKeyboardType.EmailAddress
-        self.loginTextField.autocorrectionType = UITextAutocorrectionType.No
+        self.loginTextField.placeholder = self.email
+        self.loginTextField.keyboardType = .EmailAddress
+        self.loginTextField.autocorrectionType = .No
     }
     
-    func setupPasswordTextField() {
+    private func setupPasswordTextField() {
         self.passwordTextField.delegate = self;
         self.passwordTextField.textColor = ColorBucket.blackColor
         self.passwordTextField.font = FontBucket.loginTextFieldFont
-        self.passwordTextField.placeholder = "Password";
-        self.passwordTextField.autocorrectionType = UITextAutocorrectionType.No
+        self.passwordTextField.placeholder = self.password
+        self.passwordTextField.autocorrectionType = .No
         self.passwordTextField.secureTextEntry = true
     }
     
-    func setupRecoveryButton() {
+    private func setupRecoveryButton() {
         self.recoveryButton.layer.cornerRadius = 2
         self.recoveryButton.backgroundColor = ColorBucket.whiteColor
-        self.recoveryButton.setTitle("Forgot password?", forState:UIControlState.Normal)
+        self.recoveryButton.setTitle(self.forgotPassword, forState:.Normal)
         self.recoveryButton.tintColor = UIColor.redColor()
-        self.recoveryButton.setTitleColor(UIColor.redColor(), forState:UIControlState.Normal)
+        self.recoveryButton.setTitleColor(UIColor.redColor(), forState:.Normal)
         self.recoveryButton.titleLabel?.font = FontBucket.forgotPasswordButtonFont
     }
-    
-    
-    //MARK - UITextFieldDelegate
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if (textField.isEqual(self.loginTextField)) {
-            self.passwordTextField.becomeFirstResponder()
-        } else if (textField.isEqual(self.passwordTextField)) {
-            self.loginAction(self)
-        }
-        return true
-    }
-    
-    
-    //MARK - action
-    
-    @IBAction func loginAction(sender: AnyObject) {
-        // Preferences.sharedInstance.serverUrl = Preferences.sharedInstance.predefinedServerUrl()
-//        Api.sharedInstance.login(Preferences.sharedInstance.predefinedLogin()!, password: Preferences.sharedInstance.predefinedPassword()!) { (error) in
-//            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-//                Api.sharedInstance.loadChannels(with: { (error) in
-//                    Api.sharedInstance.loadCompleteUsersList({ (error) in
-//                        RouterUtils.loadInitialScreen(true)
-//                    })
-//                    
-//                    
-//                })
-//            })
-//        }
-        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
-        Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in if (error != nil){
-            print("Error!")
-        } else {
-            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-                Api.sharedInstance.loadChannels(with: { (error) in
-                    Api.sharedInstance.loadCompleteUsersList({ (error) in
-                        RouterUtils.loadInitialScreen(true)
-                    })
-                    
-                    
-                })
-            })
-            }
-        }
-    }
-    
-    @IBAction func changeLogin(sender: AnyObject) {
-        if loginTextField.text != "" && passwordTextField.text != "" {
-            self.loginButton.enabled = true
-        } else {
-            self.loginButton.enabled = false
-        }
-    }
-    @IBAction func changePassword(sender: AnyObject) {
-        if loginTextField.text != "" && passwordTextField.text != "" {
-            self.loginButton.enabled = true
-        } else {
-            self.loginButton.enabled = false
-        }
-    }
+
 }
