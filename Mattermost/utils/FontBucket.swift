@@ -25,6 +25,13 @@ private protocol LeftMenuFonts {
     static var highlighTedTitleFont: UIFont {get}
 }
 
+private protocol LoginFonts: class {
+    static var loginButtonFont: UIFont {get}
+    static var loginTextFieldFont: UIFont {get}
+    static var titleLoginFont: UIFont {get}
+    static var forgotPasswordButtonFont: UIFont {get}
+}
+
 private protocol MarkdownFonts: class {
     static var emphasisFont: UIFont {get}
     
@@ -52,6 +59,12 @@ extension FontBucket : LeftMenuFonts {
     static let highlighTedTitleFont = FontBucket.semiboldFontOfSize(18)
 }
 
+extension FontBucket : LoginFonts {
+    static let loginButtonFont = FontBucket.mediumFontOfSize(18)
+    static let loginTextFieldFont = FontBucket.regularFontOfSize(16)
+    static let titleLoginFont = FontBucket.semiboldFontOfSize(28)
+    static let forgotPasswordButtonFont = FontBucket.regularFontOfSize(16)
+}
 //MARK: Helpers
 
 extension FontBucket: MarkdownFonts {
@@ -69,6 +82,9 @@ extension FontBucket: MarkdownFonts {
 extension FontBucket {
     private static func italicFontOfSize(size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Italic, size: size)!
+    }
+    private static func mediumFontOfSize(size: CGFloat) -> UIFont {
+        return UIFont(name: FontNames.Medium, size: size)!
     }
 }
 
