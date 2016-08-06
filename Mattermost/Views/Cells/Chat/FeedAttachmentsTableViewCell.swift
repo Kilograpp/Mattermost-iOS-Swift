@@ -6,7 +6,6 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-import ActiveLabel
 import WebImage
 import RealmSwift
 

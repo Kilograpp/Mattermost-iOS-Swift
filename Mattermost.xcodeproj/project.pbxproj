@@ -46,7 +46,6 @@
 		D6E165871D47C1200014C831 /* MattermostTableViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* MattermostTableViewCellProtocol.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
 		D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */; };
-		D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */; };
 		D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A51D47E9B00014C831 /* MFSideMenu.framework */; };
 		D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */; };
 		D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165A91D47EA920014C831 /* UIImage+Additions.swift */; };
@@ -153,7 +152,6 @@
 		D6E165861D47C1200014C831 /* MattermostTableViewCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostTableViewCellProtocol.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
 		D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCommonTableViewCell.swift; sourceTree = "<group>"; };
-		D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActiveLabel.framework; path = Carthage/Build/iOS/ActiveLabel.framework; sourceTree = "<group>"; };
 		D6E165A31D47E99C0014C831 /* WebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebImage.framework; path = Carthage/Build/iOS/WebImage.framework; sourceTree = "<group>"; };
 		D6E165A51D47E9B00014C831 /* MFSideMenu.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MFSideMenu.framework; path = Carthage/Build/iOS/MFSideMenu.framework; sourceTree = "<group>"; };
 		D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = Carthage/Build/iOS/MBProgressHUD.framework; sourceTree = "<group>"; };
@@ -217,7 +215,6 @@
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
-				D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */,
 				D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */,
 				D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */,
 				D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */,
@@ -548,7 +545,6 @@
 				D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */,
 				D6E165A51D47E9B00014C831 /* MFSideMenu.framework */,
 				D6E165A31D47E99C0014C831 /* WebImage.framework */,
-				D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */,
 				D8812C341D476EB800436B5C /* Starscream.framework */,
 				D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */,
 				D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */,
@@ -720,7 +716,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SlackTextViewController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftFetchedResultsController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RBQFetchedResultsController.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/ActiveLabel.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MFSideMenu.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",

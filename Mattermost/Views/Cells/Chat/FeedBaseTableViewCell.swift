@@ -6,12 +6,10 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-import ActiveLabel
-
 protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
     var onMentionTap: ((nickname : String) -> Void)? { get set }
     var post : Post! { get set }
-    var messageLabel : ActiveLabel { get }
+    var messageLabel : UILabel { get }
     
     func configureWithPost(post: Post) -> Void
     func configureMessageAttributedLabel() -> Void
@@ -21,10 +19,10 @@ protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
 //если нужна реализация
 extension FeedTableViewCellProtocol {
     func configureMessageAttributedLabel() -> Void {
-        self.messageLabel.URLColor = ColorBucket.blueColor
-        self.messageLabel.URLSelectedColor = ColorBucket.blueColor
-        self.messageLabel.mentionColor = ColorBucket.blueColor
-        self.messageLabel.mentionSelectedColor = ColorBucket.blueColor
-        self.messageLabel.hashtagColor = ColorBucket.blueColor
+//        self.messageLabel.URLColor = ColorBucket.blueColor
+//        self.messageLabel.URLSelectedColor = ColorBucket.blueColor
+//        self.messageLabel.mentionColor = ColorBucket.blueColor
+//        self.messageLabel.mentionSelectedColor = ColorBucket.blueColor
+//        self.messageLabel.hashtagColor = ColorBucket.blueColor
     }
 }

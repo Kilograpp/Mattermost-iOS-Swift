@@ -10,7 +10,7 @@ import Foundation
 import TSMarkdownParser
 
 extension TSMarkdownParser {
-    @nonobjc static let sharedInstance = TSMarkdownParser.customParser();
+    @nonobjc static let sharedInstance = TSMarkdownParser.customParser()
     
     private static func customParser() -> TSMarkdownParser {
         let defaultParser = TSMarkdownParser()
@@ -133,6 +133,20 @@ extension TSMarkdownParser {
         }
         
         self.addUnescapingParsing()
+        
+        let mentionExpression = try! NSRegularExpression(pattern: "@\\w\\S*\\b", options: .CaseInsensitive)
+        self.addParsingRuleWithRegularExpression(mentionExpression) { (match, attributedString) in
+            let range = NSMakeRange(match.range.location+1, match.range.length-1)
+            let name = (attributedString.string as NSString).substringWithRange(range)
+            
+            var attributes = [NSForegroundColorAttributeName : ColorBucket.blueColor]
+            
+            if name == DataManager.sharedInstance.currentUser?.username {
+                attributes[NSBackgroundColorAttributeName] =  UIColor.yellowColor()
+            }
+  
+            attributedString.addAttributes(attributes, range: match.range)
+        }
     }
     
 }

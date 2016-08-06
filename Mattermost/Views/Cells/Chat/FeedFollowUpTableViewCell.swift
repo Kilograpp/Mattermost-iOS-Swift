@@ -6,10 +6,9 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-import ActiveLabel
 
 class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
-    var messageLabel : ActiveLabel = ActiveLabel()
+    var messageLabel : UILabel = UILabel()
     
     var post : Post!
     var onMentionTap: ((nickname : String) -> Void)?
@@ -26,7 +25,6 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     
     func setupMessageLabel() -> Void {
-        self.messageLabel = ActiveLabel.init()
         self.messageLabel.backgroundColor = UIColor.whiteColor()
         self.messageLabel.numberOfLines = 0;
         self.addSubview(self.messageLabel)

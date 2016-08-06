@@ -6,7 +6,6 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-import ActiveLabel
 import WebImage
 
 
@@ -15,7 +14,7 @@ class FeedCommonTableViewCell: UITableViewCell {
     let avatarImageView : UIImageView = UIImageView()
     let nameLabel : UILabel = UILabel()
     let dateLabel : UILabel = UILabel()
-    let messageLabel : ActiveLabel = ActiveLabel()
+    let messageLabel : UILabel = UILabel()
     
     private var postIdentifier: String?
     
