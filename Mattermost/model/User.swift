@@ -160,10 +160,10 @@ extension User: ResponseDescriptors {
 
 extension User: Computatations {
     func computeNicknameIfRequired() {
-        if self.nickname == nil {
-            self.nickname = self.username
+        guard self.nickname == nil else {
+            return
         }
-        
+        self.nickname = self.username
     }
     func computeDisplayNameWidth() {
         self.displayNameWidth = StringUtils.widthOfString(self.displayName, font: FontBucket.postAuthorNameFont)
