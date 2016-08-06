@@ -36,13 +36,13 @@ public enum PostAttributes: String {
     case attributedMessage = "attributedMessage"
     case attributedMessageHeight = "attributedMessageHeight"
     case hasObserverAttached = "hasObserverAttached"
-    
 }
 
 public enum PostRelationships: String {
     case author = "author"
     case channel = "channel"
     case files = "files"
+    case attachments = "attachments"
 }
 
 @objc enum PostStatus: Int {
@@ -102,6 +102,7 @@ final class Post: RealmObject {
     }
     
     let files = List<File>()
+    let attachments = List<Attachment>()
     
     private var hasObserverAttached: Bool = false
     private var statusChangeHandler: ((status: PostStatus) -> Void)?
@@ -221,6 +222,9 @@ extension Post: ResponseMapping {
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
                                                            toKeyPath: PostRelationships.files.rawValue,
                                                          withMapping: File.simplifiedMapping()))
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
+                                                           toKeyPath: PostRelationships.attachments.rawValue,
+                                                         withMapping: Attachment.mapping()))
         return mapping
     }
 }
