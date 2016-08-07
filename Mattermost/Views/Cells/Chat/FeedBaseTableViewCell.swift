@@ -9,20 +9,9 @@
 protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
     var onMentionTap: ((nickname : String) -> Void)? { get set }
     var post : Post! { get set }
-    var messageLabel : UILabel { get }
+    var messageLabel : MessageLabel { get }
     
     func configureWithPost(post: Post) -> Void
     func configureMessageAttributedLabel() -> Void
     static func heightWithPost(post: Post) -> CGFloat
-}
-//
-//если нужна реализация
-extension FeedTableViewCellProtocol {
-    func configureMessageAttributedLabel() -> Void {
-//        self.messageLabel.URLColor = ColorBucket.blueColor
-//        self.messageLabel.URLSelectedColor = ColorBucket.blueColor
-//        self.messageLabel.mentionColor = ColorBucket.blueColor
-//        self.messageLabel.mentionSelectedColor = ColorBucket.blueColor
-//        self.messageLabel.hashtagColor = ColorBucket.blueColor
-    }
 }

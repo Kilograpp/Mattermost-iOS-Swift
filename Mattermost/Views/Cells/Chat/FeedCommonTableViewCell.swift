@@ -14,7 +14,7 @@ class FeedCommonTableViewCell: UITableViewCell {
     let avatarImageView : UIImageView = UIImageView()
     let nameLabel : UILabel = UILabel()
     let dateLabel : UILabel = UILabel()
-    let messageLabel : UILabel = UILabel()
+    let messageLabel : MessageLabel = MessageLabel()
     
     private var postIdentifier: String?
     

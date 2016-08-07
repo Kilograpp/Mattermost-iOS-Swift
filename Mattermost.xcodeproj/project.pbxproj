@@ -68,6 +68,8 @@
 		D83305FA1D563AF700E92CD6 /* NSData+AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F91D563AF700E92CD6 /* NSData+AttributedString.swift */; };
 		D83305FC1D56428300E92CD6 /* NSAttributedString+Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FB1D56428300E92CD6 /* NSAttributedString+Archive.swift */; };
 		D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */; };
+		D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */; };
+		D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */; };
 		D8436E681D26AC3600DEF464 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E671D26AC3600DEF464 /* DataManager.swift */; };
 		D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */; };
 		D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */; };
@@ -176,6 +178,8 @@
 		D83305F91D563AF700E92CD6 /* NSData+AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+AttributedString.swift"; sourceTree = "<group>"; };
 		D83305FB1D56428300E92CD6 /* NSAttributedString+Archive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Archive.swift"; sourceTree = "<group>"; };
 		D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Markdown.swift"; sourceTree = "<group>"; };
+		D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageLabel.swift; sourceTree = "<group>"; };
+		D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+UrlAtIndex.swift"; sourceTree = "<group>"; };
 		D8436E671D26AC3600DEF464 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKResponseDescriptor+RuntimeFinder.swift"; sourceTree = "<group>"; };
 		D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKRequestDescriptor+RuntimeFinder.swift"; sourceTree = "<group>"; };
@@ -348,6 +352,7 @@
 				D83305F91D563AF700E92CD6 /* NSData+AttributedString.swift */,
 				D83305FB1D56428300E92CD6 /* NSAttributedString+Archive.swift */,
 				D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */,
+				D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -515,6 +520,7 @@
 				D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */,
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
 				D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */,
+				D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -744,6 +750,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
+				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
+				D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,

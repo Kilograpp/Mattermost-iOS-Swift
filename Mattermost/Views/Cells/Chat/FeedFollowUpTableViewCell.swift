@@ -8,7 +8,7 @@
 
 
 class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
-    var messageLabel : UILabel = UILabel()
+    var messageLabel : MessageLabel = MessageLabel()
     
     var post : Post!
     var onMentionTap: ((nickname : String) -> Void)?
