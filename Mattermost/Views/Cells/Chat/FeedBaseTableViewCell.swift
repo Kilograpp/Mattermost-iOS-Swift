@@ -15,3 +15,9 @@ protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
     func configureMessageAttributedLabel() -> Void
     static func heightWithPost(post: Post) -> CGFloat
 }
+//
+//если нужна реализация
+extension FeedTableViewCellProtocol {
+    func configureMessageAttributedLabel() -> Void {
+    }
+}
