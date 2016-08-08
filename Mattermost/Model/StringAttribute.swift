@@ -22,10 +22,22 @@ final class StringAttribute: Object {
     dynamic var type: StringAttributeType = .Unknown
     dynamic var name: String?
     dynamic var value: String?
-    dynamic var float1: Float = 0
-    dynamic var float2: Float = 0
-    dynamic var float3: Float = 0
-    var valueCache: AnyObject?
+    private dynamic var float1: Float = 0
+    private dynamic var float2: Float = 0
+    private dynamic var float3: Float = 0
+    var valueCache: AnyObject? {
+        switch type {
+        case .String:
+            return self.value
+        case .Link:
+            return self.value
+        case .Font:
+            return UIFont(name: self.value!, size: CGFloat(self.float1))
+        case .Color:
+            return UIColor(red: CGFloat(self.float1), green: CGFloat(self.float2), blue: CGFloat(self.float3), alpha: 1)
+            default: return nil
+        }
+    }
    
     override class func ignoredProperties() -> [String] {
         return ["valueCache"]
@@ -84,29 +96,6 @@ final class StringAttribute: Object {
         self.name = attributeName
         self.type = .Color
     }
-    
 
-    
-    func computeValueCache() {
-        
-        switch type {
-            
-            case .String:
-                self.valueCache = self.value
-            
-            case .Link:
-                self.valueCache = self.value
-
-            case .Font:
-                self.valueCache =  UIFont(name: self.value!, size: CGFloat(self.float1))
-            
-            case .Color:
-                self.valueCache = UIColor(red: CGFloat(self.float1), green: CGFloat(self.float2), blue: CGFloat(self.float3), alpha: 1)
-            
-
-            default: break
-        }
-        
-    }
     
 }

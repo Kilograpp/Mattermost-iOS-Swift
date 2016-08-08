@@ -107,6 +107,8 @@ class AttributedLabel: UIView {
     }
     
     private func setup() {
+        opaque = false
+        contentMode = .Redraw
         self.textContainer = self.textContainer(self.bounds.size)
         self.layoutManager = self.layoutManager(self.textContainer)
         self.textStorage = NSTextStorage()
@@ -115,17 +117,11 @@ class AttributedLabel: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        opaque = false
-        contentMode = .Redraw
         self.setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
-        opaque = false
-        contentMode = .Redraw
         self.setup()
     }
     

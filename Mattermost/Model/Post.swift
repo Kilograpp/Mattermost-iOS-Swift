@@ -90,7 +90,7 @@ final class Post: RealmObject {
         }
     }
     lazy var attributedMessage: NSAttributedString? = {
-        let string = self._attributedMessageData?.attributedString()
+        let string = self._attributedMessageData?.attributedString
         return string
     }()
     dynamic var attributedMessageHeight: Float = 0.0
@@ -294,7 +294,7 @@ extension Post: Computations {
         self.attributedMessage = TSMarkdownParser.sharedInstance.attributedStringFromMarkdown(self.message!)
     }
     private func computeAttributedStringData() {
-        self._attributedMessageData = RealmAttributedString.instanceWithAttributeString(self.attributedMessage!)
+        self._attributedMessageData = RealmAttributedString(attributedString: self.attributedMessage)
     }
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)

@@ -8,20 +8,26 @@
 
 import Foundation
 import RealmSwift
+
 final class RealmAttributedString: Object {
     dynamic var string: String?
+    
     let parameters = List<StringParameter>()
     
-    func attributedString() -> NSAttributedString? {
-        let attributedString = NSMutableAttributedString(string: self.string!)
+    var attributedString: NSAttributedString? {
+        
+        guard let string = self.string else {
+            return nil
+        }
+        
+        let attributedString = NSMutableAttributedString(string: string)
         attributedString.beginEditing()
         self.parameters.forEach { (parameter) in
             
-            let range = parameter.range!
+            let range = parameter.range
             parameter.attributes.forEach({ (attribute) in
                 
                 if attribute.type != .Unknown {
-                    attribute.computeValueCache()
                     attributedString.addAttribute(attribute.name!, value: attribute.valueCache!, range: range)
                 }
             })
@@ -31,13 +37,17 @@ final class RealmAttributedString: Object {
         return attributedString
     }
     
-    static func instanceWithAttributeString(attributedString: NSAttributedString) -> RealmAttributedString {
+    convenience init?(attributedString: NSAttributedString?) {
+        guard let attributedString = attributedString else {
+            return nil
+        }
         
-        let realmAttributeString = RealmAttributedString()
-        realmAttributeString.string = attributedString.string
+        self.init()
+        
+        self.string = attributedString.string
         
         attributedString.enumerateAttributesInRange(NSMakeRange(0, attributedString.length), options: NSAttributedStringEnumerationOptions(rawValue: 0)) { (attributes, range, stop) in
-
+            
             let parameter = StringParameter()
             parameter.range = range
             
@@ -47,9 +57,14 @@ final class RealmAttributedString: Object {
                 parameter.attributes.append(attribute)
             })
             
-            realmAttributeString.parameters.append(parameter)
+            self.parameters.append(parameter)
             
         }
-        return realmAttributeString
+
+    }
+    
+    
+    override class func ignoredProperties() -> [String] {
+        return ["attributedString"]
     }
 }
