@@ -25,10 +25,10 @@ final class AttachmentField: RealmObject {
     }
     dynamic var title: String?
     
-    private dynamic var _attributedValueData: NSData?
+    private dynamic var _attributedValueData: RealmAttributedString?
     
     lazy var attributedValue: NSAttributedString? = {
-        return self._attributedValueData?.unarchiveAsAttributedString()
+        return self._attributedValueData?.attributedString()
     }()
     
     override class func ignoredProperties() -> [String] {
@@ -61,7 +61,7 @@ extension AttachmentField: ResponseMappings {
 
 extension AttachmentField: Computations {
     private func computeAttributedValueData() {
-        self._attributedValueData = self.attributedValue?.archive()
+        self._attributedValueData = RealmAttributedString.instanceWithAttributeString(self.attributedValue!)
     }
     private func computeAttributedValue() {
         self.attributedValue = self.value?.markdownAttributedString()

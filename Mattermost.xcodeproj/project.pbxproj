@@ -65,8 +65,6 @@
 		D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */ = {isa = PBXBuildFile; fileRef = D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */; };
 		D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F51D5636EF00E92CD6 /* Attachment.swift */; };
 		D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F71D5637B800E92CD6 /* AttachmentField.swift */; };
-		D83305FA1D563AF700E92CD6 /* NSData+AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F91D563AF700E92CD6 /* NSData+AttributedString.swift */; };
-		D83305FC1D56428300E92CD6 /* NSAttributedString+Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FB1D56428300E92CD6 /* NSAttributedString+Archive.swift */; };
 		D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */; };
 		D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */; };
 		D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */; };
@@ -79,6 +77,10 @@
 		D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85D92EC1D400C42002F8800 /* RealmObject.swift */; };
 		D85D92EF1D400F9E002F8800 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D85D92EE1D400F9E002F8800 /* Realm.framework */; };
 		D85D92F01D400FB1002F8800 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D85D92E61D400743002F8800 /* RealmSwift.framework */; };
+		D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7EB1D5774FC00BD49A3 /* RealmAttributedString.swift */; };
+		D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7ED1D57753500BD49A3 /* StringParameter.swift */; };
+		D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7F11D57772400BD49A3 /* StringAttribute.swift */; };
+		D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7F71D592FD500BD49A3 /* AttributedLabel.swift */; };
 		D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812AE91D43933400436B5C /* PageWrapper.swift */; };
 		D8812AEC1D44141100436B5C /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812AEB1D44141100436B5C /* File.swift */; };
 		D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */; };
@@ -175,8 +177,6 @@
 		D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+Cache.m"; sourceTree = "<group>"; };
 		D83305F51D5636EF00E92CD6 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		D83305F71D5637B800E92CD6 /* AttachmentField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentField.swift; sourceTree = "<group>"; };
-		D83305F91D563AF700E92CD6 /* NSData+AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+AttributedString.swift"; sourceTree = "<group>"; };
-		D83305FB1D56428300E92CD6 /* NSAttributedString+Archive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Archive.swift"; sourceTree = "<group>"; };
 		D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Markdown.swift"; sourceTree = "<group>"; };
 		D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageLabel.swift; sourceTree = "<group>"; };
 		D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+UrlAtIndex.swift"; sourceTree = "<group>"; };
@@ -190,6 +190,10 @@
 		D85D92E81D40079B002F8800 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D85D92EC1D400C42002F8800 /* RealmObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmObject.swift; sourceTree = "<group>"; };
 		D85D92EE1D400F9E002F8800 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
+		D86EF7EB1D5774FC00BD49A3 /* RealmAttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmAttributedString.swift; sourceTree = "<group>"; };
+		D86EF7ED1D57753500BD49A3 /* StringParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringParameter.swift; sourceTree = "<group>"; };
+		D86EF7F11D57772400BD49A3 /* StringAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringAttribute.swift; sourceTree = "<group>"; };
+		D86EF7F71D592FD500BD49A3 /* AttributedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedLabel.swift; sourceTree = "<group>"; };
 		D8812AE91D43933400436B5C /* PageWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageWrapper.swift; sourceTree = "<group>"; };
 		D8812AEB1D44141100436B5C /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDateFormatter+Singleton.swift"; sourceTree = "<group>"; };
@@ -321,6 +325,7 @@
 		9B822B9F449303D4B4A3B584 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D86EF7E81D57742200BD49A3 /* AttributedString */,
 				D8087AE01D414A71001918E8 /* Channel.swift */,
 				D8812AEB1D44141100436B5C /* File.swift */,
 				D8087AE61D427E23001918E8 /* Post.swift */,
@@ -349,8 +354,6 @@
 				D6E165A91D47EA920014C831 /* UIImage+Additions.swift */,
 				D8087AF41D429393001918E8 /* UIScreen+Size.swift */,
 				D8812C361D47D69B00436B5C /* WebSocket+Cookies.swift */,
-				D83305F91D563AF700E92CD6 /* NSData+AttributedString.swift */,
-				D83305FB1D56428300E92CD6 /* NSAttributedString+Archive.swift */,
 				D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */,
 				D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */,
 			);
@@ -513,6 +516,16 @@
 			path = "Objective-C Categories";
 			sourceTree = "<group>";
 		};
+		D86EF7E81D57742200BD49A3 /* AttributedString */ = {
+			isa = PBXGroup;
+			children = (
+				D86EF7EB1D5774FC00BD49A3 /* RealmAttributedString.swift */,
+				D86EF7ED1D57753500BD49A3 /* StringParameter.swift */,
+				D86EF7F11D57772400BD49A3 /* StringAttribute.swift */,
+			);
+			name = AttributedString;
+			sourceTree = "<group>";
+		};
 		D8812AE81D43931700436B5C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -520,6 +533,7 @@
 				D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */,
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
 				D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */,
+				D86EF7F71D592FD500BD49A3 /* AttributedLabel.swift */,
 				D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */,
 			);
 			path = Classes;
@@ -764,8 +778,9 @@
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
-				D83305FA1D563AF700E92CD6 /* NSData+AttributedString.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
+				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
+				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
@@ -777,13 +792,14 @@
 				D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */,
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
+				D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */,
 				D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
 				D6E165871D47C1200014C831 /* MattermostTableViewCellProtocol.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
 				D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */,
+				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
-				D83305FC1D56428300E92CD6 /* NSAttributedString+Archive.swift in Sources */,
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
 				D62FEB951D4F2AD700390EBC /* PublicChannelTableViewCell.swift in Sources */,
 				D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */,

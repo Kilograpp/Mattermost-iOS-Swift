@@ -54,7 +54,7 @@ enum PostRelationships: String {
 
 
 final class Post: RealmObject {
-    private dynamic var _attributedMessageData: NSData?
+    private dynamic var _attributedMessageData: RealmAttributedString?
     dynamic var channelId: String?
     dynamic var authorId: String?
     dynamic var pendingId: String?
@@ -90,7 +90,8 @@ final class Post: RealmObject {
         }
     }
     lazy var attributedMessage: NSAttributedString? = {
-        return self._attributedMessageData?.unarchiveAsAttributedString()
+        let string = self._attributedMessageData?.attributedString()
+        return string
     }()
     dynamic var attributedMessageHeight: Float = 0.0
     dynamic var type: String?
@@ -293,7 +294,7 @@ extension Post: Computations {
         self.attributedMessage = TSMarkdownParser.sharedInstance.attributedStringFromMarkdown(self.message!)
     }
     private func computeAttributedStringData() {
-        self._attributedMessageData = self.attributedMessage?.archive()
+        self._attributedMessageData = RealmAttributedString.instanceWithAttributeString(self.attributedMessage!)
     }
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)

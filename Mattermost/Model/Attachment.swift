@@ -44,18 +44,18 @@ final class Attachment: RealmObject {
         }
     }
     
-    private dynamic var _attributedTextData: NSData?
-    private dynamic var _attributedFallbackData: NSData?
-    private dynamic var _attributedPretextData: NSData?
+    private dynamic var _attributedTextData: RealmAttributedString?
+    private dynamic var _attributedFallbackData: RealmAttributedString?
+    private dynamic var _attributedPretextData: RealmAttributedString?
     
     lazy var attributedPretext: NSAttributedString? = {
-        return self._attributedPretextData?.unarchiveAsAttributedString()
+        return self._attributedPretextData?.attributedString()
     }()
     lazy var attributedFallback: NSAttributedString? = {
-        return self._attributedFallbackData?.unarchiveAsAttributedString()
+        return self._attributedFallbackData?.attributedString()
     }()
     lazy var attributedText: NSAttributedString? = {
-        return self._attributedTextData?.unarchiveAsAttributedString()
+        return self._attributedTextData?.attributedString()
     }()
         
     let fields = List<AttachmentField>()
@@ -111,12 +111,12 @@ extension Attachment: Computations {
         self.attributedPretext = self.pretext?.markdownAttributedString()
     }
     private func computeAttributedFallbackData() {
-        self._attributedFallbackData = self.attributedFallback?.archive()
+        self._attributedFallbackData = RealmAttributedString.instanceWithAttributeString(self.attributedFallback!)
     }
     private func computeAttributedPretextData() {
-        self._attributedPretextData = self.attributedPretext?.archive()
+        self._attributedPretextData = RealmAttributedString.instanceWithAttributeString(self.attributedPretext!)
     }
     private func computeAttributedTextData() {
-        self._attributedTextData = self.attributedText?.archive()
+        self._attributedTextData = RealmAttributedString.instanceWithAttributeString(self.attributedText!)
     }
 }
