@@ -14,44 +14,11 @@ private protocol Delegate {
     var onHashTagTap: ((hashTag: String) -> Void)? {get set}
 }
 
-final class MessageLabel: UILabel, Delegate {
+final class MessageLabel: AttributedLabel, Delegate {
 
     var onMentionTap: ((username: String) -> Void)?
     var onUrlTap: ((url: NSURL) -> Void)?
     var onHashTagTap: ((hashTag: String) -> Void)?
-    
-    private var textStorage = NSTextStorage()
-    private var textContainer = NSTextContainer()
-    private var layoutManager = NSLayoutManager()
-    
-    
-    override var lineBreakMode: NSLineBreakMode {
-        didSet { self.textContainer.lineBreakMode = self.lineBreakMode }
-    }
-    
-    override var numberOfLines: Int {
-        didSet { self.textContainer.maximumNumberOfLines = self.numberOfLines }
-    }
-
-
-    private func setup() {
-        self.userInteractionEnabled = true
-        self.textStorage.addLayoutManager(self.layoutManager)
-        self.layoutManager.addTextContainer(self.textContainer)
-        self.textContainer.lineFragmentPadding = 0
-        self.textContainer.lineBreakMode = self.lineBreakMode
-        self.textContainer.maximumNumberOfLines = self.numberOfLines
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setup()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setup()
-    }
 
     
     func handleTouch(touch: UITouch){
