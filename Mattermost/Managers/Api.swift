@@ -116,6 +116,17 @@ extension Api: TeamApi {
             completion(userShouldSelectTeam: true, error: error)
         }
     }
+    
+    func checkURL(with completion:(error: Error?) -> Void) {
+        let path = Team.initialLoadPathPattern()
+        self._managerCache = nil
+        self.manager.getObject(path: path, success: { (mappingResult) in
+            Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
+            completion(error: nil)
+        }) { (error) in
+            completion(error: error)
+        }
+    }
 }
 
 extension Api: ChannelApi {

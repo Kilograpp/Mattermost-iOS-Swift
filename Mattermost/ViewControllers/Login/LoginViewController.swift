@@ -21,7 +21,11 @@ private protocol Setup {
     func setupLoginTextField()
     func setupPasswordTextField()
     func setupRecoveryButton()
+}
 
+private protocol TextFieldDelegate {
+    func changeLogin(sender: AnyObject)
+    func changePassword(sender: AnyObject)
 }
 
 final class LoginViewController: UIViewController, UITextFieldDelegate {
@@ -62,7 +66,6 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
 //        }
         
         // FIXME: CodeReview: Сделать как раньге подстановку, но опциональной
-        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) {
             (error) in
             // FIXME: CodeReview: гуард
@@ -82,7 +85,12 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    // Вынести в отдельный extension и protocol
+}
+
+
+//MARK: - UITextFieldDelegate
+
+extension LoginViewController: TextFieldDelegate {
     @IBAction func changeLogin(sender: AnyObject) {
         
         // FIXME: CodeReview: Guard
@@ -102,7 +110,6 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
 }
-
 
 // MARK: - Lifecycle
 
@@ -158,6 +165,9 @@ extension LoginViewController: Setup {
     private func setupTitleLabel() {
         self.titleLabel.font = FontBucket.titleLoginFont
         self.titleLabel.textColor = ColorBucket.whiteColor
+        if (Preferences.sharedInstance.siteName != nil) {
+            self.titleLabel.text = Preferences.sharedInstance.siteName!
+        }
     }
     
     private func setupLoginButton() {
