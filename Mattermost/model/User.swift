@@ -48,6 +48,18 @@ final class User: RealmObject {
     }
 }
 
+enum UserAttributes: String {
+    case privateStatus = "privateStatus"
+    case email = "email"
+    case firstName = "firstName"
+    case lastName = "lastName"
+    case identifier = "identifier"
+    case nickname = "nickname"
+    case status = "status"
+    case username = "username"
+    case avatarLink = "avatarLink"
+}
+
 private protocol PathPatterns: class {
     static func loginPathPattern() -> String
     static func avatarPathPattern() -> String
@@ -74,17 +86,6 @@ private protocol Computatations: class {
     func computeNicknameIfRequired()
 }
 
-enum UserAttributes: String {
-    case privateStatus = "privateStatus"
-    case email = "email"
-    case firstName = "firstName"
-    case lastName = "lastName"
-    case identifier = "identifier"
-    case nickname = "nickname"
-    case status = "status"
-    case username = "username"
-    case avatarLink = "avatarLink"
-}
 
 extension User: PathPatterns {
     static func avatarPathPattern() -> String {
@@ -159,10 +160,10 @@ extension User: ResponseDescriptors {
 
 extension User: Computatations {
     func computeNicknameIfRequired() {
-        if self.nickname == nil {
-            self.nickname = self.username
+        guard self.nickname == nil else {
+            return
         }
-        
+        self.nickname = self.username
     }
     func computeDisplayNameWidth() {
         self.displayNameWidth = StringUtils.widthOfString(self.displayName, font: FontBucket.postAuthorNameFont)

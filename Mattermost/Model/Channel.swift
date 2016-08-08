@@ -28,7 +28,7 @@ final class Channel: RealmObject {
     
     dynamic var team: Team?
     
-    var isSelected: Bool! {
+    var isSelected: Bool {
         return self == ChannelObserver.sharedObserver.selectedChannel
     }
     

@@ -115,7 +115,7 @@ extension SocketManager: MessageHandling {
                 
                 let post = Post()
                 post.identifier = (postDictionary[NotificationKeys.Identifier] as! String)
-                post.privateChannelId = channelId
+                post.channelId = channelId
                 
                 Api.sharedInstance.updatePost(post, completion: { (error) in
                     self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action)!)
@@ -170,7 +170,7 @@ extension SocketManager: StateControl {
 extension SocketManager: Validation {
     private func postExistsWithIdentifier(identifier: String, pendingIdentifier: String) -> Bool {
         let realm = try! Realm()
-        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.privatePendingId.rawValue, pendingIdentifier)
+        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.pendingId.rawValue, pendingIdentifier)
         return realm.objects(Post).filter(predicate).first != nil
     }
 }
