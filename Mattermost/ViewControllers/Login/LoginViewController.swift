@@ -107,6 +107,16 @@ extension LoginViewController: TextFieldDelegate {
             self.loginButton.enabled = false
         }
     }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField.isEqual(self.loginTextField) {
+            self.passwordTextField.becomeFirstResponder()
+        }
+        if textField .isEqual(self.passwordTextField) {
+            self.loginAction(self)
+        }
+        return true
+    }
 }
 
 // MARK: - Lifecycle
