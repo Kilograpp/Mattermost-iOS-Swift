@@ -24,6 +24,10 @@ private protocol Lifecycle {
     func viewDidAppear(animated: Bool)
 }
 
+private protocol Actions {
+    func nextButtonAction(sender: AnyObject)
+    func textFieldAction()
+}
 final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -32,33 +36,74 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var promtLabel: UILabel!
     @IBOutlet weak var nextButton: UIButton!
     
-    let titleName = "Mattermost"
-    let promt = "e.g. https://matttermost.example.com"
-    let subtitleName = "All your team communication in one place, searchable and accessable anywhere."
-    let placeholder = "Your team URL"
-    let buttonText = "Next step"
+    let titleName = NSLocalizedString("Mattermost", comment: "")
+    let promt = NSLocalizedString("e.g. https://matttermost.example.com", comment: "")
+    let subtitleName = NSLocalizedString("All your team communication in one place, searchable and accessable anywhere.", comment: "")
+    let placeholder = NSLocalizedString("Your team URL", comment: "")
+    let buttonText = NSLocalizedString("Next step", comment: "")
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.Default
     }
     
-    func configureLabels() {
+    private func configureLabels() {
         self.titleLabel.text = titleName
         self.promtLabel.text = promt
         self.subtitleLabel.text = subtitleName
+        guard let server = Preferences.sharedInstance.predefinedServerUrl() else {
+            return
+        }
+        self.textField.text = server
+        self.nextButton.enabled = true
     }
+    
+    private func validateServerUrl() {
+        let urlRegEx = "((http|https)://){1}((.)*)"
+        let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
+        if urlTest.evaluateWithObject(Preferences.sharedInstance.serverUrl) {
+            Api.sharedInstance.checkURL(with: { ( error) in
+                if (error != nil) {
+                    let alert = UIAlertView.init(title: NSLocalizedString("Error", comment: ""), message: nil, delegate: self,
+                        cancelButtonTitle: NSLocalizedString("Cancel", comment: ""))
+                    alert.show()
+                } else {
+                    self.performSegueWithIdentifier("showLogin", sender: nil)
+                }
+            })
+        } else {
+            let addres = Preferences.sharedInstance.serverUrl
+            var urlAddress = String.init(format: "%@%@", "https://", addres!)
+            Preferences.sharedInstance.serverUrl = urlAddress
+            Api.sharedInstance.checkURL(with: { ( error) in
+                if (error != nil) {
+                    urlAddress = String.init(format: "%@%@", "http://", addres!)
+                    Preferences.sharedInstance.serverUrl = urlAddress
+                    Api.sharedInstance.checkURL(with: { ( error) in
+                        if (error != nil) {
+                            let alert = UIAlertView.init(title: NSLocalizedString("Error", comment: ""), message: nil, delegate: self,
+                                cancelButtonTitle: NSLocalizedString("Cancel", comment: ""))
+                            alert.show()
+                        } else {
+                            self.performSegueWithIdentifier("showLogin", sender: nil)
+                        }
+                    })
+                } else {
+                    self.performSegueWithIdentifier("showLogin", sender: nil)
+                }
+            })
+        }
+    }
+}
+
+
+//MARK: - Actions 
+
+extension ServerUrlViewController:Actions {
     @IBAction func nextButtonAction(sender: AnyObject) {
         Preferences.sharedInstance.serverUrl = self.textField.text
-        Api.sharedInstance.checkURL(with: { ( error) in
-            if (error != nil) {
-                print(error?.message)
-                let alert = UIAlertView.init(title: "Error", message: nil, delegate: self, cancelButtonTitle: "Cancel")
-                alert.show()
-            } else {
-                self.performSegueWithIdentifier("showLogin", sender: nil)
-            }
-        })
+        self.validateServerUrl()
     }
+    
     func textFieldAction() {
         if self.textField.text == "" {
             self.nextButton.enabled = false
@@ -68,6 +113,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+//MARK: - Lifecycle
 
 extension ServerUrlViewController:Lifecycle {
     override func viewDidLoad() {
@@ -94,6 +140,9 @@ extension ServerUrlViewController:Lifecycle {
     }
     
 }
+
+
+//MARK: - Setup
 
 extension ServerUrlViewController:Setup {
     private func setupNavigationBar() {

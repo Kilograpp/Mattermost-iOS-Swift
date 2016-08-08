@@ -59,10 +59,10 @@
                                 </connections>
                             </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IOi-YG-yKZ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="117"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="130"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QDz-lB-paO">
-                                        <rect key="frame" x="19" y="88" width="337" height="21"/>
+                                        <rect key="frame" x="19" y="101" width="337" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -70,10 +70,16 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.10980392160000001" green="0.4549019608" blue="0.81568627449999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" secondItem="IOi-YG-yKZ" secondAttribute="height" multiplier="375:130" id="dx4-KS-u71"/>
                                     <constraint firstItem="QDz-lB-paO" firstAttribute="centerX" secondItem="IOi-YG-yKZ" secondAttribute="centerX" id="fbS-AD-8SP"/>
                                     <constraint firstAttribute="bottom" secondItem="QDz-lB-paO" secondAttribute="bottom" constant="8" id="jxc-b8-zAE"/>
                                     <constraint firstItem="QDz-lB-paO" firstAttribute="width" secondItem="IOi-YG-yKZ" secondAttribute="height" multiplier="375:130" id="teq-cP-mBM"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="teq-cP-mBM"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MwB-Xc-MT1">
                                 <rect key="frame" x="165" y="359" width="46" height="30"/>
