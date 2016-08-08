@@ -39,7 +39,7 @@ extension MappingUtils: TeamMethods {
     }
     
     static func fetchSiteName(mappingResult: RKMappingResult) -> String? {
-        return (String)(mappingResult.dictionary()["client_cfg"]![PreferencesAttributes.siteName.rawValue])
+        return mappingResult.dictionary()["client_cfg"]?[PreferencesAttributes.siteName.rawValue] as? String
     }
     
     static func fetchAllTeams(mappingResult: RKMappingResult) -> [Team] {
