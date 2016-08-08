@@ -10,7 +10,11 @@ import Foundation
 
 extension NSAttributedString {
     final func URLAtIndex(index: Int) -> NSURL? {
-        return self.attribute(NSLinkAttributeName, atIndex: index, effectiveRange: nil) as? NSURL
+        let value = self.attribute(NSLinkAttributeName, atIndex: index, effectiveRange: nil)
+        if let string = value as? String{
+            return NSURL(string: string)!
+        }
+        return value as? NSURL
 
     }
     
