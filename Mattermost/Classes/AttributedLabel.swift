@@ -107,7 +107,7 @@ class AttributedLabel: UIView {
     }
     
     private func setup() {
-        opaque = false
+        opaque = true
         contentMode = .Redraw
         self.textContainer = self.textContainer(self.bounds.size)
         self.layoutManager = self.layoutManager(self.textContainer)
@@ -135,17 +135,15 @@ class AttributedLabel: UIView {
         guard self.attributedText != nil else {
             return
         }
-
         self.textContainer.size = rect.size
 
         let frame = layoutManager.usedRectForTextContainer(textContainer)
         let point = contentAlignment.alignOffset(viewSize: rect.size, containerSize: CGRectIntegral(frame).size)
         
-
-        
         let glyphRange = layoutManager.glyphRangeForTextContainer(textContainer)
         layoutManager.drawBackgroundForGlyphRange(glyphRange, atPoint: point)
         layoutManager.drawGlyphsForGlyphRange(glyphRange, atPoint: point)
+
     }
     
     override func sizeThatFits(size: CGSize) -> CGSize {
@@ -154,11 +152,6 @@ class AttributedLabel: UIView {
         }
         
         self.textContainer.size = size
-
-        if layoutManager.textContainers.count == 0 {
-            self.layoutManager.addTextContainer(self.textContainer)
-        }
-        
         let frame = layoutManager.usedRectForTextContainer(textContainer)
         return CGRectIntegral(frame).size
     }

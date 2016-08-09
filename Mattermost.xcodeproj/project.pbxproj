@@ -85,6 +85,8 @@
 		D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7F11D57772400BD49A3 /* StringAttribute.swift */; };
 		D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7F71D592FD500BD49A3 /* AttributedLabel.swift */; };
 		D86EF7FA1D59F13C00BD49A3 /* AttachmentFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7F91D59F13C00BD49A3 /* AttachmentFileCell.swift */; };
+		D86EF7FC1D5A208900BD49A3 /* Sugar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D86EF7FB1D5A208900BD49A3 /* Sugar.framework */; };
+		D86EF7FE1D5A325800BD49A3 /* UIView+Align.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7FD1D5A325800BD49A3 /* UIView+Align.swift */; };
 		D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812AE91D43933400436B5C /* PageWrapper.swift */; };
 		D8812AEC1D44141100436B5C /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812AEB1D44141100436B5C /* File.swift */; };
 		D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */; };
@@ -202,6 +204,8 @@
 		D86EF7F11D57772400BD49A3 /* StringAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringAttribute.swift; sourceTree = "<group>"; };
 		D86EF7F71D592FD500BD49A3 /* AttributedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedLabel.swift; sourceTree = "<group>"; };
 		D86EF7F91D59F13C00BD49A3 /* AttachmentFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentFileCell.swift; sourceTree = "<group>"; };
+		D86EF7FB1D5A208900BD49A3 /* Sugar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sugar.framework; path = Carthage/Build/iOS/Sugar.framework; sourceTree = "<group>"; };
+		D86EF7FD1D5A325800BD49A3 /* UIView+Align.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Align.swift"; sourceTree = "<group>"; };
 		D8812AE91D43933400436B5C /* PageWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageWrapper.swift; sourceTree = "<group>"; };
 		D8812AEB1D44141100436B5C /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDateFormatter+Singleton.swift"; sourceTree = "<group>"; };
@@ -228,6 +232,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D86EF7FC1D5A208900BD49A3 /* Sugar.framework in Frameworks */,
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
@@ -372,6 +377,7 @@
 				D8812C361D47D69B00436B5C /* WebSocket+Cookies.swift */,
 				D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */,
 				D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */,
+				D86EF7FD1D5A325800BD49A3 /* UIView+Align.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -590,6 +596,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D86EF7FB1D5A208900BD49A3 /* Sugar.framework */,
 				D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */,
 				D6E165A51D47E9B00014C831 /* MFSideMenu.framework */,
 				D6E165A31D47E99C0014C831 /* WebImage.framework */,
@@ -769,6 +776,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SkyFloatingLabelTextField.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Sugar.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -842,6 +850,7 @@
 				9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
+				D86EF7FE1D5A325800BD49A3 /* UIView+Align.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */,
