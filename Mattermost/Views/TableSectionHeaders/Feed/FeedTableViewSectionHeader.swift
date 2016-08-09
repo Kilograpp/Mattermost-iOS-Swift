@@ -62,7 +62,7 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
         super.layoutSubviews()
         
         let width = CGFloat(StringUtils.widthOfString(self.title, font: FontBucket.postAuthorNameFont))// as CGFloat
-        self.titleLabel!.frame = CGRectMake(UIScreen.screenWidth() - 10 - ceil(width), 5, ceil(width), 15);
+        self.titleLabel!.frame = CGRectMake(UIScreen.screenWidth() - 10 - ceil(width), 5, ceil(width), 18);
         if ((self.barView) != nil) {
             self.barView!.frame = CGRectMake(0, 12, CGRectGetMinX(self.titleLabel!.frame) - 10, 1);
         }
