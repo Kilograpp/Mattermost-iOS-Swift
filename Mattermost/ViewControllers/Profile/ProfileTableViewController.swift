@@ -24,7 +24,11 @@ private protocol Setup {
     func setup()
 }
 
-final class ProfileTableViewController: UITableViewController {
+private protocol ImagePickerControllerDelegate {
+    //func setup()
+}
+
+final class ProfileTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nameTitleLabel: UILabel!
@@ -33,6 +37,60 @@ final class ProfileTableViewController: UITableViewController {
     private var user: User?
     private var isCurrentUser: Bool?
     let kCellReuseIdentifier = "userCellReuseIdentifier"
+    
+    func changeProfilePhoto() {
+        let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .ActionSheet)
+        let openCameraAction = UIAlertAction.init(title: "Take photo", style: .Default) { (action) in
+            self.presentPickerControllerWithType(.Camera)
+        }
+        let openGalleryAction = UIAlertAction.init(title: "Take from library", style: .Default) { (action) in
+            self.presentPickerControllerWithType(.PhotoLibrary)
+        }
+        let cancelAction = UIAlertAction.init(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(openCameraAction)
+        alertController.addAction(openGalleryAction)
+        alertController.addAction(cancelAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func presentPickerControllerWithType(type: UIImagePickerControllerSourceType) {
+        let pickerController = UIImagePickerController.init()
+        pickerController.sourceType = type
+        pickerController.delegate = self
+        
+        self.presentViewController(pickerController, animated: true, completion: nil)
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if (indexPath.section == 0) {
+            switch indexPath.row {
+            case 0:
+                break
+            case 1:
+                break
+            case 2:
+                break
+            case 3:
+                self.changeProfilePhoto()
+                break
+            default:
+                break
+            }
+        } else {
+            switch indexPath.row {
+            case 0:
+                break
+            case 1:
+                break
+            case 2:
+                break
+            default:
+                break
+            }
+        }
+
+    }
 }
 
 
@@ -145,5 +203,17 @@ extension ProfileTableViewController: UITableViewDataSource {
             }
         }
         return cell!
+    }
+}
+
+extension ProfileTableViewController: ImagePickerControllerDelegate {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        self.avatarImageView.image = image
+        
+        
+        
+        //let image = info.keys.
     }
 }
