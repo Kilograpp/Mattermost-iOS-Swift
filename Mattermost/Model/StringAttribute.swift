@@ -18,13 +18,22 @@ import RealmSwift
     case Unknown = -1
 }
 
+@objc enum ColorType: Int {
+    case CommonMessage = 1
+    case SystemMessage = 2
+    case Hashtag = 3
+    case Mention = 4
+    case MentionBackground = 5
+    case Link = 6
+}
+
 final class StringAttribute: Object {
     dynamic var type: StringAttributeType = .Unknown
     dynamic var name: String?
-    dynamic var value: String?
-    private dynamic var float1: Float = 0
-    private dynamic var float2: Float = 0
-    private dynamic var float3: Float = 0
+    private dynamic var value: String?
+    private dynamic var colorType: ColorType = .CommonMessage
+    private dynamic var fontSize: Float = 0
+    
     var valueCache: AnyObject? {
         switch type {
         case .String:
@@ -32,9 +41,23 @@ final class StringAttribute: Object {
         case .Link:
             return self.value
         case .Font:
-            return UIFont(name: self.value!, size: CGFloat(self.float1))
+            return UIFont(name: self.value!, size: CGFloat(self.fontSize))
         case .Color:
-            return UIColor(red: CGFloat(self.float1), green: CGFloat(self.float2), blue: CGFloat(self.float3), alpha: 1)
+            switch self.colorType {
+                case .CommonMessage:
+                    return ColorBucket.commonMessageColor
+                case .Hashtag:
+                    return ColorBucket.hashtagColor
+                case .Link:
+                    return ColorBucket.linkColor
+                case .Mention:
+                    return ColorBucket.mentionColor
+                case .MentionBackground:
+                    return ColorBucket.mentionBackgroundColor
+                case .SystemMessage:
+                    return ColorBucket.systemMessageColor
+            }
+        
             default: return nil
         }
     }
@@ -78,21 +101,45 @@ final class StringAttribute: Object {
     
     func setFontValue(font: UIFont, attributeName: String) {
         self.value = font.fontName
-        self.float1 = Float(font.pointSize)
+        self.fontSize = Float(font.pointSize)
         self.name = attributeName
         self.type = .Font
     }
     
     func setColorValue(color: UIColor, attributeName: String) {
-        var red : CGFloat = 0
-        var green : CGFloat = 0
-        var blue : CGFloat = 0
         
-        color.getRed(&red, green: &green, blue: &blue, alpha: nil)
-        
-        self.float1 = Float(red)
-        self.float2 = Float(green)
-        self.float3 = Float(blue)
+        switch color {
+            
+            case ColorBucket.commonMessageColor:
+                self.colorType = .CommonMessage
+            break
+            
+            case ColorBucket.systemMessageColor:
+                self.colorType = .SystemMessage
+            break
+            
+            case ColorBucket.hashtagColor:
+                self.colorType = .Hashtag
+            break
+            
+            case ColorBucket.mentionColor:
+                self.colorType = .Mention
+            break
+            
+            case ColorBucket.mentionBackgroundColor:
+                self.colorType = .MentionBackground
+            break
+            
+            case ColorBucket.linkColor:
+                self.colorType = .Link
+            break
+            
+            default:
+                "❤️"
+            break
+            
+        }
+
         self.name = attributeName
         self.type = .Color
     }
