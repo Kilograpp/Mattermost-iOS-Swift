@@ -10,7 +10,7 @@ import Foundation
 import SkyFloatingLabelTextField
 
 // FIXME: CodeReview:  делегат? файнал
-final class KGTextField: SkyFloatingLabelTextField, UITextFieldDelegate {
+final class KGTextField: SkyFloatingLabelTextField {
     internal let underLineView = UIView()
     
     required init?(coder aDecoder: NSCoder) {
