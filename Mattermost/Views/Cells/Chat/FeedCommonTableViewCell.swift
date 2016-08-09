@@ -23,7 +23,7 @@ class FeedCommonTableViewCell: UITableViewCell {
     var post : Post!
     //FIXME: CodeReview: В final
     var onMentionTap: ((nickname : String) -> Void)?
-    
+    var profileTapHanglier : ((user : User) -> Void)?
     //MARK: Init
     
      override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -37,6 +37,12 @@ class FeedCommonTableViewCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+    
+    func showProfileAction() {
+        if (self.profileTapHanglier != nil) {
+            self.profileTapHanglier!(user: self.post.author)
+        }
     }
     
 }
@@ -145,6 +151,8 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         self.addSubview(self.avatarImageView)
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         //TODO: add gesture recognizer
+        self.avatarImageView.userInteractionEnabled = true
+        self.avatarImageView.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(FeedCommonTableViewCell.showProfileAction)))
     }
     
     final func setupNameLabel() {

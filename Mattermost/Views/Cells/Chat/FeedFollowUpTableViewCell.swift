@@ -12,7 +12,7 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     var post : Post!
     var onMentionTap: ((nickname : String) -> Void)?
-
+    var profileTapHanglier : ((user : User) -> Void)?
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

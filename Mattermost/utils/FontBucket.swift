@@ -37,6 +37,10 @@ private protocol ServerUrlFonts: class {
     static var subtitleServerUrlFont: UIFont {get}
 }
 
+private protocol ProfileFonts: class {
+    static var titleProfileFont: UIFont {get}
+}
+
 private protocol MarkdownFonts: class {
     static var emphasisFont: UIFont {get}
     
@@ -74,6 +78,11 @@ extension FontBucket : LoginFonts {
 extension FontBucket : ServerUrlFonts {
     static let titleServerUrlFont = FontBucket.regularFontOfSize(36)
     static let subtitleServerUrlFont = FontBucket.regularFontOfSize(14)
+}
+
+extension FontBucket : ProfileFonts {
+    static let titleProfileFont = FontBucket.semiboldFontOfSize(30)
+
 }
 //MARK: Helpers
 

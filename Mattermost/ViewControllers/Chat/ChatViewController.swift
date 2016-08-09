@@ -19,7 +19,8 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
     var refreshControl: UIRefreshControl?
-    
+    let kPresentProfileIdentifier = "showProfile"
+    var selectedUsername: String?
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -79,7 +80,9 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
             (cell as! UITableViewCell).transform = tableView.transform
             cell.configureWithPost(post)
             (cell as! UITableViewCell).selectionStyle = .None
-            
+            cell.profileTapHanglier = { user in
+                self.showProfile(post.author)
+            }
             return cell as! UITableViewCell
         } else {
             let cell = tableView.dequeueReusableCellWithIdentifier(FeedCommonTableViewCell.reuseIdentifier()) as! FeedCommonTableViewCell
@@ -186,6 +189,20 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         }
     }
     func assignPhotos() -> Void {
+    }
+    
+    func showProfile(user : User) {
+        self.selectedUsername = user.username
+        self.performSegueWithIdentifier(kPresentProfileIdentifier, sender: self.selectedUsername)
+    }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == kPresentProfileIdentifier {
+            let vc = segue.destinationViewController
+            let user = try! Realm().objects(User).filter("username = %@", self.selectedUsername!).first
+            (vc as! ProfileTableViewController).userId = user?.identifier
+            //vc.menuContainerViewController.setMenuState(MFSideMenuStateClosed, completion: nil)
+            
+        }
     }
 }
 

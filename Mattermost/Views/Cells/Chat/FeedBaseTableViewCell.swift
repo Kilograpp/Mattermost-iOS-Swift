@@ -8,6 +8,7 @@
 
 protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
     var onMentionTap: ((nickname : String) -> Void)? { get set }
+    var profileTapHanglier : ((user : User) -> Void)? { get set }
     var post : Post! { get set }
     var messageLabel : MessageLabel { get }
     
