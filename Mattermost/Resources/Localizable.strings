@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  Mattermost
+
+  Created by Tatiana on 08/08/16.
+  Copyright © 2016 Kilograpp. All rights reserved.
+*/
+//ServerUrlViewController
+"Mattermost" = "Mattermost";
+"e.g. https://matttermost.example.com" = "пример https://matttermost.example.com";
+"All your team communication in one place, searchable and accessable anywhere." = "All your team communication in one place, searchable and accessable anywhere.";
+"Your team URL" = "URL команды";
+"Next step" = "Далее";
+"Sign In" = "Войти";
+"Email" = "Email";
+"Password" = "Пароль";
+"Forgot password?" = "Забыли пароль?";
+"Error" = "Ошибка";
+"Cancel" = "Отмена";

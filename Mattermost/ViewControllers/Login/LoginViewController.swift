@@ -21,7 +21,11 @@ private protocol Setup {
     func setupLoginTextField()
     func setupPasswordTextField()
     func setupRecoveryButton()
+}
 
+private protocol TextFieldDelegate {
+    func changeLogin(sender: AnyObject)
+    func changePassword(sender: AnyObject)
 }
 
 final class LoginViewController: UIViewController, UITextFieldDelegate {
@@ -33,36 +37,33 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var recoveryButton: UIButton!
     
-    let titleName = "Sign In"
-    let email = "Email"
-    let password = "Password"
-    let forgotPassword = "Forgot password?"
+    let titleName =  NSLocalizedString("Sign In", comment: "")
+    let email = NSLocalizedString("Email", comment: "")
+    let password = NSLocalizedString("Password", comment: "")
+    let forgotPassword = NSLocalizedString("Forgot password?", comment: "")
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
     }
     
+    private func configure() {
+        guard let login = Preferences.sharedInstance.predefinedLogin() else {
+            return
+        }
+        self.loginTextField.text = login
+        guard let password = Preferences.sharedInstance.predefinedPassword() else {
+            return
+        }
+        self.passwordTextField.text = password
+        if self.loginTextField.text != "" && self.passwordTextField.text != "" {
+            self.loginButton.enabled = true
+        }
+    }
+    
+    
     //MARK - action
     
     @IBAction func loginAction(sender: AnyObject) {
-        // FIXME: CodeReview: мертвый кодик
-        // FIXME: CodeReview: Много логики в интерфейсном методе
-        
-        // Preferences.sharedInstance.serverUrl = Preferences.sharedInstance.predefinedServerUrl()
-//        Api.sharedInstance.login(Preferences.sharedInstance.predefinedLogin()!, password: Preferences.sharedInstance.predefinedPassword()!) { (error) in
-//            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-//                Api.sharedInstance.loadChannels(with: { (error) in
-//                    Api.sharedInstance.loadCompleteUsersList({ (error) in
-//                        RouterUtils.loadInitialScreen(true)
-//                    })
-//                    
-//                    
-//                })
-//            })
-//        }
-        
-        // FIXME: CodeReview: Сделать как раньге подстановку, но опциональной
-        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) {
             (error) in
             // FIXME: CodeReview: гуард
@@ -82,7 +83,12 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    // Вынести в отдельный extension и protocol
+}
+
+
+//MARK: - UITextFieldDelegate
+
+extension LoginViewController: TextFieldDelegate {
     @IBAction func changeLogin(sender: AnyObject) {
         
         // FIXME: CodeReview: Guard
@@ -101,8 +107,17 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
             self.loginButton.enabled = false
         }
     }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField.isEqual(self.loginTextField) {
+            self.passwordTextField.becomeFirstResponder()
+        }
+        if textField .isEqual(self.passwordTextField) {
+            self.loginAction(self)
+        }
+        return true
+    }
 }
-
 
 // MARK: - Lifecycle
 
@@ -115,6 +130,7 @@ extension LoginViewController: Lifecylce {
         self.setupLoginTextField()
         self.setupPasswordTextField()
         self.setupRecoveryButton()
+        self.configure()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -158,6 +174,7 @@ extension LoginViewController: Setup {
     private func setupTitleLabel() {
         self.titleLabel.font = FontBucket.titleLoginFont
         self.titleLabel.textColor = ColorBucket.whiteColor
+        self.titleLabel.text = Preferences.sharedInstance.siteName
     }
     
     private func setupLoginButton() {

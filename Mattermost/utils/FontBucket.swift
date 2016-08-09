@@ -32,6 +32,11 @@ private protocol LoginFonts: class {
     static var forgotPasswordButtonFont: UIFont {get}
 }
 
+private protocol ServerUrlFonts: class {
+    static var titleServerUrlFont: UIFont {get}
+    static var subtitleServerUrlFont: UIFont {get}
+}
+
 private protocol MarkdownFonts: class {
     static var emphasisFont: UIFont {get}
     
@@ -64,6 +69,11 @@ extension FontBucket : LoginFonts {
     static let loginTextFieldFont = FontBucket.regularFontOfSize(16)
     static let titleLoginFont = FontBucket.semiboldFontOfSize(28)
     static let forgotPasswordButtonFont = FontBucket.regularFontOfSize(16)
+}
+
+extension FontBucket : ServerUrlFonts {
+    static let titleServerUrlFont = FontBucket.regularFontOfSize(36)
+    static let subtitleServerUrlFont = FontBucket.regularFontOfSize(14)
 }
 //MARK: Helpers
 
