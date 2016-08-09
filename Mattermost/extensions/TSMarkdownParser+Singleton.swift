@@ -44,7 +44,7 @@ extension TSMarkdownParser {
     
     private func setupDefaultAttributes() -> Void {
         self.defaultAttributes = [NSFontAttributeName : FontBucket.messageFont,
-                                  NSForegroundColorAttributeName : ColorBucket.blackColor]
+                                  NSForegroundColorAttributeName : ColorBucket.commonMessageColor]
     }
     
     private func setupHeaderAttributes() -> Void {
@@ -53,7 +53,7 @@ extension TSMarkdownParser {
         for index in 0...6 {
             let attributes = [
                 NSFontAttributeName : FontBucket.self.semiboldFontOfSize(CGFloat(26 - 2 * index)),
-                NSForegroundColorAttributeName : ColorBucket.blackColor
+                NSForegroundColorAttributeName : ColorBucket.commonMessageColor
             ]
             headerAttributes.addObject(attributes)
         }
@@ -64,7 +64,7 @@ extension TSMarkdownParser {
     private func setupEmphasisAttributes() {
         self.emphasisAttributes = [
             NSFontAttributeName            : FontBucket.emphasisFont,
-            NSForegroundColorAttributeName : ColorBucket.blackColor
+            NSForegroundColorAttributeName : ColorBucket.commonMessageColor
         ]
     }
     
@@ -145,10 +145,10 @@ extension TSMarkdownParser {
                 return
             }
             
-            var attributes = [NSForegroundColorAttributeName : ColorBucket.blueColor]
+            var attributes = [NSForegroundColorAttributeName : ColorBucket.mentionColor]
             
             if name == DataManager.sharedInstance.currentUser?.username {
-                attributes[NSBackgroundColorAttributeName] =  UIColor.yellowColor()
+                attributes[NSBackgroundColorAttributeName] =  ColorBucket.mentionBackgroundColor
             }
             attributedString.addAttribute(Constants.StringAttributes.Mention, value: name, range: match.range)
             attributedString.addAttributes(attributes, range: match.range)
@@ -159,7 +159,7 @@ extension TSMarkdownParser {
             let range = NSMakeRange(match.range.location+1, match.range.length-1)
             let hashTag = (attributedString.string as NSString).substringWithRange(range)
             
-            let attributes = [NSForegroundColorAttributeName : ColorBucket.sideMenuBackgroundColor]
+            let attributes = [NSForegroundColorAttributeName : ColorBucket.hashtagColor]
 
             attributedString.addAttribute(Constants.StringAttributes.HashTag, value: hashTag, range: match.range)
             attributedString.addAttributes(attributes, range: match.range)

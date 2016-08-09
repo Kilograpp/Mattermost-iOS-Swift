@@ -8,6 +8,14 @@
 
 import Foundation
 
+private protocol PostColors: class {
+    static var commonMessageColor: UIColor {get}
+    static var systemMessageColor: UIColor {get}
+    static var hashtagColor: UIColor {get}
+    static var mentionColor: UIColor {get}
+    static var mentionBackgroundColor: UIColor {get}
+    static var linkColor: UIColor {get}
+}
 
 private protocol CommonColors: class {
     static var blackColor: UIColor {get}
@@ -19,11 +27,20 @@ private protocol CommonColors: class {
 }
 
 private protocol SideMenuColors {
-        static var sideMenuBackgroundColor: UIColor {get}
+    static var sideMenuBackgroundColor: UIColor {get}
 }
 
 
 final class ColorBucket {
+}
+
+extension ColorBucket : PostColors {
+    static let commonMessageColor = ColorBucket.black()
+    static let systemMessageColor = ColorBucket.gray()
+    static let hashtagColor = ColorBucket.blue()
+    static let mentionColor = ColorBucket.blue()
+    static let mentionBackgroundColor = UIColor.yellowColor()
+    static let linkColor = ColorBucket.blue()
 }
 
 extension ColorBucket : CommonColors {
