@@ -7,6 +7,7 @@
 //
 
 import WebImage
+import Sugar
 
 
 class FeedCommonTableViewCell: UITableViewCell {
@@ -125,7 +126,12 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
     }
     
     final func configureMessage() {
-        self.messageLabel.attributedText = self.post.attributedMessage
+
+        PerformanceManager.sharedInstance.messageRenderOperationQueue.addOperationWithBlock { 
+            dispatch_sync(dispatch_get_main_queue()) {
+                self.messageLabel.attributedText = self.post.attributedMessage
+            }
+        }
     }
     
     final func configureBasicLabels() {

@@ -194,7 +194,7 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
 
 extension ChatViewController: FetchedResultsControllerDelegate {
     func controllerWillChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-        UIView.setAnimationsEnabled(false)
+//        UIView.setAnimationsEnabled(false)
         self.tableView.beginUpdates()
     }
     
@@ -244,7 +244,7 @@ extension ChatViewController: FetchedResultsControllerDelegate {
     
     func controllerDidChangeContent<T : Object>(controller: FetchedResultsController<T>) {
         self.tableView.endUpdates()
-        UIView.setAnimationsEnabled(true)
+//        UIView.setAnimationsEnabled(true)
     }
     
     func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
