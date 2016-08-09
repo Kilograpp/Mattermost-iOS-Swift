@@ -19,20 +19,6 @@ class ChatViewController: SLKTextViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        Preferences.sharedInstance.serverUrl = "https://mattermost.kilograpp.com"
-        Api.sharedInstance.login("maxim@kilograpp.com", password: "loladin") { (error) in
-            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-                Api.sharedInstance.loadChannels(with: { (error) in
-                    self.channel = try! Realm().objects(Channel).filter("privateTeamId != ''").first!
-                    Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-                        self.setupFetchedResultsController()
-                        self.tableView?.reloadData()
-                    })
-                })
-            })
-            
-        }
 
     }
     
