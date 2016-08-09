@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Override point for customization after application launch
         
         self.launchApplicationStateManager()
-        RouterUtils.loadInitialScreen(false)
+        RouterUtils.loadInitialScreen()
 
         return true
     }

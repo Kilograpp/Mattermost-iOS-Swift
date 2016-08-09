@@ -11,8 +11,9 @@ import MFSideMenu
 
 
 class RouterUtils {
-    class func loadInitialScreen(signedIn: Bool) ->Void {
-        if signedIn {
+    class func loadInitialScreen() {
+        let isSignedIn = Api.sharedInstance.isSignedIn()
+        if isSignedIn {
             loadConversationScene()
         } else {
             loadLoginScene()

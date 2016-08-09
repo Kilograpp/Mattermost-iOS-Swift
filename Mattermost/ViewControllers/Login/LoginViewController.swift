@@ -72,7 +72,7 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
                     Api.sharedInstance.loadCompleteUsersList({ (error) in
-                        RouterUtils.loadInitialScreen(true)
+                        RouterUtils.loadInitialScreen()
                     })
                     
                     
