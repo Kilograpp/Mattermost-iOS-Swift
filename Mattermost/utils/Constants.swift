@@ -25,11 +25,16 @@ struct Constants {
         static let MattermostCookieName = "MMAUTHTOKEN"
         static let UserDefaultsPreferencesKey = "com.kilograpp.mattermost.preferences"
     }
+    struct StringAttributes {
+        static let Mention = "MattermostMention"
+        static let HashTag = "MattermostHashTag"
+    }
     struct Socket {
         static let TimeIntervalBetweenNotifications: Double = 5.0
     }
     
     struct UI {
-        static let FeedCellMessageLabelPaddings: CGFloat = 83.0
+        static let FeedCellMessageLabelPaddings: CGFloat = 61
+        static let FeedCellIndicatorPadding: CGFloat = 22
     }
 }

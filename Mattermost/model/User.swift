@@ -15,14 +15,14 @@ final class User: RealmObject {
     dynamic var email: String?
     dynamic var firstName: String?
     dynamic var lastName: String?
-    dynamic var identifier: String? {
+    dynamic var identifier: String! {
         didSet {
             computeAvatarUrl()
         }
     }
     dynamic var nickname: String?
     dynamic var displayNameWidth: Float = 0.0
-    dynamic var avatarLink: String?
+    dynamic var avatarLink: String!
     dynamic var displayName: String? {
         didSet {
             computeDisplayNameWidth()
@@ -41,14 +41,30 @@ final class User: RealmObject {
     }
     
     func avatarURL() -> NSURL {
-        return NSURL(string: self.avatarLink!)!
+        return NSURL(string: self.avatarLink)!
     }
+    func smallAvatarCacheKey() -> String {
+        return self.avatarLink.stringByAppendingString("_small")
+    }
+}
+
+enum UserAttributes: String {
+    case privateStatus = "privateStatus"
+    case email = "email"
+    case firstName = "firstName"
+    case lastName = "lastName"
+    case identifier = "identifier"
+    case nickname = "nickname"
+    case status = "status"
+    case username = "username"
+    case avatarLink = "avatarLink"
 }
 
 private protocol PathPatterns: class {
     static func loginPathPattern() -> String
-    static func initialLoadPathPattern() -> String
+    static func avatarPathPattern() -> String
     static func socketPathPattern() -> String
+    static func initialLoadPathPattern() -> String
     static func completeListPathPattern() -> String
 }
 
@@ -70,19 +86,11 @@ private protocol Computatations: class {
     func computeNicknameIfRequired()
 }
 
-enum UserAttributes: String {
-    case privateStatus = "privateStatus"
-    case email = "email"
-    case firstName = "firstName"
-    case lastName = "lastName"
-    case identifier = "identifier"
-    case nickname = "nickname"
-    case status = "status"
-    case username = "username"
-    case avatarLink = "avatarLink"
-}
 
 extension User: PathPatterns {
+    static func avatarPathPattern() -> String {
+        return "users/:\(UserAttributes.identifier)/image"
+    }
     static func loginPathPattern() -> String {
         return "users/login";
     }
@@ -93,7 +101,7 @@ extension User: PathPatterns {
         return "users/websocket"
     }
     static func completeListPathPattern() -> String {
-        return "users/profiles_for_dm_list/:\(TeamAttributes.identifier)"
+        return "users/profiles/:\(TeamAttributes.identifier)"
     }
 }
 
@@ -142,7 +150,7 @@ extension User: ResponseDescriptors {
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func completeListResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: mapping(),
+        return RKResponseDescriptor(mapping: directProfileMapping(),
                                     method: .GET,
                                     pathPattern: completeListPathPattern(),
                                     keyPath: nil,
@@ -152,20 +160,21 @@ extension User: ResponseDescriptors {
 
 extension User: Computatations {
     func computeNicknameIfRequired() {
-        if self.nickname == nil {
-            self.nickname = self.username
+        guard self.nickname == nil else {
+            return
         }
-        
+        self.nickname = self.username
     }
     func computeDisplayNameWidth() {
         self.displayNameWidth = StringUtils.widthOfString(self.displayName, font: FontBucket.postAuthorNameFont)
     }
     
     func computeAvatarUrl() {
-        self.avatarLink = "https://mattermost.kilograpp.com/api/v3/users/\(self.identifier!)/image" as String
+        self.avatarLink = Api.sharedInstance.avatarLinkForUser(self)
     }
     
     func computeDisplayName() {
         self.displayName = self.username
     }
+
 }

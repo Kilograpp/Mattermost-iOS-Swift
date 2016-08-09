@@ -8,13 +8,16 @@
 
 import SlackTextViewController
 import RealmSwift
-import UITableView_Cache
 import SwiftFetchedResultsController
 
 class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     private var channel : Channel?
+    final override var tableView: UITableView! {
+        get {
+            return super.tableView
+        }
+    }
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
-    var realm: Realm?
     var refreshControl: UIRefreshControl?
     
     //MARK: - Lifecycle
@@ -37,14 +40,14 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     //MARK: - Configuration
     
     func configureTableView() -> Void {
-        self.tableView?.separatorStyle = .None
-        self.tableView?.keyboardDismissMode = .OnDrag
-        self.tableView?.backgroundColor = ColorBucket.whiteColor
-        self.tableView!.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
-        self.tableView!.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
-        self.tableView!.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 18)
+        self.tableView.separatorStyle = .None
+        self.tableView.keyboardDismissMode = .OnDrag
+        self.tableView.backgroundColor = ColorBucket.whiteColor
+        self.tableView.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
+        self.tableView.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
+        self.tableView.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 18)
         
-        self.tableView?.registerClass(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
+        self.tableView.registerClass(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
     
     
@@ -126,8 +129,13 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     
     // MARK: - FetchedResultsController
     
+    func reloadContent() {
+        self.fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "channelId = %@ && type == ''", self.channel?.identifier ?? "")
+        self.fetchedResultsController.performFetch()
+    }
+    
     func realmFetchedResultsController() -> FetchedResultsController<Post> {
-        let predicate = NSPredicate(format: "privateChannelId = %@", self.channel?.identifier ?? "")
+        let predicate = NSPredicate(format: "channelId = %@ && type == ''", self.channel?.identifier ?? "")
         let realm = try! Realm()
         let fetchRequest = FetchRequest<Post>(realm: realm, predicate: predicate)
         let sortDescriptorSection = SortDescriptor(property: "createdAt", ascending: false)
@@ -135,7 +143,6 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: "creationDayString", cacheName: "testCache")
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch()
-
         return fetchedResultsController
     }
     
@@ -187,7 +194,8 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
 
 extension ChatViewController: FetchedResultsControllerDelegate {
     func controllerWillChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-        self.tableView!.beginUpdates()
+        UIView.setAnimationsEnabled(false)
+        self.tableView.beginUpdates()
     }
     
     func controllerDidChangeObject<T : Object>(controller: FetchedResultsController<T>, anObject: SafeObject<T>, indexPath: NSIndexPath?, changeType: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
@@ -198,21 +206,21 @@ extension ChatViewController: FetchedResultsControllerDelegate {
             
         case .Insert:
             
-            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .None)
             
         case .Delete:
             
-            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
             
         case .Update:
             
-            tableView!.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
             
         case .Move:
             
-            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
             
-            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .None)
         }
     }
     
@@ -220,22 +228,23 @@ extension ChatViewController: FetchedResultsControllerDelegate {
         
         let tableView = self.tableView
         
-        if changeType == NSFetchedResultsChangeType.Insert {
+        if changeType == .Insert {
             
             let indexSet = NSIndexSet(index: Int(sectionIndex))
             
-            tableView!.insertSections(indexSet, withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.insertSections(indexSet, withRowAnimation: .None)
         }
-        else if changeType == NSFetchedResultsChangeType.Delete {
+        else if changeType == .Delete {
             
             let indexSet = NSIndexSet(index: Int(sectionIndex))
             
-            tableView!.deleteSections(indexSet, withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView!.deleteSections(indexSet, withRowAnimation: .None)
         }
     }
     
     func controllerDidChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-        self.tableView!.endUpdates()
+        self.tableView.endUpdates()
+        UIView.setAnimationsEnabled(true)
     }
     
     func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
@@ -253,7 +262,10 @@ extension ChatViewController {
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
+        self.fetchedResultsController = self.realmFetchedResultsController()
+        self.tableView?.reloadData()
         self.loadFirstPageOfData()
+        
     }
 }
 
@@ -282,11 +294,17 @@ extension ChatViewController {
 //MARK: - Requests
 
 extension ChatViewController {
-    func loadFirstPageOfData() -> Void {
+    
+    func loadFirstPageAndReload() {
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
             self.fetchedResultsController = self.realmFetchedResultsController()
             self.tableView?.reloadData()
+        })
+    }
+    func loadFirstPageOfData() -> Void {
+        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
         })
 
     }

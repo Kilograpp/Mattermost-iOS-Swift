@@ -6,20 +6,25 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-import ActiveLabel
 import WebImage
 import RealmSwift
 
+//FIXME: CodeReview: Final
 class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
-//    var tableView : UITableView = UITableView()
-    var attachments : List<File>?
+    //FIXME: CodeReview: Константной
+    //FIXME: CodeReview: Приват
+    var tableView = UITableView()
+    //FIXME: CodeReview: Может быть такое, что ячейка без attachment рабоотает? Если нет, то implicity unwrap
+    var attachments : List<File>!
+    
+    
     
     //MARK: Init
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-//        self.setupTableView()
+        self.setupTableView()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -29,16 +34,18 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     
     //MARK: Setup
     
-//    func setupTableView() -> Void {
-//        self.tableView = UITableView.init()
-//        self.tableView.scrollsToTop = false
-//        self.tableView.delegate = self
-//        self.tableView.dataSource = self
-//        self.tableView.separatorStyle = .None
-//        self.tableView.bounces = false
-//        self.tableView.scrollEnabled = false
-//        self.addSubview(self.tableView)
-//    }
+    func setupTableView() -> Void {
+        self.tableView = UITableView.init()
+        self.tableView.scrollsToTop = false
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.separatorStyle = .None
+        self.tableView.bounces = false
+        self.tableView.scrollEnabled = false
+        
+        self.tableView.registerClass(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier(), cacheSize: 7)
+        self.addSubview(self.tableView)
+    }
     
     
     //MARK: Lifecycle
@@ -46,41 +53,33 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-//        var maxYCoordOfPrevAttachment = CGRectGetMaxY(self.messageLabel.frame)
-//        for file in (self.post?.files)! {
-//            let attachmentView = FeedAttachmentView.init(file: file)
-//            self.addSubview(attachmentView)
-//            attachmentView.frame = CGRectMake(53,maxYCoordOfPrevAttachment + 3, attachmentView.size!.width, attachmentView.size!.height)
-//            attachmentView.configure()
-//            maxYCoordOfPrevAttachment = CGRectGetMaxY(attachmentView.frame)
-//        }
+        self.tableView.frame = CGRectMake(53,
+                                          CGRectGetMaxY(self.messageLabel.frame) + 8,
+                                          UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings,
+                                          self.tableView.contentSize.height)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-//        self.tableView?.delegate = nil
-//        self.tableView?.dataSource = nil
     }
     
     
     //MARK: Private
     
     private class func tableViewHeightWithPost(post: Post) -> CGFloat {
-        return FeedAttachmentsTableViewCell.heightForFiles(Array(post.files))
+        let height =  post.files.reduce(0) {
+            (total, file) in total + (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings)*0.56 - 5
+        }
+        return height
     }
 
-}
-
-private protocol Private {
-    static func tableViewHeightWithFiles(files: Array<File>) -> CGFloat
 }
 
 extension FeedAttachmentsTableViewCell {
     override func configureWithPost(post: Post) {
         super.configureWithPost(post)
-        self.attachments = self.post?.files
-        self.setNeedsLayout()
-//        self.tableView.reloadData()
+        self.attachments = self.post.files
+        self.tableView.reloadData()
     }
     
     override class func heightWithPost(post: Post) -> CGFloat {
@@ -89,49 +88,33 @@ extension FeedAttachmentsTableViewCell {
 }
 
 extension FeedAttachmentsTableViewCell : UITableViewDataSource {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (self.post?.files.count)!
+        return self.attachments.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell.init(style: .Default, reuseIdentifier: "attachments")
-        
-        if (indexPath.row % 2 == 0) {
-            cell.backgroundColor = UIColor.redColor()
-        } else {
-            cell.backgroundColor = UIColor.blueColor()
+        //FIXME: CodeReview: Убрать инит
+        let file = self.attachments[indexPath.row]
+        if file.isImage {
+            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentImageCell.reuseIdentifier()) as! AttachmentImageCell
+            cell.configureWithFile(file)
+            return cell
         }
         
-        
-        return cell
+        return UITableViewCell()
     }
 }
 
 
 extension FeedAttachmentsTableViewCell : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        //FIXME: add real one
-        return 40
+        let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+        let imageHeight = imageWidth * 0.56 - 5
+        return imageHeight
     }
 }
-
-
-//MARK: - Private
-
-extension FeedAttachmentsTableViewCell {
-    private static func heightForFiles(files: Array<File>) -> CGFloat {
-        var height = 0 as CGFloat
-        
-        for file in files {
-            if file.isImage {
-                height += 105
-            } else {
-                height += 45
-            }
-        }
-        
-        return height
-    }
-}
-
 

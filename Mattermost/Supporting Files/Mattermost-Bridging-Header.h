@@ -7,3 +7,4 @@
 #import "NSObject+RuntimeMethodsValues.h"
 #import "HexColors.h"
 #import "NSObject+EnumerateProperties.h"
+#import "UITableView+Cache.h"

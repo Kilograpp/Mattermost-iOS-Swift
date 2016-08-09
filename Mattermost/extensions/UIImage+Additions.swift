@@ -25,7 +25,7 @@ extension UIImage {
     
     @nonobjc static let sharedAvatarPlaceholder = UIImage.avatarPlaceholder()
     
-    class func avatarPlaceholder() -> UIImage {
+    static func avatarPlaceholder() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         UIGraphicsBeginImageContext(rect.size);
         let context = UIGraphicsGetCurrentContext()! as CGContextRef
@@ -37,5 +37,29 @@ extension UIImage {
         UIGraphicsEndImageContext();
         
         return image
+    }
+    
+    func imageByScalingAndCroppingForSize(size: CGSize, radius: CGFloat) -> UIImage {
+
+        let scaleFactor  = size.height / self.size.height
+        let scaledWidth  = self.size.width * scaleFactor
+        let scaledHeight = self.size.width * scaleFactor
+        
+        UIGraphicsBeginImageContextWithOptions(size, true, 2)
+        
+        let thumbnailRect = CGRectMake(0, 0, scaledWidth, scaledHeight)
+        
+        let context = UIGraphicsGetCurrentContext()
+        ColorBucket.lightGrayColor.setFill()
+        CGContextFillRect(context, CGRect(origin: CGPointZero, size: size))
+        UIBezierPath(roundedRect: CGRect(origin: CGPointZero, size: size), cornerRadius: radius).addClip()
+        
+        self.drawInRect(thumbnailRect)
+        
+        let resultImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        return resultImage
     }
 }

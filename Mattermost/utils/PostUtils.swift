@@ -20,8 +20,8 @@ final class PostUtils: NSObject {
         postToSend.message = message
         postToSend.createdAt = NSDate()
 //        postToSend.channel = channel
-        postToSend.privateChannelId = channel.identifier
-        postToSend.privateAuthorId = Preferences.sharedInstance.currentUserId
+        postToSend.channelId = channel.identifier
+        postToSend.authorId = Preferences.sharedInstance.currentUserId
         //FIXME: fixme asap
         postToSend.identifier = message
         

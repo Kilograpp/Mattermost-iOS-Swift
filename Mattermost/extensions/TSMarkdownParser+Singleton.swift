@@ -8,9 +8,10 @@
 
 import Foundation
 import TSMarkdownParser
+import RealmSwift
 
 extension TSMarkdownParser {
-    @nonobjc static let sharedInstance = TSMarkdownParser.customParser();
+    @nonobjc static let sharedInstance = TSMarkdownParser.customParser()
     
     private static func customParser() -> TSMarkdownParser {
         let defaultParser = TSMarkdownParser()
@@ -133,6 +134,36 @@ extension TSMarkdownParser {
         }
         
         self.addUnescapingParsing()
+        
+        let mentionExpression = try! NSRegularExpression(pattern: "@\\w\\S*\\b", options: .CaseInsensitive)
+        self.addParsingRuleWithRegularExpression(mentionExpression) { (match, attributedString) in
+            let range = NSMakeRange(match.range.location+1, match.range.length-1)
+            let name = (attributedString.string as NSString).substringWithRange(range)
+            
+            guard try! Realm().objects(User.self).filter("%K == %@", UserAttributes.username.rawValue, name).count > 0 ||
+                name == "all" || name == "channel" else {
+                return
+            }
+            
+            var attributes = [NSForegroundColorAttributeName : ColorBucket.blueColor]
+            
+            if name == DataManager.sharedInstance.currentUser?.username {
+                attributes[NSBackgroundColorAttributeName] =  UIColor.yellowColor()
+            }
+            attributedString.addAttribute(Constants.StringAttributes.Mention, value: name, range: match.range)
+            attributedString.addAttributes(attributes, range: match.range)
+        }
+        
+        let hashtagExpression = try! NSRegularExpression(pattern: "(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)", options: .CaseInsensitive)
+        self.addParsingRuleWithRegularExpression(hashtagExpression) { (match, attributedString) in
+            let range = NSMakeRange(match.range.location+1, match.range.length-1)
+            let hashTag = (attributedString.string as NSString).substringWithRange(range)
+            
+            let attributes = [NSForegroundColorAttributeName : ColorBucket.sideMenuBackgroundColor]
+
+            attributedString.addAttribute(Constants.StringAttributes.HashTag, value: hashTag, range: match.range)
+            attributedString.addAttributes(attributes, range: match.range)
+        }
     }
     
 }

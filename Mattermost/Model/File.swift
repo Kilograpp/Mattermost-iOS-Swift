@@ -17,19 +17,29 @@ private protocol Interface: class {
 final class File: RealmObject {
     dynamic var name: String?
     dynamic var isImage: Bool = false
-    dynamic var _downloadLink: String?
-    dynamic var _thumbLink: String?
+    var _downloadLink: String? {
+        return FileUtils.downloadLinkForFile(self)?.absoluteString
+    }
+    var _thumbLink: String? {
+        return FileUtils.thumbLinkForFile(self)?.absoluteString
+    }
     dynamic var rawLink: String? {
         didSet {
             computeName()
-            computeDownloadLink()
-            computeThumbLink()
             computeIsImage()
         }
     }
-    let _posts = LinkingObjects(fromType: Post.self, property: PostRelationships.files.rawValue)
+    private let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.files.rawValue)
     var post: Post?  {
-        return _posts.first
+        return self.posts.first
+    }
+    
+    override class func primaryKey() -> String {
+        return FileAttributes.name.rawValue
+    }
+    
+    override class func indexedProperties() -> [String] {
+        return [FileAttributes.name.rawValue]
     }
 }
 
@@ -54,8 +64,8 @@ private protocol ResponseMappings: class {
 
 private protocol Computations: class {
     func computeName()
-    func computeDownloadLink()
-    func computeThumbLink()
+//    func computeDownloadLink()
+//    func computeThumbLink()
     func computeIsImage()
 }
 
@@ -108,14 +118,14 @@ extension File: Computations {
             self.name = rawLink
         }
     }
-    
-    private func computeDownloadLink() {
-        self._downloadLink = FileUtils.downloadLinkForFile(self)?.absoluteString
-    }
-    
-    private func computeThumbLink() {
-        self._thumbLink = FileUtils.thumbLinkForFile(self)?.absoluteString
-    }
+//    
+//    private func computeDownloadLink() {
+//        self._downloadLink = FileUtils.downloadLinkForFile(self)?.absoluteString
+//    }
+//    
+//    private func computeThumbLink() {
+//        self._thumbLink = FileUtils.thumbLinkForFile(self)?.absoluteString
+//    }
     
     private func computeIsImage() {
         self.isImage = FileUtils.fileIsImage(self)

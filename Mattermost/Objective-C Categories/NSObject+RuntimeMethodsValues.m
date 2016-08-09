@@ -9,8 +9,7 @@
 #import "NSObject+RuntimeMethodsValues.h"
 #import <objc/runtime.h>
 
-NSArray *ClassGetSubclasses(Class parentClass)
-;
+NSArray *ClassGetSubclasses(Class parentClass);
 
 @implementation NSObject (RuntimeMethodsValues)
 

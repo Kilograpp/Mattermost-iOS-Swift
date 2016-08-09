@@ -12,6 +12,7 @@ private protocol Interface: class {
     func isSignedIn() -> Bool
     func baseURL() -> NSURL!
     func cookie() -> NSHTTPCookie?
+    func avatarLinkForUser(user: User) -> String
 }
 
 private protocol UserApi: class {
@@ -85,7 +86,9 @@ extension Api: UserApi {
     func loadCompleteUsersList(completion:(error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(User.completeListPathPattern(), DataManager.sharedInstance.currentTeam)
         self.manager.getObject(path: path, success: { (mappingResult) in
-            RealmUtils.save(MappingUtils.fetchUsersFromCompleteList(mappingResult))
+            let users = MappingUtils.fetchUsersFromCompleteList(mappingResult)
+            users.forEach {$0.computeDisplayName()}
+            RealmUtils.save(users)
             completion(error: nil)
         }, failure: completion)
     }
@@ -229,5 +232,9 @@ extension Api: Interface {
     }
     func isSignedIn() -> Bool {
         return self.cookie() != nil
+    }
+    func avatarLinkForUser(user: User) -> String {
+        let path = SOCStringFromStringWithObject(User.avatarPathPattern(), user)
+        return NSURL(string: path, relativeToURL: self.manager.HTTPClient?.baseURL)!.absoluteString
     }
 }

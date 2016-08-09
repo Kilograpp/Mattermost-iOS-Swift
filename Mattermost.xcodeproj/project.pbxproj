@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
+		4195DCED1D54DAA900E8ED84 /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */; };
 		43C818F425BD8094160C22B0 /* libPods-Mattermost.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 261DD69993042D79D2F32E7E /* libPods-Mattermost.a */; };
 		9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8221EBC8202297FF772024 /* AppDelegate.swift */; };
 		9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8226CE0BB2D71C86E0F173 /* ObjectManager.swift */; };
@@ -47,8 +49,6 @@
 		D6E165871D47C1200014C831 /* MattermostTableViewCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* MattermostTableViewCellProtocol.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
 		D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */; };
-		D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */; };
-		D6E165A21D47E32E0014C831 /* UITableView_Cache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */; };
 		D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A51D47E9B00014C831 /* MFSideMenu.framework */; };
 		D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */; };
 		D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165A91D47EA920014C831 /* UIImage+Additions.swift */; };
@@ -64,6 +64,13 @@
 		D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF41D429393001918E8 /* UIScreen+Size.swift */; };
 		D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AF61D429610001918E8 /* TSMarkdownParser.framework */; };
 		D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */; };
+		D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */; };
+		D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */ = {isa = PBXBuildFile; fileRef = D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */; };
+		D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F51D5636EF00E92CD6 /* Attachment.swift */; };
+		D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F71D5637B800E92CD6 /* AttachmentField.swift */; };
+		D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */; };
+		D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */; };
+		D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */; };
 		D8436E681D26AC3600DEF464 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E671D26AC3600DEF464 /* DataManager.swift */; };
 		D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */; };
 		D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */; };
@@ -73,6 +80,10 @@
 		D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85D92EC1D400C42002F8800 /* RealmObject.swift */; };
 		D85D92EF1D400F9E002F8800 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D85D92EE1D400F9E002F8800 /* Realm.framework */; };
 		D85D92F01D400FB1002F8800 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D85D92E61D400743002F8800 /* RealmSwift.framework */; };
+		D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7EB1D5774FC00BD49A3 /* RealmAttributedString.swift */; };
+		D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7ED1D57753500BD49A3 /* StringParameter.swift */; };
+		D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7F11D57772400BD49A3 /* StringAttribute.swift */; };
+		D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7F71D592FD500BD49A3 /* AttributedLabel.swift */; };
 		D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812AE91D43933400436B5C /* PageWrapper.swift */; };
 		D8812AEC1D44141100436B5C /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812AEB1D44141100436B5C /* File.swift */; };
 		D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */; };
@@ -104,6 +115,8 @@
 
 /* Begin PBXFileReference section */
 		261DD69993042D79D2F32E7E /* libPods-Mattermost.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Mattermost.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
+		4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerUrlViewController.swift; path = ServerUrl/ServerUrlViewController.swift; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
 		9B8220F2E4D1D8538A51229B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -149,8 +162,6 @@
 		D6E165861D47C1200014C831 /* MattermostTableViewCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostTableViewCellProtocol.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
 		D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCommonTableViewCell.swift; sourceTree = "<group>"; };
-		D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActiveLabel.framework; path = Carthage/Build/iOS/ActiveLabel.framework; sourceTree = "<group>"; };
-		D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UITableView_Cache.framework; path = Carthage/Build/iOS/UITableView_Cache.framework; sourceTree = "<group>"; };
 		D6E165A31D47E99C0014C831 /* WebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebImage.framework; path = Carthage/Build/iOS/WebImage.framework; sourceTree = "<group>"; };
 		D6E165A51D47E9B00014C831 /* MFSideMenu.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MFSideMenu.framework; path = Carthage/Build/iOS/MFSideMenu.framework; sourceTree = "<group>"; };
 		D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = Carthage/Build/iOS/MBProgressHUD.framework; sourceTree = "<group>"; };
@@ -167,6 +178,14 @@
 		D8087AF41D429393001918E8 /* UIScreen+Size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Size.swift"; sourceTree = "<group>"; };
 		D8087AF61D429610001918E8 /* TSMarkdownParser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSMarkdownParser.framework; path = Carthage/Build/iOS/TSMarkdownParser.framework; sourceTree = "<group>"; };
 		D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TSMarkdownParser+Singleton.swift"; sourceTree = "<group>"; };
+		D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentImageCell.swift; sourceTree = "<group>"; };
+		D83305F21D53A4B500E92CD6 /* UITableView+Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+Cache.h"; sourceTree = "<group>"; };
+		D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+Cache.m"; sourceTree = "<group>"; };
+		D83305F51D5636EF00E92CD6 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
+		D83305F71D5637B800E92CD6 /* AttachmentField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentField.swift; sourceTree = "<group>"; };
+		D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Markdown.swift"; sourceTree = "<group>"; };
+		D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageLabel.swift; sourceTree = "<group>"; };
+		D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+UrlAtIndex.swift"; sourceTree = "<group>"; };
 		D8436E671D26AC3600DEF464 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		D8436E6A1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKResponseDescriptor+RuntimeFinder.swift"; sourceTree = "<group>"; };
 		D8436E6C1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKRequestDescriptor+RuntimeFinder.swift"; sourceTree = "<group>"; };
@@ -177,6 +196,10 @@
 		D85D92E81D40079B002F8800 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D85D92EC1D400C42002F8800 /* RealmObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmObject.swift; sourceTree = "<group>"; };
 		D85D92EE1D400F9E002F8800 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
+		D86EF7EB1D5774FC00BD49A3 /* RealmAttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmAttributedString.swift; sourceTree = "<group>"; };
+		D86EF7ED1D57753500BD49A3 /* StringParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringParameter.swift; sourceTree = "<group>"; };
+		D86EF7F11D57772400BD49A3 /* StringAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringAttribute.swift; sourceTree = "<group>"; };
+		D86EF7F71D592FD500BD49A3 /* AttributedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedLabel.swift; sourceTree = "<group>"; };
 		D8812AE91D43933400436B5C /* PageWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageWrapper.swift; sourceTree = "<group>"; };
 		D8812AEB1D44141100436B5C /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		D8812C2C1D46CE8900436B5C /* NSDateFormatter+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDateFormatter+Singleton.swift"; sourceTree = "<group>"; };
@@ -206,8 +229,6 @@
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
-				D6E165A21D47E32E0014C831 /* UITableView_Cache.framework in Frameworks */,
-				D6E165A01D47E31E0014C831 /* ActiveLabel.framework in Frameworks */,
 				D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */,
 				D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */,
 				D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */,
@@ -239,6 +260,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		4195DCEB1D54DA8600E8ED84 /* ServerUrl */ = {
+			isa = PBXGroup;
+			children = (
+				4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */,
+			);
+			name = ServerUrl;
+			sourceTree = "<group>";
+		};
 		9B82243559F26A9911CEBFB1 /* MattermostTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -265,7 +294,7 @@
 				9B822480CFCCBBED84C3A22E /* Info.plist */,
 				9B82258408C03D292317D1D2 /* LaunchScreen.storyboard */,
 				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
-				D8436E6E1D26DDED00DEF464 /* Objective-C Categories */,
+				D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */,
 				D8F6BCFF1D22E8DE000AC690 /* Supporting Files */,
 				D6330AA71D494BE2006D84F4 /* Resources */,
 			);
@@ -310,12 +339,15 @@
 		9B822B9F449303D4B4A3B584 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D86EF7E81D57742200BD49A3 /* AttributedString */,
 				D8087AE01D414A71001918E8 /* Channel.swift */,
 				D8812AEB1D44141100436B5C /* File.swift */,
 				D8087AE61D427E23001918E8 /* Post.swift */,
 				D85D92EC1D400C42002F8800 /* RealmObject.swift */,
 				D8087ADE1D413DB7001918E8 /* Team.swift */,
 				D85D92E81D40079B002F8800 /* User.swift */,
+				D83305F51D5636EF00E92CD6 /* Attachment.swift */,
+				D83305F71D5637B800E92CD6 /* AttachmentField.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -336,6 +368,8 @@
 				D6E165A91D47EA920014C831 /* UIImage+Additions.swift */,
 				D8087AF41D429393001918E8 /* UIScreen+Size.swift */,
 				D8812C361D47D69B00436B5C /* WebSocket+Cookies.swift */,
+				D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */,
+				D83306011D5695B200E92CD6 /* String+UrlAtIndex.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -362,6 +396,7 @@
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4195DCEB1D54DA8600E8ED84 /* ServerUrl */,
 				D62FEB891D4F2A8200390EBC /* LeftMenu */,
 				D62FEB8A1D4F2A8D00390EBC /* Login */,
 				D617E69C1D46AF0700283C0A /* Chat */,
@@ -463,6 +498,7 @@
 			isa = PBXGroup;
 			children = (
 				D615A3051D4F9067000DA2D6 /* AttachmentView */,
+				4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */,
 				D6E165841D47C08F0014C831 /* Cells */,
 				D65626661D49674700981057 /* TableSectionHeaders */,
 			);
@@ -486,19 +522,33 @@
 				D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */,
 				D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */,
 				D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */,
+				D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
 		};
-		D8436E6E1D26DDED00DEF464 /* Objective-C Categories */ = {
+		D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */ = {
 			isa = PBXGroup;
 			children = (
+				D83305F21D53A4B500E92CD6 /* UITableView+Cache.h */,
+				D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */,
 				D8B846B21D4A38D500AEE19A /* NSObject+EnumerateProperties.h */,
 				D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */,
 				D8436E6F1D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.h */,
 				D8436E701D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m */,
 			);
+			name = "Objective-C Runtime";
 			path = "Objective-C Categories";
+			sourceTree = "<group>";
+		};
+		D86EF7E81D57742200BD49A3 /* AttributedString */ = {
+			isa = PBXGroup;
+			children = (
+				D86EF7EB1D5774FC00BD49A3 /* RealmAttributedString.swift */,
+				D86EF7ED1D57753500BD49A3 /* StringParameter.swift */,
+				D86EF7F11D57772400BD49A3 /* StringAttribute.swift */,
+			);
+			name = AttributedString;
 			sourceTree = "<group>";
 		};
 		D8812AE81D43931700436B5C /* Classes */ = {
@@ -508,6 +558,8 @@
 				D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */,
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
 				D62FEB991D4F2CD700390EBC /* ChannelObserver.swift */,
+				D86EF7F71D592FD500BD49A3 /* AttributedLabel.swift */,
+				D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -538,8 +590,6 @@
 				D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */,
 				D6E165A51D47E9B00014C831 /* MFSideMenu.framework */,
 				D6E165A31D47E99C0014C831 /* WebImage.framework */,
-				D6E165A11D47E32E0014C831 /* UITableView_Cache.framework */,
-				D6E1659F1D47E31E0014C831 /* ActiveLabel.framework */,
 				D8812C341D476EB800436B5C /* Starscream.framework */,
 				D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */,
 				D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */,
@@ -711,12 +761,11 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SlackTextViewController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftFetchedResultsController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RBQFetchedResultsController.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/ActiveLabel.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/UITableView_Cache.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MFSideMenu.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SkyFloatingLabelTextField.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -741,6 +790,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
+				4195DCED1D54DAA900E8ED84 /* ServerUrlViewController.swift in Sources */,
+				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
+				D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
@@ -754,6 +806,8 @@
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
+				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
+				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
@@ -762,14 +816,20 @@
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
+				D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */,
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
+				D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */,
+				D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
 				D6E165871D47C1200014C831 /* MattermostTableViewCellProtocol.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
+				D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */,
+				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
 				D62FEB951D4F2AD700390EBC /* PublicChannelTableViewCell.swift in Sources */,
+				D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
@@ -790,11 +850,13 @@
 				D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
+				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
 				D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */,
 				D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */,
 				D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
+				D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */,
 				D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

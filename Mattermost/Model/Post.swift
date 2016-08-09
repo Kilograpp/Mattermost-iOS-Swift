@@ -21,9 +21,10 @@ private protocol Delegate {
     func onStatusChange(handler: ((status: PostStatus) -> Void)?)
 }
 
-public enum PostAttributes: String {
-    case privatePendingId = "privatePendingId"
-    case privateChannelId = "privateChannelId"
+enum PostAttributes: String {
+    case authorId = "authorId"
+    case channelId = "channelId"
+    case pendingId = "pendingId"
     case createdAt = "createdAt"
     case creationDay = "creationDay"
     case deletedAt = "deletedAt"
@@ -32,18 +33,18 @@ public enum PostAttributes: String {
     case type = "type"
     case status = "status"
     case updatedAt = "updatedAt"
-    case privateAuthorId = "privateAuthorId"
     case attributedMessage = "attributedMessage"
     case attributedMessageHeight = "attributedMessageHeight"
     case hasObserverAttached = "hasObserverAttached"
-    
 }
 
-public enum PostRelationships: String {
+enum PostRelationships: String {
     case author = "author"
     case channel = "channel"
     case files = "files"
+    case attachments = "attachments"
 }
+
 
 @objc enum PostStatus: Int {
     case Default = 0
@@ -53,10 +54,10 @@ public enum PostRelationships: String {
 
 
 final class Post: RealmObject {
-    dynamic var privateAttributedMessageData: NSData?
-    dynamic var privatePendingId: String?
-    dynamic var privateChannelId: String?
-    dynamic var privateAuthorId: String?
+    private dynamic var _attributedMessageData: RealmAttributedString?
+    dynamic var channelId: String?
+    dynamic var authorId: String?
+    dynamic var pendingId: String?
     dynamic var creationDay: NSDate? {
         didSet {
             computeCreationDayString()
@@ -89,19 +90,21 @@ final class Post: RealmObject {
         }
     }
     lazy var attributedMessage: NSAttributedString? = {
-        return self.unarchiveAttributedMessageFromData()
+        let string = self._attributedMessageData?.attributedString
+        return string
     }()
     dynamic var attributedMessageHeight: Float = 0.0
     dynamic var type: String?
     
-    var author: User? {
-        return realm?.objectForPrimaryKey(User.self, key: self.privateAuthorId)
+    var author: User! {
+        return safeRealm.objectForPrimaryKey(User.self, key: self.authorId)
     }
-    var channel: Channel? {
-        return realm?.objectForPrimaryKey(Channel.self, key: self.privateChannelId)
+    var channel: Channel! {
+        return safeRealm.objectForPrimaryKey(Channel.self, key: self.channelId)
     }
     
     let files = List<File>()
+    let attachments = List<Attachment>()
     
     private var hasObserverAttached: Bool = false
     private var statusChangeHandler: ((status: PostStatus) -> Void)?
@@ -201,7 +204,7 @@ extension Post: ResponseMapping {
         let mapping = super.emptyMapping()
         mapping.addAttributeMappingsFromDictionary([
             "id" : PostAttributes.identifier.rawValue,
-            "pending_post_id" : PostAttributes.privatePendingId.rawValue
+            "pending_post_id" : PostAttributes.pendingId.rawValue
             ])
         return mapping
     }
@@ -215,12 +218,15 @@ extension Post: ResponseMapping {
             "(\(PostAttributes.identifier)).update_at" : PostAttributes.updatedAt.rawValue,
             "(\(PostAttributes.identifier)).message" : PostAttributes.message.rawValue,
             "(\(PostAttributes.identifier)).type" : PostAttributes.type.rawValue,
-            "(\(PostAttributes.identifier)).user_id" : PostAttributes.privateAuthorId.rawValue,
-            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.privateChannelId.rawValue
+            "(\(PostAttributes.identifier)).user_id" : PostAttributes.authorId.rawValue,
+            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue
             ])
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
                                                            toKeyPath: PostRelationships.files.rawValue,
                                                          withMapping: File.simplifiedMapping()))
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
+                                                           toKeyPath: PostRelationships.attachments.rawValue,
+                                                         withMapping: Attachment.mapping()))
         return mapping
     }
 }
@@ -237,11 +243,6 @@ extension Post: Support {
     private static func teamIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
     }
-    private func unarchiveAttributedMessageFromData() -> NSAttributedString {
-        return NSKeyedUnarchiver.unarchiveObjectWithData(self.privateAttributedMessageData!) as! NSAttributedString
-    }
-
-    
 }
 
 // MARK: - Inteface
@@ -250,7 +251,7 @@ extension Post: Inteface {
         return self.files.count != 0
     }
     func hasSameAuthor(post: Post!) -> Bool {
-        return self.privateAuthorId == post.privateAuthorId
+        return self.authorId == post.authorId
     }
     func timeIntervalSincePost(post: Post!) -> NSTimeInterval {
         return createdAt!.timeIntervalSinceDate(post.createdAt!)
@@ -281,7 +282,7 @@ extension Post: Computations {
         self.creationDay = calendar.dateFromComponents(components)
     }
     private func computePendingId() {
-        self.privatePendingId = "\(Preferences.sharedInstance.currentUserId):\(self.createdAt!.timeIntervalSince1970)"
+        self.pendingId = "\(Preferences.sharedInstance.currentUserId):\(self.createdAt!.timeIntervalSince1970)"
     }
     private func computeCreatedAtString() {
         self.createdAtString = self.createdAt!.messageTimeFormat()
@@ -293,7 +294,7 @@ extension Post: Computations {
         self.attributedMessage = TSMarkdownParser.sharedInstance.attributedStringFromMarkdown(self.message!)
     }
     private func computeAttributedStringData() {
-        self.privateAttributedMessageData = NSKeyedArchiver.archivedDataWithRootObject(self.attributedMessage!)
+        self._attributedMessageData = RealmAttributedString(attributedString: self.attributedMessage)
     }
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
@@ -339,9 +340,9 @@ extension Post: RequestMapping {
         let mapping = RKObjectMapping.requestMapping()
         mapping.addAttributeMappingsFromDictionary([
             filesLinkPath() : "filenames",
-            PostAttributes.privateChannelId.rawValue : "channel_id",
-            PostAttributes.privatePendingId.rawValue : "pending_post_id"
-            ])
+            PostAttributes.channelId.rawValue : "channel_id",
+            PostAttributes.pendingId.rawValue : "pending_post_id"
+        ])
         return mapping
     }
 }
