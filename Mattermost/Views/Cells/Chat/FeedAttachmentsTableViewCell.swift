@@ -44,6 +44,7 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         self.tableView.scrollEnabled = false
         
         self.tableView.registerClass(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier(), cacheSize: 7)
+        self.tableView.registerClass(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier(), cacheSize: 7)
         self.addSubview(self.tableView)
     }
     
@@ -67,8 +68,9 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     //MARK: Private
     
     private class func tableViewHeightWithPost(post: Post) -> CGFloat {
-        let height =  post.files.reduce(0) {
-            (total, file) in total + (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings)*0.56 - 5
+        let height = post.files.reduce(0) {
+            (total, file) in
+            total + (file.isImage ? (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings)*0.56 - 5 : 56)
         }
         return height
     }
@@ -103,18 +105,29 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
             let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentImageCell.reuseIdentifier()) as! AttachmentImageCell
             cell.configureWithFile(file)
             return cell
+        } else {
+            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentFileCell.reuseIdentifier()) as! AttachmentFileCell
+            cell.configureWithFile(file)
+            return cell
         }
-        
-        return UITableViewCell()
     }
 }
 
 
 extension FeedAttachmentsTableViewCell : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
-        let imageHeight = imageWidth * 0.56 - 5
-        return imageHeight
+        
+        let file = self.attachments[indexPath.row]
+        
+        if file.isImage {
+            let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+            let imageHeight = imageWidth * 0.56 - 5
+            return imageHeight
+        } else {
+            return 56
+        }
+        
+
     }
 }
 

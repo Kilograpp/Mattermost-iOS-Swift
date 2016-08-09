@@ -147,7 +147,7 @@ extension TSMarkdownParser {
             
             var attributes = [NSForegroundColorAttributeName : ColorBucket.blueColor]
             
-            if name == DataManager.sharedInstance.currentUser?.username {
+            if name == DataManager.sharedInstance.currentUser?.username || name == "all" || name == "channel" {
                 attributes[NSBackgroundColorAttributeName] =  UIColor.yellowColor()
             }
             attributedString.addAttribute(Constants.StringAttributes.Mention, value: name, range: match.range)
