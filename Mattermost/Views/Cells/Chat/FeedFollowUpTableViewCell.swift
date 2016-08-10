@@ -26,7 +26,8 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     
     func setupMessageLabel()  {
         self.messageLabel.backgroundColor = UIColor.whiteColor()
-        self.messageLabel.numberOfLines = 0;
+        self.messageLabel.numberOfLines = 0
+        self.messageLabel.layer.drawsAsynchronously = true
         self.addSubview(self.messageLabel)
         self.configureMessageAttributedLabel()
         //fonts & coloring
@@ -34,11 +35,7 @@ class FeedFollowUpTableViewCell: UITableViewCell, FeedTableViewCellProtocol {
     }
     
     func configureMessage() {
-        PerformanceManager.sharedInstance.messageRenderOperationQueue.addOperationWithBlock {
-            dispatch_sync(dispatch_get_main_queue()) {
-                self.messageLabel.attributedText = self.post.attributedMessage
-            }
-        }
+        self.messageLabel.attributedText = self.post.attributedMessage
     }
     
     

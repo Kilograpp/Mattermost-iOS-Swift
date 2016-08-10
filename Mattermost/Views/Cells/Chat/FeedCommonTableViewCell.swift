@@ -126,12 +126,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
     }
     
     final func configureMessage() {
-
-        PerformanceManager.sharedInstance.messageRenderOperationQueue.addOperationWithBlock { 
-            dispatch_sync(dispatch_get_main_queue()) {
-                self.messageLabel.attributedText = self.post.attributedMessage
-            }
-        }
+        self.messageLabel.attributedText = self.post.attributedMessage
     }
     
     final func configureBasicLabels() {
@@ -173,7 +168,8 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
     final func setupMessageLabel() {
         //FIXME: CodeReview: Заменить на конкретный цвет
         self.messageLabel.backgroundColor = ColorBucket.whiteColor
-        self.messageLabel.numberOfLines = 0;
+        self.messageLabel.numberOfLines = 0
+        self.messageLabel.layer.drawsAsynchronously = true
         self.addSubview(self.messageLabel)
         self.configureMessageAttributedLabel()
         //TODO: assign closures
@@ -192,10 +188,13 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         self.messageLabel.frame = CGRectMake(53, 36, textWidth, CGFloat(self.post.attributedMessageHeight))
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
         self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
+        
+        self.alignSubviews()
     }
     
     override func prepareForReuse() {
         self.messageLabel.attributedText = nil
+//        self.messageLabel.layer.drawsAsynchronously = false
     }
     
 }

@@ -194,7 +194,6 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
 
 extension ChatViewController: FetchedResultsControllerDelegate {
     func controllerWillChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-//        UIView.setAnimationsEnabled(false)
         self.tableView.beginUpdates()
     }
     
@@ -244,7 +243,6 @@ extension ChatViewController: FetchedResultsControllerDelegate {
     
     func controllerDidChangeContent<T : Object>(controller: FetchedResultsController<T>) {
         self.tableView.endUpdates()
-//        UIView.setAnimationsEnabled(true)
     }
     
     func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
@@ -304,7 +302,7 @@ extension ChatViewController {
     }
     func loadFirstPageOfData() -> Void {
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
+            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.2)
         })
 
     }
