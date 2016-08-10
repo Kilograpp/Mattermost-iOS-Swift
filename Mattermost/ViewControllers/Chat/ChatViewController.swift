@@ -10,14 +10,15 @@ import SlackTextViewController
 import RealmSwift
 import SwiftFetchedResultsController
 
-class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
+final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     private var channel : Channel?
-    final override var tableView: UITableView! {
-        get {
-            return super.tableView
-        }
-    }
+    private lazy var resultsControllerDelegate: SimpleFRCDelegateImplementation = SimpleFRCDelegateImplementation(tableView: self.tableView)
+    private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
+    
+    override var tableView: UITableView! { return super.tableView }
+    
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
+    
     var refreshControl: UIRefreshControl?
     
     //MARK: - Lifecycle
@@ -43,10 +44,9 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         self.tableView.separatorStyle = .None
         self.tableView.keyboardDismissMode = .OnDrag
         self.tableView.backgroundColor = ColorBucket.whiteColor
-        self.tableView.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier(), cacheSize: 10)
-        self.tableView.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier(), cacheSize: 10)
-        self.tableView.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier(), cacheSize: 18)
-        
+        self.tableView.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier, cacheSize: 18)
         self.tableView.registerClass(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
     
@@ -62,30 +62,9 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if (tableView.isEqual(self.tableView)) {
-            let prevIndexPath = NSIndexPath(forRow: indexPath.row + 1, inSection: indexPath.section) as NSIndexPath
-            let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
-            let prevPost = self.fetchedResultsController.objectAtIndexPath(prevIndexPath) as Post?
-            
-            var reuseIdentifier : String!
-            
-            if (prevPost != nil && post.hasSameAuthor(prevPost)) {
-                reuseIdentifier = post.hasAttachments() ? FeedAttachmentsTableViewCell.reuseIdentifier() : FeedFollowUpTableViewCell.reuseIdentifier()
-            } else {
-                reuseIdentifier = post.hasAttachments() ? FeedAttachmentsTableViewCell.reuseIdentifier() : FeedCommonTableViewCell.reuseIdentifier()
-            }
-            
-            let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedTableViewCellProtocol
-            (cell as! UITableViewCell).transform = tableView.transform
-            cell.configureWithPost(post)
-            (cell as! UITableViewCell).selectionStyle = .None
-            
-            return cell as! UITableViewCell
-        } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier(FeedCommonTableViewCell.reuseIdentifier()) as! FeedCommonTableViewCell
-            cell.backgroundColor = UIColor.redColor()
-            return cell
-        }
+        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
+        let previousPost = self.fetchedResultsController.objectAtIndexPath(indexPath.previousPath)
+        return self.builder.cellForPost(post, previous: previousPost)
     }
     
     
@@ -93,7 +72,7 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     
     override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(FeedTableViewSectionHeader.reuseIdentifier()) as! FeedTableViewSectionHeader
-        let frcTitleForHeader = self.fetchedResultsController.titleForHeaderInSection(section) as String
+        let frcTitleForHeader = self.fetchedResultsController.titleForHeaderInSection(section)
         let titleDate = NSDateFormatter.sharedConversionSectionsDateFormatter.dateFromString(frcTitleForHeader)! as NSDate
         let titleString = titleDate.feedSectionDateFormat()
         view.configureWithTitle(titleString)
@@ -111,19 +90,9 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if (tableView.isEqual(self.tableView)) {
-            let prevIndexPath = NSIndexPath(forRow: indexPath.row + 1, inSection: indexPath.section) as NSIndexPath
-            let post = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Post
-            let prevPost = self.fetchedResultsController.objectAtIndexPath(prevIndexPath) as Post?
-            
-            if (prevPost != nil && post.hasSameAuthor(prevPost)) {
-                return post.hasAttachments() ? FeedAttachmentsTableViewCell.heightWithPost(post) : FeedFollowUpTableViewCell.heightWithPost(post)
-            } else {
-                return post.hasAttachments() ? FeedAttachmentsTableViewCell.heightWithPost(post) : FeedCommonTableViewCell.heightWithPost(post)
-            }
-        } else {
-            return 0
-        }
+        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
+        let previousPost = self.fetchedResultsController.objectAtIndexPath(indexPath.previousPath)
+        return self.builder.heightForPost(post, previous: previousPost)
     }
 
     
@@ -141,7 +110,7 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         let sortDescriptorSection = SortDescriptor(property: "createdAt", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptorSection]
         let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: "creationDayString", cacheName: "testCache")
-        fetchedResultsController.delegate = self
+        fetchedResultsController.delegate = self.resultsControllerDelegate
         fetchedResultsController.performFetch()
         return fetchedResultsController
     }
@@ -188,67 +157,6 @@ class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     func assignPhotos() -> Void {
     }
 }
-
-
-// MARK: - FetchedResultsControllerDelegate
-
-extension ChatViewController: FetchedResultsControllerDelegate {
-    func controllerWillChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-        self.tableView.beginUpdates()
-    }
-    
-    func controllerDidChangeObject<T : Object>(controller: FetchedResultsController<T>, anObject: SafeObject<T>, indexPath: NSIndexPath?, changeType: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        
-        let tableView = self.tableView
-        
-        switch changeType {
-            
-        case .Insert:
-            
-            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .None)
-            
-        case .Delete:
-            
-            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
-            
-        case .Update:
-            
-            tableView!.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
-            
-        case .Move:
-            
-            tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
-            
-            tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .None)
-        }
-    }
-    
-    func controllerDidChangeSection<T : Object>(controller: FetchedResultsController<T>, section: FetchResultsSectionInfo<T>, sectionIndex: UInt, changeType: NSFetchedResultsChangeType) {
-        
-        let tableView = self.tableView
-        
-        if changeType == .Insert {
-            
-            let indexSet = NSIndexSet(index: Int(sectionIndex))
-            
-            tableView!.insertSections(indexSet, withRowAnimation: .None)
-        }
-        else if changeType == .Delete {
-            
-            let indexSet = NSIndexSet(index: Int(sectionIndex))
-            
-            tableView!.deleteSections(indexSet, withRowAnimation: .None)
-        }
-    }
-    
-    func controllerDidChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-        self.tableView.endUpdates()
-    }
-    
-    func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
-    func controllerDidPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
-}
-
 
 // MARK: - Utils
 

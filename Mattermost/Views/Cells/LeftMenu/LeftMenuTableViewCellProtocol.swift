@@ -6,7 +6,7 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-protocol LeftMenuTableViewCellProtocol : class, MattermostTableViewCellProtocol {
+protocol LeftMenuTableViewCellProtocol : class, Reusable {
     //FIXME: CodeReview: Убрать set
     var channel : Channel? { get set }
     
@@ -15,10 +15,3 @@ protocol LeftMenuTableViewCellProtocol : class, MattermostTableViewCellProtocol 
 //    static func height(channel: Channel) -> CGFloat
 }
 //
-//если нужна реализация
-extension FeedTableViewCellProtocol {
-//    static func height(channel: Channel) -> CGFloat {
-//        return 42
-//    }
-}
-

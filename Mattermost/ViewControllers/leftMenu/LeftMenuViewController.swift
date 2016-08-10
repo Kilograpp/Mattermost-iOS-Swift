@@ -71,7 +71,7 @@ extension LeftMenuViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let reuseIdentifier = indexPath.section == 0 ? PublicChannelTableViewCell.reuseIdentifier() : PrivateChannelTableViewCell.reuseIdentifier()
+        let reuseIdentifier = indexPath.section == 0 ? PublicChannelTableViewCell.reuseIdentifier : PrivateChannelTableViewCell.reuseIdentifier
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! LeftMenuTableViewCellProtocol
         let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
         cell.configureWithChannel(channel!, selected: (channel?.isSelected)!)

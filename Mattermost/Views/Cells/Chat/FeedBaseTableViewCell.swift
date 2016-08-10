@@ -6,18 +6,71 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-protocol FeedTableViewCellProtocol : class, MattermostTableViewCellProtocol {
-    var onMentionTap: ((nickname : String) -> Void)? { get set }
-    var post : Post! { get set }
-    var messageLabel : MessageLabel { get }
-    
-    func configureWithPost(post: Post) -> Void
-    func configureMessageAttributedLabel() -> Void
+
+
+protocol TableViewPostDataSource: class {
+    func configureWithPost(post: Post)
     static func heightWithPost(post: Post) -> CGFloat
 }
-//
-//если нужна реализация
-extension FeedTableViewCellProtocol {
-    func configureMessageAttributedLabel() -> Void {
+
+class FeedBaseTableViewCell: UITableViewCell, Reusable {
+    final var onMentionTap: ((nickname : String) -> Void)?
+    final var post : Post! {
+        didSet { self.postIdentifier = self.post.identifier }
     }
+    final var postIdentifier: String?
+    final var messageLabel = MessageLabel()
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.setup()
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setup()
+    }
+    
+    
+    override func prepareForReuse() {
+        self.messageLabel.attributedText = nil
+        self.postIdentifier = nil
+    }
+    
+    private func configureMessage() {
+        self.messageLabel.attributedText = self.post.attributedMessage
+    }
+    
+    
+    private func setup() {
+        self.setupBasics()
+        self.setupMessageLabel()
+    }
+    
+    private func setupBasics() {
+        self.selectionStyle = .None
+    }
+
+    private func setupMessageLabel() {
+        //FIXME: CodeReview: Заменить на конкретный цвет
+        self.messageLabel.backgroundColor = ColorBucket.whiteColor
+        self.messageLabel.numberOfLines = 0
+        self.messageLabel.layer.drawsAsynchronously = true
+        self.addSubview(self.messageLabel)
+    }
+    
+}
+
+extension FeedBaseTableViewCell {
+    func configureWithPost(post: Post) {
+        self.post = post
+        self.configureMessage()
+    }
+    
+    class func heightWithPost(post: Post) -> CGFloat {
+        preconditionFailure("This method must be overridden")
+    }
+}
+
+extension TableViewPostDataSource {
+    func configureWithPost(post: Post) {}
 }

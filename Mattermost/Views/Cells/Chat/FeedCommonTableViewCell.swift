@@ -7,32 +7,17 @@
 //
 
 import WebImage
-import Sugar
 
+class FeedCommonTableViewCell: FeedBaseTableViewCell {
+    private let avatarImageView : UIImageView = UIImageView()
+    private let nameLabel : UILabel = UILabel()
+    private let dateLabel : UILabel = UILabel()
 
-class FeedCommonTableViewCell: UITableViewCell {
-    //FIXME: CodeReview: В приват все лишнее
-    let avatarImageView : UIImageView = UIImageView()
-    let nameLabel : UILabel = UILabel()
-    let dateLabel : UILabel = UILabel()
-    let messageLabel : MessageLabel = MessageLabel()
-    
-    private var postIdentifier: String?
-    
-    //FIXME: CodeReview: Ячейка может без поста работать? Если нет, то в implicity unwrap. 
-    //FIXME: CodeReview: В приват
-    var post : Post!
-    //FIXME: CodeReview: В final
-    var onMentionTap: ((nickname : String) -> Void)?
-    
-    //MARK: Init
-    
-     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.setupAvatarImageView()
         self.setupNameLabel()
-        self.setupMessageLabel()
         self.setupDateLabel()
     }
     
@@ -45,7 +30,6 @@ class FeedCommonTableViewCell: UITableViewCell {
 
 protocol _FeedCommonTableViewCellConfiguration : class {
     func configureAvatarImage()
-    func configureMessage()
     func configureBasicLabels()
 }
 
@@ -53,7 +37,6 @@ protocol _FeedCommonTableViewCellSetup : class {
     func setupAvatarImageView()
     func setupNameLabel()
     func setupDateLabel()
-    func setupMessageLabel()
 }
 
 protocol _FeedCommonTableViewCellLifeCycle: class {
@@ -62,18 +45,14 @@ protocol _FeedCommonTableViewCellLifeCycle: class {
 }
 
 
-//MARK: - FeedTableViewCellProtocol
-
-extension FeedCommonTableViewCell : FeedTableViewCellProtocol {
-    //FIXME: CodeReview: Убрать войд
-    func configureWithPost(post: Post) -> Void {
-        self.post = post
+extension FeedCommonTableViewCell : TableViewPostDataSource {
+    override func configureWithPost(post: Post) {
+        super.configureWithPost(post)
         self.configureAvatarImage()
-        self.configureMessage()
         self.configureBasicLabels()
     }
     
-    class func heightWithPost(post: Post) -> CGFloat {
+    override class func heightWithPost(post: Post) -> CGFloat {
         return CGFloat(post.attributedMessageHeight) + 44
     }
 }
@@ -125,9 +104,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
 
     }
     
-    final func configureMessage() {
-        self.messageLabel.attributedText = self.post.attributedMessage
-    }
+
     
     final func configureBasicLabels() {
         self.nameLabel.text = self.post.author.displayName
@@ -165,15 +142,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         self.dateLabel.textColor = ColorBucket.grayColor
     }
     
-    final func setupMessageLabel() {
-        //FIXME: CodeReview: Заменить на конкретный цвет
-        self.messageLabel.backgroundColor = ColorBucket.whiteColor
-        self.messageLabel.numberOfLines = 0
-        self.messageLabel.layer.drawsAsynchronously = true
-        self.addSubview(self.messageLabel)
-        self.configureMessageAttributedLabel()
-        //TODO: assign closures
-    }
+
 }
 
 extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
@@ -193,8 +162,7 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
     }
     
     override func prepareForReuse() {
-        self.messageLabel.attributedText = nil
-//        self.messageLabel.layer.drawsAsynchronously = false
+        super.prepareForReuse()
     }
     
 }

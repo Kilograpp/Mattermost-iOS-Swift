@@ -9,18 +9,12 @@
 import WebImage
 import RealmSwift
 
-//FIXME: CodeReview: Final
-class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
-    //FIXME: CodeReview: Константной
-    //FIXME: CodeReview: Приват
-    var tableView = UITableView()
-    //FIXME: CodeReview: Может быть такое, что ячейка без attachment рабоотает? Если нет, то implicity unwrap
-    var attachments : List<File>!
+final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
+
+    private let tableView = UITableView()
+    private var attachments : List<File>!
     
-    
-    
-    //MARK: Init
-    
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -35,7 +29,6 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     //MARK: Setup
     
     func setupTableView() -> Void {
-        self.tableView = UITableView.init()
         self.tableView.scrollsToTop = false
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -43,8 +36,8 @@ class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         self.tableView.bounces = false
         self.tableView.scrollEnabled = false
         
-        self.tableView.registerClass(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier(), cacheSize: 7)
-        self.tableView.registerClass(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier(), cacheSize: 7)
+        self.tableView.registerClass(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier, cacheSize: 7)
+        self.tableView.registerClass(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier, cacheSize: 7)
         self.addSubview(self.tableView)
     }
     
@@ -102,11 +95,11 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
         //FIXME: CodeReview: Убрать инит
         let file = self.attachments[indexPath.row]
         if file.isImage {
-            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentImageCell.reuseIdentifier()) as! AttachmentImageCell
+            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentImageCell.reuseIdentifier) as! AttachmentImageCell
             cell.configureWithFile(file)
             return cell
         } else {
-            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentFileCell.reuseIdentifier()) as! AttachmentFileCell
+            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentFileCell.reuseIdentifier) as! AttachmentFileCell
             cell.configureWithFile(file)
             return cell
         }
