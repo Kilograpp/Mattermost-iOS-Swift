@@ -50,21 +50,19 @@ extension FeedCellBuilder: Inteface {
         var reuseIdentifier: String
         
         switch self.typeForPost(post, previous: previous) {
-        case .Attachment:
-            reuseIdentifier = FeedAttachmentsTableViewCell.reuseIdentifier
-            break
-        case .FollowUp:
-            reuseIdentifier =  FeedFollowUpTableViewCell.reuseIdentifier
-            break
-        case .Common:
-            reuseIdentifier = FeedCommonTableViewCell.reuseIdentifier
-            break
+            case .Attachment:
+                reuseIdentifier = FeedAttachmentsTableViewCell.reuseIdentifier
+                break
+            case .FollowUp:
+                reuseIdentifier =  FeedFollowUpTableViewCell.reuseIdentifier
+                break
+            case .Common:
+                reuseIdentifier = FeedCommonTableViewCell.reuseIdentifier
+                break
         }
         
         let cell = self.tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedBaseTableViewCell
-        cell.transform = self.tableView.transform
-        cell.configureWithPost(post)
-        
+        cell.transform = self.tableView.transform        
         return cell
     }
     
