@@ -11,7 +11,7 @@ import DateTools
 
 extension NSDate {
     func messageTimeFormat() -> String {
-        return self.formattedDateWithFormat("HH:mm a")
+        return self.formattedDateWithFormat("HH:mm")
     }
     func messageDateFormat() -> String {
         return self.formattedDateWithFormat("dd.MM.yyyy")
