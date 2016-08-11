@@ -62,7 +62,8 @@ extension FeedCellBuilder: Inteface {
         }
         
         let cell = self.tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedBaseTableViewCell
-        cell.transform = self.tableView.transform        
+        cell.transform = self.tableView.transform
+        cell.configureWithPost(post)
         return cell
     }
     
