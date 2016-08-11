@@ -116,7 +116,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
 
 extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
     override func layoutSubviews() {
-        super.layoutSubviews()
+        
         
         let nameWidth = CGFloat(self.post.author.displayNameWidth)
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
@@ -127,7 +127,7 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
         self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
         
-        self.alignSubviews()
+        super.layoutSubviews()
     }
     
     override func prepareForReuse() {

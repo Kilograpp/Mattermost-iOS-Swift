@@ -37,6 +37,11 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         self.postIdentifier = nil
     }
     
+    override func layoutSubviews() {
+        self.align()
+        self.alignSubviews()
+    }
+    
     private func configureMessage() {
         self.messageLabel.attributedText = self.post.attributedMessage
         guard self.post.messageType == .System else { return }

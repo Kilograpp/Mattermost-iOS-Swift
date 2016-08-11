@@ -10,7 +10,10 @@ import Foundation
 
 extension UIView {
     func align() {
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height)
+        self.frame = CGRectMake(ceil(self.frame.origin.x),
+                                ceil(self.frame.origin.y),
+                                ceil(self.frame.size.width),
+                                ceil(self.frame.size.height))
     }
     
     func alignSubviews() {
