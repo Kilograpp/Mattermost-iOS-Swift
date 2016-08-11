@@ -57,8 +57,8 @@ extension ObjectManager: GetRequests {
         let cachedETag = (cachedUrlResponse?.response as? NSHTTPURLResponse)?.allHeaderFields["ETag"] as? String
         
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            let eTag = operation.HTTPRequestOperation.response.allHeaderFields["ETag"] as! String
-            success?(mappingResult: mappingResult, canSkipMapping: false)
+            let eTag = operation.HTTPRequestOperation.response.allHeaderFields["ETag"] as? String
+            success?(mappingResult: mappingResult, canSkipMapping: eTag == cachedETag)
         }) { (operation, error) in
             failure?(error: self.handleOperation(operation, withError: error))
         }
