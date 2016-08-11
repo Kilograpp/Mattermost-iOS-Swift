@@ -33,11 +33,14 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     
     override func prepareForReuse() {
         self.messageLabel.attributedText = nil
+        self.messageLabel.alpha = 1
         self.postIdentifier = nil
     }
     
     private func configureMessage() {
         self.messageLabel.attributedText = self.post.attributedMessage
+        guard self.post.messageType == .System else { return }
+        self.messageLabel.alpha = 0.5
     }
     
     

@@ -52,9 +52,16 @@ enum PostRelationships: String {
     case Sending = 1
 }
 
+@objc enum MessageType: Int {
+    case Default
+    case SlackAttachment
+    case System
+}
+
 
 final class Post: RealmObject {
     private dynamic var _attributedMessageData: RealmAttributedString?
+    dynamic var messageType: MessageType = .Default
     dynamic var channelId: String?
     dynamic var authorId: String?
     dynamic var pendingId: String?
@@ -94,7 +101,18 @@ final class Post: RealmObject {
         return string
     }()
     dynamic var attributedMessageHeight: Float = 0.0
-    dynamic var type: String?
+    
+    func setType(type: String) {
+        switch type {
+            case _ where type.hasPrefix("system"):
+                self.messageType = .System
+                self.authorId = Constants.Realm.SystemUserIdentifier
+            case "slack_attachment":
+                self.messageType = .SlackAttachment
+            default: break
+        }
+        
+    }
     
     var author: User! {
         return safeRealm.objectForPrimaryKey(User.self, key: self.authorId)
@@ -162,6 +180,7 @@ private protocol Computations: class {
     func computeAttributedString()
     func computeAttributedStringData()
     func computeAttributedMessageHeight()
+    func setSystemAuthorIfNeeded()
 }
 
 private protocol Support: class {
@@ -303,7 +322,10 @@ extension Post: Computations {
     private func computeCreationDayString() {
         self.creationDayString = NSDateFormatter.sharedConversionSectionsDateFormatter.stringFromDate(self.creationDay!)
     }
-    
+    func setSystemAuthorIfNeeded() {
+        guard self.messageType == .System else { return }
+        self.authorId = Constants.Realm.SystemUserIdentifier
+    }
     private func resetStatus() {
         self.status = .Default
     }

@@ -20,6 +20,9 @@ struct Constants {
             static let Cookie = "Cookie"
         }
     }
+    struct Realm {
+        static let SystemUserIdentifier = "SystemUserIdentifier"
+    }
     struct Common {
         static let RestKitPrefix = "RK"
         static let MattermostCookieName = "MMAUTHTOKEN"

@@ -11,9 +11,7 @@ import WebImage
 
 final class AttachmentImageCell: UITableViewCell, Reusable {
     private var file: File! {
-        didSet {
-            computeFileName()
-        }
+        didSet { computeFileName() }
     }
     private var fileName: String?
     private let fileImageView = UIImageView()

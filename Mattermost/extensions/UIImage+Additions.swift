@@ -23,9 +23,26 @@ extension UIImage {
         return result;
     }
     
+    @nonobjc static let sharedFeedSystemAvatar = UIImage.feedSystemAvatar()
+    
     @nonobjc static let sharedAvatarPlaceholder = UIImage.avatarPlaceholder()
     
-    static func avatarPlaceholder() -> UIImage {
+    private static func feedSystemAvatar() -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
+        let bundleImage = UIImage(named: "feed_system_avatar")
+        UIGraphicsBeginImageContext(rect.size);
+        let context = UIGraphicsGetCurrentContext()
+        let ref = UIBezierPath(roundedRect: rect, cornerRadius: 20).CGPath
+        CGContextAddPath(context, ref);
+        CGContextSetFillColorWithColor(context, UIColor(white: 1, alpha: 1).CGColor);
+        CGContextFillPath(context);
+        bundleImage?.drawInRect(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext() as UIImage;
+        UIGraphicsEndImageContext()
+        return image
+    }
+    
+    private static func avatarPlaceholder() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         UIGraphicsBeginImageContext(rect.size);
         let context = UIGraphicsGetCurrentContext()! as CGContextRef

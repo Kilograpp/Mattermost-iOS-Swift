@@ -25,5 +25,16 @@ final class DataManager {
         set {Preferences.sharedInstance.currentTeamId = newValue!.identifier}
     }
     
+    var systemUser: User? { return User.objectById(Constants.Realm.SystemUserIdentifier) }
+    
+    func instantiateSystemUser() -> User {
+        let user = User()
+        user.identifier = Constants.Realm.SystemUserIdentifier
+        user.nickname = "System"
+        user.displayName = user.nickname
+        
+        return user
+    }
+    
     private init() {}
 }

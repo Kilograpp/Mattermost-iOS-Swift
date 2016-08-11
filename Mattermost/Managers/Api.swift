@@ -75,9 +75,10 @@ extension Api: UserApi {
         let parameters = ["login_id" : email, "password": password, "token" : ""]
         self.manager.postObject(path: path, parameters: parameters, success: { (mappingResult) in
             let user = mappingResult.firstObject as! User
+            let systemUser = DataManager.sharedInstance.instantiateSystemUser()
             user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user
-            RealmUtils.save(user)
+            RealmUtils.save([user, systemUser])
             SocketManager.sharedInstance.setNeedsConnect()
             completion(error: nil)
             }, failure: completion)
@@ -195,7 +196,9 @@ extension Api: PostApi {
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
             defer {completion( error: nil) }
             guard !skipMapping else { return }
-            RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
+            let posts = MappingUtils.fetchPosts(mappingResult)
+            posts.forEach { $0.setSystemAuthorIfNeeded() }
+            RealmUtils.save(posts)
         }) { (error) in
             completion(error: error)
         }
@@ -207,12 +210,11 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(Post.nextPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
-            defer {
-                completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
-            }
+            defer { completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil) }
             guard !skipMapping else { return }
-            RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
-            
+            let posts = MappingUtils.fetchPosts(mappingResult)
+            posts.forEach { $0.setSystemAuthorIfNeeded() }
+            RealmUtils.save(posts)
         }) { (error) in
             var isLastPage = false
             if error!.code == 1001 {

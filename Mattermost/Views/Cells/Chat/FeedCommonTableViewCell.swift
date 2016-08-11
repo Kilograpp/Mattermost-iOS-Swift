@@ -62,49 +62,18 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
 
 extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
     final func configureAvatarImage() {
-
-        let smallAvatarCacheKey = self.post.author.smallAvatarCacheKey()
         let postIdentifier = self.post.identifier
         self.postIdentifier = postIdentifier
         
-        if let image = SDImageCache.sharedImageCache().imageFromMemoryCacheForKey(smallAvatarCacheKey) {
-            self.avatarImageView.image = image
-        } else {
-            self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
-            let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
-                [weak self] (image, error, cacheType, isFinished, imageUrl) in
-                dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-                    
-                    // Handle unpredictable errors
-                    guard image != nil else {
-                        print(error)
-                        return
-                    }
-                    
-                    let processedImage = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
-                    SDImageCache.sharedImageCache().storeImage(processedImage, forKey: smallAvatarCacheKey)
-                    
-                    // Ensure the post is still the same
-                    guard self?.postIdentifier == postIdentifier else {
-                        return
-                    }
-                    
-                    dispatch_sync(dispatch_get_main_queue(), {
-                        self?.avatarImageView.image = processedImage
-                    })
-                    
-                }
-            }
-            
-            SDWebImageManager.sharedManager().downloadImageWithURL(self.post.author.avatarURL(),
-                                                                   options: .HandleCookies ,
-                                                                   progress: nil,
-                                                                   completed: imageDownloadCompletionHandler)
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        
+        ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
+            guard self?.postIdentifier == postIdentifier else { return }
+            self?.avatarImageView.image = image
+
         }
-
+        
     }
-    
-
     
     final func configureBasicLabels() {
         self.nameLabel.text = self.post.author.displayName

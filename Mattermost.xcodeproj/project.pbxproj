@@ -109,6 +109,7 @@
 		D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */; };
 		D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */; };
 		D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */; };
+		D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601311D5D192300951F18 /* ImageDownloader.swift */; };
 		D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */; };
 		D8E98EDF1D4A15D300682922 /* ApplicationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */; };
 		D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6BD041D22FB49000AC690 /* Error.swift */; };
@@ -238,6 +239,7 @@
 		D8B846B21D4A38D500AEE19A /* NSObject+EnumerateProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+EnumerateProperties.h"; sourceTree = "<group>"; };
 		D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+EnumerateProperties.m"; sourceTree = "<group>"; };
 		D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionsNotification.swift; sourceTree = "<group>"; };
+		D8D601311D5D192300951F18 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 		D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Json.swift"; sourceTree = "<group>"; };
 		D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationStateManager.swift; sourceTree = "<group>"; };
 		D8F6BD001D22E909000AC690 /* Mattermost-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mattermost-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -357,6 +359,7 @@
 				D8087AD31D401FB3001918E8 /* RealmUtils.swift */,
 				D62FEB871D4F2A6A00390EBC /* RouterUtils.swift */,
 				D8087AF01D428FF1001918E8 /* StringUtils.swift */,
+				D8D601311D5D192300951F18 /* ImageDownloader.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -908,6 +911,7 @@
 				D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */,
 				D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */,
 				D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */,
+				D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
 				D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */,
