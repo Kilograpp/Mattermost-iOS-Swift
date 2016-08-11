@@ -49,12 +49,18 @@ extension ObjectManager: GetRequests {
     func getObject(object: AnyObject? = nil,
                    path: String,
                    parameters: [NSObject : AnyObject]? = nil,
-                   success: ((mappingResult: RKMappingResult) -> Void)?,
+                   success: ((mappingResult: RKMappingResult, canSkipMapping: Bool) -> Void)?,
                    failure: ((error: Error?) -> Void)?) {
+        
+        
+        let cachedUrlResponse = NSURLCache.sharedURLCache().cachedResponseForRequest(self.requestWithObject(object, method: .GET, path: path, parameters: parameters))
+        let cachedETag = (cachedUrlResponse?.response as? NSHTTPURLResponse)?.allHeaderFields["ETag"] as? String
+        
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            success?(mappingResult: mappingResult)
-            }) { (operation, error) in
-                failure?(error: self.handleOperation(operation, withError: error))
+            let eTag = operation.HTTPRequestOperation.response.allHeaderFields["ETag"] as? String
+            success?(mappingResult: mappingResult, canSkipMapping: eTag == cachedETag)
+        }) { (operation, error) in
+            failure?(error: self.handleOperation(operation, withError: error))
         }
         
       

@@ -13,6 +13,13 @@ import SwiftFetchedResultsController
 final class SimpleFRCDelegateImplementation: FetchedResultsControllerDelegate{
     private let tableView: UITableView
     
+    private var insertedSections = NSMutableIndexSet()
+    private var deletedSections = NSMutableIndexSet()
+    private var updatedRows = [NSIndexPath]()
+    private var deletedRows = [NSIndexPath]()
+    private var insertedRows = [NSIndexPath]()
+    private var movedRows = [NSIndexPath]()
+    
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -21,53 +28,57 @@ final class SimpleFRCDelegateImplementation: FetchedResultsControllerDelegate{
     
     
     func controllerWillChangeContent<T : Object>(controller: FetchedResultsController<T>) {
-        self.tableView.beginUpdates()
+        insertedSections = NSMutableIndexSet()
+        deletedSections = NSMutableIndexSet()
+        insertedRows.removeAll()
+        deletedRows.removeAll()
+        updatedRows.removeAll()
+        movedRows.removeAll()
     }
     
     func controllerDidChangeObject<T : Object>(controller: FetchedResultsController<T>, anObject: SafeObject<T>, indexPath: NSIndexPath?, changeType: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
+        
         switch changeType {
             
         case .Insert:
-            
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .None)
+            self.insertedRows.append(newIndexPath!)
             
         case .Delete:
-            
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
+            self.deletedRows.append(indexPath!)
             
         case .Update:
+            self.updatedRows.append(indexPath!)
             
-            tableView.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
-            
-        case .Move:
-            
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .None)
-            
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .None)
+        case .Move: break
         }
     }
     
     func controllerDidChangeSection<T : Object>(controller: FetchedResultsController<T>, section: FetchResultsSectionInfo<T>, sectionIndex: UInt, changeType: NSFetchedResultsChangeType) {
         
-        let tableView = self.tableView
         
         if changeType == .Insert {
-            
-            let indexSet = NSIndexSet(index: Int(sectionIndex))
-            
-            tableView.insertSections(indexSet, withRowAnimation: .None)
-        }
-        else if changeType == .Delete {
-            
-            let indexSet = NSIndexSet(index: Int(sectionIndex))
-            
-            tableView.deleteSections(indexSet, withRowAnimation: .None)
+            self.insertedSections.addIndex(Int(sectionIndex))
+        } else if changeType == .Delete {
+            self.deletedSections.addIndex(Int(sectionIndex))
         }
     }
     
     func controllerDidChangeContent<T : Object>(controller: FetchedResultsController<T>) {
+        
+        let totalChanges = self.deletedSections.count + self.insertedSections.count + self.insertedRows.count + self.deletedRows.count
+        print(totalChanges)
+        
+        UIView.setAnimationsEnabled(false)
+        self.tableView.beginUpdates()
+
+        self.tableView.deleteSections(self.deletedSections, withRowAnimation: .None)
+        self.tableView.insertSections(self.insertedSections, withRowAnimation: .None)
+        self.tableView.deleteRowsAtIndexPaths(self.deletedRows, withRowAnimation: .None)
+        self.tableView.insertRowsAtIndexPaths(self.insertedRows, withRowAnimation: .None)
+        
         self.tableView.endUpdates()
+        UIView.setAnimationsEnabled(true)
     }
     
     func controllerWillPerformFetch<T : Object>(controller: FetchedResultsController<T>) {}
