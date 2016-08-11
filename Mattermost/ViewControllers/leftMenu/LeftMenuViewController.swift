@@ -38,6 +38,8 @@ class LeftMenuViewController: UIViewController {
         self.tableView.dataSource = self
         self.tableView.separatorStyle = .None
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        
+        self.tableView.registerClass(LeftMenuSectionHeader.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionHeader.reuseIdentifier)
     }
     
     private func configureInitialSelectedChannel() {
@@ -100,13 +102,17 @@ extension LeftMenuViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView.init(frame: CGRectMake(0, 0, UIScreen.screenWidth(), 20))
         view.backgroundColor = ColorBucket.sideMenuBackgroundColor
+
         
         return view
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView.init(frame: CGRectMake(0, 0, UIScreen.screenWidth(), 20))
-        view.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
+//        let view = LeftMenuSectionHeader.init(reuseIdentifier: LeftMenuSectionHeader.reuseIdentifier)
+//        view.frame = CGRectMake(0, 0, UIScreen.screenWidth(), 20)
+        let sectionName = self.fetchedResultsController.titleForHeaderInSection(section)
+        view.configureWithChannelType(Channel.privateTypeDisplayName(sectionName))
         
         return view
     }

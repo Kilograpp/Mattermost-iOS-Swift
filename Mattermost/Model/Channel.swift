@@ -9,7 +9,26 @@
 import Foundation
 import RealmSwift
 
+private enum PrivateType {
+    case Direct
+    case PublicChannel
+    case PrivateChannel
+}
+
+
 final class Channel: RealmObject {
+    
+    class func privateTypeDisplayName(privateTypeString: String) -> String {
+        switch privateTypeString {
+        case "D":
+            return "Private message"
+        case "O":
+            return "Public channel"
+        default:
+            return "UNKNOWN"
+        }
+    }
+    
     dynamic var privateType: String?
     dynamic var privateTeamId: String? {
         didSet {
