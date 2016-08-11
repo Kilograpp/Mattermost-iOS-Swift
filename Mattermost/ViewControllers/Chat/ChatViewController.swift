@@ -13,13 +13,16 @@ import SwiftFetchedResultsController
 final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     private var channel : Channel?
     private lazy var resultsControllerDelegate: SimpleFRCDelegateImplementation = SimpleFRCDelegateImplementation(tableView: self.tableView)
-    private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
+    private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView, fetchedResultsController: self.fetchedResultsController)
     
     override var tableView: UITableView! { return super.tableView }
     
     lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
     
     var refreshControl: UIRefreshControl?
+    
+    var hasNextPage: Bool = true
+    var isLoadingInProgress: Bool = false
     
     //MARK: - Lifecycle
     
@@ -62,8 +65,17 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+
         let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
         let previousPost = self.fetchedResultsController.objectAtIndexPath(indexPath.previousPath)
+        
+        if tableView == self.tableView {
+            if self.hasNextPage == true && (self.fetchedResultsController.fetchedObjects.count - self.fetchedResultsController.fetchedObjects.indexOf(post)! < 15) {
+                self.loadNextPageOfData()
+            }
+        }
+        
         return self.builder.cellForPost(post, previous: previousPost)
     }
     
@@ -154,6 +166,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
             self.clearTextView()
         }
     }
+    
     func assignPhotos() -> Void {
     }
 }
@@ -161,7 +174,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
 // MARK: - Utils
 
 extension ChatViewController {
-    func clearTextView() -> Void {
+    func clearTextView() {
         self.textView.text = nil
     }
     
@@ -169,6 +182,7 @@ extension ChatViewController {
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.fetchedResultsController = self.realmFetchedResultsController()
+        self.builder.updateWithFRC(self.fetchedResultsController)
         self.tableView?.reloadData()
         self.loadFirstPageOfData()
         
@@ -202,17 +216,35 @@ extension ChatViewController {
 extension ChatViewController {
     
     func loadFirstPageAndReload() {
+        self.isLoadingInProgress = true
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
             self.fetchedResultsController = self.realmFetchedResultsController()
             self.tableView?.reloadData()
+            self.isLoadingInProgress = false
+            self.hasNextPage = true
         })
     }
-    func loadFirstPageOfData() -> Void {
+    func loadFirstPageOfData() {
+        self.isLoadingInProgress = true
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.2)
+            self.isLoadingInProgress = false
+            self.hasNextPage = true
         })
 
+    }
+    
+    func loadNextPageOfData() {
+        if self.isLoadingInProgress == true {
+            return;
+        }
+        
+        self.isLoadingInProgress = true
+        (Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.fetchedResultsController.fetchedObjects.last!) { (isLastPage, error) in
+            self.hasNextPage = !isLastPage
+            self.isLoadingInProgress = false
+        })
     }
 }
 

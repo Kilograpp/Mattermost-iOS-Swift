@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftFetchedResultsController
 
 
 private protocol Inteface: class {
@@ -23,9 +24,15 @@ private enum CellType {
 final class FeedCellBuilder {
     
     private let tableView: UITableView
+    private var fetchedResultsController: FetchedResultsController<Post>
     
-    init(tableView: UITableView) {
+    init(tableView: UITableView, fetchedResultsController: FetchedResultsController<Post>) {
         self.tableView = tableView
+        self.fetchedResultsController = fetchedResultsController
+    }
+    
+    func updateWithFRC(fetchedResultsController: FetchedResultsController<Post>) {
+        self.fetchedResultsController = fetchedResultsController
     }
     
     private init?(){
@@ -33,12 +40,16 @@ final class FeedCellBuilder {
     }
     
     private func typeForPost(post: Post, previous: Post?) -> CellType {
+        let index = self.fetchedResultsController.fetchedObjects.indexOf(post)
+        let notBetweenPages = (((index! + 1) % 60 != 0) && ((index! % 60) != 0)) || index! == 0
+        
         if post.hasAttachments() {
             return .Attachment
         }
-        if let _ = previous where post.hasSameAuthor(previous) {
+        if let _ = previous where post.hasSameAuthor(previous) && notBetweenPages {
             return .FollowUp
         }
+        
         return .Common
     }
 }
@@ -48,6 +59,8 @@ extension FeedCellBuilder: Inteface {
     func cellForPost(post: Post, previous: Post?) -> UITableViewCell {
         
         var reuseIdentifier: String
+    
+        
         
         switch self.typeForPost(post, previous: previous) {
         case .Attachment:
