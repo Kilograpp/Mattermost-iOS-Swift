@@ -46,6 +46,8 @@ class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtoco
     
     func configureStatusView() {
         self.statusView.layer.cornerRadius = 4
+        self.statusView.layer.borderColor = ColorBucket.lightGrayColor.CGColor
+        self.statusView.layer.borderWidth = 1;
     }
     
     func configurehighlightView() {
@@ -60,12 +62,16 @@ class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtoco
         let backendStatus = notification.object as! String
         
         if backendStatus == "offline" {
-            self.statusView.backgroundColor = UIColor.lightGrayColor()
+            self.statusView.backgroundColor = ColorBucket.sideMenuBackgroundColor
+            self.statusView.layer.borderWidth = 1;
         } else if backendStatus == "online" {
             self.statusView.backgroundColor = UIColor.greenColor()
+            self.statusView.layer.borderWidth = 0;
         } else if backendStatus == "away" {
             self.statusView.backgroundColor = UIColor.yellowColor()
+            self.statusView.layer.borderWidth = 0;
         } else {
+            self.statusView.layer.borderWidth = 0;
             self.statusView.backgroundColor = UIColor.blackColor()
         }
     }
@@ -104,12 +110,16 @@ extension PrivateChannelTableViewCell {
         
         let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(self.channel!.interlocuterFromPrivateChannel().identifier).backendStatus
         if backendStatus == "offline" {
-            self.statusView.backgroundColor = UIColor.lightGrayColor()
+            self.statusView.backgroundColor = ColorBucket.sideMenuBackgroundColor
+            self.statusView.layer.borderWidth = 1;
         } else if backendStatus == "online" {
             self.statusView.backgroundColor = UIColor.greenColor()
+            self.statusView.layer.borderWidth = 0;
         } else if backendStatus == "away" {
             self.statusView.backgroundColor = UIColor.yellowColor()
+            self.statusView.layer.borderWidth = 0;
         } else {
+            self.statusView.layer.borderWidth = 0;
             self.statusView.backgroundColor = UIColor.blackColor()
         }
     }
