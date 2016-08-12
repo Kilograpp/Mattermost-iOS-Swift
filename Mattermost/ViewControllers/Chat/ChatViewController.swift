@@ -66,26 +66,27 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-
         let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
         let previousPost = self.fetchedResultsController.objectAtIndexPath(indexPath.previousPath)
-        
-        if tableView == self.tableView {
-            if self.hasNextPage == true && (self.fetchedResultsController.fetchedObjects.count - self.fetchedResultsController.fetchedObjects.indexOf(post)! < 15) {
-                self.loadNextPageOfData()
-            }
+//
+        if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
+            self.loadNextPageOfData()
         }
         
-        return self.builder.cellForPost(post, previous: previousPost)
+        return self.builder.cellForPost(post, previous: previousPost, indexPath: indexPath)
     }
     
-    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
+        (cell as! FeedBaseTableViewCell).configureWithPost(post)
+    }
+//
     // MARK: - UITableViewDelegate
     
     override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(FeedTableViewSectionHeader.reuseIdentifier()) as! FeedTableViewSectionHeader
         let frcTitleForHeader = self.fetchedResultsController.titleForHeaderInSection(section)
-        let titleDate = NSDateFormatter.sharedConversionSectionsDateFormatter.dateFromString(frcTitleForHeader)! as NSDate
+        let titleDate = NSDateFormatter.sharedConversionSectionsDateFormatter.dateFromString(frcTitleForHeader)!
         let titleString = titleDate.feedSectionDateFormat()
         view.configureWithTitle(titleString)
         view.transform = tableView.transform
@@ -97,6 +98,10 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         return FeedTableViewSectionHeader.height()
     }
     
+    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 60
+    }
+    
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return CGFloat.min
     }
@@ -104,7 +109,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
         let previousPost = self.fetchedResultsController.objectAtIndexPath(indexPath.previousPath)
-        return self.builder.heightForPost(post, previous: previousPost)
+        return self.builder.heightForPost(post, previous: previousPost, indexPath: indexPath)
     }
 
     
@@ -232,19 +237,20 @@ extension ChatViewController {
             self.isLoadingInProgress = false
             self.hasNextPage = true
         })
-
     }
     
     func loadNextPageOfData() {
-        if self.isLoadingInProgress == true {
-            return;
-        }
-        
+        guard !self.isLoadingInProgress else { return }
+
         self.isLoadingInProgress = true
-        (Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.fetchedResultsController.fetchedObjects.last!) { (isLastPage, error) in
+        self.builder.weldIndexPaths.append(self.tableView.lastIndexPath())
+        Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.fetchedResultsController.fetchedObjects.last!) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
-        })
+            if error != nil {
+                self.builder.weldIndexPaths.removeLast()
+            }
+        }
     }
 }
 

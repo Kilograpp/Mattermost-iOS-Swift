@@ -193,9 +193,16 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(Post.firstPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
-            defer {completion( error: nil) }
             guard !skipMapping else { return }
-            RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
+
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+                let posts = MappingUtils.fetchPosts(mappingResult)
+                posts.forEach { $0.computeMissingFields() }
+                RealmUtils.save(posts)
+                completion(error: nil)
+            })
+            
+            
         }) { (error) in
             completion(error: error)
         }
@@ -207,11 +214,13 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(Post.nextPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
-            defer {
+//            guard !skipMapping else { return }
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+                let posts = MappingUtils.fetchPosts(mappingResult)
+                posts.forEach { $0.computeMissingFields() }
+                RealmUtils.save(posts)
                 completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
-            }
-            guard !skipMapping else { return }
-            RealmUtils.save(MappingUtils.fetchPosts(mappingResult))
+            })
             
         }) { (error) in
             var isLastPage = false

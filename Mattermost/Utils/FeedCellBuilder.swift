@@ -11,8 +11,8 @@ import SwiftFetchedResultsController
 
 
 private protocol Inteface: class {
-    func heightForPost(post: Post, previous: Post?) -> CGFloat
-    func cellForPost(post: Post, previous: Post?) -> UITableViewCell
+    func heightForPost(post: Post, previous: Post?, indexPath: NSIndexPath) -> CGFloat
+    func cellForPost(post: Post, previous: Post?, indexPath: NSIndexPath) -> UITableViewCell
 }
 
 private enum CellType {
@@ -23,6 +23,8 @@ private enum CellType {
 
 final class FeedCellBuilder {
     
+    var weldIndexPaths = [NSIndexPath]()
+
     private let tableView: UITableView
     private var fetchedResultsController: FetchedResultsController<Post>
     
@@ -39,9 +41,16 @@ final class FeedCellBuilder {
         return nil
     }
     
-    private func typeForPost(post: Post, previous: Post?) -> CellType {
-        let index = self.fetchedResultsController.fetchedObjects.indexOf(post)
-        let notBetweenPages = (((index! + 1) % 60 != 0) && ((index! % 60) != 0)) || index! == 0
+    private func typeForPost(post: Post, previous: Post?, indexPath: NSIndexPath) -> CellType {
+
+        var notBetweenPages = true
+        
+        for loopIndexPath in self.weldIndexPaths {
+            guard loopIndexPath != indexPath else {
+                notBetweenPages = false
+                break
+            }
+        }
         
         if post.hasAttachments() {
             return .Attachment
@@ -56,13 +65,11 @@ final class FeedCellBuilder {
 
 
 extension FeedCellBuilder: Inteface {
-    func cellForPost(post: Post, previous: Post?) -> UITableViewCell {
+    func cellForPost(post: Post, previous: Post?, indexPath: NSIndexPath) -> UITableViewCell {
         
         var reuseIdentifier: String
     
-        
-        
-        switch self.typeForPost(post, previous: previous) {
+        switch self.typeForPost(post, previous: previous, indexPath: indexPath) {
             case .Attachment:
                 reuseIdentifier = FeedAttachmentsTableViewCell.reuseIdentifier
                 break
@@ -76,12 +83,12 @@ extension FeedCellBuilder: Inteface {
         
         let cell = self.tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedBaseTableViewCell
         cell.transform = self.tableView.transform
-        cell.configureWithPost(post)
+
         return cell
     }
     
-    func heightForPost(post: Post, previous: Post?) -> CGFloat {
-        switch self.typeForPost(post, previous: previous) {
+    func heightForPost(post: Post, previous: Post?, indexPath: NSIndexPath) -> CGFloat {
+        switch self.typeForPost(post, previous: previous, indexPath: indexPath) {
         case .Attachment:
             return FeedAttachmentsTableViewCell.heightWithPost(post)
         case .FollowUp:
