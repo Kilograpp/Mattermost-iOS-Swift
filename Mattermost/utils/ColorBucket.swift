@@ -28,6 +28,7 @@ private protocol CommonColors: class {
 
 private protocol SideMenuColors {
     static var sideMenuBackgroundColor: UIColor {get}
+    static var sideMenuHeaderBackgroundColor: UIColor {get}
 }
 
 private protocol ServerUrlColors {
@@ -58,6 +59,7 @@ extension ColorBucket : CommonColors {
 
 extension ColorBucket : SideMenuColors {
     static let sideMenuBackgroundColor = ColorBucket.deepBlue()
+    static let sideMenuHeaderBackgroundColor = ColorBucket.deepLightBlue()
 }
 
 extension ColorBucket : ServerUrlColors {
@@ -90,6 +92,10 @@ extension ColorBucket {
     }
     
     private class func deepBlue() -> UIColor {
+        return UIColor.hx_colorWithHexRGBAString("#2071A8", alpha: 1)!
+    }
+    
+    private class func deepLightBlue() -> UIColor {
         return UIColor.hx_colorWithHexRGBAString("#2F81B7", alpha: 1)!
     }
     

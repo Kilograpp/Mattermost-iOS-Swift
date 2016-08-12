@@ -19,11 +19,12 @@ class LeftMenuViewController: UIViewController {
     
     @IBOutlet weak var teamNameLabel: UILabel!
     @IBOutlet weak var membersListButton: UIButton!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.configureTableView()
+        self.configureView()
         self.configureInitialSelectedChannel()
     }
     
@@ -31,6 +32,11 @@ class LeftMenuViewController: UIViewController {
     //MARK: - Configuration
     
     private func configureView() {
+        self.teamNameLabel.font = FontBucket.menuTitleFont
+        self.teamNameLabel.textColor = ColorBucket.whiteColor
+        self.teamNameLabel.text = DataManager.sharedInstance.currentTeam?.displayName as String!
+        
+        self.headerView.backgroundColor = ColorBucket.sideMenuHeaderBackgroundColor
     }
     
     private func configureTableView() {
@@ -40,6 +46,7 @@ class LeftMenuViewController: UIViewController {
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
         
         self.tableView.registerClass(LeftMenuSectionHeader.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionHeader.reuseIdentifier)
+        self.tableView.registerClass(LeftMenuSectionFooter.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionFooter.reuseIdentifier)
     }
     
     private func configureInitialSelectedChannel() {
@@ -92,29 +99,33 @@ extension LeftMenuViewController : UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
+        return 25
     }
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 20
+        return 30
     }
 
     func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = UIView.init(frame: CGRectMake(0, 0, UIScreen.screenWidth(), 20))
-        view.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
+        view.moreTapHandler = {print("MORE CHANNELS")}
 
-        
         return view
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
-//        let view = LeftMenuSectionHeader.init(reuseIdentifier: LeftMenuSectionHeader.reuseIdentifier)
-//        view.frame = CGRectMake(0, 0, UIScreen.screenWidth(), 20)
         let sectionName = self.fetchedResultsController.titleForHeaderInSection(section)
         view.configureWithChannelType(Channel.privateTypeDisplayName(sectionName))
+        view.addTapHandler = {print("ADD CHANNEL")}
         
         return view
+    }
+    
+    //MARK: - Actions
+    
+    @IBAction func membersListAction(sender: AnyObject) {
+        print("MEMBERS_LIST")
     }
 }
 

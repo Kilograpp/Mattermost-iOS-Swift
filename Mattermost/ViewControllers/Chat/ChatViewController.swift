@@ -68,11 +68,11 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         
         let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
         let previousPost = self.fetchedResultsController.objectAtIndexPath(indexPath.previousPath)
-//
+
         if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             self.loadNextPageOfData()
         }
-        
+
         return self.builder.cellForPost(post, previous: previousPost, indexPath: indexPath)
     }
     
