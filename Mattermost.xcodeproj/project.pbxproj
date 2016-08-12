@@ -53,6 +53,7 @@
 		D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */; };
 		D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */; };
 		D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */; };
+		D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D6E165871D47C1200014C831 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* Reusable.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
@@ -183,6 +184,7 @@
 		D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatus.swift; sourceTree = "<group>"; };
 		D6C0B4701D5E0A26006C506A /* RKObjectManager+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RKObjectManager+Additions.h"; sourceTree = "<group>"; };
 		D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RKObjectManager+Additions.m"; sourceTree = "<group>"; };
+		D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserStatusObserver.swift; path = Observers/UserStatusObserver.swift; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D6E165861D47C1200014C831 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -524,6 +526,14 @@
 			path = HexColors;
 			sourceTree = "<group>";
 		};
+		D6C0B4751D5E28D5006C506A /* Observers */ = {
+			isa = PBXGroup;
+			children = (
+				D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */,
+			);
+			name = Observers;
+			sourceTree = "<group>";
+		};
 		D6E165831D47C0890014C831 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -596,6 +606,7 @@
 		D8812AE81D43931700436B5C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D6C0B4751D5E28D5006C506A /* Observers */,
 				D6A887B21D4A0F5600C13191 /* HexColors */,
 				D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */,
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
@@ -862,6 +873,7 @@
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
+				D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */,
 				D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,

@@ -11,7 +11,16 @@ protocol LeftMenuTableViewCellProtocol : class, Reusable {
     var channel : Channel? { get set }
     
     //FIXME: CodeReview: Убрать Void
-    func configureWithChannel(channel: Channel, selected: Bool) -> Void
+    func configureWithChannel(channel: Channel, selected: Bool)
 //    static func height(channel: Channel) -> CGFloat
+    func subscribeToNotifications()
+    
+    func removeObservers()
 }
-//
+
+
+extension LeftMenuTableViewCellProtocol {
+    func removeObservers() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+}

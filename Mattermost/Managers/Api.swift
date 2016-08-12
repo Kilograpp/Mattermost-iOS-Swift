@@ -98,8 +98,9 @@ extension Api: UserApi {
     func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void) {
         let path = User.usersStatusPathPattern()
         let params = (users as NSArray).valueForKey(UserAttributes.identifier.rawValue)
-        self.manager.postObject(nil, path: path, parametersAsArray: params as! [AnyObject], success: { (operation, mappingResult) in
-            print("das")
+        self.manager.postObject(nil, path: path, parametersAsArray: params as! [AnyObject], success: { (operation: RKObjectRequestOperation!, mappingResult: RKMappingResult!) in
+            UserStatusObserver.sharedObserver.reloadWithStatusesArray(mappingResult.array() as! Array<UserStatus>)
+            completion(error: nil)
             }) { (operation, error) in
                     let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
                     print(eror)

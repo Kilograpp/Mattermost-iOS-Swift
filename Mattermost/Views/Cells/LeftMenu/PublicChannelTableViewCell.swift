@@ -79,5 +79,9 @@ extension PublicChannelTableViewCell {
         //FIXME: CodeReview: Заменить на конкретный цвет
         self.titleLabel.textColor = selected ? ColorBucket.blackColor : ColorBucket.lightGrayColor
     }
+    
+    func subscribeToNotifications() {
+
+    }
 }
 
