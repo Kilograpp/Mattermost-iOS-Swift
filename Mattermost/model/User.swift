@@ -63,6 +63,7 @@ private protocol PathPatterns: class {
     static func socketPathPattern() -> String
     static func initialLoadPathPattern() -> String
     static func completeListPathPattern() -> String
+    static func usersStatusPathPattern() -> String
 }
 
 private protocol Mappings: class {
@@ -99,6 +100,10 @@ extension User: PathPatterns {
     }
     static func completeListPathPattern() -> String {
         return "users/profiles/:\(TeamAttributes.identifier)"
+    }
+    
+    static func usersStatusPathPattern() -> String {
+        return "users/status"
     }
 }
 

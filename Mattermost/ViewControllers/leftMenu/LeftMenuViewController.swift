@@ -26,6 +26,11 @@ class LeftMenuViewController: UIViewController {
         self.configureTableView()
         self.configureView()
         self.configureInitialSelectedChannel()
+        
+        let users = Array(RealmUtils.realmForCurrentThread().objects(User).filter(NSPredicate(format: "identifier != %@", "SystemUserIdentifier")))
+        Api.sharedInstance.updateStatusForUsers(users) { (error) in
+            print("StRAX")
+        }
     }
     
     

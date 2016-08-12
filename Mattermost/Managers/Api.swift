@@ -18,6 +18,7 @@ private protocol Interface: class {
 private protocol UserApi: class {
     func login(email: String, password: String, completion: (error: Error?) -> Void)
     func loadCompleteUsersList(completion:(error: Error?) -> Void)
+    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void)
 }
 
 private protocol TeamApi: class {
@@ -93,6 +94,17 @@ extension Api: UserApi {
             completion(error: nil)
         }, failure: completion)
     }
+    
+    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void) {
+        let path = User.usersStatusPathPattern()
+        let params = (users as NSArray).valueForKey(UserAttributes.identifier.rawValue)
+        self.manager.postObject(nil, path: path, parametersAsArray: params as! [AnyObject], success: { (operation, mappingResult) in
+            print("das")
+            }) { (operation, error) in
+                    let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
+                    print(eror)
+         }
+        }
 }
 
 extension Api: TeamApi {
