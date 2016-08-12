@@ -19,13 +19,15 @@ private protocol PrivateSetup : class {
     func setupContentView()
 }
 
+private protocol Actions {
+    func moreAction()
+}
+
 final class LeftMenuSectionHeader: UITableViewHeaderFooterView {
     private let titleLabel: UILabel = UILabel()
     private let moreButton: UIButton = UIButton()
     static let reuseIdentifier = "LeftMenuSectionHeaderReuseIdentifier"
-//    var MoreButtonTapHandler: ((channelType: String) -> ()) = { in 
-//        print("dasdas")
-//    }
+    var addTapHandler : (() -> Void)?
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         
@@ -39,7 +41,9 @@ final class LeftMenuSectionHeader: UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.titleLabel.frame = CGRectMake(15, 4, 150, 13)
+        self.titleLabel.frame = CGRectMake(15, 9, 150, 13)
+        let xPos = CGRectGetMaxX(self.bounds) - 35
+        self.moreButton.frame = CGRectMake(xPos, 7, 15, 15)
     }
 }
 
@@ -56,6 +60,9 @@ extension LeftMenuSectionHeader : PrivateSetup {
     }
     
     private func setupMoreButton() {
+        self.addSubview(self.moreButton)
+        self.moreButton.setBackgroundImage(UIImage(named: "side_menu_more_icon"), forState: .Normal)
+        self.moreButton.addTarget(self, action: #selector(moreAction), forControlEvents: .TouchUpInside)
     }
     
     private func setupContentView() {
@@ -65,6 +72,12 @@ extension LeftMenuSectionHeader : PrivateSetup {
 
 extension LeftMenuSectionHeader : PublicConfiguration {
     func configureWithChannelType(channelType: String!) {
-        self.titleLabel.text = channelType
+        self.titleLabel.text = channelType.uppercaseString
+    }
+}
+
+extension LeftMenuSectionHeader : Actions {
+    func moreAction() {
+        self.addTapHandler!()
     }
 }

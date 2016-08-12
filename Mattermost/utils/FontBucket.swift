@@ -64,8 +64,9 @@ extension FontBucket : FeedFonts {
 extension FontBucket : LeftMenuFonts {
     static let normalTitleFont = FontBucket.regularFontOfSize(18)
     static let highlighTedTitleFont = FontBucket.semiboldFontOfSize(18)
-    static let headerTitleFont = FontBucket.semiboldFontOfSize(13)
-    static let footerTitleFont = FontBucket.semiboldFontOfSize(12)
+    static let headerTitleFont = FontBucket.boldFontOfSize(10)
+    static let footerTitleFont = FontBucket.boldFontOfSize(14)
+    static let menuTitleFont = FontBucket.boldFontOfSize(16)
 }
 
 extension FontBucket : LoginFonts {
@@ -97,8 +98,13 @@ extension FontBucket {
     private static func italicFontOfSize(size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Italic, size: size)!
     }
+    
     private static func mediumFontOfSize(size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Medium, size: size)!
+    }
+    
+    private static func boldFontOfSize(size: CGFloat) -> UIFont {
+        return UIFont(name: FontNames.Bold, size: size)!
     }
 }
 
