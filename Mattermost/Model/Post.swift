@@ -65,21 +65,10 @@ final class Post: RealmObject {
     dynamic var channelId: String?
     dynamic var authorId: String?
     dynamic var pendingId: String?
-    dynamic var creationDay: NSDate? {
-        didSet {
-            computeCreationDayString()
-        }
-    }
+    dynamic var creationDay: NSDate?
     dynamic var creationDayString: String?
-    dynamic var createdAt: NSDate? {
-        didSet {
-            computeDisplayDay()
-            computeCreatedAtString()
-        }
-    }
-    dynamic var createdAtString: String? {
-        didSet {computeCreatedAtStringWidth()}
-    }
+    dynamic var createdAt: NSDate?
+    dynamic var createdAtString: String?
     dynamic var createdAtStringWidth: Float = 0.0
     dynamic var updatedAt: NSDate?
     dynamic var deletedAt: NSDate?
@@ -89,13 +78,7 @@ final class Post: RealmObject {
             resetStatus()
         }
     }
-    dynamic var message: String? {
-        didSet {
-            computeAttributedString()
-            computeAttributedStringData()
-            computeAttributedMessageHeight()
-        }
-    }
+    dynamic var message: String?
     lazy var attributedMessage: NSAttributedString? = {
         let string = self._attributedMessageData?.attributedString
         return string
@@ -176,6 +159,7 @@ private protocol Computations: class {
     func resetStatus()
     func computePendingId()
     func computeCreatedAtString()
+    func computeMissingFields()
     func computeCreatedAtStringWidth()
     func computeAttributedString()
     func computeAttributedStringData()
@@ -328,6 +312,15 @@ extension Post: Computations {
     }
     private func resetStatus() {
         self.status = .Default
+    }
+    func computeMissingFields() {
+        self.computeAttributedString()
+        self.computeAttributedStringData()
+        self.computeAttributedMessageHeight()
+        self.computeDisplayDay()
+        self.computeCreatedAtString()
+        self.computeCreationDayString()
+        self.computeCreatedAtStringWidth()
     }
 }
 

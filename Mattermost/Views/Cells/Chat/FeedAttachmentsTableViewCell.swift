@@ -85,7 +85,7 @@ extension FeedAttachmentsTableViewCell {
 
 extension FeedAttachmentsTableViewCell : UITableViewDataSource {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return self.attachments != nil ? 1 : 0
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
