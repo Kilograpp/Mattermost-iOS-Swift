@@ -9,9 +9,9 @@ import Foundation
 
 extension UIImage {
     class func roundedImageOfSize(sourceImage: UIImage, size: CGSize) -> UIImage {
-        let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height) as CGRect
-        UIGraphicsBeginImageContextWithOptions(size, true, 0);
-        let context = UIGraphicsGetCurrentContext()! as CGContextRef
+        let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        UIGraphicsBeginImageContextWithOptions(size, true, 0)
+        let context = UIGraphicsGetCurrentContext()
         UIColor.whiteColor().setFill()
         CGContextFillRect(context, frame);
         UIBezierPath(roundedRect: frame, cornerRadius: ceil(size.width / 2)).addClip()
@@ -30,12 +30,10 @@ extension UIImage {
     private static func feedSystemAvatar() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         let bundleImage = UIImage(named: "feed_system_avatar")
-        UIGraphicsBeginImageContext(rect.size);
+        UIGraphicsBeginImageContextWithOptions(rect.size, true, 0);
         let context = UIGraphicsGetCurrentContext()
-        let ref = UIBezierPath(roundedRect: rect, cornerRadius: 20).CGPath
-        CGContextAddPath(context, ref);
-        CGContextSetFillColorWithColor(context, UIColor(white: 1, alpha: 1).CGColor);
-        CGContextFillPath(context);
+        UIColor.whiteColor().setFill()
+        CGContextFillRect(context, rect)
         bundleImage?.drawInRect(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext() as UIImage;
         UIGraphicsEndImageContext()
@@ -44,11 +42,11 @@ extension UIImage {
     
     private static func avatarPlaceholder() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
-        UIGraphicsBeginImageContext(rect.size);
-        let context = UIGraphicsGetCurrentContext()! as CGContextRef
+        UIGraphicsBeginImageContextWithOptions(rect.size, true, 0)
+        let context = UIGraphicsGetCurrentContext()
         let ref = UIBezierPath(roundedRect: rect, cornerRadius: 20).CGPath
         CGContextAddPath(context, ref);
-        CGContextSetFillColorWithColor(context, UIColor.init(white: 0.95, alpha: 1).CGColor);
+        CGContextSetFillColorWithColor(context, UIColor(white: 0.95, alpha: 1).CGColor);
         CGContextFillPath(context);
         let image = UIGraphicsGetImageFromCurrentImageContext() as UIImage;
         UIGraphicsEndImageContext();
