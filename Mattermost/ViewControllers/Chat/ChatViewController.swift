@@ -63,21 +63,14 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        
         let day = self.results[indexPath.section]
-        let posts = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)
-        let post = posts[indexPath.row]
-        var previousPost: Post? = nil
-        if day.posts.count > indexPath.row + 1 {
-            previousPost = posts[indexPath.row+1]
-        }
+        let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath.row]
 
         if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             self.loadNextPageOfData()
         }
 
-        return self.builder.cellForPost(post, previous: previousPost, indexPath: indexPath)
+        return self.builder.cellForPost(post)
     }
     
 //    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -108,16 +101,9 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        
         let day = self.results[indexPath.section]
-        let posts = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)
-        let post = posts[indexPath.row]
-        var previousPost: Post? = nil
-        if day.posts.count > indexPath.row + 1 {
-            previousPost = posts[indexPath.row+1]
-        }
-        
-        return self.builder.heightForPost(post, previous: previousPost, indexPath: indexPath)
+        let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath.row]
+        return self.builder.heightForPost(post)
     }
 
     
@@ -249,13 +235,9 @@ extension ChatViewController {
         guard !self.isLoadingInProgress else { return }
 
         self.isLoadingInProgress = true
-        self.builder.weldIndexPaths.append(self.tableView.lastIndexPath())
         Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.results.last!.posts.last!) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
-            if error != nil {
-                self.builder.weldIndexPaths.removeLast()
-            }
         }
     }
 }

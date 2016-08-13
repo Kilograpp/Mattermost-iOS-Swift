@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class AttachmentFileCell: UITableViewCell, Reusable {
+final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
     private var file: File!
     
     func configureWithFile(file: File) {

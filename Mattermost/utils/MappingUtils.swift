@@ -23,7 +23,7 @@ private protocol ChannelMethods: class {
 
 private protocol PostMethods: class {
     static func isLastPage(mappingResult: RKMappingResult, pageSize: Int) -> Bool
-    static func fetchPosts(mappingResult: RKMappingResult) -> [Post]
+    static func fetchConfiguredPosts(mappingResult: RKMappingResult) -> [Post]
     static func fetchPostFromUpdate(mappingResult: RKMappingResult) -> Post
 }
 
@@ -52,8 +52,16 @@ extension MappingUtils: TeamMethods {
 }
 
 extension MappingUtils: PostMethods {
-    static func fetchPosts(mappingResult: RKMappingResult) -> [Post] {
-        return mappingResult.array() as! [Post]
+    static func fetchConfiguredPosts(mappingResult: RKMappingResult) -> [Post] {
+        let posts = (mappingResult.array() as! [Post]).sort({ $0.createdAt?.compare($1.createdAt!) == .OrderedAscending })
+        var previousPost: Post?
+        posts.forEach {
+            $0.setSystemAuthorIfNeeded()
+            $0.computeMissingFields()
+            $0.cellType = FeedCellBuilder.typeForPost($0, previous: previousPost)
+            previousPost = $0
+        }
+        return posts
     }
 
     static func fetchPostFromUpdate(mappingResult: RKMappingResult) -> Post {

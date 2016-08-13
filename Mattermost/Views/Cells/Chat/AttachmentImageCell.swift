@@ -9,7 +9,7 @@
 import Foundation
 import WebImage
 
-final class AttachmentImageCell: UITableViewCell, Reusable {
+final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     private var file: File! {
         didSet { computeFileName() }
     }

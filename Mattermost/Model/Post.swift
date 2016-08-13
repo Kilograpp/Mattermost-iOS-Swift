@@ -59,10 +59,17 @@ enum PostRelationships: String {
     case System
 }
 
+@objc enum CellType: Int {
+    case Attachment
+    case FollowUp
+    case Common
+}
+
 
 final class Post: RealmObject {
     private dynamic var _attributedMessageData: RealmAttributedString?
     dynamic var messageType: MessageType = .Default
+    dynamic var cellType: CellType = .Common
     dynamic var channelId: String?
     dynamic var authorId: String?
     dynamic var pendingId: String?
@@ -322,6 +329,8 @@ extension Post: Computations {
     private func resetStatus() {
         self.status = .Default
     }
+    
+
     func computeMissingFields() {
         self.computeAttributedString()
         self.computeAttributedStringData()

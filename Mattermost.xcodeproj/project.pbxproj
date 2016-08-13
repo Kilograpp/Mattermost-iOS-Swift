@@ -110,6 +110,7 @@
 		D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */; };
 		D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */; };
 		D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */; };
+		D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */; };
 		D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601311D5D192300951F18 /* ImageDownloader.swift */; };
 		D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */; };
 		D8D601381D5E007700951F18 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601371D5E007700951F18 /* Day.swift */; };
@@ -244,6 +245,7 @@
 		D8B846B21D4A38D500AEE19A /* NSObject+EnumerateProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+EnumerateProperties.h"; sourceTree = "<group>"; };
 		D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+EnumerateProperties.m"; sourceTree = "<group>"; };
 		D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionsNotification.swift; sourceTree = "<group>"; };
+		D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachable.swift; sourceTree = "<group>"; };
 		D8D601311D5D192300951F18 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 		D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Additions.swift"; sourceTree = "<group>"; };
 		D8D601371D5E007700951F18 /* Day.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
@@ -555,6 +557,7 @@
 				D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */,
 				D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */,
 				D86EF7F91D59F13C00BD49A3 /* AttachmentFileCell.swift */,
+				D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -878,6 +881,7 @@
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
+				D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,

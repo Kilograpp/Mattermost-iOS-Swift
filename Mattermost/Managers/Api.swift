@@ -200,12 +200,7 @@ extension Api: PostApi {
             }
 
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
-                let posts = MappingUtils.fetchPosts(mappingResult)
-                posts.forEach { 
-                    $0.setSystemAuthorIfNeeded()
-                    $0.computeMissingFields() 
-                }
-                RealmUtils.save(posts)
+                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
                 
                 dispatch_sync(dispatch_get_main_queue()) {
                     completion(error: nil)
@@ -226,18 +221,11 @@ extension Api: PostApi {
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
 
             guard !skipMapping else {
-                completion(isLastPage: false, error: nil)
+                completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
                 return
             }
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
-                let posts = MappingUtils.fetchPosts(mappingResult)
-                
-                posts.forEach { 
-                    $0.setSystemAuthorIfNeeded()
-                    $0.computeMissingFields() 
-                }
-                RealmUtils.save(posts)
-                
+                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
                 dispatch_sync(dispatch_get_main_queue()) {
                     completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
                 }
