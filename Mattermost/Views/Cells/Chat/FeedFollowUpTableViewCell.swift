@@ -9,7 +9,9 @@
 
 final class FeedFollowUpTableViewCell: FeedBaseTableViewCell {
     override func layoutSubviews() {
-        
+        guard self.post != nil else {
+            return
+        }
         let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
         self.messageLabel.frame = CGRectMake(53, 8, textWidth, CGFloat(self.post.attributedMessageHeight))
         super.layoutSubviews()

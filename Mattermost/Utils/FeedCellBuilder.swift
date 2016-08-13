@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import SwiftFetchedResultsController
-
 
 private protocol Inteface: class {
     func heightForPost(post: Post, previous: Post?, indexPath: NSIndexPath) -> CGFloat
@@ -26,17 +24,11 @@ final class FeedCellBuilder {
     var weldIndexPaths = [NSIndexPath]()
 
     private let tableView: UITableView
-    private var fetchedResultsController: FetchedResultsController<Post>
     
-    init(tableView: UITableView, fetchedResultsController: FetchedResultsController<Post>) {
+    init(tableView: UITableView) {
         self.tableView = tableView
-        self.fetchedResultsController = fetchedResultsController
     }
-    
-    func updateWithFRC(fetchedResultsController: FetchedResultsController<Post>) {
-        self.fetchedResultsController = fetchedResultsController
-    }
-    
+
     private init?(){
         return nil
     }
@@ -58,7 +50,6 @@ final class FeedCellBuilder {
         if let _ = previous where post.hasSameAuthor(previous) && notBetweenPages {
             return .FollowUp
         }
-        
         return .Common
     }
 }
@@ -83,7 +74,7 @@ extension FeedCellBuilder: Inteface {
         
         let cell = self.tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedBaseTableViewCell
         cell.transform = self.tableView.transform
-
+        cell.configureWithPost(post)
         return cell
     }
     

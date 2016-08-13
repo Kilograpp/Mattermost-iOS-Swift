@@ -43,6 +43,7 @@ enum PostRelationships: String {
     case channel = "channel"
     case files = "files"
     case attachments = "attachments"
+    case day = "day"
 }
 
 
@@ -65,8 +66,6 @@ final class Post: RealmObject {
     dynamic var channelId: String?
     dynamic var authorId: String?
     dynamic var pendingId: String?
-    dynamic var creationDay: NSDate?
-    dynamic var creationDayString: String?
     dynamic var createdAt: NSDate?
     dynamic var createdAtString: String?
     dynamic var createdAtStringWidth: Float = 0.0
@@ -107,6 +106,7 @@ final class Post: RealmObject {
     let files = List<File>()
     let attachments = List<Attachment>()
     
+    dynamic var day: Day?
     private var hasObserverAttached: Bool = false
     private var statusChangeHandler: ((status: PostStatus) -> Void)?
     
@@ -128,7 +128,7 @@ final class Post: RealmObject {
     }
     
     override class func indexedProperties() -> [String] {
-        return [PostAttributes.identifier.rawValue]
+        return [PostAttributes.createdAt.rawValue, PostAttributes.identifier.rawValue]
     }
     
 }
@@ -157,6 +157,7 @@ private protocol ResponseDescriptor: class {
 
 private protocol Computations: class {
     func resetStatus()
+    func computeDay()
     func computePendingId()
     func computeCreatedAtString()
     func computeMissingFields()
@@ -278,11 +279,22 @@ extension Post: Delegate {
 // MARK: - Computations
 extension Post: Computations {
     
-    private func computeDisplayDay() {
+    private func computeDay() {
         let unitFlags: NSCalendarUnit = [.Year, .Month, .Day]
         let calendar = NSCalendar.sharedGregorianCalendar
         let components = calendar.components(unitFlags, fromDate: createdAt!)
-        self.creationDay = calendar.dateFromComponents(components)
+        let dayDate = calendar.dateFromComponents(components)
+        let key = "\(dayDate!.timeIntervalSince1970)_\(self.channel.identifier!)"
+        var day: Day! = RealmUtils.realmForCurrentThread().objectForPrimaryKey(Day.self, key: key)
+
+        defer { self.day = day }
+        guard day == nil else { return }
+        
+        day = Day()
+        day.date = dayDate
+        day.key = key
+        day.channelId = channelId
+        
     }
     private func computePendingId() {
         self.pendingId = "\(Preferences.sharedInstance.currentUserId):\(self.createdAt!.timeIntervalSince1970)"
@@ -303,9 +315,6 @@ extension Post: Computations {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
 
-    private func computeCreationDayString() {
-        self.creationDayString = NSDateFormatter.sharedConversionSectionsDateFormatter.stringFromDate(self.creationDay!)
-    }
     func setSystemAuthorIfNeeded() {
         guard self.messageType == .System else { return }
         self.authorId = Constants.Realm.SystemUserIdentifier
@@ -317,10 +326,9 @@ extension Post: Computations {
         self.computeAttributedString()
         self.computeAttributedStringData()
         self.computeAttributedMessageHeight()
-        self.computeDisplayDay()
         self.computeCreatedAtString()
-        self.computeCreationDayString()
         self.computeCreatedAtStringWidth()
+        self.computeDay()
     }
 }
 

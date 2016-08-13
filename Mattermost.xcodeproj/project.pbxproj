@@ -105,7 +105,6 @@
 		D8935BA51D5A81780037E7ED /* PerformanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8935BA41D5A81780037E7ED /* PerformanceManager.swift */; };
 		D8935BA71D5B4FC70037E7ED /* FeedCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8935BA61D5B4FC70037E7ED /* FeedCellBuilder.swift */; };
 		D8935BAC1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8935BAB1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift */; };
-		D8935BAF1D5B80330037E7ED /* SimpleFRCDelegateImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8935BAE1D5B80330037E7ED /* SimpleFRCDelegateImplementation.swift */; };
 		D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969B1D233CB400B76E1A /* Preferences.swift */; };
 		D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969D1D23E4FA00B76E1A /* Constants.swift */; };
 		D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */; };
@@ -113,6 +112,8 @@
 		D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */; };
 		D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601311D5D192300951F18 /* ImageDownloader.swift */; };
 		D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */; };
+		D8D601381D5E007700951F18 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601371D5E007700951F18 /* Day.swift */; };
+		D8D6013A1D5E1BD800951F18 /* FeedNotificationsObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601391D5E1BD800951F18 /* FeedNotificationsObserver.swift */; };
 		D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */; };
 		D8E98EDF1D4A15D300682922 /* ApplicationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */; };
 		D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6BD041D22FB49000AC690 /* Error.swift */; };
@@ -237,7 +238,6 @@
 		D8935BA41D5A81780037E7ED /* PerformanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerformanceManager.swift; sourceTree = "<group>"; };
 		D8935BA61D5B4FC70037E7ED /* FeedCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedCellBuilder.swift; path = Utils/FeedCellBuilder.swift; sourceTree = "<group>"; };
 		D8935BAB1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSIndexPath+PreviousPath.swift"; sourceTree = "<group>"; };
-		D8935BAE1D5B80330037E7ED /* SimpleFRCDelegateImplementation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleFRCDelegateImplementation.swift; sourceTree = "<group>"; };
 		D8A0969B1D233CB400B76E1A /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		D8A0969D1D23E4FA00B76E1A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D8A0969F1D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKValueTransformer+Milliseconds.swift"; sourceTree = "<group>"; };
@@ -246,6 +246,8 @@
 		D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionsNotification.swift; sourceTree = "<group>"; };
 		D8D601311D5D192300951F18 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 		D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Additions.swift"; sourceTree = "<group>"; };
+		D8D601371D5E007700951F18 /* Day.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
+		D8D601391D5E1BD800951F18 /* FeedNotificationsObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedNotificationsObserver.swift; sourceTree = "<group>"; };
 		D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Json.swift"; sourceTree = "<group>"; };
 		D8E98EDE1D4A15D300682922 /* ApplicationStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationStateManager.swift; sourceTree = "<group>"; };
 		D8F6BD001D22E909000AC690 /* Mattermost-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mattermost-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 				D85D92E81D40079B002F8800 /* User.swift */,
 				D83305F51D5636EF00E92CD6 /* Attachment.swift */,
 				D83305F71D5637B800E92CD6 /* AttachmentField.swift */,
+				D8D601371D5E007700951F18 /* Day.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -626,7 +629,7 @@
 		D8935BAD1D5B7FF80037E7ED /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				D8935BAE1D5B80330037E7ED /* SimpleFRCDelegateImplementation.swift */,
+				D8D601391D5E1BD800951F18 /* FeedNotificationsObserver.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -866,8 +869,10 @@
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
+				D8D6013A1D5E1BD800951F18 /* FeedNotificationsObserver.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
+				D8D601381D5E007700951F18 /* Day.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
@@ -875,7 +880,6 @@
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
-				D8935BAF1D5B80330037E7ED /* SimpleFRCDelegateImplementation.swift in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
 				D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */,
