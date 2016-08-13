@@ -194,7 +194,10 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(Post.firstPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
-            guard !skipMapping else { return }
+            guard !skipMapping else {
+                completion(error: nil)
+                return
+            }
 
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
                 let posts = MappingUtils.fetchPosts(mappingResult)
@@ -222,7 +225,10 @@ extension Api: PostApi {
         
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
 
-            guard !skipMapping else { return }
+            guard !skipMapping else {
+                completion(isLastPage: false, error: nil)
+                return
+            }
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
                 let posts = MappingUtils.fetchPosts(mappingResult)
                 
