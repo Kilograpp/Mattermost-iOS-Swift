@@ -14,13 +14,13 @@ final class RealmAttributedString: Object {
     
     let parameters = List<StringParameter>()
     
-    var attributedString: NSAttributedString? {
+    var attributedString: NSTextStorage? {
         
         guard let string = self.string else {
             return nil
         }
         
-        let attributedString = NSMutableAttributedString(string: string)
+        let attributedString = NSTextStorage(string: string)
         attributedString.beginEditing()
         self.parameters.forEach { (parameter) in
             

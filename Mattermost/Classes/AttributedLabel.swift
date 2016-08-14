@@ -8,58 +8,22 @@
 
 import UIKit
 
-class AttributedLabel: UIView {
-    enum ContentAlignment: Int {
-        case Center
-        case Top
-        case Bottom
-        case Left
-        case Right
-        case TopLeft
-        case TopRight
-        case BottomLeft
-        case BottomRight
-        
-        func alignOffset(viewSize viewSize: CGSize, containerSize: CGSize) -> CGPoint {
-            let xMargin = viewSize.width - containerSize.width
-            let yMargin = viewSize.height - containerSize.height
-            
-            switch self {
-            case Center:
-                return CGPoint(x: max(xMargin / 2, 0), y: max(yMargin / 2, 0))
-            case Top:
-                return CGPoint(x: max(xMargin / 2, 0), y: 0)
-            case Bottom:
-                return CGPoint(x: max(xMargin / 2, 0), y: max(yMargin, 0))
-            case Left:
-                return CGPoint(x: 0, y: max(yMargin / 2, 0))
-            case Right:
-                return CGPoint(x: max(xMargin, 0), y: max(yMargin / 2, 0))
-            case TopLeft:
-                return CGPoint(x: 0, y: 0)
-            case TopRight:
-                return CGPoint(x: max(xMargin, 0), y: 0)
-            case BottomLeft:
-                return CGPoint(x: 0, y: max(yMargin, 0))
-            case BottomRight:
-                return CGPoint(x: max(xMargin, 0), y: max(yMargin, 0))
-            }
+class AttributedLabel: UILabel {
+    
+    override var frame: CGRect {
+        didSet {
+            self.textContainer.size = self.frame.size
         }
     }
     
-
-    
     /// default is `0`.
-    var numberOfLines: Int = 0 {
+    override var numberOfLines: Int {
         didSet {
             self.textContainer.maximumNumberOfLines = self.numberOfLines
             setNeedsDisplay()
         }
     }
-    /// default is `Left`.
-    var contentAlignment: ContentAlignment = .Left {
-        didSet { setNeedsDisplay() }
-    }
+
     /// `lineFragmentPadding` of `NSTextContainer`. default is `0`.
     var padding: CGFloat = 0 {
         didSet {
@@ -69,7 +33,7 @@ class AttributedLabel: UIView {
     }
 
     /// default is `ByTruncatingTail`.
-    var lineBreakMode: NSLineBreakMode = .ByTruncatingTail {
+    override var lineBreakMode: NSLineBreakMode  {
         didSet {
             self.textContainer.lineBreakMode = self.lineBreakMode
             setNeedsDisplay()
@@ -78,41 +42,24 @@ class AttributedLabel: UIView {
 
 
     
-    var textStorage = NSTextStorage()
+    var textStorage = NSTextStorage() {
+        willSet {
+            self.textStorage.removeLayoutManager(self.layoutManager)
+        }
+        
+        didSet {
+            self.textStorage.addLayoutManager(self.layoutManager)
+        }
+    }
     var textContainer = NSTextContainer()
     var layoutManager = NSLayoutManager()
     
-    /// default is nil.
-    var attributedText: NSAttributedString? {
-        didSet {
-            if let attributedString = self.attributedText {
-                self.textStorage.setAttributedString(attributedString)
-            }
-            
-            setNeedsDisplay()
-        }
-    }
-    /// default is nil.
-    var text: String? {
-        get {
-            return attributedText?.string
-        }
-        set {
-            if let value = newValue {
-                attributedText = NSAttributedString(string: value)
-            } else {
-                attributedText = nil
-            }
-        }
-    }
     
     private func setup() {
         opaque = true
         contentMode = .Redraw
         self.textContainer = self.textContainer(self.bounds.size)
         self.layoutManager = self.layoutManager(self.textContainer)
-        self.textStorage = NSTextStorage()
-        self.textStorage.addLayoutManager(self.layoutManager)
     }
     
     override init(frame: CGRect) {
@@ -131,18 +78,11 @@ class AttributedLabel: UIView {
         }
     }
     
-    override func drawRect(rect: CGRect) {
-        guard self.attributedText != nil else {
-            return
-        }
-        self.textContainer.size = rect.size
+    override func drawTextInRect(rect: CGRect) {
+        let range = NSRange(location: 0, length: textStorage.length)
 
-        let frame = layoutManager.usedRectForTextContainer(textContainer)
-        let point = contentAlignment.alignOffset(viewSize: rect.size, containerSize: CGRectIntegral(frame).size)
-        
-        let glyphRange = layoutManager.glyphRangeForTextContainer(textContainer)
-        layoutManager.drawBackgroundForGlyphRange(glyphRange, atPoint: point)
-        layoutManager.drawGlyphsForGlyphRange(glyphRange, atPoint: point)
+        layoutManager.drawBackgroundForGlyphRange(range, atPoint: CGPointZero)
+        layoutManager.drawGlyphsForGlyphRange(range, atPoint: CGPointZero)
 
     }
     
@@ -170,9 +110,16 @@ class AttributedLabel: UIView {
         return container
     }
     
+    private func textStorage(attributedString: NSAttributedString) -> NSTextStorage {
+        let textStorage = NSTextStorage(attributedString: attributedString)
+        textStorage.addLayoutManager(self.layoutManager)
+        return textStorage
+    }
+    
     private func layoutManager(container: NSTextContainer) -> NSLayoutManager {
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(container)
+    
         return layoutManager
     }
     

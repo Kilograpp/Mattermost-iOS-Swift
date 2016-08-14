@@ -12,12 +12,10 @@ import SwiftFetchedResultsController
 
 final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     private var channel : Channel?
-    private lazy var resultsControllerDelegate: SimpleFRCDelegateImplementation = SimpleFRCDelegateImplementation(tableView: self.tableView)
-    private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView, fetchedResultsController: self.fetchedResultsController)
-    
+    private var resultsObserver: FeedNotificationsObserver?
+    private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
+    private var results: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
-    
-    lazy var fetchedResultsController: FetchedResultsController<Post> = self.realmFetchedResultsController()
     
     var refreshControl: UIRefreshControl?
     
@@ -57,35 +55,35 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     // MARK: - UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.fetchedResultsController.numberOfSections()
+        return self.results?.count ?? 0
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.fetchedResultsController.numberOfRowsForSectionIndex(section)
+        return self.results[section].posts.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
+        let day = self.results[indexPath.section]
+        let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath.row]
 
-        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
-        let previousPost = self.fetchedResultsController.objectAtIndexPath(indexPath.previousPath)
-        
-//        if tableView == self.tableView {
-//            if self.hasNextPage == true && (self.fetchedResultsController.fetchedObjects.count - self.fetchedResultsController.fetchedObjects.indexOf(post)! < 15) {
-//                self.loadNextPageOfData()
-//            }
-//        }
-        
-        return self.builder.cellForPost(post, previous: previousPost)
+        if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
+            self.loadNextPageOfData()
+        }
+
+        return self.builder.cellForPost(post)
     }
     
-    
+//    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+//        let post = self.results[indexPath.section].posts[indexPath.row]
+//        (cell as! FeedBaseTableViewCell).configureWithPost(post)
+//    }
+//
     // MARK: - UITableViewDelegate
     
     override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(FeedTableViewSectionHeader.reuseIdentifier()) as! FeedTableViewSectionHeader
-        let frcTitleForHeader = self.fetchedResultsController.titleForHeaderInSection(section)
-        let titleDate = NSDateFormatter.sharedConversionSectionsDateFormatter.dateFromString(frcTitleForHeader)! as NSDate
+        let frcTitleForHeader = self.results[section].text!
+        let titleDate = NSDateFormatter.sharedConversionSectionsDateFormatter.dateFromString(frcTitleForHeader)!
         let titleString = titleDate.feedSectionDateFormat()
         view.configureWithTitle(titleString)
         view.transform = tableView.transform
@@ -97,36 +95,38 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         return FeedTableViewSectionHeader.height()
     }
     
+    
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return CGFloat.min
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let post = self.fetchedResultsController.objectAtIndexPath(indexPath)!
-        let previousPost = self.fetchedResultsController.objectAtIndexPath(indexPath.previousPath)
-        return self.builder.heightForPost(post, previous: previousPost)
+        let day = self.results[indexPath.section]
+        let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath.row]
+        return self.builder.heightForPost(post)
     }
 
     
     // MARK: - FetchedResultsController
     
-    func reloadContent() {
-        self.fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
-        self.fetchedResultsController.performFetch()
-    }
     
-    func realmFetchedResultsController() -> FetchedResultsController<Post> {
-        let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
-        let realm = try! Realm()
-        let fetchRequest = FetchRequest<Post>(realm: realm, predicate: predicate)
-        let sortDescriptorSection = SortDescriptor(property: "createdAt", ascending: false)
-        fetchRequest.sortDescriptors = [sortDescriptorSection]
-        let fetchedResultsController = FetchedResultsController<Post>(fetchRequest: fetchRequest, sectionNameKeyPath: "creationDayString", cacheName: "testCache")
-        fetchedResultsController.delegate = self.resultsControllerDelegate
-        fetchedResultsController.performFetch()
-        return fetchedResultsController
+    func prepareResults() {
+        
+        if NSThread.isMainThread() {
+            let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
+            self.results = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
+            self.resultsObserver = FeedNotificationsObserver(results: self.results, tableView: self.tableView)
+
+        } else {
+            dispatch_sync(dispatch_get_main_queue()) {
+                let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
+                self.results = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
+                self.resultsObserver = FeedNotificationsObserver(results: self.results, tableView: self.tableView)
+            }
+        }
+        
+            
     }
-    
     
     // MARK: - Configuration
     
@@ -181,9 +181,7 @@ extension ChatViewController {
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
-        self.fetchedResultsController = self.realmFetchedResultsController()
-        self.builder.updateWithFRC(self.fetchedResultsController)
-        self.tableView?.reloadData()
+        self.prepareResults()
         self.loadFirstPageOfData()
         
     }
@@ -219,8 +217,6 @@ extension ChatViewController {
         self.isLoadingInProgress = true
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
-            self.fetchedResultsController = self.realmFetchedResultsController()
-            self.tableView?.reloadData()
             self.isLoadingInProgress = false
             self.hasNextPage = true
         })
@@ -228,23 +224,21 @@ extension ChatViewController {
     func loadFirstPageOfData() {
         self.isLoadingInProgress = true
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.2)
+            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true
+            
         })
-
     }
     
     func loadNextPageOfData() {
-        if self.isLoadingInProgress == true {
-            return;
-        }
-        
+        guard !self.isLoadingInProgress else { return }
+
         self.isLoadingInProgress = true
-        (Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.fetchedResultsController.fetchedObjects.last!) { (isLastPage, error) in
+        Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.results.last!.posts.last!) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
-        })
+        }
     }
 }
 

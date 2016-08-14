@@ -207,11 +207,20 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(Post.firstPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
-            defer {completion( error: nil) }
-            guard !skipMapping else { return }
-            let posts = MappingUtils.fetchPosts(mappingResult)
-            posts.forEach { $0.setSystemAuthorIfNeeded() }
-            RealmUtils.save(posts)
+            guard !skipMapping else {
+                completion(error: nil)
+                return
+            }
+
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
+                
+                dispatch_sync(dispatch_get_main_queue()) {
+                    completion(error: nil)
+                }
+                
+            })
+            
         }) { (error) in
             completion(error: error)
         }
@@ -223,11 +232,17 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(Post.nextPagePathPattern(), wrapper)
         
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
-            defer { completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil) }
-            guard !skipMapping else { return }
-            let posts = MappingUtils.fetchPosts(mappingResult)
-            posts.forEach { $0.setSystemAuthorIfNeeded() }
-            RealmUtils.save(posts)
+
+            guard !skipMapping else {
+                completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
+                return
+            }
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
+                dispatch_sync(dispatch_get_main_queue()) {
+                    completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
+                }
+            })
         }) { (error) in
             var isLastPage = false
             if error!.code == 1001 {

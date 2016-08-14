@@ -85,7 +85,7 @@ extension FeedAttachmentsTableViewCell {
 
 extension FeedAttachmentsTableViewCell : UITableViewDataSource {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return self.attachments != nil ? 1 : 0
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -96,15 +96,12 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
         //FIXME: CodeReview: Убрать инит
         let file = self.attachments[indexPath.row]
         if file.isImage {
-            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentImageCell.reuseIdentifier) as! AttachmentImageCell
-            cell.configureWithFile(file)
-            return cell
+            return self.tableView.dequeueReusableCellWithIdentifier(AttachmentImageCell.reuseIdentifier) as! AttachmentImageCell
         } else {
-            let cell = self.tableView.dequeueReusableCellWithIdentifier(AttachmentFileCell.reuseIdentifier) as! AttachmentFileCell
-            cell.configureWithFile(file)
-            return cell
+            return self.tableView.dequeueReusableCellWithIdentifier(AttachmentFileCell.reuseIdentifier) as! AttachmentFileCell
         }
     }
+    
 }
 
 
@@ -122,6 +119,11 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
         }
         
 
+    }
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        let file = self.attachments[indexPath.row]
+        (cell as! Attachable).configureWithFile(file)
     }
 }
 
