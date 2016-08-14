@@ -45,6 +45,7 @@ class AttributedLabel: UILabel {
     var textStorage: NSTextStorage? = NSTextStorage() {
         didSet {
             self.layoutManager.textStorage = self.textStorage
+            self.setNeedsDisplay()
         }
     }
     var textContainer = NSTextContainer()
