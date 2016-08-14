@@ -115,6 +115,7 @@ class AttributedLabel: UILabel {
     private func layoutManager(container: NSTextContainer) -> NSLayoutManager {
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(container)
+        layoutManager.allowsNonContiguousLayout = true
     
         return layoutManager
     }
