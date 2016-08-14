@@ -42,7 +42,7 @@ class AttributedLabel: UILabel {
 
 
     
-    var textStorage = NSTextStorage() {
+    var textStorage: NSTextStorage? = NSTextStorage() {
         didSet {
             self.layoutManager.textStorage = self.textStorage
         }
@@ -75,7 +75,9 @@ class AttributedLabel: UILabel {
     }
     
     override func drawTextInRect(rect: CGRect) {
-        let range = NSRange(location: 0, length: textStorage.length)
+        guard let storage = self.textStorage else { return }
+        
+        let range = NSRange(location: 0, length: storage.length)
 
         layoutManager.drawBackgroundForGlyphRange(range, atPoint: CGPointZero)
         layoutManager.drawGlyphsForGlyphRange(range, atPoint: CGPointZero)

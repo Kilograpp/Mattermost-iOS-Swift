@@ -32,6 +32,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     
     
     override func prepareForReuse() {
+        self.messageLabel.textStorage = nil
         self.messageLabel.alpha = 1
         self.postIdentifier = nil
     }
