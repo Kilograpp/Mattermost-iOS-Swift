@@ -235,7 +235,7 @@ extension ChatViewController {
         guard !self.isLoadingInProgress else { return }
 
         self.isLoadingInProgress = true
-        Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.results.last!.posts.last!) { (isLastPage, error) in
+        Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.results.last!.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false).last!) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
         }
