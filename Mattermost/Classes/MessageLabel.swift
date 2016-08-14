@@ -48,9 +48,11 @@ final class MessageLabel: AttributedLabel, Delegate {
     }
     
     private func characterIndexForTouch(touch: UITouch) -> Int {
+        guard let storage = self.textStorage else { return 0 }
+        
         let locationOfTouch = touch.locationInView(self)
         self.textContainer.size = self.bounds.size
-        self.textStorage.setAttributedString(self.attributedText!)
+        storage.setAttributedString(self.attributedText!)
         return self.layoutManager.glyphIndexForPoint(locationOfTouch, inTextContainer: self.textContainer)
     }
 
