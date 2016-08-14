@@ -85,7 +85,7 @@ final class Post: RealmObject {
         }
     }
     dynamic var message: String?
-    lazy var attributedMessage: NSAttributedString? = {
+    lazy var attributedMessage: NSTextStorage? = {
         let string = self._attributedMessageData?.attributedString
         return string
     }()
@@ -313,7 +313,7 @@ extension Post: Computations {
         self.createdAtStringWidth = StringUtils.widthOfString(self.createdAtString, font: FontBucket.postDateFont)
     }
     private func computeAttributedString() {
-        self.attributedMessage = TSMarkdownParser.sharedInstance.attributedStringFromMarkdown(self.message!)
+        self.attributedMessage = NSTextStorage(attributedString: TSMarkdownParser.sharedInstance.attributedStringFromMarkdown(self.message!))
     }
     private func computeAttributedStringData() {
         self._attributedMessageData = RealmAttributedString(attributedString: self.attributedMessage)
