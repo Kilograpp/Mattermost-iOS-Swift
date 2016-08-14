@@ -43,12 +43,8 @@ class AttributedLabel: UILabel {
 
     
     var textStorage = NSTextStorage() {
-        willSet {
-            self.textStorage.removeLayoutManager(self.layoutManager)
-        }
-        
         didSet {
-            self.textStorage.addLayoutManager(self.layoutManager)
+            self.layoutManager.textStorage = self.textStorage
         }
     }
     var textContainer = NSTextContainer()
