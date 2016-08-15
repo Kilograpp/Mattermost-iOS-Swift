@@ -28,7 +28,6 @@ class LeftMenuViewController: UIViewController {
         self.configureInitialSelectedChannel()
         
         UserStatusObserver.sharedObserver.startUpdating()
-//        self.performSelector(#selector(test), withObject: nil, afterDelay: 3)
     }
     
     func test() {
@@ -91,6 +90,12 @@ extension LeftMenuViewController : UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! LeftMenuTableViewCellProtocol
         let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
         cell.configureWithChannel(channel!, selected: (channel?.isSelected)!)
+        cell.test = { [unowned cell] in
+//            self.tableView.beginUpdates()
+            self.tableView.reloadData()
+//            cell.reloadCell()
+//            self.tableView.endUpdates()
+        }
         
         return cell as! UITableViewCell
     }
