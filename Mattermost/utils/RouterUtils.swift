@@ -32,7 +32,8 @@ class RouterUtils {
         let sb = UIStoryboard.init(name: "Main", bundle: nil) 
         let centerVc = sb.instantiateInitialViewController()
         let leftVc = sb.instantiateViewControllerWithIdentifier(String(LeftMenuViewController))
-        let sideMenuContainer = RouterUtils.sideMenuContainer(centerVc!, leftMenuViewController: leftVc, rightMenuViewController: UITableViewController.init())
+        let rightVc = sb.instantiateViewControllerWithIdentifier(String(RightMenuViewController))
+        let sideMenuContainer = RouterUtils.sideMenuContainer(centerVc!, leftMenuViewController: leftVc, rightMenuViewController: rightVc)
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.window?.rootViewController = sideMenuContainer
         appDelegate.window?.makeKeyAndVisible()

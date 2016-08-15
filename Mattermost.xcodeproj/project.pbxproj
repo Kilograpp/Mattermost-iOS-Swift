@@ -26,6 +26,7 @@
 		D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */; };
 		D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D617E6A11D46AFB900283C0A /* ChatViewController.swift */; };
 		D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */; };
+		D61962111D62230600C2E259 /* RightMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61962101D62230600C2E259 /* RightMenuViewController.swift */; };
 		D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB871D4F2A6A00390EBC /* RouterUtils.swift */; };
 		D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */; };
 		D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */; };
@@ -159,6 +160,7 @@
 		D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftFetchedResultsController.framework; path = Carthage/Build/iOS/SwiftFetchedResultsController.framework; sourceTree = "<group>"; };
 		D617E6A11D46AFB900283C0A /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RBQFetchedResultsController.framework; path = Carthage/Build/iOS/RBQFetchedResultsController.framework; sourceTree = "<group>"; };
+		D61962101D62230600C2E259 /* RightMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RightMenuViewController.swift; path = rightMenu/RightMenuViewController.swift; sourceTree = "<group>"; };
 		D62FEB871D4F2A6A00390EBC /* RouterUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RouterUtils.swift; path = Mattermost/utils/RouterUtils.swift; sourceTree = SOURCE_ROOT; };
 		D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuViewController.swift; path = LeftMenu/LeftMenuViewController.swift; sourceTree = "<group>"; };
 		D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = Login/LoginViewController.swift; sourceTree = "<group>"; };
@@ -437,6 +439,7 @@
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				D619620F1D6222EA00C2E259 /* RightMenu */,
 				4195DCEB1D54DA8600E8ED84 /* ServerUrl */,
 				D62FEB891D4F2A8200390EBC /* LeftMenu */,
 				D62FEB8A1D4F2A8D00390EBC /* Login */,
@@ -451,6 +454,14 @@
 				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		D619620F1D6222EA00C2E259 /* RightMenu */ = {
+			isa = PBXGroup;
+			children = (
+				D61962101D62230600C2E259 /* RightMenuViewController.swift */,
+			);
+			name = RightMenu;
 			sourceTree = "<group>";
 		};
 		D62FEB891D4F2A8200390EBC /* LeftMenu */ = {
@@ -939,6 +950,7 @@
 				D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */,
 				D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */,
 				D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */,
+				D61962111D62230600C2E259 /* RightMenuViewController.swift in Sources */,
 				D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */,
 				D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */,
 				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
