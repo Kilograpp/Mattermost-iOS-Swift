@@ -8,7 +8,7 @@
 
 //FIXME: CodeReview: Final class
 //FIXME: CodeReview: Следование протоколу должно быть отдельным extension
-class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol {
+final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol {
     //FIXME: CodeReview: В приват
     @IBOutlet weak var statusView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -20,6 +20,8 @@ class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtoco
     var channel : Channel?
     var user : User?
     var userBackendStatus: String?
+    
+    var test : (() -> Void)?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -33,36 +35,40 @@ class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtoco
     
     //MARK: - Configuration
     //FIXME: CodeReview: В отдельный extension все методы конфигурации
-    func configureContentView() {
+    private func configureContentView() {
         self.backgroundColor = ColorBucket.sideMenuBackgroundColor
         self.badgeLabel.hidden = true
     }
     
-    func configureTitleLabel() {
+    private func configureTitleLabel() {
         self.titleLabel.font = FontBucket.normalTitleFont
         //FIXME: CodeReview: Цвет конкретный
         self.titleLabel.textColor = ColorBucket.lightGrayColor
     }
     
-    func configureStatusView() {
+    private func configureStatusView() {
         self.statusView.layer.cornerRadius = 4
         self.statusView.layer.borderColor = ColorBucket.lightGrayColor.CGColor
         self.statusView.layer.borderWidth = 1;
     }
     
-    func configurehighlightView() {
+    private func configurehighlightView() {
         self.highlightView.layer.cornerRadius = 3;
     }
     
-    func configureUserFormPrivateChannel() {
+    private func configureUserFormPrivateChannel() {
         self.user = self.channel?.interlocuterFromPrivateChannel()
     }
     
     func configureStatusViewWithNotification(notification: NSNotification) {
         let backendStatus = notification.object as! String
-        
+//        self.configureStatusViewWithBackendStatus(backendStatus)
+        self.test!()
+    }
+    
+    func configureStatusViewWithBackendStatus(backendStatus: String) {
         if backendStatus == "offline" {
-            self.statusView.backgroundColor = ColorBucket.sideMenuBackgroundColor
+            self.statusView.backgroundColor = UIColor.clearColor()
             self.statusView.layer.borderWidth = 1;
         } else if backendStatus == "online" {
             self.statusView.backgroundColor = UIColor.greenColor()
@@ -76,10 +82,9 @@ class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtoco
         }
     }
     
-    
     //MARK: - Private
     //FIXME: CodeReview: Цвет конкретный
-    func highlightViewBackgroundColor() -> UIColor {
+    private func highlightViewBackgroundColor() -> UIColor {
         return self.channel?.isSelected == true ? ColorBucket.whiteColor : ColorBucket.sideMenuBackgroundColor
     }
     
@@ -94,14 +99,15 @@ class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtoco
     override func prepareForReuse() {
         super.prepareForReuse()
         self.removeObservers()
+        self.test = nil
     }
 }
 
 extension PrivateChannelTableViewCell {
     func configureWithChannel(channel: Channel, selected: Bool) {
         self.channel = channel
-        self.subscribeToNotifications()
         self.configureUserFormPrivateChannel()
+        self.subscribeToNotifications()
         self.titleLabel.text = channel.displayName!
         //FIXME: CodeReview: Цвет конкретный
         self.highlightView.backgroundColor = selected ? ColorBucket.whiteColor : ColorBucket.sideMenuBackgroundColor
@@ -109,19 +115,12 @@ extension PrivateChannelTableViewCell {
         self.titleLabel.textColor = selected ? ColorBucket.blackColor : ColorBucket.lightGrayColor
         
         let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(self.channel!.interlocuterFromPrivateChannel().identifier).backendStatus
-        if backendStatus == "offline" {
-            self.statusView.backgroundColor = ColorBucket.sideMenuBackgroundColor
-            self.statusView.layer.borderWidth = 1;
-        } else if backendStatus == "online" {
-            self.statusView.backgroundColor = UIColor.greenColor()
-            self.statusView.layer.borderWidth = 0;
-        } else if backendStatus == "away" {
-            self.statusView.backgroundColor = UIColor.yellowColor()
-            self.statusView.layer.borderWidth = 0;
-        } else {
-            self.statusView.layer.borderWidth = 0;
-            self.statusView.backgroundColor = UIColor.blackColor()
-        }
+        self.configureStatusViewWithBackendStatus(backendStatus!)
+    }
+    
+    func reloadCell() {
+        let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(self.channel!.interlocuterFromPrivateChannel().identifier).backendStatus
+        self.configureStatusViewWithBackendStatus(backendStatus!)
     }
     
     func subscribeToNotifications() {

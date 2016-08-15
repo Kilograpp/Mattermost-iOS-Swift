@@ -17,6 +17,7 @@ class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol
 //FIXME: CodeReview: В приват
     //FIXME: CodeReview: Может быть такое, что ячейка без канала работает? Если нет, то implicity unwrapped ее.(см как аутлеты)
     var channel : Channel?
+    var test : (() -> Void)?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -82,6 +83,10 @@ extension PublicChannelTableViewCell {
     
     func subscribeToNotifications() {
 
+    }
+    
+    func reloadCell() {
+        
     }
 }
 
