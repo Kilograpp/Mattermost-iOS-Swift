@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Chat View Controller-->
@@ -18,7 +19,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="E4C-vL-nts"/>
+                    <navigationItem key="navigationItem" id="E4C-vL-nts">
+                        <barButtonItem key="leftBarButtonItem" image="navbar_menu_icon2" id="UTo-fx-kdl"/>
+                        <rightBarButtonItems>
+                            <barButtonItem image="navbar_more_icon" id="1xX-X6-Q9I"/>
+                            <barButtonItem systemItem="search" id="GOb-jd-c9D"/>
+                        </rightBarButtonItems>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -120,7 +127,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bt2-9v-Owo">
-                                                    <rect key="frame" x="5" y="5" width="345" height="57"/>
+                                                    <rect key="frame" x="5" y="5" width="365" height="57"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2pb-CK-FwX">
@@ -153,10 +160,16 @@
                                                 <constraint firstItem="bt2-9v-Owo" firstAttribute="leading" secondItem="dSy-qM-Ym5" secondAttribute="leading" constant="5" id="WZl-QW-YwA"/>
                                                 <constraint firstItem="5Qx-U8-kCC" firstAttribute="leading" secondItem="2pb-CK-FwX" secondAttribute="trailing" constant="8" id="a5m-aa-tnY"/>
                                                 <constraint firstItem="b6M-m2-mTz" firstAttribute="centerY" secondItem="dSy-qM-Ym5" secondAttribute="centerY" id="nJv-yb-24T"/>
+                                                <constraint firstAttribute="trailing" secondItem="bt2-9v-Owo" secondAttribute="trailing" constant="5" id="nLg-iD-6In"/>
                                                 <constraint firstItem="5Qx-U8-kCC" firstAttribute="centerY" secondItem="dSy-qM-Ym5" secondAttribute="centerY" id="scR-Mm-VLk"/>
                                                 <constraint firstItem="2pb-CK-FwX" firstAttribute="leading" secondItem="dSy-qM-Ym5" secondAttribute="leading" constant="15" id="u7h-Ov-UMd"/>
                                                 <constraint firstItem="2pb-CK-FwX" firstAttribute="centerY" secondItem="dSy-qM-Ym5" secondAttribute="centerY" id="w4U-VU-d59"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="I8J-KI-z5c"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="badgeLabel" destination="b6M-m2-mTz" id="7XC-5Q-TOY"/>
@@ -219,5 +232,7 @@
     </scenes>
     <resources>
         <image name="menu_users_icon" width="20" height="13"/>
+        <image name="navbar_menu_icon2" width="22" height="22"/>
+        <image name="navbar_more_icon" width="22" height="22"/>
     </resources>
 </document>
