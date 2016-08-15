@@ -29,6 +29,10 @@ private protocol CommonColors: class {
 private protocol SideMenuColors {
     static var sideMenuBackgroundColor: UIColor {get}
     static var sideMenuHeaderBackgroundColor: UIColor {get}
+    static var sideMenuCommonTextColor: UIColor {get}
+    static var sideMenuSelectedTextColor: UIColor {get}
+    static var sideMenuCellHighlightedColor: UIColor {get}
+    static var sideMenuCellSelectedColor: UIColor {get}
 }
 
 private protocol ServerUrlColors {
@@ -60,6 +64,10 @@ extension ColorBucket : CommonColors {
 extension ColorBucket : SideMenuColors {
     static let sideMenuBackgroundColor = ColorBucket.deepBlue()
     static let sideMenuHeaderBackgroundColor = ColorBucket.deepLightBlue()
+    static let sideMenuCommonTextColor = ColorBucket.lightGrayColor
+    static let sideMenuSelectedTextColor = ColorBucket.blackColor
+    static let sideMenuCellHighlightedColor = ColorBucket.whiteColor.colorWithAlphaComponent(0.5)
+    static let sideMenuCellSelectedColor = ColorBucket.lightGrayColor
 }
 
 extension ColorBucket : ServerUrlColors {

@@ -90,7 +90,7 @@ extension LeftMenuViewController : UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! LeftMenuTableViewCellProtocol
         let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
         cell.configureWithChannel(channel!, selected: (channel?.isSelected)!)
-        cell.test = { [unowned cell] in
+        cell.test = {
 //            self.tableView.beginUpdates()
             self.tableView.reloadData()
 //            cell.reloadCell()

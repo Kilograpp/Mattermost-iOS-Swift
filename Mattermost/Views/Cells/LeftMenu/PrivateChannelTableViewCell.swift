@@ -6,20 +6,27 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-//FIXME: CodeReview: Final class
+private protocol PrivateConfiguration : class {
+    func configureContentView()
+    func configureTitleLabel()
+    func configureStatusView()
+    func configurehighlightView()
+    func configureUserFormPrivateChannel()
+    func configureStatusViewWithBackendStatus(backendStatus: String)
+    func highlightViewBackgroundColor() -> UIColor
+}
+
 //FIXME: CodeReview: Следование протоколу должно быть отдельным extension
 final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol {
-    //FIXME: CodeReview: В приват
-    @IBOutlet weak var statusView: UIView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var badgeLabel: UILabel!
-    @IBOutlet weak var highlightView: UIView!
+    @IBOutlet private weak var statusView: UIView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var badgeLabel: UILabel!
+    @IBOutlet private weak var highlightView: UIView!
     
-    //FIXME: CodeReview: В приват
     //FIXME: CodeReview: Может быть такое, что ячейка без канала работает? Если нет, то implicity unwrapped ее. Тоже самое со сторой
     var channel : Channel?
-    var user : User?
-    var userBackendStatus: String?
+    private var user : User?
+    private var userBackendStatus: String?
     
     var test : (() -> Void)?
     
@@ -33,8 +40,26 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
     }
     
     
-    //MARK: - Configuration
-    //FIXME: CodeReview: В отдельный extension все методы конфигурации
+//MARK: - Configuration
+    func configureStatusViewWithNotification(notification: NSNotification) {
+        self.test!()
+    }
+
+//MARK: - Override
+    
+    override func setHighlighted(highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.colorWithAlphaComponent(0.5) : self.highlightViewBackgroundColor()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.removeObservers()
+        self.test = nil
+    }
+}
+
+extension PrivateChannelTableViewCell : PrivateConfiguration {
     private func configureContentView() {
         self.backgroundColor = ColorBucket.sideMenuBackgroundColor
         self.badgeLabel.hidden = true
@@ -42,8 +67,7 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
     
     private func configureTitleLabel() {
         self.titleLabel.font = FontBucket.normalTitleFont
-        //FIXME: CodeReview: Цвет конкретный
-        self.titleLabel.textColor = ColorBucket.lightGrayColor
+        self.titleLabel.textColor = ColorBucket.sideMenuCommonTextColor
     }
     
     private func configureStatusView() {
@@ -59,14 +83,7 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
     private func configureUserFormPrivateChannel() {
         self.user = self.channel?.interlocuterFromPrivateChannel()
     }
-    
-    func configureStatusViewWithNotification(notification: NSNotification) {
-        let backendStatus = notification.object as! String
-//        self.configureStatusViewWithBackendStatus(backendStatus)
-        self.test!()
-    }
-    
-    func configureStatusViewWithBackendStatus(backendStatus: String) {
+    private func configureStatusViewWithBackendStatus(backendStatus: String) {
         if backendStatus == "offline" {
             self.statusView.backgroundColor = UIColor.clearColor()
             self.statusView.layer.borderWidth = 1;
@@ -82,24 +99,8 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
         }
     }
     
-    //MARK: - Private
-    //FIXME: CodeReview: Цвет конкретный
     private func highlightViewBackgroundColor() -> UIColor {
-        return self.channel?.isSelected == true ? ColorBucket.whiteColor : ColorBucket.sideMenuBackgroundColor
-    }
-    
-    
-    //MARK: - Override
-    
-    override func setHighlighted(highlighted: Bool, animated: Bool) {
-        super.setHighlighted(highlighted, animated: animated)
-        self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.colorWithAlphaComponent(0.5) : self.highlightViewBackgroundColor()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        self.removeObservers()
-        self.test = nil
+        return self.channel?.isSelected == true ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
     }
 }
 
@@ -109,10 +110,8 @@ extension PrivateChannelTableViewCell {
         self.configureUserFormPrivateChannel()
         self.subscribeToNotifications()
         self.titleLabel.text = channel.displayName!
-        //FIXME: CodeReview: Цвет конкретный
-        self.highlightView.backgroundColor = selected ? ColorBucket.whiteColor : ColorBucket.sideMenuBackgroundColor
-        //FIXME: CodeReview: Цвет конкретный
-        self.titleLabel.textColor = selected ? ColorBucket.blackColor : ColorBucket.lightGrayColor
+        self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellHighlightedColor : ColorBucket.sideMenuBackgroundColor
+        self.titleLabel.textColor = selected ? ColorBucket.sideMenuSelectedTextColor : ColorBucket.sideMenuCommonTextColor
         
         let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(self.channel!.interlocuterFromPrivateChannel().identifier).backendStatus
         self.configureStatusViewWithBackendStatus(backendStatus!)
@@ -125,6 +124,9 @@ extension PrivateChannelTableViewCell {
     
     func subscribeToNotifications() {
 //        print("SUBSCRIBED_TO \(self.channel?.interlocuterFromPrivateChannel().identifier  as String!)")
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.configureStatusViewWithNotification(_:)), name: self.channel?.interlocuterFromPrivateChannel().identifier as String!, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(self.configureStatusViewWithNotification(_:)),
+                                                         name: self.channel?.interlocuterFromPrivateChannel().identifier as String!,
+                                                         object: nil)
     }
 }
