@@ -36,7 +36,7 @@ final class LeftMenuSectionFooter : UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.titleButton.frame = CGRectMake(15, 4, 60, 13)
+        self.titleButton.frame = CGRectMake(15, 4, 47, 13)
     }
 }
 
@@ -45,10 +45,6 @@ extension LeftMenuSectionFooter : PrivateSetup {
         self.setupContentView()
         self.setupTitleButton()
     }
-    
-//    func moreAction() {
-//        self.moreTapHandler!()
-//    }
     
     private func setupTitleButton() {
         self.addSubview(self.titleButton)
