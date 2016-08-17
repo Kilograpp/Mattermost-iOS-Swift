@@ -33,6 +33,8 @@ private protocol SideMenuColors {
     static var sideMenuSelectedTextColor: UIColor {get}
     static var sideMenuCellHighlightedColor: UIColor {get}
     static var sideMenuCellSelectedColor: UIColor {get}
+    
+    static var rightMenuSeparatorColor: UIColor {get}
 }
 
 private protocol ServerUrlColors {
@@ -68,6 +70,9 @@ extension ColorBucket : SideMenuColors {
     static let sideMenuSelectedTextColor = ColorBucket.blackColor
     static let sideMenuCellHighlightedColor = ColorBucket.whiteColor.colorWithAlphaComponent(0.5)
     static let sideMenuCellSelectedColor = ColorBucket.lightGrayColor
+    
+    static let rightMenuSeparatorColor = ColorBucket.sideMenuSeparatorColor()
+    static let rightMenuTextColor = ColorBucket.lightBlue()
 }
 
 extension ColorBucket : ServerUrlColors {
@@ -109,5 +114,13 @@ extension ColorBucket {
     
     private class func darkDarkGray() -> UIColor {
         return UIColor.hx_colorWithHexRGBAString("#334659", alpha: 1)!
+    }
+    
+    private class func sideMenuSeparatorColor() -> UIColor {
+        return UIColor.hx_colorWithHexRGBAString("#8798A4", alpha: 0.7)!
+    }
+    
+    private class func lightBlue() -> UIColor {
+        return UIColor.hx_colorWithHexRGBAString("#C3CDD4", alpha: 1)!
     }
 }

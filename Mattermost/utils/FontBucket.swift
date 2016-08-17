@@ -27,6 +27,10 @@ private protocol LeftMenuFonts {
     static var footerTitleFont: UIFont {get}
 }
 
+private protocol RightMenuFonts {
+    static var rightMenuFont: UIFont {get}
+}
+
 private protocol LoginFonts: class {
     static var loginButtonFont: UIFont {get}
     static var loginTextFieldFont: UIFont {get}
@@ -67,6 +71,10 @@ extension FontBucket : LeftMenuFonts {
     static let headerTitleFont = FontBucket.boldFontOfSize(10)
     static let footerTitleFont = FontBucket.boldFontOfSize(14)
     static let menuTitleFont = FontBucket.boldFontOfSize(16)
+}
+
+extension FontBucket : RightMenuFonts {
+    static let rightMenuFont = FontBucket.semiboldFontOfSize(16)
 }
 
 extension FontBucket : LoginFonts {

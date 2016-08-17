@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
@@ -225,11 +226,15 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MvI-Cn-EaJ">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QBX-gy-ahF">
-                                        <rect key="frame" x="21" y="11" width="40" height="42"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QBX-gy-ahF">
+                                        <rect key="frame" x="21" y="15" width="35" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="QBX-gy-ahF" secondAttribute="height" multiplier="1:1" id="OBv-Jh-RYp"/>
+                                            <constraint firstAttribute="height" constant="35" id="WwD-YA-OpG"/>
+                                        </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dfb-Sr-iM9">
-                                        <rect key="frame" x="69" y="21" width="42" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dfb-Sr-iM9">
+                                        <rect key="frame" x="69" y="22" width="298" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -237,7 +242,12 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="QBX-gy-ahF" firstAttribute="leading" secondItem="MvI-Cn-EaJ" secondAttribute="leading" constant="21" id="2mQ-i3-TGU"/>
                                     <constraint firstAttribute="height" constant="64" id="9ke-Mc-EwA"/>
+                                    <constraint firstItem="Dfb-Sr-iM9" firstAttribute="centerY" secondItem="QBX-gy-ahF" secondAttribute="centerY" id="JfC-M0-n3J"/>
+                                    <constraint firstItem="QBX-gy-ahF" firstAttribute="centerY" secondItem="MvI-Cn-EaJ" secondAttribute="centerY" id="Oac-bO-Hlg"/>
+                                    <constraint firstItem="Dfb-Sr-iM9" firstAttribute="leading" secondItem="QBX-gy-ahF" secondAttribute="trailing" constant="13" id="XL2-HW-3H5"/>
+                                    <constraint firstAttribute="trailing" secondItem="Dfb-Sr-iM9" secondAttribute="trailing" constant="8" id="uiA-CM-7EL"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="72" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="phh-KW-MvH">
@@ -257,10 +267,16 @@
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="avatarImageView" destination="QBX-gy-ahF" id="KS2-il-Tpb"/>
+                        <outlet property="headerView" destination="MvI-Cn-EaJ" id="Acf-3P-BV4"/>
+                        <outlet property="tableView" destination="phh-KW-MvH" id="z5L-oU-Gui"/>
+                        <outlet property="usernameLabel" destination="Dfb-Sr-iM9" id="rSs-HZ-hyM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5az-p3-rkO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="727.5" y="977.5"/>
+            <point key="canvasLocation" x="769.5" y="985.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xa2-Dc-gbr">
