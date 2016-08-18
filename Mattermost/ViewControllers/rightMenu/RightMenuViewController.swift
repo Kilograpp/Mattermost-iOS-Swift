@@ -47,6 +47,10 @@ extension RightMenuViewController : PrivateConfig {
     
     private func configureHeaderVIew() {
         self.headerView.backgroundColor = ColorBucket.sideMenuHeaderBackgroundColor
+        self.usernameLabel.font = FontBucket.rightMenuFont
+        self.usernameLabel.textColor = ColorBucket.whiteColor
+        
+        self.usernameLabel.text = DataManager.sharedInstance.currentUser?.displayName
     }
     
     func configureCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath) {
@@ -100,6 +104,10 @@ extension RightMenuViewController : UITableViewDataSource {
         cell!.preservesSuperviewLayoutMargins = false;
         cell!.separatorInset = UIEdgeInsetsZero;
         cell!.layoutMargins = UIEdgeInsetsZero;
+        cell?.selectionStyle = .Default
+        
+        cell?.selectedBackgroundView = UIView(frame: cell!.bounds)
+        cell?.selectedBackgroundView?.backgroundColor = ColorBucket.sideMenuCellHighlightedColor
         
         cell?.textLabel?.textColor = indexPath.row == RightMenuRows.Logout.rawValue ? ColorBucket.whiteColor : ColorBucket.rightMenuTextColor
         cell?.textLabel?.font = FontBucket.rightMenuFont
