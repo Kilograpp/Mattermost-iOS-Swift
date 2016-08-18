@@ -9,8 +9,9 @@
 import SlackTextViewController
 import RealmSwift
 import SwiftFetchedResultsController
+import ImagePickerSheetController
 
-final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
+final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate {
     private var channel : Channel?
     private var resultsObserver: FeedNotificationsObserver?
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
@@ -168,6 +169,35 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     
     func assignPhotos() -> Void {
+        let presentImagePickerController: UIImagePickerControllerSourceType -> () = { source in
+            let controller = UIImagePickerController()
+//            controller.delegate = self
+            var sourceType = source
+            if (!UIImagePickerController.isSourceTypeAvailable(sourceType)) {
+                sourceType = .PhotoLibrary
+                print("Fallback to camera roll as a source since the simulator doesn't support taking pictures")
+            }
+            controller.sourceType = sourceType
+            
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
+        
+        let controller = ImagePickerSheetController(mediaType: .ImageAndVideo)
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Add comment", comment: "Action Title"), handler: { _ in
+            presentImagePickerController(.Camera)
+            }, secondaryHandler: { _, numberOfPhotos in
+                print("Comment \(numberOfPhotos) photos")
+        }))
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: { NSString.localizedStringWithFormat(NSLocalizedString("ImagePickerSheet.button1.Send %lu Photo", comment: "Action Title"), $0) as String}, handler: { _ in
+            presentImagePickerController(.PhotoLibrary)
+            }, secondaryHandler: { _, numberOfPhotos in
+                print("Send \(controller.selectedImageAssets)")
+        }))
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .Cancel, handler: { _ in
+            print("Cancelled")
+        }))
+        
+        presentViewController(controller, animated: true, completion: nil)
     }
 }
 
@@ -241,6 +271,10 @@ extension ChatViewController {
         }
     }
 }
+//
+//extension ChatViewController : UIImagePickerControllerDelegate {
+//    
+//}
 
 //extension ChatViewController : ChannelObserverDelegate {
 //    func didSelectChannelWithIdentifier(identifier: String!) -> Void {

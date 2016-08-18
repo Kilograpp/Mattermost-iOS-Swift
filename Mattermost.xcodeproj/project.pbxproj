@@ -50,6 +50,7 @@
 		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
 		D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B41D4A0F6400C13191 /* HexColors.m */; };
+		D6B4BF721D65CBEE005B22D6 /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */; };
 		D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */; };
 		D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */; };
 		D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */; };
@@ -184,6 +185,7 @@
 		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
 		D6A887B31D4A0F6400C13191 /* HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColors.h; sourceTree = "<group>"; };
 		D6A887B41D4A0F6400C13191 /* HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColors.m; sourceTree = "<group>"; };
+		D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
 		D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuSectionFooter.swift; path = LeftMenu/LeftMenuSectionFooter.swift; sourceTree = "<group>"; };
 		D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LeftMenuSectionHeader.xib; path = LeftMenu/LeftMenuSectionHeader.xib; sourceTree = "<group>"; };
 		D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatus.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6B4BF721D65CBEE005B22D6 /* ImagePickerSheetController.framework in Frameworks */,
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
@@ -678,6 +681,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */,
 				D86EF7FB1D5A208900BD49A3 /* Sugar.framework */,
 				D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */,
 				D6E165A51D47E9B00014C831 /* MFSideMenu.framework */,
@@ -863,6 +867,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SkyFloatingLabelTextField.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ImagePickerSheetController.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
