@@ -51,6 +51,7 @@ final class Api {
             _managerCache!.requestSerializationMIMEType = RKMIMETypeJSON;
             _managerCache!.addRequestDescriptorsFromArray(RKRequestDescriptor.findAllDescriptors())
             _managerCache!.addResponseDescriptorsFromArray(RKResponseDescriptor.findAllDescriptors())
+
         }
         return _managerCache!;
     }
@@ -254,7 +255,16 @@ extension Api: PostApi {
     func sendPost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(Post.creationPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
-            RealmUtils.save(mappingResult.firstObject as! Post)
+            let dict = mappingResult.firstObject as! Dictionary<String, AnyObject>
+            let lazyMapCollection = dict.keys
+            let stringArray = Array(lazyMapCollection.map { String($0) })
+            try! RealmUtils.realmForCurrentThread().write({
+                for key in stringArray {
+                    post.setValue(dict[key], forKey: key)
+                }
+            })
+
+            RealmUtils.save(post)
             completion(error: nil)
         }, failure: completion)
     }

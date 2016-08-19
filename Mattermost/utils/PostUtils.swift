@@ -19,14 +19,20 @@ final class PostUtils: NSObject {
         
         postToSend.message = message
         postToSend.createdAt = NSDate()
-//        postToSend.channel = channel
         postToSend.channelId = channel.identifier
         postToSend.authorId = Preferences.sharedInstance.currentUserId
-        //FIXME: fixme asap
-        postToSend.identifier = message
+        self.configureBackendPendingId(postToSend)
         
         RealmUtils.save(postToSend)
         
-        completion(error: nil)
+        Api.sharedInstance.sendPost(postToSend) { (error) in
+            completion(error: error)
+        }
+    }
+    
+    private func configureBackendPendingId(post: Post) {
+        let id = (DataManager.sharedInstance.currentUser?.identifier)!
+        let time = "\((post.createdAt?.timeIntervalSince1970)!)"
+        post.pendingId = "\(id):\(time)"
     }
 }
