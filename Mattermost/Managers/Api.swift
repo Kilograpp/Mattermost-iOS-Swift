@@ -39,6 +39,11 @@ private protocol PostApi: class {
     func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void)
 }
 
+private protocol FileApi : class {
+    func uploadFile(completion: (file: File, error: Error?) -> Void, progress: (progressValue: Float, index: Int) -> Void)
+    func cancelUploadingOperationForImage(image: UIImage)
+}
+
 final class Api {
     static let sharedInstance = Api()
     private var _managerCache: ObjectManager?
@@ -51,6 +56,8 @@ final class Api {
             _managerCache!.requestSerializationMIMEType = RKMIMETypeJSON;
             _managerCache!.addRequestDescriptorsFromArray(RKRequestDescriptor.findAllDescriptors())
             _managerCache!.addResponseDescriptorsFromArray(RKResponseDescriptor.findAllDescriptors())
+            
+            _managerCache!.registerRequestOperationClass(KGObjectRequestOperation.self)
 
         }
         return _managerCache!;
@@ -255,16 +262,7 @@ extension Api: PostApi {
     func sendPost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(Post.creationPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
-            let dict = mappingResult.firstObject as! Dictionary<String, AnyObject>
-            let lazyMapCollection = dict.keys
-            let stringArray = Array(lazyMapCollection.map { String($0) })
-            try! RealmUtils.realmForCurrentThread().write({
-                for key in stringArray {
-                    post.setValue(dict[key], forKey: key)
-                }
-            })
-
-            RealmUtils.save(post)
+            RealmUtils.save(mappingResult.firstObject as! Post)
             completion(error: nil)
         }, failure: completion)
     }
@@ -275,6 +273,16 @@ extension Api: PostApi {
             RealmUtils.save(MappingUtils.fetchPostFromUpdate(mappingResult))
             completion(error: nil)
         }, failure: completion)
+        
+    }
+}
+
+extension Api : FileApi {
+    func uploadFile(completion: (file: File, error: Error?) -> Void, progress: (progressValue: Float, index: Int) -> Void) {
+        
+    }
+    
+    func cancelUploadingOperationForImage(image: UIImage) {
         
     }
 }

@@ -13,6 +13,7 @@ import RealmSwift
 final class PostUtils: NSObject {
     
     static let sharedInstance = PostUtils()
+    let queue = dispatch_group_create()
     
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
         let postToSend = Post()
@@ -34,5 +35,16 @@ final class PostUtils: NSObject {
         let id = (DataManager.sharedInstance.currentUser?.identifier)!
         let time = "\((post.createdAt?.timeIntervalSince1970)!)"
         post.pendingId = "\(id):\(time)"
+    }
+    
+    private func uploadAttachmentsIfNeeded(attachments: Array<UIImage>, completion: (finished: Bool, error: Error?) -> Void) {
+        for attachment in attachments {
+            dispatch_group_enter(self.queue)
+            Api.sharedInstance.uploadFile({ (file, error) in
+                print("z_Z")
+                }, progress: { (progressValue, index) in
+                    print("z_Z")
+            })
+        }
     }
 }

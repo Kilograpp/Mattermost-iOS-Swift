@@ -23,6 +23,12 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     var hasNextPage: Bool = true
     var isLoadingInProgress: Bool = false
     
+    var fileUploadingInProgress: Bool = true {
+        didSet {
+            self.toggleSendButtonAvailability()
+        }
+    }
+    
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -111,8 +117,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     // MARK: - FetchedResultsController
     
     
-    func prepareResults() {
-        
+    private func prepareResults() {
         if NSThread.isMainThread() {
             let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
             self.results = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
@@ -125,8 +130,6 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
                 self.resultsObserver = FeedNotificationsObserver(results: self.results, tableView: self.tableView)
             }
         }
-        
-            
     }
     
     // MARK: - Configuration
@@ -183,7 +186,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         }
         
         let controller = ImagePickerSheetController(mediaType: .ImageAndVideo)
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Add comment", comment: "Action Title"), handler: { _ in
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
             presentImagePickerController(.Camera)
             }, secondaryHandler: { _, numberOfPhotos in
                 print("Comment \(numberOfPhotos) photos")
@@ -221,7 +224,7 @@ extension ChatViewController {
 // MARK: - UI Helpers
 
 extension ChatViewController {
-    func setupRefreshControl() {
+    private func setupRefreshControl() {
         let tableVc = UITableViewController.init() as UITableViewController
         tableVc.tableView = self.tableView
         self.refreshControl = UIRefreshControl.init()
@@ -235,6 +238,10 @@ extension ChatViewController {
     
     func endRefreshing() {
         self.refreshControl?.endRefreshing()
+    }
+    
+    func toggleSendButtonAvailability() {
+        self.rightButton.enabled = self.fileUploadingInProgress
     }
 }
 

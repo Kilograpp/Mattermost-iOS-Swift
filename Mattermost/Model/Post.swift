@@ -216,11 +216,13 @@ extension Post: PathPattern {
 // MARK: - Mapping
 extension Post: ResponseMapping {
     class func creationMapping() -> RKObjectMapping {
-        let mapping = super.requestMapping()
+        let mapping = super.emptyMapping()
         mapping.addAttributeMappingsFromDictionary([
             "id"                : PostAttributes.identifier.rawValue,
             "pending_post_id"   : PostAttributes.pendingId.rawValue,
-            "message"           : PostAttributes.message.rawValue
+            "message"           : PostAttributes.message.rawValue,
+            "create_at"         : PostAttributes.createdAt.rawValue,
+            "update_at"         : PostAttributes.updatedAt.rawValue,
             ])
         return mapping
     }
