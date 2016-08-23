@@ -10,7 +10,7 @@ import Foundation
 
 final class MoreChannelViewController: UIViewController, UITableViewDelegate , UITableViewDataSource {
     @IBOutlet weak var headerView: UIView!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView:  UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
