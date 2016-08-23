@@ -101,6 +101,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
 extension ServerUrlViewController:Actions {
     @IBAction func nextButtonAction(sender: AnyObject) {
         Preferences.sharedInstance.serverUrl = self.textField.text
+//FIXME: вызов методов не должен быть через self
         self.validateServerUrl()
     }
     
@@ -119,6 +120,7 @@ extension ServerUrlViewController:Lifecycle {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//FIXME: вызов методов не должен быть через self
         self.setupTitleLabel()
         self.setupSubtitleLabel()
         self.setupPromtLabel()
@@ -129,7 +131,7 @@ extension ServerUrlViewController:Lifecycle {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+//FIXME: вызов методов не должен быть через self
         self.setupNavigationBar()
     }
     

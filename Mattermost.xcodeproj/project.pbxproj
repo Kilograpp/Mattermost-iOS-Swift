@@ -21,6 +21,7 @@
 		9B822D4F5FE09663955B4184 /* MattermostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822FEE7A890495F4436A4C /* MattermostTests.swift */; };
 		9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B8220F2E4D1D8538A51229B /* Assets.xcassets */; };
 		9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822E83696EB65A72E9F73A /* Api.swift */; };
+		CD8825771D6C9CC800D08D45 /* MoreChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */; };
 		D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */; };
 		D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */; };
 		D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */; };
@@ -157,6 +158,7 @@
 		9B82299925DAB67819BE3C95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B822E83696EB65A72E9F73A /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		9B822FEE7A890495F4436A4C /* MattermostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MattermostTests.swift; sourceTree = "<group>"; };
+		CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelViewController.swift; path = MoreChannel/MoreChannelViewController.swift; sourceTree = "<group>"; };
 		D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKObjectRequestOperation+ImageUploading.swift"; sourceTree = "<group>"; };
 		D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentView.swift; path = FeedAttachmentView/FeedAttachmentView.swift; sourceTree = "<group>"; };
 		D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SlackTextViewController.framework; path = Carthage/Build/iOS/SlackTextViewController.framework; sourceTree = "<group>"; };
@@ -442,9 +444,18 @@
 			);
 			sourceTree = "<group>";
 		};
+		CD8825751D6C9C6200D08D45 /* MoreChannel */ = {
+			isa = PBXGroup;
+			children = (
+				CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */,
+			);
+			name = MoreChannel;
+			sourceTree = "<group>";
+		};
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				CD8825751D6C9C6200D08D45 /* MoreChannel */,
 				D619620F1D6222EA00C2E259 /* RightMenu */,
 				4195DCEB1D54DA8600E8ED84 /* ServerUrl */,
 				D62FEB891D4F2A8200390EBC /* LeftMenu */,
@@ -968,6 +979,7 @@
 				D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */,
 				D8935BAC1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
+				CD8825771D6C9CC800D08D45 /* MoreChannelViewController.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
 				D8935BA51D5A81780037E7ED /* PerformanceManager.swift in Sources */,

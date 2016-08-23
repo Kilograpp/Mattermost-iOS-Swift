@@ -23,9 +23,9 @@ class LeftMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.configureTableView()
-        self.configureView()
-        self.configureInitialSelectedChannel()
+        configureTableView()
+        configureView()
+        configureInitialSelectedChannel()
         
         UserStatusObserver.sharedObserver.startUpdating()
     }

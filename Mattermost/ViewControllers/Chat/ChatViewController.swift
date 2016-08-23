@@ -33,7 +33,8 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
+//FIXME: вызов методов не должен быть через self
         self.configureInputBar()
         self.configureTableView()
         self.setupRefreshControl()
