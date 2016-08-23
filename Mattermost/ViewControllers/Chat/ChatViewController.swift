@@ -11,7 +11,7 @@ import RealmSwift
 import SwiftFetchedResultsController
 import ImagePickerSheetController
 
-final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate {
+final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private var channel : Channel?
     private var resultsObserver: FeedNotificationsObserver?
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
@@ -174,7 +174,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     func assignPhotos() -> Void {
         let presentImagePickerController: UIImagePickerControllerSourceType -> () = { source in
             let controller = UIImagePickerController()
-//            controller.delegate = self
+            controller.delegate = self
             var sourceType = source
             if (!UIImagePickerController.isSourceTypeAvailable(sourceType)) {
                 sourceType = .PhotoLibrary
