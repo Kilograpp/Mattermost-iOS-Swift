@@ -68,6 +68,8 @@ class LeftMenuViewController: UIViewController {
         let selectedChannel = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Channel
         ChannelObserver.sharedObserver.selectedChannel = selectedChannel
         self.tableView.reloadData()
+        
+//FIXME: вызов метода должен быть без self
         self.toggleLeftSideMenu()
     }
     

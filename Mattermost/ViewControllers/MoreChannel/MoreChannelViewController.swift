@@ -7,10 +7,14 @@
 //
 
 import Foundation
+import RealmSwift
+import SwiftFetchedResultsController
 
 final class MoreChannelViewController: UIViewController, UITableViewDelegate , UITableViewDataSource {
-    @IBOutlet weak var headerView: UIView!
+    
     @IBOutlet weak var tableView:  UITableView!
+    lazy var fetchedResultsController: FetchedResultsController<Channel> = self.realmFetchedResultsController()
+    var realm: Realm?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +42,8 @@ final class MoreChannelViewController: UIViewController, UITableViewDelegate , U
     
     
     func configureCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath) {
-
-        //поставить конфигурацию
+        let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
+        cell.textLabel?.text = channel?.name
         
     }
     
@@ -48,7 +52,7 @@ final class MoreChannelViewController: UIViewController, UITableViewDelegate , U
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return self.fetchedResultsController.numberOfRowsForSectionIndex(section)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -58,6 +62,25 @@ final class MoreChannelViewController: UIViewController, UITableViewDelegate , U
         configureCellAtIndexPath(cell, indexPath: indexPath)
         return cell
     }
+    
+    func realmFetchedResultsController() -> FetchedResultsController<Channel> {
+        let predicate = NSPredicate(format: "identifier != %@", "fds")
+        let realm = try! Realm()
+        let fetchRequest = FetchRequest<Channel>(realm: realm, predicate: predicate)
+        fetchRequest.predicate = nil
+        //let sortDescriptorSection = SortDescriptor(property: ChannelAttributes.privateType.rawValue, ascending: false)
+        let sortDescriptorName = SortDescriptor(property: ChannelAttributes.displayName.rawValue, ascending: true)
+        fetchRequest.sortDescriptors = [/*sortDescriptorSection,*/ sortDescriptorName]
+        let fetchedResultsController = FetchedResultsController<Channel>(fetchRequest: fetchRequest,
+                                                                   sectionNameKeyPath: ChannelAttributes.privateType.rawValue,
+                                                                            cacheName: nil)
+        fetchedResultsController.delegate = nil
+        fetchedResultsController.performFetch()
+        
+        return fetchedResultsController
+    }
+    
+
  
 }
 
