@@ -13,7 +13,7 @@ import RealmSwift
 final class PostUtils: NSObject {
     
     static let sharedInstance = PostUtils()
-    let queue = dispatch_group_create()
+    let upload_images_group = dispatch_group_create()
     
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
         let postToSend = Post()
@@ -37,14 +37,14 @@ final class PostUtils: NSObject {
         post.pendingId = "\(id):\(time)"
     }
     
-    private func uploadAttachmentsIfNeeded(attachments: Array<UIImage>, completion: (finished: Bool, error: Error?) -> Void) {
-        for attachment in attachments {
-            dispatch_group_enter(self.queue)
-            Api.sharedInstance.uploadFile({ (file, error) in
-                print("z_Z")
-                }, progress: { (progressValue, index) in
-                    print("z_Z")
-            })
-        }
-    }
+//    private func uploadAttachmentsIfNeeded(attachments: Array<UIImage>, completion: (finished: Bool, error: Error?) -> Void) {
+//        for attachment in attachments {
+//            dispatch_group_enter(self.upload_images_group)
+//            Api.sharedInstance.uploadImageForIndex(attachment, index: attachments.indexOf(attachment)!, completion: { (file, error) in
+//                print("completed")
+//                }, progress: { (progressValue, index) in
+//                    print(progressValue)
+//            })
+//        }
+//    }
 }

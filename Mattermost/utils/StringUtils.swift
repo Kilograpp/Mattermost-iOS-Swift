@@ -45,4 +45,11 @@ final class StringUtils {
         let frame = attributedString.boundingRectWithSize(CGSizeMake(textWidth, CGFloat.max), options: options, context: nil)
         return ceilf(Float(frame.size.height))
     }
+    
+    static func randomUUID() -> String {
+        let newUniqueId = CFUUIDCreate(kCFAllocatorDefault)
+        let uuidString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueId)
+        
+        return uuidString as String
+    }
 }

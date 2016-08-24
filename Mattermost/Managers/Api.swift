@@ -40,7 +40,9 @@ private protocol PostApi: class {
 }
 
 private protocol FileApi : class {
-    func uploadFile(completion: (file: File, error: Error?) -> Void, progress: (progressValue: Float, index: Int) -> Void)
+//    func uploadFile(completion: (file: File, error: Error?) -> Void, progress: (progressValue: Float, index: Int) -> Void)
+//    func uploadSingleImageFromSequenceAtIndexForChannel(image: UIImage!, index: Int, channel: Channel, completion: (file: File, error: Error?) -> Void, progress: (progressValue: Float, index: Int) -> Void)
+    func uploadImageAtChannel(image: UIImage,channel: Channel, completion: (file: File, error: Error?) -> Void, progress: (progressValue: Float, index: Int) -> Void)
     func cancelUploadingOperationForImage(image: UIImage)
 }
 
@@ -278,8 +280,18 @@ extension Api: PostApi {
 }
 
 extension Api : FileApi {
-    func uploadFile(completion: (file: File, error: Error?) -> Void, progress: (progressValue: Float, index: Int) -> Void) {
+    func uploadImageAtChannel(image: UIImage,channel: Channel, completion: (file: File, error: Error?) -> Void, progress: (progressValue: Float, index: Int) -> Void) {
+        let path = SOCStringFromStringWithObject(File.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
+        let params = ["channel_id" : channel.identifier!,
+                      "client_ids"  : StringUtils.randomUUID()]
         
+        self.manager.postImage(with: image, name: "files", path: path, parameters: params, success: { (mappingResult) in
+            print("zzzzz")
+            }, failure: { (error) in
+                print("zzzzz")
+            }) { (progressValue) in
+                print(progressValue)
+        }
     }
     
     func cancelUploadingOperationForImage(image: UIImage) {

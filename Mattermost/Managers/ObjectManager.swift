@@ -1,4 +1,4 @@
-//
+ //
 // Created by Maxim Gubin on 28/06/16.
 // Copyright (c) 2016 Kilograpp. All rights reserved.
 //
@@ -34,7 +34,7 @@ private protocol PostRequests: class {
     func postImage(with image: UIImage!,
                    name: String!,
                    path: String!,
-                   parameters: [NSObject : AnyObject]?,
+                   parameters: [String : String]?,
                    success: ((mappingResult: RKMappingResult) -> Void)?,
                    failure: ((error: Error) -> Void)?,
                    progress: ((progressValue: Int) -> Void)?)
@@ -118,7 +118,7 @@ extension ObjectManager: PostRequests {
     func postImage(with image: UIImage!,
                         name: String!,
                         path: String!,
-                        parameters: [NSObject : AnyObject]?,
+                        parameters: Dictionary<String, String>?,
                         success: ((mappingResult: RKMappingResult) -> Void)?,
                         failure: ((error: Error) -> Void)?,
                         progress: ((progressValue: Int) -> Void)?) {
@@ -127,7 +127,9 @@ extension ObjectManager: PostRequests {
             formData.appendPartWithFileData(UIImagePNGRepresentation(image), name: name, fileName: "file.png", mimeType: "image/png")
         }
         
-        let request: NSMutableURLRequest = self.multipartFormRequestWithObject(nil, method: .POST, path: path,
+        let request: NSMutableURLRequest = self.multipartFormRequestWithObject(nil,
+                                                                               method: .POST,
+                                                                               path: path,
                                                                                parameters: parameters,
                                                                                constructingBodyWithBlock: constructingBodyWithBlock)
         
@@ -145,7 +147,8 @@ extension ObjectManager: PostRequests {
         let kg_operation = operation as! KGObjectRequestOperation
         kg_operation.image = image
         kg_operation.HTTPRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
-            let value = Int(Double(written) / Double(expectedToWrite) * 100)
+            let value = Int(Double(totalWritten) / Double(expectedToWrite) * 100)
+            print(value)
             progress?(progressValue: value)
         }
         self.enqueueObjectRequestOperation(operation)
