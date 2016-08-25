@@ -37,7 +37,7 @@ private protocol PostRequests: class {
                    parameters: [String : String]?,
                    success: ((mappingResult: RKMappingResult) -> Void)?,
                    failure: ((error: Error) -> Void)?,
-                   progress: ((progressValue: Int) -> Void)?)
+                   progress: ((progressValue: Float) -> Void)?)
 }
 
 private protocol Helpers: class {
@@ -121,7 +121,7 @@ extension ObjectManager: PostRequests {
                         parameters: Dictionary<String, String>?,
                         success: ((mappingResult: RKMappingResult) -> Void)?,
                         failure: ((error: Error) -> Void)?,
-                        progress: ((progressValue: Int) -> Void)?) {
+                        progress: ((progressValue: Float) -> Void)?) {
         
         let constructingBodyWithBlock = {(formData: AFRKMultipartFormData!) -> Void in
             formData.appendPartWithFileData(UIImagePNGRepresentation(image), name: name, fileName: "file.png", mimeType: "image/png")
@@ -147,8 +147,7 @@ extension ObjectManager: PostRequests {
         let kg_operation = operation as! KGObjectRequestOperation
         kg_operation.image = image
         kg_operation.HTTPRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
-            let value = Int(Double(totalWritten) / Double(expectedToWrite) * 100)
-            print(value)
+            let value = Float(totalWritten) / Float(expectedToWrite)
             progress?(progressValue: value)
         }
         self.enqueueObjectRequestOperation(operation)

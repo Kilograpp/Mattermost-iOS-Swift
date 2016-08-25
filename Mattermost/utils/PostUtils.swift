@@ -10,11 +10,26 @@ import Foundation
 import Realm
 import RealmSwift
 
+private protocol Public : class {
+    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func uploadImages(channel: Channel, images: Array<UIImage>, completion: (finished: Bool, error: Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
+    func assignImagesToPost(post: Post,images: Array<UIImage>)
+}
+
 final class PostUtils: NSObject {
     
     static let sharedInstance = PostUtils()
-    let upload_images_group = dispatch_group_create()
+    private let upload_images_group = dispatch_group_create()
     
+    
+    private func configureBackendPendingId(post: Post) {
+        let id = (DataManager.sharedInstance.currentUser?.identifier)!
+        let time = "\((post.createdAt?.timeIntervalSince1970)!)"
+        post.pendingId = "\(id):\(time)"
+    }
+}
+
+extension PostUtils : Public {
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
         let postToSend = Post()
         
@@ -30,21 +45,26 @@ final class PostUtils: NSObject {
             completion(error: error)
         }
     }
-    
-    private func configureBackendPendingId(post: Post) {
-        let id = (DataManager.sharedInstance.currentUser?.identifier)!
-        let time = "\((post.createdAt?.timeIntervalSince1970)!)"
-        post.pendingId = "\(id):\(time)"
+
+    func uploadImages(channel: Channel, images: Array<UIImage>, completion: (finished: Bool, error: Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
+        for image in images {
+            dispatch_group_enter(self.upload_images_group)
+            Api.sharedInstance.uploadImageAtChannel(image, channel: channel, completion: { (file, error) in
+                completion(finished: false, error: error)
+                dispatch_group_leave(self.upload_images_group)
+                }, progress: { (value) in
+                    let indexOfImage = Int(images.indexOf(image)!)
+                    progress(value: value, index: indexOfImage)
+            })
+            
+            dispatch_group_notify(self.upload_images_group, dispatch_get_main_queue(), {
+                //FIXME: add error
+                completion(finished: true, error: nil)
+            })
+        }
     }
     
-//    private func uploadAttachmentsIfNeeded(attachments: Array<UIImage>, completion: (finished: Bool, error: Error?) -> Void) {
-//        for attachment in attachments {
-//            dispatch_group_enter(self.upload_images_group)
-//            Api.sharedInstance.uploadImageForIndex(attachment, index: attachments.indexOf(attachment)!, completion: { (file, error) in
-//                print("completed")
-//                }, progress: { (progressValue, index) in
-//                    print(progressValue)
-//            })
-//        }
-//    }
+    func assignImagesToPost(post: Post,images: Array<UIImage>) {
+        
+    }
 }
