@@ -8,7 +8,7 @@ before_install:
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
 - rvm get stable --auto-dotfiles
-- rvm install 2.2.5
+- rvm install 2.2
 - pod setup
 
 before_script: .travis/keychain.sh
