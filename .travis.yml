@@ -1,19 +1,16 @@
 language: swift
 osx_image: xcode7.3
 
-rvm:
-- 2.2.5
-
 before_install:
 - brew update
 - brew outdated xctool || brew upgrade xctool
 - brew outdated carthage || brew upgrade carthage
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
-
+- rvm get stable --auto-dotfiles
+- rvm install 2.2.5
 
 script: .travis/script.sh
-
 
 branches:
   only:
