@@ -1,0 +1,28 @@
+fastlane_version "1.98.0"
+
+default_platform :ios
+
+platform :ios do
+  before_all do 
+    cocoapods(use_bundle_exec: true)
+    carthage(platform: "iOS")
+    match
+    gym
+  end
+
+  lane :beta do |options|
+    crashlytics(groups: ["Testers"])
+  end
+
+  lane :release do |options|
+    crashlytics(groups: [ENV['APP_NAME']])
+  end 
+
+  after_all do |lane|
+    
+  end
+
+  error do |lane, exception|
+    raise 'Exit Jenkins'
+  end
+end
