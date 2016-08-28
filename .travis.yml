@@ -2,6 +2,8 @@ language: swift
 osx_image: xcode7.3
 
 before_install:
+- pod setup
+- pod repo update
 - brew update
 - brew outdated xctool || brew upgrade xctool
 - brew outdated carthage || brew upgrade carthage
