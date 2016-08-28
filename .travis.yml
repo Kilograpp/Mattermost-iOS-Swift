@@ -5,10 +5,10 @@ before_install:
 - brew update
 - brew outdated xctool || brew upgrade xctool
 - brew outdated carthage || brew upgrade carthage
+- rvm install 2.2
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
 - rvm get stable --auto-dotfiles
-- rvm install 2.2
 - pod setup
 
 before_script: .travis/keychain.sh
