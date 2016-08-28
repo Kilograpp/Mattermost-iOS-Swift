@@ -9,9 +9,11 @@ before_install:
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
 
-before_script: .travis/keychain.sh
+before_script: 
+- bash .travis/keychain.sh
 
-script: .travis/script.sh
+script: 
+- bash .travis/script.sh
 
 branches:
   only:
