@@ -1,3 +1,2 @@
 git_url "git@git.kilograpp.com:iOS/FastlaneMatch.git"
-username "m.gubin@sedama-development.com"
 type "adhoc"
