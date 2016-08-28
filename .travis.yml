@@ -9,6 +9,7 @@ before_install:
 - gem update fastlane --no-ri --no-rdoc --no-document
 - rvm get stable --auto-dotfiles
 - rvm install 2.2.5
+- pod setup
 
 before_script: .travis/keychain.sh
 
