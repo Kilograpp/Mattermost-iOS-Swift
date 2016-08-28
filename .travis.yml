@@ -1,6 +1,9 @@
 language: swift
 osx_image: xcode7.3
 
+rvm:
+- 2.2.5
+
 before_install:
 - brew update
 - brew outdated xctool || brew upgrade xctool
@@ -8,7 +11,9 @@ before_install:
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
 
+
 script: .travis/script.sh
+
 
 branches:
   only:
