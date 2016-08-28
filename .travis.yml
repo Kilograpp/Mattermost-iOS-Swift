@@ -10,6 +10,8 @@ before_install:
 - rvm get stable --auto-dotfiles
 - rvm install 2.2.5
 
+before_script: .travis/keychain.sh
+
 script: .travis/script.sh
 
 branches:
