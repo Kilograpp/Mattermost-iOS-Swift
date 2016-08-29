@@ -4,11 +4,10 @@ osx_image: xcode7.3
 before_install:
 - chmod +x .travis/add_keychain.sh
 - chmod +x .travis/remove_keychain.sh
-- pod repo update --silent
 - brew update
 - brew outdated xctool || brew upgrade xctool
 - brew outdated carthage || brew upgrade carthage
-- rvm install 2.2.2
+- rvm install 2.2.5
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
 
