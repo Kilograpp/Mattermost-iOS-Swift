@@ -1,0 +1,3 @@
+scheme ENV['APP_NAME']
+clean true
+export_method "ad-hoc"
