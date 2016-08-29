@@ -70,7 +70,6 @@
 		D8087AE71D427E23001918E8 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE61D427E23001918E8 /* Post.swift */; };
 		D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AEA1D428923001918E8 /* NSCalendar+Singleton.swift */; };
 		D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AEC1D428DE9001918E8 /* NSDate+Formatter.swift */; };
-		D8087AEF1D428E72001918E8 /* DateTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AEE1D428E72001918E8 /* DateTools.framework */; };
 		D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF01D428FF1001918E8 /* StringUtils.swift */; };
 		D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF41D429393001918E8 /* UIScreen+Size.swift */; };
 		D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AF61D429610001918E8 /* TSMarkdownParser.framework */; };
@@ -278,7 +277,6 @@
 				D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */,
 				D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */,
 				D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */,
-				D8087AEF1D428E72001918E8 /* DateTools.framework in Frameworks */,
 				D85D92F01D400FB1002F8800 /* RealmSwift.framework in Frameworks */,
 				D85D92EF1D400F9E002F8800 /* Realm.framework in Frameworks */,
 				63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */,
@@ -853,7 +851,6 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/DateTools.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TSMarkdownParser.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SlackTextViewController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftFetchedResultsController.framework",
