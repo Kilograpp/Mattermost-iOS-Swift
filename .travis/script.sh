@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$TRAVIS_BRANCH" == "development" ]]
+if [[ "$TRAVIS_BRANCH" == "development" ]]; then
     fastlane beta
     exit $?
 else

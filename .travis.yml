@@ -12,10 +12,13 @@ before_install:
 - gem update fastlane --no-ri --no-rdoc --no-document
 
 before_script: 
-- bash .travis/keychain.sh
+- .travis/add_keychain.sh
 
 script: 
-- bash .travis/script.sh
+- .travis/script.sh
+
+after_script: 
+- .travis/remove_keychain.sh
 
 branches:
   only:
