@@ -58,8 +58,6 @@
 		D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */; };
 		D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */; };
 		D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */; };
-		D6C51DCD1D6DC75400DD1CE4 /* test.png in Resources */ = {isa = PBXBuildFile; fileRef = D6C51DCC1D6DC75400DD1CE4 /* test.png */; };
-		D6C51DCF1D6DD08A00DD1CE4 /* ttt.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = D6C51DCE1D6DD08A00DD1CE4 /* ttt.jpeg */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D6E165871D47C1200014C831 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* Reusable.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
@@ -198,8 +196,6 @@
 		D6C0B4701D5E0A26006C506A /* RKObjectManager+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RKObjectManager+Additions.h"; sourceTree = "<group>"; };
 		D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RKObjectManager+Additions.m"; sourceTree = "<group>"; };
 		D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserStatusObserver.swift; path = Observers/UserStatusObserver.swift; sourceTree = "<group>"; };
-		D6C51DCC1D6DC75400DD1CE4 /* test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test.png; sourceTree = "<group>"; };
-		D6C51DCE1D6DD08A00DD1CE4 /* ttt.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ttt.jpeg; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D6E165861D47C1200014C831 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -440,8 +436,6 @@
 		9B822D8772CC01B506FE072D = {
 			isa = PBXGroup;
 			children = (
-				D6C51DCC1D6DC75400DD1CE4 /* test.png */,
-				D6C51DCE1D6DD08A00DD1CE4 /* ttt.jpeg */,
 				F58D8E3D9E818474B8FBB6D8 /* Frameworks */,
 				9B8226364A9CB357915ABAC5 /* Mattermost */,
 				9B82243559F26A9911CEBFB1 /* MattermostTests */,
@@ -798,9 +792,7 @@
 				D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */,
 				413B762A1D58CBF200F297BE /* Localizable.strings in Resources */,
 				9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */,
-				D6C51DCF1D6DD08A00DD1CE4 /* ttt.jpeg in Resources */,
 				D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */,
-				D6C51DCD1D6DC75400DD1CE4 /* test.png in Resources */,
 				D6330AB81D494BF9006D84F4 /* SF-UI-Text-Semibold.otf in Resources */,
 				D6330AB51D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf in Resources */,
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
