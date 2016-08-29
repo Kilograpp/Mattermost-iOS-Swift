@@ -224,17 +224,17 @@ extension ChatViewController {
 //            print(progressValue)
 //        }
         self.fileUploadingInProgress = false
-        let images = [UIImage(named: "ttt.jpeg")!, UIImage(named: "test.png")!]
-        PostUtils.sharedInstance.uploadImages(self.channel!, images: images, completion: { (finished, error) in
-            print("D_O_N_E")
-            if error != nil {
-                //TODO: handle error
-            } else {
-                self.fileUploadingInProgress = finished
-            }
-            }) { (value, index) in
-                print("progress [\(value)], index [\(index)]")
-        }
+//        let images = [UIImage(named: "ttt.jpeg")!, UIImage(named: "test.png")!]
+//        PostUtils.sharedInstance.uploadImages(self.channel!, images: images, completion: { (finished, error) in
+//            print("D_O_N_E")
+//            if error != nil {
+//                //TODO: handle error
+//            } else {
+//                self.fileUploadingInProgress = finished
+//            }
+//            }) { (value, index) in
+//                print("progress [\(value)], index [\(index)]")
+//        }
     }
 }
 
