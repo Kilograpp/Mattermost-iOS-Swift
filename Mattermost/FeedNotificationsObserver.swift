@@ -60,6 +60,13 @@ final class FeedNotificationsObserver {
                     // Query results have changed, so apply them to the UITableView
   
                     
+                    
+                    
+                    guard insertions.count > 0 || deletions.count > 0 else {
+                        self.tableView.reloadData()
+                        return
+                    }
+                    
                     guard insertions[0] != 0 && insertions.count != 1 else {
                         self.tableView.reloadData()
                         return
