@@ -33,7 +33,8 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         }
     }
     
-    let postAttachmentsView = PostAttachmentsView.init()
+    let postAttachmentsView = PostAttachmentsView()
+    var assignedPhotosArray = Array<AssignedPhotoViewItem>()
     
     //MARK: - Lifecycle
     
@@ -183,11 +184,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         let presentImagePickerController: UIImagePickerControllerSourceType -> () = { source in
             let controller = UIImagePickerController()
             controller.delegate = self
-            var sourceType = source
-            if (!UIImagePickerController.isSourceTypeAvailable(sourceType)) {
-                sourceType = .PhotoLibrary
-                print("Fallback to camera roll as a source since the simulator doesn't support taking pictures")
-            }
+            let sourceType = source
             controller.sourceType = sourceType
             
             self.presentViewController(controller, animated: true, completion: nil)
@@ -197,7 +194,9 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
             presentImagePickerController(.Camera)
             }, secondaryHandler: { _, numberOfPhotos in
-                print("Comment \(numberOfPhotos) photos")
+                self.assignedPhotosArray.appendContentsOf(AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets))
+                self.postAttachmentsView.updateAppearance()
+                print(self.assignedPhotosArray)
         }))
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: { NSString.localizedStringWithFormat(NSLocalizedString("ImagePickerSheet.button1.Send %lu Photo", comment: "Action Title"), $0) as String}, handler: { _ in
             presentImagePickerController(.PhotoLibrary)
@@ -306,7 +305,6 @@ extension ChatViewController {
 
 extension ChatViewController : Private {
     private func setupPostAttachmentsView() {
-//        self.postAttachmentsView.frame = CGRectMake(100, 100, 100, 100)
         self.postAttachmentsView.backgroundColor = UIColor.blueColor()
         self.view.addSubview(self.postAttachmentsView)
         
@@ -316,6 +314,17 @@ extension ChatViewController : Private {
         let height = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1, constant: 80)
         let bottom = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Bottom, relatedBy: .Equal, toItem: self.textInputbar, attribute: .Top, multiplier: 1, constant: 0)
         self.view.addConstraints([left, right, height, bottom])
+        self.postAttachmentsView.dataSource = self
+    }
+}
+
+extension ChatViewController : PostAttachmentViewDataSource {
+    func itemAtIndex(index: Int) -> AssignedPhotoViewItem {
+        return self.assignedPhotosArray[index]
+    }
+    
+    func numberOfItems() -> Int {
+        return self.assignedPhotosArray.count
     }
 }
 //
