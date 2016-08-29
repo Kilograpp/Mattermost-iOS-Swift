@@ -346,7 +346,6 @@
 				9B8220F2E4D1D8538A51229B /* Assets.xcassets */,
 				9B822480CFCCBBED84C3A22E /* Info.plist */,
 				9B82258408C03D292317D1D2 /* LaunchScreen.storyboard */,
-				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
 				D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */,
 				D8F6BCFF1D22E8DE000AC690 /* Supporting Files */,
 				D6330AA71D494BE2006D84F4 /* Resources */,
@@ -511,6 +510,7 @@
 		D62FEB961D4F2B2200390EBC /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
+				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
 				D62FEB971D4F2B3400390EBC /* Login.storyboard */,
 			);
 			name = Storyboards;
