@@ -2,9 +2,9 @@ language: objective-c
 osx_image: xcode7.3
 
 before_install:
-- chmod +xwr .travis/script.sh
-- chmod +xwr .travis/add_keychain.sh
-- chmod +xwr .travis/remove_keychain.sh
+- chmod +x .travis/script.sh
+- chmod +x .travis/add_keychain.sh
+- chmod +x .travis/remove_keychain.sh
 - brew update
 - brew outdated xctool || brew upgrade xctool
 - brew outdated carthage || brew upgrade carthage
@@ -13,11 +13,10 @@ before_install:
 - gem update fastlane --no-ri --no-rdoc --no-document
 
 before_script: 
-- carthage bootstrap --platform iOS
+- carthage bootstrap --platform iOS --no-use-binaries
 - .travis/add_keychain.sh
 
 script: 
-- carthage build --no-skip-current
 - .travis/script.sh
 
 after_script: 
