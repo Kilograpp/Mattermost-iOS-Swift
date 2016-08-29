@@ -1,10 +1,9 @@
-if [[ "$TRAVIS_BRANCH" == "development" ]]; then
-    bundle exec pod repo update 
+#!/bin/bash
+
+if [[ "$TRAVIS_BRANCH" == "development" ]]
     fastlane beta
     exit $?
-fi
-
-if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+else
     fastlane release
     exit $?
 fi

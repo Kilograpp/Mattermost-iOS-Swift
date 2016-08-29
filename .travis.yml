@@ -2,17 +2,20 @@ language: swift
 osx_image: xcode7.3
 
 before_install:
+- pod setup
+- pod repo update
 - brew update
 - brew outdated xctool || brew upgrade xctool
 - brew outdated carthage || brew upgrade carthage
+- rvm install 2.2.2
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
-- rvm get stable --auto-dotfiles
-- rvm install 2.2.5
 
-before_script: .travis/keychain.sh
+before_script: 
+- bash .travis/keychain.sh
 
-script: .travis/script.sh
+script: 
+- bash .travis/script.sh
 
 branches:
   only:
