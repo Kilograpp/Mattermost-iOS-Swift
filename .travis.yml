@@ -2,7 +2,6 @@ language: swift
 osx_image: xcode7.3
 
 before_install:
-- pod setup --silent > /dev/null
 - pod repo update --silent
 - brew update
 - brew outdated xctool || brew upgrade xctool
