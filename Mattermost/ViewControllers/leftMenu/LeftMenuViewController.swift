@@ -122,7 +122,7 @@ extension LeftMenuViewController : UITableViewDelegate {
 
     func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
-        view.moreTapHandler = { self.transitionToMoreChannel (section) }
+        view.moreTapHandler = { self.navigateToMoreChannel(section) }
 
         return view
     }
@@ -131,7 +131,7 @@ extension LeftMenuViewController : UITableViewDelegate {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
         let sectionName = self.fetchedResultsController.titleForHeaderInSection(section)
         view.configureWithChannelType(Channel.privateTypeDisplayName(sectionName))
-        view.addTapHandler = {print("ADD CHANNEL") }
+        view.addTapHandler = { print("ADD CHANNEL") }
         
         return view
     }
@@ -141,8 +141,7 @@ extension LeftMenuViewController : UITableViewDelegate {
         print("MEMBERS_LIST")
     }
     
-    func transitionToMoreChannel(section: Int)  {
-        print("MORE CHANNELS")
+    func navigateToMoreChannel(section: Int)  {
         let moreViewController = self.storyboard!.instantiateViewControllerWithIdentifier("MoreChannelViewController") as! MoreChannelViewController
         moreViewController.isPriviteChannel = (section == 0) ? false : true
         self.menuContainerViewController!.centerViewController.pushViewController(moreViewController, animated: true)

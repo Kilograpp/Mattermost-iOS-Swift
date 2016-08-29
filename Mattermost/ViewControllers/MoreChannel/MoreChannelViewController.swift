@@ -25,7 +25,6 @@ class MoreChannelViewController: UIViewController {
         setupTableView()
     }
     
-    
     func setupNavigationBar() {
         self.title = "More Channel"
     }
@@ -103,6 +102,7 @@ extension MoreChannelViewController : UITableViewDataSource {
 }
 
 extension MoreChannelViewController  {
+    
     func realmFetchedResultsController() -> FetchedResultsController<Channel> {
         let predicate = NSPredicate(format: "identifier != %@", "fds")
         let realm = try! Realm()
