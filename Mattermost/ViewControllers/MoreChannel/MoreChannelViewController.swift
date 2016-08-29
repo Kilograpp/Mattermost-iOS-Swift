@@ -42,7 +42,6 @@ class MoreChannelViewController: UIViewController {
 extension MoreChannelViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("showChatViewController", sender: self.fetchedResultsController.objectAtIndexPath(indexPath))
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -99,11 +98,8 @@ extension MoreChannelViewController : UITableViewDataSource {
                 let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
                 cell.textLabel?.text = channel?.displayName
             }
-
         }
-        
     }
- 
 }
 
 extension MoreChannelViewController  {
