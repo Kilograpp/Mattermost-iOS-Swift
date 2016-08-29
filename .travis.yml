@@ -1,7 +1,9 @@
-language: swift
+language: objective-c
 osx_image: xcode7.3
 
 before_install:
+- chmod +x .travis/add_keychain.sh
+- chmod +x .travis/remove_keychain.sh
 - pod repo update --silent
 - brew update
 - brew outdated xctool || brew upgrade xctool
