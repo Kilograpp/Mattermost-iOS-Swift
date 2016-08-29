@@ -53,6 +53,7 @@
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
 		D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B41D4A0F6400C13191 /* HexColors.m */; };
 		D6B4BF721D65CBEE005B22D6 /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */; };
+		D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */; };
 		D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */; };
 		D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */; };
 		D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */; };
@@ -190,6 +191,7 @@
 		D6A887B31D4A0F6400C13191 /* HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColors.h; sourceTree = "<group>"; };
 		D6A887B41D4A0F6400C13191 /* HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColors.m; sourceTree = "<group>"; };
 		D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
+		D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsView.swift; path = PostAttachmentsView/PostAttachmentsView.swift; sourceTree = "<group>"; };
 		D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuSectionFooter.swift; path = LeftMenu/LeftMenuSectionFooter.swift; sourceTree = "<group>"; };
 		D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LeftMenuSectionHeader.xib; path = LeftMenu/LeftMenuSectionHeader.xib; sourceTree = "<group>"; };
 		D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatus.swift; sourceTree = "<group>"; };
@@ -573,6 +575,7 @@
 		D6E165831D47C0890014C831 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */,
 				D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */,
 				4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */,
 				D6E165841D47C08F0014C831 /* Cells */,
@@ -914,6 +917,7 @@
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */,
 				D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */,
+				D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,

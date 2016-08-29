@@ -218,6 +218,11 @@ extension ChatViewController {
         self.prepareResults()
         self.loadFirstPageOfData()
         
+        let test = PostAttachmentsView.init()
+        test.frame = CGRectMake(100, 100, 100, 100)
+        test.backgroundColor = UIColor.blueColor()
+        self.view.addSubview(test)
+        
 //        Api.sharedInstance.uploadImageAtChannel(UIImage(named: "ttt.jpeg")!, channel: self.channel!, completion: { (file, error) in
 //            print("zzzz")
 //        }) { (progressValue, index) in
