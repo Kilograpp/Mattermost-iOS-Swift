@@ -11,6 +11,10 @@ import RealmSwift
 import SwiftFetchedResultsController
 import ImagePickerSheetController
 
+private protocol Private : class {
+    func setupPostAttachmentsView()
+}
+
 final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private var channel : Channel?
     private var resultsObserver: FeedNotificationsObserver?
@@ -29,6 +33,8 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         }
     }
     
+    let postAttachmentsView = PostAttachmentsView.init()
+    
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -38,6 +44,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         self.configureInputBar()
         self.configureTableView()
         self.setupRefreshControl()
+        setupPostAttachmentsView()
         
         ChannelObserver.sharedObserver.delegate = self
     }
@@ -218,11 +225,6 @@ extension ChatViewController {
         self.prepareResults()
         self.loadFirstPageOfData()
         
-        let test = PostAttachmentsView.init()
-        test.frame = CGRectMake(100, 100, 100, 100)
-        test.backgroundColor = UIColor.blueColor()
-        self.view.addSubview(test)
-        
 //        Api.sharedInstance.uploadImageAtChannel(UIImage(named: "ttt.jpeg")!, channel: self.channel!, completion: { (file, error) in
 //            print("zzzz")
 //        }) { (progressValue, index) in
@@ -299,6 +301,21 @@ extension ChatViewController {
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
         }
+    }
+}
+
+extension ChatViewController : Private {
+    private func setupPostAttachmentsView() {
+//        self.postAttachmentsView.frame = CGRectMake(100, 100, 100, 100)
+        self.postAttachmentsView.backgroundColor = UIColor.blueColor()
+        self.view.addSubview(self.postAttachmentsView)
+        
+        self.postAttachmentsView.translatesAutoresizingMaskIntoConstraints = false
+        let left = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Left, relatedBy: .Equal, toItem: self.textInputbar, attribute: .Left, multiplier: 1, constant: 0)
+        let right = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Right, relatedBy: .Equal, toItem: self.textInputbar, attribute: .Right, multiplier: 1, constant: 0)
+        let height = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1, constant: 80)
+        let bottom = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Bottom, relatedBy: .Equal, toItem: self.textInputbar, attribute: .Top, multiplier: 1, constant: 0)
+        self.view.addConstraints([left, right, height, bottom])
     }
 }
 //
