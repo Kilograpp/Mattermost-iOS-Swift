@@ -13,9 +13,11 @@ before_install:
 - gem update fastlane --no-ri --no-rdoc --no-document
 
 before_script: 
+- carthage bootstrap --platform iOS
 - .travis/add_keychain.sh
 
 script: 
+- carthage build --no-skip-current
 - .travis/script.sh
 
 after_script: 
