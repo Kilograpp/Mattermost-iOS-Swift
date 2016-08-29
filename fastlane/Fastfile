@@ -7,7 +7,7 @@ platform :ios do
     return if lane_context[SharedValues::LANE_NAME] == 'ios register'
    
     cocoapods(use_bundle_exec: true)
-    carthage(platform: "iOS", no_skip_current: true, verbose: true, use_binaries: false)
+    carthage(platform: "iOS", verbose: true, use_binaries: false)
     match
     gym
   end
