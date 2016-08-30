@@ -1,6 +1,7 @@
 PODS:
   - Crashlytics (3.7.3):
     - Fabric (~> 1.6.3)
+  - DateTools (1.7.0)
   - Fabric (1.6.8)
   - ISO8601DateFormatterValueTransformer (0.6.1):
     - RKValueTransformers (~> 1.1.0)
@@ -28,11 +29,13 @@ PODS:
 
 DEPENDENCIES:
   - Crashlytics
+  - DateTools
   - Fabric
   - RestKit
 
 SPEC CHECKSUMS:
   Crashlytics: 76f6beaff70acf226139582c09c78461597c2b98
+  DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   Fabric: 5755268d0171435ab167e3d0878a28a777deaf10
   ISO8601DateFormatterValueTransformer: 52da467d6ec899d6aedda8e48280ac92e8ee97e6
   RestKit: a0244db34e14ed9cf059fcee2be6733cc162c34a
@@ -40,6 +43,6 @@ SPEC CHECKSUMS:
   SOCKit: c7376ac262bea9115b8f749358f762522a47d392
   TransitionKit: 9ceccda4cd0cdc0a05ef85eb235e5a3292c3c250
 
-PODFILE CHECKSUM: 73f74db733fa3567dca28d0839cdf2ba624c6e91
+PODFILE CHECKSUM: e31697fa337ca346f2cb7e34fd8e2baca03abf01
 
 COCOAPODS: 1.0.1
