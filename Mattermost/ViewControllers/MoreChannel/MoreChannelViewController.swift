@@ -59,8 +59,8 @@ extension MoreChannelViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        if (self.isPriviteChannel != nil && self.isPriviteChannel == true) {
+        guard let checkIsPriviteChannel = self.isPriviteChannel else { return 0 }
+        if checkIsPriviteChannel == true {
             if (section == 1) {
                 return self.fetchedResultsController.numberOfRowsForSectionIndex(section)
             }
@@ -86,7 +86,8 @@ extension MoreChannelViewController : UITableViewDataSource {
     
     
     func configureCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath) {
-        if (self.isPriviteChannel != nil && self.isPriviteChannel == true) {
+        guard let checkIsPriviteChannel = self.isPriviteChannel else { return }
+        if checkIsPriviteChannel == true {
             if (indexPath.section == 1) {
                 let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
                 cell.textLabel?.text = channel?.displayName
