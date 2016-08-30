@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ts1-GG-mjn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ts1-GG-mjn">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -16,7 +16,7 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -31,6 +31,42 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="733.5" y="222.5"/>
+        </scene>
+        <!--More Channel View Controller-->
+        <scene sceneID="gzj-o9-9fm">
+            <objects>
+                <viewController storyboardIdentifier="MoreChannelViewController" id="qfI-yl-L18" customClass="MoreChannelViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Iru-FE-caq"/>
+                        <viewControllerLayoutGuide type="bottom" id="v7f-eJ-zK2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4MJ-dA-z8K">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mwd-DX-rnA">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="v7f-eJ-zK2" firstAttribute="top" secondItem="mwd-DX-rnA" secondAttribute="bottom" id="9TY-fV-2tJ"/>
+                            <constraint firstItem="mwd-DX-rnA" firstAttribute="top" secondItem="4MJ-dA-z8K" secondAttribute="top" id="OnM-ML-7Ke"/>
+                            <constraint firstAttribute="trailing" secondItem="mwd-DX-rnA" secondAttribute="trailing" id="kUI-P0-zdV"/>
+                            <constraint firstItem="mwd-DX-rnA" firstAttribute="leading" secondItem="4MJ-dA-z8K" secondAttribute="leading" id="ytv-7o-Vjb"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="yFT-VL-Wck"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="tableView" destination="mwd-DX-rnA" id="GeV-OH-hUS"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="showChatViewController" id="0Og-Od-fKR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CeA-dy-T1n" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-227.5" y="646.5"/>
         </scene>
         <!--Left Menu View Controller-->
         <scene sceneID="kNN-Et-YKc">
@@ -303,4 +339,7 @@
         <image name="navbar_menu_icon2" width="22" height="22"/>
         <image name="navbar_more_icon" width="22" height="22"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="0Og-Od-fKR"/>
+    </inferredMetricsTieBreakers>
 </document>

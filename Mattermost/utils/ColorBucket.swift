@@ -69,7 +69,7 @@ extension ColorBucket : SideMenuColors {
     static let sideMenuCommonTextColor = ColorBucket.lightGrayColor
     static let sideMenuSelectedTextColor = ColorBucket.blackColor
     static let sideMenuCellHighlightedColor = ColorBucket.whiteColor.colorWithAlphaComponent(0.5)
-    static let sideMenuCellSelectedColor = ColorBucket.lightGrayColor
+    static let sideMenuCellSelectedColor = ColorBucket.whiteColor
     
     static let rightMenuSeparatorColor = ColorBucket.sideMenuSeparatorColor()
     static let rightMenuTextColor = ColorBucket.lightBlue()

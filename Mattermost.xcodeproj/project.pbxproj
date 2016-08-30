@@ -21,6 +21,8 @@
 		9B822D4F5FE09663955B4184 /* MattermostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822FEE7A890495F4436A4C /* MattermostTests.swift */; };
 		9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B8220F2E4D1D8538A51229B /* Assets.xcassets */; };
 		9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822E83696EB65A72E9F73A /* Api.swift */; };
+		CD8825771D6C9CC800D08D45 /* MoreChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */; };
+		D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */; };
 		D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */; };
 		D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */; };
 		D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */; };
@@ -50,6 +52,7 @@
 		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
 		D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B41D4A0F6400C13191 /* HexColors.m */; };
+		D6B4BF721D65CBEE005B22D6 /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */; };
 		D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */; };
 		D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */; };
 		D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */; };
@@ -154,6 +157,8 @@
 		9B822E83696EB65A72E9F73A /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		9B822FEE7A890495F4436A4C /* MattermostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MattermostTests.swift; sourceTree = "<group>"; };
 		C16480FE9907B36335721461 /* Pods_Mattermost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mattermost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelViewController.swift; path = MoreChannel/MoreChannelViewController.swift; sourceTree = "<group>"; };
+		D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKObjectRequestOperation+ImageUploading.swift"; sourceTree = "<group>"; };
 		D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentView.swift; path = FeedAttachmentView/FeedAttachmentView.swift; sourceTree = "<group>"; };
 		D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SlackTextViewController.framework; path = Carthage/Build/iOS/SlackTextViewController.framework; sourceTree = "<group>"; };
 		D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftFetchedResultsController.framework; path = Carthage/Build/iOS/SwiftFetchedResultsController.framework; sourceTree = "<group>"; };
@@ -183,6 +188,7 @@
 		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
 		D6A887B31D4A0F6400C13191 /* HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexColors.h; sourceTree = "<group>"; };
 		D6A887B41D4A0F6400C13191 /* HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexColors.m; sourceTree = "<group>"; };
+		D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
 		D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuSectionFooter.swift; path = LeftMenu/LeftMenuSectionFooter.swift; sourceTree = "<group>"; };
 		D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LeftMenuSectionHeader.xib; path = LeftMenu/LeftMenuSectionHeader.xib; sourceTree = "<group>"; };
 		D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatus.swift; sourceTree = "<group>"; };
@@ -269,6 +275,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6B4BF721D65CBEE005B22D6 /* ImagePickerSheetController.framework in Frameworks */,
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
@@ -337,7 +344,6 @@
 				9B8220F2E4D1D8538A51229B /* Assets.xcassets */,
 				9B822480CFCCBBED84C3A22E /* Info.plist */,
 				9B82258408C03D292317D1D2 /* LaunchScreen.storyboard */,
-				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
 				D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */,
 				D8F6BCFF1D22E8DE000AC690 /* Supporting Files */,
 				D6330AA71D494BE2006D84F4 /* Resources */,
@@ -419,6 +425,7 @@
 				D86EF7FD1D5A325800BD49A3 /* UIView+Align.swift */,
 				D8935BAB1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift */,
 				D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */,
+				D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -434,9 +441,18 @@
 			);
 			sourceTree = "<group>";
 		};
+		CD8825751D6C9C6200D08D45 /* MoreChannel */ = {
+			isa = PBXGroup;
+			children = (
+				CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */,
+			);
+			name = MoreChannel;
+			sourceTree = "<group>";
+		};
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				CD8825751D6C9C6200D08D45 /* MoreChannel */,
 				D619620F1D6222EA00C2E259 /* RightMenu */,
 				4195DCEB1D54DA8600E8ED84 /* ServerUrl */,
 				D62FEB891D4F2A8200390EBC /* LeftMenu */,
@@ -492,6 +508,7 @@
 		D62FEB961D4F2B2200390EBC /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
+				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
 				D62FEB971D4F2B3400390EBC /* Login.storyboard */,
 			);
 			name = Storyboards;
@@ -676,6 +693,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */,
 				D86EF7FB1D5A208900BD49A3 /* Sugar.framework */,
 				D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */,
 				D6E165A51D47E9B00014C831 /* MFSideMenu.framework */,
@@ -860,6 +878,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SkyFloatingLabelTextField.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ImagePickerSheetController.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -918,6 +937,7 @@
 				D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */,
 				D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */,
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
+				D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */,
 				D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */,
@@ -956,6 +976,7 @@
 				D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */,
 				D8935BAC1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
+				CD8825771D6C9CC800D08D45 /* MoreChannelViewController.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
 				D8935BA51D5A81780037E7ED /* PerformanceManager.swift in Sources */,

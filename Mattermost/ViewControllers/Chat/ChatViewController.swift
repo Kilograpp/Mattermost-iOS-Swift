@@ -9,8 +9,9 @@
 import SlackTextViewController
 import RealmSwift
 import SwiftFetchedResultsController
+import ImagePickerSheetController
 
-final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
+final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private var channel : Channel?
     private var resultsObserver: FeedNotificationsObserver?
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
@@ -22,11 +23,18 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     var hasNextPage: Bool = true
     var isLoadingInProgress: Bool = false
     
+    var fileUploadingInProgress: Bool = true {
+        didSet {
+            self.toggleSendButtonAvailability()
+        }
+    }
+    
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
+//FIXME: вызов методов не должен быть через self
         self.configureInputBar()
         self.configureTableView()
         self.setupRefreshControl()
@@ -110,8 +118,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     // MARK: - FetchedResultsController
     
     
-    func prepareResults() {
-        
+    private func prepareResults() {
         if NSThread.isMainThread() {
             let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
             self.results = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
@@ -124,8 +131,6 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
                 self.resultsObserver = FeedNotificationsObserver(results: self.results, tableView: self.tableView)
             }
         }
-        
-            
     }
     
     // MARK: - Configuration
@@ -168,6 +173,35 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     
     func assignPhotos() -> Void {
+        let presentImagePickerController: UIImagePickerControllerSourceType -> () = { source in
+            let controller = UIImagePickerController()
+            controller.delegate = self
+            var sourceType = source
+            if (!UIImagePickerController.isSourceTypeAvailable(sourceType)) {
+                sourceType = .PhotoLibrary
+                print("Fallback to camera roll as a source since the simulator doesn't support taking pictures")
+            }
+            controller.sourceType = sourceType
+            
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
+        
+        let controller = ImagePickerSheetController(mediaType: .ImageAndVideo)
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
+            presentImagePickerController(.Camera)
+            }, secondaryHandler: { _, numberOfPhotos in
+                print("Comment \(numberOfPhotos) photos")
+        }))
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: { NSString.localizedStringWithFormat(NSLocalizedString("ImagePickerSheet.button1.Send %lu Photo", comment: "Action Title"), $0) as String}, handler: { _ in
+            presentImagePickerController(.PhotoLibrary)
+            }, secondaryHandler: { _, numberOfPhotos in
+                print("Send \(controller.selectedImageAssets)")
+        }))
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .Cancel, handler: { _ in
+            print("Cancelled")
+        }))
+        
+        presentViewController(controller, animated: true, completion: nil)
     }
 }
 
@@ -184,6 +218,23 @@ extension ChatViewController {
         self.prepareResults()
         self.loadFirstPageOfData()
         
+//        Api.sharedInstance.uploadImageAtChannel(UIImage(named: "ttt.jpeg")!, channel: self.channel!, completion: { (file, error) in
+//            print("zzzz")
+//        }) { (progressValue, index) in
+//            print(progressValue)
+//        }
+        self.fileUploadingInProgress = false
+//        let images = [UIImage(named: "ttt.jpeg")!, UIImage(named: "test.png")!]
+//        PostUtils.sharedInstance.uploadImages(self.channel!, images: images, completion: { (finished, error) in
+//            print("D_O_N_E")
+//            if error != nil {
+//                //TODO: handle error
+//            } else {
+//                self.fileUploadingInProgress = finished
+//            }
+//            }) { (value, index) in
+//                print("progress [\(value)], index [\(index)]")
+//        }
     }
 }
 
@@ -191,7 +242,7 @@ extension ChatViewController {
 // MARK: - UI Helpers
 
 extension ChatViewController {
-    func setupRefreshControl() {
+    private func setupRefreshControl() {
         let tableVc = UITableViewController.init() as UITableViewController
         tableVc.tableView = self.tableView
         self.refreshControl = UIRefreshControl.init()
@@ -205,6 +256,10 @@ extension ChatViewController {
     
     func endRefreshing() {
         self.refreshControl?.endRefreshing()
+    }
+    
+    func toggleSendButtonAvailability() {
+        self.rightButton.enabled = self.fileUploadingInProgress
     }
 }
 
@@ -241,6 +296,10 @@ extension ChatViewController {
         }
     }
 }
+//
+//extension ChatViewController : UIImagePickerControllerDelegate {
+//    
+//}
 
 //extension ChatViewController : ChannelObserverDelegate {
 //    func didSelectChannelWithIdentifier(identifier: String!) -> Void {
