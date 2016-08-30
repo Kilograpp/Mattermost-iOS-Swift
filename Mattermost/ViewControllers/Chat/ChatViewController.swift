@@ -18,6 +18,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     override var tableView: UITableView! { return super.tableView }
     
     var refreshControl: UIRefreshControl?
+    var topActivityIndicatorView: UIActivityIndicatorView?
     
     var hasNextPage: Bool = true
     var isLoadingInProgress: Bool = false
@@ -30,6 +31,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         self.configureInputBar()
         self.configureTableView()
         self.setupRefreshControl()
+        setupTopActivityIndicator()
         
         ChannelObserver.sharedObserver.delegate = self
     }
@@ -235,9 +237,11 @@ extension ChatViewController {
         guard !self.isLoadingInProgress else { return }
 
         self.isLoadingInProgress = true
+        showTopActivityIndicator()
         Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.results.last!.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false).last!) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
+            self.hideTopActivityIndicator()
         }
     }
 }
@@ -248,4 +252,28 @@ extension ChatViewController {
 //        print("\(self.channel?.displayName)")
 //    }
 //}
+
+//MARK: - ActivityIndicator
+
+extension ChatViewController {
+    
+    func setupTopActivityIndicator() {
+        self.topActivityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        self.topActivityIndicatorView!.transform = self.tableView.transform;
+    }
+    
+    func showTopActivityIndicator() {
+        let activityIndicatorHeight = CGRectGetHeight(self.topActivityIndicatorView!.bounds)
+        let tableFooterView = UIView(frame:CGRectMake(0, 0, CGRectGetWidth(self.tableView.bounds), activityIndicatorHeight * 2))
+        self.topActivityIndicatorView!.center = CGPointMake(tableFooterView.center.x, tableFooterView.center.y - activityIndicatorHeight / 5)
+        tableFooterView.addSubview(self.topActivityIndicatorView!)
+        self.tableView.tableFooterView = tableFooterView;
+        self.topActivityIndicatorView!.startAnimating()
+    }
+    
+    func hideTopActivityIndicator() {
+        self.topActivityIndicatorView!.stopAnimating()
+        self.tableView.tableFooterView = UIView(frame: CGRectZero)
+    }
+}
 

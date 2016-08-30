@@ -82,9 +82,29 @@ extension RightMenuViewController : PrivateConfig {
     }
 }
 
+
+//MARK: - Private
+
+extension RightMenuViewController {
+    private func toggleRightSideMenu() {
+        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
+    }
+}
+
 extension RightMenuViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch indexPath.row {
+        case RightMenuRows.About.rawValue:
+            toggleRightSideMenu()
+            proceedToAbout()
+            
+        default:
+            return
+        }
     }
 }
 
@@ -114,4 +134,16 @@ extension RightMenuViewController : UITableViewDataSource {
         
         return cell!
     }
+}
+
+//MARK: - Navigation
+    
+extension RightMenuViewController {
+    func proceedToAbout() {        
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let about = storyboard.instantiateViewControllerWithIdentifier(String(AboutViewController))
+        let navigation = self.menuContainerViewController.centerViewController
+        navigation!.pushViewController(about, animated:true)
+    }
+    
 }
