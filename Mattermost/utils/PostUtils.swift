@@ -12,7 +12,7 @@ import RealmSwift
 
 private protocol Public : class {
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
-    func uploadImages(channel: Channel, images: Array<UIImage>, completion: (finished: Bool, error: Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
+    func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
     func assignImagesToPost(post: Post,images: Array<UIImage>)
 }
 
@@ -46,16 +46,19 @@ extension PostUtils : Public {
         }
     }
 
-    func uploadImages(channel: Channel, images: Array<UIImage>, completion: (finished: Bool, error: Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
-        for image in images {
-            dispatch_group_enter(self.upload_images_group)
-            Api.sharedInstance.uploadImageAtChannel(image, channel: channel, completion: { (file, error) in
-                completion(finished: false, error: error)
-                dispatch_group_leave(self.upload_images_group)
-                }, progress: { (value) in
-                    let indexOfImage = Int(images.indexOf(image)!)
-                    progress(value: value, index: indexOfImage)
-            })
+    func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
+        for item in images {
+            if item.uploaded == false {
+                dispatch_group_enter(self.upload_images_group)
+                Api.sharedInstance.uploadImageAtChannel(item.image, channel: channel, completion: { (file, error) in
+                    completion(finished: false, error: error)
+                    dispatch_group_leave(self.upload_images_group)
+                    }, progress: { (value) in
+                        let index = images.indexOf({$0.image == item.image})
+//                        let indexOfItem = Int(images.indexOf(item)!)
+                        progress(value: value, index: index!)
+                })
+            }
             
             dispatch_group_notify(self.upload_images_group, dispatch_get_main_queue(), {
                 //FIXME: add error

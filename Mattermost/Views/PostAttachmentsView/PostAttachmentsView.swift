@@ -51,14 +51,14 @@ private protocol Public : class {
 extension PostAttachmentsView : Private {
     private func configureCollectionView() {
 //        [_delegate willHideBrowser];
-//        self.hidden = YES;sssss
+//        self.hidden = YES;
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .Horizontal
         
         self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
         self.addSubview(self.collectionView!)
         //FIXME: real color
-        self.collectionView?.backgroundColor = UIColor.redColor()
+        self.collectionView?.backgroundColor = UIColor.whiteColor()
         
         self.collectionView?.delegate = self
         self.collectionView?.dataSource = self
@@ -71,13 +71,13 @@ extension PostAttachmentsView : Private {
         let top = NSLayoutConstraint(item: self.collectionView!, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
         let bottom = NSLayoutConstraint(item: self.collectionView!, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1, constant: 0)
         self.addConstraints([left, right, top, bottom])
-//        self.layoutIfNeeded()
     }
 }
 
 extension PostAttachmentsView : Public {
     func updateProgressValueAtIndex(index: Int, value: Float) {
-        
+        let cellAtIndex = self.collectionView?.cellForItemAtIndexPath(NSIndexPath(forItem:index, inSection: 0)) as! PostAttachmentsViewCell
+        cellAtIndex.updateProgressViewWithValue(value)
     }
     
     func updateAppearance() {

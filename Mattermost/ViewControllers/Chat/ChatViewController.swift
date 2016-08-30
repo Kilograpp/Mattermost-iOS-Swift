@@ -194,9 +194,19 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
             presentImagePickerController(.Camera)
             }, secondaryHandler: { _, numberOfPhotos in
-                self.assignedPhotosArray.appendContentsOf(AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets))
+                let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
+//                let images = convertedAssets.map({ $0.image as UIImage})
+                self.assignedPhotosArray.appendContentsOf(convertedAssets)
                 self.postAttachmentsView.updateAppearance()
-                print(self.assignedPhotosArray)
+                PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error) in
+                    if error != nil {
+                        //TODO: handle error
+                    } else {
+                        self.fileUploadingInProgress = finished
+                    }
+                    }) { (value, index) in
+                        self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
+                }
         }))
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: { NSString.localizedStringWithFormat(NSLocalizedString("ImagePickerSheet.button1.Send %lu Photo", comment: "Action Title"), $0) as String}, handler: { _ in
             presentImagePickerController(.PhotoLibrary)
