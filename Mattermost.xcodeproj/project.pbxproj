@@ -21,7 +21,9 @@
 		9B822D4F5FE09663955B4184 /* MattermostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822FEE7A890495F4436A4C /* MattermostTests.swift */; };
 		9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B8220F2E4D1D8538A51229B /* Assets.xcassets */; };
 		9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822E83696EB65A72E9F73A /* Api.swift */; };
+		CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */; };
 		CD8825771D6C9CC800D08D45 /* MoreChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */; };
+		CDB6D3AD1D75FB2300C3018C /* ChatNavigationBarTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */; };
 		D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */; };
 		D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */; };
 		D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */; };
@@ -157,7 +159,9 @@
 		9B822E83696EB65A72E9F73A /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		9B822FEE7A890495F4436A4C /* MattermostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MattermostTests.swift; sourceTree = "<group>"; };
 		C16480FE9907B36335721461 /* Pods_Mattermost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mattermost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationController.swift; path = NavigationControllers/ChatNavigationController/ChatNavigationController.swift; sourceTree = "<group>"; };
 		CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelViewController.swift; path = MoreChannel/MoreChannelViewController.swift; sourceTree = "<group>"; };
+		CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationBarTitleView.swift; path = ChatNavigationBarTitleView/ChatNavigationBarTitleView.swift; sourceTree = "<group>"; };
 		D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKObjectRequestOperation+ImageUploading.swift"; sourceTree = "<group>"; };
 		D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentView.swift; path = FeedAttachmentView/FeedAttachmentView.swift; sourceTree = "<group>"; };
 		D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SlackTextViewController.framework; path = Carthage/Build/iOS/SlackTextViewController.framework; sourceTree = "<group>"; };
@@ -329,6 +333,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				CD157A891D75EA3F0079BD30 /* NavigationControllers */,
 				D8935BAD1D5B7FF80037E7ED /* Helpers */,
 				D8935BAA1D5B75B70037E7ED /* Builders */,
 				D62FEB961D4F2B2200390EBC /* Storyboards */,
@@ -441,12 +446,36 @@
 			);
 			sourceTree = "<group>";
 		};
+		CD157A891D75EA3F0079BD30 /* NavigationControllers */ = {
+			isa = PBXGroup;
+			children = (
+				CD157A8A1D75EA4B0079BD30 /* ChatNavigationController */,
+			);
+			name = NavigationControllers;
+			sourceTree = "<group>";
+		};
+		CD157A8A1D75EA4B0079BD30 /* ChatNavigationController */ = {
+			isa = PBXGroup;
+			children = (
+				CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */,
+			);
+			name = ChatNavigationController;
+			sourceTree = "<group>";
+		};
 		CD8825751D6C9C6200D08D45 /* MoreChannel */ = {
 			isa = PBXGroup;
 			children = (
 				CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */,
 			);
 			name = MoreChannel;
+			sourceTree = "<group>";
+		};
+		CDB6D3B01D75FBA800C3018C /* ChatNavigationBarTitleView */ = {
+			isa = PBXGroup;
+			children = (
+				CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */,
+			);
+			name = ChatNavigationBarTitleView;
 			sourceTree = "<group>";
 		};
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
@@ -571,6 +600,7 @@
 		D6E165831D47C0890014C831 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CDB6D3B01D75FBA800C3018C /* ChatNavigationBarTitleView */,
 				D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */,
 				4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */,
 				D6E165841D47C08F0014C831 /* Cells */,
@@ -951,10 +981,12 @@
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
 				D86EF7FA1D59F13C00BD49A3 /* AttachmentFileCell.swift in Sources */,
 				D8935BA71D5B4FC70037E7ED /* FeedCellBuilder.swift in Sources */,
+				CDB6D3AD1D75FB2300C3018C /* ChatNavigationBarTitleView.swift in Sources */,
 				D62FEB951D4F2AD700390EBC /* PublicChannelTableViewCell.swift in Sources */,
 				D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
+				CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
 				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,
 				D62FEB931D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift in Sources */,
