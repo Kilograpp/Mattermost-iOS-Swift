@@ -7,7 +7,8 @@ platform :ios do
     return if lane_context[SharedValues::LANE_NAME] == 'ios register'
     sh "cd .. && scripts/carthage.sh"
     cocoapods(use_bundle_exec: true)
-    match
+    match(type: "development", readonly: true)
+    match(readonly: true)
     gym
   end
 
