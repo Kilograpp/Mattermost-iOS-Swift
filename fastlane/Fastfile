@@ -5,9 +5,8 @@ default_platform :ios
 platform :ios do
   before_all do |lane, options|
     return if lane_context[SharedValues::LANE_NAME] == 'ios register'
-   
-    cocoapods(use_bundle_exec: true)
-    carthage(platform: "iOS")
+    sh "cd .. && scripts/carthage.sh"
+    cocoapods(use_bundle_exec: true, verbose: true)
     match
     gym
   end
@@ -33,7 +32,8 @@ platform :ios do
   end
 
   error do |lane, exception|
+    puts exception
     return if lane_context[SharedValues::LANE_NAME] == 'ios register'
-    raise 'Exit Jenkins'
+    #raise 'Exit Jenkins'
   end
 end
