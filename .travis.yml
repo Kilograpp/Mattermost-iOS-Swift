@@ -14,9 +14,10 @@ before_install:
 - rvm install 2.2.5
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
+- bundle install
+- bundle exec pod repo update --silent
 
 before_script:
-- carthage bootstrap --platform iOS
 - .travis/add_keychain.sh
 
 script:
