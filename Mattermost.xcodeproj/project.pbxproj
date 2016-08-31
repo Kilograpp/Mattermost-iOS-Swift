@@ -24,6 +24,8 @@
 		CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */; };
 		CD8825771D6C9CC800D08D45 /* MoreChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */; };
 		CDB6D3AD1D75FB2300C3018C /* ChatNavigationBarTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */; };
+		CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */; };
+		CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */; };
 		D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */; };
 		D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */; };
 		D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */; };
@@ -162,6 +164,8 @@
 		CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationController.swift; path = NavigationControllers/ChatNavigationController/ChatNavigationController.swift; sourceTree = "<group>"; };
 		CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelViewController.swift; path = MoreChannel/MoreChannelViewController.swift; sourceTree = "<group>"; };
 		CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationBarTitleView.swift; path = ChatNavigationBarTitleView/ChatNavigationBarTitleView.swift; sourceTree = "<group>"; };
+		CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MoreChannelsTableViewCell.xib; path = MoreChannel/MoreChannelsTableViewCell.xib; sourceTree = "<group>"; };
+		CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelsTableViewCell.swift; path = MoreChannel/MoreChannelsTableViewCell.swift; sourceTree = "<group>"; };
 		D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKObjectRequestOperation+ImageUploading.swift"; sourceTree = "<group>"; };
 		D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentView.swift; path = FeedAttachmentView/FeedAttachmentView.swift; sourceTree = "<group>"; };
 		D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SlackTextViewController.framework; path = Carthage/Build/iOS/SlackTextViewController.framework; sourceTree = "<group>"; };
@@ -478,6 +482,15 @@
 			name = ChatNavigationBarTitleView;
 			sourceTree = "<group>";
 		};
+		CDB6D3B11D771CBC00C3018C /* MoreChannel */ = {
+			isa = PBXGroup;
+			children = (
+				CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */,
+				CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */,
+			);
+			name = MoreChannel;
+			sourceTree = "<group>";
+		};
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -612,6 +625,7 @@
 		D6E165841D47C08F0014C831 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				CDB6D3B11D771CBC00C3018C /* MoreChannel */,
 				D62FEB8F1D4F2AC500390EBC /* LeftMenu */,
 				D6E165851D47C0960014C831 /* Chat */,
 				D6E165861D47C1200014C831 /* Reusable.swift */,
@@ -826,6 +840,7 @@
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
 				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
 				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
+				CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */,
 				D62FEB981D4F2B3400390EBC /* Login.storyboard in Resources */,
 				416040F41D58B6E300B53E31 /* Localizable.strings in Resources */,
 				D6330AB61D494BF9006D84F4 /* SF-UI-Text-Medium.otf in Resources */,
@@ -940,6 +955,7 @@
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */,
+				CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */,
 				D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,

@@ -143,7 +143,7 @@ extension LeftMenuViewController : UITableViewDelegate {
     
     func navigateToMoreChannel(section: Int)  {
         let moreViewController = self.storyboard!.instantiateViewControllerWithIdentifier("MoreChannelViewController") as! MoreChannelViewController
-        moreViewController.isPriviteChannel = (section == 0) ? false : true
+        moreViewController.isPrivateChannel = (section == 0) ? false : true
         self.menuContainerViewController!.centerViewController.pushViewController(moreViewController, animated: true)
         toggleLeftSideMenu()
     }
