@@ -19,9 +19,6 @@ before_install:
 
 install: true
 
-before_script:
-- ".travis/add_keychain.sh"
-
 script:
 - ".travis/script.sh"
 
