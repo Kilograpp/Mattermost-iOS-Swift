@@ -1,12 +1,13 @@
 language: objective-c
 osx_image: xcode7.3
+
 cache:
 - bundler
+
 before_install:
 - chmod +x .travis/script.sh
 - chmod +x .travis/add_keychain.sh
 - chmod +x .travis/remove_keychain.sh
-- ".travis/add_keychain.sh"
 - brew update
 - brew outdated xctool || brew upgrade xctool
 - brew outdated carthage || brew upgrade carthage
@@ -15,17 +16,23 @@ before_install:
 - gem update fastlane --no-ri --no-rdoc --no-document
 - bundle install
 - bundle exec pod repo update --silent
+
 install: true
+
 before_script:
 - ".travis/add_keychain.sh"
+
 script:
 - ".travis/script.sh"
+
 after_script:
 - ".travis/remove_keychain.sh"
+
 branches:
   only:
   - master
   - development
+
 env:
   global:
   - secure: KKb+JHQHSp9wlYZ+c75mFNAxZAePX1aENWCTIyKl1xCG46GCmNDVqBXWEQ+z3lIBOBZhVOIp9Mjno2msQTTjVSse80TOrHLLIqUBn4mIvfW4llcmmcCS8aZC7eRAX/yd7E+bNDwpV5RblurkzdMZEdGR3LNYdaukmWGR84hVgdc7HAr/8QDtMtRGibKdVVfn3lno4aJchzOJghFrRdYO7PXnKmAdRm9zNSlALCnWxqRgcY5ClzVeviWb0iRwRr7pXjJWJFourYQp0NzyrGMUMEei3An7KdQ4kbOS0XrmTPp5CaL6T7RmRTVRtH0ndRGrc4qBhvCoWFTthlK8oI+8tzmazHAhdcmL5G+owIDRJk2ioAEsc0cucZxHAK3x9JfiZSeZyfdSuELgwLdf3z/pr3WjA4y5SXCG0D/mc8wzW4e6nhTpbPSGLCEwlJ4guRCXw7pAqOniu89//gFJiOZXmEZ5R3gErG57Q8EHGS1x02pE4bUBzA0tOT74n+uKpzkxz7jOpkPrKUtfm+Kg6lx572WGaRPQzEH5AwmDPXkKkNoRDkESUtDyJLxbzzdR4yYcu7w8d6IC7vWSK+jgnYHq19TGBsaNL5zedU/c8JhOeLdjlqTDES28c/fbPgFSwiluKV6WT3+/3QNjgtbyeJZf+Id1cAKe149iw4GW2WzPPik=
