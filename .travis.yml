@@ -17,6 +17,8 @@ before_install:
 - bundle install
 - bundle exec pod repo update --silent
 
+install: true
+
 before_script:
 - .travis/add_keychain.sh
 
