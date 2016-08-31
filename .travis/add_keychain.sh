@@ -14,3 +14,6 @@ security import .travis/dist.p12 -k $KEYCHAIN -P $MATCH_PASSWORD -T /usr/bin/cod
 
 security list-keychains -s $KEYCHAIN
 security list-keychains
+
+security default-keychain -s $KEYCHAIN
+security unlock-keychain -p $PASSWORD $KEYCHAIN
