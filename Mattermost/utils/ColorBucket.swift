@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import HEXColor
 
 private protocol PostColors: class {
     static var commonMessageColor: UIColor {get}
@@ -81,46 +82,46 @@ extension ColorBucket : ServerUrlColors {
 
 extension ColorBucket {
     private class func black() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#3B3B3B", alpha: 1)!
+        return UIColor(rgba: "#3B3B3B")
     }
     
     private class func white() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#FFFFFF", alpha: 1)!
+        return UIColor(rgba: "#FFFFFF")
     }
     
     private class func blue() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#0076FF", alpha: 1)!
+        return UIColor(rgba: "#0076FF")
     }
     
     private class func gray() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#979797", alpha: 1)!
+        return UIColor(rgba: "#979797")
     }
     
     private class func lightGray() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#D8D8D8", alpha: 1)!
+        return UIColor(rgba: "#D8D8D8")
     }
     
     private class func darkGray() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#D8D8D8", alpha: 1)!
+        return UIColor(rgba: "#D8D8D8")
     }
     
     private class func deepBlue() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#2071A8", alpha: 1)!
+        return UIColor(rgba: "#2071A8")
     }
     
     private class func deepLightBlue() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#2F81B7", alpha: 1)!
+        return UIColor(rgba: "#2F81B7")
     }
     
     private class func darkDarkGray() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#334659", alpha: 1)!
+        return UIColor(rgba: "#334659")
     }
     
     private class func sideMenuSeparatorColor() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#8798A4", alpha: 0.7)!
+        return UIColor(rgba: "#8798A4")
     }
     
     private class func lightBlue() -> UIColor {
-        return UIColor.hx_colorWithHexRGBAString("#C3CDD4", alpha: 1)!
+        return UIColor(rgba: "#C3CDD4")
     }
 }

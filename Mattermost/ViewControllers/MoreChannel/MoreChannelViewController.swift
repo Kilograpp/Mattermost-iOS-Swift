@@ -99,7 +99,7 @@ extension MoreChannelViewController : UITableViewDataSource {
     
     func configureCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath) {
         // FIXME: Code Review: Сделать на уровне фильтра
-        if (self.isPriviteChannel != nil && self.isPriviteChannel == true) {
+        if (self.isPriviteChannel == true) {
             if (indexPath.section == 1) {
                 let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
                 cell.textLabel?.text = channel?.displayName
