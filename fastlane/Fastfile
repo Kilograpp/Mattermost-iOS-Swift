@@ -5,20 +5,20 @@ default_platform :ios
 platform :ios do
   before_all do |lane, options|
     return if lane_context[SharedValues::LANE_NAME] == 'ios register'
+    
     sh "cd .. && scripts/carthage.sh"
     cocoapods(use_bundle_exec: true)
     match(readonly: true)
-    increment_version_number(version_number: number_of_commits)
+    increment_version_number(version_number: number_of_commits.to_s)
+    increment_build_number(build_number: lane_context[SharedValues::LANE_NAME].split.last.capitalize)
     gym
   end
 
   lane :beta do |options|
-    increment_build_number(build_number: 'Development')
     crashlytics(groups: ["Testers"])
   end
 
   lane :release do |options|
-    increment_build_number(build_number: 'Production')
     crashlytics(groups: [ENV['APP_NAME']])
   end 
 
