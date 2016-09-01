@@ -45,6 +45,8 @@ class PostAttachmentsView : UIView {
         }
     }
     
+    var isShown = false
+    
     static let attachmentsViewHeight: CGFloat = 80
 }
 
@@ -119,13 +121,21 @@ extension PostAttachmentsView : Public {
     }
     
     func showAnimated() {
-        self.bottomConstraint!.constant = 0
-        UIView.animateWithDuration(0.3) { 
-            self.superview?.layoutIfNeeded()
+        guard self.isShown == true else {
+            self.delegate?.attachmentsViewWillAppear()
+            self.isShown = true
+            self.bottomConstraint!.constant = 0
+            UIView.animateWithDuration(0.3) {
+                self.superview?.layoutIfNeeded()
+            }
+            
+            return
         }
     }
     
     func hideAnimated() {
+        self.delegate?.attachmentViewWillDisappear()
+        self.isShown = false
         self.bottomConstraint!.constant = PostAttachmentsView.attachmentsViewHeight
         UIView.animateWithDuration(0.3) {
             self.superview?.layoutIfNeeded()
@@ -149,12 +159,12 @@ extension PostAttachmentsView : UICollectionViewDataSource {
         convertedCell.configureWithItem((self.dataSource?.itemAtIndex(indexPath.row))!)
         convertedCell.removeTapHandler = {(imageItem) in
             self.delegate?.didRemovePhoto(imageItem)
-//            self.collectionView?.performBatchUpdates({ 
-//                self.collectionView?.deleteItemsAtIndexPaths([indexPath])
-//                self.collectionView?.reloadSections(NSIndexSet(index: 0))
-//                }, completion: { (finished) in
-//                    
-//            })
+            self.collectionView?.performBatchUpdates({ 
+                self.collectionView?.deleteItemsAtIndexPaths([indexPath])
+                self.collectionView?.reloadSections(NSIndexSet(index: 0))
+                }, completion: { (finished) in
+                    
+            })
         }
         
         return convertedCell

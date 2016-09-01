@@ -106,7 +106,8 @@ extension ObjectManager: PostRequests {
                     success: ((mappingResult: RKMappingResult) -> Void)?,
                     failure: ((error: Error) -> Void)?) {
         super.postObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            
+            let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
+            print(eror)
             success?(mappingResult: mappingResult)
         }) { (operation, error) in
             let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)

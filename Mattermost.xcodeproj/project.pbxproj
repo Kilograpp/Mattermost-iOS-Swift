@@ -24,6 +24,7 @@
 		CD8825771D6C9CC800D08D45 /* MoreChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */; };
 		D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */; };
 		D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C9B1B1D74DB76008BB5CF /* AssetsUtils.swift */; };
+		D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60EB7CE1D78384600D21D7D /* Array+RemoveObject.swift */; };
 		D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */; };
 		D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */; };
 		D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */; };
@@ -165,6 +166,7 @@
 		CD8825761D6C9CC800D08D45 /* MoreChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelViewController.swift; path = MoreChannel/MoreChannelViewController.swift; sourceTree = "<group>"; };
 		D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKObjectRequestOperation+ImageUploading.swift"; sourceTree = "<group>"; };
 		D60C9B1B1D74DB76008BB5CF /* AssetsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AssetsUtils.swift; path = Mattermost/utils/AssetsUtils.swift; sourceTree = SOURCE_ROOT; };
+		D60EB7CE1D78384600D21D7D /* Array+RemoveObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+RemoveObject.swift"; path = "Mattermost/extensions/Array+RemoveObject.swift"; sourceTree = SOURCE_ROOT; };
 		D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedAttachmentView.swift; path = FeedAttachmentView/FeedAttachmentView.swift; sourceTree = "<group>"; };
 		D617E69D1D46AF2000283C0A /* SlackTextViewController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SlackTextViewController.framework; path = Carthage/Build/iOS/SlackTextViewController.framework; sourceTree = "<group>"; };
 		D617E69F1D46AF3400283C0A /* SwiftFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftFetchedResultsController.framework; path = Carthage/Build/iOS/SwiftFetchedResultsController.framework; sourceTree = "<group>"; };
@@ -438,6 +440,7 @@
 				D8935BAB1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift */,
 				D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */,
 				D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */,
+				D60EB7CE1D78384600D21D7D /* Array+RemoveObject.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -991,6 +994,7 @@
 				D67A42F61D747B80003E2466 /* AssignedPhotoViewItem.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */,
+				D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */,
 				D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */,
 				D6A887B51D4A0F6400C13191 /* HexColors.m in Sources */,
 				D61962111D62230600C2E259 /* RightMenuViewController.swift in Sources */,

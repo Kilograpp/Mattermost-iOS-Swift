@@ -287,8 +287,8 @@ extension Api : FileApi {
             let file = File()
             let rawLink = mappingResult.firstObject[FileAttributes.rawLink.rawValue] as! String
             file.rawLink = rawLink
-            RealmUtils.save(file)
             completion(file: file, error: nil)
+//            RealmUtils.save(file)
             }, failure: { (error) in
                 completion(file: nil, error: nil)
             }) { (value) in

@@ -198,7 +198,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
             }, secondaryHandler: { _, numberOfPhotos in
                 let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
                 self.assignedPhotosArray.appendContentsOf(convertedAssets)
-                print(self.assignedPhotosArray)
+                self.postAttachmentsView.showAnimated()
                 self.postAttachmentsView.updateAppearance()
                 PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error) in
                     if error != nil {
@@ -311,17 +311,15 @@ extension ChatViewController : Private {
         
         self.postAttachmentsView.dataSource = self
         self.postAttachmentsView.delegate = self
-        
-        self.postAttachmentsView.showAnimated()
     }
     
-    func showAttachmentsView() {
+    private func showAttachmentsView() {
         var oldInset = self.tableView.contentInset
         oldInset.top = PostAttachmentsView.attachmentsViewHeight
         self.tableView.contentInset = oldInset
     }
     
-    func hideAttachmentsView() {
+    private func hideAttachmentsView() {
         var oldInset = self.tableView.contentInset
         oldInset.top = 0
         self.tableView.contentInset = oldInset
@@ -341,14 +339,17 @@ extension ChatViewController : PostAttachmentViewDataSource {
 extension ChatViewController : PostAttachmentViewDelegate {
     func didRemovePhoto(photo: AssignedPhotoViewItem) {
         PostUtils.sharedInstance.cancelImageItemUploading(photo)
-        let indexToDelete = self.assignedPhotosArray.indexOf({$0 == photo})
-        self.assignedPhotosArray.removeAtIndex(indexToDelete!)
-        self.postAttachmentsView.updateAppearance()
+        self.assignedPhotosArray.removeObject(photo)
+        
+        guard self.assignedPhotosArray.count != 0 else {
+            self.postAttachmentsView.hideAnimated()
+            return
+        }
     }
     
     func attachmentsViewWillAppear() {
         var oldInset = self.tableView.contentInset
-        oldInset.top = PostAttachmentsView.attachmentsViewHeight
+        oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
         self.tableView.contentInset = oldInset
     }
     

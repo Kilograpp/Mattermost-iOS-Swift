@@ -8,21 +8,18 @@
 
 import Foundation
 
-class AssignedPhotoViewItem {
+final class AssignedPhotoViewItem {
     
     init(image: UIImage) {
         self.image = image
         self.identifier = StringUtils.randomUUID()
     }
     
-    var image: UIImage
+    let image: UIImage
     var uploaded = false
     var uploading = false
-//    var needsUploading: Bool {
-//        return up
-//    }
     var uploadProgress: Float = 0
-    var identifier: String
+    let identifier: String
 }
 
 extension AssignedPhotoViewItem: Equatable {}
@@ -31,4 +28,10 @@ extension AssignedPhotoViewItem: Equatable {}
 
 func ==(lhs: AssignedPhotoViewItem, rhs: AssignedPhotoViewItem) -> Bool {
     return lhs.identifier == rhs.identifier
+}
+
+
+struct PhotoItem {
+    let image: UIImage
+    let identifier = StringUtils.randomUUID()
 }
