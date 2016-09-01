@@ -12,12 +12,13 @@ class PostAttachmentsViewCell : UICollectionViewCell {
     static let identifier = String(PostAttachmentsViewCell.self)
     static let itemSize = CGSizeMake(70, 70)
     
-    var backgroundImageView : UIImageView?
-    var removeButton : UIButton?
-    var progressView : UIProgressView?
-    var image: UIImage?
+    private var backgroundImageView : UIImageView?
+    private var removeButton : UIButton?
+    private var progressView : UIProgressView?
+    private var imageItem: AssignedPhotoViewItem?
     
-    var removeTapHandler : ((image: UIImage) -> Void)?
+    var removeTapHandler : ((image: AssignedPhotoViewItem) -> Void)?
+    var index: Int?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,6 +51,7 @@ extension PostAttachmentsViewCell : Private {
         self.backgroundImageView?.backgroundColor = ColorBucket.blueColor
         self.backgroundImageView?.layer.cornerRadius = 3
         self.backgroundImageView?.clipsToBounds = true
+        self.backgroundImageView?.contentMode = .ScaleAspectFill
         self.addSubview(self.backgroundImageView!)
         self.backgroundImageView?.translatesAutoresizingMaskIntoConstraints = false
         let left = NSLayoutConstraint(item: self.backgroundImageView!, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 3)
@@ -63,11 +65,11 @@ extension PostAttachmentsViewCell : Private {
         self.removeButton = UIButton()
         self.addSubview(self.removeButton!)
         self.removeButton?.translatesAutoresizingMaskIntoConstraints = false
-        self.removeButton?.setImage(UIImage(named: "close"), forState: .Normal)
+        self.removeButton?.setBackgroundImage(UIImage(named: "close"), forState: .Normal)
         let left = NSLayoutConstraint(item: self.removeButton!, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
         let right = NSLayoutConstraint(item: self.removeButton!, attribute: .Right, relatedBy: .Equal, toItem: self, attribute: .Right, multiplier: 1, constant: 0)
-        let height = NSLayoutConstraint(item: self.removeButton!, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1, constant: 12)
-        let bottom = NSLayoutConstraint(item: self.removeButton!, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .Width, multiplier: 1, constant: 12)
+        let height = NSLayoutConstraint(item: self.removeButton!, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1, constant: 25)
+        let bottom = NSLayoutConstraint(item: self.removeButton!, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .Width, multiplier: 1, constant: 25)
         self.addConstraints([left, right, height, bottom])
         
         self.removeButton?.addTarget(self, action: #selector(removeButtonAction), forControlEvents: .TouchUpInside)
@@ -75,7 +77,7 @@ extension PostAttachmentsViewCell : Private {
     
     private func setupProgressView() {
         self.progressView = UIProgressView()
-        self.progressView?.progress = 0.4
+        self.progressView?.progress = 0
         self.progressView?.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.progressView!)
         let left = NSLayoutConstraint(item: self.progressView!, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 8)
@@ -87,21 +89,19 @@ extension PostAttachmentsViewCell : Private {
     }
     
     @objc private func removeButtonAction() {
-        self.removeTapHandler!(image: self.image!)
+        self.removeTapHandler!(image: self.imageItem!)
     }
 }
 
 extension PostAttachmentsViewCell : Public {
     func configureWithItem(item: AssignedPhotoViewItem) {
-        self.image = item.image
+        self.imageItem = item
         self.backgroundImageView?.image = item.image
+        self.progressView?.hidden = item.uploaded
     }
     
     func updateProgressViewWithValue(value: Float) {
         self.progressView?.progress = value
-        guard value != 1 else {
-            self.progressView?.hidden = true
-            return
-        }
+        self.progressView?.hidden = value == 1
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 
 class KGObjectRequestOperation: RKObjectRequestOperation {
     var image: UIImage?
+    var identifier: String?
     
     override static func canProcessRequest(request: NSURLRequest) -> Bool {
         return true

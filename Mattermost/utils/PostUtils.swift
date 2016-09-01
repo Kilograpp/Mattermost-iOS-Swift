@@ -14,13 +14,14 @@ private protocol Public : class {
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
     func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
     func assignImagesToPost(post: Post,images: Array<UIImage>)
+    func cancelImageItemUploading(item: AssignedPhotoViewItem)
 }
 
 final class PostUtils: NSObject {
     
     static let sharedInstance = PostUtils()
     private let upload_images_group = dispatch_group_create()
-    
+    private var images: Array<AssignedPhotoViewItem>?
     
     private func configureBackendPendingId(post: Post) {
         let id = (DataManager.sharedInstance.currentUser?.identifier)!
@@ -47,15 +48,20 @@ extension PostUtils : Public {
     }
 
     func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
-        for item in images {
-            if item.uploaded == false {
+        self.images = images
+        for item in self.images! {
+            if !item.uploaded {
                 dispatch_group_enter(self.upload_images_group)
-                Api.sharedInstance.uploadImageAtChannel(item.image, channel: channel, completion: { (file, error) in
+                item.uploading = true
+                Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
                     completion(finished: false, error: error)
                     dispatch_group_leave(self.upload_images_group)
-                    }, progress: { (value) in
-                        let index = images.indexOf({$0.image == item.image})
-//                        let indexOfItem = Int(images.indexOf(item)!)
+                    }, progress: { (identifier, value) in
+                        let index = self.images!.indexOf({$0.identifier == identifier})
+                        guard (index != nil) else {
+                            return
+                        }
+                        self.images![index!].uploadProgress = value
                         progress(value: value, index: index!)
                 })
             }
@@ -69,5 +75,11 @@ extension PostUtils : Public {
     
     func assignImagesToPost(post: Post,images: Array<UIImage>) {
         
+    }
+    
+    func cancelImageItemUploading(item: AssignedPhotoViewItem) {
+        Api.sharedInstance.cancelUploadingOperationForImageItem(item)
+        let index = self.images!.indexOf({$0.identifier == item.identifier})
+        self.images?.removeAtIndex(index!)
     }
 }

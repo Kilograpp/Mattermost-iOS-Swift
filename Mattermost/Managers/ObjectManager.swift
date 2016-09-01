@@ -42,6 +42,7 @@ private protocol PostRequests: class {
 
 private protocol Helpers: class {
     func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Error
+    func cancelUploadingOperationForImageItem(item: AssignedPhotoViewItem)
 }
 
 // MARK: Get Requests
@@ -159,5 +160,16 @@ extension ObjectManager: PostRequests {
 extension ObjectManager: Helpers {
     private func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Error {
         return Error.errorWithGenericError(error)
+    }
+    
+    func cancelUploadingOperationForImageItem(item: AssignedPhotoViewItem) {
+        for operation in self.operationQueue.operations {
+            if operation.isKindOfClass(KGObjectRequestOperation.self) {
+                let convertedOperation = operation as! KGObjectRequestOperation
+                if convertedOperation.identifier == item.identifier {
+                    operation.cancel()
+                }
+            }
+        }
     }
 }

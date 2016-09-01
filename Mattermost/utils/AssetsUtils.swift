@@ -23,7 +23,7 @@ class AssetsUtils {
                                               contentMode: .AspectFill,
                                               options: requestOptions,
                   resultHandler: { (image, metadata) in
-                        array.append(AssignedPhotoViewItem(image: image!))
+                    array.append(AssignedPhotoViewItem(image: image!))
             })
         }
         

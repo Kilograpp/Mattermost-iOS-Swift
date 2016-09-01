@@ -13,6 +13,8 @@ import ImagePickerSheetController
 
 private protocol Private : class {
     func setupPostAttachmentsView()
+    func showAttachmentsView()
+    func hideAttachmentsView()
 }
 
 final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -33,8 +35,8 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         }
     }
     
-    let postAttachmentsView = PostAttachmentsView()
-    var assignedPhotosArray = Array<AssignedPhotoViewItem>()
+    private let postAttachmentsView = PostAttachmentsView()
+    private var assignedPhotosArray = Array<AssignedPhotoViewItem>()
     
     //MARK: - Lifecycle
     
@@ -195,8 +197,8 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
             presentImagePickerController(.Camera)
             }, secondaryHandler: { _, numberOfPhotos in
                 let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-//                let images = convertedAssets.map({ $0.image as UIImage})
                 self.assignedPhotosArray.appendContentsOf(convertedAssets)
+                print(self.assignedPhotosArray)
                 self.postAttachmentsView.updateAppearance()
                 PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error) in
                     if error != nil {
@@ -205,6 +207,10 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
                         self.fileUploadingInProgress = finished
                     }
                     }) { (value, index) in
+                        self.assignedPhotosArray[index].uploaded = value == 1
+                        self.assignedPhotosArray[index].uploading = value < 1
+                        self.assignedPhotosArray[index].uploadProgress = value
+//                        self.assignedPhotosArray[index].needsUploading = value < 1 && 
                         self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
                 }
         }))
@@ -233,24 +239,6 @@ extension ChatViewController {
         self.title = self.channel?.displayName
         self.prepareResults()
         self.loadFirstPageOfData()
-        
-//        Api.sharedInstance.uploadImageAtChannel(UIImage(named: "ttt.jpeg")!, channel: self.channel!, completion: { (file, error) in
-//            print("zzzz")
-//        }) { (progressValue, index) in
-//            print(progressValue)
-//        }
-        self.fileUploadingInProgress = false
-//        let images = [UIImage(named: "ttt.jpeg")!, UIImage(named: "test.png")!]
-//        PostUtils.sharedInstance.uploadImages(self.channel!, images: images, completion: { (finished, error) in
-//            print("D_O_N_E")
-//            if error != nil {
-//                //TODO: handle error
-//            } else {
-//                self.fileUploadingInProgress = finished
-//            }
-//            }) { (value, index) in
-//                print("progress [\(value)], index [\(index)]")
-//        }
     }
 }
 
@@ -275,7 +263,9 @@ extension ChatViewController {
     }
     
     func toggleSendButtonAvailability() {
-        self.rightButton.enabled = self.fileUploadingInProgress
+        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+            self.rightButton.enabled = self.fileUploadingInProgress
+        }
     }
 }
 
@@ -316,15 +306,25 @@ extension ChatViewController {
 extension ChatViewController : Private {
     private func setupPostAttachmentsView() {
         self.postAttachmentsView.backgroundColor = UIColor.blueColor()
-        self.view.addSubview(self.postAttachmentsView)
+        self.view.insertSubview(self.postAttachmentsView, belowSubview: self.textInputbar)
+        self.postAttachmentsView.anchorView = self.textInputbar
         
-        self.postAttachmentsView.translatesAutoresizingMaskIntoConstraints = false
-        let left = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Left, relatedBy: .Equal, toItem: self.textInputbar, attribute: .Left, multiplier: 1, constant: 0)
-        let right = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Right, relatedBy: .Equal, toItem: self.textInputbar, attribute: .Right, multiplier: 1, constant: 0)
-        let height = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1, constant: 80)
-        let bottom = NSLayoutConstraint(item: self.postAttachmentsView, attribute: .Bottom, relatedBy: .Equal, toItem: self.textInputbar, attribute: .Top, multiplier: 1, constant: 0)
-        self.view.addConstraints([left, right, height, bottom])
         self.postAttachmentsView.dataSource = self
+        self.postAttachmentsView.delegate = self
+        
+        self.postAttachmentsView.showAnimated()
+    }
+    
+    func showAttachmentsView() {
+        var oldInset = self.tableView.contentInset
+        oldInset.top = PostAttachmentsView.attachmentsViewHeight
+        self.tableView.contentInset = oldInset
+    }
+    
+    func hideAttachmentsView() {
+        var oldInset = self.tableView.contentInset
+        oldInset.top = 0
+        self.tableView.contentInset = oldInset
     }
 }
 
@@ -337,15 +337,28 @@ extension ChatViewController : PostAttachmentViewDataSource {
         return self.assignedPhotosArray.count
     }
 }
+
+extension ChatViewController : PostAttachmentViewDelegate {
+    func didRemovePhoto(photo: AssignedPhotoViewItem) {
+        PostUtils.sharedInstance.cancelImageItemUploading(photo)
+        let indexToDelete = self.assignedPhotosArray.indexOf({$0 == photo})
+        self.assignedPhotosArray.removeAtIndex(indexToDelete!)
+        self.postAttachmentsView.updateAppearance()
+    }
+    
+    func attachmentsViewWillAppear() {
+        var oldInset = self.tableView.contentInset
+        oldInset.top = PostAttachmentsView.attachmentsViewHeight
+        self.tableView.contentInset = oldInset
+    }
+    
+    func attachmentViewWillDisappear() {
+        var oldInset = self.tableView.contentInset
+        oldInset.top = 0
+        self.tableView.contentInset = oldInset
+    }
+}
 //
 //extension ChatViewController : UIImagePickerControllerDelegate {
 //    
 //}
-
-//extension ChatViewController : ChannelObserverDelegate {
-//    func didSelectChannelWithIdentifier(identifier: String!) -> Void {
-//        self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
-//        print("\(self.channel?.displayName)")
-//    }
-//}
-
