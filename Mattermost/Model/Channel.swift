@@ -10,12 +10,31 @@ import Foundation
 import RestKit
 import RealmSwift
 
+enum ChannelAttributes: String {
+    case identifier = "identifier"
+    case createdAt = "createdAt"
+    case privateTeamId = "privateTeamId"
+    case lastViewDate = "lastViewDate"
+    case name = "name"
+    case displayName = "displayName"
+    case purpose = "purpose"
+    case header = "header"
+    case messagesCount = "messagesCount"
+    case lastPostDate = "lastPostDate"
+    case privateType = "privateType"
+}
+
+enum ChannelRelationships: String {
+    case team = "team"
+    case members = "members"
+  //  case posts = "posts"
+}
+
 private enum PrivateType {
     case Direct
     case PublicChannel
     case PrivateChannel
 }
-
 
 final class Channel: RealmObject {
     
@@ -53,6 +72,7 @@ final class Channel: RealmObject {
     }
     
     let members = List<User>()
+   // let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.channel.rawValue)
     
     func interlocuterFromPrivateChannel() -> User {
         let ids = self.name?.componentsSeparatedByString("__")
@@ -61,7 +81,6 @@ final class Channel: RealmObject {
         return user
     }
     
-    
     override class func primaryKey() -> String {
         return ChannelAttributes.identifier.rawValue
     }
@@ -69,25 +88,6 @@ final class Channel: RealmObject {
         return [ChannelAttributes.identifier.rawValue]
     }
     
-}
-
-enum ChannelAttributes: String {
-    case identifier = "identifier"
-    case createdAt = "createdAt"
-    case privateTeamId = "privateTeamId"
-    case lastViewDate = "lastViewDate"
-    case name = "name"
-    case displayName = "displayName"
-    case purpose = "purpose"
-    case header = "header"
-    case messagesCount = "messagesCount"
-    case lastPostDate = "lastPostDate"
-    case privateType = "privateType"
-}
-
-enum ChannelRelationships: String {
-    case team = "team"
-    case members = "members"
 }
 
 private protocol PathPattern: class {
@@ -109,7 +109,6 @@ private protocol ResponseDescriptors: class {
     static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor
     static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor
 }
-
 
 private protocol Support: class {
     static func teamIdentifierPath() -> String

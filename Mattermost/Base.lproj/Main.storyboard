@@ -32,10 +32,10 @@
             </objects>
             <point key="canvasLocation" x="733.5" y="222.5"/>
         </scene>
-        <!--More Channel View Controller-->
+        <!--More Channels View Controller-->
         <scene sceneID="gzj-o9-9fm">
             <objects>
-                <viewController storyboardIdentifier="MoreChannelViewController" id="qfI-yl-L18" customClass="MoreChannelViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MoreChannelsViewController" id="qfI-yl-L18" customClass="MoreChannelsViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Iru-FE-caq"/>
                         <viewControllerLayoutGuide type="bottom" id="v7f-eJ-zK2"/>
@@ -44,9 +44,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mwd-DX-rnA">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mwd-DX-rnA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="qfI-yl-L18" id="kmg-Iu-3Vl"/>
+                                    <outlet property="delegate" destination="qfI-yl-L18" id="mwU-Mb-WlE"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
