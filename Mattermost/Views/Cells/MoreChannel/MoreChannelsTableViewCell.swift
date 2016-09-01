@@ -116,7 +116,7 @@ extension MoreChannelsTableViewCell {
     }
     
 //MARK: ConfigureCell
-    internal func configureCellWithObject(channel: Channel) {
+    func configureCellWithObject(channel: Channel) {
         if channel.privateType == privateTypeChannel {
             configureHiddenForSubviews(true)
             configureCellWithPrivateChannel(channel)

@@ -15,9 +15,8 @@ final class MoreChannelsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     var realm: Realm?
-    // FIXME: Code Review: Убрать internal
     // FIXME: Code Review: Вынести в приватный протокол интерфейсных методов
-    internal var isPrivateChannel : Bool = false
+    var isPrivateChannel : Bool = false
     private let showChatViewController = "showChatViewController"
     private let privateTypeChannel = "D"
     private let publicTypeChannel = "O"
@@ -32,7 +31,7 @@ final class MoreChannelsViewController: UIViewController {
         loadFitsPageOfData()
     }
     
-    // FIXME: Code Review: В приватные методы с приватным протоколом(Configuration), который объявляется после класса
+// FIXME: Code Review: В приватные методы с приватным протоколом(Configuration), который объявляется после класса
 
 //MARK: Setup
     func setupNavigationBar() {
