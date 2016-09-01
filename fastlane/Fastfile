@@ -7,16 +7,18 @@ platform :ios do
     return if lane_context[SharedValues::LANE_NAME] == 'ios register'
     sh "cd .. && scripts/carthage.sh"
     cocoapods(use_bundle_exec: true)
-    match(type: "development", readonly: true)
     match(readonly: true)
+    increment_version_number(version_number: number_of_commits)
     gym
   end
 
   lane :beta do |options|
+    increment_build_number(build_number: 'Development')
     crashlytics(groups: ["Testers"])
   end
 
   lane :release do |options|
+    increment_build_number(build_number: 'Production')
     crashlytics(groups: [ENV['APP_NAME']])
   end 
 
