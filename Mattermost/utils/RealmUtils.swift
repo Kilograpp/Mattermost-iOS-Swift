@@ -9,10 +9,21 @@
 import Foundation
 import RealmSwift
 
-class RealmUtils {
+final class RealmUtils {
+    
+    private static var realmForMainThread: Realm = {
+        return try! Realm()
+    }()
    
+    static func realmForCurrentThread() -> Realm {
+        if NSThread.isMainThread() {
+            return realmForMainThread
+        }
+        return try! Realm()
+    }
+    
     static func save(objects: [RealmObject]) {
-        let realm = try! Realm()
+        let realm = realmForCurrentThread()
         
         try! realm.write({
             realm.add(objects, update: true)
@@ -20,7 +31,7 @@ class RealmUtils {
     }
     
     static func save(object: RealmObject) {
-        let realm = try! Realm()
+        let realm = realmForCurrentThread()
         
         try! realm.write({
             realm.add(object, update: true)
