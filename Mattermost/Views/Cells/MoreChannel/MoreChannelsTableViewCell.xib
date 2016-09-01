@@ -7,12 +7,13 @@
     <customFonts key="customFonts">
         <mutableArray key="SF-UI-Text-Regular.otf">
             <string>SFUIText-Regular</string>
+            <string>SFUIText-Regular</string>
         </mutableArray>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MoreChannelsTableViewCell" rowHeight="80" id="2Bd-hi-ZcD" customClass="MoreChannelsTableViewCell" customModule="Mattermost" customModuleProvider="target">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="80" id="2Bd-hi-ZcD" customClass="MoreChannelsTableViewCell" customModule="Mattermost" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="356" height="80"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2Bd-hi-ZcD" id="PtA-yz-Uqh">
@@ -20,27 +21,27 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lSj-eN-mrr">
-                        <rect key="frame" x="8" y="7" width="64" height="64"/>
+                        <rect key="frame" x="8" y="9" width="60" height="60"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="L" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M6R-OJ-zN8">
-                                <rect key="frame" x="22" y="12" width="20" height="41"/>
+                                <rect key="frame" x="20" y="10" width="20" height="41"/>
                                 <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="34"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JNE-RD-YCU">
-                                <rect key="frame" x="49" y="49" width="15" height="15"/>
-                                <color key="backgroundColor" red="0.27058823529999998" green="0.53725490200000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="43" y="43" width="15" height="15"/>
+                                <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="BLF-Gj-W8I"/>
                                     <constraint firstAttribute="width" constant="15" id="w2r-Qw-CEz"/>
                                 </constraints>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="v5E-Pg-CGj">
-                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="64" id="3D6-ai-imr"/>
-                                    <constraint firstAttribute="width" constant="64" id="m2n-tt-GPn"/>
+                                    <constraint firstAttribute="height" constant="60" id="3D6-ai-imr"/>
+                                    <constraint firstAttribute="width" constant="60" id="m2n-tt-GPn"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -49,43 +50,43 @@
                             <constraint firstItem="v5E-Pg-CGj" firstAttribute="top" secondItem="lSj-eN-mrr" secondAttribute="top" id="4am-YA-8u2"/>
                             <constraint firstItem="M6R-OJ-zN8" firstAttribute="centerX" secondItem="lSj-eN-mrr" secondAttribute="centerX" id="6QO-tf-btx"/>
                             <constraint firstAttribute="bottom" secondItem="v5E-Pg-CGj" secondAttribute="bottom" id="7Ia-Tt-qFY"/>
-                            <constraint firstAttribute="bottom" secondItem="JNE-RD-YCU" secondAttribute="bottom" id="BhA-0I-aSY"/>
+                            <constraint firstAttribute="bottom" secondItem="JNE-RD-YCU" secondAttribute="bottom" constant="2" id="BhA-0I-aSY"/>
                             <constraint firstItem="M6R-OJ-zN8" firstAttribute="centerY" secondItem="lSj-eN-mrr" secondAttribute="centerY" id="a5X-j1-XZZ"/>
                             <constraint firstItem="v5E-Pg-CGj" firstAttribute="leading" secondItem="lSj-eN-mrr" secondAttribute="leading" id="bVN-bE-01Q"/>
                             <constraint firstAttribute="trailing" secondItem="v5E-Pg-CGj" secondAttribute="trailing" id="eBN-hA-ehQ"/>
-                            <constraint firstAttribute="width" constant="64" id="euc-jX-Z0u"/>
-                            <constraint firstAttribute="height" constant="64" id="gLN-m8-zUD"/>
-                            <constraint firstAttribute="trailing" secondItem="JNE-RD-YCU" secondAttribute="trailing" id="vdO-xP-lVU"/>
+                            <constraint firstAttribute="width" constant="60" id="euc-jX-Z0u"/>
+                            <constraint firstAttribute="height" constant="60" id="gLN-m8-zUD"/>
+                            <constraint firstAttribute="trailing" secondItem="JNE-RD-YCU" secondAttribute="trailing" constant="2" id="vdO-xP-lVU"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KLR-by-jQd">
-                        <rect key="frame" x="80" y="7" width="184" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label Label Label Label Label Label Label Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eau-Df-IO0">
-                        <rect key="frame" x="80" y="31" width="184" height="41"/>
+                        <rect key="frame" x="76" y="33" width="184" height="41"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lbh-QB-22f">
-                        <rect key="frame" x="328" y="51" width="20" height="20"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lbh-QB-22f">
+                        <rect key="frame" x="328" y="49" width="20" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="3rn-9q-epk"/>
                             <constraint firstAttribute="width" constant="20" id="jzG-BT-dkd"/>
                         </constraints>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s1c-Uj-lGc">
-                        <rect key="frame" x="80" y="78" width="276" height="1"/>
+                        <rect key="frame" x="76" y="78" width="280" height="1"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="1" id="pFV-ox-wQP"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGj-gL-1CL">
-                        <rect key="frame" x="272" y="7" width="76" height="21"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="07 jul" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGj-gL-1CL">
+                        <rect key="frame" x="268" y="10" width="80" height="20"/>
+                        <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="16"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KLR-by-jQd">
+                        <rect key="frame" x="76" y="9" width="184" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>

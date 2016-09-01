@@ -97,10 +97,10 @@ extension FontBucket : ServerUrlFonts {
 }
 
 extension FontBucket : MoreChannelsFonts {
-    static let titleChannelFont = FontBucket.regularFontOfSize(16)
-    static let subtitleChannelFont = FontBucket.semiboldFontOfSize(16)
+    static let titleChannelFont = FontBucket.semiboldFontOfSize(16)
+    static let subtitleChannelFont = FontBucket.regularFontOfSize(16)
     static let dateChannelFont = FontBucket.regularFontOfSize(16)
-    static let letterChannelFont = FontBucket.regularFontOfSize(36)
+    static let letterChannelFont = FontBucket.regularFontOfSize(30)
 }
 //MARK: Helpers
 

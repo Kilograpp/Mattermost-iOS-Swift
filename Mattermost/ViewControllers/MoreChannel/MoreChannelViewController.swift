@@ -13,8 +13,8 @@ class MoreChannelViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     private let showChatViewController = "showChatViewController"
-    private let privateTypeChat = "D"
-    private let publicTypeChat = "O"
+    private let privateTypeChannel = "D"
+    private let publicTypeChannel = "O"
     private var results: Results<Channel>! = nil
     var realm: Realm?
     internal var isPrivateChannel : Bool = false
@@ -24,18 +24,20 @@ class MoreChannelViewController: UIViewController {
         
         setupNavigationBar()
         setupTableView()
+        prepareResults()
         loadFitsPageOfData()
     }
     
 //MARK: Setup
     
     func setupNavigationBar() {
-        self.title = "More Channel"
+        self.title = "More Channel".localized
     }
     
     func setupTableView () {
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+        self.tableView.registerNib(MoreChannelsTableViewCell.nib(), forCellReuseIdentifier: MoreChannelsTableViewCell.reuseIdentifier())
     }
     
 }
@@ -50,22 +52,10 @@ extension MoreChannelViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "Cell")
-       // let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-
-        cell.backgroundView?.tintColor = ColorBucket.whiteColor
-        cell.textLabel?.tintColor = ColorBucket.blackColor
-        configureCellAtIndexPath(cell, indexPath: indexPath)
-        
-        return cell
-    }
-    
-//MARK: ConfigureCell
-    
-    func configureCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath) {
+        let cell = tableView.dequeueReusableCellWithIdentifier(MoreChannelsTableViewCell.reuseIdentifier()) as! MoreChannelsTableViewCell
         let channel = self.results[indexPath.row] as Channel?
-        cell.textLabel?.text = channel?.displayName
-        
+        cell.configureCellWithObject(channel!)
+        return cell
     }
     
 }
@@ -75,6 +65,10 @@ extension MoreChannelViewController : UITableViewDataSource {
 extension MoreChannelViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier(showChatViewController, sender: self.results[indexPath.row])
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return MoreChannelsTableViewCell.height()
     }
     
     
@@ -91,7 +85,7 @@ extension MoreChannelViewController  {
     func prepareResults() {
         
         //Preferences.sharedInstance.currentUserId
-        let typeValue = self.isPrivateChannel ? privateTypeChat : publicTypeChat
+        let typeValue = self.isPrivateChannel ? privateTypeChannel : publicTypeChannel
        // let userInTheChannel = Preferences.sharedInstance.currentUserId in ChannelRelationships.members.hashValue
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
