@@ -50,7 +50,12 @@ extension RightMenuViewController : PrivateConfig {
         self.usernameLabel.font = FontBucket.rightMenuFont
         self.usernameLabel.textColor = ColorBucket.whiteColor
         
-        self.usernameLabel.text = DataManager.sharedInstance.currentUser?.displayName
+        let user = DataManager.sharedInstance.currentUser
+        self.usernameLabel.text = user!.displayName
+        self.avatarImageView?.sd_setImageWithURL(user!.avatarURL(), placeholderImage: nil, completed: nil)
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerTapAction))
+        self.headerView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     func configureCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath) {
@@ -91,6 +96,19 @@ extension RightMenuViewController {
     }
 }
 
+
+//MARK: - Actions
+
+extension RightMenuViewController {
+    func headerTapAction() {
+        toggleRightSideMenu()
+        proceedToProfile()
+    }
+}
+
+
+//MARK: - UITableViewDelegate
+
 extension RightMenuViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
@@ -98,6 +116,10 @@ extension RightMenuViewController : UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch indexPath.row {
+        case RightMenuRows.Settings.rawValue:
+            toggleRightSideMenu()
+            proceedToSettings()
+            
         case RightMenuRows.About.rawValue:
             toggleRightSideMenu()
             proceedToAbout()
@@ -107,6 +129,9 @@ extension RightMenuViewController : UITableViewDelegate {
         }
     }
 }
+
+
+//MARK: - UITableViewDataSource
 
 extension RightMenuViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -139,6 +164,13 @@ extension RightMenuViewController : UITableViewDataSource {
 //MARK: - Navigation
     
 extension RightMenuViewController {
+    func proceedToProfile() {
+        let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
+        let profile = storyboard.instantiateInitialViewController()
+        let navigation = self.menuContainerViewController.centerViewController
+        navigation!.pushViewController(profile!, animated:true)
+    }
+    
     func proceedToAbout() {        
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let about = storyboard.instantiateViewControllerWithIdentifier(String(AboutViewController))
@@ -146,4 +178,10 @@ extension RightMenuViewController {
         navigation!.pushViewController(about, animated:true)
     }
     
+    func proceedToSettings() {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let settings = storyboard.instantiateInitialViewController()
+        let navigation = self.menuContainerViewController.centerViewController
+        navigation!.pushViewController(settings!, animated:true)
+    }
 }
