@@ -40,9 +40,9 @@ final class Channel: RealmObject {
     
     class func privateTypeDisplayName(privateTypeString: String) -> String {
         switch privateTypeString {
-        case "D":
+        case Constants.ChannelType.PrivateTypeChannel:
             return "Private message"
-        case "O":
+        case Constants.ChannelType.PublicTypeChannel:
             return "Public channel"
         default:
             return "UNKNOWN"
@@ -64,6 +64,7 @@ final class Channel: RealmObject {
     dynamic var messagesCount: String?
     dynamic var lastPostDate: String?
     dynamic var displayName: String?
+    dynamic var currentUserInChannel: Bool = false
     
     dynamic var team: Team?
     

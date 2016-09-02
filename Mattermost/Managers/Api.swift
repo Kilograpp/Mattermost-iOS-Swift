@@ -163,6 +163,7 @@ extension Api: ChannelApi {
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
                 channels.forEach {
+                    $0.currentUserInChannel = true
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
                 }

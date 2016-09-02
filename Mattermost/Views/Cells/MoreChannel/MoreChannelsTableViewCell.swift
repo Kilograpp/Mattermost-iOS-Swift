@@ -9,32 +9,18 @@
 import Foundation
 import RealmSwift
 
-private protocol PublicMoreChannels : class {
-    static func nib () -> (UINib)
-    static func reuseIdentifier () -> (String)
+//MARK: - PublicProtocol
+private protocol PublicHeightCellMoreChannels : class {
     static func height()->(CGFloat)
-}
-
-private protocol Setup : class {
-    func setupAvatarView()
-    func setupAvatarImageView()
-    func setupStatusView()
-    func setupNameChannelLabel()
-    func setupLastPostLabel()
-    func setupDateLabel()
-    func setupAvatarUsersLastPostImageView()
-    func setupSeparatorView()
-    func setupLetterFirstNamesChannelLabel()
 }
 
 private protocol Configure : class {
     func configureCellWithObject(channel: Channel)
 }
 
+final class MoreChannelsTableViewCell: UITableViewCell, Reusable {
 
-final class MoreChannelsTableViewCell: UITableViewCell {
-
-//MARK: property
+//MARK: - Property
     @IBOutlet weak var avatarView: UIView!
     @IBOutlet weak var letterFirstNamesChannelLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
@@ -44,10 +30,8 @@ final class MoreChannelsTableViewCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var avatarUsersLastPostImageView: UIImageView!
     @IBOutlet weak var separatorView: UIView!
-    private let privateTypeChannel = "D"
-    private let publicTypeChannel = "O"
 
-//MARK: Override
+//MARK: - Override
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -64,23 +48,28 @@ final class MoreChannelsTableViewCell: UITableViewCell {
 
 }
 
+//MARK: - PrivateProtocol
+private protocol Setup : class {
+    func setupAvatarView()
+    func setupAvatarImageView()
+    func setupStatusView()
+    func setupNameChannelLabel()
+    func setupLastPostLabel()
+    func setupDateLabel()
+    func setupAvatarUsersLastPostImageView()
+    func setupSeparatorView()
+    func setupLetterFirstNamesChannelLabel()
+}
 
-//MARK: PublicMoreChannels
-extension MoreChannelsTableViewCell: PublicMoreChannels {
-    class func nib () -> (UINib){
-        return UINib(nibName: "MoreChannelsTableViewCell", bundle: nil)
-    }
-    
-    class func reuseIdentifier () -> (String) {
-        return "MoreChannelsTableViewCell" + "Identifier"
-    }
+//MARK: - PublicHeightCellMoreChannels
+extension MoreChannelsTableViewCell: PublicHeightCellMoreChannels {
     
     class func height()->(CGFloat) {
         return 80
     }
 }
 
-//MARK: Setup
+//MARK: - Setup
 extension MoreChannelsTableViewCell : Setup {
     
     private func setupAvatarView(){
@@ -140,13 +129,13 @@ extension MoreChannelsTableViewCell : Setup {
 
 extension MoreChannelsTableViewCell : Configure {
 
-//MARK: ConfigureCell
+//MARK: - ConfigureCell
     func configureCellWithObject(channel: Channel) {
-        if channel.privateType == privateTypeChannel {
+        if channel.privateType == Constants.ChannelType.PrivateTypeChannel {
             configureHiddenForSubviews(true)
             configureCellWithPrivateChannel(channel)
         }
-        if channel.privateType == publicTypeChannel  {
+        if channel.privateType == Constants.ChannelType.PublicTypeChannel  {
             configureHiddenForSubviews(false)
             configureCellWithPublicChannel(channel)
         }
@@ -159,7 +148,7 @@ extension MoreChannelsTableViewCell : Configure {
         self.statusView.hidden = !hidden
     }
 
-//MARK: ConfigureWithPrivateCannel
+//MARK: - ConfigureWithPrivateCannel
     private func configureCellWithPrivateChannel(channel: Channel)  {
         configureNameChannelLabelTextForChannel(true, channel: channel)
         configureDateLabelText(channel)
@@ -168,7 +157,7 @@ extension MoreChannelsTableViewCell : Configure {
         configureStatusView(channel)
     }
     
-//MARK: ConfigureWithPublicChannel
+//MARK: - ConfigureWithPublicChannel
     private func configureCellWithPublicChannel(channel: Channel) {
         configureNameChannelLabelTextForChannel(false, channel: channel)
         configureDateLabelText(channel)
@@ -177,7 +166,7 @@ extension MoreChannelsTableViewCell : Configure {
         configureLetterFirstNamesChannelLabelText(channel)
     }
     
-//MARK: ConfigureTextLabel
+//MARK: - ConfigureTextLabel
     private func configureLastPostLabelTextForPrivateChannel(channel:Channel) {
         //self.lastPostLabel.text = channel.posts.last?.message
         let lastPost = try! Realm().objects(Post).filter("channelId = %@", channel.identifier!).last
@@ -209,14 +198,14 @@ extension MoreChannelsTableViewCell : Configure {
         self.letterFirstNamesChannelLabel.text = channel.displayName![0]
     }
 
-//MARK: ConfigureAvatarView
+//MARK: - ConfigureAvatarView
     private func configureAvatarViewForPublicChannel() {
         self.avatarView.backgroundColor = ColorBucket.blueColor
         self.letterFirstNamesChannelLabel.backgroundColor = ColorBucket.blueColor
         self.letterFirstNamesChannelLabel.textColor = ColorBucket.whiteColor
     }
  
-//MARK: ConfigureStatusUser
+//MARK: - ConfigureStatusUser
     private func configureStatusView(channel: Channel) {
         let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(channel.interlocuterFromPrivateChannel().identifier).backendStatus
         configureStatusViewWithBackendStatus(backendStatus!)
@@ -233,7 +222,7 @@ extension MoreChannelsTableViewCell : Configure {
         }
     }
 
-//MARK: ConfigureImageView
+//MARK: - ConfigureImageView
     private func configureAvatarImageView (channel: Channel) {
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         let user = channel.interlocuterFromPrivateChannel()

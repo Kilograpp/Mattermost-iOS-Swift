@@ -9,45 +9,56 @@
 import RealmSwift
 import SwiftFetchedResultsController
 
-class LeftMenuViewController: UIViewController {
+final class LeftMenuViewController: UIViewController {
     
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var tableView: UITableView!
-    lazy var fetchedResultsController: FetchedResultsController<Channel> = self.realmFetchedResultsController()
-    var realm: Realm?
-
-    
     @IBOutlet weak var teamNameLabel: UILabel!
     @IBOutlet weak var membersListButton: UIButton!
+    var realm: Realm?
+    private var resultsPublic: Results<Channel>! = nil
+    private var resultsPrivate: Results<Channel>! = nil
 
+//MARK: - Override
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureResults()
         configureTableView()
         configureView()
         configureInitialSelectedChannel()
-        
-        UserStatusObserver.sharedObserver.startUpdating()
+        configureStartUpdating()
     }
-    
-    func test() {
 
-    }
-    
-    
-    //MARK: - Configuration
+}
+
+
+private protocol Configure : class {
+    func configureView()
+    func configureTableView()
+    func configureInitialSelectedChannel()
+    func configureStartUpdating()
+    func configureResults()
+}
+
+private protocol Navigation : class {
+    func didSelectChannelAtIndexPath(indexPath: NSIndexPath)
+    func navigateToMoreChannel(section: Int)
+    func toggleLeftSideMenu()
+    func membersListAction(sender: AnyObject)
+}
+
+//MARK: - Configuration
+extension LeftMenuViewController : Configure {
     
     private func configureView() {
         self.teamNameLabel.font = FontBucket.menuTitleFont
         self.teamNameLabel.textColor = ColorBucket.whiteColor
         self.teamNameLabel.text = DataManager.sharedInstance.currentTeam?.displayName as String!
-        
         self.headerView.backgroundColor = ColorBucket.sideMenuHeaderBackgroundColor
     }
     
     private func configureTableView() {
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
         self.tableView.separatorStyle = .None
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
         
@@ -57,55 +68,57 @@ class LeftMenuViewController: UIViewController {
     
     private func configureInitialSelectedChannel() {
         let indexPathForFirstRow = NSIndexPath(forRow: 0, inSection: 0) as NSIndexPath
-        let initialSelectedChannel = self.fetchedResultsController.objectAtIndexPath(indexPathForFirstRow)
+        let initialSelectedChannel = self.resultsPublic[indexPathForFirstRow.row]
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
     }
     
-    
-    //MARK: - Private
-    
-    private func didSelectChannelAtIndexPath(indexPath: NSIndexPath) -> Void {
-        let selectedChannel = self.fetchedResultsController.objectAtIndexPath(indexPath)! as Channel
-        ChannelObserver.sharedObserver.selectedChannel = selectedChannel
-        self.tableView.reloadData()
-        
-//FIXME: вызов метода должен быть без self
-        self.toggleLeftSideMenu()
+    private func configureStartUpdating() {
+        UserStatusObserver.sharedObserver.startUpdating()
     }
     
-    private func toggleLeftSideMenu() {
-        self.menuContainerViewController.toggleLeftSideMenuCompletion(nil)
+    private func configureResults () {
+        let privateTypePredicate = NSPredicate (format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)
+        let publicTypePredicate = NSPredicate (format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
+        let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
+        let sortName = ChannelAttributes.displayName.rawValue
+        self.resultsPublic = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(publicTypePredicate).filter(currentUserInChannelPredicate).sorted(sortName, ascending: true)
+        self.resultsPrivate = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(sortName, ascending: true)
     }
+    
 }
 
+//MARK: - UITableViewDataSource
 extension LeftMenuViewController : UITableViewDataSource {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.fetchedResultsController.numberOfSections()
+        return 2
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.fetchedResultsController.numberOfRowsForSectionIndex(section)
+        let numberOfRowsInSection = section == 0 ? resultsPublic.count : resultsPrivate.count
+        return numberOfRowsInSection
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let reuseIdentifier = indexPath.section == 0 ? PublicChannelTableViewCell.reuseIdentifier : PrivateChannelTableViewCell.reuseIdentifier
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! LeftMenuTableViewCellProtocol
-        let channel = self.fetchedResultsController.objectAtIndexPath(indexPath) as Channel?
+        let channel = indexPath.section == 0 ? self.resultsPublic[indexPath.row] as Channel! : self.resultsPrivate[indexPath.row] as Channel!
         cell.configureWithChannel(channel!, selected: (channel?.isSelected)!)
         cell.test = {
-//            self.tableView.beginUpdates()
-            self.tableView.reloadData()
-//            cell.reloadCell()
-//            self.tableView.endUpdates()
+            //FIXME: REFACTOR:!!!!
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+            }
         }
         
         return cell as! UITableViewCell
     }
 }
 
+//MARK: - UITableViewDelegate
 extension LeftMenuViewController : UITableViewDelegate {
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.didSelectChannelAtIndexPath(indexPath)
+        didSelectChannelAtIndexPath(indexPath)
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -129,42 +142,39 @@ extension LeftMenuViewController : UITableViewDelegate {
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
-        let sectionName = self.fetchedResultsController.titleForHeaderInSection(section)
+        let sectionName = section == 0 ? Constants.ChannelType.PublicTypeChannel : Constants.ChannelType.PrivateTypeChannel
         view.configureWithChannelType(Channel.privateTypeDisplayName(sectionName))
         view.addTapHandler = { print("ADD CHANNEL") }
         
         return view
     }
+
+}
+
+//MARK: - Navigation
+extension LeftMenuViewController : Navigation {
     
-        //MARK: - Actions
-    @IBAction func membersListAction(sender: AnyObject) {
-        print("MEMBERS_LIST")
+    private func didSelectChannelAtIndexPath(indexPath: NSIndexPath) {
+        let selectedChannel = indexPath.section == 0 ? self.resultsPublic[indexPath.row] as Channel : self.resultsPrivate[indexPath.row] as Channel
+        ChannelObserver.sharedObserver.selectedChannel = selectedChannel
+        self.tableView.reloadData()
+        toggleLeftSideMenu()
     }
     
-    func navigateToMoreChannel(section: Int)  {
+    private func navigateToMoreChannel(section: Int)  {
         let moreViewController = self.storyboard!.instantiateViewControllerWithIdentifier("MoreChannelsViewController") as! MoreChannelsViewController
         moreViewController.isPrivateChannel = (section == 0) ? false : true
         self.menuContainerViewController!.centerViewController.pushViewController(moreViewController, animated: true)
         toggleLeftSideMenu()
     }
-}
-
-
-extension LeftMenuViewController {
-    // MARK: - FetchedResultsController
     
-    func realmFetchedResultsController() -> FetchedResultsController<Channel> {
-        let predicate = NSPredicate(format: "identifier != %@", "fds")
-        let realm = try! Realm()
-        let fetchRequest = FetchRequest<Channel>(realm: realm, predicate: predicate)
-        fetchRequest.predicate = nil
-        let sortDescriptorSection = SortDescriptor(property: ChannelAttributes.privateType.rawValue, ascending: false)
-        let sortDescriptorName = SortDescriptor(property: ChannelAttributes.displayName.rawValue, ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptorSection, sortDescriptorName]
-        let fetchedResultsController = FetchedResultsController<Channel>(fetchRequest: fetchRequest, sectionNameKeyPath: ChannelAttributes.privateType.rawValue, cacheName: nil)
-        fetchedResultsController.delegate = nil//self
-        fetchedResultsController.performFetch()
-        
-        return fetchedResultsController
+    private func toggleLeftSideMenu() {
+        self.menuContainerViewController.toggleLeftSideMenuCompletion(nil)
     }
+    
+    @IBAction func membersListAction(sender: AnyObject) {
+        print("MEMBERS_LIST")
+    }
+
 }
+

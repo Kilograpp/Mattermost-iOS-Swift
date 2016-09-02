@@ -9,6 +9,31 @@
 import Foundation
 import RealmSwift
 
+final class MoreChannelsViewController: UIViewController {
+    
+    @IBOutlet weak var tableView: UITableView!
+    var realm: Realm?
+    var isPrivateChannel : Bool = false
+    private let showChatViewController = "showChatViewController"
+    private var results: Results<Channel>! = nil
+    
+//MARK: - Override
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupNavigationBar()
+        setupTableView()
+        prepareResults()
+        loadFitsPageOfData()
+    }
+    
+//MARK: - Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let selectedChannel = sender else { return }
+        ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
+    }
+}
+
 private protocol Setup : class {
     func setupNavigationBar()
     func setupTableView()
@@ -20,34 +45,7 @@ private protocol Configure : class {
     func loadFitsPageOfData()
 }
 
-final class MoreChannelsViewController: UIViewController {
-    
-    @IBOutlet weak var tableView: UITableView!
-    var realm: Realm?
-    var isPrivateChannel : Bool = false
-    private let showChatViewController = "showChatViewController"
-    private let privateTypeChannel = "D"
-    private let publicTypeChannel = "O"
-    private var results: Results<Channel>! = nil
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupNavigationBar()
-        setupTableView()
-        prepareResults()
-        loadFitsPageOfData()
-    }
-    
-//MARK: Navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard let selectedChannel = sender else { return }
-        ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
-    }
-    
-}
-
-//MARK: UITableViewDataSource
+//MARK: - UITableViewDataSource
 extension MoreChannelsViewController : UITableViewDataSource {
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -55,7 +53,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(MoreChannelsTableViewCell.reuseIdentifier()) as! MoreChannelsTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(MoreChannelsTableViewCell.reuseIdentifier) as! MoreChannelsTableViewCell
         let channel = self.results[indexPath.row] as Channel?
         cell.configureCellWithObject(channel!)
         return cell
@@ -63,7 +61,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
     
 }
 
-//MARK: UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 extension MoreChannelsViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -76,7 +74,7 @@ extension MoreChannelsViewController : UITableViewDelegate {
 
 }
 
-//MARK: Setup
+//MARK: - Setup
 extension MoreChannelsViewController: Setup {
 
     func setupNavigationBar() {
@@ -87,16 +85,16 @@ extension MoreChannelsViewController: Setup {
     func setupTableView () {
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
-        self.tableView.registerNib(MoreChannelsTableViewCell.nib(), forCellReuseIdentifier: MoreChannelsTableViewCell.reuseIdentifier())
+        self.tableView.registerNib(MoreChannelsTableViewCell.nib, forCellReuseIdentifier: MoreChannelsTableViewCell.reuseIdentifier)
     }
 }
 
-//MARK: Configure
+//MARK: - Configure
 extension  MoreChannelsViewController: Configure  {
     func prepareResults() {
         
         //Preferences.sharedInstance.currentUserId
-        let typeValue = self.isPrivateChannel ? privateTypeChannel : publicTypeChannel
+        let typeValue = self.isPrivateChannel ? Constants.ChannelType.PrivateTypeChannel : Constants.ChannelType.PublicTypeChannel
        // let userInTheChannel = Preferences.sharedInstance.currentUserId in ChannelRelationships.members ...
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue

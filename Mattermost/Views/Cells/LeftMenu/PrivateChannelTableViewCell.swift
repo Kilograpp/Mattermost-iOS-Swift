@@ -42,7 +42,7 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
     
 //MARK: - Configuration
     func configureStatusViewWithNotification(notification: NSNotification) {
-        self.test!()
+        self.test?()
     }
 
 //MARK: - Override
@@ -126,7 +126,7 @@ extension PrivateChannelTableViewCell {
     func subscribeToNotifications() {
 //        print("SUBSCRIBED_TO \(self.channel?.interlocuterFromPrivateChannel().identifier  as String!)")
         NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(self.configureStatusViewWithNotification(_:)),
+                                                         selector: #selector(configureStatusViewWithNotification(_:)),
                                                          name: self.channel?.interlocuterFromPrivateChannel().identifier as String!,
                                                          object: nil)
     }

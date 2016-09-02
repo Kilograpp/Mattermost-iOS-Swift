@@ -220,6 +220,10 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="ke0-AP-o5P" id="3X9-zC-XAs"/>
+                                    <outlet property="delegate" destination="ke0-AP-o5P" id="AYm-S5-AQJ"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
