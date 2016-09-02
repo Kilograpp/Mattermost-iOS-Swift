@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import RestKit
 
 final class ObjectManager: RKObjectManager {}
 

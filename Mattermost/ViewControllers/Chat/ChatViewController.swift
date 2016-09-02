@@ -58,7 +58,6 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         return .Grouped
     }
     
-    
     //MARK: - Configuration
     
     func configureTableView() -> Void {

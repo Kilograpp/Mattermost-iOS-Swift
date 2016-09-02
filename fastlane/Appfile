@@ -1,3 +1,5 @@
 app_identifier "com.kilograpp.mattermost" 
 apple_id "m.gubin@sedama-development.com"
-team_id "X4SVWSJYVW"  
+team_id "X4SVWSJYVW"
+
+ENV['FASTLANE_XCODE_LIST_TIMEOUT'] = '0'

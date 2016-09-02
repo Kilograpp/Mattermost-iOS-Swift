@@ -7,6 +7,8 @@
 
 import Foundation
 import RealmSwift
+import RestKit
+import SOCKit
 
 private protocol Interface: class {
     func isSignedIn() -> Bool

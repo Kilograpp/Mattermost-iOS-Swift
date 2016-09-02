@@ -1,2 +1,2 @@
-git_url "git@git.kilograpp.com:iOS/FastlaneMatch.git"
+git_url "http://git.kilograpp.com/iOS/FastlaneMatch.git"
 type "adhoc"

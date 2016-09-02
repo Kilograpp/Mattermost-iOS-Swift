@@ -14,6 +14,6 @@
         parametersAsArray:(NSArray *)parameters
            success:(void (^)(RKObjectRequestOperation *, RKMappingResult *))success
            failure:(void (^)(RKObjectRequestOperation *, NSError *))failure {
-    [self postObject:object path:path parameters:parameters success:success failure:failure];
+    [self postObject:object path:path parameters:(id)parameters success:success failure:failure];
 }
 @end

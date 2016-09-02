@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RestKit
 
 class KGObjectRequestOperation: RKObjectRequestOperation {
     var image: UIImage?

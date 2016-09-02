@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RestKit
 import RealmSwift
 
 enum AttachmentAttributes: String {

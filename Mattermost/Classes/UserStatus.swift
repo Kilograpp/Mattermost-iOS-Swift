@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RestKit
 
 private protocol Mappings: class {
     static func mapping() -> RKObjectMapping
@@ -31,7 +32,7 @@ final class UserStatus : NSObject {
         }
     }
     var identifier: String?
-    static var responseDescr = RKResponseDescriptor(mapping: UserStatus.mapping(),
+    static var responseDescriptor = RKResponseDescriptor(mapping: UserStatus.mapping(),
                                              method: .POST,
                                              pathPattern: User.usersStatusPathPattern(),
                                              keyPath: nil,
