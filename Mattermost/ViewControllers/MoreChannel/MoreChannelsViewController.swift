@@ -9,13 +9,21 @@
 import Foundation
 import RealmSwift
 
+private protocol Setup : class {
+    func setupNavigationBar()
+    func setupTableView()
+}
+
+private protocol Configure : class {
+    var isPrivateChannel : Bool {get set}
+    func prepareResults()
+    func loadFitsPageOfData()
+}
 
 final class MoreChannelsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-
     var realm: Realm?
-    // FIXME: Code Review: Вынести в приватный протокол интерфейсных методов
     var isPrivateChannel : Bool = false
     private let showChatViewController = "showChatViewController"
     private let privateTypeChannel = "D"
@@ -29,21 +37,6 @@ final class MoreChannelsViewController: UIViewController {
         setupTableView()
         prepareResults()
         loadFitsPageOfData()
-    }
-    
-// FIXME: Code Review: В приватные методы с приватным протоколом(Configuration), который объявляется после класса
-
-//MARK: Setup
-    func setupNavigationBar() {
-        self.title = "More Channel".localized
-
-    }
-    
-    // FIXME: Code Review: В приватные методы
-    func setupTableView () {
-        self.tableView.backgroundColor = ColorBucket.whiteColor
-        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
-        self.tableView.registerNib(MoreChannelsTableViewCell.nib(), forCellReuseIdentifier: MoreChannelsTableViewCell.reuseIdentifier())
     }
     
 //MARK: Navigation
@@ -83,12 +76,28 @@ extension MoreChannelsViewController : UITableViewDelegate {
 
 }
 
-extension MoreChannelsViewController  {
+//MARK: Setup
+extension MoreChannelsViewController: Setup {
+
+    func setupNavigationBar() {
+        self.title = "More Channel".localized
+        
+    }
+    
+    func setupTableView () {
+        self.tableView.backgroundColor = ColorBucket.whiteColor
+        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+        self.tableView.registerNib(MoreChannelsTableViewCell.nib(), forCellReuseIdentifier: MoreChannelsTableViewCell.reuseIdentifier())
+    }
+}
+
+//MARK: Configure
+extension  MoreChannelsViewController: Configure  {
     func prepareResults() {
         
         //Preferences.sharedInstance.currentUserId
         let typeValue = self.isPrivateChannel ? privateTypeChannel : publicTypeChannel
-       // let userInTheChannel = Preferences.sharedInstance.currentUserId in ChannelRelationships.members.hashValue
+       // let userInTheChannel = Preferences.sharedInstance.currentUserId in ChannelRelationships.members ...
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(sortName, ascending: true)
@@ -100,5 +109,5 @@ extension MoreChannelsViewController  {
             self.tableView.reloadData()
         }
     }
- 
+
 }

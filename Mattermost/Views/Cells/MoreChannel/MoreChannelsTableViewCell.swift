@@ -9,6 +9,29 @@
 import Foundation
 import RealmSwift
 
+private protocol PublicMoreChannels : class {
+    static func nib () -> (UINib)
+    static func reuseIdentifier () -> (String)
+    static func height()->(CGFloat)
+}
+
+private protocol Setup : class {
+    func setupAvatarView()
+    func setupAvatarImageView()
+    func setupStatusView()
+    func setupNameChannelLabel()
+    func setupLastPostLabel()
+    func setupDateLabel()
+    func setupAvatarUsersLastPostImageView()
+    func setupSeparatorView()
+    func setupLetterFirstNamesChannelLabel()
+}
+
+private protocol Configure : class {
+    func configureCellWithObject(channel: Channel)
+}
+
+
 final class MoreChannelsTableViewCell: UITableViewCell {
 
 //MARK: property
@@ -28,12 +51,6 @@ final class MoreChannelsTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        setupCell()
-    }
-    
-//MARK: Setup
-    
-    private func setupCell(){
         setupAvatarView()
         setupAvatarImageView()
         setupStatusView()
@@ -44,6 +61,27 @@ final class MoreChannelsTableViewCell: UITableViewCell {
         setupSeparatorView()
         setupLetterFirstNamesChannelLabel()
     }
+
+}
+
+
+//MARK: PublicMoreChannels
+extension MoreChannelsTableViewCell: PublicMoreChannels {
+    class func nib () -> (UINib){
+        return UINib(nibName: "MoreChannelsTableViewCell", bundle: nil)
+    }
+    
+    class func reuseIdentifier () -> (String) {
+        return "MoreChannelsTableViewCell" + "Identifier"
+    }
+    
+    class func height()->(CGFloat) {
+        return 80
+    }
+}
+
+//MARK: Setup
+extension MoreChannelsTableViewCell : Setup {
     
     private func setupAvatarView(){
         self.avatarView.layer.cornerRadius = self.avatarView.bounds.height/2
@@ -94,27 +132,14 @@ final class MoreChannelsTableViewCell: UITableViewCell {
     }
     
     private func setupLetterFirstNamesChannelLabel(){
-                self.letterFirstNamesChannelLabel.backgroundColor = ColorBucket.whiteColor
+        self.letterFirstNamesChannelLabel.backgroundColor = ColorBucket.whiteColor
         self.letterFirstNamesChannelLabel.tintColor = ColorBucket.whiteColor
         self.letterFirstNamesChannelLabel.font = FontBucket.letterChannelFont
     }
-
 }
 
-extension MoreChannelsTableViewCell {
-//MARK: Public
-    class func nib () -> (UINib){
-        return UINib(nibName: "MoreChannelsTableViewCell", bundle: nil)
-    }
-    
-    class func reuseIdentifier () -> (String) {
-        return "MoreChannelsTableViewCell" + "Identifier"
-    }
-    
-    class func height()->(CGFloat) {
-        return 80
-    }
-    
+extension MoreChannelsTableViewCell : Configure {
+
 //MARK: ConfigureCell
     func configureCellWithObject(channel: Channel) {
         if channel.privateType == privateTypeChannel {
@@ -135,7 +160,6 @@ extension MoreChannelsTableViewCell {
     }
 
 //MARK: ConfigureWithPrivateCannel
-    
     private func configureCellWithPrivateChannel(channel: Channel)  {
         configureNameChannelLabelTextForChannel(true, channel: channel)
         configureDateLabelText(channel)
@@ -225,5 +249,4 @@ extension MoreChannelsTableViewCell {
             self?.avatarUsersLastPostImageView.image = image
         }
     }
-
 }
