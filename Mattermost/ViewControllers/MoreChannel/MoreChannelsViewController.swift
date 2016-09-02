@@ -11,6 +11,7 @@ import RealmSwift
 
 final class MoreChannelsViewController: UIViewController {
     
+//MARK: - Property
     @IBOutlet weak var tableView: UITableView!
     var realm: Realm?
     var isPrivateChannel : Bool = false
@@ -23,17 +24,17 @@ final class MoreChannelsViewController: UIViewController {
         
         setupNavigationBar()
         setupTableView()
-        prepareResults()
-        loadFitsPageOfData()
+        configureResults()
+        loadData()
     }
     
-//MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let selectedChannel = sender else { return }
         ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
     }
 }
 
+//MARK: - PrivateProtocols
 private protocol Setup : class {
     func setupNavigationBar()
     func setupTableView()
@@ -41,8 +42,8 @@ private protocol Setup : class {
 
 private protocol Configure : class {
     var isPrivateChannel : Bool {get set}
-    func prepareResults()
-    func loadFitsPageOfData()
+    func configureResults()
+    func loadData()
 }
 
 //MARK: - UITableViewDataSource
@@ -91,19 +92,17 @@ extension MoreChannelsViewController: Setup {
 
 //MARK: - Configure
 extension  MoreChannelsViewController: Configure  {
-    func prepareResults() {
+    func configureResults() {
         
-        //Preferences.sharedInstance.currentUserId
         let typeValue = self.isPrivateChannel ? Constants.ChannelType.PrivateTypeChannel : Constants.ChannelType.PublicTypeChannel
-       // let userInTheChannel = Preferences.sharedInstance.currentUserId in ChannelRelationships.members ...
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(sortName, ascending: true)
     }
     
-    func loadFitsPageOfData(){
+    func loadData(){
        Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
-            self.prepareResults()
+            self.configureResults()
             self.tableView.reloadData()
         }
     }
