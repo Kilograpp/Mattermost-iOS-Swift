@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ts1-GG-mjn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ts1-GG-mjn">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
@@ -30,7 +31,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="733.5" y="222.5"/>
+            <point key="canvasLocation" x="933.5" y="222.5"/>
         </scene>
         <!--Left Menu View Controller-->
         <scene sceneID="kNN-Et-YKc">
@@ -276,7 +277,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5az-p3-rkO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="733.5" y="985.5"/>
+            <point key="canvasLocation" x="933.5" y="985.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xa2-Dc-gbr">
@@ -297,8 +298,121 @@
             </objects>
             <point key="canvasLocation" x="310.5" y="222.5"/>
         </scene>
+        <!--About View Controller-->
+        <scene sceneID="mxb-8K-gPC">
+            <objects>
+                <viewController storyboardIdentifier="AboutViewController" id="EQ3-wq-9Kx" customClass="AboutViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OVt-rj-zqJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="94c-1n-00j"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZgZ-E4-EHU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about_mattermost_icon" translatesAutoresizingMaskIntoConstraints="NO" id="cd5-Hh-9Dj">
+                                <rect key="frame" x="112" y="35" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="CUg-oM-YmX"/>
+                                    <constraint firstAttribute="height" constant="150" id="coa-pL-bWa"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about_kg_icon" translatesAutoresizingMaskIntoConstraints="NO" id="LY3-En-gQP">
+                                <rect key="frame" x="207" y="115" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="6lc-pY-t3F"/>
+                                    <constraint firstAttribute="width" constant="60" id="sZT-FX-ZLv"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mattermost Team Edition" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbt-Fk-UvI">
+                                <rect key="frame" x="15" y="215" width="339" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All your team communication in one place, instantly searchable and accessible anywhere." textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nlp-Kp-lWE">
+                                <rect key="frame" x="15" y="255" width="339" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version: 3.0.0 (3.0.3)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QeN-sf-OGi">
+                                <rect key="frame" x="15" y="319" width="339" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Copyright 2016 Mattermost, Inc. All rights reserved." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jjL-LS-625">
+                                <rect key="frame" x="15" y="527" width="339" height="114"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="This application was developed by Kilograpp Team" translatesAutoresizingMaskIntoConstraints="NO" id="Tse-fc-yL0" userLabel="kilograppLinkView">
+                                <rect key="frame" x="15" y="387" width="339" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="5Zy-MF-uu2"/>
+                                </constraints>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Join the Mattermost community at mattermost.org" translatesAutoresizingMaskIntoConstraints="NO" id="ann-3e-ZvK" userLabel="matterMostLinkView">
+                                <rect key="frame" x="15" y="357" width="339" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="kdM-te-Ywo"/>
+                                </constraints>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ann-3e-ZvK" firstAttribute="leading" secondItem="QeN-sf-OGi" secondAttribute="leading" id="0OJ-wO-YB6"/>
+                            <constraint firstItem="QeN-sf-OGi" firstAttribute="trailing" secondItem="Nlp-Kp-lWE" secondAttribute="trailing" id="26R-bd-ApR"/>
+                            <constraint firstItem="94c-1n-00j" firstAttribute="top" secondItem="jjL-LS-625" secondAttribute="bottom" constant="26" id="8TN-Rc-06x"/>
+                            <constraint firstItem="cd5-Hh-9Dj" firstAttribute="top" secondItem="OVt-rj-zqJ" secondAttribute="bottom" constant="15" id="EGR-pc-fQi"/>
+                            <constraint firstItem="ann-3e-ZvK" firstAttribute="trailing" secondItem="QeN-sf-OGi" secondAttribute="trailing" id="Hz9-k4-0XG"/>
+                            <constraint firstItem="Nlp-Kp-lWE" firstAttribute="leading" secondItem="cbt-Fk-UvI" secondAttribute="leading" id="MPV-C1-DGV"/>
+                            <constraint firstItem="ann-3e-ZvK" firstAttribute="top" secondItem="QeN-sf-OGi" secondAttribute="bottom" constant="20" id="MlC-X9-h3f"/>
+                            <constraint firstItem="cbt-Fk-UvI" firstAttribute="leading" secondItem="ZgZ-E4-EHU" secondAttribute="leading" constant="15" id="TIU-M4-Xa2"/>
+                            <constraint firstItem="Nlp-Kp-lWE" firstAttribute="top" secondItem="cbt-Fk-UvI" secondAttribute="bottom" constant="10" id="TyE-CZ-wzg"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cbt-Fk-UvI" secondAttribute="trailing" constant="5" id="VSe-sF-KAc"/>
+                            <constraint firstItem="QeN-sf-OGi" firstAttribute="leading" secondItem="Nlp-Kp-lWE" secondAttribute="leading" id="XYr-wl-FTb"/>
+                            <constraint firstItem="LY3-En-gQP" firstAttribute="trailing" secondItem="cd5-Hh-9Dj" secondAttribute="trailing" constant="5" id="bA1-J9-e9V"/>
+                            <constraint firstItem="jjL-LS-625" firstAttribute="leading" secondItem="Tse-fc-yL0" secondAttribute="leading" id="f01-db-1OB"/>
+                            <constraint firstItem="Tse-fc-yL0" firstAttribute="leading" secondItem="ann-3e-ZvK" secondAttribute="leading" id="gpP-6q-IVW"/>
+                            <constraint firstItem="cd5-Hh-9Dj" firstAttribute="centerX" secondItem="ZgZ-E4-EHU" secondAttribute="centerX" id="ibL-2z-Zrz"/>
+                            <constraint firstItem="LY3-En-gQP" firstAttribute="bottom" secondItem="cd5-Hh-9Dj" secondAttribute="bottom" constant="-10" id="izM-FQ-UBz"/>
+                            <constraint firstItem="Tse-fc-yL0" firstAttribute="top" secondItem="ann-3e-ZvK" secondAttribute="bottom" constant="-10" id="lWg-Bu-3UU"/>
+                            <constraint firstItem="cbt-Fk-UvI" firstAttribute="top" secondItem="cd5-Hh-9Dj" secondAttribute="bottom" constant="30" id="ne3-Yc-RK4"/>
+                            <constraint firstItem="Nlp-Kp-lWE" firstAttribute="trailing" secondItem="cbt-Fk-UvI" secondAttribute="trailing" id="rn2-fR-6Fo"/>
+                            <constraint firstItem="QeN-sf-OGi" firstAttribute="top" secondItem="Nlp-Kp-lWE" secondAttribute="bottom" constant="30" id="v3S-LE-KwV"/>
+                            <constraint firstItem="jjL-LS-625" firstAttribute="trailing" secondItem="Tse-fc-yL0" secondAttribute="trailing" id="vyo-OZ-U44"/>
+                            <constraint firstItem="Tse-fc-yL0" firstAttribute="trailing" secondItem="ann-3e-ZvK" secondAttribute="trailing" id="w5j-4V-dv1"/>
+                            <constraint firstItem="jjL-LS-625" firstAttribute="top" secondItem="Tse-fc-yL0" secondAttribute="bottom" priority="500" constant="100" id="wAG-CE-n8c"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="iconImageView" destination="LY3-En-gQP" id="ftN-O1-Mo4"/>
+                        <outlet property="kilograppTextView" destination="Tse-fc-yL0" id="hoc-Zg-dUe"/>
+                        <outlet property="mattermostTextView" destination="ann-3e-ZvK" id="Byb-8Q-P69"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YlH-Sq-SKj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="310.5" y="1843.5"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="about_kg_icon" width="144" height="144"/>
+        <image name="about_mattermost_icon" width="450" height="450"/>
         <image name="menu_users_icon" width="20" height="13"/>
         <image name="navbar_menu_icon2" width="22" height="22"/>
         <image name="navbar_more_icon" width="22" height="22"/>

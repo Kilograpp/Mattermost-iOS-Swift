@@ -14,6 +14,17 @@
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
 		4195DCED1D54DAA900E8ED84 /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
+		8B8F6FFE1D77451A00ACF626 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */; };
+		8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */; };
+		8B8F70031D7747A900ACF626 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */; };
+		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
+		8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */; };
+		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
+		8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */; };
+		8BE969B51D7615EE0010A524 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BE969B41D7615EE0010A524 /* HEXColor.framework */; };
+		8BE969B71D7638060010A524 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BE969B61D7638060010A524 /* Settings.storyboard */; };
+		8BE969BB1D76AA420010A524 /* ProfileDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969BA1D76AA420010A524 /* ProfileDataSource.swift */; };
+		8BE969BE1D7730760010A524 /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */; };
 		9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8221EBC8202297FF772024 /* AppDelegate.swift */; };
 		9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8226CE0BB2D71C86E0F173 /* ObjectManager.swift */; };
 		9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B82258408C03D292317D1D2 /* LaunchScreen.storyboard */; };
@@ -78,7 +89,6 @@
 		D8087AE71D427E23001918E8 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE61D427E23001918E8 /* Post.swift */; };
 		D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AEA1D428923001918E8 /* NSCalendar+Singleton.swift */; };
 		D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AEC1D428DE9001918E8 /* NSDate+Formatter.swift */; };
-		D8087AEF1D428E72001918E8 /* DateTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AEE1D428E72001918E8 /* DateTools.framework */; };
 		D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF01D428FF1001918E8 /* StringUtils.swift */; };
 		D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF41D429393001918E8 /* UIScreen+Size.swift */; };
 		D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AF61D429610001918E8 /* TSMarkdownParser.framework */; };
@@ -151,6 +161,17 @@
 		4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerUrlViewController.swift; path = ServerUrl/ServerUrlViewController.swift; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
+		8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
+		8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
+		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
+		8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+PreparedColor.swift"; sourceTree = "<group>"; };
+		8BE969B41D7615EE0010A524 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
+		8BE969B61D7638060010A524 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = storyboards/Settings.storyboard; sourceTree = "<group>"; };
+		8BE969BA1D76AA420010A524 /* ProfileDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileDataSource.swift; sourceTree = "<group>"; };
+		8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
 		9B8220F2E4D1D8538A51229B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9B822144F4369B867EA300AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9B8221EBC8202297FF772024 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -287,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6B4BF721D65CBEE005B22D6 /* ImagePickerSheetController.framework in Frameworks */,
+				8BE969B51D7615EE0010A524 /* HEXColor.framework in Frameworks */,
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
 				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
@@ -295,7 +317,6 @@
 				D617E6A01D46AF3400283C0A /* SwiftFetchedResultsController.framework in Frameworks */,
 				D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */,
 				D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */,
-				D8087AEF1D428E72001918E8 /* DateTools.framework in Frameworks */,
 				D85D92F01D400FB1002F8800 /* RealmSwift.framework in Frameworks */,
 				D85D92EF1D400F9E002F8800 /* Realm.framework in Frameworks */,
 				63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */,
@@ -327,6 +348,39 @@
 				4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */,
 			);
 			name = ServerUrl;
+			sourceTree = "<group>";
+		};
+		8B8F6FFF1D7747A900ACF626 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */,
+				8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		8BE969A31D74C73B0010A524 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				8BE969A41D74C73B0010A524 /* AboutViewController.swift */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
+		8BE969A61D75CB750010A524 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		8BE969BC1D7730760010A524 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		9B82243559F26A9911CEBFB1 /* MattermostTests */ = {
@@ -441,6 +495,8 @@
 				D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */,
 				D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */,
 				D60EB7CE1D78384600D21D7D /* Array+RemoveObject.swift */,
+				8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */,
+				8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -468,6 +524,9 @@
 			isa = PBXGroup;
 			children = (
 				CD8825751D6C9C6200D08D45 /* MoreChannel */,
+				8BE969BC1D7730760010A524 /* Profile */,
+				8BE969A61D75CB750010A524 /* Settings */,
+				8BE969A31D74C73B0010A524 /* About */,
 				D619620F1D6222EA00C2E259 /* RightMenu */,
 				4195DCEB1D54DA8600E8ED84 /* ServerUrl */,
 				D62FEB891D4F2A8200390EBC /* LeftMenu */,
@@ -523,7 +582,9 @@
 		D62FEB961D4F2B2200390EBC /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
+				8BE969B61D7638060010A524 /* Settings.storyboard */,
 				D62FEB971D4F2B3400390EBC /* Login.storyboard */,
+				8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -606,6 +667,7 @@
 			isa = PBXGroup;
 			children = (
 				D67A42F71D7486F7003E2466 /* PostAttachmentsViewCell */,
+				8B8F6FFF1D7747A900ACF626 /* Profile */,
 				D62FEB8F1D4F2AC500390EBC /* LeftMenu */,
 				D6E165851D47C0960014C831 /* Chat */,
 				D6E165861D47C1200014C831 /* Reusable.swift */,
@@ -674,6 +736,7 @@
 				D83305FF1D5694DC00E92CD6 /* MessageLabel.swift */,
 				D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */,
 				D67A42F51D747B80003E2466 /* AssignedPhotoViewItem.swift */,
+				8BE969BA1D76AA420010A524 /* ProfileDataSource.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -719,6 +782,7 @@
 			isa = PBXGroup;
 			children = (
 				D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */,
+				8BE969B41D7615EE0010A524 /* HEXColor.framework */,
 				D86EF7FB1D5A208900BD49A3 /* Sugar.framework */,
 				D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */,
 				D6E165A51D47E9B00014C831 /* MFSideMenu.framework */,
@@ -812,6 +876,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				413B762C1D58CF4100F297BE /* ru.lproj in Resources */,
+				8BE969B71D7638060010A524 /* Settings.storyboard in Resources */,
+				8B8F6FFE1D77451A00ACF626 /* Profile.storyboard in Resources */,
 				D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */,
 				413B762A1D58CBF200F297BE /* Localizable.strings in Resources */,
 				9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */,
@@ -825,6 +891,7 @@
 				416040F41D58B6E300B53E31 /* Localizable.strings in Resources */,
 				D6330AB61D494BF9006D84F4 /* SF-UI-Text-Medium.otf in Resources */,
 				D6330AB11D494BF9006D84F4 /* SF-UI-Display-Bold.otf in Resources */,
+				8B8F70031D7747A900ACF626 /* ProfileTableViewCell.xib in Resources */,
 				D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */,
 				413B76221D58C6CD00F297BE /* en.lproj in Resources */,
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
@@ -894,7 +961,6 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/DateTools.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TSMarkdownParser.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SlackTextViewController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftFetchedResultsController.framework",
@@ -905,6 +971,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SkyFloatingLabelTextField.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ImagePickerSheetController.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/HEXColor.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -931,6 +998,7 @@
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				4195DCED1D54DAA900E8ED84 /* ServerUrlViewController.swift in Sources */,
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
+				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
 				D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
@@ -952,6 +1020,7 @@
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
 				D8D601381D5E007700951F18 /* Day.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
+				8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */,
 				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
@@ -967,6 +1036,7 @@
 				D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */,
+				8BE969BE1D7730760010A524 /* ProfileTableViewController.swift in Sources */,
 				D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
 				D6E165871D47C1200014C831 /* Reusable.swift in Sources */,
@@ -979,9 +1049,11 @@
 				D86EF7FA1D59F13C00BD49A3 /* AttachmentFileCell.swift in Sources */,
 				D8935BA71D5B4FC70037E7ED /* FeedCellBuilder.swift in Sources */,
 				D62FEB951D4F2AD700390EBC /* PublicChannelTableViewCell.swift in Sources */,
+				8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */,
 				D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */,
 				D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
+				8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
 				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,
@@ -1006,10 +1078,12 @@
 				D8436E681D26AC3600DEF464 /* DataManager.swift in Sources */,
 				D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */,
 				D8935BAC1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift in Sources */,
+				8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelViewController.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
+				8BE969BB1D76AA420010A524 /* ProfileDataSource.swift in Sources */,
 				D8935BA51D5A81780037E7ED /* PerformanceManager.swift in Sources */,
 				D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */,
 				D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */,
