@@ -33,7 +33,6 @@ after_script:
 branches:
   only:
   - master
-  - development
 
 env:
   global:
