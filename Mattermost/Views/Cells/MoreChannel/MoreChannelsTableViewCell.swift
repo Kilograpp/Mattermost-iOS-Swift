@@ -214,9 +214,9 @@ extension MoreChannelsTableViewCell : Configure {
     private func configureStatusViewWithBackendStatus(backendStatus: String) {
         switch backendStatus {
             case "online":
-                self.statusView.backgroundColor = UIColor.greenColor()
+                self.statusView.backgroundColor = ColorBucket.onlineStatusColor
             case "away":
-                self.statusView.backgroundColor = UIColor.yellowColor()
+                self.statusView.backgroundColor = ColorBucket.awayStatusColor
             default:
                 self.statusView.hidden = true
         }

@@ -10,7 +10,8 @@ import RealmSwift
 import SwiftFetchedResultsController
 
 final class LeftMenuViewController: UIViewController {
-    
+
+//MARK: - Property
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamNameLabel: UILabel!
@@ -32,6 +33,7 @@ final class LeftMenuViewController: UIViewController {
 
 }
 
+//MARK: - PrivateProtocols
 
 private protocol Configure : class {
     func configureView()
@@ -81,8 +83,10 @@ extension LeftMenuViewController : Configure {
         let publicTypePredicate = NSPredicate (format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let sortName = ChannelAttributes.displayName.rawValue
-        self.resultsPublic = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(publicTypePredicate).filter(currentUserInChannelPredicate).sorted(sortName, ascending: true)
-        self.resultsPrivate = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(sortName, ascending: true)
+        self.resultsPublic =
+            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(publicTypePredicate).filter(currentUserInChannelPredicate).sorted(sortName, ascending: true)
+        self.resultsPrivate =
+            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(sortName, ascending: true)
     }
     
 }
