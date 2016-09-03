@@ -280,7 +280,10 @@ extension Api: PostApi {
 }
 
 extension Api : FileApi {
-    func uploadImageItemAtChannel(item: AssignedPhotoViewItem,channel: Channel, completion: (file: File?, error: Error?) -> Void, progress: (identifier: String, value: Float) -> Void) {
+    func uploadImageItemAtChannel(item: AssignedPhotoViewItem,
+                                  channel: Channel,
+                                  completion: (file: File?, error: Error?) -> Void,
+                                  progress: (identifier: String, value: Float) -> Void) {
         let path = SOCStringFromStringWithObject(File.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
         let params = ["channel_id" : channel.identifier!,
                       "client_ids"  : StringUtils.randomUUID()]
@@ -290,7 +293,7 @@ extension Api : FileApi {
             let rawLink = mappingResult.firstObject[FileAttributes.rawLink.rawValue] as! String
             file.rawLink = rawLink
             completion(file: file, error: nil)
-//            RealmUtils.save(file)
+            RealmUtils.save(file)
             }, failure: { (error) in
                 completion(file: nil, error: nil)
             }) { (value) in

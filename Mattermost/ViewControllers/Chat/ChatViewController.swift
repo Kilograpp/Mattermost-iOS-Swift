@@ -10,6 +10,7 @@ import SlackTextViewController
 import RealmSwift
 import SwiftFetchedResultsController
 import ImagePickerSheetController
+import UITableView_Cache
 
 private protocol Private : class {
     func setupPostAttachmentsView()

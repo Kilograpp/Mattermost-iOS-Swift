@@ -48,6 +48,7 @@
 		D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D617E6A11D46AFB900283C0A /* ChatViewController.swift */; };
 		D617E6A41D46B14F00283C0A /* RBQFetchedResultsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */; };
 		D61962111D62230600C2E259 /* RightMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61962101D62230600C2E259 /* RightMenuViewController.swift */; };
+		D624CE261D7B0AA7001754F3 /* UITableView_Cache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D624CE251D7B0AA7001754F3 /* UITableView_Cache.framework */; };
 		D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB871D4F2A6A00390EBC /* RouterUtils.swift */; };
 		D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */; };
 		D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */; };
@@ -99,7 +100,6 @@
 		D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AF61D429610001918E8 /* TSMarkdownParser.framework */; };
 		D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */; };
 		D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */; };
-		D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */ = {isa = PBXBuildFile; fileRef = D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */; };
 		D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F51D5636EF00E92CD6 /* Attachment.swift */; };
 		D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F71D5637B800E92CD6 /* AttachmentField.swift */; };
 		D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */; };
@@ -206,6 +206,7 @@
 		D617E6A11D46AFB900283C0A /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D617E6A31D46B14F00283C0A /* RBQFetchedResultsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RBQFetchedResultsController.framework; path = Carthage/Build/iOS/RBQFetchedResultsController.framework; sourceTree = "<group>"; };
 		D61962101D62230600C2E259 /* RightMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RightMenuViewController.swift; path = rightMenu/RightMenuViewController.swift; sourceTree = "<group>"; };
+		D624CE251D7B0AA7001754F3 /* UITableView_Cache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UITableView_Cache.framework; path = Carthage/Build/iOS/UITableView_Cache.framework; sourceTree = "<group>"; };
 		D62FEB871D4F2A6A00390EBC /* RouterUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RouterUtils.swift; path = Mattermost/utils/RouterUtils.swift; sourceTree = SOURCE_ROOT; };
 		D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuViewController.swift; path = LeftMenu/LeftMenuViewController.swift; sourceTree = "<group>"; };
 		D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = Login/LoginViewController.swift; sourceTree = "<group>"; };
@@ -259,8 +260,6 @@
 		D8087AF61D429610001918E8 /* TSMarkdownParser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSMarkdownParser.framework; path = Carthage/Build/iOS/TSMarkdownParser.framework; sourceTree = "<group>"; };
 		D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TSMarkdownParser+Singleton.swift"; sourceTree = "<group>"; };
 		D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentImageCell.swift; sourceTree = "<group>"; };
-		D83305F21D53A4B500E92CD6 /* UITableView+Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+Cache.h"; sourceTree = "<group>"; };
-		D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+Cache.m"; sourceTree = "<group>"; };
 		D83305F51D5636EF00E92CD6 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		D83305F71D5637B800E92CD6 /* AttachmentField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentField.swift; sourceTree = "<group>"; };
 		D83305FD1D564B7B00E92CD6 /* String+Markdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Markdown.swift"; sourceTree = "<group>"; };
@@ -318,6 +317,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D624CE261D7B0AA7001754F3 /* UITableView_Cache.framework in Frameworks */,
 				D837F2791D76DCF700CA933F /* HEXColor.framework in Frameworks */,
 				D6B4BF721D65CBEE005B22D6 /* ImagePickerSheetController.framework in Frameworks */,
 				8BE969B51D7615EE0010A524 /* HEXColor.framework in Frameworks */,
@@ -682,15 +682,6 @@
 			name = PostAttachmentsViewCell;
 			sourceTree = "<group>";
 		};
-		D6A887B21D4A0F5600C13191 /* HexColors */ = {
-			isa = PBXGroup;
-			children = (
-				D6A887B31D4A0F6400C13191 /* HexColors.h */,
-				D6A887B41D4A0F6400C13191 /* HexColors.m */,
-			);
-			path = HexColors;
-			sourceTree = "<group>";
-		};
 		D6C0B4751D5E28D5006C506A /* Observers */ = {
 			isa = PBXGroup;
 			children = (
@@ -751,8 +742,6 @@
 		D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */ = {
 			isa = PBXGroup;
 			children = (
-				D83305F21D53A4B500E92CD6 /* UITableView+Cache.h */,
-				D83305F31D53A4B500E92CD6 /* UITableView+Cache.m */,
 				D8B846B21D4A38D500AEE19A /* NSObject+EnumerateProperties.h */,
 				D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */,
 				D8436E6F1D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.h */,
@@ -830,6 +819,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D624CE251D7B0AA7001754F3 /* UITableView_Cache.framework */,
 				D837F2781D76DCF700CA933F /* HEXColor.framework */,
 				D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */,
 				8BE969B41D7615EE0010A524 /* HEXColor.framework */,
@@ -1023,6 +1013,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SkyFloatingLabelTextField.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ImagePickerSheetController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/HEXColor.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/UITableView_Cache.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -1082,7 +1073,6 @@
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
-				D83305F41D53A4B500E92CD6 /* UITableView+Cache.m in Sources */,
 				D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */,
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */,
