@@ -25,7 +25,7 @@ protocol CommonFinders: class {
     static func objectById(id: String) -> Self?
     static func objectByUsername(username: String) -> Self?
 }
-
+//FIXME: -------------- все что ниже до следующего FIXME убрать!!!
 protocol CommonMappings: class {
     static func mapping() -> RKObjectMapping
     static func emptyResponseMapping() -> RKObjectMapping
@@ -55,6 +55,7 @@ extension RealmObject: CommonMappings  {
         return mapping;
     }
 }
+//FIXME: --------------убрать!!!
 
 // MARK: - Finders
 extension RealmObject : CommonFinders {

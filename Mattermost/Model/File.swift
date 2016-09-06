@@ -53,12 +53,12 @@ enum FileAttributes: String {
 enum FileRelationships: String {
     case post = "post"
 }
-private protocol PathPatterns: class {
-    static func uploadPathPattern() -> String
-    static func downloadPathPattern() -> String
-    static func thumbPathPattern() -> String
-    static func updateCommonPathPattern() -> String
-}
+//private protocol PathPatterns: class {
+//    static func uploadPathPattern() -> String
+//    static func downloadPathPattern() -> String
+//    static func thumbPathPattern() -> String
+//    static func updateCommonPathPattern() -> String
+//}
 
 private protocol ResponseMappings: class {
     static func simplifiedMapping() -> RKObjectMapping
@@ -82,21 +82,21 @@ private protocol Support: class {
     static func teamIdentifierPath() -> String
 }
 
-extension File: PathPatterns {
-    static func downloadPathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/files/get_info:\(FileAttributes.rawLink)"
-    }
-    static func thumbPathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/files/get:thumbPostfix\\.jpg"
-    }
-    static func updateCommonPathPattern() -> String {
-        return "teams/:path/files/get_info/:path/:path/:path/:path"
-    }
-    
-    static func uploadPathPattern() -> String {
-        return "teams/:identifier/files/upload"
-    }
-}
+//extension File: PathPatterns {
+//    static func downloadPathPattern() -> String {
+//        return "teams/:\(teamIdentifierPath())/files/get_info:\(FileAttributes.rawLink)"
+//    }
+//    static func thumbPathPattern() -> String {
+//        return "teams/:\(teamIdentifierPath())/files/get:thumbPostfix\\.jpg"
+//    }
+//    static func updateCommonPathPattern() -> String {
+//        return "teams/:path/files/get_info/:path/:path/:path/:path"
+//    }
+//    
+//    static func uploadPathPattern() -> String {
+//        return "teams/:identifier/files/upload"
+//    }
+//}
 
 extension File: ResponseMappings {
     static func simplifiedMapping() -> RKObjectMapping {
@@ -117,7 +117,7 @@ extension File: ResponseDescriptors {
     static func updateResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                     method: .GET,
-                                    pathPattern: updateCommonPathPattern(),
+                                    pathPattern: FilePathPatternsContainer.updateCommonPathPattern(),
                                     keyPath: nil,
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
@@ -125,7 +125,7 @@ extension File: ResponseDescriptors {
     static func uploadResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: uploadMapping(),
                                     method: .POST,
-                                    pathPattern: uploadPathPattern(),
+                                    pathPattern: FilePathPatternsContainer.uploadPathPattern(),
                                     keyPath: "filenames",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }

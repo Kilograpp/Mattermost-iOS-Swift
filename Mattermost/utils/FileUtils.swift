@@ -21,7 +21,7 @@ final class FileUtils {
         if  StringUtils.isValidLink(file.rawLink) {
             return NSURL(string: file.rawLink!)
         } else {
-            let path = SOCStringFromStringWithObject(File.downloadPathPattern(), file)
+            let path = SOCStringFromStringWithObject(FilePathPatternsContainer.downloadPathPattern(), file)
             let result = Api.sharedInstance.baseURL().URLByAppendingPathComponent(path.stringByRemovingPercentEncoding!)
             
             return result
@@ -33,7 +33,7 @@ final class FileUtils {
         if  StringUtils.isValidLink(file.rawLink) {
             return NSURL(string: file.rawLink!)
         } else {
-            let path = SOCStringFromStringWithObject(File.thumbPathPattern(), file)
+            let path = SOCStringFromStringWithObject(FilePathPatternsContainer.thumbPathPattern(), file)
             return Api.sharedInstance.baseURL().URLByAppendingPathComponent(path.stringByRemovingPercentEncoding!)
         }
 

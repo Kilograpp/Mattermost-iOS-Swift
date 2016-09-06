@@ -23,10 +23,10 @@ final class Team: RealmObject {
     }
 }
 
-private protocol PathPattern: class {
-    static func initialLoadPathPattern() -> String
-    static func teamListingsPathPattern() -> String
-}
+//private protocol PathPattern: class {
+//    static func initialLoadPathPattern() -> String
+//    static func teamListingsPathPattern() -> String
+//}
 
 private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
@@ -47,14 +47,14 @@ public enum TeamAttributes: String {
 }
 
 // MARK: - Path Pattern
-extension Team: PathPattern {
-    static func initialLoadPathPattern() -> String {
-        return "users/initial_load"
-    }
-    private static func teamListingsPathPattern() -> String {
-        return "teams/all_team_listings"
-    }
-}
+//extension Team: PathPattern {
+//    static func initialLoadPathPattern() -> String {
+//        return "users/initial_load"
+//    }
+//    private static func teamListingsPathPattern() -> String {
+//        return "teams/all_team_listings"
+//    }
+//}
 
 // MARK: - Mapping
 extension Team: ResponseMappings {
@@ -76,7 +76,7 @@ extension Team: ResponseDescriptors {
     static func initalLoadResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                     method: .GET,
-                                    pathPattern: initialLoadPathPattern(),
+                                    pathPattern: TeamPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "teams",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
@@ -84,7 +84,7 @@ extension Team: ResponseDescriptors {
     static func teamListingsResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: emptyMapping(),
                                     method: .GET,
-                                    pathPattern: teamListingsPathPattern(),
+                                    pathPattern: TeamPathPatternsContainer.teamListingsPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
@@ -92,7 +92,7 @@ extension Team: ResponseDescriptors {
     static func initalLoadConfigResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: initialLoadConfigMapping(),
                                     method: .GET,
-                                    pathPattern: initialLoadPathPattern(),
+                                    pathPattern: TeamPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "client_cfg",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }

@@ -141,12 +141,12 @@ final class Post: RealmObject {
     
 }
 
-private protocol PathPattern: class {
-    static func updatePathPattern() -> String
-    static func nextPagePathPattern() -> String
-    static func creationPathPattern() -> String
-    static func firstPagePathPattern() -> String
-}
+//private protocol PathPattern: class {
+//    static func updatePathPattern() -> String
+//    static func nextPagePathPattern() -> String
+//    static func creationPathPattern() -> String
+//    static func firstPagePathPattern() -> String
+//}
 
 private protocol ResponseMapping: class {
     static func listMapping() -> RKObjectMapping
@@ -194,25 +194,25 @@ private protocol KVO: class {
 
 
 // MARK: - Path Patterns
-extension Post: PathPattern {
-    static func nextPagePathPattern() -> String {
-        return "teams/:\(PageWrapper.teamIdPath())/" +
-               "channels/:\(PageWrapper.channelIdPath())/" +
-               "posts/:\(PageWrapper.lastPostIdPath())/" +
-               "before/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
-    }
-    static func firstPagePathPattern() -> String {
-        return "teams/:\(PageWrapper.teamIdPath())/" +
-               "channels/:\(PageWrapper.channelIdPath())/" +
-               "posts/page/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
-    }
-    static func updatePathPattern() -> String {
-        return "teams/:\(self.teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
-    }
-    static func creationPathPattern() -> String {
-        return "teams/:\(self.teamIdentifierPath())/channels/:\(self.channelIdentifierPath())/posts/create"
-    }
-}
+//extension Post: PathPattern {
+//    static func nextPagePathPattern() -> String {
+//        return "teams/:\(PageWrapper.teamIdPath())/" +
+//               "channels/:\(PageWrapper.channelIdPath())/" +
+//               "posts/:\(PageWrapper.lastPostIdPath())/" +
+//               "before/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
+//    }
+//    static func firstPagePathPattern() -> String {
+//        return "teams/:\(PageWrapper.teamIdPath())/" +
+//               "channels/:\(PageWrapper.channelIdPath())/" +
+//               "posts/page/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
+//    }
+//    static func updatePathPattern() -> String {
+//        return "teams/:\(self.teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
+//    }
+//    static func creationPathPattern() -> String {
+//        return "teams/:\(self.teamIdentifierPath())/channels/:\(self.channelIdentifierPath())/posts/create"
+//    }
+//}
 
 // MARK: - Mapping
 extension Post: ResponseMapping {
@@ -254,13 +254,13 @@ extension Post: ResponseMapping {
 
 //  MARK: - Support
 extension Post: Support {
-    private static func filesLinkPath() -> String {
+    static func filesLinkPath() -> String {
         return PostRelationships.files.rawValue + "." + FileAttributes.rawLink.rawValue
     }
-    private static func channelIdentifierPath() -> String {
+    static func channelIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelAttributes.identifier)"
     }
-    private static func teamIdentifierPath() -> String {
+    static func teamIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
     }
 }
@@ -381,7 +381,7 @@ extension Post: RequestMapping {
         let mapping = RKObjectMapping.requestMapping()
         mapping.addAttributeMappingsFromArray([ "message" ])
         mapping.addAttributeMappingsFromDictionary([
-            filesLinkPath() : "filenames",
+            Post.filesLinkPath() : "filenames",
             PostAttributes.channelId.rawValue : "channel_id",
             PostAttributes.pendingId.rawValue : "pending_post_id",
         ])
@@ -402,28 +402,28 @@ extension Post: ResponseDescriptor {
     static func firstPageResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: listMapping(),
                                     method: .GET,
-                                    pathPattern: firstPagePathPattern(),
+                                    pathPattern: PostPathPatternsContainer.firstPagePathPattern(),
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
     static func updateResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: listMapping(),
                                     method: .GET,
-                                    pathPattern: updatePathPattern(),
+                                    pathPattern: PostPathPatternsContainer.updatePathPattern(),
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
     static func nextPageResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: listMapping(),
                                     method: .GET,
-                                    pathPattern: nextPagePathPattern(),
+                                    pathPattern: PostPathPatternsContainer.nextPagePathPattern(),
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
     static func creationResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: creationMapping(),
                                     method: .POST,
-                                    pathPattern: creationPathPattern(),
+                                    pathPattern: PostPathPatternsContainer.creationPathPattern(),
                                     keyPath: nil,
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }

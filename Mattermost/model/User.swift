@@ -58,14 +58,14 @@ enum UserAttributes: String {
     case avatarLink = "avatarLink"
 }
 
-private protocol PathPatterns: class {
-    static func loginPathPattern() -> String
-    static func avatarPathPattern() -> String
-    static func socketPathPattern() -> String
-    static func initialLoadPathPattern() -> String
-    static func completeListPathPattern() -> String
-    static func usersStatusPathPattern() -> String
-}
+//private protocol PathPatterns: class {
+//    static func loginPathPattern() -> String
+//    static func avatarPathPattern() -> String
+//    static func socketPathPattern() -> String
+//    static func initialLoadPathPattern() -> String
+//    static func completeListPathPattern() -> String
+//    static func usersStatusPathPattern() -> String
+//}
 
 private protocol Mappings: class {
     static func mapping() -> RKObjectMapping
@@ -86,27 +86,27 @@ private protocol Computatations: class {
 }
 
 
-extension User: PathPatterns {
-    static func avatarPathPattern() -> String {
-        return "users/:\(UserAttributes.identifier)/image"
-    }
-    static func loginPathPattern() -> String {
-        return "users/login";
-    }
-    static func initialLoadPathPattern() -> String {
-        return Team.initialLoadPathPattern()
-    }
-    static func socketPathPattern() -> String {
-        return "users/websocket"
-    }
-    static func completeListPathPattern() -> String {
-        return "users/profiles/:\(TeamAttributes.identifier)"
-    }
-    
-    static func usersStatusPathPattern() -> String {
-        return "users/status"
-    }
-}
+//extension User: PathPatterns {
+//    static func avatarPathPattern() -> String {
+//        return "users/:\(UserAttributes.identifier)/image"
+//    }
+//    static func loginPathPattern() -> String {
+//        return "users/login";
+//    }
+//    static func initialLoadPathPattern() -> String {
+//        return Team.initialLoadPathPattern()
+//    }
+//    static func socketPathPattern() -> String {
+//        return "users/websocket"
+//    }
+//    static func completeListPathPattern() -> String {
+//        return "users/profiles/:\(TeamAttributes.identifier)"
+//    }
+//    
+//    static func usersStatusPathPattern() -> String {
+//        return "users/status"
+//    }
+//}
 
 // MARK: - Mappings
 extension User: Mappings {
@@ -141,21 +141,21 @@ extension User: ResponseDescriptors {
     static func loginResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                     method: .POST,
-                                    pathPattern: loginPathPattern(),
+                                    pathPattern: UserPathPatternsContainer.loginPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: directProfileMapping(),
                                     method: .GET,
-                                    pathPattern: initialLoadPathPattern(),
+                                    pathPattern: UserPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "direct_profiles",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func completeListResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: directProfileMapping(),
                                     method: .GET,
-                                    pathPattern: completeListPathPattern(),
+                                    pathPattern: UserPathPatternsContainer.completeListPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }

@@ -91,12 +91,17 @@ final class Channel: RealmObject {
     
 }
 
-private protocol PathPattern: class {
-    static func listPathPattern() -> String
-    static func moreListPathPattern() -> String
-    static func extraInfoPathPattern() -> String
-    static func updateLastViewDatePathPattern() -> String
+private protocol Support: class {
+    static func teamIdentifierPath() -> String
+    func hasNewMessages() -> Bool
 }
+
+//private protocol PathPattern: class {
+//    static func listPathPattern() -> String
+//    static func moreListPathPattern() -> String
+//    static func extraInfoPathPattern() -> String
+//    static func updateLastViewDatePathPattern() -> String
+//}
 
 private protocol Mapping: class {
     static func mapping() -> RKObjectMapping
@@ -111,26 +116,21 @@ private protocol ResponseDescriptors: class {
     static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor
 }
 
-private protocol Support: class {
-    static func teamIdentifierPath() -> String
-    func hasNewMessages() -> Bool
-}
-
 // MARK: - Path Pattern
-extension Channel: PathPattern {
-    static func moreListPathPattern() -> String {
-        return "teams/:\(TeamAttributes.identifier.rawValue)/channels/more"
-    }
-    static func listPathPattern() -> String {
-        return "teams/:\(TeamAttributes.identifier.rawValue)/channels/"
-    }
-    static func extraInfoPathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/extra_info"
-    }
-    static func updateLastViewDatePathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/update_last_viewed_at"
-    }
-}
+//extension Channel: PathPattern {
+//    static func moreListPathPattern() -> String {
+//        return "teams/:\(TeamAttributes.identifier.rawValue)/channels/more"
+//    }
+//    static func listPathPattern() -> String {
+//        return "teams/:\(TeamAttributes.identifier.rawValue)/channels/"
+//    }
+//    static func extraInfoPathPattern() -> String {
+//        return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/extra_info"
+//    }
+//    static func updateLastViewDatePathPattern() -> String {
+//        return "teams/:\(teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/update_last_viewed_at"
+//    }
+//}
 
 // MARK: - Mapping
 extension Channel: Mapping {
@@ -170,14 +170,14 @@ extension Channel: ResponseDescriptors {
     static func channelsListResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                     method: .GET,
-                                    pathPattern: listPathPattern(),
+                                    pathPattern: ChannelPathPatternsContainer.listPathPattern(),
                                     keyPath: "channels",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: attendantInfoMapping(),
                                     method: .GET,
-                                    pathPattern: listPathPattern(),
+                                    pathPattern: ChannelPathPatternsContainer.listPathPattern(),
                                     keyPath: "members",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
@@ -185,7 +185,7 @@ extension Channel: ResponseDescriptors {
     static func extraInfoResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                     method: .GET,
-                                    pathPattern: extraInfoPathPattern(),
+                                    pathPattern: ChannelPathPatternsContainer.extraInfoPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
@@ -193,14 +193,14 @@ extension Channel: ResponseDescriptors {
     static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: emptyMapping(),
                                     method: .POST,
-                                    pathPattern: updateLastViewDatePathPattern(),
+                                    pathPattern: ChannelPathPatternsContainer.updateLastViewDatePathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                     method: .GET,
-                                    pathPattern: moreListPathPattern(),
+                                    pathPattern: ChannelPathPatternsContainer.moreListPathPattern(),
                                     keyPath: "channels",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }

@@ -34,7 +34,7 @@ final class UserStatus : NSObject {
     var identifier: String?
     static var responseDescriptor = RKResponseDescriptor(mapping: UserStatus.mapping(),
                                              method: .POST,
-                                             pathPattern: User.usersStatusPathPattern(),
+                                             pathPattern: UserPathPatternsContainer.usersStatusPathPattern(),
                                              keyPath: nil,
                                              statusCodes: RKStatusCodeIndexSetForClass(.Successful))
 }
@@ -54,7 +54,7 @@ extension UserStatus : ResponseDescriptors {
     static func statusResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: mapping(),
                                      method: .POST,
-                                     pathPattern: User.usersStatusPathPattern(),
+                                     pathPattern: UserPathPatternsContainer.usersStatusPathPattern(),
                                      keyPath: nil,
                                      statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
