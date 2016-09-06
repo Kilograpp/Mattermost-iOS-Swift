@@ -1,7 +1,7 @@
 PODS:
-  - Crashlytics (3.7.2):
+  - Crashlytics (3.8.0):
     - Fabric (~> 1.6.3)
-  - Fabric (1.6.7)
+  - Fabric (1.6.8)
   - ISO8601DateFormatterValueTransformer (0.6.1):
     - RKValueTransformers (~> 1.1.0)
   - RestKit (0.27.0):
@@ -32,8 +32,8 @@ DEPENDENCIES:
   - RestKit
 
 SPEC CHECKSUMS:
-  Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
-  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
+  Crashlytics: 8601d9c74a4c4d28f3e7f408bf4c0e490c70e8b4
+  Fabric: 5755268d0171435ab167e3d0878a28a777deaf10
   ISO8601DateFormatterValueTransformer: 52da467d6ec899d6aedda8e48280ac92e8ee97e6
   RestKit: a0244db34e14ed9cf059fcee2be6733cc162c34a
   RKValueTransformers: e5ed67e3811229b616fe01bddeeafe3bb337b1b9

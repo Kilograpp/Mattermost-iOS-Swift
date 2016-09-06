@@ -211,7 +211,9 @@ extension ProfileTableViewController: ImagePickerControllerDelegate {
         picker.dismissViewControllerAnimated(true, completion: nil)
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.avatarImageView.image = image
-        
+        Api.sharedInstance.updateImageForCurrentUser(image) { (error) in
+            
+        }
         
         
         //let image = info.keys.

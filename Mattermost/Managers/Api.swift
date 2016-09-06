@@ -65,6 +65,12 @@ final class Api {
     private func computeAndReturnApiRootUrl() -> NSURL! {
         return NSURL(string: Preferences.sharedInstance.serverUrl!)?.URLByAppendingPathComponent(Constants.Api.Route)
     }
+    func updateImageForCurrentUser(image: UIImage, completion: (error: Error?) -> Void) {
+        let path = User.uploadAvatarPathPattern()
+        self.manager .postImage(with: image, name: "image", path: path, parameters: nil, success: { (mappingResult) in
+            completion(error: nil)
+            }, failure: completion)
+    }
 }
 
 
@@ -248,4 +254,5 @@ extension Api: Interface {
         let path = SOCStringFromStringWithObject(User.avatarPathPattern(), user)
         return NSURL(string: path, relativeToURL: self.manager.HTTPClient?.baseURL)!.absoluteString
     }
+    
 }
