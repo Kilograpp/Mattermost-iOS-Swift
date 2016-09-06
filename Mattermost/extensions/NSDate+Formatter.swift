@@ -19,4 +19,8 @@ extension NSDate {
     func feedSectionDateFormat() -> String {
         return self.formattedDateWithFormat("MMM dd,yyyy", locale: NSLocale(localeIdentifier: "en_US_POSIX"))
     }
+    
+    func messageDateFormatForChannel() -> String {
+        return self.formattedDateWithFormat("MMM d", locale: NSLocale(localeIdentifier: "en_US_POSIX"))
+    }
 }

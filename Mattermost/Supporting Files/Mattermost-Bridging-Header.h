@@ -2,10 +2,8 @@
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
 
-#import <RestKit/RestKit-umbrella.h>
-#import <SOCKit/SOCKit-umbrella.h>
+
 #import "NSObject+RuntimeMethodsValues.h"
-#import "HexColors.h"
 #import "NSObject+EnumerateProperties.h"
-#import "UITableView+Cache.h"
+//#import "UITableView+Cache.h"
 #import "RKObjectManager+Additions.h"

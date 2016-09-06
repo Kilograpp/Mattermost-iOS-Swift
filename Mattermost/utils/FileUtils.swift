@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SOCKit
 
 private protocol Interface {
     static func downloadLinkForFile(file: File) -> NSURL?

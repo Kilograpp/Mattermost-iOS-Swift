@@ -25,6 +25,7 @@ class RightMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//FIXME: вызов методов не должен быть через self
         self.configureTableView()
         self.configureHeaderVIew()
     }

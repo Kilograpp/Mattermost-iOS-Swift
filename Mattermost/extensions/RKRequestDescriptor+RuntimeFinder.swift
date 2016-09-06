@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RestKit
 
 extension RKRequestDescriptor {
     class func findAllDescriptors() -> Array<RKRequestDescriptor>{

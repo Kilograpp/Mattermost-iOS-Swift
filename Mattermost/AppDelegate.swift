@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+ //FIXME: вызов методов не должен быть через self
         self.launchApplicationStateManager()
         RouterUtils.loadInitialScreen()
 

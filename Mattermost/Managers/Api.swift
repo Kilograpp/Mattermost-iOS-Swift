@@ -7,6 +7,8 @@
 
 import Foundation
 import RealmSwift
+import RestKit
+import SOCKit
 
 private protocol Interface: class {
     func isSignedIn() -> Bool
@@ -39,6 +41,11 @@ private protocol PostApi: class {
     func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void)
 }
 
+private protocol FileApi : class {
+    func uploadImageItemAtChannel(item: AssignedPhotoViewItem,channel: Channel, completion: (file: File?, error: Error?) -> Void, progress: (identifier: String, value: Float) -> Void)
+    func cancelUploadingOperationForImageItem(item: AssignedPhotoViewItem)
+}
+
 final class Api {
     static let sharedInstance = Api()
     private var _managerCache: ObjectManager?
@@ -51,6 +58,9 @@ final class Api {
             _managerCache!.requestSerializationMIMEType = RKMIMETypeJSON;
             _managerCache!.addRequestDescriptorsFromArray(RKRequestDescriptor.findAllDescriptors())
             _managerCache!.addResponseDescriptorsFromArray(RKResponseDescriptor.findAllDescriptors())
+            
+            _managerCache!.registerRequestOperationClass(KGObjectRequestOperation.self)
+
         }
         return _managerCache!;
     }
@@ -153,6 +163,7 @@ extension Api: ChannelApi {
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
                 channels.forEach {
+                    $0.currentUserInChannel = true
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
                 }
@@ -266,6 +277,33 @@ extension Api: PostApi {
             completion(error: nil)
         }, failure: completion)
         
+    }
+}
+
+extension Api : FileApi {
+    func uploadImageItemAtChannel(item: AssignedPhotoViewItem,
+                                  channel: Channel,
+                                  completion: (file: File?, error: Error?) -> Void,
+                                  progress: (identifier: String, value: Float) -> Void) {
+        let path = SOCStringFromStringWithObject(File.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
+        let params = ["channel_id" : channel.identifier!,
+                      "client_ids"  : StringUtils.randomUUID()]
+        
+        self.manager.postImage(with: item.image, name: "files", path: path, parameters: params, success: { (mappingResult) in
+            let file = File()
+            let rawLink = mappingResult.firstObject[FileAttributes.rawLink.rawValue] as! String
+            file.rawLink = rawLink
+            completion(file: file, error: nil)
+            RealmUtils.save(file)
+            }, failure: { (error) in
+                completion(file: nil, error: nil)
+            }) { (value) in
+                progress(identifier: item.identifier ,value: value)
+        }
+    }
+    
+    func cancelUploadingOperationForImageItem(item: AssignedPhotoViewItem) {
+        self.manager.cancelUploadingOperationForImageItem(item)
     }
 }
 

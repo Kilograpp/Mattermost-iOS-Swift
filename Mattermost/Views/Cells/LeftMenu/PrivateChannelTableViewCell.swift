@@ -42,7 +42,7 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
     
 //MARK: - Configuration
     func configureStatusViewWithNotification(notification: NSNotification) {
-        self.test!()
+        self.test?()
     }
 
 //MARK: - Override
@@ -84,6 +84,7 @@ extension PrivateChannelTableViewCell : PrivateConfiguration {
         self.user = self.channel?.interlocuterFromPrivateChannel()
     }
     private func configureStatusViewWithBackendStatus(backendStatus: String) {
+        //FIXME в свифте есть swith из строк
         if backendStatus == "offline" {
             self.statusView.backgroundColor = UIColor.clearColor()
             self.statusView.layer.borderWidth = 1;
@@ -125,7 +126,7 @@ extension PrivateChannelTableViewCell {
     func subscribeToNotifications() {
 //        print("SUBSCRIBED_TO \(self.channel?.interlocuterFromPrivateChannel().identifier  as String!)")
         NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(self.configureStatusViewWithNotification(_:)),
+                                                         selector: #selector(configureStatusViewWithNotification(_:)),
                                                          name: self.channel?.interlocuterFromPrivateChannel().identifier as String!,
                                                          object: nil)
     }

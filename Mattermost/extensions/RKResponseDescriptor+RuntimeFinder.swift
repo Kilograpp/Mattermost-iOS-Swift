@@ -7,12 +7,12 @@
 //
 
 import Foundation
+import RestKit
 
 extension RKResponseDescriptor {
     class func findAllDescriptors() -> Array<RKResponseDescriptor>{
         let descriptors = dumpValuesFromRootClass(RealmObject.self, withClassPrefix: Constants.Common.RestKitPrefix) as! Array<RKResponseDescriptor>
-        let userStatusDesc = [UserStatus.responseDescr] as! Array<RKResponseDescriptor>
-
+        let userStatusDesc: Array<RKResponseDescriptor> = [UserStatus.responseDescriptor]
         return descriptors + userStatusDesc
     }
 }

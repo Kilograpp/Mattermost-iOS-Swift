@@ -9,8 +9,16 @@
 import SlackTextViewController
 import RealmSwift
 import SwiftFetchedResultsController
+import ImagePickerSheetController
+import UITableView_Cache
 
-final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
+private protocol Private : class {
+    func setupPostAttachmentsView()
+    func showAttachmentsView()
+    func hideAttachmentsView()
+}
+
+final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private var channel : Channel?
     private var resultsObserver: FeedNotificationsObserver?
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
@@ -23,14 +31,25 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     var hasNextPage: Bool = true
     var isLoadingInProgress: Bool = false
     
+    var fileUploadingInProgress: Bool = true {
+        didSet {
+            self.toggleSendButtonAvailability()
+        }
+    }
+    
+    private let postAttachmentsView = PostAttachmentsView()
+    private var assignedPhotosArray = Array<AssignedPhotoViewItem>()
+    
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
+//FIXME: вызов методов не должен быть через self
         self.configureInputBar()
         self.configureTableView()
         self.setupRefreshControl()
+        setupPostAttachmentsView()
         setupTopActivityIndicator()
         
         ChannelObserver.sharedObserver.delegate = self
@@ -39,7 +58,6 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
         return .Grouped
     }
-    
     
     //MARK: - Configuration
     
@@ -112,8 +130,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     // MARK: - FetchedResultsController
     
     
-    func prepareResults() {
-        
+    private func prepareResults() {
         if NSThread.isMainThread() {
             let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
             self.results = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
@@ -126,8 +143,6 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
                 self.resultsObserver = FeedNotificationsObserver(results: self.results, tableView: self.tableView)
             }
         }
-        
-            
     }
     
     // MARK: - Configuration
@@ -151,7 +166,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
         self.rightButton.setTitle("Send", forState: .Normal)
         self.rightButton.addTarget(self, action: #selector(sendPost), forControlEvents: .TouchUpInside)
         
-        self.leftButton.setImage(UIImage.init(named: "chat_photo_icon"), forState: .Normal)
+        self.leftButton.setImage(UIImage(named: "chat_photo_icon"), forState: .Normal)
         self.leftButton.tintColor = UIColor.grayColor()
         self.leftButton.addTarget(self, action: #selector(assignPhotos), forControlEvents: .TouchUpInside)
     }
@@ -170,6 +185,49 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate {
     }
     
     func assignPhotos() -> Void {
+        //TODO: REFACTOR
+        let presentImagePickerController: UIImagePickerControllerSourceType -> () = { source in
+            let controller = UIImagePickerController()
+            controller.delegate = self
+            let sourceType = source
+            controller.sourceType = sourceType
+            
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
+        
+        let controller = ImagePickerSheetController(mediaType: .ImageAndVideo)
+        controller.maximumSelection = 5
+
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
+            presentImagePickerController(.Camera)
+            }, secondaryHandler: { _, numberOfPhotos in
+                let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
+                self.assignedPhotosArray.appendContentsOf(convertedAssets)
+                self.postAttachmentsView.showAnimated()
+                self.postAttachmentsView.updateAppearance()
+                PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error) in
+                    if error != nil {
+                        //TODO: handle error
+                    } else {
+                        self.fileUploadingInProgress = finished
+                    }
+                    }) { (value, index) in
+                        self.assignedPhotosArray[index].uploaded = value == 1
+                        self.assignedPhotosArray[index].uploading = value < 1
+                        self.assignedPhotosArray[index].uploadProgress = value
+                        self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
+                }
+        }))
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
+            presentImagePickerController(.PhotoLibrary)
+            }, secondaryHandler: { _ in
+                presentImagePickerController(.PhotoLibrary)
+        }))
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .Cancel, handler: { _ in
+            print("Cancelled")
+        }))
+        
+        presentViewController(controller, animated: true, completion: nil)
     }
 }
 
@@ -185,7 +243,6 @@ extension ChatViewController {
         self.title = self.channel?.displayName
         self.prepareResults()
         self.loadFirstPageOfData()
-        
     }
 }
 
@@ -193,7 +250,7 @@ extension ChatViewController {
 // MARK: - UI Helpers
 
 extension ChatViewController {
-    func setupRefreshControl() {
+    private func setupRefreshControl() {
         let tableVc = UITableViewController.init() as UITableViewController
         tableVc.tableView = self.tableView
         self.refreshControl = UIRefreshControl.init()
@@ -207,6 +264,12 @@ extension ChatViewController {
     
     func endRefreshing() {
         self.refreshControl?.endRefreshing()
+    }
+    
+    func toggleSendButtonAvailability() {
+        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+            self.rightButton.enabled = self.fileUploadingInProgress
+        }
     }
 }
 
@@ -246,11 +309,65 @@ extension ChatViewController {
     }
 }
 
-//extension ChatViewController : ChannelObserverDelegate {
-//    func didSelectChannelWithIdentifier(identifier: String!) -> Void {
-//        self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
-//        print("\(self.channel?.displayName)")
-//    }
+extension ChatViewController : Private {
+    private func setupPostAttachmentsView() {
+        self.postAttachmentsView.backgroundColor = UIColor.blueColor()
+        self.view.insertSubview(self.postAttachmentsView, belowSubview: self.textInputbar)
+        self.postAttachmentsView.anchorView = self.textInputbar
+        
+        self.postAttachmentsView.dataSource = self
+        self.postAttachmentsView.delegate = self
+    }
+    
+    private func showAttachmentsView() {
+        var oldInset = self.tableView.contentInset
+        oldInset.top = PostAttachmentsView.attachmentsViewHeight
+        self.tableView.contentInset = oldInset
+    }
+    
+    private func hideAttachmentsView() {
+        var oldInset = self.tableView.contentInset
+        oldInset.top = 0
+        self.tableView.contentInset = oldInset
+    }
+}
+
+extension ChatViewController : PostAttachmentViewDataSource {
+    func itemAtIndex(index: Int) -> AssignedPhotoViewItem {
+        return self.assignedPhotosArray[index]
+    }
+    
+    func numberOfItems() -> Int {
+        return self.assignedPhotosArray.count
+    }
+}
+
+extension ChatViewController : PostAttachmentViewDelegate {
+    func didRemovePhoto(photo: AssignedPhotoViewItem) {
+        PostUtils.sharedInstance.cancelImageItemUploading(photo)
+        self.assignedPhotosArray.removeObject(photo)
+        
+        guard self.assignedPhotosArray.count != 0 else {
+            self.postAttachmentsView.hideAnimated()
+            return
+        }
+    }
+    
+    func attachmentsViewWillAppear() {
+        var oldInset = self.tableView.contentInset
+        oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
+        self.tableView.contentInset = oldInset
+    }
+    
+    func attachmentViewWillDisappear() {
+        var oldInset = self.tableView.contentInset
+        oldInset.top = 0
+        self.tableView.contentInset = oldInset
+    }
+}
+//
+//extension ChatViewController : UIImagePickerControllerDelegate {
+//    
 //}
 
 //MARK: - ActivityIndicator
@@ -276,4 +393,3 @@ extension ChatViewController {
         self.tableView.tableFooterView = UIView(frame: CGRectZero)
     }
 }
-

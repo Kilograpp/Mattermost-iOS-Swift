@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RestKit
 import RealmSwift
 
 private protocol Interface: class {
@@ -53,6 +54,7 @@ enum FileRelationships: String {
     case post = "post"
 }
 private protocol PathPatterns: class {
+    static func uploadPathPattern() -> String
     static func downloadPathPattern() -> String
     static func thumbPathPattern() -> String
     static func updateCommonPathPattern() -> String
@@ -60,6 +62,7 @@ private protocol PathPatterns: class {
 
 private protocol ResponseMappings: class {
     static func simplifiedMapping() -> RKObjectMapping
+    static func uploadMapping() -> RKObjectMapping
 }
 
 private protocol Computations: class {
@@ -71,6 +74,7 @@ private protocol Computations: class {
 
 private protocol ResponseDescriptors: class {
     static func updateResponseDescriptor() -> RKResponseDescriptor
+    static func uploadResponseDescriptor() -> RKResponseDescriptor
 }
 
 private protocol Support: class {
@@ -88,12 +92,23 @@ extension File: PathPatterns {
     static func updateCommonPathPattern() -> String {
         return "teams/:path/files/get_info/:path/:path/:path/:path"
     }
+    
+    static func uploadPathPattern() -> String {
+        return "teams/:identifier/files/upload"
+    }
 }
 
 extension File: ResponseMappings {
     static func simplifiedMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
+        return mapping
+    }
+    
+    static func uploadMapping() -> RKObjectMapping {
+        let mapping = RKObjectMapping(withClass: NSMutableDictionary.self)
+        mapping.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
+        
         return mapping
     }
 }
@@ -106,6 +121,15 @@ extension File: ResponseDescriptors {
                                     keyPath: nil,
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
+    
+    static func uploadResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: uploadMapping(),
+                                    method: .POST,
+                                    pathPattern: uploadPathPattern(),
+                                    keyPath: "filenames",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
+
 }
 
 extension File: Computations {

@@ -125,6 +125,7 @@ extension LoginViewController: Lifecylce {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//FIXME: вызов методов не должен быть через self
         self.setupTitleLabel()
         self.setupLoginButton()
         self.setupLoginTextField()
@@ -135,7 +136,7 @@ extension LoginViewController: Lifecylce {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+//FIXME: вызов методов не должен быть через self        
         self.setupNavigationBar()
     }
     

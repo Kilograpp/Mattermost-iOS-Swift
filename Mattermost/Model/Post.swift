@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import RestKit
 import TSMarkdownParser
 
 
@@ -175,6 +176,10 @@ private protocol Computations: class {
     func setSystemAuthorIfNeeded()
 }
 
+private protocol RequestDescriptor : class {
+    static func creationRequestDescriptor() -> RKRequestDescriptor
+}
+
 private protocol Support: class {
     static func filesLinkPath() -> String
     static func teamIdentifierPath() -> String
@@ -214,8 +219,12 @@ extension Post: ResponseMapping {
     class func creationMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.addAttributeMappingsFromDictionary([
-            "id" : PostAttributes.identifier.rawValue,
-            "pending_post_id" : PostAttributes.pendingId.rawValue
+            "id"                : PostAttributes.identifier.rawValue,
+            "pending_post_id"   : PostAttributes.pendingId.rawValue,
+            "message"           : PostAttributes.message.rawValue,
+            "create_at"         : PostAttributes.createdAt.rawValue,
+            "update_at"         : PostAttributes.updatedAt.rawValue,
+            "files.backendLink" : "filenames"
             ])
         return mapping
     }
@@ -370,12 +379,20 @@ extension Post: KVO {
 extension Post: RequestMapping {
     static func creationRequestMapping() -> RKObjectMapping {
         let mapping = RKObjectMapping.requestMapping()
+        mapping.addAttributeMappingsFromArray([ "message" ])
         mapping.addAttributeMappingsFromDictionary([
             filesLinkPath() : "filenames",
             PostAttributes.channelId.rawValue : "channel_id",
-            PostAttributes.pendingId.rawValue : "pending_post_id"
+            PostAttributes.pendingId.rawValue : "pending_post_id",
         ])
         return mapping
+    }
+}
+
+//MARK: - Request Descriptors
+extension Post : RequestDescriptor {
+    static func creationRequestDescriptor() -> RKRequestDescriptor {
+        return RKRequestDescriptor(mapping: creationRequestMapping(), objectClass: Post.self, rootKeyPath: nil, method: .POST)
     }
 }
 

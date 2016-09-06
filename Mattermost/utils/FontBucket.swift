@@ -50,6 +50,13 @@ private protocol MarkdownFonts: class {
     static func regularFontOfSize(size: CGFloat) -> UIFont
 }
 
+private protocol MoreChannelsFonts: class {
+    static var titleChannelFont : UIFont { get }
+    static var subtitleChannelFont : UIFont { get }
+    static var dateChannelFont : UIFont { get }
+    static var letterChannelFont : UIFont { get }
+}
+
 final class FontBucket {
 }
 
@@ -87,6 +94,13 @@ extension FontBucket : LoginFonts {
 extension FontBucket : ServerUrlFonts {
     static let titleServerUrlFont = FontBucket.regularFontOfSize(36)
     static let subtitleServerUrlFont = FontBucket.regularFontOfSize(14)
+}
+
+extension FontBucket : MoreChannelsFonts {
+    static let titleChannelFont = FontBucket.semiboldFontOfSize(16)
+    static let subtitleChannelFont = FontBucket.regularFontOfSize(16)
+    static let dateChannelFont = FontBucket.regularFontOfSize(16)
+    static let letterChannelFont = FontBucket.regularFontOfSize(30)
 }
 //MARK: Helpers
 

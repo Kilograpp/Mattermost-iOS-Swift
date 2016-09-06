@@ -1,9 +1,10 @@
-//
+ //
 // Created by Maxim Gubin on 28/06/16.
 // Copyright (c) 2016 Kilograpp. All rights reserved.
 //
 
 import Foundation
+import RestKit
 
 final class ObjectManager: RKObjectManager {}
 
@@ -34,13 +35,15 @@ private protocol PostRequests: class {
     func postImage(with image: UIImage!,
                    name: String!,
                    path: String!,
-                   parameters: [NSObject : AnyObject]?,
+                   parameters: [String : String]?,
                    success: ((mappingResult: RKMappingResult) -> Void)?,
-                   failure: ((error: Error) -> Void)?)
+                   failure: ((error: Error) -> Void)?,
+                   progress: ((progressValue: Float) -> Void)?)
 }
 
 private protocol Helpers: class {
     func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Error
+    func cancelUploadingOperationForImageItem(item: AssignedPhotoViewItem)
 }
 
 // MARK: Get Requests
@@ -103,25 +106,33 @@ extension ObjectManager: PostRequests {
                     parameters: [NSObject : AnyObject]? = nil,
                     success: ((mappingResult: RKMappingResult) -> Void)?,
                     failure: ((error: Error) -> Void)?) {
-        super.postObject(object, path: path, parameters: parameters, success: { (_, mappingResult) in
+        super.postObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
+            let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
+            print(eror)
             success?(mappingResult: mappingResult)
         }) { (operation, error) in
+            let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
+            print(eror)
+            
             failure?(error: self.handleOperation(operation, withError: error))
         }
     }
     
     func postImage(with image: UIImage!,
-                   name: String!,
-                   path: String!,
-                   parameters: [NSObject : AnyObject]?,
-                   success: ((mappingResult: RKMappingResult) -> Void)?,
-                   failure: ((error: Error) -> Void)?) {
+                        name: String!,
+                        path: String!,
+                        parameters: Dictionary<String, String>?,
+                        success: ((mappingResult: RKMappingResult) -> Void)?,
+                        failure: ((error: Error) -> Void)?,
+                        progress: ((progressValue: Float) -> Void)?) {
         
         let constructingBodyWithBlock = {(formData: AFRKMultipartFormData!) -> Void in
             formData.appendPartWithFileData(UIImagePNGRepresentation(image), name: name, fileName: "file.png", mimeType: "image/png")
         }
         
-        let request: NSMutableURLRequest = self.multipartFormRequestWithObject(nil, method: .POST, path: path,
+        let request: NSMutableURLRequest = self.multipartFormRequestWithObject(nil,
+                                                                               method: .POST,
+                                                                               path: path,
                                                                                parameters: parameters,
                                                                                constructingBodyWithBlock: constructingBodyWithBlock)
         
@@ -135,8 +146,14 @@ extension ObjectManager: PostRequests {
         let operation: RKObjectRequestOperation = self.objectRequestOperationWithRequest(request,
                                                                                          success: successHandlerBlock,
                                                                                          failure: failureHandlerBlock)
+        
+        let kg_operation = operation as! KGObjectRequestOperation
+        kg_operation.image = image
+        kg_operation.HTTPRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
+            let value = Float(totalWritten) / Float(expectedToWrite)
+            progress?(progressValue: value)
+        }
         self.enqueueObjectRequestOperation(operation)
-
     }
 }
 
@@ -145,5 +162,16 @@ extension ObjectManager: PostRequests {
 extension ObjectManager: Helpers {
     private func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Error {
         return Error.errorWithGenericError(error)
+    }
+    
+    func cancelUploadingOperationForImageItem(item: AssignedPhotoViewItem) {
+        for operation in self.operationQueue.operations {
+            if operation.isKindOfClass(KGObjectRequestOperation.self) {
+                let convertedOperation = operation as! KGObjectRequestOperation
+                if convertedOperation.identifier == item.identifier {
+                    operation.cancel()
+                }
+            }
+        }
     }
 }

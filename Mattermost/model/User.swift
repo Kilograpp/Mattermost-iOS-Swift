@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import RestKit
 import RealmSwift
 
 private protocol Interface {
