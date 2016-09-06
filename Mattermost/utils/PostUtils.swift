@@ -67,7 +67,6 @@ extension PostUtils : Public {
                 item.uploading = true
                 Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
                     completion(finished: false, error: error)
-                    print("LINK: \(file?.rawLink)")
                     if self.assignedFiles.count == 0 {
                         self.test = file
                     }

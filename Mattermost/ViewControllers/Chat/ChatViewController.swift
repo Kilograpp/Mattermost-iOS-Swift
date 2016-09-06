@@ -166,7 +166,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         self.rightButton.setTitle("Send", forState: .Normal)
         self.rightButton.addTarget(self, action: #selector(sendPost), forControlEvents: .TouchUpInside)
         
-        self.leftButton.setImage(UIImage.init(named: "chat_photo_icon"), forState: .Normal)
+        self.leftButton.setImage(UIImage(named: "chat_photo_icon"), forState: .Normal)
         self.leftButton.tintColor = UIColor.grayColor()
         self.leftButton.addTarget(self, action: #selector(assignPhotos), forControlEvents: .TouchUpInside)
     }
@@ -185,6 +185,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     }
     
     func assignPhotos() -> Void {
+        //TODO: REFACTOR
         let presentImagePickerController: UIImagePickerControllerSourceType -> () = { source in
             let controller = UIImagePickerController()
             controller.delegate = self
@@ -195,6 +196,8 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         }
         
         let controller = ImagePickerSheetController(mediaType: .ImageAndVideo)
+        controller.maximumSelection = 5
+
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
             presentImagePickerController(.Camera)
             }, secondaryHandler: { _, numberOfPhotos in
@@ -212,14 +215,13 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
                         self.assignedPhotosArray[index].uploaded = value == 1
                         self.assignedPhotosArray[index].uploading = value < 1
                         self.assignedPhotosArray[index].uploadProgress = value
-//                        self.assignedPhotosArray[index].needsUploading = value < 1 && 
                         self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
                 }
         }))
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: { NSString.localizedStringWithFormat(NSLocalizedString("ImagePickerSheet.button1.Send %lu Photo", comment: "Action Title"), $0) as String}, handler: { _ in
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
             presentImagePickerController(.PhotoLibrary)
-            }, secondaryHandler: { _, numberOfPhotos in
-                print("Send \(controller.selectedImageAssets)")
+            }, secondaryHandler: { _ in
+                presentImagePickerController(.PhotoLibrary)
         }))
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .Cancel, handler: { _ in
             print("Cancelled")
@@ -367,6 +369,7 @@ extension ChatViewController : PostAttachmentViewDelegate {
 //extension ChatViewController : UIImagePickerControllerDelegate {
 //    
 //}
+
 //MARK: - ActivityIndicator
 
 extension ChatViewController {
