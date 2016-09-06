@@ -8,18 +8,15 @@
 
 import Foundation
 
-private protocol FilePathPatterns: class {
+private protocol PathPatterns: class {
     static func uploadPathPattern() -> String
     static func downloadPathPattern() -> String
     static func thumbPathPattern() -> String
     static func updateCommonPathPattern() -> String
 }
 
-final class FilePathPatternsContainer {
+final class FilePathPatternsContainer: PathPatterns {
     
-}
-
-extension FilePathPatternsContainer: FilePathPatterns {
     static func downloadPathPattern() -> String {
         return "teams/:\(File.teamIdentifierPath())/files/get_info:\(FileAttributes.rawLink)"
     }

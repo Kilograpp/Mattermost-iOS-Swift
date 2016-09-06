@@ -8,18 +8,16 @@
 
 import Foundation
 
-private protocol ChannelPathPattern: class {
+private protocol PathPatterns: class {
     static func listPathPattern() -> String
     static func moreListPathPattern() -> String
     static func extraInfoPathPattern() -> String
     static func updateLastViewDatePathPattern() -> String
 }
 
-final class ChannelPathPatternsContainer {
+final class ChannelPathPatternsContainer: PathPatterns {
     
-}
-
-extension ChannelPathPatternsContainer: ChannelPathPattern {
+    
     static func moreListPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/more"
     }

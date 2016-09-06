@@ -8,18 +8,15 @@
 
 import Foundation
 
-private protocol PostPathPattern: class {
+private protocol PathPatterns: class {
     static func updatePathPattern() -> String
     static func nextPagePathPattern() -> String
     static func creationPathPattern() -> String
     static func firstPagePathPattern() -> String
 }
 
-final class PostPathPatternsContainer {
+final class PostPathPatternsContainer: PathPatterns {
     
-}
-
-extension PostPathPatternsContainer: PostPathPattern {
     static func nextPagePathPattern() -> String {
         return "teams/:\(PageWrapper.teamIdPath())/" +
             "channels/:\(PageWrapper.channelIdPath())/" +
@@ -38,4 +35,5 @@ extension PostPathPatternsContainer: PostPathPattern {
         return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/posts/create"
     }
 }
+
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-private protocol UserPathPatterns: class {
+private protocol PathPatterns: class {
     static func loginPathPattern() -> String
     static func avatarPathPattern() -> String
     static func socketPathPattern() -> String
@@ -17,11 +17,8 @@ private protocol UserPathPatterns: class {
     static func usersStatusPathPattern() -> String
 }
 
-final class UserPathPatternsContainer {
+final class UserPathPatternsContainer: PathPatterns {
     
-}
-
-extension UserPathPatternsContainer: UserPathPatterns {
     static func avatarPathPattern() -> String {
         return "users/:\(UserAttributes.identifier)/image"
     }

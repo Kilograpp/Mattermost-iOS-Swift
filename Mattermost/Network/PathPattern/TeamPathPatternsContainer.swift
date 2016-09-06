@@ -8,16 +8,13 @@
 
 import Foundation
 
-private protocol TeamPathPattern: class {
+private protocol PathPatterns: class {
     static func initialLoadPathPattern() -> String
     static func teamListingsPathPattern() -> String
 }
 
-final class TeamPathPatternsContainer {
+final class TeamPathPatternsContainer: PathPatterns {
     
-}
-
-extension TeamPathPatternsContainer: TeamPathPattern {
     static func initialLoadPathPattern() -> String {
         return "users/initial_load"
     }
