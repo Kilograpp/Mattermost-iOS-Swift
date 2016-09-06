@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Xf1-h5-dIb">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="SF-UI-Text-Regular.otf">
+            <string>SFUIText-Regular</string>
+        </mutableArray>
+    </customFonts>
+    <scenes>
+        <!--Settings-->
+        <scene sceneID="rFq-hW-QOa">
+            <objects>
+                <tableViewController id="Xf1-h5-dIb" customClass="SettingsTableViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="emG-U0-yqg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <sections>
+                            <tableViewSection headerTitle="Image processing" footerTitle="Upload lower quality images to decrease its size" id="896-Jm-mDc">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="45" id="WAG-g2-rWh">
+                                        <rect key="frame" x="0.0" y="50" width="375" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WAG-g2-rWh" id="cir-TG-Bwh">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MjI-cx-9QN">
+                                                    <rect key="frame" x="311" y="7" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="shouldCompressValueChanged:" destination="Xf1-h5-dIb" eventType="valueChanged" id="Jr0-XE-273"/>
+                                                    </connections>
+                                                </switch>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compress images" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jzy-1p-WHA">
+                                                    <rect key="frame" x="15" y="12" width="135" height="20"/>
+                                                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="16"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="MjI-cx-9QN" secondAttribute="trailing" constant="15" id="OML-di-GEG"/>
+                                                <constraint firstItem="jzy-1p-WHA" firstAttribute="leading" secondItem="cir-TG-Bwh" secondAttribute="leading" constant="15" id="ZOz-Z1-jzn"/>
+                                                <constraint firstItem="jzy-1p-WHA" firstAttribute="centerY" secondItem="cir-TG-Bwh" secondAttribute="centerY" id="eQQ-21-n8Q"/>
+                                                <constraint firstItem="MjI-cx-9QN" firstAttribute="centerY" secondItem="cir-TG-Bwh" secondAttribute="centerY" id="maS-hx-CAs"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Xf1-h5-dIb" id="MRE-Sh-oOa"/>
+                            <outlet property="delegate" destination="Xf1-h5-dIb" id="CCa-fo-Mre"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Settings" id="jJI-qe-Qh9"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="imagesCompressSwitch" destination="MjI-cx-9QN" id="eCr-Ue-Kvi"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nbw-0U-UFz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="128.5" y="289.5"/>
+        </scene>
+    </scenes>
+</document>
