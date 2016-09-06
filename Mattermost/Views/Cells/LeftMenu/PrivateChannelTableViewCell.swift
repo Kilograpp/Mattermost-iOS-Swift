@@ -111,11 +111,17 @@ extension PrivateChannelTableViewCell {
         self.configureUserFormPrivateChannel()
         self.subscribeToNotifications()
         self.titleLabel.text = channel.displayName!
-        self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellHighlightedColor : ColorBucket.sideMenuBackgroundColor
-        self.titleLabel.textColor = selected ? ColorBucket.sideMenuSelectedTextColor : ColorBucket.sideMenuCommonTextColor
         
         let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(self.channel!.interlocuterFromPrivateChannel().identifier).backendStatus
         self.configureStatusViewWithBackendStatus(backendStatus!)
+        
+        self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
+        self.titleLabel.font = (channel.hasNewMessages()) ? FontBucket.highlighTedTitleFont : FontBucket.normalTitleFont
+        if selected {
+            self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuSelectedTextColor
+        } else {
+            self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuCommonTextColor
+        }
     }
     
     func reloadCell() {

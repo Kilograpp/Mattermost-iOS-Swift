@@ -171,6 +171,7 @@ extension Api: ChannelApi {
                 for channel in members {
                     var dictionary: [String: AnyObject] = [String: AnyObject] ()
                     dictionary[ChannelAttributes.lastViewDate.rawValue] = channel.lastViewDate
+                    dictionary[ChannelAttributes.lastPostDate.rawValue] = channel.lastPostDate
                     dictionary[ChannelAttributes.identifier.rawValue] = channel.identifier
                     realm.create(Channel.self, value: dictionary, update: true)
                     
