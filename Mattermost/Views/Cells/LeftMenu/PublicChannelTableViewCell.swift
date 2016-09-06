@@ -70,9 +70,9 @@ extension PublicChannelTableViewCell {
         self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
         self.titleLabel.font = (channel.hasNewMessages()) ? FontBucket.highlighTedTitleFont : FontBucket.normalTitleFont
         if selected {
-            self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuSelectedTextColor
+            self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.blackColor : ColorBucket.sideMenuSelectedTextColor
         } else {
-            self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.blackColor : ColorBucket.sideMenuCommonTextColor
+            self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuCommonTextColor
         }
     }
     
