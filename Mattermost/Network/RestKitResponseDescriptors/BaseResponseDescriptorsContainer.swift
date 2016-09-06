@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RestKit
-
-class BaseResponseDescriptorsContainer: RKResponseDescriptor {
-
-}
+//import RestKit
+//
+//class BaseResponseDescriptorsContainer: RKResponseDescriptor {
+//
+//}

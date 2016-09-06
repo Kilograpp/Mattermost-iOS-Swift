@@ -72,7 +72,7 @@ extension PublicChannelTableViewCell {
         if selected {
             self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuSelectedTextColor
         } else {
-            self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuCommonTextColor
+            self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.blackColor : ColorBucket.sideMenuCommonTextColor
         }
     }
     
