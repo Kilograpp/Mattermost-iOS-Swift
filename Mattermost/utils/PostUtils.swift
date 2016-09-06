@@ -30,3 +30,9 @@ final class PostUtils: NSObject {
         completion(error: nil)
     }
 }
+
+
+//MARK: - Private
+
+extension PostUtils {
+}
