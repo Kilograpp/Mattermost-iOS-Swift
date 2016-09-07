@@ -87,6 +87,27 @@ extension RightMenuViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
     }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch (indexPath.row) {
+            case RightMenuRows.SwitchTeam.rawValue:
+                navigateToTeams()
+            
+            default:
+                break
+        }
+        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+}
+
+//MARK: - Navigation
+extension RightMenuViewController {
+    func navigateToTeams() {
+        let teamViewController = UIStoryboard(name:  "Login",
+            bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("TeamViewController")
+        let loginNavigationController = LoginNavigationController(rootViewController: teamViewController)
+        self.presentViewController(loginNavigationController, animated: true, completion: nil)
+        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
+    }
 }
 
 extension RightMenuViewController : UITableViewDataSource {
