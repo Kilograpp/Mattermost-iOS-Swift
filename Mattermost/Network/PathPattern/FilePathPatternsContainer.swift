@@ -26,7 +26,6 @@ final class FilePathPatternsContainer: PathPatterns {
     static func updateCommonPathPattern() -> String {
         return "teams/:path/files/get_info/:path/:path/:path/:path"
     }
-    
     static func uploadPathPattern() -> String {
         return "teams/:identifier/files/upload"
     }

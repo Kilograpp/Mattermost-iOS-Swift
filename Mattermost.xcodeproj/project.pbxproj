@@ -38,6 +38,7 @@
 		CDB4BC5C1D8033F700662231 /* PostResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */; };
 		CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */; };
 		CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */; };
+		CDB4BC621D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */; };
 		CDB6D3AD1D75FB2300C3018C /* ChatNavigationBarTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */; };
 		CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */; };
 		CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */; };
@@ -209,6 +210,7 @@
 		CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/PostResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
 		CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/TeamResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
 		CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/UserResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserStatusResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/UserStatusResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
 		CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationBarTitleView.swift; path = ChatNavigationBarTitleView/ChatNavigationBarTitleView.swift; sourceTree = "<group>"; };
 		CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MoreChannelsTableViewCell.xib; path = MoreChannel/MoreChannelsTableViewCell.xib; sourceTree = "<group>"; };
 		CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelsTableViewCell.swift; path = MoreChannel/MoreChannelsTableViewCell.swift; sourceTree = "<group>"; };
@@ -437,8 +439,9 @@
 			isa = PBXGroup;
 			children = (
 				D8F6BD041D22FB49000AC690 /* Error.swift */,
-				CDF07EC61D7F119800172D1E /* PathPatterns */,
 				CDF07EC51D7F115900172D1E /* Mappings */,
+				CDF07EC61D7F119800172D1E /* PathPatterns */,
+				CDB4BC631D805EDD00662231 /* RestKitRequestDescriptors */,
 				CDB6D3CA1D7F04BE00C3018C /* RestKitResponseDescriptors */,
 			);
 			path = Network;
@@ -539,6 +542,13 @@
 			name = ChatNavigationController;
 			sourceTree = "<group>";
 		};
+		CDB4BC631D805EDD00662231 /* RestKitRequestDescriptors */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = RestKitRequestDescriptors;
+			sourceTree = "<group>";
+		};
 		CDB6D3B01D75FBA800C3018C /* ChatNavigationBarTitleView */ = {
 			isa = PBXGroup;
 			children = (
@@ -565,6 +575,7 @@
 				CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */,
 				CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */,
 				CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */,
+				CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */,
 			);
 			name = RestKitResponseDescriptors;
 			sourceTree = "<group>";
@@ -1138,6 +1149,7 @@
 				D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */,
 				D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */,
 				D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */,
+				CDB4BC621D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
 				D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */,

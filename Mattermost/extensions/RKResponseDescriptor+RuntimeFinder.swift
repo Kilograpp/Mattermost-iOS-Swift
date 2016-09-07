@@ -12,7 +12,7 @@ import RestKit
 extension RKResponseDescriptor {
     class func findAllDescriptors() -> Array<RKResponseDescriptor>{
         let descriptors = dumpValuesFromRootClass(BaseResponseDescriptorsContainer.self, withClassPrefix: Constants.Common.RestKitPrefix) as! Array<RKResponseDescriptor>
-        let userStatusDesc: Array<RKResponseDescriptor> = [UserStatus.responseDescriptor]
+        let userStatusDesc: Array<RKResponseDescriptor> = [UserStatusResponseDescriptorsContainer.responseDescriptor]
         return descriptors + userStatusDesc
     }
 }

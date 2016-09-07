@@ -141,13 +141,6 @@ final class Post: RealmObject {
     
 }
 
-//private protocol PathPattern: class {
-//    static func updatePathPattern() -> String
-//    static func nextPagePathPattern() -> String
-//    static func creationPathPattern() -> String
-//    static func firstPagePathPattern() -> String
-//}
-
 private protocol ResponseMapping: class {
     static func listMapping() -> RKObjectMapping
     static func creationMapping() -> RKObjectMapping
@@ -155,12 +148,6 @@ private protocol ResponseMapping: class {
 
 private protocol RequestMapping: class {
     static func creationRequestMapping() -> RKObjectMapping
-}
-
-private protocol ResponseDescriptor: class {
-    static func updateResponseDescriptor() -> RKResponseDescriptor
-    static func nextPageResponseDescriptor() -> RKResponseDescriptor
-    static func firstPageResponseDescriptor() -> RKResponseDescriptor
 }
 
 private protocol Computations: class {
@@ -192,27 +179,6 @@ private protocol KVO: class {
     func notifyStatusObserverIfNeeded(oldStatus: PostStatus)
 }
 
-
-// MARK: - Path Patterns
-//extension Post: PathPattern {
-//    static func nextPagePathPattern() -> String {
-//        return "teams/:\(PageWrapper.teamIdPath())/" +
-//               "channels/:\(PageWrapper.channelIdPath())/" +
-//               "posts/:\(PageWrapper.lastPostIdPath())/" +
-//               "before/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
-//    }
-//    static func firstPagePathPattern() -> String {
-//        return "teams/:\(PageWrapper.teamIdPath())/" +
-//               "channels/:\(PageWrapper.channelIdPath())/" +
-//               "posts/page/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
-//    }
-//    static func updatePathPattern() -> String {
-//        return "teams/:\(self.teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
-//    }
-//    static func creationPathPattern() -> String {
-//        return "teams/:\(self.teamIdentifierPath())/channels/:\(self.channelIdentifierPath())/posts/create"
-//    }
-//}
 
 // MARK: - Mapping
 extension Post: ResponseMapping {
@@ -396,35 +362,3 @@ extension Post : RequestDescriptor {
     }
 }
 
-
-// MARK: - Response Descriptors
-extension Post: ResponseDescriptor {
-    static func firstPageResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: PostPathPatternsContainer.firstPagePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func updateResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: PostPathPatternsContainer.updatePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func nextPageResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: PostPathPatternsContainer.nextPagePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func creationResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: creationMapping(),
-                                    method: .POST,
-                                    pathPattern: PostPathPatternsContainer.creationPathPattern(),
-                                    keyPath: nil,
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-}
