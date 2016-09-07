@@ -9,6 +9,32 @@
 import Foundation
 import RealmSwift
 
+final class MoreChannelsViewController: UIViewController {
+    
+//MARK: - Property
+    @IBOutlet weak var tableView: UITableView!
+    var realm: Realm?
+    var isPrivateChannel : Bool = false
+    private let showChatViewController = "showChatViewController"
+    private var results: Results<Channel>! = nil
+    
+//MARK: - Override
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupNavigationBar()
+        setupTableView()
+        configureResults()
+        loadData()
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let selectedChannel = sender else { return }
+        ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
+    }
+}
+
+//MARK: - PrivateProtocols
 private protocol Setup : class {
     func setupNavigationBar()
     func setupTableView()
@@ -16,38 +42,11 @@ private protocol Setup : class {
 
 private protocol Configure : class {
     var isPrivateChannel : Bool {get set}
-    func prepareResults()
-    func loadFitsPageOfData()
+    func configureResults()
+    func loadData()
 }
 
-final class MoreChannelsViewController: UIViewController {
-    
-    @IBOutlet weak var tableView: UITableView!
-    var realm: Realm?
-    var isPrivateChannel : Bool = false
-    private let showChatViewController = "showChatViewController"
-    private let privateTypeChannel = "D"
-    private let publicTypeChannel = "O"
-    private var results: Results<Channel>! = nil
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupNavigationBar()
-        setupTableView()
-        prepareResults()
-        loadFitsPageOfData()
-    }
-    
-//MARK: Navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard let selectedChannel = sender else { return }
-        ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
-    }
-    
-}
-
-//MARK: UITableViewDataSource
+//MARK: - UITableViewDataSource
 extension MoreChannelsViewController : UITableViewDataSource {
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -55,7 +54,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(MoreChannelsTableViewCell.reuseIdentifier()) as! MoreChannelsTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(MoreChannelsTableViewCell.reuseIdentifier) as! MoreChannelsTableViewCell
         let channel = self.results[indexPath.row] as Channel?
         cell.configureCellWithObject(channel!)
         return cell
@@ -63,7 +62,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
     
 }
 
-//MARK: UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 extension MoreChannelsViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -76,7 +75,7 @@ extension MoreChannelsViewController : UITableViewDelegate {
 
 }
 
-//MARK: Setup
+//MARK: - Setup
 extension MoreChannelsViewController: Setup {
 
     func setupNavigationBar() {
@@ -87,25 +86,23 @@ extension MoreChannelsViewController: Setup {
     func setupTableView () {
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
-        self.tableView.registerNib(MoreChannelsTableViewCell.nib(), forCellReuseIdentifier: MoreChannelsTableViewCell.reuseIdentifier())
+        self.tableView.registerNib(MoreChannelsTableViewCell.nib, forCellReuseIdentifier: MoreChannelsTableViewCell.reuseIdentifier)
     }
 }
 
-//MARK: Configure
+//MARK: - Configure
 extension  MoreChannelsViewController: Configure  {
-    func prepareResults() {
+    func configureResults() {
         
-        //Preferences.sharedInstance.currentUserId
-        let typeValue = self.isPrivateChannel ? privateTypeChannel : publicTypeChannel
-       // let userInTheChannel = Preferences.sharedInstance.currentUserId in ChannelRelationships.members ...
+        let typeValue = self.isPrivateChannel ? Constants.ChannelType.PrivateTypeChannel : Constants.ChannelType.PublicTypeChannel
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(sortName, ascending: true)
     }
     
-    func loadFitsPageOfData(){
+    func loadData(){
        Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
-            self.prepareResults()
+            self.configureResults()
             self.tableView.reloadData()
         }
     }

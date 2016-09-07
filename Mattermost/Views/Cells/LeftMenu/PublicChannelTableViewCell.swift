@@ -25,9 +25,14 @@ final class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellPr
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        self.configureContentView()
-        self.configureTitleLabel()
-        self.configurehighlightView()
+        configureContentView()
+        configureTitleLabel()
+        configurehighlightView()
+    }
+    
+    //MARK: - Configuration
+    func configureStatusViewWithNotification(notification: NSNotification) {
+        self.test?()
     }
 
 //MARK: - Override
@@ -63,10 +68,20 @@ extension PublicChannelTableViewCell {
         self.channel = channel
         self.titleLabel.text = "# \(channel.displayName!)"
         self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
-        self.titleLabel.textColor = selected ? ColorBucket.sideMenuSelectedTextColor : ColorBucket.sideMenuCommonTextColor
+        self.titleLabel.font = (channel.hasNewMessages()) ? FontBucket.highlighTedTitleFont : FontBucket.normalTitleFont
+        if selected {
+            self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.blackColor : ColorBucket.sideMenuSelectedTextColor
+        } else {
+            self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuCommonTextColor
+        }
     }
     
     func subscribeToNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(configureStatusViewWithNotification(_:)),
+                                                         name: self.channel?.displayName ,
+                                                         object: nil)
+
 
     }
     

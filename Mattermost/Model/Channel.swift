@@ -40,9 +40,9 @@ final class Channel: RealmObject {
     
     class func privateTypeDisplayName(privateTypeString: String) -> String {
         switch privateTypeString {
-        case "D":
+        case Constants.ChannelType.PrivateTypeChannel:
             return "Private message"
-        case "O":
+        case Constants.ChannelType.PublicTypeChannel:
             return "Public channel"
         default:
             return "UNKNOWN"
@@ -62,8 +62,9 @@ final class Channel: RealmObject {
     dynamic var purpose: String?
     dynamic var header: String?
     dynamic var messagesCount: String?
-    dynamic var lastPostDate: String?
+    dynamic var lastPostDate: NSDate?
     dynamic var displayName: String?
+    dynamic var currentUserInChannel: Bool = false
     
     dynamic var team: Team?
     
@@ -112,6 +113,7 @@ private protocol ResponseDescriptors: class {
 
 private protocol Support: class {
     static func teamIdentifierPath() -> String
+    func hasNewMessages() -> Bool
 }
 
 // MARK: - Path Pattern
@@ -222,5 +224,9 @@ extension Channel: Support {
                 self.displayName = user.displayName
             }
         }
+    }
+    
+    func hasNewMessages() -> Bool {
+      return (self.lastViewDate?.isEarlierThan(self.lastPostDate))!
     }
 }

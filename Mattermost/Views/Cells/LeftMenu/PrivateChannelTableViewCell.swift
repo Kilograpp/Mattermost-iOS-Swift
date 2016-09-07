@@ -42,7 +42,7 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
     
 //MARK: - Configuration
     func configureStatusViewWithNotification(notification: NSNotification) {
-        self.test!()
+        self.test?()
     }
 
 //MARK: - Override
@@ -111,11 +111,17 @@ extension PrivateChannelTableViewCell {
         self.configureUserFormPrivateChannel()
         self.subscribeToNotifications()
         self.titleLabel.text = channel.displayName!
-        self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellHighlightedColor : ColorBucket.sideMenuBackgroundColor
-        self.titleLabel.textColor = selected ? ColorBucket.sideMenuSelectedTextColor : ColorBucket.sideMenuCommonTextColor
         
         let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(self.channel!.interlocuterFromPrivateChannel().identifier).backendStatus
         self.configureStatusViewWithBackendStatus(backendStatus!)
+        
+        self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
+        self.titleLabel.font = (channel.hasNewMessages()) ? FontBucket.highlighTedTitleFont : FontBucket.normalTitleFont
+        if selected {
+            self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.blackColor : ColorBucket.sideMenuSelectedTextColor
+        } else {
+            self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuCommonTextColor
+        }
     }
     
     func reloadCell() {
@@ -126,7 +132,7 @@ extension PrivateChannelTableViewCell {
     func subscribeToNotifications() {
 //        print("SUBSCRIBED_TO \(self.channel?.interlocuterFromPrivateChannel().identifier  as String!)")
         NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(self.configureStatusViewWithNotification(_:)),
+                                                         selector: #selector(configureStatusViewWithNotification(_:)),
                                                          name: self.channel?.interlocuterFromPrivateChannel().identifier as String!,
                                                          object: nil)
     }

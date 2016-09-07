@@ -30,11 +30,11 @@ class FeedAttachmentView: UIView {
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         let ref = UIBezierPath(roundedRect: rect, cornerRadius: 10).CGPath
-        CGContextAddPath(context, ref);
-        CGContextSetFillColorWithColor(context, UIColor.init(white: 0.95, alpha: 1).CGColor);
-        CGContextFillPath(context);
+        CGContextAddPath(context, ref)
+        CGContextSetFillColorWithColor(context, UIColor(white: 0.95, alpha: 1).CGColor)
+        CGContextFillPath(context)
 //        let image = UIGraphicsGetImageFromCurrentImageContext() as UIImage;
-        UIGraphicsEndImageContext();
+        UIGraphicsEndImageContext()
     }
 }
 

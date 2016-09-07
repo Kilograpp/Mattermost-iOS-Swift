@@ -45,4 +45,9 @@ struct Constants {
 //    struct UserStatus {
 //        <#fields#>
 //    }
+    
+    struct ChannelType {
+        static let PublicTypeChannel = "O"
+        static let PrivateTypeChannel = "D"
+    }
 }

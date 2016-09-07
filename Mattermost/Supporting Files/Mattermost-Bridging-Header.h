@@ -5,5 +5,5 @@
 
 #import "NSObject+RuntimeMethodsValues.h"
 #import "NSObject+EnumerateProperties.h"
-#import "UITableView+Cache.h"
+//#import "UITableView+Cache.h"
 #import "RKObjectManager+Additions.h"

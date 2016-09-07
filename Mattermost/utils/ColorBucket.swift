@@ -25,6 +25,8 @@ private protocol CommonColors: class {
     static var grayColor: UIColor {get}
     static var lightGrayColor: UIColor {get}
     static var darkGrayColor: UIColor {get}
+    static var onlineStatusColor: UIColor {get}
+    static var awayStatusColor: UIColor {get}
 }
 
 private protocol SideMenuColors {
@@ -34,7 +36,6 @@ private protocol SideMenuColors {
     static var sideMenuSelectedTextColor: UIColor {get}
     static var sideMenuCellHighlightedColor: UIColor {get}
     static var sideMenuCellSelectedColor: UIColor {get}
-    
     static var rightMenuSeparatorColor: UIColor {get}
 }
 
@@ -74,16 +75,17 @@ extension ColorBucket : CommonColors {
     static let grayColor = ColorBucket.gray()
     static let lightGrayColor = ColorBucket.lightGray()
     static let darkGrayColor = ColorBucket.darkGray()
+    static let onlineStatusColor = ColorBucket.onlineStatus()
+    static let awayStatusColor = ColorBucket.awayStatus()
 }
 
 extension ColorBucket : SideMenuColors {
     static let sideMenuBackgroundColor = ColorBucket.deepBlue()
     static let sideMenuHeaderBackgroundColor = ColorBucket.deepLightBlue()
-    static let sideMenuCommonTextColor = ColorBucket.lightGrayColor
+    static let sideMenuCommonTextColor = ColorBucket.sideMenuTextColor()
     static let sideMenuSelectedTextColor = ColorBucket.blackColor
     static let sideMenuCellHighlightedColor = ColorBucket.whiteColor.colorWithAlphaComponent(0.5)
     static let sideMenuCellSelectedColor = ColorBucket.whiteColor
-    
     static let rightMenuSeparatorColor = ColorBucket.sideMenuSeparatorColor()
     static let rightMenuTextColor = ColorBucket.lightBlue()
 }
@@ -123,7 +125,7 @@ extension ColorBucket {
     }
     
     private class func lightGray() -> UIColor {
-        return UIColor(rgba: "#D8D8D8")
+        return UIColor(rgba: "#AAAAAA")
     }
     
     private class func darkGray() -> UIColor {
@@ -149,4 +151,21 @@ extension ColorBucket {
     private class func lightBlue() -> UIColor {
         return UIColor(rgba: "#C3CDD4")
     }
+    
+    private class func sideMenuTextColor() -> UIColor {
+        return UIColor (rgba: "#C3CDD4")
+    }
+    
+    private class func sideMenuHighlightColor() -> UIColor {
+        return UIColor(rgba: "#367fb0")
+    }
+    
+    private class func awayStatus() -> UIColor {
+        return UIColor(rgba: "#FFCF63")
+    }
+    
+    private class func onlineStatus() -> UIColor {
+        return UIColor(rgba: "#81C784")
+    }
+    
 }

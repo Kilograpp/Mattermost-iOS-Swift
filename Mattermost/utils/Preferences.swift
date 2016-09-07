@@ -23,6 +23,7 @@ enum PreferencesAttributes: String {
     case serverUrl     = "serverUrl"
     case currentUserId = "currentUserId"
     case currentTeamId = "currentTeamId"
+    case shouldCompressImages = "shouldCompressImages"
 }
 
 final class Preferences: NSObject, NSCoding {
@@ -32,6 +33,7 @@ final class Preferences: NSObject, NSCoding {
     dynamic var currentUserId: String?
     dynamic var currentTeamId: String?
     dynamic var siteName: String?
+    dynamic var shouldCompressImages: NSNumber?
     
     private override init() {
         super.init()

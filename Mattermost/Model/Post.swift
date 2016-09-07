@@ -224,6 +224,7 @@ extension Post: ResponseMapping {
             "message"           : PostAttributes.message.rawValue,
             "create_at"         : PostAttributes.createdAt.rawValue,
             "update_at"         : PostAttributes.updatedAt.rawValue,
+            "files.backendLink" : "filenames"
             ])
         return mapping
     }
