@@ -24,7 +24,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
     private var results: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
-    private let showChatViewController = "showInfo"
+    private let showChannelInfoViewController = "showInfo"
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
     
@@ -411,6 +411,6 @@ extension ChatViewController {
 extension ChatViewController : ChatNavigationControllerDelegate {
     func didSelectTitleView() {
         print("Channel info")
-        performSegueWithIdentifier(self.showChatViewController, sender: nil)
+        performSegueWithIdentifier(self.showChannelInfoViewController, sender: nil)
     }
 }

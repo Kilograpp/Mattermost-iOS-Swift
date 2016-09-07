@@ -106,7 +106,6 @@ extension ChannelInfoViewController : UITableViewDataSource {
         case Section.sectionNotification.hashValue:
             return self.sectionNotificationNumberOfRows
         case Section.sectionMembers.hashValue:
-            //FIXME add number of members  in channel
             return self.sectionMembersMinNumberOfRows + min((self.channel?.members.count)!, self.maxVisibleNumberOfMembersRows)
         case Section.sectionLeave.hashValue:
             return self.sectionLeaveNumberOfRows
