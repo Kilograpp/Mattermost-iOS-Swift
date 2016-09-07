@@ -108,13 +108,13 @@ private protocol Mapping: class {
     static func attendantInfoMapping() -> RKObjectMapping
 }
 
-private protocol ResponseDescriptors: class {
-    static func extraInfoResponseDescriptor() -> RKResponseDescriptor
-    static func channelsListResponseDescriptor() -> RKResponseDescriptor
-    static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor
-    static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor
-    static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor
-}
+//private protocol ResponseDescriptors: class {
+//    static func extraInfoResponseDescriptor() -> RKResponseDescriptor
+//    static func channelsListResponseDescriptor() -> RKResponseDescriptor
+//    static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor
+//    static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor
+//    static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor
+//}
 
 // MARK: - Path Pattern
 //extension Channel: PathPattern {
@@ -166,45 +166,45 @@ extension Channel: Mapping {
 }
 
 // MARK: Response Descriptors
-extension Channel: ResponseDescriptors {
-    static func channelsListResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: mapping(),
-                                    method: .GET,
-                                    pathPattern: ChannelPathPatternsContainer.listPathPattern(),
-                                    keyPath: "channels",
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: attendantInfoMapping(),
-                                    method: .GET,
-                                    pathPattern: ChannelPathPatternsContainer.listPathPattern(),
-                                    keyPath: "members",
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
-    }
-    
-    static func extraInfoResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: mapping(),
-                                    method: .GET,
-                                    pathPattern: ChannelPathPatternsContainer.extraInfoPathPattern(),
-                                    keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
-    }
-    
-    static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: emptyMapping(),
-                                    method: .POST,
-                                    pathPattern: ChannelPathPatternsContainer.updateLastViewDatePathPattern(),
-                                    keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: mapping(),
-                                    method: .GET,
-                                    pathPattern: ChannelPathPatternsContainer.moreListPathPattern(),
-                                    keyPath: "channels",
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
-    }
-}
+//extension Channel: ResponseDescriptors {
+//    static func channelsListResponseDescriptor() -> RKResponseDescriptor {
+//        return RKResponseDescriptor(mapping: mapping(),
+//                                    method: .GET,
+//                                    pathPattern: ChannelPathPatternsContainer.listPathPattern(),
+//                                    keyPath: "channels",
+//                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+//    }
+//    static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor {
+//        return RKResponseDescriptor(mapping: attendantInfoMapping(),
+//                                    method: .GET,
+//                                    pathPattern: ChannelPathPatternsContainer.listPathPattern(),
+//                                    keyPath: "members",
+//                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+//    }
+//    
+//    static func extraInfoResponseDescriptor() -> RKResponseDescriptor {
+//        return RKResponseDescriptor(mapping: mapping(),
+//                                    method: .GET,
+//                                    pathPattern: ChannelPathPatternsContainer.extraInfoPathPattern(),
+//                                    keyPath: nil,
+//                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+//    }
+//    
+//    static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor {
+//        return RKResponseDescriptor(mapping: emptyMapping(),
+//                                    method: .POST,
+//                                    pathPattern: ChannelPathPatternsContainer.updateLastViewDatePathPattern(),
+//                                    keyPath: nil,
+//                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+//    }
+//    static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor {
+//        return RKResponseDescriptor(mapping: mapping(),
+//                                    method: .GET,
+//                                    pathPattern: ChannelPathPatternsContainer.moreListPathPattern(),
+//                                    keyPath: "channels",
+//                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+//    }
+//}
 
 
 //  MARK: - Support

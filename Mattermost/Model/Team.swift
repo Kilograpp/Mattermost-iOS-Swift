@@ -64,7 +64,7 @@ extension Team: ResponseMappings {
         entityMapping.addAttributeMappingsFromArray([TeamAttributes.name.rawValue])
         return entityMapping
     }
-    private static func initialLoadConfigMapping() -> RKObjectMapping {
+    static func initialLoadConfigMapping() -> RKObjectMapping {
         let entityMapping = RKObjectMapping(forClass: NSMutableDictionary.self)
         entityMapping.addAttributeMappingsFromDictionary(["SiteName" : PreferencesAttributes.siteName.rawValue])
         return entityMapping

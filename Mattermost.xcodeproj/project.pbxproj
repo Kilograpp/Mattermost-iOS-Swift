@@ -34,6 +34,10 @@
 		9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822E83696EB65A72E9F73A /* Api.swift */; };
 		CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */; };
 		CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */; };
+		CDB4BC5A1D8033DF00662231 /* FileResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */; };
+		CDB4BC5C1D8033F700662231 /* PostResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */; };
+		CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */; };
+		CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */; };
 		CDB6D3AD1D75FB2300C3018C /* ChatNavigationBarTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */; };
 		CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */; };
 		CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */; };
@@ -201,6 +205,10 @@
 		C16480FE9907B36335721461 /* Pods_Mattermost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mattermost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationController.swift; path = NavigationControllers/ChatNavigationController/ChatNavigationController.swift; sourceTree = "<group>"; };
 		CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreChannelsViewController.swift; sourceTree = "<group>"; };
+		CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/FileResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/PostResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/TeamResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/UserResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
 		CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationBarTitleView.swift; path = ChatNavigationBarTitleView/ChatNavigationBarTitleView.swift; sourceTree = "<group>"; };
 		CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MoreChannelsTableViewCell.xib; path = MoreChannel/MoreChannelsTableViewCell.xib; sourceTree = "<group>"; };
 		CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelsTableViewCell.swift; path = MoreChannel/MoreChannelsTableViewCell.swift; sourceTree = "<group>"; };
@@ -428,10 +436,10 @@
 		9B822ACBDE33A13DD8E74AB9 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				D8F6BD041D22FB49000AC690 /* Error.swift */,
 				CDF07EC61D7F119800172D1E /* PathPatterns */,
 				CDF07EC51D7F115900172D1E /* Mappings */,
 				CDB6D3CA1D7F04BE00C3018C /* RestKitResponseDescriptors */,
-				D8F6BD041D22FB49000AC690 /* Error.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -553,6 +561,10 @@
 			children = (
 				CDB6D3CD1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift */,
 				CDB6D3CF1D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift */,
+				CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */,
+				CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */,
+				CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */,
+				CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */,
 			);
 			name = RestKitResponseDescriptors;
 			sourceTree = "<group>";
@@ -1032,6 +1044,7 @@
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
+				CDB4BC5C1D8033F700662231 /* PostResponseDescriptorsContainer.swift in Sources */,
 				D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */,
 				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,
 				D8E98EDF1D4A15D300682922 /* ApplicationStateManager.swift in Sources */,
@@ -1070,6 +1083,7 @@
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
 				D6E165871D47C1200014C831 /* Reusable.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
+				CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */,
 				D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */,
 				D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */,
 				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
@@ -1093,6 +1107,7 @@
 				9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
+				CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */,
 				D86EF7FE1D5A325800BD49A3 /* UIView+Align.swift in Sources */,
 				CDB6D3BB1D78423600C3018C /* String+IntSubscript.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
@@ -1117,6 +1132,7 @@
 				CDF07ED01D7F1D8900172D1E /* FilePathPatternsContainer.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
 				8BE969BB1D76AA420010A524 /* ProfileDataSource.swift in Sources */,
+				CDB4BC5A1D8033DF00662231 /* FileResponseDescriptorsContainer.swift in Sources */,
 				D8935BA51D5A81780037E7ED /* PerformanceManager.swift in Sources */,
 				D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */,
 				D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */,
