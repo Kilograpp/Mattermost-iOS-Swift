@@ -18,13 +18,14 @@ class ChatNavigationBarTitleView: UIView {
     
     var titleString : String?
     var channel : Channel?
-    //var loadingView : UIActivityIndicatorView
+    var loadingView : UIActivityIndicatorView?
     
     init() {
         super.init(frame: CGRectZero)
             setupBackgroundColor()
             setupStatusView()
             setupTitleLabel()
+        setupLoadingView()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,18 +83,34 @@ class ChatNavigationBarTitleView: UIView {
         
     }
     
-    private func hideStatusIndicateView() {
+    
+    }
+
+private protocol Private {
+    func hideStatusIndicateView()
+    func showStatusIndicateView()
+    func toggleLoadingViewVisibility(shouldBeShown: Bool)
+    
+}
+
+extension ChatNavigationBarTitleView : Private {
+    func hideStatusIndicateView() {
         self.statusIndicatorView!.hidden = true
     }
-    private func showStatusIndicateView() {
+    func showStatusIndicateView() {
         self.statusIndicatorView!.hidden = false
     }
+    func toggleLoadingViewVisibility(shouldBeShown: Bool) {
+        self.loadingView?.hidden = !shouldBeShown
     }
+    
+}
 
 private protocol SetupNavigationControler {
     func setupBackgroundColor()
     func setupStatusView()
     func setupTitleLabel()
+    func setupLoadingView()
 }
 
 extension ChatNavigationBarTitleView : SetupNavigationControler {
@@ -119,6 +136,11 @@ extension ChatNavigationBarTitleView : SetupNavigationControler {
         self.titleLabel?.textColor = ColorBucket.blackColor
         self.titleLabel?.font = FontBucket.normalTitleFont
         self.titleLabel?.adjustsFontSizeToFitWidth = true
+    }
+    
+    func setupLoadingView() {
+        self.loadingView = UIActivityIndicatorView.init(activityIndicatorStyle: .Gray)
+        self.addSubview(self.loadingView!)
     }
 
 }

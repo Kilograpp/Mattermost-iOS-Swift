@@ -27,6 +27,9 @@
                             <barButtonItem systemItem="search" id="GOb-jd-c9D"/>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <segue destination="tuJ-Au-SSh" kind="show" identifier="showInfo" id="yaf-3N-DWI"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -271,6 +274,43 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k6S-mR-lBE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="378.5" y="1259.5"/>
+        </scene>
+        <!--Channel Info View Controller-->
+        <scene sceneID="Dhh-Rk-3E4">
+            <objects>
+                <viewController id="tuJ-Au-SSh" customClass="ChannelInfoViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="SQN-8S-3Gq"/>
+                        <viewControllerLayoutGuide type="bottom" id="G47-ak-faj"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4nI-fh-K1Z">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1O8-mK-3CD">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="tuJ-Au-SSh" id="goi-wd-WZn"/>
+                                    <outlet property="delegate" destination="tuJ-Au-SSh" id="Vcf-9v-mQ3"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="1O8-mK-3CD" firstAttribute="leading" secondItem="4nI-fh-K1Z" secondAttribute="leading" id="AgF-lP-V5h"/>
+                            <constraint firstItem="G47-ak-faj" firstAttribute="top" secondItem="1O8-mK-3CD" secondAttribute="bottom" id="Kvh-yD-X9x"/>
+                            <constraint firstItem="1O8-mK-3CD" firstAttribute="top" secondItem="SQN-8S-3Gq" secondAttribute="bottom" id="fVx-Kc-wVU"/>
+                            <constraint firstAttribute="trailing" secondItem="1O8-mK-3CD" secondAttribute="trailing" id="njg-Pt-dFI"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="1O8-mK-3CD" id="yvw-g4-L2e"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Bdl-PA-VVd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1282.5" y="309.5"/>
         </scene>
         <!--Right Menu View Controller-->
         <scene sceneID="woB-dB-jJh">

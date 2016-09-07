@@ -24,7 +24,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
     private var results: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
-    
+    private let showChatViewController = "showInfo"
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
     
@@ -59,6 +59,13 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
         return .Grouped
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        //guard let selectedChannel = sender else { return }
+        //ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
+        let vc = segue.destinationViewController as! ChannelInfoViewController
+        vc.channel = self.channel
     }
     
     //MARK: - Configuration
@@ -404,5 +411,6 @@ extension ChatViewController {
 extension ChatViewController : ChatNavigationControllerDelegate {
     func didSelectTitleView() {
         print("Channel info")
+        performSegueWithIdentifier(self.showChatViewController, sender: nil)
     }
 }
