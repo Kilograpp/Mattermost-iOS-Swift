@@ -14,7 +14,7 @@ private protocol Lifecylce {
     func viewDidAppear(animated: Bool)
 }
 
-private protocol Setup {
+private protocol SetupLoginViewController {
     func setupNavigationBar()
     func setupTitleLabel()
     func setupLoginButton()
@@ -150,7 +150,7 @@ extension LoginViewController: Lifecylce {
 
 // MARK: - Setup
 
-extension LoginViewController: Setup {
+extension LoginViewController: SetupLoginViewController {
     private func setupNavigationBar() {
         let titleAttribute = [
             NSForegroundColorAttributeName: UIColor.whiteColor(),

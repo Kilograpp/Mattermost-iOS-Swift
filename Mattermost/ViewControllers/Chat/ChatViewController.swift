@@ -53,6 +53,8 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         setupTopActivityIndicator()
         
         ChannelObserver.sharedObserver.delegate = self
+        let navController = self.navigationController as! ChatNavigationController
+        navController.chatNavControllerDelegate = self
     }
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
@@ -243,6 +245,9 @@ extension ChatViewController {
         self.title = self.channel?.displayName
         self.prepareResults()
         self.loadFirstPageOfData()
+        var navController : ChatNavigationController?
+        navController = self.navigationController as? ChatNavigationController
+        navController?.configureTitleViewWithCannel(self.channel!, loadingInProgress: true)
     }
 }
 
@@ -391,5 +396,13 @@ extension ChatViewController {
     func hideTopActivityIndicator() {
         self.topActivityIndicatorView!.stopAnimating()
         self.tableView.tableFooterView = UIView(frame: CGRectZero)
+    }
+}
+
+
+
+extension ChatViewController : ChatNavigationControllerDelegate {
+    func didSelectTitleView() {
+        print("Channel info")
     }
 }

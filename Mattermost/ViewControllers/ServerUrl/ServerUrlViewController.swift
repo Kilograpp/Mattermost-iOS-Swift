@@ -9,7 +9,7 @@
 import Foundation
 //import KGTextField
 
-private protocol Setup {
+private protocol SetupServerUrlViewController {
     func setupTitleLabel()
     func setupSubtitleLabel()
     func setupPromtLabel()
@@ -146,7 +146,7 @@ extension ServerUrlViewController:Lifecycle {
 
 //MARK: - Setup
 
-extension ServerUrlViewController:Setup {
+extension ServerUrlViewController:SetupServerUrlViewController {
     private func setupNavigationBar() {
         self.navigationController?.navigationBar.translucent = true
         self.navigationController?.navigationBar.backgroundColor = UIColor.clearColor()

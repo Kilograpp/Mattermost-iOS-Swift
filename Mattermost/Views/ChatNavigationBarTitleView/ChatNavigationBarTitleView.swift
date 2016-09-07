@@ -8,23 +8,72 @@
 
 import Foundation
 
+
+
 class ChatNavigationBarTitleView: UIView {
     
     internal var statusIndicatorView : UIView?
     internal var titleLabel : UILabel?
     internal var disclosureView : UIView?
     
-    var titleString : NSString?
+    var titleString : String?
     var channel : Channel?
     //var loadingView : UIActivityIndicatorView
     
+    init() {
+        super.init(frame: CGRectZero)
+            setupBackgroundColor()
+            setupStatusView()
+            setupTitleLabel()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     internal func configureWithChannel(channel: Channel, loadingInProgress:Bool) {
+        self.channel = channel
+        self.titleString = channel.displayName
+        self.titleLabel?.text = channel.displayName
+        self.hideStatusIndicateView()
         
+        if channel.privateType == Constants.ChannelType.PrivateTypeChannel {
+            
+        }
+        
+        setNeedsLayout()
+        setNeedsDisplay()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        let xPos : CGFloat = 8
+        let yPos : CGFloat = CGRectGetHeight(self.bounds)/2 - 2
+        self.statusIndicatorView!.frame = CGRectMake(xPos, yPos, 8 ,8)
+        guard let channel = self.channel else {
+            return
+        }
+
+        let titleXPos : CGFloat = channel.privateType == Constants.ChannelType.PrivateTypeChannel ? CGRectGetMaxX((self.statusIndicatorView?.frame)!) + 8  : 8
+        
+        let titleHeight : CGFloat = 20
+        var titleWidth = widthOfString(self.titleString, font: FontBucket.highlighTedTitleFont)
+        let titleYPos : CGFloat = CGRectGetHeight(self.bounds)/2 - titleHeight / 2
+        
+        let availableWidthForTitle : CGFloat = channel.privateType == Constants.ChannelType.PrivateTypeChannel ? CGRectGetWidth(self.bounds) - 42 : CGRectGetWidth(self.bounds) - 26
+        titleWidth = min(availableWidthForTitle, titleWidth)
+        self.titleLabel?.frame = CGRectMake(titleXPos, titleYPos, titleWidth, titleHeight)
+        self.alignSubviews()
+    }
+    
+    func widthOfString(string: String?, font: UIFont) -> CGFloat {
+        guard let str = string else {
+            return 0.00001
+        }
+        let stringAttributes = [NSFontAttributeName : font]
+        let attr = NSAttributedString.init(string: str, attributes: stringAttributes)
+        return ceil(attr.size().width)
         
     }
     
@@ -33,8 +82,21 @@ class ChatNavigationBarTitleView: UIView {
         
     }
     
-    //Setup
-    
+    private func hideStatusIndicateView() {
+        self.statusIndicatorView!.hidden = true
+    }
+    private func showStatusIndicateView() {
+        self.statusIndicatorView!.hidden = false
+    }
+    }
+
+private protocol SetupNavigationControler {
+    func setupBackgroundColor()
+    func setupStatusView()
+    func setupTitleLabel()
+}
+
+extension ChatNavigationBarTitleView : SetupNavigationControler {
     func setupBackgroundColor() {
         self.backgroundColor = ColorBucket.whiteColor
     }
@@ -44,7 +106,7 @@ class ChatNavigationBarTitleView: UIView {
         let yPosition = CGFloat(CGRectGetHeight(self.bounds)/2 - 2)
         self.statusIndicatorView = UIView(frame: CGRectMake(xPosition, yPosition, 8, 8))
         self.addSubview(self.statusIndicatorView!)
-        self.statusIndicatorView?.layer.cornerRadius = 4
+        self.statusIndicatorView!.layer.cornerRadius = 4
     }
     
     func setupTitleLabel() {
@@ -58,7 +120,5 @@ class ChatNavigationBarTitleView: UIView {
         self.titleLabel?.font = FontBucket.normalTitleFont
         self.titleLabel?.adjustsFontSizeToFitWidth = true
     }
-    
-    
-    
+
 }
