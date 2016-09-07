@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RestKit
 
 enum AttachmentFieldAttributes: String {
     case short = "short"
@@ -39,26 +38,26 @@ final class AttachmentField: RealmObject {
     }
 }
 
-private protocol ResponseMappings : class {
-    static func mapping() -> RKObjectMapping
-}
+//private protocol ResponseMappings : class {
+//    static func mapping() -> RKObjectMapping
+//}
 
 private protocol Computations : class {
     func computeAttributedValue()
     func computeAttributedValueData()
 }
 
-extension AttachmentField: ResponseMappings {
-    override static func mapping() -> RKObjectMapping {
-        let mapping = super.emptyMapping()
-        mapping.addAttributeMappingsFromArray([
-            AttachmentFieldAttributes.short.rawValue,
-            AttachmentFieldAttributes.value.rawValue,
-            AttachmentFieldAttributes.title.rawValue
-        ])
-        return mapping
-    }
-}
+//extension AttachmentField: ResponseMappings {
+//    override static func mapping() -> RKObjectMapping {
+//        let mapping = super.emptyMapping()
+//        mapping.addAttributeMappingsFromArray([
+//            AttachmentFieldAttributes.short.rawValue,
+//            AttachmentFieldAttributes.value.rawValue,
+//            AttachmentFieldAttributes.title.rawValue
+//        ])
+//        return mapping
+//    }
+//}
 
 extension AttachmentField: Computations {
     private func computeAttributedValueData() {

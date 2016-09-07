@@ -26,35 +26,35 @@ protocol CommonFinders: class {
     static func objectByUsername(username: String) -> Self?
 }
 //FIXME: -------------- все что ниже до следующего FIXME убрать!!!
-protocol CommonMappings: class {
-    static func mapping() -> RKObjectMapping
-    static func emptyResponseMapping() -> RKObjectMapping
-    static func emptyMapping() -> RKObjectMapping
-    static func requestMapping() -> RKObjectMapping
-}
-
-// MARK: - Mappings
-extension RealmObject: CommonMappings  {
-    class func mapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(forClass: self)
-        mapping.addAttributeMappingsFromDictionary(["id" : CommonAttributes.identifier.rawValue])
-        return mapping;
-    }
-    
-    static func emptyResponseMapping() -> RKObjectMapping {
-        return RKObjectMapping(withClass: NSNull.self)
-    }
-    
-    static func emptyMapping() -> RKObjectMapping {
-        return RKObjectMapping(withClass: self)
-    }
-    
-    class func requestMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping.requestMapping()
-        mapping.addAttributeMappingsFromDictionary([CommonAttributes.identifier.rawValue : "id"])
-        return mapping;
-    }
-}
+//protocol CommonMappings: class {
+//    static func mapping() -> RKObjectMapping
+//    static func emptyResponseMapping() -> RKObjectMapping
+//    static func emptyMapping() -> RKObjectMapping
+//    static func requestMapping() -> RKObjectMapping
+//}
+//
+//// MARK: - Mappings
+//extension RealmObject: CommonMappings  {
+//    class func mapping() -> RKObjectMapping {
+//        let mapping = RKObjectMapping(forClass: self)
+//        mapping.addAttributeMappingsFromDictionary(["id" : CommonAttributes.identifier.rawValue])
+//        return mapping;
+//    }
+//    
+//    static func emptyResponseMapping() -> RKObjectMapping {
+//        return RKObjectMapping(withClass: NSNull.self)
+//    }
+//    
+//    static func emptyMapping() -> RKObjectMapping {
+//        return RKObjectMapping(withClass: self)
+//    }
+//    
+//    class func requestMapping() -> RKObjectMapping {
+//        let mapping = RKObjectMapping.requestMapping()
+//        mapping.addAttributeMappingsFromDictionary([CommonAttributes.identifier.rawValue : "id"])
+//        return mapping;
+//    }
+//}
 //FIXME: --------------убрать!!!
 
 // MARK: - Finders

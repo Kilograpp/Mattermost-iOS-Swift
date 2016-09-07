@@ -20,7 +20,7 @@ final class FileResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
 
 extension FileResponseDescriptorsContainer: ResponseDescriptors {
     static func updateResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: File.mapping(),
+        return RKResponseDescriptor(mapping: FileMappingsContainer.mapping(),
                                     method: .GET,
                                     pathPattern: FilePathPatternsContainer.updateCommonPathPattern(),
                                     keyPath: nil,
@@ -28,7 +28,7 @@ extension FileResponseDescriptorsContainer: ResponseDescriptors {
     }
     
     static func uploadResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: File.uploadMapping(),
+        return RKResponseDescriptor(mapping: FileMappingsContainer.uploadMapping(),
                                     method: .POST,
                                     pathPattern: FilePathPatternsContainer.uploadPathPattern(),
                                     keyPath: "filenames",

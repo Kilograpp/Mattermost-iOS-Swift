@@ -8,7 +8,6 @@
 //
 
 import Foundation
-import RestKit
 import RealmSwift
 
 private protocol Interface {
@@ -58,10 +57,10 @@ enum UserAttributes: String {
     case avatarLink = "avatarLink"
 }
 
-private protocol Mappings: class {
-    static func mapping() -> RKObjectMapping
-    static func directProfileMapping() -> RKObjectMapping
-}
+//private protocol Mappings: class {
+//    static func mapping() -> RKObjectMapping
+//    static func directProfileMapping() -> RKObjectMapping
+//}
 
 private protocol Computatations: class {
     func computeDisplayNameWidth()
@@ -72,32 +71,32 @@ private protocol Computatations: class {
 
 
 // MARK: - Mappings
-extension User: Mappings {
-    override class func mapping() -> RKObjectMapping {
-        let mapping = super.mapping()
-        mapping.addAttributeMappingsFromDictionary([
-            "first_name" : UserAttributes.firstName.rawValue,
-            "last_name"  : UserAttributes.lastName.rawValue,
-            "username"   : UserAttributes.username.rawValue,
-            "nickname"   : UserAttributes.nickname.rawValue
-        ])
-        return mapping
-    }
-    static func directProfileMapping() -> RKObjectMapping {
-        let mapping = super.emptyMapping()
-        mapping.forceCollectionMapping = true
-        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(UserAttributes.identifier.rawValue)
-        mapping.addAttributeMappingsFromDictionary([
-            "(\(UserAttributes.identifier)).first_name" : UserAttributes.firstName.rawValue,
-            "(\(UserAttributes.identifier)).last_name" : UserAttributes.lastName.rawValue,
-            "(\(UserAttributes.identifier)).username" : UserAttributes.username.rawValue,
-            "(\(UserAttributes.identifier)).nickname" : UserAttributes.nickname.rawValue,
-            "(\(UserAttributes.identifier)).email" : UserAttributes.email.rawValue
-        ])
-        return mapping
-    }
-    
-}
+//extension User: Mappings {
+//    override class func mapping() -> RKObjectMapping {
+//        let mapping = super.mapping()
+//        mapping.addAttributeMappingsFromDictionary([
+//            "first_name" : UserAttributes.firstName.rawValue,
+//            "last_name"  : UserAttributes.lastName.rawValue,
+//            "username"   : UserAttributes.username.rawValue,
+//            "nickname"   : UserAttributes.nickname.rawValue
+//        ])
+//        return mapping
+//    }
+//    static func directProfileMapping() -> RKObjectMapping {
+//        let mapping = super.emptyMapping()
+//        mapping.forceCollectionMapping = true
+//        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(UserAttributes.identifier.rawValue)
+//        mapping.addAttributeMappingsFromDictionary([
+//            "(\(UserAttributes.identifier)).first_name" : UserAttributes.firstName.rawValue,
+//            "(\(UserAttributes.identifier)).last_name" : UserAttributes.lastName.rawValue,
+//            "(\(UserAttributes.identifier)).username" : UserAttributes.username.rawValue,
+//            "(\(UserAttributes.identifier)).nickname" : UserAttributes.nickname.rawValue,
+//            "(\(UserAttributes.identifier)).email" : UserAttributes.email.rawValue
+//        ])
+//        return mapping
+//    }
+//    
+//}
 
 
 extension User: Computatations {

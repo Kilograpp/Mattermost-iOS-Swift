@@ -22,7 +22,7 @@ final class TeamResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
 // MARK: - Response Descriptors
 extension TeamResponseDescriptorsContainer: ResponseDescriptors {
     static func initalLoadResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Team.mapping(),
+        return RKResponseDescriptor(mapping: TeamMappingsContainer.mapping(),
                                     method: .GET,
                                     pathPattern: TeamPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "teams",
@@ -30,7 +30,7 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
     }
     
     static func teamListingsResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Team.emptyMapping(),
+        return RKResponseDescriptor(mapping: TeamMappingsContainer.emptyMapping(),
                                     method: .GET,
                                     pathPattern: TeamPathPatternsContainer.teamListingsPathPattern(),
                                     keyPath: nil,
@@ -38,7 +38,7 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
     }
     
     static func initalLoadConfigResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Team.initialLoadConfigMapping(),
+        return RKResponseDescriptor(mapping: TeamMappingsContainer.initialLoadConfigMapping(),
                                     method: .GET,
                                     pathPattern: TeamPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "client_cfg",

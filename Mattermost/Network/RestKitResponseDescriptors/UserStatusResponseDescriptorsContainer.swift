@@ -15,7 +15,7 @@ private protocol ResponseDescriptors: class {
 
 final class UserStatusResponseDescriptorsContainer: RKResponseDescriptor {
     
-    static var responseDescriptor = RKResponseDescriptor(mapping: UserStatus.mapping(),
+    static var responseDescriptor = RKResponseDescriptor(mapping: UserStatusMappingsContainer.mapping(),
                                                          method: .POST,
                                                          pathPattern: UserPathPatternsContainer.usersStatusPathPattern(),
                                                          keyPath: nil,
@@ -28,7 +28,7 @@ final class UserStatusResponseDescriptorsContainer: RKResponseDescriptor {
 extension UserStatusResponseDescriptorsContainer: ResponseDescriptors {
     
     static func statusResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: UserStatus.mapping(),
+        return RKResponseDescriptor(mapping: UserStatusMappingsContainer.mapping(),
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.usersStatusPathPattern(),
                                     keyPath: nil,

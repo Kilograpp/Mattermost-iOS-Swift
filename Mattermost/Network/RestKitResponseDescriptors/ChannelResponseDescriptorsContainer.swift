@@ -23,14 +23,14 @@ final class ChannelResponseDescriptorsContainer: BaseResponseDescriptorsContaine
 
 extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
     static func channelsListResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Channel.mapping(),
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
                                     method: .GET,
                                     pathPattern: ChannelPathPatternsContainer.listPathPattern(),
                                     keyPath: "channels",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Channel.attendantInfoMapping(),
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.attendantInfoMapping(),
                                     method: .GET,
                                     pathPattern: ChannelPathPatternsContainer.listPathPattern(),
                                     keyPath: "members",
@@ -38,7 +38,7 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
     }
     
     static func extraInfoResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Channel.mapping(),
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
                                     method: .GET,
                                     pathPattern: ChannelPathPatternsContainer.extraInfoPathPattern(),
                                     keyPath: nil,
@@ -46,14 +46,14 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
     }
     
     static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Channel.emptyMapping(),
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.emptyMapping(),
                                     method: .POST,
                                     pathPattern: ChannelPathPatternsContainer.updateLastViewDatePathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Channel.mapping(),
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
                                     method: .GET,
                                     pathPattern: ChannelPathPatternsContainer.moreListPathPattern(),
                                     keyPath: "channels",

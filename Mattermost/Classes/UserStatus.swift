@@ -9,9 +9,9 @@
 import Foundation
 import RestKit
 
-private protocol Mappings: class {
-    static func mapping() -> RKObjectMapping
-}
+//private protocol Mappings: class {
+//    static func mapping() -> RKObjectMapping
+//}
 
 private protocol Public : class {
     func refreshWithBackendStatus(backendStatus: String!)
@@ -31,16 +31,16 @@ final class UserStatus : NSObject {
 
 }
 
-extension UserStatus : Mappings {
-    static func mapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(forClass: UserStatus.self)
-        mapping.forceCollectionMapping = true
-        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute("identifier")
-        mapping.addAttributeMappingsFromDictionary(["(identifier)" : "backendStatus"])
-        
-        return mapping
-    }
-}
+//extension UserStatus : Mappings {
+//    static func mapping() -> RKObjectMapping {
+//        let mapping = RKObjectMapping(forClass: UserStatus.self)
+//        mapping.forceCollectionMapping = true
+//        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute("identifier")
+//        mapping.addAttributeMappingsFromDictionary(["(identifier)" : "backendStatus"])
+//        
+//        return mapping
+//    }
+//}
 
 extension UserStatus : Public {
     func refreshWithBackendStatus(backendStatus: String!) {

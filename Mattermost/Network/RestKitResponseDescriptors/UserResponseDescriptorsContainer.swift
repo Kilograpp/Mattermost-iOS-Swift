@@ -22,21 +22,21 @@ final class UserResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
 // MARK: - Response Descriptors
 extension UserResponseDescriptorsContainer: ResponseDescriptors {
     static func loginResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: User.mapping(),
+        return RKResponseDescriptor(mapping: UserMappingsContainer.mapping(),
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.loginPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: User.directProfileMapping(),
+        return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "direct_profiles",
                                     statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
     static func completeListResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: User.directProfileMapping(),
+        return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.completeListPathPattern(),
                                     keyPath: nil,

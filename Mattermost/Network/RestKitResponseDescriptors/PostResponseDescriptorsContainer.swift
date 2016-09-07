@@ -21,28 +21,28 @@ final class PostResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
 
 extension PostResponseDescriptorsContainer: ResponseDescriptor {
     static func firstPageResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Post.listMapping(),
+        return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
                                     method: .GET,
                                     pathPattern: PostPathPatternsContainer.firstPagePathPattern(),
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
     static func updateResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Post.listMapping(),
+        return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
                                     method: .GET,
                                     pathPattern: PostPathPatternsContainer.updatePathPattern(),
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
     static func nextPageResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Post.listMapping(),
+        return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
                                     method: .GET,
                                     pathPattern: PostPathPatternsContainer.nextPagePathPattern(),
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
     static func creationResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: Post.creationMapping(),
+        return RKResponseDescriptor(mapping: PostMappingsContainer.creationMapping(),
                                     method: .POST,
                                     pathPattern: PostPathPatternsContainer.creationPathPattern(),
                                     keyPath: nil,
