@@ -24,6 +24,7 @@ final class ChannelInfoViewController : UIViewController {
     var titleArray : Array<String>?
     var detailArray : Array<String>?
     var users : Array<User>?
+    var channelName : String?
     
     let sectionCount = 2
     
@@ -77,12 +78,31 @@ extension ChannelInfoViewController : Setup {
     }
     
     func setupDetailArray() {
-        //self.detailArray = [self.channel?.header, self.channel?.purpose, "kilograpp", self.channel?.identifier]
+        self.detailArray = []
+        if self.channel?.header != nil {
+            self.detailArray?.append((self.channel?.header)!)
+        } else {
+            self.detailArray?.append("")
+        }
+        if self.channel?.purpose != nil {
+            self.detailArray?.append((self.channel?.purpose)!)
+        } else {
+            self.detailArray?.append("")
+        }
+        self.detailArray?.append("kilograpp")
+        if self.channel?.identifier != nil {
+            self.detailArray?.append((self.channel?.identifier)!)
+        } else {
+            self.detailArray?.append("")
+        }
+        //self.detailArray = [(self.channel?.header)!, (self.channel?.purpose)!, "kilograpp", (self.channel?.identifier)!]
     }
     
     func setupUserArray() {
+        self.channelName = self.channel?.displayName
         Api.sharedInstance.loadExtraInfoForChannel(self.channel!) { (error) in
             self.users = self.channel?.members.reverse()
+            //self.setupDetailArray()
             self.tableView.reloadData()
         }
     }
@@ -121,7 +141,7 @@ extension ChannelInfoViewController : UITableViewDataSource {
             if cell == nil {
                 cell = UITableViewCell.init(style: .Default, reuseIdentifier: self.defaultTableViewCellReuseIdentifier)
             }
-            cell?.textLabel!.text = self.channel!.displayName
+            cell?.textLabel!.text = self.channelName
             cell?.textLabel?.textColor = ColorBucket.blackColor
             cell?.imageView!.image = UIImage.init(named: "about_kg_icon")
             cell?.textLabel?.textAlignment = .Left
@@ -133,7 +153,9 @@ extension ChannelInfoViewController : UITableViewDataSource {
             }
             cell?.textLabel!.text = self.titleArray![indexPath.row]
             cell?.textLabel?.textColor = ColorBucket.blackColor
-            //cell.detail
+            if self.detailArray != nil {
+                cell?.detailTextLabel?.text = self.detailArray![indexPath.row]
+            }
             
             cell?.accessoryType = .DisclosureIndicator
             return cell!
@@ -174,19 +196,16 @@ extension ChannelInfoViewController : UITableViewDataSource {
             if cell == nil {
                 cell = UITableViewCell.init(style: .Value1, reuseIdentifier: self.userCellReuseIdentifier)
             }
-
-            //let user = self.users![indexPath.row - 1]
+            
             if self.users != nil {
                 cell?.textLabel!.text = self.users![indexPath.row - 1].username
-                cell?.imageView?.setImageWithURL(self.users![indexPath.row - 1].avatarURL())
+                ImageDownloader.downloadFeedAvatarForUser(self.users![indexPath.row - 1]) { [weak cell] (image, error) in
+                    cell?.imageView?.image = image
+                }
             } else {
             cell?.textLabel!.text = "user name"
             }
             cell?.textLabel?.textColor = ColorBucket.blackColor
-            //cell?.imageView.image = UIImage.init(named: <#T##String#>)
-            
-            
-            
             
             return cell!
         case Section.sectionLeave.hashValue:
@@ -215,7 +234,7 @@ extension ChannelInfoViewController : UITableViewDelegate {
         if section == Section.sectionMembers.hashValue {
             return CGFloat(self.tableViewMembersSectionHeaderHeight)
         }
-        return CGFloat(self.tableViewOtherSectionHeaderHeight)
+        return CGFloat(self.tableViewTitleSectionHeaderHeight)
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -225,16 +244,29 @@ extension ChannelInfoViewController : UITableViewDelegate {
         return CGFloat(self.tableViewCellHeight)
     }
     
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == Section.sectionMembers.hashValue && self.channel?.members.count != 0{
+            let header = UITableViewHeaderFooterView.init()
+            header.textLabel!.font = FontBucket.postDateFont
+            let str = NSString.init(format: "%d MEMBERS", (self.channel?.members.count)!)
+            header.textLabel!.text = str as String
+            header.textLabel?.textColor = ColorBucket.grayColor
+            return header
+        }
+        return UIView.init()
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == Section.sectionTitle.hashValue {
+            return CGFloat(self.tableViewOtherSectionHeaderHeight)
+        }
+        if section == Section.sectionNotification.hashValue {
+            return CGFloat(self.tableViewMembersSectionHeaderHeight - self.tableViewOtherSectionHeaderHeight)
+        }
+        return CGFloat(self.tableViewOtherSectionHeaderHeight)
+    }
 }
 
 private protocol Private {
     func configareUserName(user: User) -> String
 }
-
-//extension ChannelInfoViewController : Private {
-//    func configareUserName(user: User) -> String {
-//        if user.lastName!.characters.count == 0 {
-//            return user.firstName
-//        }
-//    }
-//}
