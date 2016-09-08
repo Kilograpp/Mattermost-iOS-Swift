@@ -307,6 +307,7 @@
                     <connections>
                         <outlet property="tableView" destination="1O8-mK-3CD" id="yvw-g4-L2e"/>
                         <segue destination="NFe-6H-SeY" kind="show" identifier="showHeader" id="4lo-qU-0vK"/>
+                        <segue destination="QKS-S8-F1L" kind="show" identifier="showPurpose" id="ojR-cj-ngX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bdl-PA-VVd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -349,6 +350,43 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5lE-cW-KZS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1776" y="197"/>
+        </scene>
+        <!--Channel Purpose View Controller-->
+        <scene sceneID="d3g-7W-cbB">
+            <objects>
+                <viewController id="QKS-S8-F1L" customClass="ChannelPurposeViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JdF-c0-2hI"/>
+                        <viewControllerLayoutGuide type="bottom" id="Cja-D8-wL4"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2pg-iF-Wpo">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Mhs-IE-Uxx">
+                                <rect key="frame" x="0.0" y="50" width="375" height="156"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="156" id="YNv-Ck-smM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="Mhs-IE-Uxx" firstAttribute="leading" secondItem="2pg-iF-Wpo" secondAttribute="leading" id="QXS-NI-8di"/>
+                            <constraint firstItem="Mhs-IE-Uxx" firstAttribute="top" secondItem="JdF-c0-2hI" secondAttribute="bottom" constant="30" id="ZWz-dR-Wkt"/>
+                            <constraint firstItem="Mhs-IE-Uxx" firstAttribute="width" secondItem="2pg-iF-Wpo" secondAttribute="width" id="hrF-aS-F6p"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="textField" destination="Mhs-IE-Uxx" id="94b-8u-OjG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hHx-VC-Lk4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1737" y="694"/>
         </scene>
         <!--Right Menu View Controller-->
         <scene sceneID="woB-dB-jJh">

@@ -46,7 +46,7 @@ final class ChannelInfoViewController : UIViewController {
     let userCellReuseIdentifier = "userCellReuseIdentifier"
     let titleValueCellReuseIdentifier = "titleValueCellReuseIdentifier"
     let showHeaderIdentifier = "showHeader"
-    
+    let showPurposeIdentifier = "showPurpose"
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -63,6 +63,10 @@ final class ChannelInfoViewController : UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == self.showHeaderIdentifier {
             let vc = segue.destinationViewController as! ChannelHeaderViewController
+            vc.channel = self.channel
+        }
+        if segue.identifier == self.showPurposeIdentifier {
+            let vc = segue.destinationViewController as! ChannelPurposeViewController
             vc.channel = self.channel
         }
     }
@@ -241,7 +245,7 @@ extension ChannelInfoViewController : UITableViewDataSource {
                 navigateToHeader()
                 break
             case 1:
-                navigateToHeader()
+                navigateToPurpose()
                 break
             default:
                 break
@@ -304,10 +308,14 @@ extension ChannelInfoViewController : UITableViewDelegate {
 
 private protocol Private {
     func navigateToHeader()
+    func navigateToPurpose()
 }
 
 extension ChannelInfoViewController : Private {
     func navigateToHeader() {
-        performSegueWithIdentifier("showHeader", sender: nil)
+        performSegueWithIdentifier(self.showHeaderIdentifier, sender: nil)
+    }
+    func navigateToPurpose() {
+        performSegueWithIdentifier(self.showPurposeIdentifier, sender: nil)
     }
 }
