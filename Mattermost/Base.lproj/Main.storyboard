@@ -287,9 +287,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1O8-mK-3CD">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="1O8-mK-3CD">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="dataSource" destination="tuJ-Au-SSh" id="goi-wd-WZn"/>
                                     <outlet property="delegate" destination="tuJ-Au-SSh" id="Vcf-9v-mQ3"/>
@@ -306,11 +306,49 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="1O8-mK-3CD" id="yvw-g4-L2e"/>
+                        <segue destination="NFe-6H-SeY" kind="show" identifier="showHeader" id="4lo-qU-0vK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bdl-PA-VVd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1282.5" y="309.5"/>
+            <point key="canvasLocation" x="1210.5" y="304.5"/>
+        </scene>
+        <!--Channel Header View Controller-->
+        <scene sceneID="m7G-Gg-bIE">
+            <objects>
+                <viewController id="NFe-6H-SeY" customClass="ChannelHeaderViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XLp-ge-xOI"/>
+                        <viewControllerLayoutGuide type="bottom" id="1S7-xm-4fh"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="oTd-70-6da">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wXD-L6-heR">
+                                <rect key="frame" x="0.0" y="25" width="375" height="48"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="Mvn-iI-QIb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="wXD-L6-heR" firstAttribute="width" secondItem="oTd-70-6da" secondAttribute="width" id="8bj-3b-OcN"/>
+                            <constraint firstItem="wXD-L6-heR" firstAttribute="top" secondItem="XLp-ge-xOI" secondAttribute="bottom" constant="25" id="A3R-ve-pSR"/>
+                            <constraint firstItem="wXD-L6-heR" firstAttribute="leading" secondItem="oTd-70-6da" secondAttribute="leading" id="q8U-pr-uXr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="textField" destination="wXD-L6-heR" id="BVP-ej-pCr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5lE-cW-KZS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1776" y="197"/>
         </scene>
         <!--Right Menu View Controller-->
         <scene sceneID="woB-dB-jJh">
@@ -405,6 +443,6 @@
         <image name="navbar_more_icon" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="nAD-tx-gIG"/>
+        <segue reference="0Og-Od-fKR"/>
     </inferredMetricsTieBreakers>
 </document>

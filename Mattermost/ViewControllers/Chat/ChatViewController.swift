@@ -64,8 +64,10 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         //guard let selectedChannel = sender else { return }
         //ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
-        let vc = segue.destinationViewController as! ChannelInfoViewController
-        vc.channel = self.channel
+        if segue.identifier == self.showChannelInfoViewController {
+            let vc = segue.destinationViewController as! ChannelInfoViewController
+            vc.channel = self.channel
+        }
     }
     
     //MARK: - Configuration

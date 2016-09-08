@@ -42,9 +42,10 @@ final class ChannelInfoViewController : UIViewController {
     
     let maxVisibleNumberOfMembersRows = 5
     
-    let defaultTableViewCellReuseIdentifier = "defaultTableViewCellReuseIdentifier";
-    let userCellReuseIdentifier = "userCellReuseIdentifier";
-    let titleValueCellReuseIdentifier = "titleValueCellReuseIdentifier";
+    let defaultTableViewCellReuseIdentifier = "defaultTableViewCellReuseIdentifier"
+    let userCellReuseIdentifier = "userCellReuseIdentifier"
+    let titleValueCellReuseIdentifier = "titleValueCellReuseIdentifier"
+    let showHeaderIdentifier = "showHeader"
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -57,6 +58,13 @@ final class ChannelInfoViewController : UIViewController {
         setupUserArray()
         setupNavigationBar()
         
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == self.showHeaderIdentifier {
+            let vc = segue.destinationViewController as! ChannelHeaderViewController
+            vc.channel = self.channel
+        }
     }
 }
 
@@ -95,14 +103,13 @@ extension ChannelInfoViewController : Setup {
         } else {
             self.detailArray?.append("")
         }
-        //self.detailArray = [(self.channel?.header)!, (self.channel?.purpose)!, "kilograpp", (self.channel?.identifier)!]
+
     }
     
     func setupUserArray() {
         self.channelName = self.channel?.displayName
         Api.sharedInstance.loadExtraInfoForChannel(self.channel!) { (error) in
             self.users = self.channel?.members.reverse()
-            //self.setupDetailArray()
             self.tableView.reloadData()
         }
     }
@@ -224,6 +231,33 @@ extension ChannelInfoViewController : UITableViewDataSource {
         }
         return UITableViewCell.init()
     }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch indexPath.section {
+        case Section.sectionTitle.hashValue:
+            break
+        case Section.sectionInformation.hashValue:
+            switch indexPath.row {
+            case 0:
+                navigateToHeader()
+                break
+            case 1:
+                navigateToHeader()
+                break
+            default:
+                break
+            }
+        case Section.sectionNotification.hashValue:
+            break
+        case Section.sectionMembers.hashValue:
+            break
+        case Section.sectionLeave.hashValue:
+            break
+        default:
+            break
+        }
+
+    }
+
 }
 
 extension ChannelInfoViewController : UITableViewDelegate {
@@ -265,8 +299,15 @@ extension ChannelInfoViewController : UITableViewDelegate {
         }
         return CGFloat(self.tableViewOtherSectionHeaderHeight)
     }
-}
+    
+    }
 
 private protocol Private {
-    func configareUserName(user: User) -> String
+    func navigateToHeader()
+}
+
+extension ChannelInfoViewController : Private {
+    func navigateToHeader() {
+        performSegueWithIdentifier("showHeader", sender: nil)
+    }
 }
