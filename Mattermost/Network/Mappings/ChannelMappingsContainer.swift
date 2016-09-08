@@ -9,7 +9,7 @@
 import Foundation
 import RestKit
 
-private protocol Mappings: class {
+private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
     static func attendantInfoMapping() -> RKObjectMapping
 }
@@ -17,10 +17,13 @@ private protocol Mappings: class {
 // Sadly no generics for Runtime methods scanning 
 // http://stackoverflow.com/a/31362180
 final class ChannelMappingsContainer: BaseMappingsContainer {
-    
+    override class var classForMapping: AnyClass! {
+        return Channel.self
+    }
 }
 
-extension ChannelMappingsContainer: Mappings {
+//MARK: - ResponseMappings
+extension ChannelMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappingsFromDictionary([
@@ -51,3 +54,4 @@ extension ChannelMappingsContainer: Mappings {
         return mapping
     }
 }
+

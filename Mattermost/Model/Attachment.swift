@@ -70,10 +70,6 @@ final class Attachment: RealmObject {
     }
 }
 
-//private protocol ResponseMappings : class {
-//    static func mapping() -> RKObjectMapping
-//}
-
 private protocol Computations : class {
     func computeAttributedFallback()
     func computeAttributedText()
@@ -82,23 +78,6 @@ private protocol Computations : class {
     func computeAttributedPretextData()
     func computeAttributedTextData()
 }
-
-//extension Attachment: ResponseMappings {
-//    override static func mapping() -> RKObjectMapping {
-//        let mapping = super.emptyMapping()
-//        mapping.addAttributeMappingsFromArray([
-//            AttachmentAttributes.text.rawValue,
-//            AttachmentAttributes.color.rawValue,
-//            AttachmentAttributes.pretext.rawValue,
-//            AttachmentAttributes.fallback.rawValue
-//        ])
-//        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "fields",
-//                                                           toKeyPath: AttachmentRelationship.fields.rawValue,
-//                                                         withMapping: AttachmentField.mapping()))
-//
-//        return mapping
-//    }
-//}
 
 extension Attachment: Computations {
     private func computeAttributedFallback() {

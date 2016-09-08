@@ -140,15 +140,6 @@ final class Post: RealmObject {
     
 }
 
-//private protocol ResponseMapping: class {
-//    static func listMapping() -> RKObjectMapping
-//    static func creationMapping() -> RKObjectMapping
-//}
-
-//private protocol RequestMapping: class {
-//    static func creationRequestMapping() -> RKObjectMapping
-//}
-
 private protocol Computations: class {
     func resetStatus()
     func computeDay()
@@ -162,10 +153,6 @@ private protocol Computations: class {
     func setSystemAuthorIfNeeded()
 }
 
-//private protocol RequestDescriptor : class {
-//    static func creationRequestDescriptor() -> RKRequestDescriptor
-//}
-
 private protocol Support: class {
     static func filesLinkPath() -> String
     static func teamIdentifierPath() -> String
@@ -177,45 +164,6 @@ private protocol KVO: class {
     func removeStatusObserverIfNeeded()
     func notifyStatusObserverIfNeeded(oldStatus: PostStatus)
 }
-
-
-// MARK: - Mapping
-//extension Post: ResponseMapping {
-//    class func creationMapping() -> RKObjectMapping {
-//        let mapping = super.emptyMapping()
-//        mapping.addAttributeMappingsFromDictionary([
-//            "id"                : PostAttributes.identifier.rawValue,
-//            "pending_post_id"   : PostAttributes.pendingId.rawValue,
-//            "message"           : PostAttributes.message.rawValue,
-//            "create_at"         : PostAttributes.createdAt.rawValue,
-//            "update_at"         : PostAttributes.updatedAt.rawValue,
-//            "files.backendLink" : "filenames"
-//            ])
-//        return mapping
-//    }
-//    class func listMapping() -> RKObjectMapping {
-//        let mapping = super.emptyMapping()
-//        mapping.forceCollectionMapping = true
-//        mapping.assignsNilForMissingRelationships = false
-//        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(PostAttributes.identifier.rawValue)
-//        mapping.addAttributeMappingsFromDictionary([
-//            "(\(PostAttributes.identifier)).create_at" : PostAttributes.createdAt.rawValue,
-//            "(\(PostAttributes.identifier)).update_at" : PostAttributes.updatedAt.rawValue,
-//            "(\(PostAttributes.identifier)).message" : PostAttributes.message.rawValue,
-//            "(\(PostAttributes.identifier)).type" : PostAttributes.type.rawValue,
-//            "(\(PostAttributes.identifier)).user_id" : PostAttributes.authorId.rawValue,
-//            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue
-//            ])
-//        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
-//                                                           toKeyPath: PostRelationships.files.rawValue,
-//                                                         withMapping: File.simplifiedMapping()))
-//        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
-//                                                           toKeyPath: PostRelationships.attachments.rawValue,
-//                                                         withMapping: Attachment.mapping()))
-//        return mapping
-//    }
-//}
-
 
 //  MARK: - Support
 extension Post: Support {
@@ -339,25 +287,3 @@ extension Post: KVO {
         }
     }
 }
-
-//// MARK: - Request Mapping
-//extension Post: RequestMapping {
-//    static func creationRequestMapping() -> RKObjectMapping {
-//        let mapping = RKObjectMapping.requestMapping()
-//        mapping.addAttributeMappingsFromArray([ "message" ])
-//        mapping.addAttributeMappingsFromDictionary([
-//            Post.filesLinkPath() : "filenames",
-//            PostAttributes.channelId.rawValue : "channel_id",
-//            PostAttributes.pendingId.rawValue : "pending_post_id",
-//        ])
-//        return mapping
-//    }
-//}
-
-//MARK: - Request Descriptors
-//extension Post : RequestDescriptor {
-//    static func creationRequestDescriptor() -> RKRequestDescriptor {
-//        return RKRequestDescriptor(mapping: creationRequestMapping(), objectClass: Post.self, rootKeyPath: nil, method: .POST)
-//    }
-//}
-

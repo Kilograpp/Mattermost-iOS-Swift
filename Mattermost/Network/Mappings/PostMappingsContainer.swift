@@ -20,7 +20,9 @@ private protocol RequestMapping: class {
 
 
 final class PostMappingsContainer: BaseMappingsContainer {
-    
+    override class var classForMapping: AnyClass! {
+        return Post.self
+    }
 }
 
 //MARK: - ResponseMappings

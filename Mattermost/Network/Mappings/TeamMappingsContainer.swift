@@ -9,16 +9,19 @@
 import Foundation
 import RestKit
 
-private protocol Mappings: class {
+private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
     static func initialLoadConfigMapping() -> RKObjectMapping
 }
 
 final class TeamMappingsContainer: BaseMappingsContainer {
-    //
+    override class var classForMapping: AnyClass! {
+        return Team.self
+    }
 }
 
-extension TeamMappingsContainer: Mappings {
+//MARK: - ResponseMappings
+extension TeamMappingsContainer: ResponseMappings {
     override static func mapping() -> RKObjectMapping {
         let entityMapping = super.mapping()
         entityMapping.addAttributeMappingsFromDictionary(["display_name" : TeamAttributes.displayName.rawValue])

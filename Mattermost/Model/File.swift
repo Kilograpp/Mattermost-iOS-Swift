@@ -53,11 +53,6 @@ enum FileRelationships: String {
     case post = "post"
 }
 
-//private protocol ResponseMappings: class {
-//    static func simplifiedMapping() -> RKObjectMapping
-//    static func uploadMapping() -> RKObjectMapping
-//}
-
 private protocol Computations: class {
     func computeName()
 //    func computeDownloadLink()
@@ -70,23 +65,6 @@ private protocol Support: class {
     func thumbPostfix() -> String?
     static func teamIdentifierPath() -> String
 }
-
-//MARK: - MAPPING
-
-//extension File: ResponseMappings {
-//    static func simplifiedMapping() -> RKObjectMapping {
-//        let mapping = super.emptyMapping()
-//        mapping.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
-//        return mapping
-//    }
-//    
-//    static func uploadMapping() -> RKObjectMapping {
-//        let mapping = RKObjectMapping(withClass: NSMutableDictionary.self)
-//        mapping.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
-//        
-//        return mapping
-//    }
-//}
 
 extension File: Computations {
     private func computeName() {

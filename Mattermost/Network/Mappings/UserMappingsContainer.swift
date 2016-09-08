@@ -9,12 +9,20 @@
 import Foundation
 import RestKit
 
-private protocol Mappings: class {
+private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
     static func directProfileMapping() -> RKObjectMapping
 }
 
 final class UserMappingsContainer: BaseMappingsContainer {
+    override class var classForMapping: AnyClass! {
+        return User.self
+    }
+}
+
+//MARK: - ResponseMappings
+extension UserMappingsContainer: ResponseMappings {
+    
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappingsFromDictionary([
@@ -25,9 +33,6 @@ final class UserMappingsContainer: BaseMappingsContainer {
             ])
         return mapping
     }
-}
-
-extension UserMappingsContainer: Mappings {
 
     static func directProfileMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()

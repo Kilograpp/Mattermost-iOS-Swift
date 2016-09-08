@@ -15,9 +15,12 @@ private protocol ResponseMappings: class {
 }
 
 final class FileMappingsContainer: BaseMappingsContainer {
-    //
+    override class var classForMapping: AnyClass! {
+        return File.self
+    }
 }
 
+//MARK: - ResponseMappings
 extension FileMappingsContainer: ResponseMappings {
     static func simplifiedMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()

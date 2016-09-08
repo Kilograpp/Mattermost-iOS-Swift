@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RealmSwift
 import RestKit
 
 protocol CommonMappings: class {
@@ -16,9 +17,15 @@ protocol CommonMappings: class {
     static func requestMapping() -> RKObjectMapping
 }
 
+protocol ClassForMapping {
+    static var classForMapping : AnyClass! { get }
+}
+
 class BaseMappingsContainer: RKObjectMapping {
+
+//MARK: - CommonMappings
     class func mapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(forClass: RealmObject.self)
+        let mapping = RKObjectMapping(forClass: self.classForMapping)
         mapping.addAttributeMappingsFromDictionary(["id" : CommonAttributes.identifier.rawValue])
         return mapping;
     }
@@ -28,7 +35,7 @@ class BaseMappingsContainer: RKObjectMapping {
     }
     
     static func emptyMapping() -> RKObjectMapping {
-        return RKObjectMapping(withClass: RealmObject.self)
+        return RKObjectMapping(withClass: self.classForMapping)
     }
     
    override class func requestMapping() -> RKObjectMapping {
@@ -37,3 +44,11 @@ class BaseMappingsContainer: RKObjectMapping {
         return mapping;
     }
 }
+
+//MARK: - ClassForMapping
+extension BaseMappingsContainer : ClassForMapping {
+    class var classForMapping : AnyClass! {
+        return RealmObject.self
+    }
+}
+
