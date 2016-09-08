@@ -18,6 +18,8 @@ private protocol Private : class {
     func hideAttachmentsView()
 }
 
+let showChannelInfoSegueIdentifier = "showChannelInfo"
+
 final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private var channel : Channel?
     private var resultsObserver: FeedNotificationsObserver?
@@ -50,6 +52,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         self.configureTableView()
         self.setupRefreshControl()
         setupPostAttachmentsView()
+        setupChatNavigationController()
         setupTopActivityIndicator()
         
         ChannelObserver.sharedObserver.delegate = self
@@ -241,6 +244,7 @@ extension ChatViewController {
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
+        self.updateNavigationBarAppearance()
         self.prepareResults()
         self.loadFirstPageOfData()
     }
@@ -365,6 +369,35 @@ extension ChatViewController : PostAttachmentViewDelegate {
         self.tableView.contentInset = oldInset
     }
 }
+
+//MARK: - ChatNavigationDelegate
+extension ChatViewController : ChatNavigationDelegate {
+    func updateNavigationBarAppearance() {
+        let nc = self.navigationController as! ChatNavigationController
+        nc.configureTitleViewWithCannel(self.channel!,loadingInProgress:false)
+    }
+    func setupChatNavigationController() {
+        let nc = self.navigationController as! ChatNavigationController
+        nc.chatNavigationDelegate = self
+    }
+    func didSelectTitle() {
+        if (self.channel?.privateType == Constants.ChannelType.PublicTypeChannel) {
+            self.performSegueWithIdentifier(showChannelInfoSegueIdentifier, sender: nil)
+        }
+    }
+}
+
+//MARK: - Navigation
+extension ChatViewController {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == showChannelInfoSegueIdentifier) {
+            let vc = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("ChannelInfoViewController")
+            let nc = UINavigationController(rootViewController: vc)
+            self.presentViewController(nc, animated: true, completion: nil)
+        }
+    }
+}
+
 //
 //extension ChatViewController : UIImagePickerControllerDelegate {
 //    

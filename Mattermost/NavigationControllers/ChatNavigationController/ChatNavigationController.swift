@@ -13,7 +13,7 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
     var titleLabel : UILabel?
     var titleView : UIView?
     var actitvityIndicatorView : UIView?
-    
+    var chatNavigationDelegate : ChatNavigationDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,14 +45,21 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
         //self.titleView = KGNavigationBarTitleView
         self.titleView = UIView(frame: CGRectMake(0, 0, UIScreen.screenWidth()*0.6, 44))
         self.navigationBar.topItem?.titleView = self.titleView
+        self.titleView?.addSubview(self.titleLabel!)
     }
     
     func setupGestureRecognizer() {
-        
+        self.titleLabel?.userInteractionEnabled = true
+        self.titleLabel?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapOnTitleAction)))
+    }
+    
+    func tapOnTitleAction() {
+        self.chatNavigationDelegate?.didSelectTitle()
     }
     
     func configureTitleViewWithCannel(channel: Channel, loadingInProgress: Bool) {
-       
+       // Временно
+        self.titleLabel?.text = channel.displayName
     }
     
  //UINavigationControllerDelegate
@@ -60,5 +67,10 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask.Portrait
     }
+    
+}
 
+//MARK: - ChatNavigationDelegate
+protocol ChatNavigationDelegate {
+    func didSelectTitle()
 }
