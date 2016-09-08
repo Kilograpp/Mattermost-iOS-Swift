@@ -69,9 +69,7 @@ extension TeamViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let team = self.fetchedResultsController.objectAtIndexPath(indexPath) as Team?
         if (Preferences.sharedInstance.currentTeamId != team?.identifier) {
-            // Change in preferences
             Preferences.sharedInstance.currentTeamId = team?.identifier
-            //Reload channels and chat
             self.reloadChat()
         }
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -113,7 +111,6 @@ extension TeamViewController {
         Api.sharedInstance.loadChannels(with: { (error) in
             Api.sharedInstance.loadCompleteUsersList({ (error) in
                 RouterUtils.loadInitialScreen()
-                //reload chat и left menu
             })
         })
     }
