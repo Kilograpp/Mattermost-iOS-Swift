@@ -110,9 +110,3 @@ extension PostUtils : Private {
         self.images?.removeAll()
     }
 }
-
-
-//MARK: - Private
-
-extension PostUtils {
-}
