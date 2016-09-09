@@ -11,6 +11,6 @@ import RestKit
 
 extension RKRequestDescriptor {
     class func findAllDescriptors() -> Array<RKRequestDescriptor>{
-        return dumpValuesFromRootClass(RealmObject.self, withClassPrefix: Constants.Common.RestKitPrefix) as! Array
+        return dumpValuesFromRootClass(BaseRequestDescriptorsContainer.self, withClassPrefix: Constants.Common.RestKitPrefix) as! Array
     }
 }

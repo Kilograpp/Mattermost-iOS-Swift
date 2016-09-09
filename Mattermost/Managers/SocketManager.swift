@@ -20,7 +20,7 @@ private protocol Interface: class {
     static let sharedInstance = SocketManager()
     private var lastNotificationDate: NSDate?
     private lazy var socket: WebSocket = {
-        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(User.socketPathPattern()).URLWithScheme(.WSS)!)
+        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
         webSocket.delegate = self
         webSocket.setCookie(Api.sharedInstance.cookie())
         return webSocket
