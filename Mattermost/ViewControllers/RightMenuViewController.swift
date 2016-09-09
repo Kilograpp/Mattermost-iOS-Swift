@@ -172,9 +172,15 @@ extension RightMenuViewController {
         navigation!.pushViewController(profile!, animated:true)
     }
     
-    func proceedToAbout() {        
+    func proceedToAbout() {
+        // UNCOMMENT THIS
+//        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+//        let about = storyboard.instantiateViewControllerWithIdentifier(String(AboutViewController))
+//        let navigation = self.menuContainerViewController.centerViewController
+//        navigation!.pushViewController(about, animated:true)
+        // DELETE THIS
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let about = storyboard.instantiateViewControllerWithIdentifier(String(AboutViewController))
+        let about = storyboard.instantiateViewControllerWithIdentifier(String("MembersViewController"))
         let navigation = self.menuContainerViewController.centerViewController
         navigation!.pushViewController(about, animated:true)
     }

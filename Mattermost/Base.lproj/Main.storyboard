@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ts1-GG-mjn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ts1-GG-mjn">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -31,6 +31,40 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="733.5" y="222.5"/>
+        </scene>
+        <!--Members View Controller-->
+        <scene sceneID="5bY-8m-gJK">
+            <objects>
+                <viewController storyboardIdentifier="MembersViewController" id="r4S-dR-SGb" customClass="MembersViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="iWf-jb-K0P"/>
+                        <viewControllerLayoutGuide type="bottom" id="seS-PT-V06"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="icy-Nc-duU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7Wp-31-bo4">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="7Wp-31-bo4" secondAttribute="trailing" id="9On-sC-hVc"/>
+                            <constraint firstItem="seS-PT-V06" firstAttribute="top" secondItem="7Wp-31-bo4" secondAttribute="bottom" id="QDd-un-f2e"/>
+                            <constraint firstItem="7Wp-31-bo4" firstAttribute="top" secondItem="iWf-jb-K0P" secondAttribute="bottom" id="uPr-QH-Q3I"/>
+                            <constraint firstItem="7Wp-31-bo4" firstAttribute="leading" secondItem="icy-Nc-duU" secondAttribute="leading" id="zMc-dw-uil"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="tableView" destination="7Wp-31-bo4" id="VFr-Qj-93h"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mZP-wF-1Md" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1262.5" y="222.5"/>
         </scene>
         <!--More Channels View Controller-->
         <scene sceneID="gzj-o9-9fm">
