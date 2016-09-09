@@ -7,7 +7,6 @@
 //
 
 import Foundation
-//import KGTextField
 
 private protocol SetupServerUrlViewController {
     func setupTitleLabel()
@@ -61,15 +60,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
         let urlRegEx = "((http|https)://){1}((.)*)"
         let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
         if urlTest.evaluateWithObject(Preferences.sharedInstance.serverUrl) {
-            Api.sharedInstance.checkURL(with: { ( error) in
-                if (error != nil) {
-                    let alert = UIAlertView.init(title: NSLocalizedString("Error", comment: ""), message: nil, delegate: self,
-                        cancelButtonTitle: NSLocalizedString("Cancel", comment: ""))
-                    alert.show()
-                } else {
-                    self.performSegueWithIdentifier("showLogin", sender: nil)
-                }
-            })
+            checkServerUrl()
         } else {
             let addres = Preferences.sharedInstance.serverUrl
             var urlAddress = String.init(format: "%@%@", "https://", addres!)
@@ -78,31 +69,34 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
                 if (error != nil) {
                     urlAddress = String.init(format: "%@%@", "http://", addres!)
                     Preferences.sharedInstance.serverUrl = urlAddress
-                    Api.sharedInstance.checkURL(with: { ( error) in
-                        if (error != nil) {
-                            let alert = UIAlertView.init(title: NSLocalizedString("Error", comment: ""), message: nil, delegate: self,
-                                cancelButtonTitle: NSLocalizedString("Cancel", comment: ""))
-                            alert.show()
-                        } else {
-                            self.performSegueWithIdentifier("showLogin", sender: nil)
-                        }
-                    })
+                    self.checkServerUrl()
                 } else {
                     self.performSegueWithIdentifier("showLogin", sender: nil)
                 }
             })
         }
     }
+    
+    private func checkServerUrl() {
+        Api.sharedInstance.checkURL(with: { ( error) in
+            if (error != nil) {
+                let alert = UIAlertView.init(title: NSLocalizedString("Error", comment: ""), message: nil, delegate: self,
+                    cancelButtonTitle: NSLocalizedString("Cancel", comment: ""))
+                alert.show()
+            } else {
+                self.performSegueWithIdentifier("showLogin", sender: nil)
+            }
+        })
+    }
 }
 
 
-//MARK: - Actions 
+//MARK: - Actions
 
 extension ServerUrlViewController:Actions {
     @IBAction func nextButtonAction(sender: AnyObject) {
         Preferences.sharedInstance.serverUrl = self.textField.text
-//FIXME: вызов методов не должен быть через self
-        self.validateServerUrl()
+        validateServerUrl()
     }
     
     func textFieldAction() {
@@ -120,19 +114,16 @@ extension ServerUrlViewController:Lifecycle {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//FIXME: вызов методов не должен быть через self
-        self.setupTitleLabel()
-        self.setupSubtitleLabel()
-        self.setupPromtLabel()
-        self.setupNextButton()
-        self.setupTextField()
-        self.configureLabels()
+        setupTitleLabel()
+        setupSubtitleLabel()
+        setupPromtLabel()
+        setupNextButton()
+        setupTextField()
+        configureLabels()
     }
 
     override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-//FIXME: вызов методов не должен быть через self
-        self.setupNavigationBar()
+        setupNavigationBar()
     }
     
     override func viewDidAppear(animated: Bool) {

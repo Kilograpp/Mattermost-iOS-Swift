@@ -6,7 +6,6 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-// FIXME: CodeReview: Разнести протоколы на extension
 
 private protocol Lifecylce {
     func viewDidLoad()
@@ -66,7 +65,6 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBAction func loginAction(sender: AnyObject) {
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) {
             (error) in
-            // FIXME: CodeReview: гуард
             if (error != nil){
                 print("Error!")
         } else {
@@ -75,11 +73,17 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
                     Api.sharedInstance.loadCompleteUsersList({ (error) in
                         RouterUtils.loadInitialScreen()
                     })
-                    
-                    
                 })
             })
             }
+        }
+    }
+    
+    private func checkLoginAndPassword() -> Bool{
+        if loginTextField.text != "" && passwordTextField.text != "" {
+            return true
+        } else {
+            return false
         }
     }
     
@@ -90,22 +94,10 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
 
 extension LoginViewController: TextFieldDelegate {
     @IBAction func changeLogin(sender: AnyObject) {
-        
-        // FIXME: CodeReview: Guard
-        if loginTextField.text != "" && passwordTextField.text != "" {
-            self.loginButton.enabled = true
-        } else {
-            self.loginButton.enabled = false
-        }
+            self.loginButton.enabled = checkLoginAndPassword()
     }
     @IBAction func changePassword(sender: AnyObject) {
-        
-        // FIXME: CodeReview: guard
-        if loginTextField.text != "" && passwordTextField.text != "" {
-            self.loginButton.enabled = true
-        } else {
-            self.loginButton.enabled = false
-        }
+        self.loginButton.enabled = checkLoginAndPassword()
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -125,19 +117,17 @@ extension LoginViewController: Lifecylce {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//FIXME: вызов методов не должен быть через self
-        self.setupTitleLabel()
-        self.setupLoginButton()
-        self.setupLoginTextField()
-        self.setupPasswordTextField()
-        self.setupRecoveryButton()
-        self.configure()
+        setupTitleLabel()
+        setupLoginButton()
+        setupLoginTextField()
+        setupPasswordTextField()
+        setupRecoveryButton()
+        configure()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-//FIXME: вызов методов не должен быть через self        
-        self.setupNavigationBar()
+        setupNavigationBar()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -145,6 +135,7 @@ extension LoginViewController: Lifecylce {
         
         self.loginTextField.becomeFirstResponder()
     }
+    
 }
 
 

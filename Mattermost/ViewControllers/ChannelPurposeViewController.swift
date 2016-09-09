@@ -17,7 +17,7 @@ final class ChannelPurposeViewController : UIViewController {
             super.viewDidLoad()
             setupTitle()
             setupTextField()
-            SetupRightButton()
+            setupRightButton()
             
         }
     }
@@ -25,7 +25,7 @@ final class ChannelPurposeViewController : UIViewController {
     private protocol Setup {
         func setupTextField()
         func setupTitle()
-        func SetupRightButton()
+        func setupRightButton()
     }
     
     extension ChannelPurposeViewController : Setup {
@@ -38,7 +38,7 @@ final class ChannelPurposeViewController : UIViewController {
             self.title = "Channel Purpose"
         }
         
-        func SetupRightButton() {
+        func setupRightButton() {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(save))
         }
     }

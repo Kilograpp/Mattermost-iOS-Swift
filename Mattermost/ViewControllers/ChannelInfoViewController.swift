@@ -236,6 +236,7 @@ extension ChannelInfoViewController : UITableViewDataSource {
         return UITableViewCell.init()
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
         switch indexPath.section {
         case Section.sectionTitle.hashValue:
             break
@@ -260,6 +261,7 @@ extension ChannelInfoViewController : UITableViewDataSource {
             break
         }
 
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 
 }
