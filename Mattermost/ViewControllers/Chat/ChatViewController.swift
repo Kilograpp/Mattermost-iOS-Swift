@@ -28,14 +28,23 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
     
+    var messageNotificationView : MessageNotificationView?
+    
     var hasNextPage: Bool = true
     var isLoadingInProgress: Bool = false
+    var isNotificationView: Bool = false
     
     var fileUploadingInProgress: Bool = true {
         didSet {
             self.toggleSendButtonAvailability()
         }
     }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return self.isNotificationView
+    }
+    
+    
     
     private let postAttachmentsView = PostAttachmentsView()
     private var assignedPhotosArray = Array<AssignedPhotoViewItem>()
@@ -408,11 +417,36 @@ extension ChatViewController {
     }
 }
 
-
-
 extension ChatViewController : ChatNavigationControllerDelegate {
     func didSelectTitleView() {
-        print("Channel info")
-        performSegueWithIdentifier(self.showChannelInfoViewController, sender: nil)
+
+        //performSegueWithIdentifier(self.showChannelInfoViewController, sender: nil)
+        
+        if self.messageNotificationView == nil {
+            self.messageNotificationView = MessageNotificationView.init()
+            self.navigationController?.view.addSubview(self.messageNotificationView!)
+        }
+        self.messageNotificationView?.hidden = false
+        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .None)
+        let sortName = PostAttributes.createdAt.rawValue
+        let post =
+            RealmUtils.realmForCurrentThread().objects(Post.self).sorted(sortName, ascending: false).first
+        self.messageNotificationView!.configurateWithPost(post!)
+        
+        self.messageNotificationView!.delegate = self
+    }
+}
+
+extension ChatViewController : MessageNotificationViewDelegate {
+    func didSelectNotification(post : Post) {
+        self.didSelectChannelWithIdentifier(post.channel.identifier)
+        self.messageNotificationView?.hidden = true
+        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .None)
+
+    }
+    
+    func didCloseNotification() {
+        self.messageNotificationView?.hidden = true
+        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .None)
     }
 }

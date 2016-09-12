@@ -239,6 +239,8 @@ extension ChannelInfoViewController : UITableViewDataSource {
         
         switch indexPath.section {
         case Section.sectionTitle.hashValue:
+//            let messageNotification : MessageNotificationView = MessageNotificationView.init()
+//            self.navigationController?.view.addSubview(messageNotification)
             break
         case Section.sectionInformation.hashValue:
             switch indexPath.row {

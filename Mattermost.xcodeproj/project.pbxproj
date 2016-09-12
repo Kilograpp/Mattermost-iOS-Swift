@@ -14,6 +14,7 @@
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
 		4195DCED1D54DAA900E8ED84 /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */; };
 		41C1AD7D1D7FFA6900856DBE /* ChannelInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C1AD7C1D7FFA6900856DBE /* ChannelInfoViewController.swift */; };
+		41DA61831D82BB4D007855E2 /* MessageNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DA61821D82BB4D007855E2 /* MessageNotificationView.swift */; };
 		41DC7E401D81B04900289C57 /* ChannelHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DC7E3F1D81B04900289C57 /* ChannelHeaderViewController.swift */; };
 		41DC7E421D81C17200289C57 /* ChannelPurposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DC7E411D81C17200289C57 /* ChannelPurposeViewController.swift */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
@@ -169,6 +170,7 @@
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
 		4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerUrlViewController.swift; path = ServerUrl/ServerUrlViewController.swift; sourceTree = "<group>"; };
 		41C1AD7C1D7FFA6900856DBE /* ChannelInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelInfoViewController.swift; sourceTree = "<group>"; };
+		41DA61821D82BB4D007855E2 /* MessageNotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageNotificationView.swift; sourceTree = "<group>"; };
 		41DC7E3F1D81B04900289C57 /* ChannelHeaderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelHeaderViewController.swift; sourceTree = "<group>"; };
 		41DC7E411D81C17200289C57 /* ChannelPurposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelPurposeViewController.swift; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
@@ -708,6 +710,7 @@
 				4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */,
 				D6E165841D47C08F0014C831 /* Cells */,
 				D65626661D49674700981057 /* TableSectionHeadersFooters */,
+				41DA61821D82BB4D007855E2 /* MessageNotificationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1074,6 +1077,7 @@
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
 				D8D6013A1D5E1BD800951F18 /* FeedNotificationsObserver.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
+				41DA61831D82BB4D007855E2 /* MessageNotificationView.swift in Sources */,
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
 				D8D601381D5E007700951F18 /* Day.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
