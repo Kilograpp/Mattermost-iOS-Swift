@@ -29,7 +29,7 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     var topActivityIndicatorView: UIActivityIndicatorView?
     
     var messageNotificationView : MessageNotificationView?
-    
+    var timer : NSTimer?
     var hasNextPage: Bool = true
     var isLoadingInProgress: Bool = false
     var isNotificationView: Bool = false
@@ -419,26 +419,30 @@ extension ChatViewController {
 
 extension ChatViewController : ChatNavigationControllerDelegate {
     func didSelectTitleView() {
-
+        self.timer?.invalidate()
+        self.timer = nil
         //performSegueWithIdentifier(self.showChannelInfoViewController, sender: nil)
         
         if self.messageNotificationView == nil {
             self.messageNotificationView = MessageNotificationView.init()
             self.navigationController?.view.addSubview(self.messageNotificationView!)
         }
+        
         self.messageNotificationView?.hidden = false
         UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .None)
         let sortName = PostAttributes.createdAt.rawValue
         let post =
-            RealmUtils.realmForCurrentThread().objects(Post.self).sorted(sortName, ascending: false).first
-        self.messageNotificationView!.configurateWithPost(post!)
-        
+            RealmUtils.realmForCurrentThread().objects(Post.self).sorted(sortName, ascending: false)[10]
+        self.messageNotificationView!.configurateWithPost(post)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(didCloseNotification), userInfo: nil, repeats: false)
         self.messageNotificationView!.delegate = self
     }
 }
 
 extension ChatViewController : MessageNotificationViewDelegate {
     func didSelectNotification(post : Post) {
+        self.timer?.invalidate()
+        self.timer = nil
         self.didSelectChannelWithIdentifier(post.channel.identifier)
         self.messageNotificationView?.hidden = true
         UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .None)
@@ -446,6 +450,8 @@ extension ChatViewController : MessageNotificationViewDelegate {
     }
     
     func didCloseNotification() {
+        self.timer?.invalidate()
+        self.timer = nil
         self.messageNotificationView?.hidden = true
         UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .None)
     }

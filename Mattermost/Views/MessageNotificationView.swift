@@ -22,8 +22,8 @@ class MessageNotificationView : UIView {
     final let offset: CGFloat = 8
     final let avatarSize: CGFloat = 30
     final let mesageOffset: CGFloat = 45
-    final let backgroundAlpha: CGFloat = 0.95
-    
+    final let backgroundAlpha: CGFloat = 0.97
+    var timer : NSTimer?
     var post : Post?
     
     init() {
@@ -39,12 +39,15 @@ class MessageNotificationView : UIView {
     }
     
     func configurateWithPost(post : Post) {
+        self.timer?.invalidate()
+        //self.timer = nil
         self.post = post
         self.messageLabel.text = post.message
         self.titleLabel.text = post.channel.displayName
         ImageDownloader.downloadFeedAvatarForUser((self.post?.author)!) { [weak self] (image, error) in
             self?.avatarImageView.image = image
         }
+        
     }
     
     var delegate : MessageNotificationViewDelegate?
@@ -60,7 +63,7 @@ private protocol Setup {
 
 extension MessageNotificationView : Setup {
     func setup(){
-        self.frame = CGRectMake(0, 0, UIScreen .mainScreen().bounds.width, 60)
+        self.frame = CGRectMake(0, 0, UIScreen .mainScreen().bounds.width, 90)
         self.backgroundColor = ColorBucket.blackColor
         self.backgroundColor = self.backgroundColor?.colorWithAlphaComponent(backgroundAlpha)
         self.userInteractionEnabled = true
@@ -74,7 +77,7 @@ extension MessageNotificationView : Setup {
     }
     
     func setupAvatarImageView() {
-        self.avatarImageView.frame = CGRectMake(offset, offset, avatarSize, avatarSize)
+        self.avatarImageView.frame = CGRectMake(offset, offset * 2, avatarSize, avatarSize)
         self.avatarImageView.backgroundColor = self.backgroundColor
         self.avatarImageView.layer.cornerRadius = 15
         self.avatarImageView.clipsToBounds = true
@@ -82,7 +85,7 @@ extension MessageNotificationView : Setup {
     }
     
     func setupMessageLabel() {
-        self.messageLabel.frame = CGRectMake(mesageOffset, 20, UIScreen .mainScreen().bounds.width - offset - mesageOffset, avatarSize + offset)
+        self.messageLabel.frame = CGRectMake(mesageOffset, 30 + offset, UIScreen .mainScreen().bounds.width - offset - mesageOffset, avatarSize + offset * 2)
         self.messageLabel.font = FontBucket.subtitleServerUrlFont
         self.messageLabel.textColor = ColorBucket.whiteColor
         self.messageLabel.numberOfLines = 0
@@ -90,7 +93,7 @@ extension MessageNotificationView : Setup {
     }
     
     func setupTitleLabel() {
-        self.titleLabel.frame = CGRectMake(mesageOffset, offset, UIScreen .mainScreen().bounds.width - offset - mesageOffset, mesageOffset - avatarSize)
+        self.titleLabel.frame = CGRectMake(mesageOffset, offset * 2, UIScreen .mainScreen().bounds.width - offset - mesageOffset, mesageOffset - avatarSize)
         self.titleLabel.font = FontBucket.footerTitleFont
         self.titleLabel.textColor = ColorBucket.whiteColor
         self.addSubview(self.titleLabel)
@@ -104,12 +107,13 @@ private protocol Action {
 
 extension MessageNotificationView : Action {
     func chooseMessageAction() {
-        
+        self.timer = nil
         self.delegate?.didSelectNotification(self.post!)
     }
     
     func closeAction() {
-       
+        self.timer = nil
+        self.timer?.invalidate()
         self.delegate?.didCloseNotification()
     }
 }
