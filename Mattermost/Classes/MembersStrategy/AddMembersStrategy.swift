@@ -66,9 +66,4 @@ class AddMembersStrategy: MembersStrategy {
         return true;
     }
     
-    
-    func dataSourceWithChannel (channel:Channel) -> [User] {
-        return Array<User>(RealmUtils.realmForCurrentThread().objects(User))
-    }
-    
 }

@@ -10,13 +10,15 @@ import Foundation
 import SwiftFetchedResultsController
 import RealmSwift
 
+let membersCellHeight: CGFloat = 61
+
 final class MembersViewController: UIViewController{
     
     @IBOutlet weak var tableView: UITableView!
-    var searchController = UISearchController()
     var strategy = MembersStrategy()
-    private var userList: Results<User>! = nil
     var channel: Channel?
+    private var searchController = UISearchController(searchResultsController: nil)
+    private var users: Results<User>! = nil
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -25,9 +27,7 @@ final class MembersViewController: UIViewController{
         setupTableView()
         setupNavigationBar()
         setupSearchController()
-        
-        //place to other REFACTOR
-        self.userList = RealmUtils.realmForCurrentThread().objects(User.self).filter(self.strategy.predicateWithChannel(channel!))
+        setupUsers()
     }
     
 }
@@ -36,6 +36,7 @@ private protocol Setup {
     func setupNavigationBar()
     func setupTableView()
     func setupSearchController()
+    func setupUsers()
 }
 
 extension MembersViewController: Setup {
@@ -60,38 +61,36 @@ extension MembersViewController: Setup {
                                                                  target: self,
                                                                  action: #selector(save))
     }
+    func setupUsers() {
+        self.users = RealmUtils.realmForCurrentThread().objects(User.self).filter(self.strategy.predicateWithChannel(channel!))
+    }
 }
 
 extension MembersViewController: UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate {
     func setupSearchController() {
-        self.searchController.searchResultsUpdater = self
-        self.definesPresentationContext = true
-        self.searchController.dimsBackgroundDuringPresentation = false
+        self.extendedLayoutIncludesOpaqueBars = true    // add edges to searchBar (on top) ..
+        self.edgesForExtendedLayout = UIRectEdge.None   //   ..   equals 0
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        self.searchController.searchBar.searchBarStyle = UISearchBarStyle.Prominent
+        tableView.tableHeaderView = searchController.searchBar
+        searchController.searchBar.delegate = self
         self.searchController.delegate = self
-        self.searchController.searchBar.backgroundImage = UIImage()
-        self.extendedLayoutIncludesOpaqueBars = true
-        self.edgesForExtendedLayout = UIRectEdge.None
-        
-        self.searchController.searchBar.scopeButtonTitles = []
-        self.searchController.searchBar.delegate = self
-        self.searchController.searchBar.searchBarStyle = UISearchBarStyle.Minimal
-        self.searchController.searchBar.backgroundColor = ColorBucket.whiteColor
         self.searchController.searchBar.translucent = false
-
-        
-        self.tableView.tableHeaderView = self.searchController.searchBar
+        self.searchController.searchBar.backgroundColor = ColorBucket.whiteColor
     }
     //MARK: - UISearchResultsUpdating
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        //REFACTOR
         let containsPredicate = self.strategy.predicateWithChannel(self.channel!)
         if let searchString = searchController.searchBar.text {
-            let namePredicate = NSPredicate(format: "self.nickname contains[c] %@", searchString)
+            let namePredicate = NSPredicate(format: "displayName contains[c] %@", searchString)
             let resultPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [namePredicate, containsPredicate])
-            self.userList = RealmUtils.realmForCurrentThread().objects(User.self).filter(resultPredicate)
+            users = RealmUtils.realmForCurrentThread().objects(User.self).filter(resultPredicate)
         } else {
-            self.userList = RealmUtils.realmForCurrentThread().objects(User.self).filter(containsPredicate)
+            users = RealmUtils.realmForCurrentThread().objects(User.self).filter(containsPredicate)
         }
+        tableView.reloadData()
     }
 }
 
@@ -99,19 +98,23 @@ extension MembersViewController: UISearchResultsUpdating, UISearchBarDelegate, U
 //MARK: - UITableViewDataSource
 extension MembersViewController: UITableViewDataSource {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 61
+        return membersCellHeight
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        //REFACTOR билдер
         var cell = tableView.dequeueReusableCellWithIdentifier("Cell")
         if (cell == nil) {
             cell = UITableViewCell(style: .Default, reuseIdentifier: "Cell")
         }
-        cell?.textLabel?.text = userList[indexPath.row].nickname
+        cell?.textLabel?.text = users[indexPath.row].displayName
+//        cell?.accessoryType = .DetailDisclosureButton
+        cell?.accessoryView = UIImageView(image:strategy.imageForCellAccessoryViewWithUser(users[indexPath.row]))
+//        cell?.imageView?.image = /=*_*=/
         return cell!
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.userList.count
+        return users.count
     }
     
 }
@@ -119,14 +122,20 @@ extension MembersViewController: UITableViewDataSource {
 extension MembersViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if (self.strategy.isAddMembers()) {
-            self.strategy.didSelectUser(userList[indexPath.row])
+            //refactor  this V user -> let user
+            self.strategy.didSelectUser(users[indexPath.row])
+            self.tableView.cellForRowAtIndexPath(indexPath)?.accessoryView = UIImageView(image:strategy.imageForCellAccessoryViewWithUser(users[indexPath.row]))
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+            print(users[indexPath.row])
         }
     }
 }
 
 extension MembersViewController {
     func save() {
-        print("SAVE")
+        strategy.addUsersToChannel(channel!) { (error) in
+            print("Users added to Channel")
+            self.navigationController?.popViewControllerAnimated(true)
+        }
     }
 }

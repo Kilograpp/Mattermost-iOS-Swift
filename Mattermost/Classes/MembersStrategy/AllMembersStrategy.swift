@@ -29,8 +29,7 @@ class AllMembersStrategy: MembersStrategy {
     override func shouldSendAdditionalRequest() -> Bool {
         return true;
     }
-        
-    func dataSourceWithChannel (channel:Channel) -> [User] {
-            return Array<User>(channel.members)
-    }
+    
+    // todo: implement did select
+    
 }
