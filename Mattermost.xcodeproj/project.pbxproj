@@ -17,6 +17,12 @@
 		8B8F6FFE1D77451A00ACF626 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */; };
 		8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */; };
 		8B8F70031D7747A900ACF626 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */; };
+		8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */; };
+		8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */; };
+		8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */; };
+		8BBA7DC61D874F7B003A5B99 /* monkey.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC51D874F7B003A5B99 /* monkey.gif */; };
+		8BBA7DC81D87DD06003A5B99 /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC71D87DD06003A5B99 /* UIImage+Gif.swift */; };
+		8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */; };
 		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
 		8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */; };
 		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
@@ -193,6 +199,12 @@
 		8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
+		8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatViewController.swift; sourceTree = "<group>"; };
+		8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingInProcessView.swift; sourceTree = "<group>"; };
+		8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchingInProcessView.xib; sourceTree = "<group>"; };
+		8BBA7DC51D874F7B003A5B99 /* monkey.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = monkey.gif; sourceTree = "<group>"; };
+		8BBA7DC71D87DD06003A5B99 /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Gif.swift"; sourceTree = "<group>"; };
+		8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatTableViewCell.swift; sourceTree = "<group>"; };
 		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
@@ -409,6 +421,14 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		8BBA7DC21D874F0F003A5B99 /* Xibs */ = {
+			isa = PBXGroup;
+			children = (
+				8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */,
+			);
+			path = Xibs;
+			sourceTree = "<group>";
+		};
 		9B82243559F26A9911CEBFB1 /* MattermostTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -505,6 +525,7 @@
 		9B822BE6333BBEF83F57C819 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				8BBA7DC71D87DD06003A5B99 /* UIImage+Gif.swift */,
 				D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */,
 				D8087AEA1D428923001918E8 /* NSCalendar+Singleton.swift */,
 				D8087AEC1D428DE9001918E8 /* NSDate+Formatter.swift */,
@@ -640,6 +661,7 @@
 				D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */,
 				D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */,
 				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
+				8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -669,6 +691,7 @@
 		D6330AA71D494BE2006D84F4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8BBA7DC51D874F7B003A5B99 /* monkey.gif */,
 				416040F31D58B6E300B53E31 /* Localizable.strings */,
 				413B76291D58CBF200F297BE /* Localizable.strings */,
 				413B762B1D58CF4100F297BE /* ru.lproj */,
@@ -722,12 +745,14 @@
 		D6E165831D47C0890014C831 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8BBA7DC21D874F0F003A5B99 /* Xibs */,
 				D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */,
 				CDB6D3B01D75FBA800C3018C /* ChatNavigationBarTitleView */,
 				D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */,
 				4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */,
 				D6E165841D47C08F0014C831 /* Cells */,
 				D65626661D49674700981057 /* TableSectionHeadersFooters */,
+				8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -741,6 +766,7 @@
 				D62FEB8F1D4F2AC500390EBC /* LeftMenu */,
 				D6E165851D47C0960014C831 /* Chat */,
 				D6E165861D47C1200014C831 /* Reusable.swift */,
+				8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -948,9 +974,11 @@
 				8BE969B71D7638060010A524 /* Settings.storyboard in Resources */,
 				8B8F6FFE1D77451A00ACF626 /* Profile.storyboard in Resources */,
 				D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */,
+				8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */,
 				413B762A1D58CBF200F297BE /* Localizable.strings in Resources */,
 				9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */,
 				D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */,
+				8BBA7DC61D874F7B003A5B99 /* monkey.gif in Resources */,
 				D6330AB81D494BF9006D84F4 /* SF-UI-Text-Semibold.otf in Resources */,
 				D6330AB51D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf in Resources */,
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
@@ -1096,6 +1124,7 @@
 				D8D601381D5E007700951F18 /* Day.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
+				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
 				8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */,
 				CDB4BC671D80678000662231 /* BaseRequestDescriptorsContainer.swift in Sources */,
 				CDF07ECC1D7F127400172D1E /* ChannelMappingsContainer.swift in Sources */,
@@ -1111,6 +1140,7 @@
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
+				8BBA7DC81D87DD06003A5B99 /* UIImage+Gif.swift in Sources */,
 				D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */,
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */,
@@ -1126,6 +1156,7 @@
 				CDB4BC751D8074E800662231 /* AttachmentFieldMappingsContainer.swift in Sources */,
 				CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */,
 				D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */,
+				8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */,
 				D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */,
 				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
@@ -1154,6 +1185,7 @@
 				CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */,
 				D86EF7FE1D5A325800BD49A3 /* UIView+Align.swift in Sources */,
 				CDB6D3BB1D78423600C3018C /* String+IntSubscript.swift in Sources */,
+				8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
 				D67A42F61D747B80003E2466 /* AssignedPhotoViewItem.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,

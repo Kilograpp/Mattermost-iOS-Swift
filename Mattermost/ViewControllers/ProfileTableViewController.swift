@@ -83,12 +83,23 @@ extension ProfileViewController {
         //self.avatarImageView?.sd_setImageWithURL(self.user!.avatarURL(), placeholderImage: nil, completed: nil)
         self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
         
+      /*
+        ImageDownloader.downloadFullAvatarForUser(self.user!) { (image, error) in
+            if (image == nil) {
+                print(error?.localizedDescription)
+            }
+            self.avatarImageView.image = image
+        }*/
+        
+        print(self.user?.avatarURL())
         ImageDownloader.downloadFeedAvatarForUser(self.user!) { [weak self] (image, error) in
             if (image == nil) {
                 print(error?.localizedDescription)
             }
             self?.avatarImageView.image = image
         }
+        
+        print(self.user?.firstName)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(changeProfilePhoto))
         self.avatarImageView?.userInteractionEnabled = true

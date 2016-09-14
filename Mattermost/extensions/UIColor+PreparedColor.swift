@@ -25,4 +25,14 @@ extension UIColor {
         let color = UIColor.init(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
         return color
     }
+    
+    class func kg_lightBlackColor() -> UIColor {
+        let color = UIColor.init(red: 66/255, green: 66/255, blue: 66/255, alpha: 1)
+        return color
+    }
+    
+    class func kg_lightGrayTextColor() -> UIColor {
+        let color = UIColor.init(red: 151/255, green: 151/255, blue: 151/255, alpha: 1)
+        return color
+    }
 }
