@@ -32,6 +32,7 @@ private protocol ChannelApi: class {
     func loadExtraInfoForChannel(channel: Channel, completion:(error: Error?) -> Void)
     func updateLastViewDateForChannel(channel: Channel, completion:(error: Error?) -> Void)
     func loadAllChannelsWithCompletion(completion:(error: Error?) -> Void)
+    func addUserToChannel(user:User, channel:Channel, completion:(error: Error?) -> Void)
 }
 
 private protocol PostApi: class {
@@ -185,7 +186,10 @@ extension Api: ChannelApi {
     func loadExtraInfoForChannel(channel: Channel, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.extraInfoPathPattern(), channel)
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
-            RealmUtils.save(mappingResult.firstObject as! Channel)
+            try! RealmUtils.realmForCurrentThread().write({
+                RealmUtils.realmForCurrentThread().create(Channel.self,value: Reflection.fetchNotNullValues(mappingResult.firstObject as! Channel),
+                                                                    update: true)
+            })
             completion(error: nil)
         }, failure: completion)
     }
@@ -210,6 +214,13 @@ extension Api: ChannelApi {
             })
             completion(error: nil)
         }, failure: completion)
+    }
+    func addUserToChannel(user:User, channel:Channel, completion:(error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.addUserPathPattern(), channel)
+        let params = [ "user_id" : user.identifier ]
+        self.manager.postObject(nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(error:nil)
+            }, failure: completion)
     }
 }
 

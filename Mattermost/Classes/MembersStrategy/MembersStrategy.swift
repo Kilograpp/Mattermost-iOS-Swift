@@ -10,14 +10,14 @@ import Foundation
 
 class MembersStrategy {
     func title() -> String {
-        return nil
+        return ""
     }
     
     func imageForCellAccessoryViewWithUser(user:User) -> UIImage {
-        return nil
+        return UIImage()
     }
     
-    func sendAdditionalRequestForChannel(channel:Channel, completion: () -> Void){
+    func sendAdditionalRequestForChannel(channel:Channel, completion: (error:Error?) -> Void){
         
     }
     
@@ -26,7 +26,7 @@ class MembersStrategy {
     }
     
     func predicateWithChannel(channel:Channel) -> NSPredicate {
-        return nil;
+        return NSPredicate();
     }
     
     func shouldSendAdditionalRequest() -> Bool {
@@ -37,7 +37,7 @@ class MembersStrategy {
         return false;
     }
     
-    func addUsersToChannel(channel:Channel, completion:() -> Void) {
+    func addUsersToChannel(channel:Channel, completion:(error:Error?) -> Void) {
     
     }
     

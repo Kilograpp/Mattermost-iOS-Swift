@@ -26,10 +26,11 @@ extension UserMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappingsFromDictionary([
-            "first_name" : UserAttributes.firstName.rawValue,
-            "last_name"  : UserAttributes.lastName.rawValue,
+            "firstName" : UserAttributes.firstName.rawValue,
+            "lastName"  : UserAttributes.lastName.rawValue,
             "username"   : UserAttributes.username.rawValue,
-            "nickname"   : UserAttributes.nickname.rawValue
+            "nickname"   : UserAttributes.nickname.rawValue,
+            "email"      : UserAttributes.email.rawValue
             ])
         return mapping
     }

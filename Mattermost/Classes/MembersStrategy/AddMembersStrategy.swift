@@ -13,19 +13,19 @@ class AddMembersStrategy: MembersStrategy {
     
     private var usersList = [User]()
     
-    func title() -> String {
+    override func title() -> String {
         return "Add Members"
     }
     
-    func imageForCellAccessoryViewWithUser(user:User) -> UIImage {
-        return UIImage(named: usersList.contains(user) ? "user_in_channel" : "add_user_to_channel")
+    override func imageForCellAccessoryViewWithUser(user:User) -> UIImage {
+        return UIImage(named: usersList.contains(user) ? "user_in_channel" : "add_user_to_channel")!
     }
     
-    func sendAdditionalRequestForChannel(channel:Channel, completion: (error:Error?) -> Void){
+    override func sendAdditionalRequestForChannel(channel:Channel, completion: (error:Error?) -> Void){
         Api.sharedInstance.loadCompleteUsersList(completion)
     }
     
-    func didSelectUser(user:User) {
+    override func didSelectUser(user:User) {
         if (usersList.contains(user)) {
             self.usersList.removeObject(user)
         } else {
@@ -33,35 +33,42 @@ class AddMembersStrategy: MembersStrategy {
         }
     }
     
-    func predicateWithChannel(channel:Channel) -> NSPredicate {
-        return NSPredicate(format: "NOT (self IN %@", channel.members)
+    override func predicateWithChannel(channel:Channel) -> NSPredicate {
+        let identifiers = channel.members.mutableArrayValueForKey("identifier")
+        return NSPredicate(format: "!(identifier IN %@)", identifiers)
     }
     
-    func shouldSendAdditionalRequest() -> Bool {
+    override func shouldSendAdditionalRequest() -> Bool {
         return true;
     }
     
-    func shouldShowRightBarButtonItem() ->Bool {
+    override func shouldShowRightBarButtonItem() ->Bool {
         return true;
     }
     
-    func addUsersToChannel(channel:Channel, completion:() -> Void) {
+    override func addUsersToChannel(channel:Channel, completion:(error:Error?) -> Void) {
         let group = dispatch_group_create()
+        var finalError : Error?
         // __block error = nil
         for user in self.usersList {
             dispatch_group_enter(group)
-            Api.sharedInstance.
+            Api.sharedInstance.addUserToChannel(user, channel: channel, completion: { (error) in
+                finalError = error
+                dispatch_group_leave(group)
+            })
+        }
+        dispatch_group_notify(group, dispatch_get_main_queue()) {
+                completion(error: finalError)
         }
     }
     
-    func isAddMembers() -> Bool {
+    override func isAddMembers() -> Bool {
         return true;
     }
     
     
-    //MARK: - Private functions
-    private func dataSourceWithChannel (channel:Channel) -> [User] {
-        return Realm().objects(User)
+    func dataSourceWithChannel (channel:Channel) -> [User] {
+        return Array<User>(RealmUtils.realmForCurrentThread().objects(User))
     }
     
 }

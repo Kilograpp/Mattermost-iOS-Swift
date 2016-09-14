@@ -51,10 +51,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="7Wp-31-bo4" secondAttribute="trailing" id="9On-sC-hVc"/>
-                            <constraint firstItem="seS-PT-V06" firstAttribute="top" secondItem="7Wp-31-bo4" secondAttribute="bottom" id="QDd-un-f2e"/>
-                            <constraint firstItem="7Wp-31-bo4" firstAttribute="top" secondItem="iWf-jb-K0P" secondAttribute="bottom" id="uPr-QH-Q3I"/>
-                            <constraint firstItem="7Wp-31-bo4" firstAttribute="leading" secondItem="icy-Nc-duU" secondAttribute="leading" id="zMc-dw-uil"/>
+                            <constraint firstAttribute="trailing" secondItem="7Wp-31-bo4" secondAttribute="trailing" id="IOE-dH-0oh"/>
+                            <constraint firstItem="7Wp-31-bo4" firstAttribute="leading" secondItem="icy-Nc-duU" secondAttribute="leading" id="Mrh-CV-3m1"/>
+                            <constraint firstItem="7Wp-31-bo4" firstAttribute="top" secondItem="iWf-jb-K0P" secondAttribute="bottom" id="Xqo-iJ-p5z"/>
+                            <constraint firstItem="7Wp-31-bo4" firstAttribute="bottom" secondItem="seS-PT-V06" secondAttribute="top" id="bEF-H7-fCx"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>

@@ -9,40 +9,28 @@
 import Foundation
 
 class AllMembersStrategy: MembersStrategy {
-    func title() -> String {
-        return nil
+    override func title() -> String {
+        return "All Members"
     }
     
-    func imageForCellAccessoryViewWithUser(user:User) -> UIImage {
-        return nil
+     override func imageForCellAccessoryViewWithUser(user:User) -> UIImage {
+        return UIImage(named: "comments_send_icon")!
     }
     
-    func sendAdditionalRequestForChannel(channel:Channel, completion: () -> Void){
+     override func sendAdditionalRequestForChannel(channel:Channel, completion: (error:Error?) -> Void){
+        Api.sharedInstance.loadExtraInfoForChannel(channel, completion: completion)
+    }
+    
+     override func predicateWithChannel(channel:Channel) -> NSPredicate {
+        let identifiers = channel.members.mutableArrayValueForKey("identifier")
+        return NSPredicate(format: "identifier IN %@", identifiers)
+    }
+    
+    override func shouldSendAdditionalRequest() -> Bool {
+        return true;
+    }
         
+    func dataSourceWithChannel (channel:Channel) -> [User] {
+            return Array<User>(channel.members)
     }
-    
-    func didSelectUser(user:User) {
-        
-    }
-    
-    func predicateWithChannel(channel:Channel) -> NSPredicate {
-        return nil;
-    }
-    
-    func shouldSendAdditionalRequest() -> Bool {
-        return false;
-    }
-    
-    func shouldShowRightBarButtonItem() ->Bool {
-        return false;
-    }
-    
-    func addUsersToChannel(channel:Channel, completion:() -> Void) {
-        
-    }
-    
-    func isAddMembers() -> Bool {
-        return false;
-    }
-    
 }
