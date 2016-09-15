@@ -39,10 +39,10 @@
         <scene sceneID="Wvq-wD-6cm">
             <objects>
                 <viewController storyboardIdentifier="ChannelInfoViewController" id="a6P-t6-Fa8" customClass="ChannelInfoViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="nH3-Vr-lmv">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="nH3-Vr-lmv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                     </tableView>
                     <navigationItem key="navigationItem" id="gOe-r8-LND"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>

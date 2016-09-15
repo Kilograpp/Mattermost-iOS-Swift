@@ -33,7 +33,7 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
         self.navigationBar.barTintColor = ColorBucket.whiteColor
   
     }
-    
+    //fix visual bug with label
     func setupTitleLabel() {
         self.titleLabel = UILabel(frame: (CGRectMake(0, 4, UIScreen.screenWidth()*0.6, 22)))
         self.titleLabel?.numberOfLines = 1
@@ -48,6 +48,8 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
         self.titleView?.addSubview(self.titleLabel!)
     }
     
+    
+    //REFACTOR
     func setupGestureRecognizer() {
         self.titleLabel?.userInteractionEnabled = true
         self.titleLabel?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapOnTitleAction)))
@@ -58,7 +60,7 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
     }
     
     func configureTitleViewWithCannel(channel: Channel, loadingInProgress: Bool) {
-       // Временно
+       // temp
         self.titleLabel?.text = channel.displayName
     }
     

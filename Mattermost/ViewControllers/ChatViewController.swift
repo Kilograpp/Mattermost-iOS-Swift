@@ -391,8 +391,10 @@ extension ChatViewController : ChatNavigationDelegate {
 extension ChatViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == showChannelInfoSegueIdentifier) {
-            let vc = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("ChannelInfoViewController")
+            let vc = UIStoryboard(name: "Main",
+                        bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("ChannelInfoViewController") as! ChannelInfoViewController
             let nc = UINavigationController(rootViewController: vc)
+            vc.channel = self.channel
             self.presentViewController(nc, animated: true, completion: nil)
         }
     }
