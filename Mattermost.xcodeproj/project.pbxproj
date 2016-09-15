@@ -38,11 +38,34 @@
 		9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822E83696EB65A72E9F73A /* Api.swift */; };
 		CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */; };
 		CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */; };
+		CDB4BC5A1D8033DF00662231 /* FileResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */; };
+		CDB4BC5C1D8033F700662231 /* PostResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */; };
+		CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */; };
+		CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */; };
+		CDB4BC621D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */; };
+		CDB4BC651D8062B600662231 /* PostRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC641D8062B600662231 /* PostRequestDescriptorsContainer.swift */; };
+		CDB4BC671D80678000662231 /* BaseRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC661D80678000662231 /* BaseRequestDescriptorsContainer.swift */; };
+		CDB4BC691D806C7000662231 /* FileMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC681D806C7000662231 /* FileMappingsContainer.swift */; };
+		CDB4BC6B1D806C8100662231 /* TeamMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC6A1D806C8100662231 /* TeamMappingsContainer.swift */; };
+		CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC6C1D806C9600662231 /* UserMappingsContainer.swift */; };
+		CDB4BC6F1D806CCD00662231 /* UserStatusMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC6E1D806CCD00662231 /* UserStatusMappingsContainer.swift */; };
+		CDB4BC711D806ED000662231 /* PostMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC701D806ED000662231 /* PostMappingsContainer.swift */; };
+		CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC721D80725600662231 /* AttachmentMappingsContainer.swift */; };
+		CDB4BC751D8074E800662231 /* AttachmentFieldMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC741D8074E800662231 /* AttachmentFieldMappingsContainer.swift */; };
 		CDB6D3AD1D75FB2300C3018C /* ChatNavigationBarTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */; };
 		CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */; };
 		CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */; };
 		CDB6D3BB1D78423600C3018C /* String+IntSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3BA1D78423600C3018C /* String+IntSubscript.swift */; };
 		CDB6D3BD1D78925B00C3018C /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3BC1D78925B00C3018C /* String+Localized.swift */; };
+		CDB6D3CE1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3CD1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift */; };
+		CDB6D3D01D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB6D3CF1D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift */; };
+		CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF07EC71D7F11F000172D1E /* BaseMappingsContainer.swift */; };
+		CDF07ECC1D7F127400172D1E /* ChannelMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF07ECB1D7F127400172D1E /* ChannelMappingsContainer.swift */; };
+		CDF07ECE1D7F129100172D1E /* ChannelPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF07ECD1D7F129100172D1E /* ChannelPathPatternsContainer.swift */; };
+		CDF07ED01D7F1D8900172D1E /* FilePathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF07ECF1D7F1D8900172D1E /* FilePathPatternsContainer.swift */; };
+		CDF07ED21D7F1DA300172D1E /* PostPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF07ED11D7F1DA300172D1E /* PostPathPatternsContainer.swift */; };
+		CDF07ED41D7F1DB500172D1E /* TeamPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF07ED31D7F1DB500172D1E /* TeamPathPatternsContainer.swift */; };
+		CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF07ED51D7F1DC900172D1E /* UserPathPatternsContainer.swift */; };
 		D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */; };
 		D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60C9B1B1D74DB76008BB5CF /* AssetsUtils.swift */; };
 		D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60EB7CE1D78384600D21D7D /* Array+RemoveObject.swift */; };
@@ -200,11 +223,34 @@
 		C16480FE9907B36335721461 /* Pods_Mattermost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mattermost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationController.swift; path = NavigationControllers/ChatNavigationController/ChatNavigationController.swift; sourceTree = "<group>"; };
 		CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreChannelsViewController.swift; sourceTree = "<group>"; };
+		CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/FileResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/PostResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/TeamResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/UserResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserStatusResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/UserStatusResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC641D8062B600662231 /* PostRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/PostRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC661D80678000662231 /* BaseRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/BaseRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC681D806C7000662231 /* FileMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileMappingsContainer.swift; path = Mappings/FileMappingsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC6A1D806C8100662231 /* TeamMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamMappingsContainer.swift; path = Mappings/TeamMappingsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC6C1D806C9600662231 /* UserMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserMappingsContainer.swift; path = Mappings/UserMappingsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC6E1D806CCD00662231 /* UserStatusMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserStatusMappingsContainer.swift; path = Mappings/UserStatusMappingsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC701D806ED000662231 /* PostMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostMappingsContainer.swift; path = Mappings/PostMappingsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC721D80725600662231 /* AttachmentMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentMappingsContainer.swift; path = Mappings/AttachmentMappingsContainer.swift; sourceTree = "<group>"; };
+		CDB4BC741D8074E800662231 /* AttachmentFieldMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentFieldMappingsContainer.swift; path = Mappings/AttachmentFieldMappingsContainer.swift; sourceTree = "<group>"; };
 		CDB6D3AC1D75FB2300C3018C /* ChatNavigationBarTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationBarTitleView.swift; path = ChatNavigationBarTitleView/ChatNavigationBarTitleView.swift; sourceTree = "<group>"; };
 		CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MoreChannelsTableViewCell.xib; path = MoreChannel/MoreChannelsTableViewCell.xib; sourceTree = "<group>"; };
 		CDB6D3B81D772A0100C3018C /* MoreChannelsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreChannelsTableViewCell.swift; path = MoreChannel/MoreChannelsTableViewCell.swift; sourceTree = "<group>"; };
 		CDB6D3BA1D78423600C3018C /* String+IntSubscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+IntSubscript.swift"; path = "Mattermost/extensions/String+IntSubscript.swift"; sourceTree = SOURCE_ROOT; };
 		CDB6D3BC1D78925B00C3018C /* String+Localized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Localized.swift"; path = "Mattermost/extensions/String+Localized.swift"; sourceTree = SOURCE_ROOT; };
+		CDB6D3CD1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/BaseResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDB6D3CF1D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/ChannelResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		CDF07EC71D7F11F000172D1E /* BaseMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseMappingsContainer.swift; path = Mappings/BaseMappingsContainer.swift; sourceTree = "<group>"; };
+		CDF07ECB1D7F127400172D1E /* ChannelMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelMappingsContainer.swift; path = Mappings/ChannelMappingsContainer.swift; sourceTree = "<group>"; };
+		CDF07ECD1D7F129100172D1E /* ChannelPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelPathPatternsContainer.swift; path = PathPattern/ChannelPathPatternsContainer.swift; sourceTree = "<group>"; };
+		CDF07ECF1D7F1D8900172D1E /* FilePathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FilePathPatternsContainer.swift; path = PathPattern/FilePathPatternsContainer.swift; sourceTree = "<group>"; };
+		CDF07ED11D7F1DA300172D1E /* PostPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostPathPatternsContainer.swift; path = PathPattern/PostPathPatternsContainer.swift; sourceTree = "<group>"; };
+		CDF07ED31D7F1DB500172D1E /* TeamPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamPathPatternsContainer.swift; path = PathPattern/TeamPathPatternsContainer.swift; sourceTree = "<group>"; };
+		CDF07ED51D7F1DC900172D1E /* UserPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPathPatternsContainer.swift; path = PathPattern/UserPathPatternsContainer.swift; sourceTree = "<group>"; };
 		D60B15D71D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RKObjectRequestOperation+ImageUploading.swift"; sourceTree = "<group>"; };
 		D60C9B1B1D74DB76008BB5CF /* AssetsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AssetsUtils.swift; path = Mattermost/utils/AssetsUtils.swift; sourceTree = SOURCE_ROOT; };
 		D60EB7CE1D78384600D21D7D /* Array+RemoveObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+RemoveObject.swift"; path = "Mattermost/extensions/Array+RemoveObject.swift"; sourceTree = SOURCE_ROOT; };
@@ -427,6 +473,10 @@
 			isa = PBXGroup;
 			children = (
 				D8F6BD041D22FB49000AC690 /* Error.swift */,
+				CDF07EC51D7F115900172D1E /* Mappings */,
+				CDF07EC61D7F119800172D1E /* PathPatterns */,
+				CDB4BC631D805EDD00662231 /* RestKitRequestDescriptors */,
+				CDB6D3CA1D7F04BE00C3018C /* RestKitResponseDescriptors */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -528,6 +578,15 @@
 			name = ChatNavigationController;
 			sourceTree = "<group>";
 		};
+		CDB4BC631D805EDD00662231 /* RestKitRequestDescriptors */ = {
+			isa = PBXGroup;
+			children = (
+				CDB4BC661D80678000662231 /* BaseRequestDescriptorsContainer.swift */,
+				CDB4BC641D8062B600662231 /* PostRequestDescriptorsContainer.swift */,
+			);
+			name = RestKitRequestDescriptors;
+			sourceTree = "<group>";
+		};
 		CDB6D3B01D75FBA800C3018C /* ChatNavigationBarTitleView */ = {
 			isa = PBXGroup;
 			children = (
@@ -543,6 +602,48 @@
 				CDB6D3B41D771D6900C3018C /* MoreChannelsTableViewCell.xib */,
 			);
 			name = MoreChannel;
+			sourceTree = "<group>";
+		};
+		CDB6D3CA1D7F04BE00C3018C /* RestKitResponseDescriptors */ = {
+			isa = PBXGroup;
+			children = (
+				CDB6D3CD1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift */,
+				CDB6D3CF1D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift */,
+				CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */,
+				CDB4BC5B1D8033F700662231 /* PostResponseDescriptorsContainer.swift */,
+				CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */,
+				CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */,
+				CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */,
+			);
+			name = RestKitResponseDescriptors;
+			sourceTree = "<group>";
+		};
+		CDF07EC51D7F115900172D1E /* Mappings */ = {
+			isa = PBXGroup;
+			children = (
+				CDF07EC71D7F11F000172D1E /* BaseMappingsContainer.swift */,
+				CDF07ECB1D7F127400172D1E /* ChannelMappingsContainer.swift */,
+				CDB4BC681D806C7000662231 /* FileMappingsContainer.swift */,
+				CDB4BC701D806ED000662231 /* PostMappingsContainer.swift */,
+				CDB4BC6A1D806C8100662231 /* TeamMappingsContainer.swift */,
+				CDB4BC6C1D806C9600662231 /* UserMappingsContainer.swift */,
+				CDB4BC6E1D806CCD00662231 /* UserStatusMappingsContainer.swift */,
+				CDB4BC721D80725600662231 /* AttachmentMappingsContainer.swift */,
+				CDB4BC741D8074E800662231 /* AttachmentFieldMappingsContainer.swift */,
+			);
+			name = Mappings;
+			sourceTree = "<group>";
+		};
+		CDF07EC61D7F119800172D1E /* PathPatterns */ = {
+			isa = PBXGroup;
+			children = (
+				CDF07ECD1D7F129100172D1E /* ChannelPathPatternsContainer.swift */,
+				CDF07ECF1D7F1D8900172D1E /* FilePathPatternsContainer.swift */,
+				CDF07ED11D7F1DA300172D1E /* PostPathPatternsContainer.swift */,
+				CDF07ED31D7F1DB500172D1E /* TeamPathPatternsContainer.swift */,
+				CDF07ED51D7F1DC900172D1E /* UserPathPatternsContainer.swift */,
+			);
+			name = PathPatterns;
 			sourceTree = "<group>";
 		};
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
@@ -988,6 +1089,7 @@
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */,
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
+				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
 				D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
@@ -1002,9 +1104,11 @@
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
+				CDB4BC5C1D8033F700662231 /* PostResponseDescriptorsContainer.swift in Sources */,
 				D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */,
 				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,
 				D8E98EDF1D4A15D300682922 /* ApplicationStateManager.swift in Sources */,
+				CDF07ECE1D7F129100172D1E /* ChannelPathPatternsContainer.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
@@ -1013,13 +1117,19 @@
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
 				D8D601381D5E007700951F18 /* Day.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
+				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
 				8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */,
+				CDB4BC671D80678000662231 /* BaseRequestDescriptorsContainer.swift in Sources */,
+				CDF07ECC1D7F127400172D1E /* ChannelMappingsContainer.swift in Sources */,
 				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
+				CDF07ED21D7F1DA300172D1E /* PostPathPatternsContainer.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
 				D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */,
+				CDB4BC691D806C7000662231 /* FileMappingsContainer.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
+				CDB6D3D01D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
@@ -1027,6 +1137,7 @@
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */,
 				4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */,
+				CDF07ED41D7F1DB500172D1E /* TeamPathPatternsContainer.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				CDB6D3BD1D78925B00C3018C /* String+Localized.swift in Sources */,
 				D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */,
@@ -1036,11 +1147,14 @@
 				D6E165871D47C1200014C831 /* Reusable.swift in Sources */,
 				4B4FE7951D802CE00088ABEC /* LoginNavigationController.swift in Sources */,
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
+				CDB4BC751D8074E800662231 /* AttachmentFieldMappingsContainer.swift in Sources */,
+				CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */,
 				D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */,
 				D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */,
 				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
+				CDB4BC6B1D806C8100662231 /* TeamMappingsContainer.swift in Sources */,
 				D86EF7FA1D59F13C00BD49A3 /* AttachmentFileCell.swift in Sources */,
 				D8935BA71D5B4FC70037E7ED /* FeedCellBuilder.swift in Sources */,
 				CDB6D3AD1D75FB2300C3018C /* ChatNavigationBarTitleView.swift in Sources */,
@@ -1052,12 +1166,16 @@
 				8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */,
+				CDB6D3CE1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift in Sources */,
+				CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
 				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,
 				D62FEB931D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift in Sources */,
 				9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */,
+				CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
+				CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */,
 				D86EF7FE1D5A325800BD49A3 /* UIView+Align.swift in Sources */,
 				CDB6D3BB1D78423600C3018C /* String+IntSubscript.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
@@ -1070,22 +1188,28 @@
 				D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */,
 				D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */,
 				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
+				CDB4BC651D8062B600662231 /* PostRequestDescriptorsContainer.swift in Sources */,
 				D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */,
 				D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */,
+				CDB4BC6F1D806CCD00662231 /* UserStatusMappingsContainer.swift in Sources */,
 				D8436E681D26AC3600DEF464 /* DataManager.swift in Sources */,
 				D8A0969E1D23E4FA00B76E1A /* Constants.swift in Sources */,
 				D8935BAC1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift in Sources */,
+				CDB4BC711D806ED000662231 /* PostMappingsContainer.swift in Sources */,
 				8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
+				CDF07ED01D7F1D8900172D1E /* FilePathPatternsContainer.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
 				8BE969BB1D76AA420010A524 /* ProfileDataSource.swift in Sources */,
+				CDB4BC5A1D8033DF00662231 /* FileResponseDescriptorsContainer.swift in Sources */,
 				D8935BA51D5A81780037E7ED /* PerformanceManager.swift in Sources */,
 				D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */,
 				D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */,
 				D8087AEB1D428923001918E8 /* NSCalendar+Singleton.swift in Sources */,
 				D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */,
+				CDB4BC621D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
 				D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */,

@@ -8,7 +8,6 @@
 
 import Foundation
 import RealmSwift
-import RestKit
 import TSMarkdownParser
 
 
@@ -141,28 +140,6 @@ final class Post: RealmObject {
     
 }
 
-private protocol PathPattern: class {
-    static func updatePathPattern() -> String
-    static func nextPagePathPattern() -> String
-    static func creationPathPattern() -> String
-    static func firstPagePathPattern() -> String
-}
-
-private protocol ResponseMapping: class {
-    static func listMapping() -> RKObjectMapping
-    static func creationMapping() -> RKObjectMapping
-}
-
-private protocol RequestMapping: class {
-    static func creationRequestMapping() -> RKObjectMapping
-}
-
-private protocol ResponseDescriptor: class {
-    static func updateResponseDescriptor() -> RKResponseDescriptor
-    static func nextPageResponseDescriptor() -> RKResponseDescriptor
-    static func firstPageResponseDescriptor() -> RKResponseDescriptor
-}
-
 private protocol Computations: class {
     func resetStatus()
     func computeDay()
@@ -174,10 +151,6 @@ private protocol Computations: class {
     func computeAttributedStringData()
     func computeAttributedMessageHeight()
     func setSystemAuthorIfNeeded()
-}
-
-private protocol RequestDescriptor : class {
-    static func creationRequestDescriptor() -> RKRequestDescriptor
 }
 
 private protocol Support: class {
@@ -192,75 +165,15 @@ private protocol KVO: class {
     func notifyStatusObserverIfNeeded(oldStatus: PostStatus)
 }
 
-
-// MARK: - Path Patterns
-extension Post: PathPattern {
-    static func nextPagePathPattern() -> String {
-        return "teams/:\(PageWrapper.teamIdPath())/" +
-               "channels/:\(PageWrapper.channelIdPath())/" +
-               "posts/:\(PageWrapper.lastPostIdPath())/" +
-               "before/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
-    }
-    static func firstPagePathPattern() -> String {
-        return "teams/:\(PageWrapper.teamIdPath())/" +
-               "channels/:\(PageWrapper.channelIdPath())/" +
-               "posts/page/:\(PageWrapper.pagePath())/:\(PageWrapper.sizePath())"
-    }
-    static func updatePathPattern() -> String {
-        return "teams/:\(self.teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
-    }
-    static func creationPathPattern() -> String {
-        return "teams/:\(self.teamIdentifierPath())/channels/:\(self.channelIdentifierPath())/posts/create"
-    }
-}
-
-// MARK: - Mapping
-extension Post: ResponseMapping {
-    class func creationMapping() -> RKObjectMapping {
-        let mapping = super.emptyMapping()
-        mapping.addAttributeMappingsFromDictionary([
-            "id"                : PostAttributes.identifier.rawValue,
-            "pending_post_id"   : PostAttributes.pendingId.rawValue,
-            "message"           : PostAttributes.message.rawValue,
-            "create_at"         : PostAttributes.createdAt.rawValue,
-            "update_at"         : PostAttributes.updatedAt.rawValue,
-            "files.backendLink" : "filenames"
-            ])
-        return mapping
-    }
-    class func listMapping() -> RKObjectMapping {
-        let mapping = super.emptyMapping()
-        mapping.forceCollectionMapping = true
-        mapping.assignsNilForMissingRelationships = false
-        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(PostAttributes.identifier.rawValue)
-        mapping.addAttributeMappingsFromDictionary([
-            "(\(PostAttributes.identifier)).create_at" : PostAttributes.createdAt.rawValue,
-            "(\(PostAttributes.identifier)).update_at" : PostAttributes.updatedAt.rawValue,
-            "(\(PostAttributes.identifier)).message" : PostAttributes.message.rawValue,
-            "(\(PostAttributes.identifier)).type" : PostAttributes.type.rawValue,
-            "(\(PostAttributes.identifier)).user_id" : PostAttributes.authorId.rawValue,
-            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue
-            ])
-        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
-                                                           toKeyPath: PostRelationships.files.rawValue,
-                                                         withMapping: File.simplifiedMapping()))
-        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
-                                                           toKeyPath: PostRelationships.attachments.rawValue,
-                                                         withMapping: Attachment.mapping()))
-        return mapping
-    }
-}
-
-
 //  MARK: - Support
 extension Post: Support {
-    private static func filesLinkPath() -> String {
+    static func filesLinkPath() -> String {
         return PostRelationships.files.rawValue + "." + FileAttributes.rawLink.rawValue
     }
-    private static func channelIdentifierPath() -> String {
+    static func channelIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelAttributes.identifier)"
     }
-    private static func teamIdentifierPath() -> String {
+    static func teamIdentifierPath() -> String {
         return "\(PostRelationships.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
     }
 }
@@ -372,59 +285,5 @@ extension Post: KVO {
             self.removeObserver(self, forKeyPath: PostAttributes.status.rawValue)
             self.hasObserverAttached = false
         }
-    }
-}
-
-// MARK: - Request Mapping
-extension Post: RequestMapping {
-    static func creationRequestMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping.requestMapping()
-        mapping.addAttributeMappingsFromArray([ "message" ])
-        mapping.addAttributeMappingsFromDictionary([
-            filesLinkPath() : "filenames",
-            PostAttributes.channelId.rawValue : "channel_id",
-            PostAttributes.pendingId.rawValue : "pending_post_id",
-        ])
-        return mapping
-    }
-}
-
-//MARK: - Request Descriptors
-extension Post : RequestDescriptor {
-    static func creationRequestDescriptor() -> RKRequestDescriptor {
-        return RKRequestDescriptor(mapping: creationRequestMapping(), objectClass: Post.self, rootKeyPath: nil, method: .POST)
-    }
-}
-
-
-// MARK: - Response Descriptors
-extension Post: ResponseDescriptor {
-    static func firstPageResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: firstPagePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func updateResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: updatePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func nextPageResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: listMapping(),
-                                    method: .GET,
-                                    pathPattern: nextPagePathPattern(),
-                                    keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    static func creationResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: creationMapping(),
-                                    method: .POST,
-                                    pathPattern: creationPathPattern(),
-                                    keyPath: nil,
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
     }
 }

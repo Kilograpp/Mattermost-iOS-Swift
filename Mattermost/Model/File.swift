@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RestKit
 import RealmSwift
 
 private protocol Interface: class {
@@ -53,17 +52,6 @@ enum FileAttributes: String {
 enum FileRelationships: String {
     case post = "post"
 }
-private protocol PathPatterns: class {
-    static func uploadPathPattern() -> String
-    static func downloadPathPattern() -> String
-    static func thumbPathPattern() -> String
-    static func updateCommonPathPattern() -> String
-}
-
-private protocol ResponseMappings: class {
-    static func simplifiedMapping() -> RKObjectMapping
-    static func uploadMapping() -> RKObjectMapping
-}
 
 private protocol Computations: class {
     func computeName()
@@ -72,64 +60,10 @@ private protocol Computations: class {
     func computeIsImage()
 }
 
-private protocol ResponseDescriptors: class {
-    static func updateResponseDescriptor() -> RKResponseDescriptor
-    static func uploadResponseDescriptor() -> RKResponseDescriptor
-}
 
 private protocol Support: class {
     func thumbPostfix() -> String?
     static func teamIdentifierPath() -> String
-}
-
-extension File: PathPatterns {
-    static func downloadPathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/files/get_info:\(FileAttributes.rawLink)"
-    }
-    static func thumbPathPattern() -> String {
-        return "teams/:\(teamIdentifierPath())/files/get:thumbPostfix\\.jpg"
-    }
-    static func updateCommonPathPattern() -> String {
-        return "teams/:path/files/get_info/:path/:path/:path/:path"
-    }
-    
-    static func uploadPathPattern() -> String {
-        return "teams/:identifier/files/upload"
-    }
-}
-
-extension File: ResponseMappings {
-    static func simplifiedMapping() -> RKObjectMapping {
-        let mapping = super.emptyMapping()
-        mapping.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
-        return mapping
-    }
-    
-    static func uploadMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(withClass: NSMutableDictionary.self)
-        mapping.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
-        
-        return mapping
-    }
-}
-
-extension File: ResponseDescriptors {
-    static func updateResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: mapping(),
-                                    method: .GET,
-                                    pathPattern: updateCommonPathPattern(),
-                                    keyPath: nil,
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-    
-    static func uploadResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: uploadMapping(),
-                                    method: .POST,
-                                    pathPattern: uploadPathPattern(),
-                                    keyPath: "filenames",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
-    }
-
 }
 
 extension File: Computations {
