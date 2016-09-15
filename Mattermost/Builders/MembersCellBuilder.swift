@@ -8,6 +8,8 @@
 
 import Foundation
 
+let membersCellHeight: CGFloat = 61
+
 final class MembersCellBuilder {
     private let tableView: UITableView
     
@@ -31,5 +33,9 @@ extension MembersCellBuilder: Interface {
         cell.transform = self.tableView.transform
         cell.configureWithMember(member,strategy: strategy)
         return cell
+    }
+    func heightForMember() -> CGFloat {
+        return membersCellHeight
+        
     }
 }

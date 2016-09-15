@@ -10,8 +10,6 @@ import Foundation
 import SwiftFetchedResultsController
 import RealmSwift
 
-let membersCellHeight: CGFloat = 61
-
 final class MembersViewController: UIViewController{
     
     @IBOutlet weak var tableView: UITableView!
@@ -101,7 +99,7 @@ extension MembersViewController: UISearchResultsUpdating, UISearchBarDelegate, U
 //MARK: - UITableViewDataSource
 extension MembersViewController: UITableViewDataSource {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return membersCellHeight
+        return builder.heightForMember()
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         return builder.cellForMember(users[indexPath.row],strategy: strategy)

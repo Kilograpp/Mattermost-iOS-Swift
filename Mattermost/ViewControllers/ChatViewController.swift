@@ -179,21 +179,18 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
     }
     
     func sendPost() -> Void {
-        // UNCOMMENT THIS !!!
-//        PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
-//            self.clearTextView()
-//        }
-        
-        
-        
-        Api.sharedInstance.loadExtraInfoForChannel(self.channel!) { (error) in
-            let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-            let about = storyboard.instantiateViewControllerWithIdentifier(String("MembersViewController")) as! MembersViewController
-            about.strategy = AllMembersStrategy()
-            about.channel = self.channel
-            let navigation = self.menuContainerViewController.centerViewController
-            navigation!.pushViewController(about, animated:true)
+        PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+            self.clearTextView()
         }
+    // testing MembersViewController (delete later)
+//        Api.sharedInstance.loadExtraInfoForChannel(self.channel!) { (error) in
+//            let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+//            let about = storyboard.instantiateViewControllerWithIdentifier(String("MembersViewController")) as! MembersViewController
+//            about.strategy = AllMembersStrategy()
+//            about.channel = self.channel
+//            let navigation = self.menuContainerViewController.centerViewController
+//            navigation!.pushViewController(about, animated:true)
+//        }
     }
     
     func assignPhotos() -> Void {
