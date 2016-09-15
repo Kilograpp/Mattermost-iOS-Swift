@@ -14,7 +14,7 @@ class AllMembersStrategy: MembersStrategy {
     }
     
      override func imageForCellAccessoryViewWithUser(user:User) -> UIImage {
-        return UIImage(named: "comments_send_icon")!
+        return UIImage(named: "send_private_msg_icon")!
     }
     
      override func sendAdditionalRequestForChannel(channel:Channel, completion: (error:Error?) -> Void){

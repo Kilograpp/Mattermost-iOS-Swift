@@ -68,17 +68,17 @@ extension MembersViewController: Setup {
 
 extension MembersViewController: UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate {
     func setupSearchController() {
-        self.extendedLayoutIncludesOpaqueBars = true    // add edges to searchBar (on top) ..
-        self.edgesForExtendedLayout = UIRectEdge.None   //   ..   equals 0
+        extendedLayoutIncludesOpaqueBars = true    // add edges to searchBar (on top) ..
+        edgesForExtendedLayout = .None   //   ..   equals 0
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
-        self.searchController.searchBar.searchBarStyle = UISearchBarStyle.Prominent
+        searchController.searchBar.searchBarStyle = UISearchBarStyle.Minimal
         tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.delegate = self
-        self.searchController.delegate = self
-        self.searchController.searchBar.translucent = false
-        self.searchController.searchBar.backgroundColor = ColorBucket.whiteColor
+        searchController.delegate = self
+        searchController.searchBar.translucent = false
+        searchController.searchBar.backgroundColor = ColorBucket.whiteColor
     }
     //MARK: - UISearchResultsUpdating
     func updateSearchResultsForSearchController(searchController: UISearchController) {
@@ -101,15 +101,20 @@ extension MembersViewController: UITableViewDataSource {
         return membersCellHeight
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        //REFACTOR билдер
+        //REFACTOR BUILDER!!!
         var cell = tableView.dequeueReusableCellWithIdentifier("Cell")
         if (cell == nil) {
             cell = UITableViewCell(style: .Default, reuseIdentifier: "Cell")
         }
-        cell?.textLabel?.text = users[indexPath.row].displayName
-//        cell?.accessoryType = .DetailDisclosureButton
+        let user = users[indexPath.row]
+        cell?.textLabel?.text = user.displayName
         cell?.accessoryView = UIImageView(image:strategy.imageForCellAccessoryViewWithUser(users[indexPath.row]))
-//        cell?.imageView?.image = /=*_*=/
+        ImageDownloader.downloadFeedAvatarForUser(user) { [weak cell] (image, error) in
+            cell!.imageView!.image = image
+        }
+        // White background in imageView
+        cell?.selectionStyle = .None
+
         return cell!
     }
     

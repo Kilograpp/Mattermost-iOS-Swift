@@ -189,12 +189,11 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         Api.sharedInstance.loadExtraInfoForChannel(self.channel!) { (error) in
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let about = storyboard.instantiateViewControllerWithIdentifier(String("MembersViewController")) as! MembersViewController
-            about.strategy = AddMembersStrategy()
+            about.strategy = AllMembersStrategy()
             about.channel = self.channel
             let navigation = self.menuContainerViewController.centerViewController
             navigation!.pushViewController(about, animated:true)
         }
-//        Reflection.fetchNotNullValues(testChannel)
     }
     
     func assignPhotos() -> Void {
