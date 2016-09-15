@@ -17,6 +17,7 @@ final class MembersViewController: UIViewController{
     @IBOutlet weak var tableView: UITableView!
     var strategy = MembersStrategy()
     var channel: Channel?
+    private lazy var builder: MembersCellBuilder = MembersCellBuilder(tableView: self.tableView)
     private var searchController = UISearchController(searchResultsController: nil)
     private var users: Results<User>! = nil
     
@@ -31,41 +32,43 @@ final class MembersViewController: UIViewController{
     }
     
 }
-//MARK: - Setup
+
 private protocol Setup {
     func setupNavigationBar()
     func setupTableView()
     func setupSearchController()
     func setupUsers()
 }
-
+//MARK: - Setup
 extension MembersViewController: Setup {
     func setupNavigationBar() {
-        self.navigationItem.title = self.strategy.title()
-        if (self.strategy.shouldShowRightBarButtonItem()) {
+        navigationItem.title = strategy.title()
+        if (strategy.shouldShowRightBarButtonItem()) {
             setupRightBarButtonItem()
         }
     }
     
     func setupTableView() {
-        self.tableView.tableFooterView = UIView(frame: CGRectZero)
-        self.tableView.backgroundColor = ColorBucket.whiteColor
-        self.view.backgroundColor = ColorBucket.whiteColor
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
+        tableView.tableFooterView = UIView(frame: CGRectZero)
+        tableView.backgroundColor = ColorBucket.whiteColor
+        view.backgroundColor = ColorBucket.whiteColor
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.registerClass(MembersTableViewCell.self, forCellReuseIdentifier: MembersTableViewCell.reuseIdentifier, cacheSize: 5)
     }
     
     func setupRightBarButtonItem() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save",
-                                                                 style: UIBarButtonItemStyle.Plain,
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save",
+                                                                 style: .Plain,
                                                                  target: self,
-                                                                 action: #selector(save))
+                                                                 action: #selector(saveAction))
     }
     func setupUsers() {
-        self.users = RealmUtils.realmForCurrentThread().objects(User.self).filter(self.strategy.predicateWithChannel(channel!))
+        users = RealmUtils.realmForCurrentThread().objects(User.self).filter(self.strategy.predicateWithChannel(channel!))
     }
 }
 
+//MARK: - UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate
 extension MembersViewController: UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate {
     func setupSearchController() {
         extendedLayoutIncludesOpaqueBars = true    // add edges to searchBar (on top) ..
@@ -80,9 +83,9 @@ extension MembersViewController: UISearchResultsUpdating, UISearchBarDelegate, U
         searchController.searchBar.translucent = false
         searchController.searchBar.backgroundColor = ColorBucket.whiteColor
     }
-    //MARK: - UISearchResultsUpdating
+    
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        let containsPredicate = self.strategy.predicateWithChannel(self.channel!)
+        let containsPredicate = strategy.predicateWithChannel(channel!)
         if let searchString = searchController.searchBar.text {
             let namePredicate = NSPredicate(format: "displayName contains[c] %@", searchString)
             let resultPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [namePredicate, containsPredicate])
@@ -101,21 +104,7 @@ extension MembersViewController: UITableViewDataSource {
         return membersCellHeight
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        //REFACTOR BUILDER!!!
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell")
-        if (cell == nil) {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: "Cell")
-        }
-        let user = users[indexPath.row]
-        cell?.textLabel?.text = user.displayName
-        cell?.accessoryView = UIImageView(image:strategy.imageForCellAccessoryViewWithUser(users[indexPath.row]))
-        ImageDownloader.downloadFeedAvatarForUser(user) { [weak cell] (image, error) in
-            cell!.imageView!.image = image
-        }
-        // White background in imageView
-        cell?.selectionStyle = .None
-
-        return cell!
+        return builder.cellForMember(users[indexPath.row],strategy: strategy)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -126,20 +115,19 @@ extension MembersViewController: UITableViewDataSource {
 //MARK: - UITableViewDelegate
 extension MembersViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (self.strategy.isAddMembers()) {
-            //refactor  this V user -> let user
-            self.strategy.didSelectUser(users[indexPath.row])
-            self.tableView.cellForRowAtIndexPath(indexPath)?.accessoryView = UIImageView(image:strategy.imageForCellAccessoryViewWithUser(users[indexPath.row]))
-            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
-            print(users[indexPath.row])
+        if (strategy.isAddMembers()) {
+            let user = users[indexPath.row]
+            strategy.didSelectUser(user)
+            tableView.cellForRowAtIndexPath(indexPath)?.accessoryView = UIImageView(image:strategy.imageForCellAccessoryViewWithUser(user))
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
         }
     }
 }
 
 extension MembersViewController {
-    func save() {
+    //MARK: - Action
+    func saveAction() {
         strategy.addUsersToChannel(channel!) { (error) in
-            print("Users added to Channel")
             self.navigationController?.popViewControllerAnimated(true)
         }
     }
