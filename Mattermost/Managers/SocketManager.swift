@@ -36,6 +36,7 @@ private struct NotificationKeys {
     static let Action = "action"
     static let Properties = "props"
     static let PendingPostIdentifier = "pending_post_id"
+    static let State = "state"
 }
 
 enum ChannelAction: String {
@@ -132,12 +133,20 @@ extension SocketManager: MessageHandling {
 extension SocketManager: Notifications {
     func publishBackendNotificationAboutAction(action: ChannelAction, channel: Channel) {
         if shouldSendNotification() {
-            let parameters = [
-                NotificationKeys.ChannelIdentifier : channel.identifier!,
-                NotificationKeys.TeamIdentifier    : DataManager.sharedInstance.currentTeam!.identifier!,
-                NotificationKeys.Action            : action.rawValue
+            let parameters: [String: JSON] = [
+                NotificationKeys.ChannelIdentifier : JSON(stringLiteral: channel.identifier!),
+                NotificationKeys.TeamIdentifier    : JSON(stringLiteral: DataManager.sharedInstance.currentTeam!.identifier!),
+                NotificationKeys.Action            : JSON(stringLiteral: action.rawValue),
+                NotificationKeys.State             : JSON(SocketNotificationState()),
+                NotificationKeys.Properties        : JSON(["parent_id" : ""])
             ]
-            self.socket.writeData(parameters.toJsonData()!)
+//            let message = "{\"channel_id\":\"o36ktmifaf88dy9e87d9f5n3da\",\"action\":\"typing\",\"props\":{\"parent_id\":\"\"},\"state\":{},\"team_id\":\"on95mnb5h7r73n373brm6eddrr\"}"
+//            let data = message.dataUsingEncoding(NSUTF8StringEncoding)
+//            self.socket.writeData(data!)
+            let socketNotification = SocketNotification(channelId: channel.identifier!, teamId: DataManager.sharedInstance.currentTeam!.identifier!, act: action.rawValue)
+            let json = JSON(socketNotification)
+            parameters.
+            try! socket.writeData(json.rawData())
         }
     }
     
@@ -158,11 +167,15 @@ extension SocketManager: StateControl {
     }
     private func shouldSendNotification() -> Bool {
         let date = NSDate()
-        if let previousDate = self.lastNotificationDate where date.timeIntervalSinceDate(previousDate) < Constants.Socket.TimeIntervalBetweenNotifications{
+        if (lastNotificationDate == nil) {
+            self.lastNotificationDate = date
+        }
+        if let previousDate = self.lastNotificationDate where date.timeIntervalSinceDate(previousDate) > Constants.Socket.TimeIntervalBetweenNotifications {
             self.lastNotificationDate = date
             return true
         }
-        return false
+//        return false
+        return true
     }
 }
 

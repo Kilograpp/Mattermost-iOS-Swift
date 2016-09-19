@@ -243,6 +243,9 @@ extension ChatViewController {
         self.title = self.channel?.displayName
         self.prepareResults()
         self.loadFirstPageOfData()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleChannelNotification),
+                                                         name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
+                                                         object: nil)
     }
 }
 
@@ -391,5 +394,33 @@ extension ChatViewController {
     func hideTopActivityIndicator() {
         self.topActivityIndicatorView!.stopAnimating()
         self.tableView.tableFooterView = UIView(frame: CGRectZero)
+    }
+}
+
+//MARK: - Notifications
+extension ChatViewController {
+    
+    func handleChannelNotification(notification: NSNotification) {
+        if let actionNotification = notification.object as? ActionsNotification {
+            let user = User.self.objectById(actionNotification.userIdentifier)
+            switch (actionNotification.action) {
+            case .Typing:
+                //refactor (to methods)
+                if (actionNotification.userIdentifier != Preferences.sharedInstance.currentUserId) {
+                        typingIndicatorView?.insertUsername(user?.displayName)
+                }
+            case .Posted:
+                typingIndicatorView?.removeUsername(user?.displayName)
+            default:
+                break
+            }
+        }
+    }
+}
+
+//MARK: - UITextViewDelegate
+extension ChatViewController {
+    override func textViewDidChange(textView: UITextView) {
+        SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
     }
 }
