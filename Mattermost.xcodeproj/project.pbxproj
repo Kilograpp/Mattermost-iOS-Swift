@@ -15,6 +15,14 @@
 		4195DCED1D54DAA900E8ED84 /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */; };
 		4B1723811D8AFE5C00276945 /* ChannelDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B17237F1D8AFE5C00276945 /* ChannelDisplayManager.swift */; };
 		4B1723821D8AFE5C00276945 /* ChannelInfoCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1723801D8AFE5C00276945 /* ChannelInfoCellBuilder.swift */; };
+		4BF2F6141D8C3AF00074FF75 /* ChannelTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2F6131D8C3AF00074FF75 /* ChannelTitleTableViewCell.swift */; };
+		4BF2F6161D8C3B150074FF75 /* ChannelInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2F6151D8C3B150074FF75 /* ChannelInfoTableViewCell.swift */; };
+		4BF2F6181D8C3B430074FF75 /* ChannelDefaultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2F6171D8C3B430074FF75 /* ChannelDefaultTableViewCell.swift */; };
+		4BF2F61A1D8C3B5A0074FF75 /* ChannelMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2F6191D8C3B5A0074FF75 /* ChannelMemberTableViewCell.swift */; };
+		4BF2F61C1D8C3B7B0074FF75 /* ChannelAddMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2F61B1D8C3B7B0074FF75 /* ChannelAddMemberCell.swift */; };
+		4BF2F61E1D8C3BDF0074FF75 /* ChannelDefaultBlueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2F61D1D8C3BDE0074FF75 /* ChannelDefaultBlueCell.swift */; };
+		4BF2F6201D8C3DF50074FF75 /* ChannelInfoCellProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2F61F1D8C3DF50074FF75 /* ChannelInfoCellProtocol.swift */; };
+		4BF2F6231D8C40280074FF75 /* ChannelInfoUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2F6221D8C40280074FF75 /* ChannelInfoUtils.swift */; };
 		4BF8A2141D819CA400262457 /* ChannelInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF8A2131D819CA400262457 /* ChannelInfoViewController.swift */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
 		8B8F6FFE1D77451A00ACF626 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */; };
@@ -193,6 +201,14 @@
 		4195DCEC1D54DAA900E8ED84 /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerUrlViewController.swift; sourceTree = "<group>"; };
 		4B17237F1D8AFE5C00276945 /* ChannelDisplayManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelDisplayManager.swift; path = Helpers/ChannelDisplayManager.swift; sourceTree = "<group>"; };
 		4B1723801D8AFE5C00276945 /* ChannelInfoCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelInfoCellBuilder.swift; path = Helpers/ChannelInfoCellBuilder.swift; sourceTree = "<group>"; };
+		4BF2F6131D8C3AF00074FF75 /* ChannelTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelTitleTableViewCell.swift; path = Channel/ChannelTitleTableViewCell.swift; sourceTree = "<group>"; };
+		4BF2F6151D8C3B150074FF75 /* ChannelInfoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelInfoTableViewCell.swift; path = Channel/ChannelInfoTableViewCell.swift; sourceTree = "<group>"; };
+		4BF2F6171D8C3B430074FF75 /* ChannelDefaultTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelDefaultTableViewCell.swift; path = Channel/ChannelDefaultTableViewCell.swift; sourceTree = "<group>"; };
+		4BF2F6191D8C3B5A0074FF75 /* ChannelMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelMemberTableViewCell.swift; path = Channel/ChannelMemberTableViewCell.swift; sourceTree = "<group>"; };
+		4BF2F61B1D8C3B7B0074FF75 /* ChannelAddMemberCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelAddMemberCell.swift; path = Channel/ChannelAddMemberCell.swift; sourceTree = "<group>"; };
+		4BF2F61D1D8C3BDE0074FF75 /* ChannelDefaultBlueCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelDefaultBlueCell.swift; path = Channel/ChannelDefaultBlueCell.swift; sourceTree = "<group>"; };
+		4BF2F61F1D8C3DF50074FF75 /* ChannelInfoCellProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelInfoCellProtocol.swift; path = Channel/ChannelInfoCellProtocol.swift; sourceTree = "<group>"; };
+		4BF2F6221D8C40280074FF75 /* ChannelInfoUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelInfoUtils.swift; sourceTree = "<group>"; };
 		4BF8A2131D819CA400262457 /* ChannelInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelInfoViewController.swift; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
@@ -404,6 +420,28 @@
 				793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		4BF2F6121D8C38340074FF75 /* Channel */ = {
+			isa = PBXGroup;
+			children = (
+				4BF2F6131D8C3AF00074FF75 /* ChannelTitleTableViewCell.swift */,
+				4BF2F6151D8C3B150074FF75 /* ChannelInfoTableViewCell.swift */,
+				4BF2F6171D8C3B430074FF75 /* ChannelDefaultTableViewCell.swift */,
+				4BF2F6191D8C3B5A0074FF75 /* ChannelMemberTableViewCell.swift */,
+				4BF2F61B1D8C3B7B0074FF75 /* ChannelAddMemberCell.swift */,
+				4BF2F61D1D8C3BDE0074FF75 /* ChannelDefaultBlueCell.swift */,
+				4BF2F61F1D8C3DF50074FF75 /* ChannelInfoCellProtocol.swift */,
+			);
+			name = Channel;
+			sourceTree = "<group>";
+		};
+		4BF2F6211D8C3FEE0074FF75 /* Channel */ = {
+			isa = PBXGroup;
+			children = (
+				4BF2F6221D8C40280074FF75 /* ChannelInfoUtils.swift */,
+			);
+			name = Channel;
 			sourceTree = "<group>";
 		};
 		8B8F6FFF1D7747A900ACF626 /* Profile */ = {
@@ -742,6 +780,7 @@
 		D6E165841D47C08F0014C831 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				4BF2F6121D8C38340074FF75 /* Channel */,
 				D67A42F71D7486F7003E2466 /* PostAttachmentsViewCell */,
 				8B8F6FFF1D7747A900ACF626 /* Profile */,
 				CDB6D3B11D771CBC00C3018C /* MoreChannel */,
@@ -802,6 +841,7 @@
 		D8812AE81D43931700436B5C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				4BF2F6211D8C3FEE0074FF75 /* Channel */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
 				D8BEE3E51D48067900964EC4 /* ActionsNotification.swift */,
 				D8812AE91D43933400436B5C /* PageWrapper.swift */,
@@ -1082,6 +1122,7 @@
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
 				D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */,
+				4BF2F6231D8C40280074FF75 /* ChannelInfoUtils.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
@@ -1113,16 +1154,19 @@
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
 				CDF07ED21D7F1DA300172D1E /* PostPathPatternsContainer.swift in Sources */,
+				4BF2F61A1D8C3B5A0074FF75 /* ChannelMemberTableViewCell.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
 				D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */,
 				CDB4BC691D806C7000662231 /* FileMappingsContainer.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
+				4BF2F61E1D8C3BDF0074FF75 /* ChannelDefaultBlueCell.swift in Sources */,
 				CDB6D3D01D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				9B822FFD5F3D3B86C07AF7D9 /* Api.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
 				D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */,
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
+				4BF2F6181D8C3B430074FF75 /* ChannelDefaultTableViewCell.swift in Sources */,
 				D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */,
 				CDF07ED41D7F1DB500172D1E /* TeamPathPatternsContainer.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
@@ -1135,6 +1179,7 @@
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
 				CDB4BC751D8074E800662231 /* AttachmentFieldMappingsContainer.swift in Sources */,
 				CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */,
+				4BF2F61C1D8C3B7B0074FF75 /* ChannelAddMemberCell.swift in Sources */,
 				D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */,
 				D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */,
 				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
@@ -1161,12 +1206,14 @@
 				CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				4BF8A2141D819CA400262457 /* ChannelInfoViewController.swift in Sources */,
+				4BF2F6141D8C3AF00074FF75 /* ChannelTitleTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
 				CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */,
 				D86EF7FE1D5A325800BD49A3 /* UIView+Align.swift in Sources */,
 				CDB6D3BB1D78423600C3018C /* String+IntSubscript.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
 				D67A42F61D747B80003E2466 /* AssignedPhotoViewItem.swift in Sources */,
+				4BF2F6161D8C3B150074FF75 /* ChannelInfoTableViewCell.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */,
 				D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */,
@@ -1174,6 +1221,7 @@
 				D61962111D62230600C2E259 /* RightMenuViewController.swift in Sources */,
 				D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */,
 				D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */,
+				4BF2F6201D8C3DF50074FF75 /* ChannelInfoCellProtocol.swift in Sources */,
 				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
 				CDB4BC651D8062B600662231 /* PostRequestDescriptorsContainer.swift in Sources */,
 				D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */,

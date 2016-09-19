@@ -87,7 +87,14 @@ extension ChannelDisplayManager: DisplayData {
         return 50
     }
     func cellForIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        switch (indexPath.section) {
+            case ChannelSection.Title.rawValue:
+                return builder.configureCellWithType(//type, //object
+            // ! 1. Кто должен формировать объект (image+title, title+detail) ?
+        case ChannelSection.Info.rawValue:
+            //switch по строкам.
+            // ! 2. Где хранить объекты title+detail? Может в массиве?
+        }
     }
     func headerForMembersSection() -> UIView {
         // todo uiView for count of members

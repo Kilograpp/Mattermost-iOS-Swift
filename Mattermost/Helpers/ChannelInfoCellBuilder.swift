@@ -16,4 +16,5 @@ final class ChannelInfoCellBuilder {
         self.tableView = tableView
         self.channel = channel
     }
+    
 }

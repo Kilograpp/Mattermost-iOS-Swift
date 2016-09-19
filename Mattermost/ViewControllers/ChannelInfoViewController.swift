@@ -13,7 +13,7 @@ import SwiftFetchedResultsController
 final class ChannelInfoViewController: UIViewController {
     
     @IBOutlet var tableView: UITableView!
-    var displayManager : ChannelDisplayManager?
+    var displayManager : ChannelDisplayManager!
     var channel: Channel?
     
     override func viewDidLoad() {
@@ -21,11 +21,13 @@ final class ChannelInfoViewController: UIViewController {
         
         setupTableView()
         setupTitle()
+        setupLeftBarButtonItem()
     }
 }
 private protocol Setup {
     func setupTableView()
     func setupTitle()
+    func setupLeftBarButtonItem()
 }
 
 //MARK: - Setup
@@ -41,6 +43,10 @@ extension ChannelInfoViewController: Setup {
     }
     
     //todo close button
+    func setupLeftBarButtonItem() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close", style: .Done, target: self, action: #selector(closeAction))
+        
+    }
 }
 
 //MARK: - UITableViewDelegate
@@ -65,3 +71,9 @@ extension ChannelInfoViewController: UITableViewDataSource {
     }
 }
 
+extension ChannelInfoViewController {
+    //MARK: - Action
+    func closeAction() {
+        navigationController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+}
