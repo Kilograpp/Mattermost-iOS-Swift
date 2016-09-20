@@ -23,6 +23,7 @@
 		8BBA7DC61D874F7B003A5B99 /* monkey.gif in Resources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC51D874F7B003A5B99 /* monkey.gif */; };
 		8BBA7DC81D87DD06003A5B99 /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC71D87DD06003A5B99 /* UIImage+Gif.swift */; };
 		8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */; };
+		8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */; };
 		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
 		8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */; };
 		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
@@ -205,6 +206,7 @@
 		8BBA7DC51D874F7B003A5B99 /* monkey.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = monkey.gif; sourceTree = "<group>"; };
 		8BBA7DC71D87DD06003A5B99 /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Gif.swift"; sourceTree = "<group>"; };
 		8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatTableViewCell.swift; sourceTree = "<group>"; };
+		8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NVActivityIndicatorView.framework; path = Carthage/Build/iOS/NVActivityIndicatorView.framework; sourceTree = "<group>"; };
 		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
@@ -377,6 +379,7 @@
 			files = (
 				D624CE261D7B0AA7001754F3 /* UITableView_Cache.framework in Frameworks */,
 				D837F2791D76DCF700CA933F /* HEXColor.framework in Frameworks */,
+				8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */,
 				D6B4BF721D65CBEE005B22D6 /* ImagePickerSheetController.framework in Frameworks */,
 				8BE969B51D7615EE0010A524 /* HEXColor.framework in Frameworks */,
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
@@ -747,12 +750,12 @@
 			children = (
 				8BBA7DC21D874F0F003A5B99 /* Xibs */,
 				D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */,
-				CDB6D3B01D75FBA800C3018C /* ChatNavigationBarTitleView */,
 				D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */,
 				4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */,
+				8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */,
+				CDB6D3B01D75FBA800C3018C /* ChatNavigationBarTitleView */,
 				D6E165841D47C08F0014C831 /* Cells */,
 				D65626661D49674700981057 /* TableSectionHeadersFooters */,
-				8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -874,6 +877,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */,
 				D624CE251D7B0AA7001754F3 /* UITableView_Cache.framework */,
 				D837F2781D76DCF700CA933F /* HEXColor.framework */,
 				D6B4BF711D65CBEE005B22D6 /* ImagePickerSheetController.framework */,
@@ -1071,6 +1075,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/ImagePickerSheetController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/HEXColor.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/UITableView_Cache.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/NVActivityIndicatorView.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (

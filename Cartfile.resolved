@@ -1,6 +1,7 @@
 github "ivedeneev/ImagePickerSheetController" "56f6de84501e1c336ac7ff0373866ae38b2787e3"
 github "jdg/MBProgressHUD" "0.9.2"
 github "Kilograpp/MFSideMenu" "c6119ce7e1b5ce1648bbb14a6234de56fa5afb36"
+github "ninjaprox/NVActivityIndicatorView" "v2.11"
 github "rs/SDWebImage" "42a5e6f6ec513e57987ea9544ac8a969cf586c3c"
 github "Skyscanner/SkyFloatingLabelTextField" "v1.2.1"
 github "slackhq/SlackTextViewController" "v1.9.4"

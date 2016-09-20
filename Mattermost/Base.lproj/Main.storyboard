@@ -26,7 +26,7 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -34,7 +34,11 @@
                         <barButtonItem key="leftBarButtonItem" image="navbar_menu_icon2" id="UTo-fx-kdl"/>
                         <rightBarButtonItems>
                             <barButtonItem image="navbar_more_icon" id="1xX-X6-Q9I"/>
-                            <barButtonItem systemItem="search" id="GOb-jd-c9D"/>
+                            <barButtonItem systemItem="search" id="GOb-jd-c9D">
+                                <connections>
+                                    <action selector="searchButtonAction:" destination="BYZ-38-t0r" id="guI-I4-IIm"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
@@ -43,7 +47,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="941.5" y="214.5"/>
+            <point key="canvasLocation" x="941.5" y="222.5"/>
         </scene>
         <!--More Channels View Controller-->
         <scene sceneID="gzj-o9-9fm">
@@ -266,7 +270,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k6S-mR-lBE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="310.5" y="1137.5"/>
+            <point key="canvasLocation" x="348.5" y="1067.5"/>
         </scene>
         <!--Right Menu View Controller-->
         <scene sceneID="woB-dB-jJh">
@@ -333,7 +337,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5az-p3-rkO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="941.5" y="1137.5"/>
+            <point key="canvasLocation" x="941.5" y="1067.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xa2-Dc-gbr">
@@ -352,12 +356,30 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PlE-YR-Tg6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="310.5" y="222.5"/>
+            <point key="canvasLocation" x="-419.5" y="-97.5"/>
         </scene>
-        <!--Search View Controller-->
+        <!--View Controller-->
+        <scene sceneID="CrH-w0-Vx2">
+            <objects>
+                <viewController id="8u5-GF-MfL" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="e1H-yr-6tm"/>
+                        <viewControllerLayoutGuide type="bottom" id="fQh-bH-Que"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="REi-Zm-ppB">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LMM-n2-2Qf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1701" y="1056"/>
+        </scene>
+        <!--Search Chat View Controller-->
         <scene sceneID="6ML-u0-5Ly">
             <objects>
-                <viewController storyboardIdentifier="KGSearchViewController" id="5k1-2c-X1D" customClass="KGSearchViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchChatViewController" id="5k1-2c-X1D" customClass="SearchChatViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lbD-ks-i5r"/>
                         <viewControllerLayoutGuide type="bottom" id="mlL-tB-TBU"/>
@@ -581,7 +603,7 @@
                     <connections>
                         <outlet property="infoView" destination="Hzb-s2-IhM" id="sgU-IL-SQo"/>
                         <outlet property="loadingEmozziView" destination="72H-Zh-E5W" id="ULL-wn-LYr"/>
-                        <outlet property="noResultsView" destination="Jpr-zS-q1o" id="0Ag-3l-cVG"/>
+                        <outlet property="noResultView" destination="Jpr-zS-q1o" id="cuw-3k-bHX"/>
                         <outlet property="searchTextField" destination="xP9-pf-veq" id="BVj-HY-iXd"/>
                         <outlet property="tableView" destination="9K1-sy-LFz" id="fpv-nX-zEs"/>
                     </connections>
@@ -597,6 +619,6 @@
         <image name="navbar_more_icon" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0Og-Od-fKR"/>
+        <segue reference="HXp-bU-AZq"/>
     </inferredMetricsTieBreakers>
 </document>

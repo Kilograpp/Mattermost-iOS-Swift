@@ -18,6 +18,14 @@ private protocol Private : class {
     func hideAttachmentsView()
 }
 
+private protocol Action {
+    func searchButtonAction(sender: AnyObject)
+}
+
+private protocol Navigation {
+    func proceedToSearchChat()
+}
+
 final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private var channel : Channel?
     private var resultsObserver: FeedNotificationsObserver?
@@ -53,6 +61,12 @@ final class ChatViewController: SLKTextViewController, ChannelObserverDelegate, 
         setupTopActivityIndicator()
         
         ChannelObserver.sharedObserver.delegate = self
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBarHidden = false
     }
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
@@ -270,6 +284,32 @@ extension ChatViewController {
         dispatch_async(dispatch_get_main_queue()) { [unowned self] in
             self.rightButton.enabled = self.fileUploadingInProgress
         }
+    }
+}
+
+
+//MARK: Action
+
+extension ChatViewController: Action {
+    @IBAction func searchButtonAction(sender: AnyObject) {
+        proceedToSearchChat()
+    }
+}
+
+
+//MARK: Navigation
+
+extension ChatViewController: Navigation {
+    func proceedToSearchChat() {
+        let transaction = CATransition()
+        transaction.duration = 0.3
+        transaction.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transaction.type = kCATransitionMoveIn
+        transaction.subtype = kCATransitionFromBottom
+        self.navigationController!.view.layer.addAnimation(transaction, forKey: kCATransition)
+        
+        let searchChat = self.storyboard?.instantiateViewControllerWithIdentifier(String(SearchChatViewController)) as! SearchChatViewController
+        self.navigationController?.pushViewController(searchChat, animated: false)
     }
 }
 

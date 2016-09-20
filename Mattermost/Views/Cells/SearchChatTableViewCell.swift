@@ -6,7 +6,10 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
+//TODO: Main part of realization will be added soon
+
 import UIKit
+import NVActivityIndicatorView
 
 struct Geometry {
     static let AvatarDimension: CGFloat = 40.0
@@ -14,6 +17,13 @@ struct Geometry {
     static let SmallPadding: CGFloat    = 5.0
     static let LoadingViewSize: CGFloat = 22.0
     static let ErrorViewSize: CGFloat   = 34.0
+}
+
+private protocol LifeCycle {
+    func awakeFromNib()
+    func setSelected(selected: Bool, animated: Bool)
+    func layoutSubviews()
+    func prepareForReuse()
 }
 
 private protocol Setup {
@@ -25,33 +35,33 @@ private protocol Private {
 }
 
 private protocol Configuration {
-
+    func configureLabel(label: UILabel, font: UIFont, color: UIColor)
+    func configureCellState()
+    func configureBasicLabels()
+    func configureMessageOperation()
+    func configureAvatarImage()
 }
 
 private protocol Action {
-
+    func showProfileAction()
 }
 
-public protocol Public {
-
-}
-
-class SearchChatTableViewCell: UITableViewCell {
+class SearchChatTableViewCell: FeedBaseTableViewCell {
 
 //MARK: Properties
     private let channelLabel: UILabel = UILabel()
     private let avatarImageView: UIImageView = UIImageView()
     private let nameLabel: UILabel = UILabel()
-    private let dateLabel: UILabel = UILabel()
-    private let messageLabel: UILabel = UILabel() // ActiveLabel in original
+    private let timeLabel: UILabel = UILabel()
     private let detailIconImageView: UIImageView = UIImageView()
-    private let loadingView: UIView = UIView() // DGActivityIndicatorView in original
-    private let messageOperation: NSBlockOperation
+    private let loadingView: NVActivityIndicatorView = NVActivityIndicatorView(frame: CGRectZero)
     
-    private let dateString: String
+    private let messageOperation: NSBlockOperation = NSBlockOperation()
+    private let timeString: String = ""
     
     
-//MARK: Life cycle
+    //MARK: Public
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -61,14 +71,31 @@ class SearchChatTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func configureWithPost(post: Post) {
+        
+    }
+    
+    func heighWithPost(post: Post) -> CGFloat {
+        return 0.0
+    }
+    
+    func errorAction() {
+        
+    }
+}
+
+
+//MARK: LifeCycle
+
+extension SearchChatTableViewCell: LifeCycle {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
@@ -116,25 +143,32 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupDateLabel() {
-        configureLabel(self.dateLabel, font: UIFont.kg_regular13Font(), color: UIColor.kg_lightGrayTextColor())
-        self.addSubview(self.dateLabel)
+        configureLabel(self.timeLabel, font: UIFont.kg_regular13Font(), color: UIColor.kg_lightGrayTextColor())
+        self.addSubview(self.timeLabel)
     }
     
     func setupMessageLabel() {
-        
+        self.messageLabel.backgroundColor = UIColor.whiteColor()
+        self.messageLabel.numberOfLines = 0
+        self.messageLabel.layer.drawsAsynchronously = true
+        self.addSubview(self.messageLabel)
     }
     
     func setupDetailIconImageView() {
-        
+        self.detailIconImageView.image = UIImage(named: "comments_send_icon")
+        self.detailIconImageView.backgroundColor = UIColor.whiteColor()
+        self.detailIconImageView.contentMode = .ScaleAspectFill
+        self.addSubview(self.detailIconImageView)
     }
     
     func setupLoadingView() {
-        
+        self.loadingView.type = .BallPulse
+        self.loadingView.tintColor = UIColor.kg_blueColor()
+        self.loadingView.padding = Geometry.LoadingViewSize - Geometry.SmallPadding
+        self.loadingView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        self.addSubview(self.loadingView)
     }
-    
-    func setupErrorView() {
-        
-    }
+
 }
 
 
@@ -150,19 +184,28 @@ extension SearchChatTableViewCell: Configuration {
     }
     
     func configureCellState() {
-        
+       
     }
     
     func configureBasicLabels() {
-        
+        self.channelLabel.text = self.post.channel.name
+        self.nameLabel.text = self.post.author.nickname
+        self.timeLabel.text = self.post.createdAtString
     }
     
     func configureMessageOperation() {
         
     }
     
-    func configureAvatarImage() {
-        
+    func configureAvatarImage() {        
+        let postIdentifier = self.post.identifier
+        self.postIdentifier = postIdentifier
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
+            guard self?.postIdentifier == postIdentifier else { return }
+            self?.avatarImageView.image = image
+            
+        }
     }
 }
 
@@ -171,23 +214,5 @@ extension SearchChatTableViewCell: Configuration {
 
 extension SearchChatTableViewCell: Action {
     func showProfileAction() {
-        
-    }
-}
-
-
-//MARK: Public
-
-extension SearchChatTableViewCell: Public {
-    func configureWithPost(post: Post) {
-        
-    }
-    
-    func heighWithPost(post: Post) -> CGFloat {
-        return 0.0
-    }
-
-    func errorAction() {
-        
     }
 }

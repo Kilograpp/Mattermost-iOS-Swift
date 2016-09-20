@@ -78,6 +78,7 @@ extension SearchChatViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupTableView()
+        setupSearchView()
         
     }
     
@@ -91,8 +92,11 @@ extension SearchChatViewController: Setup {
     
     func setupSearchView() {
         self.searchingInProcessView = SearchingInProcessView.monkeyChatSearchView()
+        self.searchingInProcessView?.translatesAutoresizingMaskIntoConstraints = true
         self.view.addSubview(self.searchingInProcessView!)
-        // Add constrains
+        
+        self.searchingInProcessView!.center = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
+        self.searchingInProcessView!.autoresizingMask = [.FlexibleLeftMargin, .FlexibleRightMargin, .FlexibleTopMargin, .FlexibleBottomMargin]
     }
 }
 
