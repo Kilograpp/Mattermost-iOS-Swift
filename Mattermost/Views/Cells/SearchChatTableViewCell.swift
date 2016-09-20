@@ -15,7 +15,6 @@ struct Geometry {
     static let AvatarDimension: CGFloat = 40.0
     static let StandartPadding: CGFloat = 8.0
     static let SmallPadding: CGFloat    = 5.0
-    static let LoadingViewSize: CGFloat = 22.0
     static let ErrorViewSize: CGFloat   = 34.0
 }
 
@@ -27,7 +26,14 @@ private protocol LifeCycle {
 }
 
 private protocol Setup {
-
+    func initialSetup()
+    func setupBackground()
+    func setupChannelLabel()
+    func setupAvatarImageView()
+    func setupNameLabel()
+    func setupDateLabel()
+    func setupMessageLabel()
+    func setupDetailIconImageView()
 }
 
 private protocol Private {
@@ -75,7 +81,10 @@ class SearchChatTableViewCell: UITableViewCell {
     }
     
     func configureWithPost(post: Post) {
-        
+        self.post = post
+        configureBasicLabels()
+        configureAvatarImage()
+        configureMessageLabel()
     }
     
     func heighWithPost(post: Post) -> CGFloat {
@@ -116,7 +125,13 @@ extension SearchChatTableViewCell: LifeCycle {
 
 extension SearchChatTableViewCell: Setup {
     func initialSetup() {
-        
+        setupBackground()
+        setupChannelLabel()
+        setupAvatarImageView()
+        setupNameLabel()
+        setupDateLabel()
+        setupMessageLabel()
+        setupDetailIconImageView()
     }
     
     func setupBackground() {
@@ -125,7 +140,7 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupChannelLabel() {
-   //     configureLabel(self.channelLabel, font: UIFont.kg_semibold13Font(), color: UIColor.kg_lightBlackColor())
+        configureLabel(self.channelLabel, font: UIFont.kg_semibold13Font(), color: UIColor.kg_lightBlackColor())
         self.addSubview(self.channelLabel)
     }
     
@@ -139,14 +154,14 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupNameLabel() {
-    //    configureLabel(self.nameLabel, font: UIFont.kg_semibold15Font(), color: UIColor.kg_lightBlackColor())
+        configureLabel(self.nameLabel, font: UIFont.kg_semibold15Font(), color: UIColor.kg_lightBlackColor())
         self.nameLabel.userInteractionEnabled = true
         self.nameLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showProfileAction)))
         self.addSubview(self.nameLabel)
     }
     
     func setupDateLabel() {
-       // configureLabel(self.timeLabel, font: UIFont.kg_regular13Font(), color: UIColor.kg_lightGrayTextColor())
+        configureLabel(self.timeLabel, font: UIFont.kg_regular13Font(), color: UIColor.kg_lightGrayTextColor())
         self.addSubview(self.timeLabel)
     }
     
@@ -163,15 +178,6 @@ extension SearchChatTableViewCell: Setup {
         self.detailIconImageView.contentMode = .ScaleAspectFill
         self.addSubview(self.detailIconImageView)
     }
-    
-    func setupLoadingView() {
-    /*    self.loadingView.type = .BallPulse
-        self.loadingView.tintColor = UIColor.kg_blueColor()
-        self.loadingView.padding = Geometry.LoadingViewSize - Geometry.SmallPadding
-        self.loadingView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        self.addSubview(self.loadingView)*/
-    }
-
 }
 
 
@@ -194,6 +200,7 @@ extension SearchChatTableViewCell: Configuration {
         self.channelLabel.text = self.post.channel.name
         self.nameLabel.text = self.post.author.nickname
         self.timeLabel.text = self.post.createdAtString
+        configureMessageLabel()
     }
     
     func configureAvatarImage() {
@@ -204,6 +211,12 @@ extension SearchChatTableViewCell: Configuration {
             guard self?.postIdentifier == postIdentifier else { return }
             self?.avatarImageView.image = image
         }
+    }
+    
+    func configureMessageLabel() {
+        self.messageLabel.textStorage = self.post.attributedMessage!
+        guard self.post.messageType == .System else { return }
+        self.messageLabel.alpha = 0.5
     }
 }
 
