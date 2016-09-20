@@ -27,7 +27,8 @@ final class UserStatusObserver {
     @nonobjc static let sharedObserver = UserStatusObserver.sharedInstanse()
     
     private init() {
-        self.setupStatusesArray()
+        setupStatusesArray()
+        subscribeForLogoutNotifications()
     }
 }
 
@@ -78,6 +79,18 @@ extension UserStatusObserver {
 }
 
 extension UserStatusObserver : Private {
+    
+    private func subscribeForLogoutNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didLogout),
+                                                         name: Constants.Common.UserLogoutNotificationName,
+                                                         object: nil)
+    }
+    
+    @objc private func didLogout() {
+        updateRequestTimer?.invalidate()
+        updateRequestTimer = nil
+    }
+    
     private func setupStatusesArray() {
         self.statuses = Array()
         let users = Array(RealmUtils.realmForCurrentThread().objects(User).filter(NSPredicate(format: "identifier != %@", "SystemUserIdentifier")))
@@ -90,6 +103,7 @@ extension UserStatusObserver : Private {
         }
     }
     
+   
 
     @objc private func updateStatusesForAllUsers() {
         let users = Array(RealmUtils.realmForCurrentThread().objects(User).filter(NSPredicate(format: "identifier != %@", "SystemUserIdentifier")))

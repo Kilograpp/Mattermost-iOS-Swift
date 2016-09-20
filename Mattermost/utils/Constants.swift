@@ -27,6 +27,7 @@ struct Constants {
         static let RestKitPrefix = "RK"
         static let MattermostCookieName = "MMAUTHTOKEN"
         static let UserDefaultsPreferencesKey = "com.kilograpp.mattermost.preferences"
+        static let UserLogoutNotificationName = "LOGOUT"
     }
     struct StringAttributes {
         static let Mention = "MattermostMention"

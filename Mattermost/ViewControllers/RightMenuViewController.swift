@@ -125,6 +125,8 @@ extension RightMenuViewController : UITableViewDelegate {
         case RightMenuRows.About.rawValue:
             toggleRightSideMenu()
             proceedToAbout()
+        case RightMenuRows.Logout.rawValue:
+            logOut()
             
         default:
             return
@@ -192,5 +194,8 @@ extension RightMenuViewController {
         let settings = storyboard.instantiateInitialViewController()
         let navigation = self.menuContainerViewController.centerViewController
         navigation!.pushViewController(settings!, animated:true)
+    }
+    func logOut() {
+        UserStatusManager.sharedInstance.logout()
     }
 }

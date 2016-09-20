@@ -37,4 +37,12 @@ final class RealmUtils {
             realm.add(object, update: true)
         })
     }
+    
+    static func deleteAll() {
+        let realm = realmForCurrentThread()
+        
+        try! realm.write({ 
+            realm.deleteAll()
+        })
+    }
 }
