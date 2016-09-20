@@ -143,9 +143,8 @@ extension SocketManager: Notifications {
 //            let message = "{\"channel_id\":\"o36ktmifaf88dy9e87d9f5n3da\",\"action\":\"typing\",\"props\":{\"parent_id\":\"\"},\"state\":{},\"team_id\":\"on95mnb5h7r73n373brm6eddrr\"}"
 //            let data = message.dataUsingEncoding(NSUTF8StringEncoding)
 //            self.socket.writeData(data!)
-            let socketNotification = SocketNotification(channelId: channel.identifier!, teamId: DataManager.sharedInstance.currentTeam!.identifier!, act: action.rawValue)
-            let json = JSON(socketNotification)
-            parameters.
+//            let socketNotification = SocketNotification(channelId: channel.identifier!, teamId: DataManager.sharedInstance.currentTeam!.identifier!, act: action.rawValue)
+            let json = JSON(parameters)
             try! socket.writeData(json.rawData())
         }
     }
@@ -174,8 +173,7 @@ extension SocketManager: StateControl {
             self.lastNotificationDate = date
             return true
         }
-//        return false
-        return true
+        return false
     }
 }
 
