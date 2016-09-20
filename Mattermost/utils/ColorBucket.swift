@@ -43,6 +43,18 @@ private protocol ServerUrlColors {
     static var serverUrlSubtitleColor: UIColor {get}
 }
 
+private protocol GradientColors {
+    static var topBlueColorForGradient: UIColor {get}
+    static var bottomBlueColorForGradient: UIColor {get}
+    static var topRedColorForGradient: UIColor {get}
+    static var bottomRedColorForGradient: UIColor {get}
+    static var topGreenColorForGradient: UIColor {get}
+    static var bottomGreenColorForGradient: UIColor {get}
+    static var topOrangeColorForGradient: UIColor {get}
+    static var bottomOrangeColorForGradient: UIColor {get}
+    static var topPurpleColorForGradient: UIColor {get}
+    static var bottomPurpleColorForGradient: UIColor {get}
+}
 
 final class ColorBucket {
 }
@@ -80,6 +92,19 @@ extension ColorBucket : SideMenuColors {
 
 extension ColorBucket : ServerUrlColors {
     static let serverUrlSubtitleColor = ColorBucket.darkDarkGray()
+}
+
+extension ColorBucket : GradientColors {
+    static let topBlueColorForGradient = UIColor(rgba: "#1D66DE")
+    static let bottomBlueColorForGradient = UIColor(rgba: "#248BE2")
+    static let topRedColorForGradient = UIColor(rgba: "#9F041B")
+    static let bottomRedColorForGradient = UIColor(rgba: "#F5515F")
+    static let topGreenColorForGradient = UIColor(rgba: "#429321")
+    static let bottomGreenColorForGradient = UIColor(rgba: "#B4EC51")
+    static let topOrangeColorForGradient = UIColor(rgba: "#F76B1C")
+    static let bottomOrangeColorForGradient = UIColor(rgba: "#FAD961")
+    static let topPurpleColorForGradient = UIColor(rgba: "#3023AE")
+    static let bottomPurpleColorForGradient = UIColor(rgba: "#C86DD7")
 }
 
 extension ColorBucket {

@@ -39,6 +39,7 @@ struct Constants {
     struct UI {
         static let FeedCellMessageLabelPaddings: CGFloat = 61
         static let FeedCellIndicatorPadding: CGFloat = 22
+        
     }
     
 //    struct UserStatus {

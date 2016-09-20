@@ -57,6 +57,10 @@ private protocol MoreChannelsFonts: class {
     static var letterChannelFont : UIFont { get }
 }
 
+private protocol TeamsFonts: class {
+    static var titleURLFont : UIFont { get }
+}
+
 final class FontBucket {
 }
 
@@ -101,6 +105,10 @@ extension FontBucket : MoreChannelsFonts {
     static let subtitleChannelFont = FontBucket.regularFontOfSize(16)
     static let dateChannelFont = FontBucket.regularFontOfSize(16)
     static let letterChannelFont = FontBucket.regularFontOfSize(30)
+}
+
+extension FontBucket : TeamsFonts {
+    static let titleURLFont = FontBucket.boldFontOfSize(28)
 }
 //MARK: Helpers
 
