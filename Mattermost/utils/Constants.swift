@@ -31,6 +31,8 @@ struct Constants {
     struct StringAttributes {
         static let Mention = "MattermostMention"
         static let HashTag = "MattermostHashTag"
+        static let Phone = "MattermostPhone"
+        static let Email = "MattermostEmail"
     }
     struct Socket {
         static let TimeIntervalBetweenNotifications: Double = 5.0

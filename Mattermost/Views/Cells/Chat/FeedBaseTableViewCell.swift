@@ -63,6 +63,18 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         self.messageLabel.backgroundColor = ColorBucket.whiteColor
         self.messageLabel.numberOfLines = 0
         self.messageLabel.layer.drawsAsynchronously = true
+        messageLabel.userInteractionEnabled = true
+        messageLabel.onUrlTap = { (url:NSURL) in
+            UIApplication.sharedApplication().openURL(url)
+        }
+        messageLabel.onEmailTap = { (email:String) in
+            let url = NSURL(string: "mailto:" + email)
+            UIApplication.sharedApplication().openURL(url!)
+        }
+        messageLabel.onPhoneTap = { (phone:String) in
+            let url = NSURL(string: "sms:" + phone)
+            UIApplication.sharedApplication().openURL(url!)
+        }
         self.addSubview(self.messageLabel)
     }
     
