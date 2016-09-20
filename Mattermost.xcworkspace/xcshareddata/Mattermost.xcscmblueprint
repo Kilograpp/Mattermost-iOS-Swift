@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "6AB9A9E5ED55E5604CF27180D56734D2239FECC1",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "6AB9A9E5ED55E5604CF27180D56734D2239FECC1" : 0,
+    "020E3A1B3C4524E6AD8342A26BA83EC64799F576" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "E642ADC2-EA10-41BE-B059-E4281AE0B831",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "6AB9A9E5ED55E5604CF27180D56734D2239FECC1" : "Mattermost-iOS-Swift\/",
+    "020E3A1B3C4524E6AD8342A26BA83EC64799F576" : "Mattermost-Native\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Mattermost",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Mattermost.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git.kilograpp.com:iOS\/mattermost.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "020E3A1B3C4524E6AD8342A26BA83EC64799F576"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Kilograpp\/Mattermost-iOS-Swift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6AB9A9E5ED55E5604CF27180D56734D2239FECC1"
+    }
+  ]
+}
