@@ -38,7 +38,6 @@ private protocol Configuration {
     func configureLabel(label: UILabel, font: UIFont, color: UIColor)
     func configureCellState()
     func configureBasicLabels()
-    func configureMessageOperation()
     func configureAvatarImage()
 }
 
@@ -46,32 +45,36 @@ private protocol Action {
     func showProfileAction()
 }
 
-class SearchChatTableViewCell: FeedBaseTableViewCell {
+class SearchChatTableViewCell: UITableViewCell {
 
 //MARK: Properties
     private let channelLabel: UILabel = UILabel()
     private let avatarImageView: UIImageView = UIImageView()
     private let nameLabel: UILabel = UILabel()
     private let timeLabel: UILabel = UILabel()
+    private let messageLabel: MessageLabel = MessageLabel()
     private let detailIconImageView: UIImageView = UIImageView()
-    private let loadingView: NVActivityIndicatorView = NVActivityIndicatorView(frame: CGRectZero)
     
-    private let messageOperation: NSBlockOperation = NSBlockOperation()
     private let timeString: String = ""
+    final var post : Post! {
+        didSet { self.postIdentifier = self.post.identifier }
+    }
+    final var postIdentifier: String?
     
     
     //MARK: Public
-    
+   
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        initialSetup()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
-    override func configureWithPost(post: Post) {
+    func configureWithPost(post: Post) {
         
     }
     
@@ -122,7 +125,7 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupChannelLabel() {
-        configureLabel(self.channelLabel, font: UIFont.kg_semibold13Font(), color: UIColor.kg_lightBlackColor())
+   //     configureLabel(self.channelLabel, font: UIFont.kg_semibold13Font(), color: UIColor.kg_lightBlackColor())
         self.addSubview(self.channelLabel)
     }
     
@@ -136,14 +139,14 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupNameLabel() {
-        configureLabel(self.nameLabel, font: UIFont.kg_semibold15Font(), color: UIColor.kg_lightBlackColor())
+    //    configureLabel(self.nameLabel, font: UIFont.kg_semibold15Font(), color: UIColor.kg_lightBlackColor())
         self.nameLabel.userInteractionEnabled = true
         self.nameLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showProfileAction)))
         self.addSubview(self.nameLabel)
     }
     
     func setupDateLabel() {
-        configureLabel(self.timeLabel, font: UIFont.kg_regular13Font(), color: UIColor.kg_lightGrayTextColor())
+       // configureLabel(self.timeLabel, font: UIFont.kg_regular13Font(), color: UIColor.kg_lightGrayTextColor())
         self.addSubview(self.timeLabel)
     }
     
@@ -162,11 +165,11 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupLoadingView() {
-        self.loadingView.type = .BallPulse
+    /*    self.loadingView.type = .BallPulse
         self.loadingView.tintColor = UIColor.kg_blueColor()
         self.loadingView.padding = Geometry.LoadingViewSize - Geometry.SmallPadding
         self.loadingView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        self.addSubview(self.loadingView)
+        self.addSubview(self.loadingView)*/
     }
 
 }
@@ -184,7 +187,7 @@ extension SearchChatTableViewCell: Configuration {
     }
     
     func configureCellState() {
-       
+        
     }
     
     func configureBasicLabels() {
@@ -193,18 +196,13 @@ extension SearchChatTableViewCell: Configuration {
         self.timeLabel.text = self.post.createdAtString
     }
     
-    func configureMessageOperation() {
-        
-    }
-    
-    func configureAvatarImage() {        
+    func configureAvatarImage() {
         let postIdentifier = self.post.identifier
         self.postIdentifier = postIdentifier
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }
             self?.avatarImageView.image = image
-            
         }
     }
 }
