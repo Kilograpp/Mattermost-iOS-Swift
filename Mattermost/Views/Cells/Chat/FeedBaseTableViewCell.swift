@@ -85,13 +85,13 @@ private protocol Actions {
 }
 
 extension FeedBaseTableViewCell: Actions {
-    private func emailTapAction(email:String) {
+    func emailTapAction(email:String) {
         let url = NSURL(string: "mailto:" + email)
-        openURL(url)
+        openURL(url!)
     }
     func phoneTapAction(phone:String) {
         let url = NSURL(string: "tel:" + phone)
-        openURL(url)
+        openURL(url!)
     }
     func openURL(url:NSURL) {
         UIApplication.sharedApplication().openURL(url)
