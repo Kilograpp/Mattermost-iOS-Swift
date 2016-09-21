@@ -59,6 +59,21 @@ extension PostUtils : Public {
         }
     }
 
+    func updatePost(post: Post, message: String, attachments: NSArray?, complection: (error: Error?) -> Void) {
+        print("updatePost")
+        try! RealmUtils.realmForCurrentThread().write({
+            post.message = message
+            post.updatedAt = NSDate()
+        })
+        
+        Api.sharedInstance.updatePost(post) { (error) in            
+            print("yeap")
+            if (error != nil) {
+                print(error?.message)
+            }
+        }
+    }
+    
     func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
         self.images = images
         for item in self.images! {
