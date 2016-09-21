@@ -12,7 +12,7 @@ import MFSideMenu
 
 class RouterUtils {
     class func loadInitialScreen() {
-        let isSignedIn = Api.sharedInstance.isSignedIn()
+        let isSignedIn = UserStatusManager.sharedInstance.isSignedIn()
         if isSignedIn {
             loadConversationScene()
         } else {

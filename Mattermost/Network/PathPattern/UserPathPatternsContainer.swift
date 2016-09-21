@@ -25,6 +25,9 @@ final class UserPathPatternsContainer: PathPatterns {
     static func loginPathPattern() -> String {
         return "users/login";
     }
+    static func logoutPathPattern() -> String {
+        return "users/logout";
+    }
     static func initialLoadPathPattern() -> String {
         return TeamPathPatternsContainer.initialLoadPathPattern()
     }
