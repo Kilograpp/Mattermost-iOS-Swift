@@ -63,9 +63,39 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         self.messageLabel.backgroundColor = ColorBucket.whiteColor
         self.messageLabel.numberOfLines = 0
         self.messageLabel.layer.drawsAsynchronously = true
+        messageLabel.userInteractionEnabled = true
+        messageLabel.onUrlTap = { (url:NSURL) in
+            self.openURL(url)
+        }
+        messageLabel.onEmailTap = { (email:String) in
+            self.emailTapAction(email)
+        }
+        messageLabel.onPhoneTap = { (phone:String) in
+            self.phoneTapAction(phone)
+        }
         self.addSubview(self.messageLabel)
     }
     
+}
+
+protocol TextTapActions {
+    func emailTapAction(email:String)
+    func phoneTapAction(phone:String)
+    func openURL(url:NSURL)
+}
+
+extension FeedBaseTableViewCell: TextTapActions {
+    func emailTapAction(email:String) {
+        let url = NSURL(string: "mailto:" + email)
+        UIApplication.sharedApplication().openURL(url!)
+    }
+    func phoneTapAction(phone:String) {
+        let url = NSURL(string: "tel:" + phone)
+        UIApplication.sharedApplication().openURL(url!)
+    }
+    func openURL(url:NSURL) {
+        UIApplication.sharedApplication().openURL(url)
+    }
 }
 
 extension FeedBaseTableViewCell {
