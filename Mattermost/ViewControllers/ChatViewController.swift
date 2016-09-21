@@ -377,6 +377,16 @@ extension ChatViewController {
         let day = self.results[indexPath.section]
         let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath.row]
         
+        if (post.message == "1234") {
+            //print("hit")
+            PostUtils.sharedInstance.updatePost(post, message: "sdds", attachments: nil, complection: { (error) in
+                print("yeaaap2")
+                if (error != nil) {
+                    print(error?.message)
+                }
+            })
+        }
+        
         if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             self.loadNextPageOfData()
         }

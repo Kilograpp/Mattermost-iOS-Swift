@@ -277,7 +277,6 @@ extension Api: PostApi {
             RealmUtils.save(MappingUtils.fetchPostFromUpdate(mappingResult))
             completion(error: nil)
         }, failure: completion)
-        
     }
 }
 

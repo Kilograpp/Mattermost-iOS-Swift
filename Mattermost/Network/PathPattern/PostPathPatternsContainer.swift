@@ -31,9 +31,8 @@ final class PostPathPatternsContainer: PathPatterns {
     static func updatePathPattern() -> String {
         return "teams/:\(Post.teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
     }
+    // /teams/on95mnb5h7r73n373brm6eddrr/channels/1d8egstt33nujj49zhaoobiumc/posts/update
     static func creationPathPattern() -> String {
         return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/posts/create"
     }
 }
-
-
