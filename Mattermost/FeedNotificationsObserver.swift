@@ -59,9 +59,8 @@ final class FeedNotificationsObserver {
                 case .Update(_, let deletions, let insertions, _):
                     // Query results have changed, so apply them to the UITableView
   
-                    
-                    if (insertions.count == 0) {
-                        self.tableView.reloadData()
+                    // temp: while insertions.count = 0,  error on line 72 (insertions[0])
+                    if (insertions.count == 0 && deletions.count == 0) {
                         return
                     }
                     
