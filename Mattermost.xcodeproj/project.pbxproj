@@ -13,6 +13,7 @@
 		416040F41D58B6E300B53E31 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 416040F31D58B6E300B53E31 /* Localizable.strings */; };
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
 		4B3CD9FF1D918CC400E6FDB4 /* UserStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CD9FE1D918CC400E6FDB4 /* UserStatusManager.swift */; };
+		4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B404A791D92914A002F9F6D /* ObserverUtils.swift */; };
 		4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */; };
 		4B4FE7951D802CE00088ABEC /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */; };
 		4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */; };
@@ -193,6 +194,7 @@
 		416040F31D58B6E300B53E31 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
 		4B3CD9FE1D918CC400E6FDB4 /* UserStatusManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatusManager.swift; sourceTree = "<group>"; };
+		4B404A791D92914A002F9F6D /* ObserverUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverUtils.swift; sourceTree = "<group>"; };
 		4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamTableViewCell.swift; path = Teams/TeamTableViewCell.swift; sourceTree = "<group>"; };
 		4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginNavigationController.swift; path = NavigationControllers/LoginNavigationController.swift; sourceTree = "<group>"; };
 		4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerUrlViewController.swift; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 				D8087AF01D428FF1001918E8 /* StringUtils.swift */,
 				D8D601311D5D192300951F18 /* ImageDownloader.swift */,
 				D60C9B1B1D74DB76008BB5CF /* AssetsUtils.swift */,
+				4B404A791D92914A002F9F6D /* ObserverUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1094,6 +1097,7 @@
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
+				4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */,
 				D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,

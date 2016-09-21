@@ -25,17 +25,20 @@ final class FeedNotificationsObserver {
     init(results: Results<Day>, tableView: UITableView) {
         self.results = results
         self.tableView = tableView
-        self.subscribeForNotifications()
+        subscribeNotifications()
     }
     
-    deinit {
+//    deinit {
+//        unsubscribeRealmNotifications()
+//    }
+    
+    @objc func unsubscribeRealmNotifications() {
         self.resultsNotificationToken?.stop()
         self.lastDayNotificationToken?.stop()
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    
-    
-    func subscribeForNotifications() {
+    func subscribeForRealmNotifications() {
 //        let lastDayNotificationsBlock = { (changes: RealmCollectionChange<LinkingObjects<Post>> ) in
 //            switch changes {
 //                case .Update(_, let deletions, let insertions, _):
@@ -48,7 +51,7 @@ final class FeedNotificationsObserver {
 //                default: break
 //            }
 //        }
-//        
+//
         let resultsNotificationHandler = {
             (changes: RealmCollectionChange<Results<Day>> ) in
             
@@ -58,12 +61,6 @@ final class FeedNotificationsObserver {
                     break
                 case .Update(_, let deletions, let insertions, _):
                     // Query results have changed, so apply them to the UITableView
-  
-                    // temp: while insertions.count = 0,  error on line 72 (insertions[0])
-                    // refactor after added a delete action
-                    if (insertions.count == 0) {
-                        return
-                    }
                     
                     guard insertions.count > 0 || deletions.count > 0 else {
                         self.tableView.reloadData()
@@ -122,7 +119,7 @@ final class FeedNotificationsObserver {
             self.resultsNotificationToken = self.results.addNotificationBlock(resultsNotificationHandler)
             //self.lastDayNotificationToken = self.results.last?.posts.addNotificationBlock(lastDayNotificationsBlock)
         }
-    
+
         if NSThread.isMainThread() {
             configurationBlock()
             
@@ -132,5 +129,13 @@ final class FeedNotificationsObserver {
             }
         }
 
+    }
+}
+
+//MARK: - Notification Subscription
+extension FeedNotificationsObserver {
+    func subscribeNotifications() {
+        Observer.sharedObserver.subscribeForLogoutNotification(self, selector: #selector(unsubscribeRealmNotifications))
+        subscribeForRealmNotifications()
     }
 }

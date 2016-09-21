@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 
-final class DataManager {
+class DataManager {
     
     static let sharedInstance = DataManager();
     
@@ -36,5 +36,19 @@ final class DataManager {
         return user
     }
     
-    private init() {}
+
+    @objc func clearCachedResponses() {
+        NSURLCache.sharedURLCache().removeAllCachedResponses()
+    }
+    
+    private init() {
+        subscribeNotifications()
+    }
+}
+
+//MARK: - Notification Subscription
+extension DataManager {
+    func subscribeNotifications() {
+        Observer.sharedObserver.subscribeForLogoutNotification(self, selector: #selector(clearCachedResponses))
+    }
 }

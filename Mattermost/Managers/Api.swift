@@ -228,7 +228,6 @@ extension Api: PostApi {
         
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
             guard !skipMapping else {
-                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
                 completion(error: nil)
                 return
             }
@@ -255,7 +254,6 @@ extension Api: PostApi {
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
 
             guard !skipMapping else {
-                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
                 completion(isLastPage: MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), error: nil)
                 return
             }
