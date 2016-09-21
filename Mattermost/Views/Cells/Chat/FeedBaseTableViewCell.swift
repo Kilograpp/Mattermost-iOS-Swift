@@ -78,20 +78,20 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     
 }
 
-private protocol Actions {
+protocol TextTapActions {
     func emailTapAction(email:String)
     func phoneTapAction(phone:String)
     func openURL(url:NSURL)
 }
 
-extension FeedBaseTableViewCell: Actions {
+extension FeedBaseTableViewCell: TextTapActions {
     func emailTapAction(email:String) {
         let url = NSURL(string: "mailto:" + email)
-        openURL(url!)
+        UIApplication.sharedApplication().openURL(url!)
     }
     func phoneTapAction(phone:String) {
         let url = NSURL(string: "tel:" + phone)
-        openURL(url!)
+        UIApplication.sharedApplication().openURL(url!)
     }
     func openURL(url:NSURL) {
         UIApplication.sharedApplication().openURL(url)
