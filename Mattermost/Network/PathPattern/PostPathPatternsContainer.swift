@@ -10,13 +10,14 @@ import Foundation
 
 private protocol PathPatterns: class {
     static func updatePathPattern() -> String
+    static func firstPagePathPattern() -> String
     static func nextPagePathPattern() -> String
     static func creationPathPattern() -> String
-    static func firstPagePathPattern() -> String
+    static func updatingPathPattern() -> String
+    static func deletingPathPattern() -> String
 }
 
 final class PostPathPatternsContainer: PathPatterns {
-    
     static func nextPagePathPattern() -> String {
         return "teams/:\(PageWrapper.teamIdPath())/" +
             "channels/:\(PageWrapper.channelIdPath())/" +
@@ -31,8 +32,13 @@ final class PostPathPatternsContainer: PathPatterns {
     static func updatePathPattern() -> String {
         return "teams/:\(Post.teamIdentifierPath())/posts/:\(PostAttributes.identifier)"
     }
-    // /teams/on95mnb5h7r73n373brm6eddrr/channels/1d8egstt33nujj49zhaoobiumc/posts/update
     static func creationPathPattern() -> String {
         return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/posts/create"
+    }
+    static func updatingPathPattern() -> String {
+        return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/posts/update"
+    }
+    static func deletingPathPattern() -> String {
+        return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/post/:\(PostAttributes.identifier)/delete"
     }
 }
