@@ -11,9 +11,9 @@ import RestKit
 import SOCKit
 
 private protocol Interface: class {
-    func isSignedIn() -> Bool
+//    func isSignedIn() -> Bool
     func baseURL() -> NSURL!
-    func cookie() -> NSHTTPCookie?
+//    func cookie() -> NSHTTPCookie?
     func avatarLinkForUser(user: User) -> String
 }
 
@@ -91,6 +91,14 @@ extension Api: UserApi {
             DataManager.sharedInstance.currentUser = user
             RealmUtils.save([user, systemUser])
             SocketManager.sharedInstance.setNeedsConnect()
+            completion(error: nil)
+            }, failure: completion)
+    }
+    
+    func logout(completion:(error: Error?) -> Void) {
+        let path = UserPathPatternsContainer.logoutPathPattern()
+        let parameters = ["user_id" : Preferences.sharedInstance.currentUserId!]
+        self.manager.postObject(path: path, parameters: parameters, success: { (mappingResult) in
             completion(error: nil)
             }, failure: completion)
     }
@@ -310,12 +318,6 @@ extension Api : FileApi {
 extension Api: Interface {
     func baseURL() -> NSURL! {
         return self.manager.HTTPClient.baseURL
-    }
-    func cookie() -> NSHTTPCookie? {
-        return NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies?.filter { $0.name == Constants.Common.MattermostCookieName }.first
-    }
-    func isSignedIn() -> Bool {
-        return self.cookie() != nil
     }
     func avatarLinkForUser(user: User) -> String {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.avatarPathPattern(), user)
