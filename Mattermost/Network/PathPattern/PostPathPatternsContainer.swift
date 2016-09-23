@@ -39,6 +39,6 @@ final class PostPathPatternsContainer: PathPatterns {
         return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/posts/update"
     }
     static func deletingPathPattern() -> String {
-        return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/post/:\(PostAttributes.identifier)/delete"
+        return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/post/:\(PostAttributes.identifier)/delete/"
     }
 }

@@ -45,8 +45,6 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     //MARK: Lifecycle
     
     override func layoutSubviews() {
-        
-        
         self.tableView.frame = CGRectMake(53,
                                           CGRectGetMaxY(self.messageLabel.frame) + 8,
                                           UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings,

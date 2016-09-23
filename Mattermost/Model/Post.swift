@@ -26,6 +26,7 @@ enum PostAttributes: String {
     case channelId = "channelId"
     case pendingId = "pendingId"
     case createdAt = "createdAt"
+    case parentId = "parentId"
     case creationDay = "creationDay"
     case deletedAt = "deletedAt"
     case identifier = "identifier"
@@ -73,6 +74,7 @@ final class Post: RealmObject {
     dynamic var channelId: String?
     dynamic var authorId: String?
     dynamic var pendingId: String?
+    dynamic var parentId: String?
     dynamic var createdAt: NSDate?
     dynamic var createdAtString: String?
     dynamic var createdAtStringWidth: Float = 0.0

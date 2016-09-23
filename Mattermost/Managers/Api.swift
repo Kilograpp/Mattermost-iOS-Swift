@@ -37,6 +37,8 @@ private protocol ChannelApi: class {
 private protocol PostApi: class {
     func sendPost(post: Post, completion: (error: Error?) -> Void)
     func updatePost(post: Post, completion: (error: Error?) -> Void)
+    func update1Post(post: Post, completion: (error: Error?) -> Void)
+    func deletePost(post: Post, completion: (error: Error?) -> Void)
     func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
     func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void)
 }
@@ -277,6 +279,17 @@ extension Api: PostApi {
             RealmUtils.save(mappingResult.firstObject as! Post)
             completion(error: nil)
         }, failure: completion)
+    }
+    func update1Post(post: Post, completion: (error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)
+        self.manager.postObject(post, path: path, success: { (mappingResult) in
+            print(mappingResult)
+            RealmUtils.save(mappingResult.firstObject as! Post)
+            completion(error: nil)
+            }, failure: completion)
+    }
+    func deletePost(post: Post, completion: (error: Error?) -> Void) {
+        print("deletePost")
     }
     
     func updatePost(post: Post, completion: (error: Error?) -> Void) {

@@ -12,6 +12,9 @@ import RealmSwift
 
 private protocol Public : class {
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func update1Post(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func deletePost(post: Post, completion: (error: Error?) -> Void)
     func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
     func cancelImageItemUploading(item: AssignedPhotoViewItem)
 }
@@ -58,19 +61,60 @@ extension PostUtils : Public {
             self.clearUploadedAttachments()
         }
     }
+    
+    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
+        let postToSend = Post()
+        
+        postToSend.message = message
+        postToSend.createdAt = NSDate()
+        postToSend.channelId = channel.identifier
+        postToSend.authorId = Preferences.sharedInstance.currentUserId
+        postToSend.parentId = post.identifier
+        self.configureBackendPendingId(postToSend)
+        self.assignFilesToPostIfNeeded(postToSend)
+        
+        Api.sharedInstance.sendPost(postToSend) { (error) in
+            completion(error: error)
+            self.clearUploadedAttachments()
+        }
+    }
 
-    func updatePost(post: Post, message: String, attachments: NSArray?, complection: (error: Error?) -> Void) {
+    func update1Post(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
         print("updatePost")
         try! RealmUtils.realmForCurrentThread().write({
+          //  post.message = message
+          //  post.updatedAt = NSDate()
+          //  self.configureBackendPendingId(post)
+          //  self.assignFilesToPostIfNeeded(post)
+            
             post.message = message
             post.updatedAt = NSDate()
+            self.configureBackendPendingId(post)
+            self.assignFilesToPostIfNeeded(post)
+            
         })
+        /*  let postToSend = Post()
         
-        Api.sharedInstance.updatePost(post) { (error) in            
+        postToSend.message = message
+        postToSend.createdAt = post.createdAt
+        postToSend.identifier = post.identifier
+        postToSend.channelId = post.channel.identifier
+        postToSend.updatedAt = NSDate()
+        postToSend.authorId = Preferences.sharedInstance.currentUserId
+        self.configureBackendPendingId(postToSend)
+        self.assignFilesToPostIfNeeded(postToSend)*/
+        
+        Api.sharedInstance.update1Post(post) { (error) in
             print("yeap")
             if (error != nil) {
                 print(error?.message)
             }
+        }
+    }
+    
+    func deletePost(post: Post, completion: (error: Error?) -> Void) {
+        Api.sharedInstance.deletePost(post) { (error) in
+            print("deleted")
         }
     }
     

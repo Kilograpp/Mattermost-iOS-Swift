@@ -117,6 +117,7 @@ extension ChatViewController: Setup {
         setupRefreshControl()
         setupPostAttachmentsView()
         setupTopActivityIndicator()
+        setupLongCellSelection()
     }
     
     func setupTableView() {
@@ -180,6 +181,11 @@ extension ChatViewController: Setup {
     func setupTopActivityIndicator() {
         self.topActivityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         self.topActivityIndicatorView!.transform = self.tableView.transform;
+    }
+    
+    func setupLongCellSelection() {
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
+        self.tableView.addGestureRecognizer(longPressGestureRecognizer)
     }
 }
 
@@ -265,6 +271,49 @@ extension ChatViewController : Private {
     func clearTextView() {
         self.textView.text = nil
     }
+    
+    func showActionSheetControllerForPost(post: Post) {
+        let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+     
+        let replyAction = UIAlertAction(title: "Reply", style: .Default) { action -> Void in
+            self.sendRepyToPost(post)
+        }
+        actionSheetController.addAction(replyAction)
+        
+        //let copyAction = UIAlertAction(title: "Copy", style: .Default, handler: nil)
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+            print("Cancel")
+        }
+        actionSheetController.addAction(cancelAction)
+        
+        if (post.author.identifier == Preferences.sharedInstance.currentUserId) {
+            let editAction = UIAlertAction(title: "Edit", style: .Default) { action -> Void in
+               // print("Edit")
+                print(post.message)
+                if (post.message == "zzz") {
+                    /*    PostUtils.sharedInstance.update1Post(post, message: "sdds", attachments: nil, completion: { (error) in
+                     print("yeaaap2")
+                     if (error != nil) {
+                     print(error?.message)
+                     }
+                     })*/
+                }
+
+            }
+            actionSheetController.addAction(editAction)
+            
+            let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { action -> Void in
+                //print("Delete")
+                PostUtils.sharedInstance.deletePost(post, completion: { (error) in
+                  print("Deleted")
+                })
+            }
+            actionSheetController.addAction(deleteAction)
+        }
+        
+        self.presentViewController(actionSheetController, animated: true, completion: nil)
+    }
 }
 
 
@@ -284,7 +333,15 @@ extension ChatViewController: Action {
     }
     
     func refreshControlValueChanged() {
+        self.prepareResults()
         self.loadFirstPageOfData()
+    }
+    
+    func longPressAction(gestureRecognizer: UILongPressGestureRecognizer) {
+        let indexPath = self.tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(self.tableView))
+        let day = self.results[indexPath!.section]
+        let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath!.row]
+        showActionSheetControllerForPost(post)
     }
 }
 
@@ -345,6 +402,12 @@ extension ChatViewController: Request {
         }
     }
     
+    func sendRepyToPost(post: Post) {
+        PostUtils.sharedInstance.sendReplyToPost(post, channel: self.channel!, message: "test reply", attachments: nil) { (error) in
+            self.clearTextView()
+        }
+    }
+    
     func uploadImages() {
         PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error) in
             if error != nil {
@@ -376,16 +439,6 @@ extension ChatViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let day = self.results[indexPath.section]
         let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath.row]
-        
-        if (post.message == "1234") {
-            //print("hit")
-            PostUtils.sharedInstance.updatePost(post, message: "sdds", attachments: nil, complection: { (error) in
-                print("yeaaap2")
-                if (error != nil) {
-                    print(error?.message)
-                }
-            })
-        }
         
         if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             self.loadNextPageOfData()
