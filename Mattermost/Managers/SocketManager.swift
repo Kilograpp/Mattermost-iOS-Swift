@@ -22,7 +22,7 @@ private protocol Interface: class {
     private lazy var socket: WebSocket = {
         let webSocket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
         webSocket.delegate = self
-        webSocket.setCookie(Api.sharedInstance.cookie())
+        webSocket.setCookie(UserStatusManager.sharedInstance.cookie())
         return webSocket
     }()
 }
@@ -162,7 +162,7 @@ extension SocketManager: Notifications {
 //MARK: - State Control
 extension SocketManager: StateControl {
     private func shouldConnect() -> Bool{
-        return Api.sharedInstance.isSignedIn() && !self.socket.isConnected
+        return UserStatusManager.sharedInstance.isSignedIn() && !self.socket.isConnected
     }
     private func shouldSendNotification() -> Bool {
         let date = NSDate()

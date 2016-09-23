@@ -262,6 +262,7 @@ extension ChatViewController {
     }
     
     func refreshControlValueChanged() {
+        self.prepareResults()
         self.loadFirstPageOfData()
     }
     

@@ -27,10 +27,13 @@ struct Constants {
         static let RestKitPrefix = "RK"
         static let MattermostCookieName = "MMAUTHTOKEN"
         static let UserDefaultsPreferencesKey = "com.kilograpp.mattermost.preferences"
+        static let UserLogoutNotificationName = "LOGOUT"
     }
     struct StringAttributes {
         static let Mention = "MattermostMention"
         static let HashTag = "MattermostHashTag"
+        static let Phone = "MattermostPhone"
+        static let Email = "MattermostEmail"
     }
     struct Socket {
         static let TimeIntervalBetweenNotifications: Double = 5.0
