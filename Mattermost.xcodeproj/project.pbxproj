@@ -14,6 +14,7 @@
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
 		4B3CD9FF1D918CC400E6FDB4 /* UserStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CD9FE1D918CC400E6FDB4 /* UserStatusManager.swift */; };
 		4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B404A791D92914A002F9F6D /* ObserverUtils.swift */; };
+		4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4497F31D93ECA9009939A9 /* PostStatusView.swift */; };
 		4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */; };
 		4B4FE7951D802CE00088ABEC /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */; };
 		4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */; };
@@ -202,6 +203,7 @@
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
 		4B3CD9FE1D918CC400E6FDB4 /* UserStatusManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatusManager.swift; sourceTree = "<group>"; };
 		4B404A791D92914A002F9F6D /* ObserverUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverUtils.swift; sourceTree = "<group>"; };
+		4B4497F31D93ECA9009939A9 /* PostStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostStatusView.swift; sourceTree = "<group>"; };
 		4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamTableViewCell.swift; path = Teams/TeamTableViewCell.swift; sourceTree = "<group>"; };
 		4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginNavigationController.swift; path = NavigationControllers/LoginNavigationController.swift; sourceTree = "<group>"; };
 		4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerUrlViewController.swift; sourceTree = "<group>"; };
@@ -780,6 +782,7 @@
 				CDB6D3B01D75FBA800C3018C /* ChatNavigationBarTitleView */,
 				D6E165841D47C08F0014C831 /* Cells */,
 				D65626661D49674700981057 /* TableSectionHeadersFooters */,
+				4B4497F31D93ECA9009939A9 /* PostStatusView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1149,6 +1152,7 @@
 				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,
 				D8E98EDF1D4A15D300682922 /* ApplicationStateManager.swift in Sources */,
 				CDF07ECE1D7F129100172D1E /* ChannelPathPatternsContainer.swift in Sources */,
+				4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,

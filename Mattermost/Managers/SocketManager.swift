@@ -48,7 +48,7 @@ enum ChannelAction: String {
 
 private protocol Notifications: class {
     func publishBackendNotificationAboutAction(action: ChannelAction, channel: Channel)
-    func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: ChannelAction)
+    func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: String?)
 }
 
 private protocol StateControl: class {
@@ -103,9 +103,9 @@ extension SocketManager: MessageHandling {
     private func handleIncomingMessage(text: String) {
         let dictionary = text.toDictionary()!
         let userId     = dictionary[NotificationKeys.UserIdentifier] as! String
-        let action     = dictionary[NotificationKeys.Action] as! String
+        let action     = dictionary[NotificationKeys.Action] as! String?
         let channelId  = dictionary[NotificationKeys.ChannelIdentifier] as! String
-        let postString = dictionary[NotificationKeys.Properties]![NotificationKeys.Post] as? NSString
+        let postString = dictionary[NotificationKeys.Properties]?[NotificationKeys.Post] as? NSString
         
         if let postDictionary = postString?.toDictionary() {
             let postPendingIdentifier = postDictionary[NotificationKeys.PendingPostIdentifier] as! String
@@ -118,11 +118,11 @@ extension SocketManager: MessageHandling {
                 post.channelId = channelId
                 
                 Api.sharedInstance.updatePost(post, completion: { (error) in
-                    self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action)!)
+                    self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
                 })
             }
         } else {
-            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: ChannelAction(rawValue: action) ?? ChannelAction.Unknown)
+            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
         }
 
     }
@@ -141,12 +141,13 @@ extension SocketManager: Notifications {
         }
     }
     
-    private func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: ChannelAction) {
-        guard action != ChannelAction.Unknown else {
+    private func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: String?) {
+        guard action != nil else {
             return
         }
+        let channelAction = ChannelAction(rawValue: action!)
         let notificationName = ActionsNotification.notificationNameForChannelIdentifier(channelIdentifier)
-        let notification = ActionsNotification(userIdentifier: userIdentifier, action: action)
+        let notification = ActionsNotification(userIdentifier: userIdentifier, action: channelAction)
         NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: notification)
     }
 }

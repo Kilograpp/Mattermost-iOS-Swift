@@ -20,6 +20,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     }
     final var postIdentifier: String?
     final var messageLabel = MessageLabel()
+    final var postStatusView: PostStatusView!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -38,6 +39,8 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     }
     
     override func layoutSubviews() {
+//        errorButton.frame = CGRectMake(UIScreen.screenWidth() - Constants.UI.MessageStatusViewSize, (CGRectGetHeight(frame) - Constants.UI.MessageStatusViewSize)/2, Constants.UI.MessageStatusViewSize, Constants.UI.MessageStatusViewSize)
+        
         self.align()
         self.alignSubviews()
     }
@@ -52,6 +55,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     private func setup() {
         self.setupBasics()
         self.setupMessageLabel()
+        setupPostStatusView()
     }
     
     private func setupBasics() {
@@ -76,15 +80,21 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         self.addSubview(self.messageLabel)
     }
     
+    private func setupPostStatusView() {
+        postStatusView = PostStatusView()
+        self.addSubview(postStatusView)
+    }
+    
 }
 
-protocol TextTapActions {
+protocol ChatMessageTapActions {
     func emailTapAction(email:String)
     func phoneTapAction(phone:String)
     func openURL(url:NSURL)
+    func errorAction()
 }
 
-extension FeedBaseTableViewCell: TextTapActions {
+extension FeedBaseTableViewCell: ChatMessageTapActions {
     func emailTapAction(email:String) {
         let url = NSURL(string: "mailto:" + email)
         UIApplication.sharedApplication().openURL(url!)
@@ -96,12 +106,16 @@ extension FeedBaseTableViewCell: TextTapActions {
     func openURL(url:NSURL) {
         UIApplication.sharedApplication().openURL(url)
     }
+    func errorAction() {
+        
+    }
 }
 
 extension FeedBaseTableViewCell {
     func configureWithPost(post: Post) {
         self.post = post
         self.configureMessage()
+        postStatusView.configureWithStatus(post)
     }
     
     class func heightWithPost(post: Post) -> CGFloat {

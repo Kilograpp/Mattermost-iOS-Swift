@@ -47,7 +47,7 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override func layoutSubviews() {
         self.tableView.frame = CGRectMake(53,
                                           CGRectGetMaxY(self.messageLabel.frame) + 8,
-                                          UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings,
+                                          UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize,
                                           self.tableView.contentSize.height)
         super.layoutSubviews()
     }
