@@ -10,9 +10,9 @@ import Foundation
 
 final class ActionsNotification {
     let userIdentifier: String
-    let action: ChannelAction
+    let action: ChannelAction?
     
-    init(userIdentifier: String!, action: ChannelAction) {
+    init(userIdentifier: String!, action: ChannelAction?) {
         self.userIdentifier = userIdentifier
         self.action = action
     }

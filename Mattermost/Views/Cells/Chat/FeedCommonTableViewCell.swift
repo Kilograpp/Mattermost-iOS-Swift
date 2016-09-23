@@ -121,7 +121,7 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         let nameWidth = CGFloat(self.post.author.displayNameWidth)
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
         
-        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
         
         self.messageLabel.frame = CGRectMake(53, 36, textWidth, CGFloat(self.post.attributedMessageHeight))
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
