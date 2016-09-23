@@ -75,7 +75,8 @@ extension LeftMenuViewController : Configure {
     }
     
     private func configureStartUpdating() {
-        UserStatusObserver.sharedObserver.startUpdating()
+        // UserStatusObserver Updating
+//        UserStatusObserver.sharedObserver.startUpdating()
     }
     
     private func configureResults () {
