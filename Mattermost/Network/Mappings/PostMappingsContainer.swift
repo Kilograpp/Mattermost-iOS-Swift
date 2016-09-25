@@ -39,6 +39,10 @@ extension PostMappingsContainer: ResponseMappings {
             "message"           : PostAttributes.message.rawValue,
             "create_at"         : PostAttributes.createdAt.rawValue,
             "update_at"         : PostAttributes.updatedAt.rawValue,
+            "root_id"           : PostAttributes.rootId.rawValue,
+            "parent_id"         : PostAttributes.parentId.rawValue,
+            "user_id"           : PostAttributes.authorId.rawValue,
+            "channel_id"        : PostAttributes.channelId.rawValue,
             "files.backendLink" : "filenames"
             ])
         return mapping
@@ -49,12 +53,14 @@ extension PostMappingsContainer: ResponseMappings {
         mapping.assignsNilForMissingRelationships = false
         mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(PostAttributes.identifier.rawValue)
         mapping.addAttributeMappingsFromDictionary([
-            "(\(PostAttributes.identifier)).create_at" : PostAttributes.createdAt.rawValue,
-            "(\(PostAttributes.identifier)).update_at" : PostAttributes.updatedAt.rawValue,
-            "(\(PostAttributes.identifier)).message" : PostAttributes.message.rawValue,
-            "(\(PostAttributes.identifier)).type" : PostAttributes.type.rawValue,
-            "(\(PostAttributes.identifier)).user_id" : PostAttributes.authorId.rawValue,
-            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue
+            "(\(PostAttributes.identifier)).create_at"  : PostAttributes.createdAt.rawValue,
+            "(\(PostAttributes.identifier)).update_at"  : PostAttributes.updatedAt.rawValue,
+            "(\(PostAttributes.identifier)).message"    : PostAttributes.message.rawValue,
+            "(\(PostAttributes.identifier)).type"       : PostAttributes.type.rawValue,
+            "(\(PostAttributes.identifier)).user_id"    : PostAttributes.authorId.rawValue,
+            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue,
+            "(\(PostAttributes.identifier)).root_id"    : PostAttributes.rootId.rawValue,
+            "(\(PostAttributes.identifier)).parent_id"  : PostAttributes.parentId.rawValue
             ])
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
             toKeyPath: PostRelationships.files.rawValue,
@@ -71,9 +77,11 @@ extension PostMappingsContainer: ResponseMappings {
         mapping.assignsNilForMissingRelationships = false
         mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(PostAttributes.identifier.rawValue)
         mapping.addAttributeMappingsFromDictionary([
-            "(\(PostAttributes.identifier)).update_at" : PostAttributes.updatedAt.rawValue,
-            "(\(PostAttributes.identifier)).message" : PostAttributes.message.rawValue,
-            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue
+            "(\(PostAttributes.identifier)).update_at"  : PostAttributes.updatedAt.rawValue,
+            "(\(PostAttributes.identifier)).message"    : PostAttributes.message.rawValue,
+            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue,
+            "(\(PostAttributes.identifier)).root_id"    : PostAttributes.rootId.rawValue,
+            "(\(PostAttributes.identifier)).parent_id"  : PostAttributes.parentId.rawValue
             ])
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
             toKeyPath: PostRelationships.files.rawValue,
@@ -98,22 +106,12 @@ extension PostMappingsContainer: RequestMapping {
         mapping.addAttributeMappingsFromArray([ "message" ])
         mapping.addAttributeMappingsFromDictionary([
             PostAttributes.identifier.rawValue : "id",
-            Post.filesLinkPath() : "filenames",
-            PostAttributes.channelId.rawValue : "channel_id",
-            PostAttributes.pendingId.rawValue : "pending_post_id",
-            PostAttributes.parentId.rawValue : "parent_id"
+            Post.filesLinkPath()               : "filenames",
+            PostAttributes.channelId.rawValue  : "channel_id",
+            PostAttributes.pendingId.rawValue  : "pending_post_id",
+            PostAttributes.parentId.rawValue   : "parent_id",
+            PostAttributes.rootId.rawValue     : "root_id"
             ])
         return mapping
     }
-    
-  /*  static func postRequestMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping.requestMapping()
-        mapping.addAttributeMappingsFromArray([ "message" ])
-        mapping.addAttributeMappingsFromDictionary([
-            Post.filesLinkPath() : "filenames",
-            PostAttributes.channelId.rawValue : "channel_id",
-            PostAttributes.pendingId.rawValue : "pending_post_id"
-            ])
-        return mapping
-    }*/
 }

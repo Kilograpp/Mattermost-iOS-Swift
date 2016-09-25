@@ -16,9 +16,11 @@ protocol TableViewPostDataSource: class {
 class FeedBaseTableViewCell: UITableViewCell, Reusable {
     final var onMentionTap: ((nickname : String) -> Void)?
     final var post : Post! {
-        didSet { self.postIdentifier = self.post.identifier }
+        didSet { self.postIdentifier = self.post.identifier
+            self.parentPostIdentifier = self.post.hasParentPost() ? self.post.parentId : nil}
     }
     final var postIdentifier: String?
+    final var parentPostIdentifier: String?
     final var messageLabel = MessageLabel()
     final var postStatusView: PostStatusView!
     

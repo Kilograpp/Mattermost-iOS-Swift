@@ -15,6 +15,8 @@ private protocol Inteface {
     func hasAttachments() -> Bool
     func hasSameAuthor(post: Post!) -> Bool
     func timeIntervalSincePost(post: Post!) -> NSTimeInterval
+    func hasParentPost() -> Bool
+    func parentPost() -> Post?
 }
 
 private protocol Delegate {
@@ -27,6 +29,7 @@ enum PostAttributes: String {
     case pendingId = "pendingId"
     case createdAt = "createdAt"
     case parentId = "parentId"
+    case rootId = "rootId"
     case creationDay = "creationDay"
     case deletedAt = "deletedAt"
     case identifier = "identifier"
@@ -75,6 +78,7 @@ final class Post: RealmObject {
     dynamic var authorId: String?
     dynamic var pendingId: String?
     dynamic var parentId: String?
+    dynamic var rootId: String?
     dynamic var createdAt: NSDate?
     dynamic var createdAtString: String?
     dynamic var createdAtStringWidth: Float = 0.0
@@ -191,7 +195,13 @@ extension Post: Inteface {
     func timeIntervalSincePost(post: Post!) -> NSTimeInterval {
         return createdAt!.timeIntervalSinceDate(post.createdAt!)
     }
-
+    func hasParentPost() -> Bool {
+        return (self.parentId != nil)
+    }
+    
+    func parentPost() -> Post? {
+        return (self.parentId != nil) ? try! Realm().objects(Post).filter("identifier = %@", self.parentId!).last : nil
+    }
 }
 
 // MARK: - Delegate

@@ -18,12 +18,10 @@ struct AnimationsBase {
 
 class SearchingInProcessView: UIView {
 
-    
 //MARK: Properties
     
     @IBOutlet weak var animationImageView: UIImageView!
   
-    
 //MARK: Life cycle
     
     class func monkeyChatSearchView() -> SearchingInProcessView {

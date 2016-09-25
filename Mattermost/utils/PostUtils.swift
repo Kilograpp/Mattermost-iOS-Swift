@@ -13,7 +13,7 @@ import RealmSwift
 private protocol Public : class {
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
     func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
-    func update1Post(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
     func deletePost(post: Post, completion: (error: Error?) -> Void)
     func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
     func cancelImageItemUploading(item: AssignedPhotoViewItem)
@@ -57,7 +57,6 @@ extension PostUtils : Public {
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
             completion(error: error)
-            
             self.clearUploadedAttachments()
         }
     }
@@ -70,8 +69,10 @@ extension PostUtils : Public {
         postToSend.channelId = channel.identifier
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         postToSend.parentId = post.identifier
+        postToSend.rootId = post.identifier
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
+        RealmUtils.save(postToSend)
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
             completion(error: error)
@@ -79,7 +80,7 @@ extension PostUtils : Public {
         }
     }
 
-    func update1Post(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
+    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
         print("updatePost")
         try! RealmUtils.realmForCurrentThread().write({
           //  post.message = message
@@ -104,7 +105,7 @@ extension PostUtils : Public {
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)*/
         
-        Api.sharedInstance.update1Post(post) { (error) in
+        Api.sharedInstance.updateSinglePost(post) { (error) in
             print("yeap")
             if (error != nil) {
                 print(error?.message)

@@ -68,6 +68,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
     private var results: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
+    private let completePost: UIView = UIView()
     
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
@@ -280,8 +281,6 @@ extension ChatViewController : Private {
         }
         actionSheetController.addAction(replyAction)
         
-        //let copyAction = UIAlertAction(title: "Copy", style: .Default, handler: nil)
-        
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
             print("Cancel")
         }
@@ -289,6 +288,11 @@ extension ChatViewController : Private {
         
         if (post.author.identifier == Preferences.sharedInstance.currentUserId) {
             let editAction = UIAlertAction(title: "Edit", style: .Default) { action -> Void in
+                self.presentKeyboard(true)
+                
+                
+                
+                
                // print("Edit")
                 print(post.message)
                 if (post.message == "zzz") {
@@ -314,6 +318,11 @@ extension ChatViewController : Private {
         
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
+
+    private func showCompletePost(post: Post, action: PostActionType) {
+        
+    }
+
 }
 
 
@@ -399,11 +408,15 @@ extension ChatViewController: Request {
     func sendPost() {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             self.clearTextView()
+            //self.prepareResults()
+            self.performSelector(#selector(self.prepareResults), withObject: nil, afterDelay: 1)
         }
     }
     
     func sendRepyToPost(post: Post) {
         PostUtils.sharedInstance.sendReplyToPost(post, channel: self.channel!, message: "test reply", attachments: nil) { (error) in
+            self.prepareResults()
+            self.tableView.reloadData()
             self.clearTextView()
         }
     }
@@ -496,6 +509,11 @@ extension ChatViewController: FetchedResultsController {
         let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
         self.results = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
         self.resultsObserver = FeedNotificationsObserver(results: self.results, tableView: self.tableView)
+        
+        print("---------After--------------")
+        for day in self.results {
+            print("fetched =", day.posts.count)
+        }
     }
 }
 
