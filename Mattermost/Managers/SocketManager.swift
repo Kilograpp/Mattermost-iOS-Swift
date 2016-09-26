@@ -18,6 +18,8 @@ private protocol Interface: class {
 
 @objc final class SocketManager: NSObject {
     static let sharedInstance = SocketManager()
+    //refactor seqNumber
+    static var seqNumber = 1
     private var lastNotificationDate: NSDate?
     private lazy var socket: WebSocket = {
         let webSocket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
@@ -27,29 +29,11 @@ private protocol Interface: class {
     }()
 }
 
-private struct NotificationKeys {
-    static let ChannelIdentifier = "channel_id"
-    static let TeamIdentifier = "team_id"
-    static let UserIdentifier = "user_id"
-    static let Identifier = "id"
-    static let Post = "post"
-    static let Action = "action"
-    static let Properties = "props"
-    static let PendingPostIdentifier = "pending_post_id"
-    static let State = "state"
-}
-
-enum ChannelAction: String {
-    case Typing = "typing"
-    case ChannelView = "channel_viewed"
-    case Posted = "posted"
-    case UserAdded = "user_added"
-    case Unknown
-}
-
 private protocol Notifications: class {
-    func publishBackendNotificationAboutAction(action: ChannelAction, channel: Channel)
+    func publishBackendNotificationAboutAction(action: ChannelAction, channelId:String)
     func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: String?)
+    func publishBackendNotificationFetchStatuses()
+    func publishLocalNotificationStatusSetup(statuses:[String:String])
 }
 
 private protocol StateControl: class {
@@ -86,7 +70,7 @@ extension SocketManager: WebSocketDelegate{
 // MARK: - Interface Methods
 extension SocketManager: Interface {
     func sendNotificationAboutAction(action: ChannelAction, channel: Channel) {
-        self.publishBackendNotificationAboutAction(action, channel: channel)
+        self.publishBackendNotificationAboutAction(action, channelId: channel.identifier!)
     }
     func setNeedsConnect() {
         if shouldConnect() {
@@ -103,60 +87,92 @@ extension SocketManager: Interface {
 extension SocketManager: MessageHandling {
     private func handleIncomingMessage(text: String) {
         let dictionary = text.toDictionary()!
-        let userId     = dictionary[NotificationKeys.UserIdentifier] as! String
-        let action     = dictionary[NotificationKeys.Action] as! String?
-        let channelId  = dictionary[NotificationKeys.ChannelIdentifier] as! String
-        let postString = dictionary[NotificationKeys.Properties]?[NotificationKeys.Post] as? NSString
-        
-        if let postDictionary = postString?.toDictionary() {
-            let postPendingIdentifier = postDictionary[NotificationKeys.PendingPostIdentifier] as! String
-            let postIdentifier        = postDictionary[NotificationKeys.Identifier] as! String
-            
-            if !postExistsWithIdentifier(postIdentifier, pendingIdentifier: postPendingIdentifier) {
-                
-                let post = Post()
-                post.identifier = (postDictionary[NotificationKeys.Identifier] as! String)
-                post.channelId = channelId
-                
-                Api.sharedInstance.updatePost(post, completion: { (error) in
-                    self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
-                })
-            }
-        } else {
-            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
+        let userId = dictionary[NotificationKeys.UserIdentifier] as? String
+        let channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
+        switch(SocketNotificationUtils.typeForNotification(dictionary)) {
+            case .Error:
+                print("ERROR "+text)
+            case .Default:
+                print("OK "+text)
+            case .ReceivingPost:
+                print("New post")
+            case .ReceivingStatus:
+                guard let status = dictionary[NotificationKeys.Data]?[NotificationKeys.Status] as? String else { return }
+                publishLocalNotificationStatusChanged(userId!, status: status)
+            case .ReceivingStatuses:
+                guard let statuses = dictionary[NotificationKeys.Data] as? [String:String] else { return }
+                publishLocalNotificationStatusSetup(statuses)
+            case .ReceivingTyping:
+                publishLocalNotificationWithChannelIdentifier(channelId!, userIdentifier: userId!, action: Event.Typing.rawValue)
+                print("Typing...")
+            default:
+                print("UNKNW: "+text)
+                //reply with event:"hello"
+                publishBackendNotificationFetchStatuses()
         }
+//
+//
+//        let action     = dictionary[NotificationKeys.Action] as? String
+//        let channelId  = dictionary[NotificationKeys.ChannelIdentifier] as! String
+//        let postString = dictionary[NotificationKeys.Properties]?[NotificationKeys.Post] as? NSString
+//
+//        
+//        if let postDictionary = postString?.toDictionary() {
+//            let postPendingIdentifier = postDictionary[NotificationKeys.PendingPostIdentifier] as! String
+//            let postIdentifier        = postDictionary[NotificationKeys.Identifier] as! String
+//            
+//            if !postExistsWithIdentifier(postIdentifier, pendingIdentifier: postPendingIdentifier) {
+//                
+//                let post = Post()
+//                post.identifier = (postDictionary[NotificationKeys.Identifier] as! String)
+//                post.channelId = channelId
+//                
+//                Api.sharedInstance.updatePost(post, completion: { (error) in
+//                    self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
+//                })
+//            }
+//        } else {
+//            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
+//        }
 
     }
 }
 
 //MARK: - Notifications
 extension SocketManager: Notifications {
-    func publishBackendNotificationAboutAction(action: ChannelAction, channel: Channel) {
+    func publishBackendNotificationAboutAction(action: ChannelAction, channelId:String) {
+            socket.writeData(SocketNotificationUtils.dataForActionRequest(action, seq: SocketManager.seqNumber, channelId: channelId))
+            // ++ is deprecated. refactor later seq number
+            SocketManager.seqNumber = SocketManager.seqNumber + 1
+    }
+    
+    func publishBackendNotificationAboutUserAction(action: ChannelAction, channelId:String) {
         if shouldSendNotification() {
-            let parameters: [String: JSON] = [
-                NotificationKeys.ChannelIdentifier : JSON(stringLiteral: channel.identifier!),
-                NotificationKeys.TeamIdentifier    : JSON(stringLiteral: DataManager.sharedInstance.currentTeam!.identifier!),
-                NotificationKeys.Action            : JSON(stringLiteral: action.rawValue),
-                NotificationKeys.State             : JSON(SocketNotificationState()),
-                NotificationKeys.Properties        : JSON(["parent_id" : ""])
-            ]
-//            let message = "{\"channel_id\":\"o36ktmifaf88dy9e87d9f5n3da\",\"action\":\"typing\",\"props\":{\"parent_id\":\"\"},\"state\":{},\"team_id\":\"on95mnb5h7r73n373brm6eddrr\"}"
-//            let data = message.dataUsingEncoding(NSUTF8StringEncoding)
-//            self.socket.writeData(data!)
-//            let socketNotification = SocketNotification(channelId: channel.identifier!, teamId: DataManager.sharedInstance.currentTeam!.identifier!, act: action.rawValue)
-            let json = JSON(parameters)
-            try! socket.writeData(json.rawData())
+            publishBackendNotificationAboutAction(action, channelId: channelId)
         }
+    }
+        
+    func publishBackendNotificationFetchStatuses() {
+        publishBackendNotificationAboutAction(ChannelAction.Statuses, channelId: "null channel id")
     }
     
     private func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: String?) {
         guard action != nil else {
             return
         }
-        let channelAction = ChannelAction(rawValue: action!)
+        let channelEvent = Event(rawValue: action!)
         let notificationName = ActionsNotification.notificationNameForChannelIdentifier(channelIdentifier)
-        let notification = ActionsNotification(userIdentifier: userIdentifier, action: channelAction)
+        let notification = ActionsNotification(userIdentifier: userIdentifier, event: channelEvent)
         NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: notification)
+    }
+    private func publishLocalNotificationStatusChanged(userIdentifier: String, status: String) {
+        let notification = StatusChangingSocketNotification(userIdentifier: userIdentifier, status: status)
+        let notificationName = StatusChangingSocketNotification.notificationName()
+        NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: notification)
+    }
+    private func publishLocalNotificationStatusSetup(statuses:[String:String]) {
+        let notificationName = Constants.NotificationsNames.StatusesSocketNotification
+        NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: statuses)
     }
 }
 
@@ -170,7 +186,7 @@ extension SocketManager: StateControl {
         if (lastNotificationDate == nil) {
             self.lastNotificationDate = date
         }
-        if let previousDate = self.lastNotificationDate where date.timeIntervalSinceDate(previousDate) > Constants.Socket.TimeIntervalBetweenNotifications {
+        if let previousDate = self.lastNotificationDate where date.timeIntervalSinceDate(previousDate) < Constants.Socket.TimeIntervalBetweenNotifications {
             self.lastNotificationDate = date
             return true
         }

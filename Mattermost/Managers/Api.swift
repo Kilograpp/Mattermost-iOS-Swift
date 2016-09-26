@@ -20,7 +20,7 @@ private protocol Interface: class {
 private protocol UserApi: class {
     func login(email: String, password: String, completion: (error: Error?) -> Void)
     func loadCompleteUsersList(completion:(error: Error?) -> Void)
-    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void)
+//    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void)
 }
 
 private protocol TeamApi: class {
@@ -113,17 +113,17 @@ extension Api: UserApi {
         }, failure: completion)
     }
     
-    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void) {
-        let path = UserPathPatternsContainer.usersStatusPathPattern()
-        let params = (users as NSArray).valueForKey(UserAttributes.identifier.rawValue)
-        self.manager.postObject(nil, path: path, parametersAsArray: params as! [AnyObject], success: { (operation: RKObjectRequestOperation!, mappingResult: RKMappingResult!) in
-            UserStatusObserver.sharedObserver.reloadWithStatusesArray(mappingResult.array() as! Array<UserStatus>)
-            completion(error: nil)
-            }) { (operation, error) in
-                    let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
-                    print(eror)
-         }
-        }
+//    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void) {
+//        let path = UserPathPatternsContainer.usersStatusPathPattern()
+//        let params = (users as NSArray).valueForKey(UserAttributes.identifier.rawValue)
+//        self.manager.postObject(nil, path: path, parametersAsArray: params as! [AnyObject], success: { (operation: RKObjectRequestOperation!, mappingResult: RKMappingResult!) in
+//            UserStatusObserver.sharedObserver.reloadWithStatusesArray(mappingResult.array() as! Array<UserStatus>)
+//            completion(error: nil)
+//            }) { (operation, error) in
+//                    let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
+//                    print(eror)
+//         }
+//        }
 }
 
 extension Api: TeamApi {

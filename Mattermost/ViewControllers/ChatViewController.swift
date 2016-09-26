@@ -404,16 +404,15 @@ extension ChatViewController {
     func handleChannelNotification(notification: NSNotification) {
         if let actionNotification = notification.object as? ActionsNotification {
             let user = User.self.objectById(actionNotification.userIdentifier)
-            switch (actionNotification.action) {
+            switch (actionNotification.event!) {
             case .Typing:
                 //refactor (to methods)
                 if (actionNotification.userIdentifier != Preferences.sharedInstance.currentUserId) {
                         typingIndicatorView?.insertUsername(user?.displayName)
                 }
-            case .Posted:
-                typingIndicatorView?.removeUsername(user?.displayName)
             default:
-                break
+                //how to handle this?
+                typingIndicatorView?.removeUsername(user?.displayName)
             }
         }
     }
