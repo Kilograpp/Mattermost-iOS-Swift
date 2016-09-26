@@ -22,6 +22,7 @@ private protocol Setup {
     func setupRefreshControl()
     func setupPostAttachmentsView()
     func setupTopActivityIndicator()
+    func setupCompactPost()
 }
 
 private protocol Private {
@@ -68,7 +69,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
     private var results: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
-    private let completePost: UIView = UIView()
+    private let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
     
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
@@ -119,6 +120,7 @@ extension ChatViewController: Setup {
         setupPostAttachmentsView()
         setupTopActivityIndicator()
         setupLongCellSelection()
+        setupCompactPost()
     }
     
     func setupTableView() {
@@ -187,6 +189,24 @@ extension ChatViewController: Setup {
     func setupLongCellSelection() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
         self.tableView.addGestureRecognizer(longPressGestureRecognizer)
+    }
+    
+    func setupCompactPost() {
+        let size = self.completePost.requeredSize()
+        self.completePost.translatesAutoresizingMaskIntoConstraints = false
+//TODO: Will be uncomment 
+       // self.view.addSubview(self.completePost)
+        
+        /*let horizontal = NSLayoutConstraint(item: self.completePost, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
+        view.addConstraint(horizontal)
+        let vertical = NSLayoutConstraint(item: self.completePost, attribute: .Bottom, relatedBy: .Equal, toItem: self.textView, attribute: .Top, multiplier: 1, constant: 0)
+        view.addConstraint(vertical)
+        
+        let width = NSLayoutConstraint(item: self.completePost, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: size.width)
+        view.addConstraint(width)
+        
+        let height = NSLayoutConstraint(item: self.completePost, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: size.height)
+        view.addConstraint(height)*/
     }
 }
 
@@ -277,7 +297,12 @@ extension ChatViewController : Private {
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
      
         let replyAction = UIAlertAction(title: "Reply", style: .Default) { action -> Void in
-            self.sendRepyToPost(post)
+           // self.sendRepyToPost(post)
+            self.presentKeyboard(true)
+            let size = self.completePost.requeredSize()
+            self.completePost.frame = CGRectMake(0, 60, size.width, size.height)
+            self.completePost.layoutIfNeeded()
+            self.view.addSubview(self.completePost)
         }
         actionSheetController.addAction(replyAction)
         
@@ -319,7 +344,7 @@ extension ChatViewController : Private {
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
 
-    private func showCompletePost(post: Post, action: PostActionType) {
+    private func showCompletePost(post: Post, action: String) {
         
     }
 
@@ -509,11 +534,6 @@ extension ChatViewController: FetchedResultsController {
         let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
         self.results = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
         self.resultsObserver = FeedNotificationsObserver(results: self.results, tableView: self.tableView)
-        
-        print("---------After--------------")
-        for day in self.results {
-            print("fetched =", day.posts.count)
-        }
     }
 }
 
