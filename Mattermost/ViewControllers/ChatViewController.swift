@@ -541,11 +541,14 @@ extension ChatViewController: FetchedResultsController {
 //MARK: ChannelObserverDelegate
 
 extension ChatViewController: ChannelObserverDelegate {
-    func didSelectChannelWithIdentifier(identifier: String!) -> Void {
+    func didSelectChannelWithIdentifier(identifier: String!) {
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.prepareResults()
         self.loadFirstPageOfData()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleChannelNotification),
+                                                         name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
+                                                         object: nil)
     }
 }
 
@@ -586,5 +589,60 @@ extension ChatViewController: PostAttachmentViewDelegate {
         var oldInset = self.tableView.contentInset
         oldInset.top = 0
         self.tableView.contentInset = oldInset
+    }
+}
+//
+//extension ChatViewController : UIImagePickerControllerDelegate {
+//    
+//}
+
+//MARK: - ActivityIndicator
+
+extension ChatViewController {
+    
+  /*  func setupTopActivityIndicator() {
+        self.topActivityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        self.topActivityIndicatorView!.transform = self.tableView.transform;
+    }*/
+    
+ /*   func showTopActivityIndicator() {
+        let activityIndicatorHeight = CGRectGetHeight(self.topActivityIndicatorView!.bounds)
+        let tableFooterView = UIView(frame:CGRectMake(0, 0, CGRectGetWidth(self.tableView.bounds), activityIndicatorHeight * 2))
+        self.topActivityIndicatorView!.center = CGPointMake(tableFooterView.center.x, tableFooterView.center.y - activityIndicatorHeight / 5)
+        tableFooterView.addSubview(self.topActivityIndicatorView!)
+        self.tableView.tableFooterView = tableFooterView;
+        self.topActivityIndicatorView!.startAnimating()
+    }
+    
+    func hideTopActivityIndicator() {
+        self.topActivityIndicatorView!.stopAnimating()
+        self.tableView.tableFooterView = UIView(frame: CGRectZero)
+    }*/
+}
+
+//MARK: - Notifications
+extension ChatViewController {
+    
+    func handleChannelNotification(notification: NSNotification) {
+        if let actionNotification = notification.object as? ActionsNotification {
+            let user = User.self.objectById(actionNotification.userIdentifier)
+            switch (actionNotification.event!) {
+            case .Typing:
+                //refactor (to methods)
+                if (actionNotification.userIdentifier != Preferences.sharedInstance.currentUserId) {
+                        typingIndicatorView?.insertUsername(user?.displayName)
+                }
+            default:
+                //how to handle this?
+                typingIndicatorView?.removeUsername(user?.displayName)
+            }
+        }
+    }
+}
+
+//MARK: - UITextViewDelegate
+extension ChatViewController {
+    override func textViewDidChange(textView: UITextView) {
+        SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
     }
 }
