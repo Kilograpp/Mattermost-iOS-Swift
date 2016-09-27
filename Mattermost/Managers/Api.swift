@@ -285,13 +285,21 @@ extension Api: PostApi {
     func updateSinglePost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
-            print(mappingResult)
             RealmUtils.save(mappingResult.firstObject as! Post)
             completion(error: nil)
             }, failure: completion)
     }
     func deletePost(post: Post, completion: (error: Error?) -> Void) {
-        print("deletePost")
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.deletingPathPattern(), post)
+        let params = ["team_id"    : Preferences.sharedInstance.currentTeamId!,
+                      "channel_id" : post.channelId!,
+                      "post_id"    : post.identifier!]
+  
+        self.manager.deletePost(with: post, path: path, parameters: params, success: { (mappingResult) in
+            
+            }) { (error) in
+                
+        }
     }
     
     func updatePost(post: Post, completion: (error: Error?) -> Void) {

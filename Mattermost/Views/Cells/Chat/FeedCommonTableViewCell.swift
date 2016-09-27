@@ -55,10 +55,17 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
         super.configureWithPost(post)
         self.configureAvatarImage()
         self.configureBasicLabels()
+        configureParentView()
+        
     }
     
     override class func heightWithPost(post: Post) -> CGFloat {
-        return CGFloat(post.attributedMessageHeight) + 44
+        var height = CGFloat(post.attributedMessageHeight) + 44
+        if (post.hasParentPost()) {
+            height += 64 + Constants.UI.ShortPaddingSize
+        }
+        
+        return height
     }
 }
 
@@ -86,7 +93,11 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
     
     final func configureParentView() {
         if (self.post.hasParentPost()) {
-            self.parentView.configureWithPost(self.post.parentPost()!)
+            self.parentView.configureWithCompletePost(self.post.parentPost()!)
+            self.addSubview(self.parentView)
+        }
+        else {
+            self.parentView.removeFromSuperview()
         }
     }
 }
@@ -128,7 +139,8 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         
         let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
         
-        self.messageLabel.frame = CGRectMake(53, 36, textWidth, CGFloat(self.post.attributedMessageHeight))
+        let originY = self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36
+        self.messageLabel.frame = CGRectMake(53, originY, textWidth, CGFloat(self.post.attributedMessageHeight))
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
         self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
         
