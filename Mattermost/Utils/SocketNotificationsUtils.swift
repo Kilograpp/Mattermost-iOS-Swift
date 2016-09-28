@@ -32,6 +32,22 @@ struct NotificationKeys {
         static let Post = "post"
         static let ParentIdentifier = "parent_id"
         static let UserStatus = "status"
+        struct PostKeys {
+            static let Create_at = "create_at"
+            static let Update_at = "update_at"
+            static let Delete_at = "delete_at"
+            static let RootIdentifier = "root_id"
+            static let ParentIdentifier = "parent_id"
+            static let Message = "message"
+            static let Files = "filenames"
+            //Also : channelId, userId, pendingPostId, Id
+            
+            //Undefined in Post class as RealmObject
+            static let Props = "props"
+            static let Type = "type"
+            static let Hashtags = "hashtags"
+            
+        }
     }
 }
 
@@ -77,6 +93,23 @@ final class SocketNotificationUtils {
         }
         let json = JSON(parameters)
         return try! json.rawData()
+    }
+    
+    //todo: files supporting (NotificationKeys.DataKeys.PostKeys.Files)
+    static func postFromDictionary(dictionary:[String:AnyObject]) -> Post {
+        var post = Post()
+        // ? pending post id
+        post.message = dictionary[NotificationKeys.DataKeys.PostKeys.Message] as? String
+        post.identifier = dictionary[NotificationKeys.Identifier] as? String
+        post.authorId = dictionary[NotificationKeys.UserIdentifier] as? String
+        post.channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
+ 
+        post.createdAt = NSDate(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! NSTimeInterval/1000.0)
+        post.updatedAt = NSDate(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Update_at] as! NSTimeInterval/1000.0)
+        post.deletedAt = NSDate(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Delete_at] as! NSTimeInterval/1000.0)
+
+        post.computeMissingFields()
+        return post
     }
     
     static func typeForNotification(dictionary:[String:AnyObject]) -> NotificationType {

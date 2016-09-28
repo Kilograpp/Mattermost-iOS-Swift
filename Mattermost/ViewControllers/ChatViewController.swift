@@ -409,8 +409,9 @@ extension ChatViewController: Request {
             self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true
-            self.resultsObserver.prepareResults()
+            
             self.resultsObserver.unsubscribeRealmNotifications()
+            self.resultsObserver.prepareResults()
             self.resultsObserver.subscribeNotifications()
         })
     }
@@ -424,21 +425,21 @@ extension ChatViewController: Request {
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
+            
             self.resultsObserver.prepareResults()
+            self.resultsObserver.unsubscribeRealmNotifications()
+            self.resultsObserver.subscribeNotifications()
         }
     }
     
     func sendPost() {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
-//            self.resultsObserver.prepareResults()
             self.clearTextView()
         }
     }
     
     func sendRepyToPost(post: Post) {
         PostUtils.sharedInstance.sendReplyToPost(post, channel: self.channel!, message: "test reply", attachments: nil) { (error) in
-//            self.prepareResults()
-//            self.tableView.reloadData()
             self.clearTextView()
         }
     }
@@ -526,7 +527,19 @@ extension ChatViewController {
 
 extension ChatViewController: ChannelObserverDelegate {
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
+        //refactor: unsubscribing from realm and channelActionNotifications
+        if resultsObserver != nil {
+            resultsObserver.unsubscribeRealmNotifications()
+        }
         self.resultsObserver = nil
+        if self.channel != nil {
+            //remove action observer from old channel
+            print(channel?.identifier)
+            NSNotificationCenter.defaultCenter().removeObserver(self,
+                                                                name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
+                                                                object: nil)
+        }
+        
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)

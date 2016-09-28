@@ -89,13 +89,20 @@ extension SocketManager: MessageHandling {
         let dictionary = text.toDictionary()!
         let userId = dictionary[NotificationKeys.UserIdentifier] as? String
         let channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
+        let teamId = dictionary[NotificationKeys.TeamIdentifier] as? String
         switch(SocketNotificationUtils.typeForNotification(dictionary)) {
             case .Error:
                 print("ERROR "+text)
             case .Default:
-                print("OK "+text)
+                break
             case .ReceivingPost:
                 print("New post")
+                let channelName = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.ChannelName] as! String
+                let channelType = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.ChannelType] as! String
+                let senderName = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.SenderName] as! String
+                let postString = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.Post] as! String
+                let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
+                handleReceivingNewPost(channelId!,channelName: channelName,channelType: channelType,senderName: senderName,post: post)
             case .ReceivingStatus:
                 guard let status = dictionary[NotificationKeys.Data]?[NotificationKeys.Status] as? String else { return }
                 publishLocalNotificationStatusChanged(userId!, status: status)
@@ -104,7 +111,6 @@ extension SocketManager: MessageHandling {
                 publishLocalNotificationStatusSetup(statuses)
             case .ReceivingTyping:
                 publishLocalNotificationWithChannelIdentifier(channelId!, userIdentifier: userId!, action: Event.Typing.rawValue)
-                print("Typing...")
             default:
                 print("UNKNW: "+text)
                 //reply with event:"hello"
@@ -154,6 +160,10 @@ extension SocketManager: Notifications {
         
     func publishBackendNotificationFetchStatuses() {
         publishBackendNotificationAboutAction(ChannelAction.Statuses, channelId: "null channel id")
+    }
+    
+    func handleReceivingNewPost(channelId:String,channelName:String,channelType:String,senderName:String,post:Post) {
+        RealmUtils.save(post)
     }
     
     private func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: String?) {
