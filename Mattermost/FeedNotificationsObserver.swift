@@ -11,10 +11,13 @@ import RealmSwift
 
 
 final class FeedNotificationsObserver {
-    private let results: Results<Day>
-    private let tableView: UITableView
+    private var results: Results<Post>! = nil
+    private var days: Results<Day>! = nil
+    private var tableView: UITableView
     private var resultsNotificationToken: NotificationToken?
     private var lastDayNotificationToken: NotificationToken?
+    private let channel: Channel!
+
 
     
 //    private var insertedRows = [NSIndexPath]()
@@ -22,15 +25,17 @@ final class FeedNotificationsObserver {
 //    private var insertedSections = NSMutableIndexSet()
 //    private var deletedSections = NSMutableIndexSet()
     
-    init(results: Results<Day>, tableView: UITableView) {
-        self.results = results
+    init(tableView: UITableView, channel: Channel) {
+        self.channel = channel
         self.tableView = tableView
-        subscribeNotifications()
+        self.unsubscribeRealmNotifications()
+        self.prepareResults()
+        self.subscribeNotifications()
     }
     
-//    deinit {
-//        unsubscribeRealmNotifications()
-//    }
+    deinit {
+        unsubscribeRealmNotifications()
+    }
     
     @objc func unsubscribeRealmNotifications() {
         self.resultsNotificationToken?.stop()
@@ -53,70 +58,34 @@ final class FeedNotificationsObserver {
 //        }
 //
         let resultsNotificationHandler = {
-            (changes: RealmCollectionChange<Results<Day>> ) in
+            (changes: RealmCollectionChange<Results<Post>> ) in
             
             switch changes {
                 case .Initial:
                     self.tableView.reloadData()
                     break
                 case .Update(_, let deletions, let insertions, _):
-                    // Query results have changed, so apply them to the UITableView
-                    
-                    guard insertions.count > 0 || deletions.count > 0 else {
-                        self.tableView.reloadData()
-                        return
-                    }
-                    
-                    guard insertions[0] != 0 && insertions.count != 1 else {
-                        self.tableView.reloadData()
-                        return
-                    
-                    }
-                    var insertedRows = [NSIndexPath]()
-                    
-                    let lastDaySection = self.tableView.numberOfSections - 1
-                    let currentNumberOfRows = self.tableView.numberOfRowsInSection(lastDaySection)
-                    let updatedNumberOfRows = self.results[lastDaySection].posts.count
-                    
-                    for index in currentNumberOfRows..<updatedNumberOfRows {
-                        insertedRows.append(NSIndexPath(forRow: index , inSection: lastDaySection))
-                    }
-                    
-                    let insertedSections = NSMutableIndexSet()
-                    for section in insertions {
-                        let postsCount = self.results[section].posts.count
-                        insertedSections.addIndex(section)
-                        for row in 0..<postsCount {
-                            insertedRows.append(NSIndexPath(forRow: row, inSection: section))
+                    if (insertions.count > 0) {
+                        self.tableView.beginUpdates()
+                        //todo inserting sections
+                        if self.days?.first?.posts.count == 1 {
+                            self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .None)
                         }
+                        insertions.forEach({ (index:Int) in
+                            self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Automatic)
+                            print(self.numberOfRows(0))
+                        })
+                        self.tableView.endUpdates()
                     }
-                    
-                    var deletedRows = [NSIndexPath]()
-                    let deletedSections = NSMutableIndexSet()
-                    for section in deletions {
-                        let postsCount = self.tableView.numberOfRowsInSection(section)
-                        deletedSections.addIndex(section)
-                        for row in 0..<postsCount {
-                            deletedRows.append(NSIndexPath(forRow: row, inSection: section))
-                        }
-                    }
-                    
-                    UIView.setAnimationsEnabled(false)
-                    self.tableView.beginUpdates()
-                    self.tableView.insertSections(insertedSections, withRowAnimation: .None)
-                    self.tableView.deleteSections(deletedSections, withRowAnimation: .None)
-                    self.tableView.deleteRowsAtIndexPaths(deletedRows, withRowAnimation: .None)
-                    self.tableView.insertRowsAtIndexPaths(insertedRows, withRowAnimation: .None)
-                    
-                    self.tableView.endUpdates()
-                    UIView.setAnimationsEnabled(true)
-                    break
+                    //todo modifications and deletions
+                
                 default: break
+                
             }
         }
         
         let configurationBlock = {
-            self.resultsNotificationToken = self.results.addNotificationBlock(resultsNotificationHandler)
+            self.resultsNotificationToken = self.results!.addNotificationBlock(resultsNotificationHandler)
             //self.lastDayNotificationToken = self.results.last?.posts.addNotificationBlock(lastDayNotificationsBlock)
         }
 
@@ -137,5 +106,50 @@ extension FeedNotificationsObserver {
     func subscribeNotifications() {
         Observer.sharedObserver.subscribeForLogoutNotification(self, selector: #selector(unsubscribeRealmNotifications))
         subscribeForRealmNotifications()
+    }
+}
+
+//MARK: FetchedResultsController
+extension FeedNotificationsObserver {
+    func prepareResults() {
+        if NSThread.isMainThread() {
+            fetchPosts()
+            fetchDays()
+        } else {
+            dispatch_sync(dispatch_get_main_queue()) {
+                self.fetchPosts()
+                self.fetchDays()
+            }
+        }
+    }
+    
+    func fetchPosts() {
+        let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
+        self.results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted("createdAt", ascending: false)
+    }
+    func fetchDays() {
+        let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
+        self.days = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
+    }
+}
+//refactor manager for results and tableViewdelegate
+//MARK: FetchedResultsController
+extension FeedNotificationsObserver {
+    func numberOfRows(section:Int) -> Int {
+//        print("in day: \(self.days![section].text) : \(self.days![section].posts.count)")
+       return self.days![section].posts.count
+    }
+    
+    func numberOfSections() -> Int {
+        return self.days!.count ?? 0
+    }
+    func postForIndexPath(indexPath:NSIndexPath) -> Post {
+        return days![indexPath.section].posts[self.numberOfRows(indexPath.section) - indexPath.row - 1]
+    }
+    func lastPost() -> Post {
+        return results!.last!
+    }
+    func titleForHeader(section:Int) -> String {
+        return self.days![section].text!
     }
 }

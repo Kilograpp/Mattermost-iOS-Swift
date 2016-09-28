@@ -53,7 +53,6 @@ extension PostUtils : Public {
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
-        RealmUtils.save(postToSend)
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
             completion(error: error)

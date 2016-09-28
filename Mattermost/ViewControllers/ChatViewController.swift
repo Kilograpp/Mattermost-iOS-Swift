@@ -47,10 +47,6 @@ private protocol Navigation {
     func proceedToSearchChat()
 }
 
-private protocol FetchedResultsController {
-
-}
-
 private protocol Request {
     func loadFirstPageAndReload()
     func loadFirstPageOfData()
@@ -65,9 +61,10 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 //MARK: Properties
     
     private var channel : Channel?
-    private var resultsObserver: FeedNotificationsObserver?
+    private var resultsObserver: FeedNotificationsObserver! = nil
     private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
-    private var results: Results<Day>! = nil
+//    private var results: Results<Post>! = nil
+//    private var days: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
     private let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
     
@@ -94,8 +91,8 @@ extension ChatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initialSetup()
         ChannelObserver.sharedObserver.delegate = self
+        initialSetup()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -367,15 +364,13 @@ extension ChatViewController: Action {
     }
     
     func refreshControlValueChanged() {
-        self.prepareResults()
         self.loadFirstPageOfData()
     }
     
     func longPressAction(gestureRecognizer: UILongPressGestureRecognizer) {
-        let indexPath = self.tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(self.tableView))
-        let day = self.results[indexPath!.section]
-        let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath!.row]
-        showActionSheetControllerForPost(post)
+//        let indexPath = self.tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(self.tableView))
+//        let post = results[indexPath!.row]
+//        showActionSheetControllerForPost(post)
     }
 }
 
@@ -414,7 +409,9 @@ extension ChatViewController: Request {
             self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true
-            
+            self.resultsObserver.prepareResults()
+            self.resultsObserver.unsubscribeRealmNotifications()
+            self.resultsObserver.subscribeNotifications()
         })
     }
     
@@ -423,25 +420,25 @@ extension ChatViewController: Request {
         
         self.isLoadingInProgress = true
         showTopActivityIndicator()
-        Api.sharedInstance.loadNextPage(self.channel!, fromPost: self.results.last!.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false).last!) { (isLastPage, error) in
+        Api.sharedInstance.loadNextPage(self.channel!, fromPost: resultsObserver.lastPost()) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
+            self.resultsObserver.prepareResults()
         }
     }
     
     func sendPost() {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+//            self.resultsObserver.prepareResults()
             self.clearTextView()
-            //self.prepareResults()
-            self.performSelector(#selector(self.prepareResults), withObject: nil, afterDelay: 1)
         }
     }
     
     func sendRepyToPost(post: Post) {
         PostUtils.sharedInstance.sendReplyToPost(post, channel: self.channel!, message: "test reply", attachments: nil) { (error) in
-            self.prepareResults()
-            self.tableView.reloadData()
+//            self.prepareResults()
+//            self.tableView.reloadData()
             self.clearTextView()
         }
     }
@@ -467,22 +464,23 @@ extension ChatViewController: Request {
 
 extension ChatViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.results?.count ?? 0
+//        print("Days count: \(days.count)")
+        return self.resultsObserver?.numberOfSections() ?? 1
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.results[section].posts.count
+//        print("in  \(days[section].text) , postCount: \(days[section].posts.count)")
+        return self.resultsObserver?.numberOfRows(section) ?? 0
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let day = self.results[indexPath.section]
-        let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath.row]
-        
+        let post = resultsObserver?.postForIndexPath(indexPath)
+//        print("day for post \(post.message) : \(post.day?.text)")
         if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             self.loadNextPageOfData()
         }
         
-        return self.builder.cellForPost(post)
+        return self.builder.cellForPost(post!)
     }
 }
 
@@ -491,14 +489,18 @@ extension ChatViewController {
 
 extension ChatViewController {
     override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(FeedTableViewSectionHeader.reuseIdentifier()) as! FeedTableViewSectionHeader
-        let frcTitleForHeader = self.results[section].text!
+        guard resultsObserver != nil else { return UIView() }
+        var view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
+        if view == nil {
+            view = FeedTableViewSectionHeader(reuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
+        }
+        let frcTitleForHeader = resultsObserver.titleForHeader(section)
         let titleDate = NSDateFormatter.sharedConversionSectionsDateFormatter.dateFromString(frcTitleForHeader)!
         let titleString = titleDate.feedSectionDateFormat()
-        view.configureWithTitle(titleString)
-        view.transform = tableView.transform
+        view!.configureWithTitle(titleString)
+        view!.transform = tableView.transform
         
-        return view
+        return view!
     }
     
     override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -510,42 +512,24 @@ extension ChatViewController {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let day = self.results[indexPath.section]
-        let post = day.posts.sorted(PostAttributes.createdAt.rawValue, ascending: false)[indexPath.row]
-        return self.builder.heightForPost(post)
+        let post = resultsObserver?.postForIndexPath(indexPath)
+//        print("height for post \(post.message) : \(post.attributedMessageHeight)")
+        return self.builder.heightForPost(post!)
     }
 }
-
-
-//MARK: FetchedResultsController
-
-extension ChatViewController: FetchedResultsController {
-    func prepareResults() {
-        if NSThread.isMainThread() {
-            fetchPosts()
-        } else {
-            dispatch_sync(dispatch_get_main_queue()) {
-                self.fetchPosts()
-            }
-        }
-    }
-    
-    func fetchPosts() {
-        let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
-        self.results = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
-        self.resultsObserver = FeedNotificationsObserver(results: self.results, tableView: self.tableView)
-    }
-}
-
 
 //MARK: ChannelObserverDelegate
 
 extension ChatViewController: ChannelObserverDelegate {
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
+        self.resultsObserver = nil
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
-        self.prepareResults()
+        self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         self.loadFirstPageOfData()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleChannelNotification),
+                                                         name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
+                                                         object: nil)
     }
 }
 
@@ -586,5 +570,32 @@ extension ChatViewController: PostAttachmentViewDelegate {
         var oldInset = self.tableView.contentInset
         oldInset.top = 0
         self.tableView.contentInset = oldInset
+    }
+}
+
+//MARK: Notifications
+extension ChatViewController {
+    
+    func handleChannelNotification(notification: NSNotification) {
+        if let actionNotification = notification.object as? ActionsNotification {
+            let user = User.self.objectById(actionNotification.userIdentifier)
+            switch (actionNotification.event!) {
+            case .Typing:
+                //refactor (to methods)
+                if (actionNotification.userIdentifier != Preferences.sharedInstance.currentUserId) {
+                    typingIndicatorView?.insertUsername(user?.displayName)
+                }
+            default:
+                //how to handle this?
+                typingIndicatorView?.removeUsername(user?.displayName)
+            }
+        }
+    }
+}
+
+//MARK: - UITextViewDelegate
+extension ChatViewController {
+    override func textViewDidChange(textView: UITextView) {
+        SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
     }
 }

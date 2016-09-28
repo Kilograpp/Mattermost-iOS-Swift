@@ -1,5 +1,5 @@
 PODS:
-  - Crashlytics (3.8.1):
+  - Crashlytics (3.7.3):
     - Fabric (~> 1.6.3)
   - DateTools (1.7.0)
   - Fabric (1.6.8)
@@ -34,7 +34,7 @@ DEPENDENCIES:
   - RestKit
 
 SPEC CHECKSUMS:
-  Crashlytics: 4391d8df0b125345e9f209c5db6e7f40a6a8435d
+  Crashlytics: 76f6beaff70acf226139582c09c78461597c2b98
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   Fabric: 5755268d0171435ab167e3d0878a28a777deaf10
   ISO8601DateFormatterValueTransformer: 52da467d6ec899d6aedda8e48280ac92e8ee97e6

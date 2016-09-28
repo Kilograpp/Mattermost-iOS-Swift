@@ -59,10 +59,13 @@ extension FeedCellBuilder: Inteface {
             break
         }
         
-        let cell = self.tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedBaseTableViewCell
-        cell.transform = self.tableView.transform
-        cell.configureWithPost(post)
-        return cell
+        var cell = self.tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as? FeedBaseTableViewCell
+        if cell == nil {
+            cell = FeedBaseTableViewCell(style: .Default, reuseIdentifier: FeedBaseTableViewCell.reuseIdentifier)
+        }
+        cell!.transform = self.tableView.transform
+        cell!.configureWithPost(post)
+        return cell!
     }
     
     func heightForPost(post: Post) -> CGFloat {
