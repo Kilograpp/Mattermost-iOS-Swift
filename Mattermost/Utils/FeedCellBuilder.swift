@@ -10,7 +10,7 @@ import UIKit
 
 private protocol Inteface: class {
     func heightForPost(post: Post) -> CGFloat
-    func cellForPost(post: Post) -> UITableViewCell
+    func cellForPost(post: Post, errorHandler: (post:Post) -> Void) -> UITableViewCell
 }
 
 final class FeedCellBuilder {
@@ -43,7 +43,7 @@ final class FeedCellBuilder {
 
 
 extension FeedCellBuilder: Inteface {
-    func cellForPost(post: Post) -> UITableViewCell {
+    func cellForPost(post: Post, errorHandler: (post:Post) -> Void) -> UITableViewCell {
         
         var reuseIdentifier: String
     
@@ -64,6 +64,7 @@ extension FeedCellBuilder: Inteface {
             cell = FeedBaseTableViewCell(style: .Default, reuseIdentifier: FeedBaseTableViewCell.reuseIdentifier)
         }
         cell!.transform = self.tableView.transform
+        cell?.errorHandler = errorHandler
         cell!.configureWithPost(post)
         return cell!
     }

@@ -480,7 +480,11 @@ extension ChatViewController {
             self.loadNextPageOfData()
         }
         
-        return self.builder.cellForPost(post!)
+        let errorHandler = { (post:Post) in
+            self.errorAction(post)
+        }
+        
+        return self.builder.cellForPost(post!, errorHandler: errorHandler)
     }
 }
 
@@ -573,7 +577,7 @@ extension ChatViewController: PostAttachmentViewDelegate {
     }
 }
 
-//MARK: Notifications
+//MARK: Handlers
 extension ChatViewController {
     
     func handleChannelNotification(notification: NSNotification) {
@@ -590,6 +594,26 @@ extension ChatViewController {
                 typingIndicatorView?.removeUsername(user?.displayName)
             }
         }
+    }
+    
+    func errorAction(post: Post) {
+        let controller = UIAlertController(title: "Error on sending post", message: "What to do?", preferredStyle: .ActionSheet)
+        controller.addAction(UIAlertAction(title: "Resend", style: .Default, handler: { (action:UIAlertAction) in
+            self.resendAction(post)
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { _ in
+            print("Cancelled")
+            }))
+        presentViewController(controller, animated: true) {}
+    }
+}
+//MARK: - Action {
+extension ChatViewController {
+    func resendAction(post:Post) {
+        PostUtils.sharedInstance.resendPost(post) { (error) in
+            self.clearTextView()
+        }
+
     }
 }
 

@@ -40,6 +40,7 @@ enum PostAttributes: String {
     case attributedMessage = "attributedMessage"
     case attributedMessageHeight = "attributedMessageHeight"
     case hasObserverAttached = "hasObserverAttached"
+    case localId = "localIdentifier"
 }
 
 enum PostRelationships: String {
@@ -85,6 +86,8 @@ final class Post: RealmObject {
     dynamic var updatedAt: NSDate?
     dynamic var deletedAt: NSDate?
     dynamic var status: PostStatus = .Default
+    dynamic var localIdentifier: String?
+
     dynamic var identifier: String? {
         didSet {
             resetStatus()
@@ -137,17 +140,18 @@ final class Post: RealmObject {
     }
     
     override class func primaryKey() -> String {
-        return PostAttributes.identifier.rawValue
+        return PostAttributes.localId.rawValue
     }
     
     override class func indexedProperties() -> [String] {
-        return [PostAttributes.createdAt.rawValue, PostAttributes.identifier.rawValue]
+        return [PostAttributes.createdAt.rawValue, PostAttributes.identifier.rawValue, PostAttributes.localId.rawValue]
     }
     
 }
 
 private protocol Computations: class {
     func resetStatus()
+    func computeLocalIdentifier()
     func computeDay()
     func computePendingId()
     func computeCreatedAtString()
@@ -219,7 +223,6 @@ extension Post: Delegate {
 
 // MARK: - Computations
 extension Post: Computations {
-    
     private func computeDay() {
         let unitFlags: NSCalendarUnit = [.Year, .Month, .Day]
         let calendar = NSCalendar.sharedGregorianCalendar
@@ -255,6 +258,9 @@ extension Post: Computations {
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
+    private func computeLocalIdentifier() {
+         self.localIdentifier = channelId! + authorId! + (createdAt?.formattedDateWithFormat("MM-dd-yyyy_HH:mm:ss"))!
+    }
 
     func setSystemAuthorIfNeeded() {
         guard self.messageType == .System else { return }
@@ -272,6 +278,7 @@ extension Post: Computations {
         self.computeCreatedAtString()
         self.computeCreatedAtStringWidth()
         self.computeDay()
+        self.computeLocalIdentifier()
     }
 }
 

@@ -64,20 +64,34 @@ final class FeedNotificationsObserver {
                 case .Initial:
                     self.tableView.reloadData()
                     break
-                case .Update(_, let deletions, let insertions, _):
-                    if (insertions.count > 0) {
-                        self.tableView.beginUpdates()
-                        //todo inserting sections
-                        if self.days?.first?.posts.count == 1 {
-                            self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .None)
+                case .Update(_, let deletions, let insertions, let modifications):
+                    self.tableView.beginUpdates()
+
+                        if deletions.count > 0 {
+                            deletions.forEach({ (index:Int) in
+                                self.tableView.deleteRowsAtIndexPaths([self.indexPathForPost(self.results[index])], withRowAnimation: .Automatic)
+                            })
                         }
-                        insertions.forEach({ (index:Int) in
-                            self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Automatic)
-                            print(self.numberOfRows(0))
+                        if (insertions.count > 0) {
+                        
+                        //todo inserting sections
+                            if self.days?.first?.posts.count == 1 {
+                                self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .None)
+                            }
+                            insertions.forEach({ (index:Int) in
+                                self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Automatic)
+                            })
+                        
+                        }
+                    
+                        if modifications.count > 0 {
+                        modifications.forEach({ (index:Int) in
+                            self.tableView.reloadRowsAtIndexPaths([self.indexPathForPost(self.results[index])], withRowAnimation: .Automatic)
                         })
-                        self.tableView.endUpdates()
-                    }
-                    //todo modifications and deletions
+                        }
+
+                    
+                    self.tableView.endUpdates()
                 
                 default: break
                 
@@ -151,5 +165,13 @@ extension FeedNotificationsObserver {
     }
     func titleForHeader(section:Int) -> String {
         return self.days![section].text!
+    }
+    private func indexPathForPost(post: Post) -> NSIndexPath {
+        let day = post.day
+        let indexOfDay = (self.days?.indexOf(day!))!
+        let invertedIndexOfPost = (day?.posts.count)! - 1 - (day?.posts.indexOf(post))!
+        let indexPath = NSIndexPath(forRow: invertedIndexOfPost, inSection: indexOfDay)
+        
+        return indexPath
     }
 }

@@ -12,6 +12,8 @@ import RealmSwift
 
 private protocol Public : class {
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func sendExistingPost(post:Post, completion: (error:Error?) -> Void)
+    func resendPost(post:Post, completion: (error:Error?) -> Void)
     func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
     func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
     func deletePost(post: Post, completion: (error: Error?) -> Void)
@@ -53,11 +55,32 @@ extension PostUtils : Public {
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
-        
-        Api.sharedInstance.sendPost(postToSend) { (error) in
+        postToSend.computeMissingFields()
+        postToSend.status = .Sending
+        RealmUtils.save(postToSend)
+        self.clearUploadedAttachments()
+        sendExistingPost(postToSend, completion: completion)
+    }
+    
+    func sendExistingPost(post:Post, completion: (error:Error?) -> Void) {
+        Api.sharedInstance.sendPost(post) { (error) in
             completion(error: error)
-            self.clearUploadedAttachments()
+            if error != nil {
+                print("error")
+                try! RealmUtils.realmForCurrentThread().write({
+                    post.status = .Error
+                })
+            }
+            
         }
+    }
+    
+    func resendPost(post:Post, completion: (error:Error?) -> Void) {
+        try! RealmUtils.realmForCurrentThread().write({
+            post.status = .Sending
+        })
+        print("Status on SENDING changes!")
+        sendExistingPost(post, completion: completion)
     }
     
     func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {

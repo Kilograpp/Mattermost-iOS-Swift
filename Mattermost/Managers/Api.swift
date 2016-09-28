@@ -276,16 +276,16 @@ extension Api: PostApi {
     func sendPost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
-            let post = mappingResult.firstObject as! Post
-            post.computeMissingFields()
-            RealmUtils.save(post)
+            let resultPost = mappingResult.firstObject as! Post
+            resultPost.computeMissingFields()
+            resultPost.localIdentifier = post.localIdentifier
+            RealmUtils.save(resultPost)
             completion(error: nil)
         }, failure: completion)
     }
     func updateSinglePost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
-            print(mappingResult)
             RealmUtils.save(mappingResult.firstObject as! Post)
             completion(error: nil)
             }, failure: completion)

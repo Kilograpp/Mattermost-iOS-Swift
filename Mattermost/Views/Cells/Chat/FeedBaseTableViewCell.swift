@@ -15,6 +15,7 @@ protocol TableViewPostDataSource: class {
 
 class FeedBaseTableViewCell: UITableViewCell, Reusable {
     final var onMentionTap: ((nickname : String) -> Void)?
+    var errorHandler: ((post: Post) -> Void)?
     final var post : Post! {
         didSet { self.postIdentifier = self.post.identifier
             self.parentPostIdentifier = self.post.hasParentPost() ? self.post.parentId : nil}
@@ -41,7 +42,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     }
     
     override func layoutSubviews() {
-//        errorButton.frame = CGRectMake(UIScreen.screenWidth() - Constants.UI.MessageStatusViewSize, (CGRectGetHeight(frame) - Constants.UI.MessageStatusViewSize)/2, Constants.UI.MessageStatusViewSize, Constants.UI.MessageStatusViewSize)
+        postStatusView.frame = CGRectMake(UIScreen.screenWidth() - Constants.UI.PostStatusViewSize, (CGRectGetHeight(frame) - Constants.UI.PostStatusViewSize)/2, Constants.UI.PostStatusViewSize, Constants.UI.PostStatusViewSize)
         
         self.align()
         self.alignSubviews()
@@ -93,7 +94,6 @@ protocol ChatMessageTapActions {
     func emailTapAction(email:String)
     func phoneTapAction(phone:String)
     func openURL(url:NSURL)
-    func errorAction()
 }
 
 extension FeedBaseTableViewCell: ChatMessageTapActions {
@@ -108,9 +108,6 @@ extension FeedBaseTableViewCell: ChatMessageTapActions {
     func openURL(url:NSURL) {
         UIApplication.sharedApplication().openURL(url)
     }
-    func errorAction() {
-        
-    }
 }
 
 extension FeedBaseTableViewCell {
@@ -118,6 +115,7 @@ extension FeedBaseTableViewCell {
         self.post = post
         self.configureMessage()
         postStatusView.configureWithStatus(post)
+        postStatusView.errorHandler = self.errorHandler
     }
     
     class func heightWithPost(post: Post) -> CGFloat {
