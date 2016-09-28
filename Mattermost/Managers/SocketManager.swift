@@ -163,7 +163,10 @@ extension SocketManager: Notifications {
     }
     
     func handleReceivingNewPost(channelId:String,channelName:String,channelType:String,senderName:String,post:Post) {
-        RealmUtils.save(post)
+        // if user is not author
+        if post.authorId != Preferences.sharedInstance.currentUserId {
+            RealmUtils.save(post)
+        }
     }
     
     private func publishLocalNotificationWithChannelIdentifier(channelIdentifier: String, userIdentifier: String, action: String?) {

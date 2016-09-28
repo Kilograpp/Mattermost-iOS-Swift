@@ -434,8 +434,9 @@ extension ChatViewController: Request {
     
     func sendPost() {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
-            self.clearTextView()
+            
         }
+        self.clearTextView()
     }
     
     func sendRepyToPost(post: Post) {
