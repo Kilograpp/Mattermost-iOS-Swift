@@ -34,6 +34,7 @@
 		8BBA7DC81D87DD06003A5B99 /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC71D87DD06003A5B99 /* UIImage+Gif.swift */; };
 		8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */; };
 		8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */; };
+		8BCCD4B51D9CFD4C00F3B7B9 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCCD4B41D9CFD4C00F3B7B9 /* SwiftyJSON.swift */; };
 		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
 		8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */; };
 		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
@@ -227,6 +228,7 @@
 		8BBA7DC71D87DD06003A5B99 /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Gif.swift"; sourceTree = "<group>"; };
 		8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatTableViewCell.swift; sourceTree = "<group>"; };
 		8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NVActivityIndicatorView.framework; path = Carthage/Build/iOS/NVActivityIndicatorView.framework; sourceTree = "<group>"; };
+		8BCCD4B41D9CFD4C00F3B7B9 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
@@ -898,6 +900,7 @@
 		D8935BAD1D5B7FF80037E7ED /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8BCCD4B41D9CFD4C00F3B7B9 /* SwiftyJSON.swift */,
 				D8D601391D5E1BD800951F18 /* FeedNotificationsObserver.swift */,
 			);
 			name = Helpers;
@@ -1239,6 +1242,7 @@
 				D67A42F61D747B80003E2466 /* AssignedPhotoViewItem.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */,
+				8BCCD4B51D9CFD4C00F3B7B9 /* SwiftyJSON.swift in Sources */,
 				D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */,
 				D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */,
 				D61962111D62230600C2E259 /* RightMenuViewController.swift in Sources */,
