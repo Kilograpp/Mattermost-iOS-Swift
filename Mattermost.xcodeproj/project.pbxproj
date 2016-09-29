@@ -23,6 +23,7 @@
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
+		8B5A55B61D994F8400E6EEDF /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A55B51D994F8400E6EEDF /* SwiftyJSON.swift */; };
 		8B8F6FFE1D77451A00ACF626 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */; };
 		8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */; };
 		8B8F70031D7747A900ACF626 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */; };
@@ -215,6 +216,7 @@
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
+		8B5A55B51D994F8400E6EEDF /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
@@ -1137,6 +1139,7 @@
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */,
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
+				8B5A55B61D994F8400E6EEDF /* SwiftyJSON.swift in Sources */,
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
 				4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */,

@@ -81,41 +81,21 @@ extension PostUtils : Public {
     }
 
     func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
-        print("updatePost")
         try! RealmUtils.realmForCurrentThread().write({
-          //  post.message = message
-          //  post.updatedAt = NSDate()
-          //  self.configureBackendPendingId(post)
-          //  self.assignFilesToPostIfNeeded(post)
-            
             post.message = message
             post.updatedAt = NSDate()
             self.configureBackendPendingId(post)
             self.assignFilesToPostIfNeeded(post)
-            
         })
-        /*  let postToSend = Post()
-        
-        postToSend.message = message
-        postToSend.createdAt = post.createdAt
-        postToSend.identifier = post.identifier
-        postToSend.channelId = post.channel.identifier
-        postToSend.updatedAt = NSDate()
-        postToSend.authorId = Preferences.sharedInstance.currentUserId
-        self.configureBackendPendingId(postToSend)
-        self.assignFilesToPostIfNeeded(postToSend)*/
-        
+    
         Api.sharedInstance.updateSinglePost(post) { (error) in
-            print("yeap")
-            if (error != nil) {
-                print(error?.message)
-            }
+            completion(error: error)
         }
     }
     
     func deletePost(post: Post, completion: (error: Error?) -> Void) {
         Api.sharedInstance.deletePost(post) { (error) in
-            print("deleted")
+            completion(error: error)
         }
     }
     
