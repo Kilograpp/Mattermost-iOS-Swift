@@ -200,7 +200,7 @@ extension Post: Inteface {
         return createdAt!.timeIntervalSinceDate(post.createdAt!)
     }
     func hasParentPost() -> Bool {
-        return (self.parentId != nil)
+        return (self.parentId != "")
     }
     
     func parentPost() -> Post? {

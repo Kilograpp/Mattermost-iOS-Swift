@@ -67,6 +67,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 //    private var days: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
     private let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
+    private let postAttachmentsView = PostAttachmentsView()
     
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
@@ -79,9 +80,9 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
             self.toggleSendButtonAvailability()
         }
     }
-    
-    private let postAttachmentsView = PostAttachmentsView()
     private var assignedPhotosArray = Array<AssignedPhotoViewItem>()
+    private var selectedPost: Post! = nil
+    private var selectedAction: String = Constants.PostActionType.SendNew
 }
 
 
@@ -99,6 +100,13 @@ extension ChatViewController {
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBarHidden = false
+        addSLKKeyboardObservers()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        removeSLKKeyboardObservers()
     }
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
@@ -191,10 +199,18 @@ extension ChatViewController: Setup {
     func setupCompactPost() {
         let size = self.completePost.requeredSize()
         self.completePost.translatesAutoresizingMaskIntoConstraints = false
-//TODO: Will be uncomment 
-       // self.view.addSubview(self.completePost)
+        self.completePost.hidden = true
+        self.completePost.cancelHandler = {
+            self.selectedPost = nil
+            self.clearTextView()
+            self.dismissKeyboard(true)
+            self.completePost.hidden = true
+            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendNew)
+        }
         
-        /*let horizontal = NSLayoutConstraint(item: self.completePost, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
+        self.view.addSubview(self.completePost)
+        
+        let horizontal = NSLayoutConstraint(item: self.completePost, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
         view.addConstraint(horizontal)
         let vertical = NSLayoutConstraint(item: self.completePost, attribute: .Bottom, relatedBy: .Equal, toItem: self.textView, attribute: .Top, multiplier: 1, constant: 0)
         view.addConstraint(vertical)
@@ -203,7 +219,7 @@ extension ChatViewController: Setup {
         view.addConstraint(width)
         
         let height = NSLayoutConstraint(item: self.completePost, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: size.height)
-        view.addConstraint(height)*/
+        view.addConstraint(height)
     }
 }
 
@@ -290,50 +306,42 @@ extension ChatViewController : Private {
         self.textView.text = nil
     }
     
+    func configureRightButtonWithTitle(title: String, action: String) {
+            self.rightButton.setTitle(title, forState: .Normal)
+            self.selectedAction = action
+    }
+    
     func showActionSheetControllerForPost(post: Post) {
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-     
+        self.selectedPost = post
+        
         let replyAction = UIAlertAction(title: "Reply", style: .Default) { action -> Void in
-           // self.sendRepyToPost(post)
+            self.completePost.configureWithPost(post, action: ActionType.Reply)
+            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendReply)
+            self.completePost.hidden = false
             self.presentKeyboard(true)
-            let size = self.completePost.requeredSize()
-            self.completePost.frame = CGRectMake(0, 60, size.width, size.height)
-            self.completePost.layoutIfNeeded()
-            self.view.addSubview(self.completePost)
+            
         }
         actionSheetController.addAction(replyAction)
         
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-            print("Cancel")
+            self.selectedPost = nil
         }
         actionSheetController.addAction(cancelAction)
         
         if (post.author.identifier == Preferences.sharedInstance.currentUserId) {
             let editAction = UIAlertAction(title: "Edit", style: .Default) { action -> Void in
+                self.selectedPost = post
+                self.completePost.configureWithPost(post, action: ActionType.Edit)
+                self.completePost.hidden = false
+                self.configureRightButtonWithTitle("Save", action: Constants.PostActionType.SendUpdate)
                 self.presentKeyboard(true)
-                
-                
-                
-                
-               // print("Edit")
-                print(post.message)
-                if (post.message == "zzz") {
-                    /*    PostUtils.sharedInstance.update1Post(post, message: "sdds", attachments: nil, completion: { (error) in
-                     print("yeaaap2")
-                     if (error != nil) {
-                     print(error?.message)
-                     }
-                     })*/
-                }
-
             }
             actionSheetController.addAction(editAction)
             
             let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { action -> Void in
-                //print("Delete")
-                PostUtils.sharedInstance.deletePost(post, completion: { (error) in
-                  print("Deleted")
-                })
+                self.selectedAction = Constants.PostActionType.DeleteOwn
+                self.deletePost()
             }
             actionSheetController.addAction(deleteAction)
         }
@@ -356,7 +364,14 @@ extension ChatViewController: Action {
     }
     
     func sendPostAction() {
-        sendPost()
+        switch self.selectedAction {
+        case Constants.PostActionType.SendReply:
+            sendPostReply()
+        case Constants.PostActionType.SendUpdate:
+            updatePost()
+        default:
+            sendPost()
+        }
     }
     
     func assignPhotosAction() {
@@ -434,14 +449,40 @@ extension ChatViewController: Request {
     
     func sendPost() {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
-            
         }
+        self.dismissKeyboard(true)
         self.clearTextView()
     }
     
-    func sendRepyToPost(post: Post) {
-        PostUtils.sharedInstance.sendReplyToPost(post, channel: self.channel!, message: "test reply", attachments: nil) { (error) in
+    func sendPostReply() {
+        guard (self.selectedPost != nil) else { return }
+        
+        PostUtils.sharedInstance.sendReplyToPost(self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+            self.selectedPost = nil
+        }
+        self.clearTextView()
+        self.dismissKeyboard(true)
+    }
+    
+    func updatePost() {
+        guard (self.selectedPost != nil) else { return }
+        
+        PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil, completion: { (error) in
+            self.selectedPost = nil
             self.clearTextView()
+            self.tableView.reloadData()
+            self.dismissKeyboard(true)
+            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
+        })
+    }
+    
+    func deletePost() {
+        guard (self.selectedPost != nil) else { return }
+        
+        PostUtils.sharedInstance.deletePost(self.selectedPost) { (error) in
+            self.selectedAction = Constants.PostActionType.SendNew
+            RealmUtils.deleteObject(self.selectedPost)
+            self.selectedPost = nil
         }
     }
     
@@ -523,6 +564,7 @@ extension ChatViewController {
 //MARK: ChannelObserverDelegate
 
 extension ChatViewController: ChannelObserverDelegate {
+
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
         //unsubscribing from realm and channelActionNotifications
         if resultsObserver != nil {
@@ -536,7 +578,6 @@ extension ChatViewController: ChannelObserverDelegate {
                                                                 name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
                                                                 object: nil)
         }
-        
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
@@ -590,9 +631,9 @@ extension ChatViewController: PostAttachmentViewDelegate {
     }
 }
 
+
 //MARK: Handlers
 extension ChatViewController {
-    
     func handleChannelNotification(notification: NSNotification) {
         if let actionNotification = notification.object as? ActionsNotification {
             let user = User.self.objectById(actionNotification.userIdentifier)
@@ -638,6 +679,18 @@ extension ChatViewController {
 
 //MARK: - UITextViewDelegate
 extension ChatViewController {
+    func addSLKKeyboardObservers() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: SLKKeyboardWillHideNotification, object: nil)
+    }
+    
+    func removeSLKKeyboardObservers() {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: SLKKeyboardWillHideNotification, object: nil)
+    }
+    
+    func handleKeyboardWillHideeNotification() {
+        self.completePost.hidden = true
+    }
+    
     override func textViewDidChange(textView: UITextView) {
         SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
     }

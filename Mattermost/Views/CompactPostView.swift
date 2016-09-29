@@ -8,6 +8,10 @@
 
 import Foundation
 
+let BaseHeight = CGFloat(64)
+let ContentHeight = CGFloat(48)
+let SeparatorSize = CGSizeMake(2, 38)
+
 struct ActionType {
     static let Edit = "edit"
     static let Reply = "reply"
@@ -25,6 +29,10 @@ private protocol Setup {
     func setupMessageLabel()
 }
 
+private protocol Action {
+    func cancelAction()
+}
+
 class CompactPostView: UIView {
 
 //Properties
@@ -36,6 +44,8 @@ class CompactPostView: UIView {
     private let cancelButton: UIButton = UIButton()
     private let messageLabel: UILabel = UILabel()
     
+    var cancelHandler : (() -> Void)?
+    
     var actionType: String = ""
     
     class func compactPostView(type: String) -> CompactPostView {
@@ -46,17 +56,17 @@ class CompactPostView: UIView {
         return compactPostView
     }
     
-    func configureWithPost(post: Post) {
-        if (self.actionType == ActionType.CompleteReply) {
-            self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
-            ImageDownloader.downloadFeedAvatarForUser(post.author) { [weak self] (image, error) in
-                self?.avatarImageView.image = image
-            }
-            self.nameLabel.text = post.author.displayName
+    func configureWithCompletePost(post: Post) {
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        ImageDownloader.downloadFeedAvatarForUser(post.author) { [weak self] (image, error) in
+            self?.avatarImageView.image = image
         }
-        else {
-            self.typeLabel.text = (self.actionType == ActionType.Edit) ? "Edit message" : "Reply message"
-        }
+        self.nameLabel.text = post.author.displayName
+        self.messageLabel.text = post.message
+    }
+    
+    func configureWithPost(post: Post, action: String) {
+        self.typeLabel.text = (action == ActionType.Edit) ? "Edit message" : "Reply message"
         self.messageLabel.text = post.message
     }
     
@@ -65,7 +75,7 @@ class CompactPostView: UIView {
         if (self.actionType == ActionType.CompleteReply) {
             width -= (Constants.UI.FeedCellMessageLabelPaddings + Constants.UI.PostStatusViewSize)
         }
-        return CGSizeMake(width, 64)
+        return CGSizeMake(width, BaseHeight)
     }
 }
 
@@ -98,21 +108,22 @@ extension CompactPostView: Setup {
         self.contentView.layer.shadowOpacity = 0.15
         self.contentView.layer.shadowOffset = CGSizeMake(0, 1)
         self.contentView.layer.cornerRadius = 3.0
-        let width = UIScreen.screenWidth() - 2 * Constants.UI.MiddlePaddingSize
-        self.contentView.frame = CGRectMake(8, 10, width, 48)
+        let width = UIScreen.screenWidth() - Constants.UI.StandardPaddingSize
+        self.contentView.frame = CGRectMake(Constants.UI.MiddlePaddingSize, Constants.UI.LongPaddingSize, width, ContentHeight)
         self.addSubview(self.contentView)
     }
     
     func setupSeparatorView() {
         self.separatorView.backgroundColor = (self.actionType == ActionType.CompleteReply) ? ColorBucket.parentSeparatorColor : ColorBucket.editSeparatorColor
         self.contentView.addSubview(self.separatorView)
-        self.separatorView.frame = CGRectMake(10, 5, 2, 38)
+        self.separatorView.frame = CGRectMake(Constants.UI.LongPaddingSize, Constants.UI.ShortPaddingSize, SeparatorSize.width, SeparatorSize.height)
     }
     
     func setupAvatarImageView() {
         self.avatarImageView.backgroundColor = self.contentView.backgroundColor
-        self.avatarImageView.frame = CGRectMake(20, 5, 16, 16)
-        self.avatarImageView.layer.cornerRadius = 8
+        self.avatarImageView.frame = CGRectMake(Constants.UI.DoublePaddingSize, Constants.UI.ShortPaddingSize,
+                                                Constants.UI.StandardPaddingSize, Constants.UI.StandardPaddingSize)
+        self.avatarImageView.layer.cornerRadius = Constants.UI.MiddlePaddingSize
         self.contentView.addSubview(self.avatarImageView)
     }
     
@@ -120,8 +131,9 @@ extension CompactPostView: Setup {
         self.nameLabel.backgroundColor = self.contentView.backgroundColor
         self.nameLabel.font = FontBucket.parentAuthorNameFont
         self.nameLabel.textColor = ColorBucket.parentAuthorColor
-        let width = UIScreen.screenWidth() - 41 - 20
-        self.nameLabel.frame = CGRectMake(41, 5, width, 16)
+        let originX = Constants.UI.DoublePaddingSize + Constants.UI.StandardPaddingSize + Constants.UI.ShortPaddingSize
+        let width = UIScreen.screenWidth() - (originX + Constants.UI.DoublePaddingSize)
+        self.nameLabel.frame = CGRectMake(originX, Constants.UI.ShortPaddingSize, width, Constants.UI.StandardPaddingSize)
         self.contentView.addSubview(self.nameLabel)
     }
     
@@ -129,25 +141,35 @@ extension CompactPostView: Setup {
         self.typeLabel.backgroundColor = self.contentView.backgroundColor
         self.typeLabel.font = FontBucket.editTypeFont
         self.typeLabel.textColor = ColorBucket.editSeparatorColor
-        let width = UIScreen.screenWidth() - 20 - 45
-        self.typeLabel.frame = CGRectMake(20, 10, width, 14)
+        let width = UIScreen.screenWidth() - (3 * Constants.UI.DoublePaddingSize + Constants.UI.ShortPaddingSize)
+        self.typeLabel.frame = CGRectMake(Constants.UI.DoublePaddingSize, Constants.UI.LongPaddingSize, width, 14)
         self.contentView.addSubview(self.typeLabel)
     }
     
     func setupCancelButton() {
         self.cancelButton.backgroundColor = self.contentView.backgroundColor
         self.cancelButton.setImage(UIImage(named: "close button"), forState: .Normal)
-        let x = self.typeLabel.frame.origin.x + self.typeLabel.frame.size.width + 5
-        self.cancelButton.frame = CGRectMake(x, 5, 16, 16)
+        let x = self.typeLabel.frame.origin.x + self.typeLabel.frame.size.width + Constants.UI.ShortPaddingSize
+        self.cancelButton.frame = CGRectMake(x, Constants.UI.ShortPaddingSize, Constants.UI.StandardPaddingSize, Constants.UI.StandardPaddingSize)
+        self.cancelButton.addTarget(self, action: #selector(self.cancelAction), forControlEvents: .TouchUpInside)
         self.contentView.addSubview(self.cancelButton)
     }
     
     func setupMessageLabel() {
         self.messageLabel.backgroundColor = self.contentView.backgroundColor
         self.messageLabel.font = (self.actionType == ActionType.CompleteReply) ? FontBucket.parentMessageFont : FontBucket.messageFont
-        self.messageLabel.textColor = UIColor.blueColor()
-        let width = UIScreen.screenWidth() - 20 - 20
-        self.messageLabel.frame = CGRectMake(20, 28, width, 16)
+        self.messageLabel.textColor = ColorBucket.parentMessageColor
+        let width = UIScreen.screenWidth() - 2 * Constants.UI.DoublePaddingSize
+        self.messageLabel.frame = CGRectMake(Constants.UI.DoublePaddingSize, Constants.UI.DoublePaddingSize + Constants.UI.MiddlePaddingSize, width, Constants.UI.StandardPaddingSize)
         self.contentView.addSubview(self.messageLabel)
+    }
+}
+
+
+//MARK: Action
+
+extension CompactPostView: Action {
+    func cancelAction() {
+        self.cancelHandler!()
     }
 }
