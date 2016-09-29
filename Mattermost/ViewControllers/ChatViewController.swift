@@ -368,9 +368,9 @@ extension ChatViewController: Action {
     }
     
     func longPressAction(gestureRecognizer: UILongPressGestureRecognizer) {
-//        let indexPath = self.tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(self.tableView))
-//        let post = results[indexPath!.row]
-//        showActionSheetControllerForPost(post)
+        guard let indexPath = self.tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(self.tableView)) else { return }
+        let post = resultsObserver?.postForIndexPath(indexPath)
+        showActionSheetControllerForPost(post!)
     }
 }
 
@@ -410,7 +410,7 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hasNextPage = true
             
-            self.resultsObserver.unsubscribeRealmNotifications()
+            self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
             self.resultsObserver.subscribeNotifications()
         })
@@ -426,8 +426,8 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
             
+            self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
-            self.resultsObserver.unsubscribeRealmNotifications()
             self.resultsObserver.subscribeNotifications()
         }
     }
@@ -466,18 +466,15 @@ extension ChatViewController: Request {
 
 extension ChatViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-//        print("Days count: \(days.count)")
         return self.resultsObserver?.numberOfSections() ?? 1
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        print("in  \(days[section].text) , postCount: \(days[section].posts.count)")
         return self.resultsObserver?.numberOfRows(section) ?? 0
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let post = resultsObserver?.postForIndexPath(indexPath)
-//        print("day for post \(post.message) : \(post.day?.text)")
         if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             self.loadNextPageOfData()
         }
@@ -519,7 +516,6 @@ extension ChatViewController {
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let post = resultsObserver?.postForIndexPath(indexPath)
-//        print("height for post \(post.message) : \(post.attributedMessageHeight)")
         return self.builder.heightForPost(post!)
     }
 }
@@ -528,14 +524,14 @@ extension ChatViewController {
 
 extension ChatViewController: ChannelObserverDelegate {
     func didSelectChannelWithIdentifier(identifier: String!) -> Void {
-        //refactor: unsubscribing from realm and channelActionNotifications
+        //unsubscribing from realm and channelActionNotifications
         if resultsObserver != nil {
-            resultsObserver.unsubscribeRealmNotifications()
+            resultsObserver.unsubscribeNotifications()
         }
         self.resultsObserver = nil
         if self.channel != nil {
             //remove action observer from old channel
-            print(channel?.identifier)
+            //after relogin
             NSNotificationCenter.defaultCenter().removeObserver(self,
                                                                 name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
                                                                 object: nil)
@@ -547,6 +543,9 @@ extension ChatViewController: ChannelObserverDelegate {
         self.loadFirstPageOfData()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleChannelNotification),
                                                          name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
+                                                         object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleLogoutNotification),
+                                                         name: Constants.NotificationsNames.UserLogoutNotificationName,
                                                          object: nil)
     }
 }
@@ -608,6 +607,12 @@ extension ChatViewController {
                 typingIndicatorView?.removeUsername(user?.displayName)
             }
         }
+    }
+    
+    func handleLogoutNotification() {
+        self.channel = nil
+        self.resultsObserver = nil
+        ChannelObserver.sharedObserver.delegate = nil
     }
     
     func errorAction(post: Post) {

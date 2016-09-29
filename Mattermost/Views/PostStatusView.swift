@@ -56,7 +56,6 @@ extension PostStatusView {
 extension PostStatusView {
     func configureWithStatus(post: Post) {
         self.post = post
-        print(post.status.rawValue)
         switch post.status {
         case .Error:
             sendingView.removeFromSuperview()

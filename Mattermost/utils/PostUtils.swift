@@ -79,7 +79,6 @@ extension PostUtils : Public {
         try! RealmUtils.realmForCurrentThread().write({
             post.status = .Sending
         })
-        print("Status on SENDING changes!")
         sendExistingPost(post, completion: completion)
     }
     

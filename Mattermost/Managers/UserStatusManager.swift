@@ -21,9 +21,10 @@ extension UserStatusManager {
         Api.sharedInstance.logout { (error) in
             // cookie deleting automatically? (Api.shared...cookie becomes nil)
             //            SocketManager.sharedInstance.disconnect()
-            RouterUtils.loadInitialScreen()
+            
             NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: Constants.NotificationsNames.UserLogoutNotificationName, object: nil))
             RealmUtils.deleteAll()
+            RouterUtils.loadInitialScreen()
         }
     }
 }

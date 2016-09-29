@@ -28,18 +28,17 @@ final class FeedNotificationsObserver {
     init(tableView: UITableView, channel: Channel) {
         self.channel = channel
         self.tableView = tableView
-        self.unsubscribeRealmNotifications()
+        self.unsubscribeNotifications()
         self.prepareResults()
         self.subscribeNotifications()
     }
     
     deinit {
-        unsubscribeRealmNotifications()
+        unsubscribeNotifications()
     }
     
-    @objc func unsubscribeRealmNotifications() {
+    @objc func unsubscribeNotifications() {
         self.resultsNotificationToken?.stop()
-        self.lastDayNotificationToken?.stop()
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
@@ -118,7 +117,7 @@ final class FeedNotificationsObserver {
 //MARK: - Notification Subscription
 extension FeedNotificationsObserver {
     func subscribeNotifications() {
-        Observer.sharedObserver.subscribeForLogoutNotification(self, selector: #selector(unsubscribeRealmNotifications))
+        Observer.sharedObserver.subscribeForLogoutNotification(self, selector: #selector(unsubscribeNotifications))
         subscribeForRealmNotifications()
     }
 }
@@ -150,7 +149,6 @@ extension FeedNotificationsObserver {
 //MARK: FetchedResultsController
 extension FeedNotificationsObserver {
     func numberOfRows(section:Int) -> Int {
-//        print("in day: \(self.days![section].text) : \(self.days![section].posts.count)")
        return self.days![section].posts.count
     }
     
