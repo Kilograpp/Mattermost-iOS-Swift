@@ -200,11 +200,17 @@ extension Post: Inteface {
         return createdAt!.timeIntervalSinceDate(post.createdAt!)
     }
     func hasParentPost() -> Bool {
-        return (self.parentId != "")
+        return (self.parentId != "" && self.parentId != nil)
+//        return self.parentId != nil
     }
     
     func parentPost() -> Post? {
-        return (self.parentId != nil) ? try! Realm().objects(Post).filter("identifier = %@", self.parentId!).last : nil
+        //temp!!! will be a post instead of parent post
+//        return (self.parentId != nil) ? try! Realm().objects(Post).filter("identifier = %@", self.parentId!).last : nil
+        if let parentPost = try! Realm().objects(Post).filter("identifier = %@", self.parentId!).last {
+                return parentPost
+        }
+        return self
     }
 }
 
@@ -259,6 +265,7 @@ extension Post: Computations {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
     private func computeLocalIdentifier() {
+        guard localIdentifier == nil else { return }
          self.localIdentifier = channelId! + authorId! + (createdAt?.formattedDateWithFormat("MM-dd-yyyy_HH:mm:ss"))!
     }
 

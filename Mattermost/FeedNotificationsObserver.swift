@@ -64,13 +64,27 @@ final class FeedNotificationsObserver {
                     self.tableView.reloadData()
                     break
                 case .Update(_, let deletions, let insertions, let modifications):
-                    self.tableView.beginUpdates()
+                    
 
                         if deletions.count > 0 {
-                            deletions.forEach({ (index:Int) in
-                                self.tableView.deleteRowsAtIndexPaths([self.indexPathForPost(self.results[index])], withRowAnimation: .Automatic)
-                            })
+//                            // for last section (don't work at others) with 0 posts
+//                            if (self.numberOfRows(0) == 0) {
+////                                self.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Automatic)
+//                                self.tableView.deleteSections(NSIndexSet(index: 0), withRowAnimation: .None)
+//                            } else {
+//                                //for other posts
+//                                deletions.forEach({ (index:Int) in
+//                                    let row = self.indexPathForPost(self.results[index]).row - 1
+//                                    let section = self.indexPathForPost(self.results[index]).section
+//                                    self.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: row, inSection: section)], withRowAnimation: .Automatic)
+//                                    print ("deletion on section \(self.indexPathForPost(self.results[index]).section) and row:\(self.indexPathForPost(self.results[index]).row)")
+//                                })
+//                            }
+                            //TEMP:
+                            self.tableView.reloadData()
+                            
                         }
+                        self.tableView.beginUpdates()
                         if (insertions.count > 0) {
                         
                         //todo inserting sections
@@ -153,7 +167,7 @@ extension FeedNotificationsObserver {
     }
     
     func numberOfSections() -> Int {
-        return self.days!.count ?? 0
+        return days.count
     }
     func postForIndexPath(indexPath:NSIndexPath) -> Post {
         return days![indexPath.section].posts[self.numberOfRows(indexPath.section) - indexPath.row - 1]

@@ -93,6 +93,7 @@ extension PostUtils : Public {
         postToSend.rootId = post.identifier
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
+        postToSend.computeMissingFields()
         RealmUtils.save(postToSend)
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
@@ -107,6 +108,7 @@ extension PostUtils : Public {
             post.updatedAt = NSDate()
             self.configureBackendPendingId(post)
             self.assignFilesToPostIfNeeded(post)
+            post.computeMissingFields()
         })
     
         Api.sharedInstance.updateSinglePost(post) { (error) in

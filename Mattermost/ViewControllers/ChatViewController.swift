@@ -469,11 +469,10 @@ extension ChatViewController: Request {
         
         PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil, completion: { (error) in
             self.selectedPost = nil
-            self.clearTextView()
-            self.tableView.reloadData()
             self.dismissKeyboard(true)
             self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
         })
+        self.clearTextView()
     }
     
     func deletePost() {
