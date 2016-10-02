@@ -52,10 +52,12 @@ struct NotificationKeys {
 }
 
 enum NotificationType: Int {
-    case Error = -1         //error
-    case Default = 0        //OK
-    case ReceivingPost = 1  //receiving new post
-    case ReceivingTyping    //receiving action
+    case Error = -1             //error
+    case Default = 0            //OK
+    case ReceivingPost = 1      //receiving new post
+    case ReceivingUpdatedPost   //receiving new post
+    case ReceivingDeletedPost
+    case ReceivingTyping        //receiving action
     case ReceivingStatus    //receiving user status change
     case ReceivingStatuses  //receiving all user statuses
     case Unknown
@@ -65,6 +67,8 @@ enum Event: String {
     case Typing = "typing"
     case ChannelView = "channel_viewed"
     case Posted = "posted"
+    case Deleted = "post_deleted"
+    case Updated = "post_edited"
     case StatusChanged = "status_change"
     case UserAdded = "user_added"
     case Unknown
@@ -131,6 +135,10 @@ final class SocketNotificationUtils {
             return .ReceivingTyping
         case Event.Posted.rawValue:
             return .ReceivingPost
+        case Event.Deleted.rawValue:
+            return .ReceivingDeletedPost
+        case Event.Updated.rawValue:
+            return .ReceivingUpdatedPost
         case Event.StatusChanged.rawValue:
             return .ReceivingStatus
         default:
