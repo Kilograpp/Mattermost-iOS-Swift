@@ -87,7 +87,7 @@ final class FeedNotificationsObserver {
                         self.tableView.beginUpdates()
                         if (insertions.count > 0) {
                         
-                        //todo inserting sections
+ 
                             if self.days?.first?.posts.count == 1 {
                                 self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .None)
                             }
@@ -159,7 +159,7 @@ extension FeedNotificationsObserver {
         self.days = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
     }
 }
-//refactor manager for results and tableViewdelegate
+//refactor
 //MARK: FetchedResultsController
 extension FeedNotificationsObserver {
     func numberOfRows(section:Int) -> Int {
@@ -168,9 +168,14 @@ extension FeedNotificationsObserver {
     
     func numberOfSections() -> Int {
         return days.count
+//        let daysCount = days.filter { (day:Day) -> Bool in
+//            return day.posts.count > 0
+//        }.count
+//        return daysCount
     }
     func postForIndexPath(indexPath:NSIndexPath) -> Post {
-        return days![indexPath.section].posts[self.numberOfRows(indexPath.section) - indexPath.row - 1]
+//        return days![indexPath.section].posts[self.numberOfRows(indexPath.section) - indexPath.row - 1]
+        return days![indexPath.section].sortedPosts()[self.numberOfRows(indexPath.section) - indexPath.row - 1]
     }
     func lastPost() -> Post {
         return results!.last!
@@ -180,9 +185,11 @@ extension FeedNotificationsObserver {
     }
     private func indexPathForPost(post: Post) -> NSIndexPath {
         let day = post.day
+        let daysPosts = day?.sortedPosts()
         let indexOfDay = (self.days?.indexOf(day!))!
-        let invertedIndexOfPost = (day?.posts.count)! - 1 - (day?.posts.indexOf(post))!
-        let indexPath = NSIndexPath(forRow: invertedIndexOfPost, inSection: indexOfDay)
+//        let invertedIndexOfPost = (day?.posts.count)! - 1 - (day?.posts.indexOf(post))!
+        let indexOfPost = (day?.posts.count)! - 1 - (daysPosts?.indexOf(post))!
+        let indexPath = NSIndexPath(forRow: indexOfPost, inSection: indexOfDay)
         
         return indexPath
     }

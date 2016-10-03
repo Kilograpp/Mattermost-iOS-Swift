@@ -320,7 +320,6 @@ extension ChatViewController : Private {
             self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendReply)
             self.completePost.hidden = false
             self.presentKeyboard(true)
-            
         }
         actionSheetController.addAction(replyAction)
         
@@ -336,6 +335,7 @@ extension ChatViewController : Private {
                 self.completePost.hidden = false
                 self.configureRightButtonWithTitle("Save", action: Constants.PostActionType.SendUpdate)
                 self.presentKeyboard(true)
+                self.textView.text = self.selectedPost.message
             }
             actionSheetController.addAction(editAction)
             
@@ -466,12 +466,14 @@ extension ChatViewController: Request {
     
     func updatePost() {
         guard (self.selectedPost != nil) else { return }
-        
+    
         PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil, completion: { (error) in
             self.selectedPost = nil
             self.dismissKeyboard(true)
-            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
+            self.selectedAction = Constants.PostActionType.SendNew
+//            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
         })
+        
         self.clearTextView()
     }
     
@@ -643,7 +645,6 @@ extension ChatViewController {
                     typingIndicatorView?.insertUsername(user?.displayName)
                 }
             default:
-                //how to handle this?
                 typingIndicatorView?.removeUsername(user?.displayName)
             }
         }
@@ -669,9 +670,7 @@ extension ChatViewController {
 //MARK: - Action {
 extension ChatViewController {
     func resendAction(post:Post) {
-        PostUtils.sharedInstance.resendPost(post) { (error) in
-            self.clearTextView()
-        }
+        PostUtils.sharedInstance.resendPost(post) { _ in }
 
     }
 }

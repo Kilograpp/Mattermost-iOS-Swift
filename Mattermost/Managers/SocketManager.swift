@@ -103,6 +103,16 @@ extension SocketManager: MessageHandling {
                 let postString = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.Post] as! String
                 let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
                 handleReceivingNewPost(channelId!,channelName: channelName,channelType: channelType,senderName: senderName,post: post)
+            case .ReceivingUpdatedPost:
+                print("Updated post")
+                let postString = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.Post] as! String
+                let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
+                handleReceivingUpdatedPost(post)
+            case .ReceivingDeletedPost:
+                print("Deleted post")
+                let postString = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.Post] as! String
+                let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
+                handleReceivingDeletedPost(post)
             case .ReceivingStatus:
                 guard let status = dictionary[NotificationKeys.Data]?[NotificationKeys.Status] as? String else { return }
                 publishLocalNotificationStatusChanged(userId!, status: status)
@@ -116,31 +126,6 @@ extension SocketManager: MessageHandling {
                 //reply with event:"hello"
                 publishBackendNotificationFetchStatuses()
         }
-//
-//
-//        let action     = dictionary[NotificationKeys.Action] as? String
-//        let channelId  = dictionary[NotificationKeys.ChannelIdentifier] as! String
-//        let postString = dictionary[NotificationKeys.Properties]?[NotificationKeys.Post] as? NSString
-//
-//        
-//        if let postDictionary = postString?.toDictionary() {
-//            let postPendingIdentifier = postDictionary[NotificationKeys.PendingPostIdentifier] as! String
-//            let postIdentifier        = postDictionary[NotificationKeys.Identifier] as! String
-//            
-//            if !postExistsWithIdentifier(postIdentifier, pendingIdentifier: postPendingIdentifier) {
-//                
-//                let post = Post()
-//                post.identifier = (postDictionary[NotificationKeys.Identifier] as! String)
-//                post.channelId = channelId
-//                
-//                Api.sharedInstance.updatePost(post, completion: { (error) in
-//                    self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
-//                })
-//            }
-//        } else {
-//            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
-//        }
-
     }
 }
 
@@ -166,6 +151,25 @@ extension SocketManager: Notifications {
         // if user is not author
         if post.authorId != Preferences.sharedInstance.currentUserId {
             RealmUtils.save(post)
+        }
+    }
+    
+    func handleReceivingUpdatedPost(updatedPost:Post) {
+        // if user is not author
+        if updatedPost.authorId != Preferences.sharedInstance.currentUserId {
+            RealmUtils.save(updatedPost)
+        }
+    }
+    
+    func handleReceivingDeletedPost(deletedPost:Post) {
+        // if user is not author
+        let day = deletedPost.day
+        if deletedPost.authorId != Preferences.sharedInstance.currentUserId {
+            let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first!
+            RealmUtils.deleteObject(post)
+            if day?.posts.count == 0 {
+                RealmUtils.deleteObject(day!)
+            }
         }
     }
     
