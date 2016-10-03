@@ -13,7 +13,9 @@ before_install:
 - brew outdated carthage || brew upgrade carthage
 - gem install xcov --no-ri --no-rdoc --no-document
 - gem update fastlane --no-ri --no-rdoc --no-document
-- bundle install
+- gem uninstall bundler -v '>1.12.5' --force || echo "bundler >1.12.5 is not installed"
+- gem install bundler -v 1.12.5 --no-rdoc --no-ri --no-document --quiet
+- bundle install --deployment --retry 3
 - bundle exec pod repo update --silent
 
 install: true
