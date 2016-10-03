@@ -21,12 +21,7 @@ private protocol Interface: class {
     //refactor seqNumber
     static var seqNumber = 1
     private var lastNotificationDate: NSDate?
-    private lazy var socket: WebSocket = {
-        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
-        webSocket.delegate = self
-        webSocket.setCookie(UserStatusManager.sharedInstance.cookie())
-        return webSocket
-    }()
+    private var socket: WebSocket?
 }
 
 private protocol Notifications: class {
@@ -73,12 +68,20 @@ extension SocketManager: Interface {
         self.publishBackendNotificationAboutAction(action, channelId: channel.identifier!)
     }
     func setNeedsConnect() {
+        self.socketSetup()
         if shouldConnect() {
-            self.socket.connect()
+            self.socket!.connect()
         }
     }
     func disconnect() {
-        socket.disconnect(forceTimeout: 0)
+        socket!.disconnect(forceTimeout: 0)
+        socket = nil
+    }
+    
+    func socketSetup() {
+        self.socket = WebSocket(url: Api.sharedInstance.baseURL().URLByAppendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
+        self.socket!.delegate = self
+        self.socket!.setCookie(UserStatusManager.sharedInstance.cookie())
     }
 }
 
@@ -157,7 +160,7 @@ extension SocketManager: MessageHandling {
 //MARK: - Notifications
 extension SocketManager: Notifications {
     func publishBackendNotificationAboutAction(action: ChannelAction, channelId:String) {
-            socket.writeData(SocketNotificationUtils.dataForActionRequest(action, seq: SocketManager.seqNumber, channelId: channelId))
+            socket!.writeData(SocketNotificationUtils.dataForActionRequest(action, seq: SocketManager.seqNumber, channelId: channelId))
             // ++ is deprecated. refactor later seq number
             SocketManager.seqNumber = SocketManager.seqNumber + 1
     }
@@ -221,7 +224,7 @@ extension SocketManager: Notifications {
 //MARK: - State Control
 extension SocketManager: StateControl {
     private func shouldConnect() -> Bool{
-        return UserStatusManager.sharedInstance.isSignedIn() && !self.socket.isConnected
+        return UserStatusManager.sharedInstance.isSignedIn() && !self.socket!.isConnected
     }
     private func shouldSendNotification() -> Bool {
         let date = NSDate()
