@@ -30,13 +30,13 @@ final class FeedCellBuilder {
         if post.hasAttachments() {
             return .Attachment
         }
-        if let _ = previous where post.hasSameAuthor(previous)  {
-            
-            if previous?.day!.date!.compare(post.day!.date!) == .OrderedSame {
-               return .FollowUp
-            }
-            
-        }
+//        if let _ = previous where post.hasSameAuthor(previous)  {
+//            
+//            if previous?.day!.date!.compare(post.day!.date!) == .OrderedSame {
+//               return .FollowUp
+//            }
+//            
+//        }
         return .Common
     }
 }
@@ -52,7 +52,9 @@ extension FeedCellBuilder: Inteface {
             reuseIdentifier = FeedAttachmentsTableViewCell.reuseIdentifier
             break
         case .FollowUp:
-            reuseIdentifier =  FeedFollowUpTableViewCell.reuseIdentifier
+//            reuseIdentifier =  FeedFollowUpTableViewCell.reuseIdentifier
+//            break
+            reuseIdentifier = FeedCommonTableViewCell.reuseIdentifier
             break
         case .Common:
             reuseIdentifier = FeedCommonTableViewCell.reuseIdentifier
@@ -74,7 +76,8 @@ extension FeedCellBuilder: Inteface {
             case .Attachment:
                 return FeedAttachmentsTableViewCell.heightWithPost(post)
             case .FollowUp:
-                return FeedFollowUpTableViewCell.heightWithPost(post)
+//                return FeedFollowUpTableViewCell.heightWithPost(post)
+                return FeedCommonTableViewCell.heightWithPost(post)
             case .Common:
                 return FeedCommonTableViewCell.heightWithPost(post)
         }
