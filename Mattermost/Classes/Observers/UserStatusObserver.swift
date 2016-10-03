@@ -49,7 +49,7 @@ extension UserStatusObserver : Private {
         let statusesDictionary = notification.object as! [String:String]
         for (key,value) in statusesDictionary {
             statuses.updateValue(value, forKey: key)
-            sendUpdateNotification(value, status:key)
+            sendUpdateNotification(key, status:value)
         }
     }
 }

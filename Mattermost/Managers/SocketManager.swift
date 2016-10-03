@@ -126,31 +126,6 @@ extension SocketManager: MessageHandling {
                 //reply with event:"hello"
                 publishBackendNotificationFetchStatuses()
         }
-//
-//
-//        let action     = dictionary[NotificationKeys.Action] as? String
-//        let channelId  = dictionary[NotificationKeys.ChannelIdentifier] as! String
-//        let postString = dictionary[NotificationKeys.Properties]?[NotificationKeys.Post] as? NSString
-//
-//        
-//        if let postDictionary = postString?.toDictionary() {
-//            let postPendingIdentifier = postDictionary[NotificationKeys.PendingPostIdentifier] as! String
-//            let postIdentifier        = postDictionary[NotificationKeys.Identifier] as! String
-//            
-//            if !postExistsWithIdentifier(postIdentifier, pendingIdentifier: postPendingIdentifier) {
-//                
-//                let post = Post()
-//                post.identifier = (postDictionary[NotificationKeys.Identifier] as! String)
-//                post.channelId = channelId
-//                
-//                Api.sharedInstance.updatePost(post, completion: { (error) in
-//                    self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
-//                })
-//            }
-//        } else {
-//            self.publishLocalNotificationWithChannelIdentifier(channelId, userIdentifier: userId, action: action)
-//        }
-
     }
 }
 
