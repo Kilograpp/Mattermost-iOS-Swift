@@ -188,9 +188,13 @@ extension SocketManager: Notifications {
     
     func handleReceivingDeletedPost(deletedPost:Post) {
         // if user is not author
+        let day = deletedPost.day
         if deletedPost.authorId != Preferences.sharedInstance.currentUserId {
             let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first!
             RealmUtils.deleteObject(post)
+            if day?.posts.count == 0 {
+                RealmUtils.deleteObject(day!)
+            }
         }
     }
     

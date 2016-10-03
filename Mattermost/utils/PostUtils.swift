@@ -118,12 +118,16 @@ extension PostUtils : Public {
     
     func deletePost(post: Post, completion: (error: Error?) -> Void) {
         // identifier == nil -> post exists only in database
+        let day = post.day
         guard post.identifier != nil else {
             completion(error: nil)
             return
         }
         Api.sharedInstance.deletePost(post) { (error) in
             completion(error: error)
+            if day?.posts.count == 0 {
+                RealmUtils.deleteObject(day!)
+            }
         }
     }
     

@@ -167,11 +167,11 @@ extension FeedNotificationsObserver {
     }
     
     func numberOfSections() -> Int {
-//        return days.count
-        let daysCount = days.filter { (day:Day) -> Bool in
-            return day.posts.count > 0
-        }.count
-        return daysCount
+        return days.count
+//        let daysCount = days.filter { (day:Day) -> Bool in
+//            return day.posts.count > 0
+//        }.count
+//        return daysCount
     }
     func postForIndexPath(indexPath:NSIndexPath) -> Post {
         return days![indexPath.section].posts[self.numberOfRows(indexPath.section) - indexPath.row - 1]
