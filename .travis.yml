@@ -8,9 +8,6 @@ rvm:
 - 2.2.5
 
 before_install:
-- chmod +x .travis/script.sh
-- chmod +x .travis/add_keychain.sh
-- chmod +x .travis/remove_keychain.sh
 - brew update
 - brew outdated xctool || brew upgrade xctool
 - brew outdated carthage || brew upgrade carthage
@@ -33,6 +30,7 @@ after_script:
 branches:
   only:
   - master
+  - development
 
 env:
   global:
