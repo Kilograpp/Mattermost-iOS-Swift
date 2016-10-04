@@ -18,34 +18,34 @@ private protocol Interface: class {
 }
 
 private protocol UserApi: class {
-    func login(email: String, password: String, completion: (error: Error?) -> Void)
-    func loadCompleteUsersList(completion:(error: Error?) -> Void)
-//    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void)
+    func login(email: String, password: String, completion: (error: Mattermost.Error?) -> Void)
+    func loadCompleteUsersList(completion:(error: Mattermost.Error?) -> Void)
+//    func updateStatusForUsers(users: Array<User>, completion: (error: Mattermost.Error?) -> Void)
 }
 
 private protocol TeamApi: class {
-    func loadTeams(with completion:(userShouldSelectTeam: Bool, error: Error?) -> Void)
+    func loadTeams(with completion:(userShouldSelectTeam: Bool, error: Mattermost.Error?) -> Void)
 }
 
 private protocol ChannelApi: class {
-    func loadChannels(with completion:(error: Error?) -> Void)
-    func loadExtraInfoForChannel(channel: Channel, completion:(error: Error?) -> Void)
-    func updateLastViewDateForChannel(channel: Channel, completion:(error: Error?) -> Void)
-    func loadAllChannelsWithCompletion(completion:(error: Error?) -> Void)
-    func addUserToChannel(user:User, channel:Channel, completion:(error: Error?) -> Void)
+    func loadChannels(with completion:(error: Mattermost.Error?) -> Void)
+    func loadExtraInfoForChannel(channel: Channel, completion:(error: Mattermost.Error?) -> Void)
+    func updateLastViewDateForChannel(channel: Channel, completion:(error: Mattermost.Error?) -> Void)
+    func loadAllChannelsWithCompletion(completion:(error: Mattermost.Error?) -> Void)
+    func addUserToChannel(user:User, channel:Channel, completion:(error: Mattermost.Error?) -> Void)
 }
 
 private protocol PostApi: class {
-    func sendPost(post: Post, completion: (error: Error?) -> Void)
-    func updatePost(post: Post, completion: (error: Error?) -> Void)
-    func updateSinglePost(post: Post, completion: (error: Error?) -> Void)
-    func deletePost(post: Post, completion: (error: Error?) -> Void)
-    func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
-    func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void)
+    func sendPost(post: Post, completion: (error: Mattermost.Error?) -> Void)
+    func updatePost(post: Post, completion: (error: Mattermost.Error?) -> Void)
+    func updateSinglePost(post: Post, completion: (error: Mattermost.Error?) -> Void)
+    func deletePost(post: Post, completion: (error: Mattermost.Error?) -> Void)
+    func loadFirstPage(channel: Channel, completion: (error: Mattermost.Error?) -> Void)
+    func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Mattermost.Error?) -> Void)
 }
 
 private protocol FileApi : class {
-    func uploadImageItemAtChannel(item: AssignedPhotoViewItem,channel: Channel, completion: (file: File?, error: Error?) -> Void, progress: (identifier: String, value: Float) -> Void)
+    func uploadImageItemAtChannel(item: AssignedPhotoViewItem,channel: Channel, completion: (file: File?, error: Mattermost.Error?) -> Void, progress: (identifier: String, value: Float) -> Void)
     func cancelUploadingOperationForImageItem(item: AssignedPhotoViewItem)
 }
 
@@ -84,7 +84,7 @@ final class Api {
 
 extension Api: UserApi {
     
-    func login(email: String, password: String, completion: (error: Error?) -> Void) {
+    func login(email: String, password: String, completion: (error: Mattermost.Error?) -> Void) {
         let path = UserPathPatternsContainer.loginPathPattern()
         let parameters = ["login_id" : email, "password": password, "token" : ""]
         self.manager.postObject(path: path, parameters: parameters, success: { (mappingResult) in
@@ -98,7 +98,7 @@ extension Api: UserApi {
             }, failure: completion)
     }
     
-    func logout(completion:(error: Error?) -> Void) {
+    func logout(completion:(error: Mattermost.Error?) -> Void) {
         let path = UserPathPatternsContainer.logoutPathPattern()
         let parameters = ["user_id" : Preferences.sharedInstance.currentUserId!]
         self.manager.postObject(path: path, parameters: parameters, success: { (mappingResult) in
@@ -106,7 +106,7 @@ extension Api: UserApi {
             }, failure: completion)
     }
     
-    func loadCompleteUsersList(completion:(error: Error?) -> Void) {
+    func loadCompleteUsersList(completion:(error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.completeListPathPattern(), DataManager.sharedInstance.currentTeam)
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
             let users = MappingUtils.fetchUsersFromCompleteList(mappingResult)
@@ -116,7 +116,7 @@ extension Api: UserApi {
         }, failure: completion)
     }
     
-//    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void) {
+//    func updateStatusForUsers(users: Array<User>, completion: (error: Mattermost.Error?) -> Void) {
 //        let path = UserPathPatternsContainer.usersStatusPathPattern()
 //        let params = (users as NSArray).valueForKey(UserAttributes.identifier.rawValue)
 //        self.manager.postObject(nil, path: path, parametersAsArray: params as! [AnyObject], success: { (operation: RKObjectRequestOperation!, mappingResult: RKMappingResult!) in
@@ -131,7 +131,7 @@ extension Api: UserApi {
 
 extension Api: TeamApi {
     
-    func loadTeams(with completion:(userShouldSelectTeam: Bool, error: Error?) -> Void) {
+    func loadTeams(with completion:(userShouldSelectTeam: Bool, error: Mattermost.Error?) -> Void) {
         let path = TeamPathPatternsContainer.initialLoadPathPattern()
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
             let teams = MappingUtils.fetchAllTeams(mappingResult)
@@ -152,7 +152,7 @@ extension Api: TeamApi {
         }
     }
     
-    func checkURL(with completion:(error: Error?) -> Void) {
+    func checkURL(with completion:(error: Mattermost.Error?) -> Void) {
         let path = TeamPathPatternsContainer.initialLoadPathPattern()
         self._managerCache = nil
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
@@ -166,7 +166,7 @@ extension Api: TeamApi {
 
 extension Api: ChannelApi {
     
-    func loadChannels(with completion: (error: Error?) -> Void) {
+    func loadChannels(with completion: (error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.listPathPattern(), DataManager.sharedInstance.currentTeam)
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
@@ -193,7 +193,7 @@ extension Api: ChannelApi {
             }, failure: completion)
     }
     
-    func loadExtraInfoForChannel(channel: Channel, completion: (error: Error?) -> Void) {
+    func loadExtraInfoForChannel(channel: Channel, completion: (error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.extraInfoPathPattern(), channel)
 //        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
 //            try! RealmUtils.realmForCurrentThread().write({
@@ -204,7 +204,7 @@ extension Api: ChannelApi {
 //        }, failure: completion)
     }
     
-    func updateLastViewDateForChannel(channel: Channel, completion: (error: Error?) -> Void) {
+    func updateLastViewDateForChannel(channel: Channel, completion: (error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updateLastViewDatePathPattern(), channel)
         self.manager.postObject(path: path, success: { (mappingResult) in
             try! RealmUtils.realmForCurrentThread().write({
@@ -214,7 +214,7 @@ extension Api: ChannelApi {
         }, failure: completion)
     }
     
-    func loadAllChannelsWithCompletion(completion: (error: Error?) -> Void) {
+    func loadAllChannelsWithCompletion(completion: (error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.moreListPathPattern(), DataManager.sharedInstance.currentTeam)
         self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
@@ -225,7 +225,7 @@ extension Api: ChannelApi {
             completion(error: nil)
         }, failure: completion)
     }
-    func addUserToChannel(user:User, channel:Channel, completion:(error: Error?) -> Void) {
+    func addUserToChannel(user:User, channel:Channel, completion:(error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.addUserPathPattern(), channel)
         let params = [ "user_id" : user.identifier ]
         self.manager.postObject(nil, path: path, parameters: params, success: { (mappingResult) in
@@ -235,7 +235,7 @@ extension Api: ChannelApi {
 }
 
 extension Api: PostApi {
-    func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void) {
+    func loadFirstPage(channel: Channel, completion: (error: Mattermost.Error?) -> Void) {
         let wrapper = PageWrapper(channel: channel)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.firstPagePathPattern(), wrapper)
         
@@ -259,7 +259,7 @@ extension Api: PostApi {
         }
     }
     
-    func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void) {
+    func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Mattermost.Error?) -> Void) {
         let postIdentifier = fromPost.identifier!
         let wrapper = PageWrapper(channel: channel, lastPostId: postIdentifier)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.nextPagePathPattern(), wrapper)
@@ -284,7 +284,7 @@ extension Api: PostApi {
             completion(isLastPage: isLastPage, error: error)
         }
     }
-    func sendPost(post: Post, completion: (error: Error?) -> Void) {
+    func sendPost(post: Post, completion: (error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
             let resultPost = mappingResult.firstObject as! Post
@@ -294,14 +294,14 @@ extension Api: PostApi {
             completion(error: nil)
         }, failure: completion)
     }
-    func updateSinglePost(post: Post, completion: (error: Error?) -> Void) {
+    func updateSinglePost(post: Post, completion: (error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
             RealmUtils.save(mappingResult.firstObject as! Post)
             completion(error: nil)
             }, failure: completion)
     }
-    func deletePost(post: Post, completion: (error: Error?) -> Void) {
+    func deletePost(post: Post, completion: (error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.deletingPathPattern(), post)
         let params = ["team_id"    : Preferences.sharedInstance.currentTeamId!,
                       "channel_id" : post.channelId!,
@@ -314,7 +314,7 @@ extension Api: PostApi {
         }
     }
     
-    func updatePost(post: Post, completion: (error: Error?) -> Void) {
+    func updatePost(post: Post, completion: (error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatePathPattern(), post)
         self.manager.getObject(post, path: path, success: { (mappingResult, skipMapping) in
             RealmUtils.save(MappingUtils.fetchPostFromUpdate(mappingResult))
@@ -326,7 +326,7 @@ extension Api: PostApi {
 extension Api : FileApi {
     func uploadImageItemAtChannel(item: AssignedPhotoViewItem,
                                   channel: Channel,
-                                  completion: (file: File?, error: Error?) -> Void,
+                                  completion: (file: File?, error: Mattermost.Error?) -> Void,
                                   progress: (identifier: String, value: Float) -> Void) {
         let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
         let params = ["channel_id" : channel.identifier!,

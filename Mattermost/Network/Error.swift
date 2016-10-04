@@ -1,5 +1,5 @@
 //
-//  Errir.swift
+//  Error.swift
 //  Mattermost
 //
 //  Created by Maxim Gubin on 28/06/16.
@@ -18,7 +18,7 @@ struct Error {
         
     }
     
-    internal static  func errorWithGenericError(error: NSError!) -> Error {
+    internal static  func errorWithGenericError(error: NSError!) -> Mattermost.Error {
         return Error(error: error)
     }
 }

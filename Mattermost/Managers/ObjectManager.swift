@@ -12,17 +12,17 @@ private protocol GetRequests: class {
     func getObjectsAtPath(path: String,
                           parameters: [NSObject : AnyObject]?,
                           success: ((mappingResult: RKMappingResult) -> Void)?,
-                          failure: ((error: Error) -> Void)?)
+                          failure: ((error: Mattermost.Error) -> Void)?)
     
     func getObjectsAtPath(path: String, parameters: [NSObject : AnyObject]?,
                           success: ((operation: RKObjectRequestOperation, mappingResult: RKMappingResult) -> Void)?,
-                          failure: ((error: Error) -> Void)?)
+                          failure: ((error: Mattermost.Error) -> Void)?)
     
     
     func getObject(object: AnyObject,
                    path: String!,
                    success: ((mappingResult: RKMappingResult) -> Void)?,
-                   failure: ((error: Error) -> Void)?)
+                   failure: ((error: Mattermost.Error) -> Void)?)
 }
 
 private protocol PostRequests: class {
@@ -30,19 +30,19 @@ private protocol PostRequests: class {
                     path: String!,
                     parameters: [NSObject : AnyObject]?,
                     success: ((mappingResult: RKMappingResult) -> Void)?,
-                    failure: ((error: Error) -> Void)?)
+                    failure: ((error: Mattermost.Error) -> Void)?)
 
     func postImage(with image: UIImage!,
                    name: String!,
                    path: String!,
                    parameters: [String : String]?,
                    success: ((mappingResult: RKMappingResult) -> Void)?,
-                   failure: ((error: Error) -> Void)?,
+                   failure: ((error: Mattermost.Error) -> Void)?,
                    progress: ((progressValue: Float) -> Void)?)
 }
 
 private protocol Helpers: class {
-    func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Error
+    func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Mattermost.Error
     func cancelUploadingOperationForImageItem(item: AssignedPhotoViewItem)
 }
 
@@ -53,7 +53,7 @@ extension ObjectManager: GetRequests {
                    path: String,
                    parameters: [NSObject : AnyObject]? = nil,
                    success: ((mappingResult: RKMappingResult, canSkipMapping: Bool) -> Void)?,
-                   failure: ((error: Error?) -> Void)?) {
+                   failure: ((error: Mattermost.Error?) -> Void)?) {
         
         
         let cachedUrlResponse = NSURLCache.sharedURLCache().cachedResponseForRequest(self.requestWithObject(object, method: .GET, path: path, parameters: parameters))
@@ -72,7 +72,7 @@ extension ObjectManager: GetRequests {
     func getObjectsAtPath(path: String,
                           parameters: [NSObject : AnyObject]?,
                           success: ((mappingResult: RKMappingResult) -> Void)?,
-                          failure: ((error: Error) -> Void)?) {
+                          failure: ((error: Mattermost.Error) -> Void)?) {
         super.getObjectsAtPath(path, parameters: parameters, success: { (_, mappingResult) in
             success?(mappingResult: mappingResult);
         }, failure: { (operation, error) in
@@ -82,7 +82,7 @@ extension ObjectManager: GetRequests {
     
     func getObjectsAtPath(path: String, parameters: [NSObject : AnyObject]? = nil,
                           success: ((operation: RKObjectRequestOperation, mappingResult: RKMappingResult) -> Void)?,
-                          failure: ((error: Error) -> Void)?){
+                          failure: ((error: Mattermost.Error) -> Void)?){
         super.getObjectsAtPath(path, parameters: parameters, success: { (operation, mappingResult) in
             success?(operation: operation, mappingResult: mappingResult)
         }) { (operation, error) in
@@ -90,7 +90,7 @@ extension ObjectManager: GetRequests {
         }
     }
     
-    func getObject(object: AnyObject, path: String!, success: ((mappingResult: RKMappingResult) -> Void)?, failure: ((error: Error) -> Void)?) {
+    func getObject(object: AnyObject, path: String!, success: ((mappingResult: RKMappingResult) -> Void)?, failure: ((error: Mattermost.Error) -> Void)?) {
         super.getObject(object, path: path, parameters: nil, success: { (_, mappingResult) in
             success?(mappingResult: mappingResult)
         }) { (operation, error) in
@@ -105,7 +105,7 @@ extension ObjectManager: PostRequests {
                     path: String!,
                     parameters: [NSObject : AnyObject]? = nil,
                     success: ((mappingResult: RKMappingResult) -> Void)?,
-                    failure: ((error: Error) -> Void)?) {
+                    failure: ((error: Mattermost.Error) -> Void)?) {
         super.postObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
             let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
             print(eror)
@@ -122,7 +122,7 @@ extension ObjectManager: PostRequests {
                         path: String!,
                         parameters: Dictionary<String, String>?,
                         success: ((mappingResult: RKMappingResult) -> Void)?,
-                        failure: ((error: Error) -> Void)?) {
+                        failure: ((error: Mattermost.Error) -> Void)?) {
         
         let request: NSMutableURLRequest = self.requestWithObject(nil, method: .POST, path: path, parameters: parameters)
         let successHandlerBlock = {(operation: RKObjectRequestOperation!, mappingResult: RKMappingResult!) -> Void in
@@ -141,7 +141,7 @@ extension ObjectManager: PostRequests {
                         path: String!,
                         parameters: Dictionary<String, String>?,
                         success: ((mappingResult: RKMappingResult) -> Void)?,
-                        failure: ((error: Error) -> Void)?,
+                        failure: ((error: Mattermost.Error) -> Void)?,
                         progress: ((progressValue: Float) -> Void)?) {
         
         let constructingBodyWithBlock = {(formData: AFRKMultipartFormData!) -> Void in
@@ -178,7 +178,7 @@ extension ObjectManager: PostRequests {
 
 // MARK: Helpers
 extension ObjectManager: Helpers {
-    private func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Error {
+    private func handleOperation(operation: RKObjectRequestOperation, withError error: NSError) -> Mattermost.Error {
         return Error.errorWithGenericError(error)
     }
     

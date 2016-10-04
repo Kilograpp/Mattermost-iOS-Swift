@@ -11,13 +11,13 @@ import Realm
 import RealmSwift
 
 private protocol Public : class {
-    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
-    func sendExistingPost(post:Post, completion: (error:Error?) -> Void)
-    func resendPost(post:Post, completion: (error:Error?) -> Void)
-    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
-    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
-    func deletePost(post: Post, completion: (error: Error?) -> Void)
-    func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
+    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void)
+    func sendExistingPost(post:Post, completion: (error: Mattermost.Error?) -> Void)
+    func resendPost(post:Post, completion: (error: Mattermost.Error?) -> Void)
+    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void)
+    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void)
+    func deletePost(post: Post, completion: (error: Mattermost.Error?) -> Void)
+    func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Mattermost.Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
     func cancelImageItemUploading(item: AssignedPhotoViewItem)
 }
 
@@ -45,7 +45,7 @@ final class PostUtils: NSObject {
 }
 
 extension PostUtils : Public {
-    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
+    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void) {
         let postToSend = Post()
         
 //        RealmUtils.save(self.assignedFiles)
@@ -62,7 +62,7 @@ extension PostUtils : Public {
         sendExistingPost(postToSend, completion: completion)
     }
     
-    func sendExistingPost(post:Post, completion: (error:Error?) -> Void) {
+    func sendExistingPost(post:Post, completion: (error: Mattermost.Error?) -> Void) {
         Api.sharedInstance.sendPost(post) { (error) in
             completion(error: error)
             if error != nil {
@@ -75,14 +75,14 @@ extension PostUtils : Public {
         }
     }
     
-    func resendPost(post:Post, completion: (error:Error?) -> Void) {
+    func resendPost(post:Post, completion: (error: Mattermost.Error?) -> Void) {
         try! RealmUtils.realmForCurrentThread().write({
             post.status = .Sending
         })
         sendExistingPost(post, completion: completion)
     }
     
-    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
+    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void) {
         let postToSend = Post()
         
         postToSend.message = message
@@ -102,7 +102,7 @@ extension PostUtils : Public {
         }
     }
 
-    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
+    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void) {
         try! RealmUtils.realmForCurrentThread().write({
             post.message = message
             post.updatedAt = NSDate()
@@ -116,7 +116,7 @@ extension PostUtils : Public {
         }
     }
     
-    func deletePost(post: Post, completion: (error: Error?) -> Void) {
+    func deletePost(post: Post, completion: (error: Mattermost.Error?) -> Void) {
         // identifier == nil -> post exists only in database
         let day = post.day
         guard post.identifier != nil else {
@@ -131,7 +131,7 @@ extension PostUtils : Public {
         }
     }
     
-    func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
+    func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Mattermost.Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
         self.images = images
         for item in self.images! {
             if !item.uploaded {
