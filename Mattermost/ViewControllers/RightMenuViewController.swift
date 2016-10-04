@@ -114,16 +114,19 @@ extension RightMenuViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
     }
-    
+
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch indexPath.row {
         case RightMenuRows.Settings.rawValue:
             toggleRightSideMenu()
             proceedToSettings()
-            
+        case RightMenuRows.SwitchTeam.rawValue:
+            proceedToTeams()
         case RightMenuRows.About.rawValue:
             toggleRightSideMenu()
             proceedToAbout()
+        case RightMenuRows.Logout.rawValue:
+            logOut()
             
         default:
             return
@@ -163,8 +166,15 @@ extension RightMenuViewController : UITableViewDataSource {
 }
 
 //MARK: - Navigation
-    
 extension RightMenuViewController {
+    func proceedToTeams() {
+        let teamViewController = UIStoryboard(name:  "Login",
+            bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("TeamViewController")
+        let loginNavigationController = LoginNavigationController(rootViewController: teamViewController)
+        self.presentViewController(loginNavigationController, animated: true, completion: nil)
+        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
+    }
+    
     func proceedToProfile() {
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
@@ -190,5 +200,8 @@ extension RightMenuViewController {
         let settings = storyboard.instantiateInitialViewController()
         let navigation = self.menuContainerViewController.centerViewController
         navigation!.pushViewController(settings!, animated:true)
+    }
+    func logOut() {
+        UserStatusManager.sharedInstance.logout()
     }
 }

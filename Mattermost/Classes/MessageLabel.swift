@@ -12,6 +12,8 @@ private protocol Delegate {
     var onMentionTap: ((username: String) -> Void)? {get set}
     var onUrlTap: ((url: NSURL) -> Void)? {get set}
     var onHashTagTap: ((hashTag: String) -> Void)? {get set}
+    var onPhoneTap: ((phone: String) -> Void)? {get set}
+    var onEmailTap: ((email: String) -> Void)? {get set}
 }
 
 final class MessageLabel: AttributedLabel, Delegate {
@@ -19,26 +21,38 @@ final class MessageLabel: AttributedLabel, Delegate {
     var onMentionTap: ((username: String) -> Void)?
     var onUrlTap: ((url: NSURL) -> Void)?
     var onHashTagTap: ((hashTag: String) -> Void)?
-
+    var onPhoneTap: ((phone: String) -> Void)?
+    var onEmailTap: ((email: String) -> Void)?
     
     func handleTouch(touch: UITouch){
-
         let indexOfCharacter = self.characterIndexForTouch(touch)
         
-        if let url = self.attributedText?.URLAtIndex(indexOfCharacter) {
-            self.onUrlTap?(url: url)
-            return
-        }
-        
-        if let username = self.attributedText?.mentionAtIndex(indexOfCharacter) {
+        if let username = textStorage!.mentionAtIndex(indexOfCharacter) {
             self.onMentionTap?(username: username)
             return
         }
         
-        if let hashTag = self.attributedText?.hashTagAtIndex(indexOfCharacter) {
+        if let hashTag = textStorage!.hashTagAtIndex(indexOfCharacter) {
             self.onHashTagTap?(hashTag: hashTag)
             return
         }
+        
+        if let email = textStorage!.emailAtIndex(indexOfCharacter) {
+            self.onEmailTap?(email:email)
+            return
+        }
+        
+        if let url = textStorage!.URLAtIndex(indexOfCharacter) {
+            self.onUrlTap?(url: url)
+            return
+        }
+        
+        if let phone = textStorage!.phoneAtIndex(indexOfCharacter) {
+            self.onPhoneTap?(phone:phone)
+            return
+        }
+        
+        
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -52,7 +66,7 @@ final class MessageLabel: AttributedLabel, Delegate {
         
         let locationOfTouch = touch.locationInView(self)
         self.textContainer.size = self.bounds.size
-        storage.setAttributedString(self.attributedText!)
+//        storage.setAttributedString(self.attributedText!)
         return self.layoutManager.glyphIndexForPoint(locationOfTouch, inTextContainer: self.textContainer)
     }
 

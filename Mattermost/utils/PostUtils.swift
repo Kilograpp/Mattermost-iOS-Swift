@@ -12,6 +12,11 @@ import RealmSwift
 
 private protocol Public : class {
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func sendExistingPost(post:Post, completion: (error:Error?) -> Void)
+    func resendPost(post:Post, completion: (error:Error?) -> Void)
+    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void)
+    func deletePost(post: Post, completion: (error: Error?) -> Void)
     func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
     func cancelImageItemUploading(item: AssignedPhotoViewItem)
 }
@@ -50,8 +55,46 @@ extension PostUtils : Public {
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
+        postToSend.computeMissingFields()
+        postToSend.status = .Sending
+        RealmUtils.save(postToSend)
+        self.clearUploadedAttachments()
+        sendExistingPost(postToSend, completion: completion)
+    }
+    
+    func sendExistingPost(post:Post, completion: (error:Error?) -> Void) {
+        Api.sharedInstance.sendPost(post) { (error) in
+            completion(error: error)
+            if error != nil {
+                print("error")
+                try! RealmUtils.realmForCurrentThread().write({
+                    post.status = .Error
+                })
+            }
+            
+        }
+    }
+    
+    func resendPost(post:Post, completion: (error:Error?) -> Void) {
+        try! RealmUtils.realmForCurrentThread().write({
+            post.status = .Sending
+        })
+        sendExistingPost(post, completion: completion)
+    }
+    
+    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
+        let postToSend = Post()
         
-//        RealmUtils.save(postToSend)
+        postToSend.message = message
+        postToSend.createdAt = NSDate()
+        postToSend.channelId = channel.identifier
+        postToSend.authorId = Preferences.sharedInstance.currentUserId
+        postToSend.parentId = post.identifier
+        postToSend.rootId = post.identifier
+        self.configureBackendPendingId(postToSend)
+        self.assignFilesToPostIfNeeded(postToSend)
+        postToSend.computeMissingFields()
+        RealmUtils.save(postToSend)
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
             completion(error: error)
@@ -59,6 +102,35 @@ extension PostUtils : Public {
         }
     }
 
+    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Error?) -> Void) {
+        try! RealmUtils.realmForCurrentThread().write({
+            post.message = message
+            post.updatedAt = NSDate()
+            self.configureBackendPendingId(post)
+            self.assignFilesToPostIfNeeded(post)
+            post.computeMissingFields()
+        })
+    
+        Api.sharedInstance.updateSinglePost(post) { (error) in
+            completion(error: error)
+        }
+    }
+    
+    func deletePost(post: Post, completion: (error: Error?) -> Void) {
+        // identifier == nil -> post exists only in database
+        let day = post.day
+        guard post.identifier != nil else {
+            completion(error: nil)
+            return
+        }
+        Api.sharedInstance.deletePost(post) { (error) in
+            completion(error: error)
+            if day?.posts.count == 0 {
+                RealmUtils.deleteObject(day!)
+            }
+        }
+    }
+    
     func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
         self.images = images
         for item in self.images! {

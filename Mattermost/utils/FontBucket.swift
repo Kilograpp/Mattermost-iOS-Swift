@@ -12,6 +12,9 @@ private protocol PostFonts: class {
     static var messageFont: UIFont {get}
     static var postDateFont: UIFont {get}
     static var postAuthorNameFont: UIFont {get}
+    static var parentAuthorNameFont: UIFont {get}
+    static var parentMessageFont: UIFont {get}
+    static var editTypeFont: UIFont {get}
 }
 
 private protocol FeedFonts: class {
@@ -57,13 +60,20 @@ private protocol MoreChannelsFonts: class {
     static var letterChannelFont : UIFont { get }
 }
 
+private protocol TeamsFonts: class {
+    static var titleURLFont : UIFont { get }
+}
+
 final class FontBucket {
 }
 
 extension FontBucket : PostFonts {
-     static let messageFont = FontBucket.regularFontOfSize(15)
-     static let postDateFont = FontBucket.regularFontOfSize(13)
-     static let postAuthorNameFont = FontBucket.semiboldFontOfSize(16)
+    static let messageFont = FontBucket.regularFontOfSize(15)
+    static let postDateFont = FontBucket.regularFontOfSize(13)
+    static let postAuthorNameFont = FontBucket.semiboldFontOfSize(16)
+    static let parentAuthorNameFont = FontBucket.semiboldFontOfSize(13)
+    static let parentMessageFont = FontBucket.regularFontOfSize(14)
+    static let editTypeFont = FontBucket.regularFontOfSize(13)
 }
 
 extension FontBucket : FeedFonts {
@@ -101,6 +111,10 @@ extension FontBucket : MoreChannelsFonts {
     static let subtitleChannelFont = FontBucket.regularFontOfSize(16)
     static let dateChannelFont = FontBucket.regularFontOfSize(16)
     static let letterChannelFont = FontBucket.regularFontOfSize(30)
+}
+
+extension FontBucket : TeamsFonts {
+    static let titleURLFont = FontBucket.boldFontOfSize(28)
 }
 //MARK: Helpers
 

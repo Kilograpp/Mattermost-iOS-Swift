@@ -16,6 +16,11 @@ extension UIColor {
         return color
     }
     
+    class func kg_blueColor() -> UIColor {
+        let color = UIColor(rgba:"#0076FF")
+        return color;
+    }
+    
     class func kg_lightGrayColor() -> UIColor {
         let color = UIColor.lightGrayColor()
         return color
@@ -23,6 +28,16 @@ extension UIColor {
     
     class func kg_lightLightGrayColor() -> UIColor {
         let color = UIColor.init(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        return color
+    }
+    
+    class func kg_lightBlackColor() -> UIColor {
+        let color = UIColor.init(red: 66/255, green: 66/255, blue: 66/255, alpha: 1)
+        return color
+    }
+    
+    class func kg_lightGrayTextColor() -> UIColor {
+        let color = UIColor.init(red: 151/255, green: 151/255, blue: 151/255, alpha: 1)
         return color
     }
 }
