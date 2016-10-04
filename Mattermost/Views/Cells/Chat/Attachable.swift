@@ -9,5 +9,5 @@
 import Foundation
 
 protocol Attachable: class {
-    func configureWithFile(file: File)
+    func configureWithFile(_ file: File)
 }

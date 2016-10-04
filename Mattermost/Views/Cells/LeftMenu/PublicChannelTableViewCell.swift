@@ -14,9 +14,9 @@ private protocol PrivateConfiguration : class {
 }
 
 final class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol {
-    @IBOutlet private weak var badgeLabel: UILabel!
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var highlightView: UIView!
+    @IBOutlet fileprivate weak var badgeLabel: UILabel!
+    @IBOutlet fileprivate weak var titleLabel: UILabel!
+    @IBOutlet fileprivate weak var highlightView: UIView!
     
     //FIXME: CodeReview: Может быть такое, что ячейка без канала работает? Если нет, то implicity unwrapped ее.(см как аутлеты)
     var channel : Channel?
@@ -31,40 +31,40 @@ final class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellPr
     }
     
     //MARK: - Configuration
-    func configureStatusViewWithNotification(notification: NSNotification) {
+    func configureStatusViewWithNotification(_ notification: Notification) {
         self.test?()
     }
 
 //MARK: - Override
     
-    override func setHighlighted(highlighted: Bool, animated: Bool) {
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         self.highlightView.backgroundColor = highlighted ? ColorBucket.sideMenuCellHighlightedColor : self.highlightViewBackgroundColor()
     }
 }
 
 extension PublicChannelTableViewCell : PrivateConfiguration {
-    private func configureContentView() {
+    fileprivate func configureContentView() {
         self.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        self.badgeLabel.hidden = true
+        self.badgeLabel.isHidden = true
     }
     
-    private func configureTitleLabel() {
+    fileprivate func configureTitleLabel() {
         self.titleLabel.font = FontBucket.normalTitleFont
         self.titleLabel.textColor = ColorBucket.lightGrayColor
     }
     
-    private func configurehighlightView() {
+    fileprivate func configurehighlightView() {
         self.highlightView.layer.cornerRadius = 3;
     }
 
-    private func highlightViewBackgroundColor() -> UIColor {
+    fileprivate func highlightViewBackgroundColor() -> UIColor {
         return self.channel?.isSelected == true ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
     }
 }
 
 extension PublicChannelTableViewCell {
-    func configureWithChannel(channel: Channel, selected: Bool) {
+    func configureWithChannel(_ channel: Channel, selected: Bool) {
         self.channel = channel
         self.titleLabel.text = "# \(channel.displayName!)"
         self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
@@ -77,9 +77,9 @@ extension PublicChannelTableViewCell {
     }
     
     func subscribeToNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(configureStatusViewWithNotification(_:)),
-                                                         name: self.channel?.displayName ,
+                                                         name: (self.channel?.displayName).map { NSNotification.Name(rawValue: $0) } ,
                                                          object: nil)
 
 

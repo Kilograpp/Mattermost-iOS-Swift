@@ -13,7 +13,7 @@ class KGObjectRequestOperation: RKObjectRequestOperation {
     var image: UIImage?
     var identifier: String?
     
-    override static func canProcessRequest(request: NSURLRequest) -> Bool {
+    override static func canProcessRequest(_ request: URLRequest) -> Bool {
         return true
     }
 }

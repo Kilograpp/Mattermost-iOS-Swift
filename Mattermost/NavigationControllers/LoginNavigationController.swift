@@ -23,14 +23,14 @@ private protocol Setup {
 extension LoginNavigationController: Setup {
     func setupNavigationBar() {
         let navBar = self.navigationBar
-        navBar.translucent = true
-        navBar.setBackgroundImage(UIImage(), forBarMetrics: UIBarMetrics.Default)
+        navBar.isTranslucent = true
+        navBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navBar.shadowImage = UIImage()
         navBar.tintColor = ColorBucket.blackColor
-        navBar.backgroundColor = UIColor.clearColor()
+        navBar.backgroundColor = UIColor.clear
         navBar.topItem?.title = ""
     }
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
 }

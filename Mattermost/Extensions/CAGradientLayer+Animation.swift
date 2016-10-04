@@ -20,41 +20,42 @@ extension CAGradientLayer {
         return makeGradientForTopColor(topColor, bottomColor: bottomColor)
     }
     
-    static func makeGradientForTopColor(topColor:UIColor, bottomColor:UIColor) -> CAGradientLayer {
-        let colors = [topColor.CGColor, bottomColor.CGColor]
+    static func makeGradientForTopColor(_ topColor:UIColor, bottomColor:UIColor) -> CAGradientLayer {
+        let colors = [topColor.cgColor, bottomColor.cgColor]
         let stopTop = CGFloat(0.0)
         let stopBottom = CGFloat(1.0)
         let locations = [stopTop, stopBottom]
         
         let headerLayer = CAGradientLayer()
         headerLayer.colors = colors
-        headerLayer.locations = locations
+        headerLayer.locations = locations as [NSNumber]?
         
         return headerLayer
     }
     
-    func addBaseAnimation(fromColors:[CGColor], toColors:[CGColor]) -> CABasicAnimation {
+    func addBaseAnimation(_ fromColors:[CGColor], toColors:[CGColor]) -> CABasicAnimation {
         let animation = CABasicAnimation(keyPath: basicAnimationColorKey)
         animation.fromValue = fromColors
         animation.toValue = toColors
         animation.duration = Double(animationDuration)
-        animation.removedOnCompletion = true
+        animation.isRemovedOnCompletion = true
         animation.fillMode = kCAFillModeForwards
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        animation.delegate = self
+        //s3 refactor
+        // animation.delegate = self
         
         return animation
     }
     
-    func animateLayerInfinitely(headerLayer:CAGradientLayer) {
+    func animateLayerInfinitely(_ headerLayer:CAGradientLayer) {
         let colorsArray = makeArrayColors(headerLayer)
         var timeDelay:Int
         for i in 1..<colorsArray.count {
             timeDelay = i*animationDuration
-            let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(timeDelay) * Int64(NSEC_PER_SEC))
-            dispatch_after(popTime, dispatch_get_main_queue()) {
+            let popTime = DispatchTime.now() + Double(Int64(timeDelay) * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: popTime) {
                 headerLayer.colors = colorsArray[i]
-                headerLayer.addAnimation(self.addBaseAnimation(colorsArray[i-1], toColors: colorsArray[i]), forKey: animateGradientKey)
+                headerLayer.add(self.addBaseAnimation(colorsArray[i-1], toColors: colorsArray[i]), forKey: animateGradientKey)
                 if ((i + 1) == colorsArray.count) {
                     self.animateLayerInfinitely(headerLayer)
                 }
@@ -62,13 +63,13 @@ extension CAGradientLayer {
         }
     }
     
-    func makeArrayColors(headerLayer:CAGradientLayer) -> [[CGColor]] {
+    func makeArrayColors(_ headerLayer:CAGradientLayer) -> [[CGColor]] {
         let fromColors = headerLayer.colors as! [CGColor]
-        let toColorsGreen = [ColorBucket.topGreenColorForGradient.CGColor, ColorBucket.bottomGreenColorForGradient.CGColor]
-        let toColorsOrange = [ColorBucket.topOrangeColorForGradient.CGColor, ColorBucket.bottomOrangeColorForGradient.CGColor]
-        let toColorsRed = [ColorBucket.topRedColorForGradient.CGColor, ColorBucket.bottomRedColorForGradient.CGColor]
-        let toColorsPurple = [ColorBucket.topPurpleColorForGradient.CGColor, ColorBucket.bottomPurpleColorForGradient.CGColor]
-        let toColorsBlue = [ColorBucket.topBlueColorForGradient.CGColor, ColorBucket.bottomBlueColorForGradient.CGColor]
+        let toColorsGreen = [ColorBucket.topGreenColorForGradient.cgColor, ColorBucket.bottomGreenColorForGradient.cgColor]
+        let toColorsOrange = [ColorBucket.topOrangeColorForGradient.cgColor, ColorBucket.bottomOrangeColorForGradient.cgColor]
+        let toColorsRed = [ColorBucket.topRedColorForGradient.cgColor, ColorBucket.bottomRedColorForGradient.cgColor]
+        let toColorsPurple = [ColorBucket.topPurpleColorForGradient.cgColor, ColorBucket.bottomPurpleColorForGradient.cgColor]
+        let toColorsBlue = [ColorBucket.topBlueColorForGradient.cgColor, ColorBucket.bottomBlueColorForGradient.cgColor]
         let colorsArray = [fromColors, toColorsGreen, toColorsOrange, toColorsRed, toColorsPurple, toColorsBlue]
         
         return colorsArray

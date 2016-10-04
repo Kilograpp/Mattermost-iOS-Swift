@@ -10,8 +10,8 @@ import Foundation
 import RealmSwift
 
 final class StringParameter: Object {
-    private dynamic var _rangeLocation: Int = 0
-    private dynamic var _rangeLength: Int = 0
+    fileprivate dynamic var _rangeLocation: Int = 0
+    fileprivate dynamic var _rangeLength: Int = 0
     var range: NSRange {
         get {
             return NSMakeRange(self._rangeLocation, self._rangeLength)

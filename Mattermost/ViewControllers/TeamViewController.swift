@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftFetchedResultsController
 import RealmSwift
 
 let teamCellHeight: CGFloat = 60
@@ -18,7 +17,7 @@ final class TeamViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
     
-    lazy var fetchedResultsController: FetchedResultsController<Team> = self.realmFetchedResultsController()
+
     var realm: Realm?
     
     override func viewDidLoad() {
@@ -38,74 +37,62 @@ private protocol Setup {
 
 // MARK: - Setup
 extension TeamViewController: Setup {
-    private func setupTableView() {
+    fileprivate func setupTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.backgroundColor = ColorBucket.whiteColor
-        self.tableView.registerClass(TeamTableViewCell.classForCoder(), forCellReuseIdentifier: TeamTableViewCell.reuseIdentifier)
+        self.tableView.register(TeamTableViewCell.classForCoder(), forCellReuseIdentifier: TeamTableViewCell.reuseIdentifier)
     }
     
-    private func setupTitleLabel() {
+    fileprivate func setupTitleLabel() {
         self.titleLabel.font = FontBucket.titleURLFont
         self.titleLabel.text = Preferences.sharedInstance.siteName
         self.titleLabel.textColor = ColorBucket.whiteColor
     }
     
-    private func setupNavigationView() {
+    fileprivate func setupNavigationView() {
         let bgLayer = CAGradientLayer.blueGradientForNavigationBar()
-        bgLayer.frame = CGRect(x:0,y:0,width:CGRectGetWidth(self.navigationView.bounds),height: CGRectGetHeight(self.navigationView.bounds))
+        bgLayer.frame = CGRect(x:0,y:0,width:self.navigationView.bounds.width,height: self.navigationView.bounds.height)
         bgLayer.animateLayerInfinitely(bgLayer)
-        self.navigationView.layer.insertSublayer(bgLayer, atIndex: 0)
-        self.navigationView.bringSubviewToFront(self.titleLabel)
+        self.navigationView.layer.insertSublayer(bgLayer, at: 0)
+        self.navigationView.bringSubview(toFront: self.titleLabel)
     }
 }
 
 // MARK: - UITableViewDelegate
 extension TeamViewController: UITableViewDelegate {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return teamCellHeight;
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let team = self.fetchedResultsController.objectAtIndexPath(indexPath) as Team?
-        if (Preferences.sharedInstance.currentTeamId != team?.identifier) {
-            Preferences.sharedInstance.currentTeamId = team?.identifier
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let team = Team()
+        if (Preferences.sharedInstance.currentTeamId != team.identifier) {
+            Preferences.sharedInstance.currentTeamId = team.identifier
             self.reloadChat()
         }
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
 // MARK: - UITableViewDataSource
 extension TeamViewController: UITableViewDataSource {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fetchedResultsController.numberOfRowsForSectionIndex(section)
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 0
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(TeamTableViewCell.reuseIdentifier, forIndexPath: indexPath)
-        let team = self.fetchedResultsController.objectAtIndexPath(indexPath) as Team?
-        (cell as! TeamTableViewCell).configureWithTeam(team!)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: TeamTableViewCell.reuseIdentifier, for: indexPath)
+        let team = Team()
+        (cell as! TeamTableViewCell).configureWithTeam(team)
         return cell
     }
 }
 
 
 extension TeamViewController {
-    // MARK: - FetchedResultsController
-    func realmFetchedResultsController() -> FetchedResultsController<Team> {
-        let predicate = NSPredicate(format: "identifier != %@", "fds")
-        let realm = try! Realm()
-        let fetchRequest = FetchRequest<Team>(realm: realm, predicate: predicate)
-        fetchRequest.predicate = nil
-        let sortDescriptorName = SortDescriptor(property: TeamAttributes.displayName.rawValue, ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptorName]
-        let fetchedResultsController = FetchedResultsController<Team>(fetchRequest: fetchRequest, sectionNameKeyPath:nil, cacheName: nil)
-        fetchedResultsController.delegate = nil//self
-        fetchedResultsController.performFetch()
-        
-        return fetchedResultsController
-    }
+    // TODO: without FRC
+    
     // MARK: - Navigation
     func reloadChat() {
         Api.sharedInstance.loadChannels(with: { (error) in

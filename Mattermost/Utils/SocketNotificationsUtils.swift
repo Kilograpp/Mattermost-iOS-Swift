@@ -44,7 +44,7 @@ struct NotificationKeys {
             
             //Undefined in Post class as RealmObject
             static let Props = "props"
-            static let Type = "type"
+            static let PostType = "type"
             static let Hashtags = "hashtags"
             
         }
@@ -52,15 +52,15 @@ struct NotificationKeys {
 }
 
 enum NotificationType: Int {
-    case Error = -1             //error
-    case Default = 0            //OK
-    case ReceivingPost = 1      //receiving new post
-    case ReceivingUpdatedPost   //receiving new post
-    case ReceivingDeletedPost
-    case ReceivingTyping        //receiving action
-    case ReceivingStatus    //receiving user status change
-    case ReceivingStatuses  //receiving all user statuses
-    case Unknown
+    case error = -1             //error
+    case `default` = 0            //OK
+    case receivingPost = 1      //receiving new post
+    case receivingUpdatedPost   //receiving new post
+    case receivingDeletedPost
+    case receivingTyping        //receiving action
+    case receivingStatus    //receiving user status change
+    case receivingStatuses  //receiving all user statuses
+    case unknown
 }
 
 enum Event: String {
@@ -83,7 +83,9 @@ enum ChannelAction: String {
 
 final class SocketNotificationUtils {
     
-    static func dataForActionRequest(action:ChannelAction, seq:Int, channelId:String?) -> NSData {
+    static func dataForActionRequest(_ action:ChannelAction, seq:Int, channelId:String?) -> Data {
+        //Uncomment after adding SwiftyJSON
+        /*
         var parameters = [String: JSON]()
         parameters[NotificationKeys.Action] = JSON(stringLiteral: action.rawValue)
         parameters[NotificationKeys.Seq] = JSON(integerLiteral: seq)
@@ -93,56 +95,58 @@ final class SocketNotificationUtils {
         case .Typing:
             parameters[NotificationKeys.Data] = JSON(["parent_id" : "" , "channel_id" : channelId!])
         default:
-            return NSData()
+            return Data()
         }
         let json = JSON(parameters)
         return try! json.rawData()
+         */
+        return Data()
     }
     
     //todo: files supporting (NotificationKeys.DataKeys.PostKeys.Files)
-    static func postFromDictionary(dictionary:[String:AnyObject]) -> Post {
-        var post = Post()
+    static func postFromDictionary(_ dictionary:[String:AnyObject]) -> Post {
+        let post = Post()
         // ? pending post id
         post.message = dictionary[NotificationKeys.DataKeys.PostKeys.Message] as? String
         post.identifier = dictionary[NotificationKeys.Identifier] as? String
         post.authorId = dictionary[NotificationKeys.UserIdentifier] as? String
         post.channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
  
-        post.createdAt = NSDate(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! NSTimeInterval/1000.0)
-        post.updatedAt = NSDate(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Update_at] as! NSTimeInterval/1000.0)
-        post.deletedAt = NSDate(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Delete_at] as! NSTimeInterval/1000.0)
+        post.createdAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! TimeInterval/1000.0)
+        post.updatedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Update_at] as! TimeInterval/1000.0)
+        post.deletedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Delete_at] as! TimeInterval/1000.0)
 
         post.computeMissingFields()
         return post
     }
     
-    static func typeForNotification(dictionary:[String:AnyObject]) -> NotificationType {
+    static func typeForNotification(_ dictionary:[String:AnyObject]) -> NotificationType {
         guard let event = dictionary[NotificationKeys.Event] as? String else {
             guard let reply = dictionary[NotificationKeys.Status] as? String else {
-                return .Unknown
+                return .unknown
             }
             if dictionary[NotificationKeys.Data] == nil {
                 if reply != "OK" {
-                    return .Error
+                    return .error
                 }
-                return .Default
+                return .default
             } else {
-                return .ReceivingStatuses
+                return .receivingStatuses
             }
         }
         switch (event) {
         case Event.Typing.rawValue:
-            return .ReceivingTyping
+            return .receivingTyping
         case Event.Posted.rawValue:
-            return .ReceivingPost
+            return .receivingPost
         case Event.Deleted.rawValue:
-            return .ReceivingDeletedPost
+            return .receivingDeletedPost
         case Event.Updated.rawValue:
-            return .ReceivingUpdatedPost
+            return .receivingUpdatedPost
         case Event.StatusChanged.rawValue:
-            return .ReceivingStatus
+            return .receivingStatus
         default:
-            return .Unknown
+            return .unknown
         }
     }
 }

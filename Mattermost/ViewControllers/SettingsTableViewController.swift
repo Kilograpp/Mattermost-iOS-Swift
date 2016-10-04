@@ -48,7 +48,7 @@ extension SettingsTableViewController {
 
 extension SettingsTableViewController {
     func toggleShouldCompressValue() {
-        Preferences.sharedInstance.shouldCompressImages = NSNumber.init(bool: (self.imagesCompressSwitch?.on)!)
+        Preferences.sharedInstance.shouldCompressImages = NSNumber.init(value: (self.imagesCompressSwitch?.isOn)! as Bool)
         Preferences.sharedInstance.save()
     }
 }
@@ -58,10 +58,10 @@ extension SettingsTableViewController {
 
 extension SettingsTableViewController {
     func backAction() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func shouldCompressValueChanged(sender: AnyObject) {
+    @IBAction func shouldCompressValueChanged(_ sender: AnyObject) {
         toggleShouldCompressValue()
     }
 }
@@ -70,12 +70,12 @@ extension SettingsTableViewController {
 //MARK: - UITableViewDelegate
 
 extension SettingsTableViewController {
-    override func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         let footer = view as! UITableViewHeaderFooterView
         footer.textLabel!.font = UIFont.kg_regular13Font()
     }
     
-    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
         header.textLabel!.font = UIFont.kg_regular13Font()
     }

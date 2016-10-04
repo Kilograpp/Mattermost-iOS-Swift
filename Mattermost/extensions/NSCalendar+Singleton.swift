@@ -8,10 +8,10 @@
 
 import Foundation
 
-extension NSCalendar {
-    @nonobjc static let sharedGregorianCalendar = NSCalendar.gregorianCalendar();
+extension Calendar {
+    @nonobjc static let sharedGregorianCalendar = Calendar.gregorianCalendar();
     
-    private static func gregorianCalendar() -> NSCalendar! {
-        return NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+    fileprivate static func gregorianCalendar() -> Calendar! {
+        return Calendar(identifier: Calendar.Identifier.gregorian)
     }
 }

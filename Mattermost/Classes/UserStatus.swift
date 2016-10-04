@@ -10,7 +10,7 @@ import Foundation
 import RestKit
 
 private protocol Public : class {
-    func refreshWithBackendStatus(backendStatus: String!)
+    func refreshWithBackendStatus(_ backendStatus: String!)
 }
 
 private protocol Private : class {
@@ -28,7 +28,7 @@ final class UserStatus : NSObject {
 }
 
 extension UserStatus : Public {
-    func refreshWithBackendStatus(backendStatus: String!) {
+    func refreshWithBackendStatus(_ backendStatus: String!) {
         self.backendStatus = backendStatus
         
         
@@ -38,6 +38,6 @@ extension UserStatus : Public {
 extension UserStatus : Private {
     func postNewStatusNotification() {
 //        print("POSTED \(self.identifier as String!)")
-        NSNotificationCenter.defaultCenter().postNotificationName("\(self.identifier  as String!)", object: self.backendStatus  as String!, userInfo: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "\(self.identifier  as String!)"), object: self.backendStatus  as String!, userInfo: nil)
     }
 }

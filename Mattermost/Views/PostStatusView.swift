@@ -14,10 +14,10 @@ final class PostStatusView: UIView {
     var post: Post?
     let errorView = UIButton()
     let sendingView = UIActivityIndicatorView()
-    var errorHandler: ((post: Post) -> Void)?
+    var errorHandler: ((_ post: Post) -> Void)?
     
     init() {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         setupErrorView()
         setupSendingView()
     }
@@ -35,12 +35,12 @@ final class PostStatusView: UIView {
 //MARK: - Setup
 extension PostStatusView {
     func setupErrorView() {
-        errorView.setImage(UIImage(named:  "message_fail_button"), forState: .Normal)
-        errorView.addTarget(self, action: #selector(errorAction), forControlEvents: .TouchUpInside)
+        errorView.setImage(UIImage(named:  "message_fail_button"), for: UIControlState())
+        errorView.addTarget(self, action: #selector(errorAction), for: .touchUpInside)
         errorView.imageEdgeInsets = UIEdgeInsetsMake(7, 7, 7, 7)
     }
     func setupSendingView() {
-        sendingView.activityIndicatorViewStyle = .Gray
+        sendingView.activityIndicatorViewStyle = .gray
         
     }
 }
@@ -48,19 +48,19 @@ extension PostStatusView {
 extension PostStatusView {
     func errorAction() {
         guard errorHandler != nil else { return }
-        errorHandler!(post: post!)
+        errorHandler!(post!)
     }
 }
 
 //MARK: - Configuration
 extension PostStatusView {
-    func configureWithStatus(post: Post) {
+    func configureWithStatus(_ post: Post) {
         self.post = post
         switch post.status {
-        case .Error:
+        case .error:
             sendingView.removeFromSuperview()
             addSubview(errorView)
-        case .Sending:
+        case .sending:
 //            addSubview(errorView)
             errorView.removeFromSuperview()
             sendingView.startAnimating()

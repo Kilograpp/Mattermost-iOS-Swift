@@ -11,18 +11,18 @@ import Foundation
 final class PerformanceManager {
     static let sharedInstance = PerformanceManager()
     
-    let messageRenderOperationQueue = NSOperationQueue()
+    let messageRenderOperationQueue = OperationQueue()
     
-    private init() {
+    fileprivate init() {
         self.setup()
     }
     
-    private func setup() {
+    fileprivate func setup() {
         self.configureMessageRenderQueue()
     }
     
-    private func configureMessageRenderQueue() {
-        self.messageRenderOperationQueue.qualityOfService = .UserInteractive
+    fileprivate func configureMessageRenderQueue() {
+        self.messageRenderOperationQueue.qualityOfService = .userInteractive
         self.messageRenderOperationQueue.maxConcurrentOperationCount = 2
     }
 }

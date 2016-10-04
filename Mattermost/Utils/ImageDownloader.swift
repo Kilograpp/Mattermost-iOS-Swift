@@ -9,76 +9,76 @@
 import WebImage
 
 final class ImageDownloader {
-    static func downloadFeedAvatarForUser(user: User, completion: (image: UIImage?, error: NSError?) -> Void) {
+    static func downloadFeedAvatarForUser(_ user: User, completion: @escaping (_ image: UIImage?, _ error: NSError?) -> Void) {
         guard !user.isSystem() else {
-            completion(image: UIImage.sharedFeedSystemAvatar, error: nil)
+            completion(UIImage.sharedFeedSystemAvatar, nil)
             return
         }
         
         let smallAvatarCacheKey = user.smallAvatarCacheKey()
         
-        if let image = SDImageCache.sharedImageCache().imageFromMemoryCacheForKey(smallAvatarCacheKey) {
-            completion(image: image, error: nil)
+        if let image = SDImageCache.shared().imageFromMemoryCache(forKey: smallAvatarCacheKey) {
+            completion(image, nil)
         } else {
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 (image, error, cacheType, isFinished, imageUrl) in
-                dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+                DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                     
                     // Handle unpredictable errors
                     guard image != nil else {
-                        completion(image: nil, error: error)
+                        completion(nil, error as NSError?)
                         return
                     }
                     
-                    let processedImage = UIImage.roundedImageOfSize(image, size: CGSizeMake(40, 40))
-                    SDImageCache.sharedImageCache().storeImage(processedImage, forKey: smallAvatarCacheKey)
+                    let processedImage = UIImage.roundedImageOfSize(image!, size: CGSize(width: 40, height: 40))
+                    SDImageCache.shared().store(processedImage, forKey: smallAvatarCacheKey)
                     
-                    dispatch_sync(dispatch_get_main_queue(), {
-                        completion(image: processedImage, error: nil)
+                    DispatchQueue.main.sync(execute: {
+                        completion(processedImage, nil)
                     })
                     
 
                 }
             }
             
-            SDWebImageManager.sharedManager().downloadImageWithURL(user.avatarURL(),
-                                                                   options: .HandleCookies ,
+            SDWebImageManager.shared().downloadImage(with: user.avatarURL() as URL!,
+                                                                   options: .handleCookies ,
                                                                    progress: nil,
                                                                    completed: imageDownloadCompletionHandler)
         }
     }
     
-    static func downloadFullAvatarForUser(user: User, complection: (image: UIImage?, error: NSError?) -> Void) {
+    static func downloadFullAvatarForUser(_ user: User, complection: @escaping (_ image: UIImage?, _ error: NSError?) -> Void) {
         guard !user.isSystem() else {
-            complection(image: UIImage.sharedAvatarPlaceholder, error: nil)
+            complection(UIImage.sharedAvatarPlaceholder, nil)
             return
         }
         
         let fullAvatarCacheKey = user.avatarLink
         
-        if let image = SDImageCache.sharedImageCache().imageFromDiskCacheForKey(fullAvatarCacheKey) {
-            complection(image:  image, error: nil)
+        if let image = SDImageCache.shared().imageFromDiskCache(forKey: fullAvatarCacheKey) {
+            complection(image, nil)
         }
         else {
             let imageDownloadComplectionHandler: SDWebImageCompletionWithFinishedBlock = {
                 (image, error, cacheType, isFinished, imageUrl) in
-                dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) {
+                DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive).async {
                     guard image != nil else {
-                        complection(image: nil, error: error)
+                        complection(nil, error as NSError?)
                         return
                     }
                     
-                    let processedImage = UIImage.roundedImageOfSize(image, size: CGSizeMake(130, 130))
-                    SDImageCache.sharedImageCache().storeImage(processedImage, forKey: fullAvatarCacheKey)
+                    let processedImage = UIImage.roundedImageOfSize(image!, size: CGSize(width: 130, height: 130))
+                    SDImageCache.shared().store(processedImage, forKey: fullAvatarCacheKey)
                     
-                    dispatch_sync(dispatch_get_main_queue(), {
-                        complection(image: processedImage, error: nil)
+                    DispatchQueue.main.sync(execute: {
+                        complection(processedImage, nil)
                     })
                 }
             }
             
-            SDWebImageManager.sharedManager().downloadImageWithURL(user.avatarURL(),
-                                                                   options: .HandleCookies ,
+            SDWebImageManager.shared().downloadImage(with: user.avatarURL() as URL!,
+                                                                   options: .handleCookies ,
                                                                    progress: nil,
                                                                    completed: imageDownloadComplectionHandler)
         }

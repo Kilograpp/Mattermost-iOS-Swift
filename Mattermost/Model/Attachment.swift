@@ -44,9 +44,9 @@ final class Attachment: RealmObject {
         }
     }
     
-    private dynamic var _attributedTextData: RealmAttributedString?
-    private dynamic var _attributedFallbackData: RealmAttributedString?
-    private dynamic var _attributedPretextData: RealmAttributedString?
+    fileprivate dynamic var _attributedTextData: RealmAttributedString?
+    fileprivate dynamic var _attributedFallbackData: RealmAttributedString?
+    fileprivate dynamic var _attributedPretextData: RealmAttributedString?
     
     lazy var attributedPretext: NSAttributedString? = {
         return self._attributedPretextData?.attributedString
@@ -80,22 +80,22 @@ private protocol Computations : class {
 }
 
 extension Attachment: Computations {
-    private func computeAttributedFallback() {
+    fileprivate func computeAttributedFallback() {
         self.attributedFallback = self.fallback?.markdownAttributedString()
     }
-    private func computeAttributedText() {
+    fileprivate func computeAttributedText() {
         self.attributedText = self.text?.markdownAttributedString()
     }
-    private func computeAttributedPretext() {
+    fileprivate func computeAttributedPretext() {
         self.attributedPretext = self.pretext?.markdownAttributedString()
     }
-    private func computeAttributedFallbackData() {
+    fileprivate func computeAttributedFallbackData() {
         self._attributedFallbackData = RealmAttributedString(attributedString: self.attributedFallback)
     }
-    private func computeAttributedPretextData() {
+    fileprivate func computeAttributedPretextData() {
         self._attributedPretextData = RealmAttributedString(attributedString: self.attributedPretext)
     }
-    private func computeAttributedTextData() {
+    fileprivate func computeAttributedTextData() {
         self._attributedTextData = RealmAttributedString(attributedString: self.attributedText)
     }
 }

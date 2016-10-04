@@ -8,16 +8,16 @@
 import Foundation
 
 extension UIImage {
-    class func roundedImageOfSize(sourceImage: UIImage, size: CGSize) -> UIImage {
+    class func roundedImageOfSize(_ sourceImage: UIImage, size: CGSize) -> UIImage {
         let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, true, 0)
         let context = UIGraphicsGetCurrentContext()
-        UIColor.whiteColor().setFill()
-        CGContextFillRect(context, frame);
+        UIColor.white.setFill()
+        context?.fill(frame);
         UIBezierPath(roundedRect: frame, cornerRadius: ceil(size.width / 2)).addClip()
-        sourceImage.drawInRect(frame)
+        sourceImage.draw(in: frame)
         
-        let result = UIGraphicsGetImageFromCurrentImageContext() as UIImage;
+        let result = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext();
         
         return result;
@@ -27,34 +27,34 @@ extension UIImage {
     
     @nonobjc static let sharedAvatarPlaceholder = UIImage.avatarPlaceholder()
     
-    private static func feedSystemAvatar() -> UIImage {
+    fileprivate static func feedSystemAvatar() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         let bundleImage = UIImage(named: "feed_system_avatar")
         UIGraphicsBeginImageContextWithOptions(rect.size, true, 0);
         let context = UIGraphicsGetCurrentContext()
-        UIColor.whiteColor().setFill()
-        CGContextFillRect(context, rect)
-        bundleImage?.drawInRect(rect)
-        let image = UIGraphicsGetImageFromCurrentImageContext() as UIImage;
+        UIColor.white.setFill()
+        context?.fill(rect)
+        bundleImage?.draw(in: rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext()
         return image
     }
     
-    private static func avatarPlaceholder() -> UIImage {
+    fileprivate static func avatarPlaceholder() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         UIGraphicsBeginImageContextWithOptions(rect.size, true, 0)
         let context = UIGraphicsGetCurrentContext()
-        let ref = UIBezierPath(roundedRect: rect, cornerRadius: 20).CGPath
-        CGContextAddPath(context, ref);
-        CGContextSetFillColorWithColor(context, UIColor(white: 0.95, alpha: 1).CGColor);
-        CGContextFillPath(context);
-        let image = UIGraphicsGetImageFromCurrentImageContext() as UIImage;
+        let ref = UIBezierPath(roundedRect: rect, cornerRadius: 20).cgPath
+        context?.addPath(ref);
+        context?.setFillColor(UIColor(white: 0.95, alpha: 1).cgColor);
+        context?.fillPath();
+        let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext();
         
         return image
     }
     
-    func imageByScalingAndCroppingForSize(size: CGSize, radius: CGFloat) -> UIImage {
+    func imageByScalingAndCroppingForSize(_ size: CGSize, radius: CGFloat) -> UIImage {
 
         let scaleFactor  = size.height / self.size.height
         let scaledWidth  = self.size.width * scaleFactor
@@ -62,31 +62,31 @@ extension UIImage {
         
         UIGraphicsBeginImageContextWithOptions(size, true, 2)
         
-        let thumbnailRect = CGRectMake(0, 0, scaledWidth, scaledHeight)
+        let thumbnailRect = CGRect(x: 0, y: 0, width: scaledWidth, height: scaledHeight)
         
         let context = UIGraphicsGetCurrentContext()
         ColorBucket.lightGrayColor.setFill()
-        CGContextFillRect(context, CGRect(origin: CGPointZero, size: size))
-        UIBezierPath(roundedRect: CGRect(origin: CGPointZero, size: size), cornerRadius: radius).addClip()
+        context?.fill(CGRect(origin: CGPoint.zero, size: size))
+        UIBezierPath(roundedRect: CGRect(origin: CGPoint.zero, size: size), cornerRadius: radius).addClip()
         
-        self.drawInRect(thumbnailRect)
+        self.draw(in: thumbnailRect)
         
         let resultImage = UIGraphicsGetImageFromCurrentImageContext()
         
         UIGraphicsEndImageContext()
         
-        return resultImage
+        return resultImage!
     }
     
-    func kg_resizedImageWithHeight(height: CGFloat) -> UIImage {
-        let newHeight = UIScreen.mainScreen().scale * height
+    func kg_resizedImageWithHeight(_ height: CGFloat) -> UIImage {
+        let newHeight = UIScreen.main.scale * height
         let scale: CGFloat = self.size.width / self.size.height
-        let size: CGSize = CGSizeMake(newHeight * scale, height)
+        let size: CGSize = CGSize(width: newHeight * scale, height: height)
         UIGraphicsBeginImageContext(size)
-        self.drawInRect(CGRectMake(0, 0, size.width, size.height))
+        self.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         let destImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return destImage
+        return destImage!
     }
 }

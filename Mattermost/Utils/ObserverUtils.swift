@@ -15,19 +15,19 @@ class Observer {
 }
 
 private protocol ObserverProtocol {
-    func subscribeForLogoutNotification(observer:AnyObject, selector:Selector)
-    func subscribeForNotification(observer:AnyObject, name:String, selector:Selector)
+    func subscribeForLogoutNotification(_ observer:AnyObject, selector:Selector)
+    func subscribeForNotification(_ observer:AnyObject, name:String, selector:Selector)
 }
 
 extension Observer: ObserverProtocol {
-    func subscribeForLogoutNotification(observer:AnyObject, selector:Selector) {
-        NSNotificationCenter.defaultCenter().addObserver(observer, selector: selector,
-                                                         name: Constants.NotificationsNames.UserLogoutNotificationName,
+    func subscribeForLogoutNotification(_ observer:AnyObject, selector:Selector) {
+        NotificationCenter.default.addObserver(observer, selector: selector,
+                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
                                                          object: nil)
     }
-    func subscribeForNotification(observer:AnyObject, name:String, selector:Selector) {
-        NSNotificationCenter.defaultCenter().addObserver(observer, selector: selector,
-                                                         name: name,
+    func subscribeForNotification(_ observer:AnyObject, name:String, selector:Selector) {
+        NotificationCenter.default.addObserver(observer, selector: selector,
+                                                         name: NSNotification.Name(rawValue: name),
                                                          object: nil)
     }
 }

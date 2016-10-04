@@ -25,7 +25,7 @@ final class AttachmentField: RealmObject {
     }
     dynamic var title: String?
     
-    private dynamic var _attributedValueData: RealmAttributedString?
+    fileprivate dynamic var _attributedValueData: RealmAttributedString?
     
     lazy var attributedValue: NSAttributedString? = {
         return self._attributedValueData?.attributedString
@@ -44,10 +44,10 @@ private protocol Computations : class {
 }
 
 extension AttachmentField: Computations {
-    private func computeAttributedValueData() {
+    fileprivate func computeAttributedValueData() {
         self._attributedValueData = RealmAttributedString(attributedString: self.attributedValue)
     }
-    private func computeAttributedValue() {
+    fileprivate func computeAttributedValue() {
         self.attributedValue = self.value?.markdownAttributedString()
     }
 }

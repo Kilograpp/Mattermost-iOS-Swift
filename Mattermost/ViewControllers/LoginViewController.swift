@@ -10,8 +10,8 @@
 
 private protocol Lifecylce {
     func viewDidLoad()
-    func viewWillAppear(animated: Bool)
-    func viewDidAppear(animated: Bool)
+    func viewWillAppear(_ animated: Bool)
+    func viewDidAppear(_ animated: Bool)
 }
 
 private protocol Setup {
@@ -24,8 +24,8 @@ private protocol Setup {
 }
 
 private protocol TextFieldDelegate {
-    func changeLogin(sender: AnyObject)
-    func changePassword(sender: AnyObject)
+    func changeLogin(_ sender: AnyObject)
+    func changePassword(_ sender: AnyObject)
 }
 
 final class LoginViewController: UIViewController, UITextFieldDelegate {
@@ -42,11 +42,11 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     let password = NSLocalizedString("Password", comment: "")
     let forgotPassword = NSLocalizedString("Forgot password?", comment: "")
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
-    private func configure() {
+    fileprivate func configure() {
         guard let login = Preferences.sharedInstance.predefinedLogin() else {
             return
         }
@@ -56,14 +56,14 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         self.passwordTextField.text = password
         if self.loginTextField.text != "" && self.passwordTextField.text != "" {
-            self.loginButton.enabled = true
+            self.loginButton.isEnabled = true
         }
     }
     
     
     //MARK - action
     
-    @IBAction func loginAction(sender: AnyObject) {
+    @IBAction func loginAction(_ sender: AnyObject) {
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) {
             (error) in
             // FIXME: CodeReview: гуард
@@ -89,26 +89,26 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
 //MARK: - UITextFieldDelegate
 
 extension LoginViewController: TextFieldDelegate {
-    @IBAction func changeLogin(sender: AnyObject) {
+    @IBAction func changeLogin(_ sender: AnyObject) {
         
         // FIXME: CodeReview: Guard
         if loginTextField.text != "" && passwordTextField.text != "" {
-            self.loginButton.enabled = true
+            self.loginButton.isEnabled = true
         } else {
-            self.loginButton.enabled = false
+            self.loginButton.isEnabled = false
         }
     }
-    @IBAction func changePassword(sender: AnyObject) {
+    @IBAction func changePassword(_ sender: AnyObject) {
         
         // FIXME: CodeReview: guard
         if loginTextField.text != "" && passwordTextField.text != "" {
-            self.loginButton.enabled = true
+            self.loginButton.isEnabled = true
         } else {
-            self.loginButton.enabled = false
+            self.loginButton.isEnabled = false
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.isEqual(self.loginTextField) {
             self.passwordTextField.becomeFirstResponder()
         }
@@ -134,13 +134,13 @@ extension LoginViewController: Lifecylce {
         self.configure()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //FIXME: вызов методов не должен быть через self        
         self.setupNavigationBar()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.loginTextField.becomeFirstResponder()
@@ -151,9 +151,9 @@ extension LoginViewController: Lifecylce {
 // MARK: - Setup
 
 extension LoginViewController: Setup {
-    private func setupNavigationBar() {
+    fileprivate func setupNavigationBar() {
         let titleAttribute = [
-            NSForegroundColorAttributeName: UIColor.whiteColor(),
+            NSForegroundColorAttributeName: UIColor.white,
             NSFontAttributeName: FontBucket.normalTitleFont
         ]
         
@@ -161,54 +161,54 @@ extension LoginViewController: Setup {
             return
         }
         navigationController.navigationBar.titleTextAttributes = titleAttribute
-        navigationController.navigationBar.tintColor = UIColor.whiteColor()
-        navigationController.navigationBar.barStyle = .Black
-        navigationController.navigationBar.translucent = true
-        navigationController.navigationBar.backgroundColor = UIColor.clearColor()
+        navigationController.navigationBar.tintColor = UIColor.white
+        navigationController.navigationBar.barStyle = .black
+        navigationController.navigationBar.isTranslucent = true
+        navigationController.navigationBar.backgroundColor = UIColor.clear
         navigationController.navigationBar.shadowImage = UIImage()
-        navigationController.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+        navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.title = self.titleName
-        self.navigationController?.view.bringSubviewToFront(self.titleLabel)
+        self.navigationController?.view.bringSubview(toFront: self.titleLabel)
         self.setNeedsStatusBarAppearanceUpdate()
     }
     
-    private func setupTitleLabel() {
+    fileprivate func setupTitleLabel() {
         self.titleLabel.font = FontBucket.titleLoginFont
         self.titleLabel.textColor = ColorBucket.whiteColor
         self.titleLabel.text = Preferences.sharedInstance.siteName
     }
     
-    private func setupLoginButton() {
+    fileprivate func setupLoginButton() {
         self.loginButton.layer.cornerRadius = 2
-        self.loginButton.setTitle(self.titleName, forState: .Normal)
+        self.loginButton.setTitle(self.titleName, for: UIControlState())
         self.loginButton.titleLabel?.font = FontBucket.loginButtonFont
-        self.loginButton.enabled = false
+        self.loginButton.isEnabled = false
     }
     
-    private func setupLoginTextField() {
+    fileprivate func setupLoginTextField() {
         self.loginTextField.delegate = self;
         self.loginTextField.textColor = ColorBucket.blackColor
         self.loginTextField.font = FontBucket.loginTextFieldFont
         self.loginTextField.placeholder = self.email
-        self.loginTextField.keyboardType = .EmailAddress
-        self.loginTextField.autocorrectionType = .No
+        self.loginTextField.keyboardType = .emailAddress
+        self.loginTextField.autocorrectionType = .no
     }
     
-    private func setupPasswordTextField() {
+    fileprivate func setupPasswordTextField() {
         self.passwordTextField.delegate = self;
         self.passwordTextField.textColor = ColorBucket.blackColor
         self.passwordTextField.font = FontBucket.loginTextFieldFont
         self.passwordTextField.placeholder = self.password
-        self.passwordTextField.autocorrectionType = .No
-        self.passwordTextField.secureTextEntry = true
+        self.passwordTextField.autocorrectionType = .no
+        self.passwordTextField.isSecureTextEntry = true
     }
     
-    private func setupRecoveryButton() {
+    fileprivate func setupRecoveryButton() {
         self.recoveryButton.layer.cornerRadius = 2
         self.recoveryButton.backgroundColor = ColorBucket.whiteColor
-        self.recoveryButton.setTitle(self.forgotPassword, forState:.Normal)
-        self.recoveryButton.tintColor = UIColor.redColor()
-        self.recoveryButton.setTitleColor(UIColor.redColor(), forState:.Normal)
+        self.recoveryButton.setTitle(self.forgotPassword, for:UIControlState())
+        self.recoveryButton.tintColor = UIColor.red
+        self.recoveryButton.setTitleColor(UIColor.red, for:UIControlState())
         self.recoveryButton.titleLabel?.font = FontBucket.forgotPasswordButtonFont
     }
 

@@ -23,23 +23,23 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
         setupGestureRecognizer()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        UIStatusBarStyle.Default
+        UIStatusBarStyle.default
     }
     
     func setupNavigationBar()  {
-        self.navigationBar.translucent = false
+        self.navigationBar.isTranslucent = false
         self.navigationBar.barTintColor = ColorBucket.whiteColor
   
     }
     
     func setupTitleLabel() {
-        self.titleLabel = UILabel(frame: (CGRectMake(0, 11, CGRectGetWidth(titleView.bounds) - 30, 22)))
+        self.titleLabel = UILabel(frame: (CGRect(x: 0, y: 11, width: titleView.bounds.width - 30, height: 22)))
         self.titleLabel.numberOfLines = 1
-        self.titleLabel.textAlignment = NSTextAlignment.Center
+        self.titleLabel.textAlignment = NSTextAlignment.center
         self.titleLabel.textColor = ColorBucket.blackColor
-        titleLabel.lineBreakMode = .ByClipping
+        titleLabel.lineBreakMode = .byClipping
         self.titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.5
         self.titleView.addSubview(self.titleLabel!)
@@ -48,7 +48,7 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
     //todo NavigationBarTitleView
     func setupTitleView() {
         //self.titleView = KGNavigationBarTitleView
-        self.titleView = UIView(frame: CGRectMake(0, 0, UIScreen.screenWidth()*0.6, 44))
+        self.titleView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth()*0.6, height: 44))
         self.navigationBar.topItem?.titleView = self.titleView
         titleView.clipsToBounds = true
     }
@@ -56,7 +56,7 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
     
     
     func setupGestureRecognizer() {
-        self.titleLabel.userInteractionEnabled = true
+        self.titleLabel.isUserInteractionEnabled = true
         self.titleLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapOnTitleAction)))
     }
     
@@ -64,7 +64,7 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
         self.chatNavigationDelegate?.didSelectTitle()
     }
     
-    func configureTitleViewWithCannel(channel: Channel, loadingInProgress: Bool) {
+    func configureTitleViewWithCannel(_ channel: Channel, loadingInProgress: Bool) {
        // temp
         self.titleLabel.text = channel.displayName
         titleLabel.sizeToFit()
@@ -73,8 +73,8 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
     
  //UINavigationControllerDelegate
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait
     }
     
 }

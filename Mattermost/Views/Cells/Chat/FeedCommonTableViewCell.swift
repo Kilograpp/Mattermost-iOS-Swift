@@ -9,10 +9,10 @@
 import WebImage
 
 class FeedCommonTableViewCell: FeedBaseTableViewCell {
-    private let avatarImageView: UIImageView = UIImageView()
-    private let nameLabel: UILabel = UILabel()
-    private let dateLabel: UILabel = UILabel()
-    private let parentView: CompactPostView = CompactPostView.compactPostView(ActionType.CompleteReply)
+    fileprivate let avatarImageView: UIImageView = UIImageView()
+    fileprivate let nameLabel: UILabel = UILabel()
+    fileprivate let dateLabel: UILabel = UILabel()
+    fileprivate let parentView: CompactPostView = CompactPostView.compactPostView(ActionType.CompleteReply)
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -51,7 +51,7 @@ protocol ParentComment: class {
 }
 
 extension FeedCommonTableViewCell : TableViewPostDataSource {
-    override func configureWithPost(post: Post) {
+    override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         self.configureAvatarImage()
         self.configureBasicLabels()
@@ -59,7 +59,7 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
         
     }
     
-    override class func heightWithPost(post: Post) -> CGFloat {
+    override class func heightWithPost(_ post: Post) -> CGFloat {
         var height = CGFloat(post.attributedMessageHeight) + 44
         if (post.hasParentPost()) {
             height += 64 + Constants.UI.ShortPaddingSize
@@ -108,7 +108,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
         //FIXME: CodeReview: Конкретный цвет
         self.avatarImageView.backgroundColor = ColorBucket.whiteColor
-        self.avatarImageView.contentMode = .ScaleAspectFill
+        self.avatarImageView.contentMode = .scaleAspectFill
         self.addSubview(self.avatarImageView)
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         //TODO: add gesture recognizer
@@ -124,7 +124,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
     }
     
     final func setupDateLabel() {
-        self.dateLabel.backgroundColor = UIColor.whiteColor()
+        self.dateLabel.backgroundColor = UIColor.white
         self.addSubview(self.dateLabel)
         self.dateLabel.font = FontBucket.postDateFont
         //FIXME: CodeReview: Заменить на конкретный цвет
@@ -140,12 +140,12 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
         
         let originY = self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36
-        self.messageLabel.frame = CGRectMake(53, originY, textWidth, CGFloat(self.post.attributedMessageHeight))
-        self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
-        self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
+        self.messageLabel.frame = CGRect(x: 53, y: originY, width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
+        self.nameLabel.frame = CGRect(x: 53, y: 8, width: nameWidth, height: 20)
+        self.dateLabel.frame = CGRect(x: self.nameLabel.frame.maxX + 5, y: 8, width: dateWidth, height: 20)
         
         let size = self.parentView.requeredSize()
-        self.parentView.frame = CGRectMake(60, 36, size.width, size.height)
+        self.parentView.frame = CGRect(x: 60, y: 36, width: size.width, height: size.height)
         
         super.layoutSubviews()
     }

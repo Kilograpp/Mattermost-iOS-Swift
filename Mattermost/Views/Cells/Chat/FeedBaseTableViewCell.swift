@@ -9,13 +9,13 @@
 
 
 protocol TableViewPostDataSource: class {
-    func configureWithPost(post: Post)
-    static func heightWithPost(post: Post) -> CGFloat
+    func configureWithPost(_ post: Post)
+    static func heightWithPost(_ post: Post) -> CGFloat
 }
 
 class FeedBaseTableViewCell: UITableViewCell, Reusable {
-    final var onMentionTap: ((nickname : String) -> Void)?
-    var errorHandler: ((post: Post) -> Void)?
+    final var onMentionTap: ((_ nickname : String) -> Void)?
+    var errorHandler: ((_ post: Post) -> Void)?
     final var post : Post! {
         didSet { self.postIdentifier = self.post.identifier
             self.parentPostIdentifier = self.post.hasParentPost() ? self.post.parentId : nil}
@@ -42,36 +42,36 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     }
     
     override func layoutSubviews() {
-        postStatusView.frame = CGRectMake(UIScreen.screenWidth() - Constants.UI.PostStatusViewSize, (CGRectGetHeight(frame) - Constants.UI.PostStatusViewSize)/2, Constants.UI.PostStatusViewSize, Constants.UI.PostStatusViewSize)
+        postStatusView.frame = CGRect(x: UIScreen.screenWidth() - Constants.UI.PostStatusViewSize, y: (frame.height - Constants.UI.PostStatusViewSize)/2, width: Constants.UI.PostStatusViewSize, height: Constants.UI.PostStatusViewSize)
         
         self.align()
         self.alignSubviews()
     }
     
-    private func configureMessage() {
+    fileprivate func configureMessage() {
         self.messageLabel.textStorage = self.post.attributedMessage!
-        guard self.post.messageType == .System else { return }
+        guard self.post.messageType == .system else { return }
         self.messageLabel.alpha = 0.5
     }
     
     
-    private func setup() {
+    fileprivate func setup() {
         self.setupBasics()
         self.setupMessageLabel()
         setupPostStatusView()
     }
     
-    private func setupBasics() {
-        self.selectionStyle = .None
+    fileprivate func setupBasics() {
+        self.selectionStyle = .none
     }
 
-    private func setupMessageLabel() {
+    fileprivate func setupMessageLabel() {
         //FIXME: CodeReview: Заменить на конкретный цвет
         self.messageLabel.backgroundColor = ColorBucket.whiteColor
         self.messageLabel.numberOfLines = 0
         self.messageLabel.layer.drawsAsynchronously = true
-        messageLabel.userInteractionEnabled = true
-        messageLabel.onUrlTap = { (url:NSURL) in
+        messageLabel.isUserInteractionEnabled = true
+        messageLabel.onUrlTap = { (url:URL) in
             self.openURL(url)
         }
         messageLabel.onEmailTap = { (email:String) in
@@ -83,7 +83,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         self.addSubview(self.messageLabel)
     }
     
-    private func setupPostStatusView() {
+    fileprivate func setupPostStatusView() {
         postStatusView = PostStatusView()
         self.addSubview(postStatusView)
     }
@@ -91,38 +91,38 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
 }
 
 protocol ChatMessageTapActions {
-    func emailTapAction(email:String)
-    func phoneTapAction(phone:String)
-    func openURL(url:NSURL)
+    func emailTapAction(_ email:String)
+    func phoneTapAction(_ phone:String)
+    func openURL(_ url:URL)
 }
 
 extension FeedBaseTableViewCell: ChatMessageTapActions {
-    func emailTapAction(email:String) {
-        let url = NSURL(string: "mailto:" + email)
-        UIApplication.sharedApplication().openURL(url!)
+    func emailTapAction(_ email:String) {
+        let url = URL(string: "mailto:" + email)
+        UIApplication.shared.openURL(url!)
     }
-    func phoneTapAction(phone:String) {
-        let url = NSURL(string: "tel:" + phone)
-        UIApplication.sharedApplication().openURL(url!)
+    func phoneTapAction(_ phone:String) {
+        let url = URL(string: "tel:" + phone)
+        UIApplication.shared.openURL(url!)
     }
-    func openURL(url:NSURL) {
-        UIApplication.sharedApplication().openURL(url)
+    func openURL(_ url:URL) {
+        UIApplication.shared.openURL(url)
     }
 }
 
 extension FeedBaseTableViewCell {
-    func configureWithPost(post: Post) {
+    func configureWithPost(_ post: Post) {
         self.post = post
         self.configureMessage()
         postStatusView.configureWithStatus(post)
         postStatusView.errorHandler = self.errorHandler
     }
     
-    class func heightWithPost(post: Post) -> CGFloat {
+    class func heightWithPost(_ post: Post) -> CGFloat {
         preconditionFailure("This method must be overridden")
     }
 }
 
 extension TableViewPostDataSource {
-    func configureWithPost(post: Post) {}
+    func configureWithPost(_ post: Post) {}
 }

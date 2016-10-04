@@ -9,9 +9,9 @@
 import Foundation
 
 extension Dictionary {
-    func toJsonData() -> NSData? {
+    func toJsonData() -> Data? {
         do {
-            return try NSJSONSerialization.dataWithJSONObject(self as! AnyObject, options: NSJSONWritingOptions.PrettyPrinted)
+            return try JSONSerialization.data(withJSONObject: self as AnyObject, options: JSONSerialization.WritingOptions.prettyPrinted)
             // here "jsonData" is the dictionary encoded in JSON data
         } catch let error as NSError {
             print(error)

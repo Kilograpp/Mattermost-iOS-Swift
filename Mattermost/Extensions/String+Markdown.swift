@@ -11,6 +11,6 @@ import TSMarkdownParser
 
 extension String {
     func markdownAttributedString() -> NSAttributedString? {
-        return TSMarkdownParser.sharedInstance.attributedStringFromMarkdown(self)
+        return TSMarkdownParser.sharedInstance.attributedString(fromMarkdown: self)
     }
 }

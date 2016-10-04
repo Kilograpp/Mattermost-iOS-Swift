@@ -10,51 +10,51 @@ import Foundation
 import RealmSwift
 
 @objc enum StringAttributeType: Int {
-    case Link = 0
-    case Font = 5
-    case String = 1
-    case URL = 3
-    case Color = 4
-    case Unknown = -1
+    case link = 0
+    case font = 5
+    case string = 1
+    case url = 3
+    case color = 4
+    case unknown = -1
 }
 
 @objc enum ColorType: Int {
-    case CommonMessage = 1
-    case SystemMessage = 2
-    case Hashtag = 3
-    case Mention = 4
-    case MentionBackground = 5
-    case Link = 6
+    case commonMessage = 1
+    case systemMessage = 2
+    case hashtag = 3
+    case mention = 4
+    case mentionBackground = 5
+    case link = 6
 }
 
 final class StringAttribute: Object {
-    dynamic var type: StringAttributeType = .Unknown
+    dynamic var type: StringAttributeType = .unknown
     dynamic var name: String?
-    private dynamic var value: String?
-    private dynamic var colorType: ColorType = .CommonMessage
-    private dynamic var fontSize: Float = 0
+    fileprivate dynamic var value: String?
+    fileprivate dynamic var colorType: ColorType = .commonMessage
+    fileprivate dynamic var fontSize: Float = 0
     
     var valueCache: AnyObject? {
         switch type {
-        case .String:
-            return self.value
-        case .Link:
-            return self.value
-        case .Font:
+        case .string:
+            return self.value as AnyObject?
+        case .link:
+            return self.value as AnyObject?
+        case .font:
             return UIFont(name: self.value!, size: CGFloat(self.fontSize))
-        case .Color:
+        case .color:
             switch self.colorType {
-                case .CommonMessage:
+                case .commonMessage:
                     return ColorBucket.commonMessageColor
-                case .Hashtag:
+                case .hashtag:
                     return ColorBucket.hashtagColor
-                case .Link:
+                case .link:
                     return ColorBucket.linkColor
-                case .Mention:
+                case .mention:
                     return ColorBucket.mentionColor
-                case .MentionBackground:
+                case .mentionBackground:
                     return ColorBucket.mentionBackgroundColor
-                case .SystemMessage:
+                case .systemMessage:
                     return ColorBucket.systemMessageColor
             }
         
@@ -66,7 +66,7 @@ final class StringAttribute: Object {
         return ["valueCache"]
     }
     
-    func setValue(value: AnyObject, attributeName: String) {
+    func setValue(_ value: AnyObject, attributeName: String) {
         switch value {
             case is UIColor:
                 self.setColorValue(value as! UIColor, attributeName: attributeName)
@@ -76,8 +76,8 @@ final class StringAttribute: Object {
                 self.setFontValue(value as! UIFont, attributeName: attributeName)
             break
                 
-            case is NSURL:
-                self.setURLValue(value as! NSURL, attributeName: attributeName)
+            case is URL:
+                self.setURLValue(value as! URL, attributeName: attributeName)
             break
             
             case is String:
@@ -87,51 +87,51 @@ final class StringAttribute: Object {
             default : break
         }
     }
-    func setStringValue(string: String, attributeString: String) {
+    func setStringValue(_ string: String, attributeString: String) {
         self.value = string
         self.name = attributeString
-        self.type = .String
+        self.type = .string
     }
     
-    func setURLValue(URL: NSURL, attributeName: String) {
+    func setURLValue(_ URL: Foundation.URL, attributeName: String) {
         self.value = URL.absoluteString
         self.name = attributeName
-        self.type = .Link
+        self.type = .link
     }
     
-    func setFontValue(font: UIFont, attributeName: String) {
+    func setFontValue(_ font: UIFont, attributeName: String) {
         self.value = font.fontName
         self.fontSize = Float(font.pointSize)
         self.name = attributeName
-        self.type = .Font
+        self.type = .font
     }
     
-    func setColorValue(color: UIColor, attributeName: String) {
+    func setColorValue(_ color: UIColor, attributeName: String) {
         
         switch color {
             
             case ColorBucket.commonMessageColor:
-                self.colorType = .CommonMessage
+                self.colorType = .commonMessage
             break
             
             case ColorBucket.systemMessageColor:
-                self.colorType = .SystemMessage
+                self.colorType = .systemMessage
             break
             
             case ColorBucket.hashtagColor:
-                self.colorType = .Hashtag
+                self.colorType = .hashtag
             break
             
             case ColorBucket.mentionColor:
-                self.colorType = .Mention
+                self.colorType = .mention
             break
             
             case ColorBucket.mentionBackgroundColor:
-                self.colorType = .MentionBackground
+                self.colorType = .mentionBackground
             break
             
             case ColorBucket.linkColor:
-                self.colorType = .Link
+                self.colorType = .link
             break
             
             default:
@@ -141,7 +141,7 @@ final class StringAttribute: Object {
         }
 
         self.name = attributeName
-        self.type = .Color
+        self.type = .color
     }
 
     

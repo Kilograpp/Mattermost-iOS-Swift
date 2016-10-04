@@ -15,7 +15,7 @@ private protocol PublicHeightCellMoreChannels : class {
 }
 
 private protocol Configure : class {
-    func configureCellWithObject(channel: Channel)
+    func configureCellWithObject(_ channel: Channel)
 }
 
 final class MoreChannelsTableViewCell: UITableViewCell, Reusable {
@@ -72,55 +72,55 @@ extension MoreChannelsTableViewCell: PublicHeightCellMoreChannels {
 //MARK: - Setup
 extension MoreChannelsTableViewCell : Setup {
     
-    private func setupAvatarView(){
+    fileprivate func setupAvatarView(){
         self.avatarView.layer.cornerRadius = self.avatarView.bounds.height/2
         self.avatarView.backgroundColor = ColorBucket.whiteColor
         
     }
     
-    private func setupAvatarImageView(){
+    fileprivate func setupAvatarImageView(){
         self.avatarImageView.layer.cornerRadius = self.avatarImageView.bounds.height/2
         self.avatarImageView.clipsToBounds = true
     }
     
-    private func setupStatusView() {
+    fileprivate func setupStatusView() {
         self.statusView.layer.cornerRadius = self.statusView.bounds.height/2
         self.statusView.layer.borderWidth = 2
-        self.statusView.layer.borderColor = ColorBucket.whiteColor.CGColor
+        self.statusView.layer.borderColor = ColorBucket.whiteColor.cgColor
         self.statusView.backgroundColor = ColorBucket.darkGrayColor
-        self.avatarView.bringSubviewToFront(self.statusView)
+        self.avatarView.bringSubview(toFront: self.statusView)
     }
     
-    private func setupNameChannelLabel(){
+    fileprivate func setupNameChannelLabel(){
         self.nameChannelLabel.textColor = ColorBucket.blackColor
         self.nameChannelLabel.backgroundColor = ColorBucket.whiteColor
         self.nameChannelLabel.font = FontBucket.titleChannelFont
         self.nameChannelLabel.numberOfLines = 1
     }
     
-    private func setupLastPostLabel(){
+    fileprivate func setupLastPostLabel(){
         self.lastPostLabel.textColor = ColorBucket.blackColor
         self.lastPostLabel.backgroundColor = ColorBucket.whiteColor
         self.lastPostLabel.font = FontBucket.subtitleChannelFont
         self.lastPostLabel.numberOfLines = 2
     }
     
-    private func setupDateLabel(){
+    fileprivate func setupDateLabel(){
         self.dateLabel.textColor = ColorBucket.grayColor
         self.dateLabel.backgroundColor = ColorBucket.whiteColor
         self.dateLabel.font = FontBucket.dateChannelFont
     }
     
-    private func setupAvatarUsersLastPostImageView(){
+    fileprivate func setupAvatarUsersLastPostImageView(){
         self.avatarUsersLastPostImageView.layer.cornerRadius = self.avatarUsersLastPostImageView.bounds.height/2
         self.avatarUsersLastPostImageView.clipsToBounds = true
     }
     
-    private func setupSeparatorView(){
+    fileprivate func setupSeparatorView(){
         self.separatorView.backgroundColor = ColorBucket.rightMenuSeparatorColor
     }
     
-    private func setupLetterFirstNamesChannelLabel(){
+    fileprivate func setupLetterFirstNamesChannelLabel(){
         self.letterFirstNamesChannelLabel.backgroundColor = ColorBucket.whiteColor
         self.letterFirstNamesChannelLabel.tintColor = ColorBucket.whiteColor
         self.letterFirstNamesChannelLabel.font = FontBucket.letterChannelFont
@@ -130,7 +130,7 @@ extension MoreChannelsTableViewCell : Setup {
 extension MoreChannelsTableViewCell : Configure {
 
 //MARK: - ConfigureCell
-    func configureCellWithObject(channel: Channel) {
+    func configureCellWithObject(_ channel: Channel) {
         if channel.privateType == Constants.ChannelType.PrivateTypeChannel {
             configureHiddenForSubviews(true)
             configureCellWithPrivateChannel(channel)
@@ -141,15 +141,15 @@ extension MoreChannelsTableViewCell : Configure {
         }
     }
     
-    private func configureHiddenForSubviews(hidden: Bool) {
-        self.letterFirstNamesChannelLabel.hidden = hidden
-        self.avatarUsersLastPostImageView.hidden = hidden
-        self.avatarImageView.hidden = !hidden
-        self.statusView.hidden = !hidden
+    fileprivate func configureHiddenForSubviews(_ hidden: Bool) {
+        self.letterFirstNamesChannelLabel.isHidden = hidden
+        self.avatarUsersLastPostImageView.isHidden = hidden
+        self.avatarImageView.isHidden = !hidden
+        self.statusView.isHidden = !hidden
     }
 
 //MARK: - ConfigureWithPrivateCannel
-    private func configureCellWithPrivateChannel(channel: Channel)  {
+    fileprivate func configureCellWithPrivateChannel(_ channel: Channel)  {
         configureNameChannelLabelTextForChannel(true, channel: channel)
         configureDateLabelText(channel)
         configureAvatarImageView(channel)
@@ -158,7 +158,7 @@ extension MoreChannelsTableViewCell : Configure {
     }
     
 //MARK: - ConfigureWithPublicChannel
-    private func configureCellWithPublicChannel(channel: Channel) {
+    fileprivate func configureCellWithPublicChannel(_ channel: Channel) {
         configureNameChannelLabelTextForChannel(false, channel: channel)
         configureDateLabelText(channel)
         configureLastPostLabelTextForPublicChannel(channel)
@@ -167,25 +167,25 @@ extension MoreChannelsTableViewCell : Configure {
     }
     
 //MARK: - ConfigureTextLabel
-    private func configureLastPostLabelTextForPrivateChannel(channel:Channel) {
+    fileprivate func configureLastPostLabelTextForPrivateChannel(_ channel:Channel) {
         //self.lastPostLabel.text = channel.posts.last?.message
         let lastPost = try! Realm().objects(Post).filter("channelId = %@", channel.identifier!).last
         self.lastPostLabel.text = lastPost?.message
     }
     
-    private func configureNameChannelLabelTextForChannel(isPrivate:Bool, channel: Channel){
+    fileprivate func configureNameChannelLabelTextForChannel(_ isPrivate:Bool, channel: Channel){
         self.nameChannelLabel.text = isPrivate ? "@" + channel.displayName! : "#" + channel.displayName!
     }
     
-    private func configureDateLabelText(channel: Channel) {
+    fileprivate func configureDateLabelText(_ channel: Channel) {
         self.dateLabel.text = channel.lastViewDate?.messageDateFormatForChannel()
     }
     
-    private func configureLastPostLabelTextForPublicChannel(channel:Channel){
+    fileprivate func configureLastPostLabelTextForPublicChannel(_ channel:Channel){
         //self.lastPostLabel.text = channel.posts.last?.message
         let lastPost = try! Realm().objects(Post).filter("channelId = %@", channel.identifier!).last
         if lastPost == nil {
-            self.avatarUsersLastPostImageView.hidden = true
+            self.avatarUsersLastPostImageView.isHidden = true
             self.lastPostLabel.text = ""
         } else {
             configureAvatarUsersLastPostImageView(lastPost!)
@@ -194,36 +194,36 @@ extension MoreChannelsTableViewCell : Configure {
         
     }
     
-    private func configureLetterFirstNamesChannelLabelText(channel:Channel) {
+    fileprivate func configureLetterFirstNamesChannelLabelText(_ channel:Channel) {
         self.letterFirstNamesChannelLabel.text = channel.displayName![0]
     }
 
 //MARK: - ConfigureAvatarView
-    private func configureAvatarViewForPublicChannel() {
+    fileprivate func configureAvatarViewForPublicChannel() {
         self.avatarView.backgroundColor = ColorBucket.blueColor
         self.letterFirstNamesChannelLabel.backgroundColor = ColorBucket.blueColor
         self.letterFirstNamesChannelLabel.textColor = ColorBucket.whiteColor
     }
  
 //MARK: - ConfigureStatusUser
-    private func configureStatusView(channel: Channel) {
+    fileprivate func configureStatusView(_ channel: Channel) {
         let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(channel.interlocuterFromPrivateChannel().identifier).backendStatus
         configureStatusViewWithBackendStatus(backendStatus!)
     }
     
-    private func configureStatusViewWithBackendStatus(backendStatus: String) {
+    fileprivate func configureStatusViewWithBackendStatus(_ backendStatus: String) {
         switch backendStatus {
             case "online":
                 self.statusView.backgroundColor = ColorBucket.onlineStatusColor
             case "away":
                 self.statusView.backgroundColor = ColorBucket.awayStatusColor
             default:
-                self.statusView.hidden = true
+                self.statusView.isHidden = true
         }
     }
 
 //MARK: - ConfigureImageView
-    private func configureAvatarImageView (channel: Channel) {
+    fileprivate func configureAvatarImageView (_ channel: Channel) {
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         let user = channel.interlocuterFromPrivateChannel()
         ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
@@ -231,10 +231,10 @@ extension MoreChannelsTableViewCell : Configure {
         }
     }
     
-    private func configureAvatarUsersLastPostImageView(lastPost: Post) {
+    fileprivate func configureAvatarUsersLastPostImageView(_ lastPost: Post) {
         self.avatarUsersLastPostImageView.image = UIImage.sharedFeedSystemAvatar
         let user = lastPost.author
-        ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
+        ImageDownloader.downloadFeedAvatarForUser(user!) { [weak self] (image, error) in
             self?.avatarUsersLastPostImageView.image = image
         }
     }

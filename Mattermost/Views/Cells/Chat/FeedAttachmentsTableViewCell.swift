@@ -11,8 +11,8 @@ import RealmSwift
 
 final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
 
-    private let tableView = UITableView()
-    private var attachments : List<File>!
+    fileprivate let tableView = UITableView()
+    fileprivate var attachments : List<File>!
     
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -32,12 +32,12 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         self.tableView.scrollsToTop = false
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.tableView.separatorStyle = .None
+        self.tableView.separatorStyle = .none
         self.tableView.bounces = false
-        self.tableView.scrollEnabled = false
+        self.tableView.isScrollEnabled = false
         
-        self.tableView.registerClass(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier, cacheSize: 7)
-        self.tableView.registerClass(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier, cacheSize: 7)
+        self.tableView.register(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier, cacheSize: 7)
+        self.tableView.register(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier, cacheSize: 7)
         self.addSubview(self.tableView)
     }
     
@@ -45,10 +45,10 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     //MARK: Lifecycle
     
     override func layoutSubviews() {
-        self.tableView.frame = CGRectMake(53,
-                                          CGRectGetMaxY(self.messageLabel.frame) + 8,
-                                          UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize,
-                                          self.tableView.contentSize.height)
+        self.tableView.frame = CGRect(x: 53,
+                                          y: self.messageLabel.frame.maxY + 8,
+                                          width: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize,
+                                          height: self.tableView.contentSize.height)
         super.layoutSubviews()
     }
     
@@ -59,7 +59,7 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     
     //MARK: Private
     
-    private class func tableViewHeightWithPost(post: Post) -> CGFloat {
+    fileprivate class func tableViewHeightWithPost(_ post: Post) -> CGFloat {
         let height = post.files.reduce(0) {
             (total, file) in
             total + (file.isImage ? (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings)*0.56 - 5 : 56)
@@ -70,33 +70,33 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
 }
 
 extension FeedAttachmentsTableViewCell {
-    override func configureWithPost(post: Post) {
+    override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         self.attachments = self.post.files
         self.tableView.reloadData()
     }
     
-    override class func heightWithPost(post: Post) -> CGFloat {
+    override class func heightWithPost(_ post: Post) -> CGFloat {
         return CGFloat(post.attributedMessageHeight) + 44 + 8 + FeedAttachmentsTableViewCell.tableViewHeightWithPost(post)
     }
 }
 
 extension FeedAttachmentsTableViewCell : UITableViewDataSource {
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.attachments != nil ? 1 : 0
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.attachments.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //FIXME: CodeReview: Убрать инит
         let file = self.attachments[indexPath.row]
         if file.isImage {
-            return self.tableView.dequeueReusableCellWithIdentifier(AttachmentImageCell.reuseIdentifier) as! AttachmentImageCell
+            return self.tableView.dequeueReusableCell(withIdentifier: AttachmentImageCell.reuseIdentifier) as! AttachmentImageCell
         } else {
-            return self.tableView.dequeueReusableCellWithIdentifier(AttachmentFileCell.reuseIdentifier) as! AttachmentFileCell
+            return self.tableView.dequeueReusableCell(withIdentifier: AttachmentFileCell.reuseIdentifier) as! AttachmentFileCell
         }
     }
     
@@ -104,7 +104,7 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
 
 
 extension FeedAttachmentsTableViewCell : UITableViewDelegate {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         let file = self.attachments[indexPath.row]
         
@@ -119,7 +119,7 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
 
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let file = self.attachments[indexPath.row]
         (cell as! Attachable).configureWithFile(file)
     }

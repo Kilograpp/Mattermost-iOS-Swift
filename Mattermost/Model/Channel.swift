@@ -30,14 +30,14 @@ enum ChannelRelationships: String {
 }
 
 private enum PrivateType {
-    case Direct
-    case PublicChannel
-    case PrivateChannel
+    case direct
+    case publicChannel
+    case privateChannel
 }
 
 final class Channel: RealmObject {
     
-    class func privateTypeDisplayName(privateTypeString: String) -> String {
+    class func privateTypeDisplayName(_ privateTypeString: String) -> String {
         switch privateTypeString {
         case Constants.ChannelType.PrivateTypeChannel:
             return "Private message"
@@ -54,14 +54,14 @@ final class Channel: RealmObject {
             computeTeam()
         }
     }
-    dynamic var createdAt: NSDate?
-    dynamic var lastViewDate: NSDate?
+    dynamic var createdAt: Date?
+    dynamic var lastViewDate: Date?
     dynamic var identifier: String?
     dynamic var name: String?
     dynamic var purpose: String?
     dynamic var header: String?
     dynamic var messagesCount: String?
-    dynamic var lastPostDate: NSDate?
+    dynamic var lastPostDate: Date?
     dynamic var displayName: String?
     dynamic var currentUserInChannel: Bool = false
     
@@ -75,9 +75,9 @@ final class Channel: RealmObject {
    // let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.channel.rawValue)
     
     func interlocuterFromPrivateChannel() -> User {
-        let ids = self.name?.componentsSeparatedByString("__")
+        let ids = self.name?.components(separatedBy: "__")
         let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
-        let user = safeRealm.objects(User).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
+        let user = safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
         return user
     }
     
@@ -102,7 +102,12 @@ extension Channel: Support {
     }
 
     func computeTeam() {
-        self.team = safeRealm.objectForPrimaryKey(Team.self, key: self.privateTeamId!.isEmpty ? DataManager.sharedInstance.currentTeam!.identifier : self.privateTeamId!)
+        //s3 refactor
+        if (self.privateTeamId!.isEmpty) {
+            self.team = safeRealm.object(ofType:Team.self, forPrimaryKey: DataManager.sharedInstance.currentTeam!.identifier!)
+        } else {
+            self.team = safeRealm.object(ofType:Team.self, forPrimaryKey: self.privateTeamId!)
+        }
     }
     
     func computeDispayNameIfNeeded() {
@@ -115,6 +120,6 @@ extension Channel: Support {
     }
     
     func hasNewMessages() -> Bool {
-      return (self.lastViewDate?.isEarlierThan(self.lastPostDate))!
+      return ((self.lastViewDate as NSDate?)?.isEarlierThan(self.lastPostDate))!
     }
 }

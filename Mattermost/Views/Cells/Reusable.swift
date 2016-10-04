@@ -15,10 +15,10 @@ protocol Reusable: class {
 
 extension Reusable {
     static var nib: UINib {
-        return UINib(nibName: String(Self), bundle: nil)
+        return UINib(nibName: String(describing: self), bundle: nil)
     }
     
     static var reuseIdentifier: String {
-        return "\(String(Self))Identifier"
+        return "\(String(describing: self))Identifier"
     }
 }

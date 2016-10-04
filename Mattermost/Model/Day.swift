@@ -24,9 +24,9 @@ final class Day: RealmObject {
     dynamic var key: String?
     dynamic var channelId: String?
     dynamic var text: String?
-    dynamic var date: NSDate? {
+    dynamic var date: Date? {
         didSet {
-            self.text = NSDateFormatter.sharedConversionSectionsDateFormatter.stringFromDate(self.date!)
+            self.text = DateFormatter.sharedConversionSectionsDateFormatter?.string(from: self.date!)
         }
     }
     let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.day.rawValue)
@@ -42,6 +42,6 @@ final class Day: RealmObject {
     }
     
     func sortedPosts() -> Results<Post> {
-        return posts.sorted("createdAt", ascending: true)
+        return posts.sorted(byProperty: "createdAt", ascending: true)
     }
 }

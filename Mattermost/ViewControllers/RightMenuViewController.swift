@@ -9,11 +9,11 @@
 import Foundation
 
 @objc private enum RightMenuRows : Int {
-    case SwitchTeam
-    case Settings = 1
-    case InviteNewMembers = 2
-    case About = 3
-    case Logout = 4
+    case switchTeam
+    case settings = 1
+    case inviteNewMembers = 2
+    case about = 3
+    case logout = 4
 }
 
 class RightMenuViewController: UIViewController {
@@ -34,50 +34,50 @@ class RightMenuViewController: UIViewController {
 private protocol PrivateConfig {
     func configureTableView()
     func configureHeaderVIew()
-    func configureCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath)
+    func configureCellAtIndexPath(_ cell: UITableViewCell, indexPath: IndexPath)
 }
 
 extension RightMenuViewController : PrivateConfig {
-    private func configureTableView() {
+    fileprivate func configureTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.tableView.tableFooterView = UIView(frame: CGRectZero)
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
     }
     
-    private func configureHeaderVIew() {
+    fileprivate func configureHeaderVIew() {
         self.headerView.backgroundColor = ColorBucket.sideMenuHeaderBackgroundColor
         self.usernameLabel.font = FontBucket.rightMenuFont
         self.usernameLabel.textColor = ColorBucket.whiteColor
         
         let user = DataManager.sharedInstance.currentUser
         self.usernameLabel.text = user!.displayName
-        self.avatarImageView?.sd_setImageWithURL(user!.avatarURL(), placeholderImage: nil, completed: nil)
+        self.avatarImageView.sd_setImage(with: user!.avatarURL())
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerTapAction))
         self.headerView.addGestureRecognizer(tapGestureRecognizer)
     }
     
-    func configureCellAtIndexPath(cell: UITableViewCell, indexPath: NSIndexPath) {
-        switch indexPath.row {
-        case RightMenuRows.SwitchTeam.rawValue:
+    func configureCellAtIndexPath(_ cell: UITableViewCell, indexPath: IndexPath) {
+        switch (indexPath as NSIndexPath).row {
+        case RightMenuRows.switchTeam.rawValue:
             cell.textLabel?.text = "Switch team"
             cell.imageView?.image = UIImage(named: "menu_switch_icon")
             
-        case RightMenuRows.Settings.rawValue:
+        case RightMenuRows.settings.rawValue:
             cell.textLabel?.text = "Settings"
             cell.imageView?.image = UIImage(named: "menu_settings_icon")
             
-        case RightMenuRows.InviteNewMembers.rawValue:
+        case RightMenuRows.inviteNewMembers.rawValue:
             cell.textLabel?.text = "Invite new members"
             cell.imageView?.image = UIImage(named: "menu_invite_icon")
             
-        case RightMenuRows.About.rawValue:
+        case RightMenuRows.about.rawValue:
             cell.textLabel?.text = "About Mattermost"
             cell.imageView?.image = UIImage(named: "menu_question_icon")
             
-        case RightMenuRows.Logout.rawValue:
+        case RightMenuRows.logout.rawValue:
             cell.textLabel?.text = "Logout"
             cell.imageView?.image = UIImage(named: "menu_logout_icon")
             
@@ -92,7 +92,7 @@ extension RightMenuViewController : PrivateConfig {
 //MARK: - Private
 
 extension RightMenuViewController {
-    private func toggleRightSideMenu() {
+    fileprivate func toggleRightSideMenu() {
         self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
     }
 }
@@ -111,21 +111,21 @@ extension RightMenuViewController {
 //MARK: - UITableViewDelegate
 
 extension RightMenuViewController : UITableViewDelegate {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        switch indexPath.row {
-        case RightMenuRows.Settings.rawValue:
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch (indexPath as NSIndexPath).row {
+        case RightMenuRows.settings.rawValue:
             toggleRightSideMenu()
             proceedToSettings()
-        case RightMenuRows.SwitchTeam.rawValue:
+        case RightMenuRows.switchTeam.rawValue:
             proceedToTeams()
-        case RightMenuRows.About.rawValue:
+        case RightMenuRows.about.rawValue:
             toggleRightSideMenu()
             proceedToAbout()
-        case RightMenuRows.Logout.rawValue:
+        case RightMenuRows.logout.rawValue:
             logOut()
             
         default:
@@ -138,27 +138,27 @@ extension RightMenuViewController : UITableViewDelegate {
 //MARK: - UITableViewDataSource
 
 extension RightMenuViewController : UITableViewDataSource {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 5
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell")
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
         if cell == nil {
-            cell = UITableViewCell(style: .Default, reuseIdentifier:"Cell")
+            cell = UITableViewCell(style: .default, reuseIdentifier:"Cell")
         }
         
         self.configureCellAtIndexPath(cell!, indexPath: indexPath)
         cell?.backgroundColor = ColorBucket.sideMenuBackgroundColor
         cell!.preservesSuperviewLayoutMargins = false;
-        cell!.separatorInset = UIEdgeInsetsZero;
-        cell!.layoutMargins = UIEdgeInsetsZero;
-        cell?.selectionStyle = .Default
+        cell!.separatorInset = UIEdgeInsets.zero;
+        cell!.layoutMargins = UIEdgeInsets.zero;
+        cell?.selectionStyle = .default
         
         cell?.selectedBackgroundView = UIView(frame: cell!.bounds)
         cell?.selectedBackgroundView?.backgroundColor = ColorBucket.sideMenuCellHighlightedColor
         
-        cell?.textLabel?.textColor = indexPath.row == RightMenuRows.Logout.rawValue ? ColorBucket.whiteColor : ColorBucket.rightMenuTextColor
+        cell?.textLabel?.textColor = (indexPath as NSIndexPath).row == RightMenuRows.logout.rawValue ? ColorBucket.whiteColor : ColorBucket.rightMenuTextColor
         cell?.textLabel?.font = FontBucket.rightMenuFont
         
         return cell!
@@ -169,9 +169,9 @@ extension RightMenuViewController : UITableViewDataSource {
 extension RightMenuViewController {
     func proceedToTeams() {
         let teamViewController = UIStoryboard(name:  "Login",
-            bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("TeamViewController")
+            bundle: Bundle.main).instantiateViewController(withIdentifier: "TeamViewController")
         let loginNavigationController = LoginNavigationController(rootViewController: teamViewController)
-        self.presentViewController(loginNavigationController, animated: true, completion: nil)
+        self.present(loginNavigationController, animated: true, completion: nil)
         self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
     }
     
@@ -179,7 +179,7 @@ extension RightMenuViewController {
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         let navigation = self.menuContainerViewController.centerViewController
-        navigation!.pushViewController(profile!, animated:true)
+        (navigation! as AnyObject).pushViewController(profile!, animated:true)
     }
     
     func proceedToAbout() {
@@ -190,16 +190,16 @@ extension RightMenuViewController {
 //        navigation!.pushViewController(about, animated:true)
         // DELETE THIS
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let about = storyboard.instantiateViewControllerWithIdentifier(String("MembersViewController"))
+        let about = storyboard.instantiateViewController(withIdentifier: String("MembersViewController"))
         let navigation = self.menuContainerViewController.centerViewController
-        navigation!.pushViewController(about, animated:true)
+        (navigation! as AnyObject).pushViewController(about, animated:true)
     }
     
     func proceedToSettings() {
         let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
         let settings = storyboard.instantiateInitialViewController()
         let navigation = self.menuContainerViewController.centerViewController
-        navigation!.pushViewController(settings!, animated:true)
+        (navigation! as AnyObject).pushViewController(settings!, animated:true)
     }
     func logOut() {
         UserStatusManager.sharedInstance.logout()

@@ -8,8 +8,8 @@
 
 import Foundation
 
-extension NSIndexPath {
-    var previousPath: NSIndexPath {
-        return NSIndexPath(forRow: self.row + 1, inSection: self.section)
+extension IndexPath {
+    var previousPath: IndexPath {
+        return IndexPath(row: (self as NSIndexPath).row + 1, section: (self as NSIndexPath).section)
     }
 }

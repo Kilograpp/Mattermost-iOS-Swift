@@ -24,13 +24,13 @@ final class TeamMappingsContainer: BaseMappingsContainer {
 extension TeamMappingsContainer: ResponseMappings {
     override static func mapping() -> RKObjectMapping {
         let entityMapping = super.mapping()
-        entityMapping.addAttributeMappingsFromDictionary(["display_name" : TeamAttributes.displayName.rawValue])
-        entityMapping.addAttributeMappingsFromArray([TeamAttributes.name.rawValue])
+        entityMapping.addAttributeMappings(from: ["display_name" : TeamAttributes.displayName.rawValue])
+        entityMapping.addAttributeMappings(from: [TeamAttributes.name.rawValue])
         return entityMapping
     }
     static func initialLoadConfigMapping() -> RKObjectMapping {
-        let entityMapping = RKObjectMapping(forClass: NSMutableDictionary.self)
-        entityMapping.addAttributeMappingsFromDictionary(["SiteName" : PreferencesAttributes.siteName.rawValue])
-        return entityMapping
+        let entityMapping = RKObjectMapping(for: NSMutableDictionary.self)
+        entityMapping?.addAttributeMappings(from: ["SiteName" : PreferencesAttributes.siteName.rawValue])
+        return entityMapping!
     }
 }

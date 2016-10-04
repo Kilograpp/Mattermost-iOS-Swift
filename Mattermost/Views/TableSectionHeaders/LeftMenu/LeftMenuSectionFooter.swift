@@ -19,7 +19,7 @@ private protocol Actions {
 }
 
 final class LeftMenuSectionFooter : UITableViewHeaderFooterView {
-    private let titleButton: UIButton = UIButton()
+    fileprivate let titleButton: UIButton = UIButton()
     static let reuseIdentifier = "LeftMenuSectionFooterReuseIdentifier"
     var moreTapHandler : (() -> Void)?
     
@@ -36,28 +36,28 @@ final class LeftMenuSectionFooter : UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.titleButton.frame = CGRectMake(15, 0, 50, 29)
+        self.titleButton.frame = CGRect(x: 15, y: 0, width: 50, height: 29)
     }
 }
 
 extension LeftMenuSectionFooter : PrivateSetup {
-    private func setup() {
+    fileprivate func setup() {
         self.setupContentView()
         self.setupTitleButton()
     }
     
-    private func setupTitleButton() {
+    fileprivate func setupTitleButton() {
         self.addSubview(self.titleButton)
-        self.titleButton.setImage(UIImage(named: "common_arrow_icon_passive"), forState: .Normal)
+        self.titleButton.setImage(UIImage(named: "common_arrow_icon_passive"), for: UIControlState())
         self.titleButton.titleLabel?.font = FontBucket.footerTitleFont
-        self.titleButton.setTitle("more ", forState: .Normal)
-        self.titleButton.transform = CGAffineTransformMakeScale(-1.0, 1.0);
-        self.titleButton.titleLabel!.transform = CGAffineTransformMakeScale(-1.0, 1.0);
-        self.titleButton.imageView!.transform = CGAffineTransformMakeScale(-1.0, 1.0);
-        self.titleButton.addTarget(self, action: #selector(moreAction), forControlEvents: .TouchUpInside)
+        self.titleButton.setTitle("more ", for: UIControlState())
+        self.titleButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
+        self.titleButton.titleLabel!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
+        self.titleButton.imageView!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
+        self.titleButton.addTarget(self, action: #selector(moreAction), for: .touchUpInside)
     }
     
-    private func setupContentView() {
+    fileprivate func setupContentView() {
         self.contentView.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
 }

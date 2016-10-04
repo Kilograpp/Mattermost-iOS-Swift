@@ -12,13 +12,13 @@ struct Error {
     var code: Int = 0;
     var message: String!
     
-    init(error: NSError!) {
-        code = error.code;
+    init(error: Swift.Error!) {
+        code = (error as NSError).code
         message = error.localizedDescription
         
     }
     
-    internal static  func errorWithGenericError(error: NSError!) -> Mattermost.Error {
+    internal static  func errorWithGenericError(_ error: Swift.Error!) -> Mattermost.Error {
         return Error(error: error)
     }
 }

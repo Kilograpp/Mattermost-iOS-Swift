@@ -9,80 +9,80 @@
 import Foundation
 
 private protocol Delegate {
-    var onMentionTap: ((username: String) -> Void)? {get set}
-    var onUrlTap: ((url: NSURL) -> Void)? {get set}
-    var onHashTagTap: ((hashTag: String) -> Void)? {get set}
-    var onPhoneTap: ((phone: String) -> Void)? {get set}
-    var onEmailTap: ((email: String) -> Void)? {get set}
+    var onMentionTap: ((_ username: String) -> Void)? {get set}
+    var onUrlTap: ((_ url: URL) -> Void)? {get set}
+    var onHashTagTap: ((_ hashTag: String) -> Void)? {get set}
+    var onPhoneTap: ((_ phone: String) -> Void)? {get set}
+    var onEmailTap: ((_ email: String) -> Void)? {get set}
 }
 
 final class MessageLabel: AttributedLabel, Delegate {
 
-    var onMentionTap: ((username: String) -> Void)?
-    var onUrlTap: ((url: NSURL) -> Void)?
-    var onHashTagTap: ((hashTag: String) -> Void)?
-    var onPhoneTap: ((phone: String) -> Void)?
-    var onEmailTap: ((email: String) -> Void)?
+    var onMentionTap: ((_ username: String) -> Void)?
+    var onUrlTap: ((_ url: URL) -> Void)?
+    var onHashTagTap: ((_ hashTag: String) -> Void)?
+    var onPhoneTap: ((_ phone: String) -> Void)?
+    var onEmailTap: ((_ email: String) -> Void)?
     
-    func handleTouch(touch: UITouch){
+    func handleTouch(_ touch: UITouch){
         let indexOfCharacter = self.characterIndexForTouch(touch)
         
         if let username = textStorage!.mentionAtIndex(indexOfCharacter) {
-            self.onMentionTap?(username: username)
+            self.onMentionTap?(username)
             return
         }
         
         if let hashTag = textStorage!.hashTagAtIndex(indexOfCharacter) {
-            self.onHashTagTap?(hashTag: hashTag)
+            self.onHashTagTap?(hashTag)
             return
         }
         
         if let email = textStorage!.emailAtIndex(indexOfCharacter) {
-            self.onEmailTap?(email:email)
+            self.onEmailTap?(email)
             return
         }
         
         if let url = textStorage!.URLAtIndex(indexOfCharacter) {
-            self.onUrlTap?(url: url)
+            self.onUrlTap?(url)
             return
         }
         
         if let phone = textStorage!.phoneAtIndex(indexOfCharacter) {
-            self.onPhoneTap?(phone:phone)
+            self.onPhoneTap?(phone)
             return
         }
         
         
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         handleTouch(touch)
-        super.touchesEnded(touches, withEvent: event)
+        super.touchesEnded(touches, with: event)
     }
     
-    private func characterIndexForTouch(touch: UITouch) -> Int {
+    fileprivate func characterIndexForTouch(_ touch: UITouch) -> Int {
         guard let storage = self.textStorage else { return 0 }
         
-        let locationOfTouch = touch.locationInView(self)
+        let locationOfTouch = touch.location(in: self)
         self.textContainer.size = self.bounds.size
 //        storage.setAttributedString(self.attributedText!)
-        return self.layoutManager.glyphIndexForPoint(locationOfTouch, inTextContainer: self.textContainer)
+        return self.layoutManager.glyphIndex(for: locationOfTouch, in: self.textContainer)
     }
 
 }
 
 extension MessageLabel : UIGestureRecognizerDelegate {
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailByGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 }

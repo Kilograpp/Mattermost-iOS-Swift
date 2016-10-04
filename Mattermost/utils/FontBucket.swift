@@ -49,8 +49,8 @@ private protocol ServerUrlFonts: class {
 private protocol MarkdownFonts: class {
     static var emphasisFont: UIFont {get}
     
-    static func semiboldFontOfSize(size: CGFloat) -> UIFont
-    static func regularFontOfSize(size: CGFloat) -> UIFont
+    static func semiboldFontOfSize(_ size: CGFloat) -> UIFont
+    static func regularFontOfSize(_ size: CGFloat) -> UIFont
 }
 
 private protocol MoreChannelsFonts: class {
@@ -121,25 +121,25 @@ extension FontBucket : TeamsFonts {
 extension FontBucket: MarkdownFonts {
     static let emphasisFont = FontBucket.italicFontOfSize(15)
     
-    static func regularFontOfSize(size: CGFloat) -> UIFont {
+    static func regularFontOfSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Regular, size: size)!
     }
     
-    static func semiboldFontOfSize(size: CGFloat) -> UIFont {
+    static func semiboldFontOfSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Semibold, size: size)!
     }
 }
 
 extension FontBucket {
-    private static func italicFontOfSize(size: CGFloat) -> UIFont {
+    fileprivate static func italicFontOfSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Italic, size: size)!
     }
     
-    private static func mediumFontOfSize(size: CGFloat) -> UIFont {
+    fileprivate static func mediumFontOfSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Medium, size: size)!
     }
     
-    private static func boldFontOfSize(size: CGFloat) -> UIFont {
+    fileprivate static func boldFontOfSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Bold, size: size)!
     }
 }

@@ -12,17 +12,17 @@ import HEXColor
 extension UIColor {
     
     class func kg_blackColor() -> UIColor {
-        let color = UIColor(rgba:"#3B3B3B")
+        let color = try! UIColor(rgba_throws:"#3B3B3B")
         return color
     }
     
     class func kg_blueColor() -> UIColor {
-        let color = UIColor(rgba:"#0076FF")
+        let color = try! UIColor(rgba_throws: "#0076FF")
         return color;
     }
     
     class func kg_lightGrayColor() -> UIColor {
-        let color = UIColor.lightGrayColor()
+        let color = UIColor.lightGray
         return color
     }
     

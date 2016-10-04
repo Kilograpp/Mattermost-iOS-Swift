@@ -10,6 +10,6 @@ import Foundation
 
 final class LocaleUtils {
     class func currentLocale() -> String {
-        return NSLocale.preferredLanguages().first!
+        return Locale.preferredLanguages.first!
     }
 }

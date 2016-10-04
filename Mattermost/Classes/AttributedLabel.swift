@@ -52,9 +52,9 @@ class AttributedLabel: UILabel {
     var layoutManager = NSLayoutManager()
     
     
-    private func setup() {
-        opaque = true
-        contentMode = .Redraw
+    fileprivate func setup() {
+        isOpaque = true
+        contentMode = .redraw
         self.textContainer = self.textContainer(self.bounds.size)
         self.layoutManager = self.layoutManager(self.textContainer)
     }
@@ -70,38 +70,38 @@ class AttributedLabel: UILabel {
     }
     
     override func setNeedsDisplay() {
-        if NSThread.isMainThread() {
+        if Thread.isMainThread {
             super.setNeedsDisplay()
         }
     }
     
-    override func drawTextInRect(rect: CGRect) {
+    override func drawText(in rect: CGRect) {
         guard let storage = self.textStorage else { return }
         
         let range = NSRange(location: 0, length: storage.length)
 
-        layoutManager.drawBackgroundForGlyphRange(range, atPoint: CGPointZero)
-        layoutManager.drawGlyphsForGlyphRange(range, atPoint: CGPointZero)
+        layoutManager.drawBackground(forGlyphRange: range, at: CGPoint.zero)
+        layoutManager.drawGlyphs(forGlyphRange: range, at: CGPoint.zero)
 
     }
     
-    override func sizeThatFits(size: CGSize) -> CGSize {
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
         guard self.attributedText != nil else {
             return super.sizeThatFits(size)
         }
         
         self.textContainer.size = size
-        let frame = layoutManager.usedRectForTextContainer(textContainer)
-        return CGRectIntegral(frame).size
+        let frame = layoutManager.usedRect(for: textContainer)
+        return frame.integral.size
     }
     
     override func sizeToFit() {
         super.sizeToFit()
         
-        frame.size = sizeThatFits(CGSize(width: bounds.width, height: CGFloat.max))
+        frame.size = sizeThatFits(CGSize(width: bounds.width, height: CGFloat.greatestFiniteMagnitude))
     }
     
-    private func textContainer(size: CGSize) -> NSTextContainer {
+    fileprivate func textContainer(_ size: CGSize) -> NSTextContainer {
         let container = NSTextContainer(size: size)
         container.lineBreakMode = lineBreakMode
         container.lineFragmentPadding = padding
@@ -109,13 +109,13 @@ class AttributedLabel: UILabel {
         return container
     }
     
-    private func textStorage(attributedString: NSAttributedString) -> NSTextStorage {
+    fileprivate func textStorage(_ attributedString: NSAttributedString) -> NSTextStorage {
         let textStorage = NSTextStorage(attributedString: attributedString)
         textStorage.addLayoutManager(self.layoutManager)
         return textStorage
     }
     
-    private func layoutManager(container: NSTextContainer) -> NSLayoutManager {
+    fileprivate func layoutManager(_ container: NSTextContainer) -> NSLayoutManager {
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(container)
         layoutManager.allowsNonContiguousLayout = true

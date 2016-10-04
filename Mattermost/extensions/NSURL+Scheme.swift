@@ -15,10 +15,10 @@ public enum URLScheme: String {
     case HTTPS = "https"
 }
 
-extension NSURL {
-    func URLWithScheme(scheme: URLScheme) -> NSURL? {
-        let components = NSURLComponents(URL: self, resolvingAgainstBaseURL: true)
+extension URL {
+    func URLWithScheme(_ scheme: URLScheme) -> URL? {
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
         components?.scheme = scheme.rawValue
-        return components?.URL
+        return components?.url
     }
 }

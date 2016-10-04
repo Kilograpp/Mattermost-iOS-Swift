@@ -12,7 +12,7 @@ extension UITableView {
     func offsetFromTop() -> Int {
         return Int(self.contentSize.height) - (Int(self.contentOffset.y) + Int(self.bounds.size.height))
     }
-    func lastIndexPath() -> NSIndexPath {
-        return NSIndexPath(forRow: self.numberOfRowsInSection(self.numberOfSections - 1) - 1, inSection: self.numberOfSections - 1)
+    func lastIndexPath() -> IndexPath {
+        return IndexPath(row: self.numberOfRows(inSection: self.numberOfSections - 1) - 1, section: self.numberOfSections - 1)
     }
 }

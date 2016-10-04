@@ -9,16 +9,16 @@
 import Foundation
 
 final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
-    private var file: File!
+    fileprivate var file: File!
     
-    func configureWithFile(file: File) {
+    func configureWithFile(_ file: File) {
         self.file = file
         self.setNeedsDisplay()
     }
     
-    override func drawRect(rect: CGRect) {
-        let iconFrame = CGRectOffset(CGRectMake(5, 5, 44, 44), frame.origin.x, frame.origin.y)
-        UIImage(named: "message_file_icon")?.drawInRect(iconFrame)
+    override func draw(_ rect: CGRect) {
+        let iconFrame = CGRect(x: 5, y: 5, width: 44, height: 44).offsetBy(dx: frame.origin.x, dy: frame.origin.y)
+        UIImage(named: "message_file_icon")?.draw(in: iconFrame)
         
 //        let nameFrame = CGRectOffset(CGRectMake(CGRectGetMaxX(iconFrame) + 5, 8, frame.size.width - 64, 20), 0, frame.origin.y);
 //        (self.file.name as? NSString)?.drawInRect(nameFrame, withAttributes: )

@@ -28,41 +28,41 @@ extension PostResponseDescriptorsContainer: ResponseDescriptor {
                                     method: .GET,
                                     pathPattern: PostPathPatternsContainer.firstPagePathPattern(),
                                     keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
     static func updateResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
                                     method: .GET,
                                     pathPattern: PostPathPatternsContainer.updatePathPattern(),
                                     keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
     static func nextPageResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
                                     method: .GET,
                                     pathPattern: PostPathPatternsContainer.nextPagePathPattern(),
                                     keyPath: "posts",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
     static func creationResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: PostMappingsContainer.creationMapping(),
                                     method: .POST,
                                     pathPattern: PostPathPatternsContainer.creationPathPattern(),
                                     keyPath: nil,
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
     static func updatingResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: PostMappingsContainer.updatingMapping(),
                                     method: .POST,
                                     pathPattern: PostPathPatternsContainer.updatingPathPattern(),
                                     keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     static func deletingResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: PostMappingsContainer.deletingMapping(),
                                     method: .POST,
                                     pathPattern: PostPathPatternsContainer.deletingPathPattern(),
                                     keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
 }

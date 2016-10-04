@@ -9,21 +9,21 @@
 import Foundation
 
 private protocol Private : class {
-    func updateStatusForUser(notification: NSNotification)
-    func setupStatuses(notification: NSNotification)
+    func updateStatusForUser(_ notification: Notification)
+    func setupStatuses(_ notification: Notification)
 }
 
 final class UserStatusObserver {
-    private var statuses = [String:String?]()
+    fileprivate var statuses = [String:String?]()
     static let sharedObserver = UserStatusObserver()
     
-    private init() {
+    fileprivate init() {
         subscribeForStatusChangingNotifications()
         subscribeForStatusesNotifications()
         subscribeForLogoutNotifications()
     }
     
-    func statusForUserWithIdentifier(identifier:String) -> UserStatus {
+    func statusForUserWithIdentifier(_ identifier:String) -> UserStatus {
         let status = UserStatus()
         if statuses[identifier] == nil {
             status.backendStatus = "offline"
@@ -36,16 +36,16 @@ final class UserStatusObserver {
 }
 
 extension UserStatusObserver : Private {
-    @objc private func didLogout() {
+    @objc fileprivate func didLogout() {
         // unsubscribe from all observers
     }
-    @objc func updateStatusForUser(notification: NSNotification) {
+    @objc func updateStatusForUser(_ notification: Notification) {
         let statusNotification = notification.object as! StatusChangingSocketNotification
         statuses[statusNotification.userId] = statusNotification.status
         sendUpdateNotification(statusNotification.userId, status:statusNotification.status)
     }
     
-    @objc func setupStatuses(notification: NSNotification) {
+    @objc func setupStatuses(_ notification: Notification) {
         let statusesDictionary = notification.object as! [String:String]
         for (key,value) in statusesDictionary {
             statuses.updateValue(value, forKey: key)
@@ -56,26 +56,26 @@ extension UserStatusObserver : Private {
 
 //MARK: - Notifications
 extension UserStatusObserver {
-    private func subscribeForLogoutNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didLogout),
-                                                         name: Constants.NotificationsNames.UserLogoutNotificationName,
+    fileprivate func subscribeForLogoutNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didLogout),
+                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
                                                          object: nil)
     }
     
-    private func subscribeForStatusChangingNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(updateStatusForUser),
-                                                         name: StatusChangingSocketNotification.notificationName(),
+    fileprivate func subscribeForStatusChangingNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateStatusForUser),
+                                                         name: NSNotification.Name(rawValue: StatusChangingSocketNotification.notificationName()),
                                                          object: nil)
     }
-    private func subscribeForStatusesNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(setupStatuses),
-                                                         name: Constants.NotificationsNames.StatusesSocketNotification,
+    fileprivate func subscribeForStatusesNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(setupStatuses),
+                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
                                                          object: nil)
     }
     
-    private func sendUpdateNotification(userIdentifier:String, status:String) {
+    fileprivate func sendUpdateNotification(_ userIdentifier:String, status:String) {
         let notificationName = userIdentifier
-        NSNotificationCenter.defaultCenter().postNotificationName(notificationName, object: status)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: status)
         
     }
 }

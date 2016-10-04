@@ -9,18 +9,22 @@
 import Foundation
 import DateTools
 
-extension NSDate {
+extension Date {
     func messageTimeFormat() -> String {
-        return self.formattedDateWithFormat("HH:mm")
+        return (self as NSDate).formattedDate(withFormat: "HH:mm")
     }
     func messageDateFormat() -> String {
-        return self.formattedDateWithFormat("dd.MM.yyyy")
+        return (self as NSDate).formattedDate(withFormat: "dd.MM.yyyy")
     }
     func feedSectionDateFormat() -> String {
-        return self.formattedDateWithFormat("MMM dd,yyyy", locale: NSLocale(localeIdentifier: "en_US_POSIX"))
+        return (self as NSDate).formattedDate(withFormat: "MMM dd,yyyy", locale: Locale(identifier: "en_US_POSIX"))
     }
     
     func messageDateFormatForChannel() -> String {
-        return self.formattedDateWithFormat("MMM d", locale: NSLocale(localeIdentifier: "en_US_POSIX"))
+        return (self as NSDate).formattedDate(withFormat: "MMM d", locale: Locale(identifier: "en_US_POSIX"))
+    }
+    
+    func dateFormatForPostKey() -> String {
+        return (self as NSDate).formattedDate(withFormat: "MM-dd-yyyy_HH:mm:ss")
     }
 }

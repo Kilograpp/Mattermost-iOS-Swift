@@ -20,21 +20,21 @@ class RouterUtils {
         }
     }
     
-    private class func loadLoginScene() -> Void {
+    fileprivate class func loadLoginScene() -> Void {
         let sb = UIStoryboard.init(name: "Login", bundle: nil)
         let vc = sb.instantiateInitialViewController()
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController = vc
         appDelegate.window?.makeKeyAndVisible()
     }
     
-    private class func loadConversationScene() -> Void {
+    fileprivate class func loadConversationScene() -> Void {
         let sb = UIStoryboard.init(name: "Main", bundle: nil) 
         let centerVc = sb.instantiateInitialViewController()
-        let leftVc = sb.instantiateViewControllerWithIdentifier(String(LeftMenuViewController))
-        let rightVc = sb.instantiateViewControllerWithIdentifier(String(RightMenuViewController))
+        let leftVc = sb.instantiateViewController(withIdentifier: String(describing: "LeftMenuViewController"))
+        let rightVc = sb.instantiateViewController(withIdentifier: String(describing: "RightMenuViewController"))
         let sideMenuContainer = RouterUtils.sideMenuContainer(centerVc!, leftMenuViewController: leftVc, rightMenuViewController: rightVc)
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController = sideMenuContainer
         appDelegate.window?.makeKeyAndVisible()
     }
@@ -45,7 +45,7 @@ class RouterUtils {
 
 extension RouterUtils {
     
-    private class func sideMenuContainer(centerViewController: AnyObject, leftMenuViewController: AnyObject, rightMenuViewController: AnyObject) -> MFSideMenuContainerViewController {
+    fileprivate class func sideMenuContainer(_ centerViewController: AnyObject, leftMenuViewController: AnyObject, rightMenuViewController: AnyObject) -> MFSideMenuContainerViewController {
         let container = MFSideMenuContainerViewController.init()
         container.leftMenuViewController = leftMenuViewController as! UIViewController
         container.rightMenuViewController = rightMenuViewController as! UIViewController
@@ -53,18 +53,18 @@ extension RouterUtils {
         
         container.leftMenuWidth = UIScreen.screenWidth() - 51
         container.menuAnimationDefaultDuration = 0.3
-        container.modalTransitionStyle = .CrossDissolve
+        container.modalTransitionStyle = .crossDissolve
         
         return container
     }
 }
 
 extension MFSideMenuContainerViewController {
-    public override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .Default
+    open override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .default
     }
     
-    public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return .Portrait
+    open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return .portrait
     }
 }

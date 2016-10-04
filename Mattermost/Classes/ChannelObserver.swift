@@ -11,7 +11,7 @@ import Foundation
 
 
 protocol ChannelObserverDelegate {
-    func didSelectChannelWithIdentifier(identifier: String!) -> Void
+    func didSelectChannelWithIdentifier(_ identifier: String!) -> Void
 }
 
 
@@ -30,14 +30,14 @@ class ChannelObserver {
     
     //MARK: - Private
     
-    private func handleSelectedChannel() {
+    fileprivate func handleSelectedChannel() {
         self.delegate?.didSelectChannelWithIdentifier(self.selectedChannel?.identifier)
     }
 }
 
 
 extension ChannelObserver {
-    private static func sharedInstanse() -> ChannelObserver {
+    fileprivate static func sharedInstanse() -> ChannelObserver {
         let sharedInstanse = ChannelObserver()
         return sharedInstanse
     }

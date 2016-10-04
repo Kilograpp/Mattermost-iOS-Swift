@@ -9,10 +9,10 @@
 class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     var titleLabel: UILabel?
     var barView: UIView?
-    private var title : String?
+    fileprivate var title : String?
     
     static func reuseIdentifier() -> String {
-        return "\(String(FeedTableViewSectionHeader))Identifier"
+        return "\(String(describing: FeedTableViewSectionHeader()))Identifier"
     }
     
     override init(reuseIdentifier: String?) {
@@ -49,7 +49,7 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
         self.addSubview(self.barView!)
     }
     
-    func configureWithTitle(title: String) {
+    func configureWithTitle(_ title: String) {
         self.title = title
         self.titleLabel?.text = title
     }
@@ -61,10 +61,10 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let width = CGFloat(StringUtils.widthOfString(self.title, font: FontBucket.postAuthorNameFont))// as CGFloat
-        self.titleLabel!.frame = CGRectMake(UIScreen.screenWidth() - 10 - ceil(width), 5, ceil(width), 18);
+        let width = CGFloat(StringUtils.widthOfString(self.title as NSString!, font: FontBucket.postAuthorNameFont))// as CGFloat
+        self.titleLabel!.frame = CGRect(x: UIScreen.screenWidth() - 10 - ceil(width), y: 5, width: ceil(width), height: 18);
         if ((self.barView) != nil) {
-            self.barView!.frame = CGRectMake(0, 12, CGRectGetMinX(self.titleLabel!.frame) - 10, 1);
+            self.barView!.frame = CGRect(x: 0, y: 12, width: self.titleLabel!.frame.minX - 10, height: 1);
         }
         
     }

@@ -26,7 +26,7 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
                                     method: .GET,
                                     pathPattern: TeamPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "teams",
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     
     static func teamListingsResponseDescriptor() -> RKResponseDescriptor {
@@ -34,7 +34,7 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
                                     method: .GET,
                                     pathPattern: TeamPathPatternsContainer.teamListingsPathPattern(),
                                     keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     
     static func initalLoadConfigResponseDescriptor() -> RKResponseDescriptor {
@@ -42,6 +42,6 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
                                     method: .GET,
                                     pathPattern: TeamPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "client_cfg",
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
 }

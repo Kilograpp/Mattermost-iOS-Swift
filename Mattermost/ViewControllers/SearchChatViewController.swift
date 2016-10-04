@@ -21,7 +21,7 @@ private protocol LifeCycle {
 }
 
 private protocol Private {
-    func configureForSearchStage(searchStage: Int)
+    func configureForSearchStage(_ searchStage: Int)
 }
 
 private protocol Setup {
@@ -32,7 +32,7 @@ private protocol Setup {
 }
 
 private protocol Action {
-    func cancelBarButtonAction(sender: AnyObject)
+    func cancelBarButtonAction(_ sender: AnyObject)
 }
 
 private protocol Navigation {
@@ -55,7 +55,7 @@ class SearchChatViewController: UIViewController {
 
 //MARK: Public
     
-    func capConfigureWith(post: Post) {
+    func capConfigureWith(_ post: Post) {
         self.post = post
     }
 }
@@ -83,7 +83,7 @@ extension SearchChatViewController: Setup {
     }
     
     func setupNavigationBar() {
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
     }
     
     func setupTableView() {
@@ -96,7 +96,7 @@ extension SearchChatViewController: Setup {
         self.view.addSubview(self.searchingInProcessView!)
         
         self.searchingInProcessView!.center = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
-        self.searchingInProcessView!.autoresizingMask = [.FlexibleLeftMargin, .FlexibleRightMargin, .FlexibleTopMargin, .FlexibleBottomMargin]
+        self.searchingInProcessView!.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
     }
 }
 
@@ -104,10 +104,10 @@ extension SearchChatViewController: Setup {
 //MARK: Private
 
 extension SearchChatViewController: Private {
-    func configureForSearchStage(searchStage: Int) {
-        self.infoView.hidden = (searchStage != SearchStage.SearchNotStarted)
-        self.tableView.hidden = (searchStage != SearchStage.SearchResultsDisplay)
-        self.noResultView.hidden = (searchStage != SearchStage.SearchNoResults)
+    func configureForSearchStage(_ searchStage: Int) {
+        self.infoView.isHidden = (searchStage != SearchStage.SearchNotStarted)
+        self.tableView.isHidden = (searchStage != SearchStage.SearchResultsDisplay)
+        self.noResultView.isHidden = (searchStage != SearchStage.SearchNoResults)
     }
 }
 
@@ -115,7 +115,7 @@ extension SearchChatViewController: Private {
 //MARK: Action
 
 extension SearchChatViewController {
-    @IBAction func cancelBarButtonAction(sender: AnyObject) {
+    @IBAction func cancelBarButtonAction(_ sender: AnyObject) {
         returnToChat()
     }
 }
@@ -131,8 +131,8 @@ extension SearchChatViewController {
         transition.type = kCATransitionReveal
         transition.subtype = kCATransitionFromTop
         
-        self.navigationController?.view.layer.addAnimation(transition, forKey: kCATransition)
-        self.navigationController?.popViewControllerAnimated(false)
+        self.navigationController?.view.layer.add(transition, forKey: kCATransition)
+        self.navigationController?.popViewController(animated: false)
     }
 }
 
@@ -140,15 +140,15 @@ extension SearchChatViewController {
 //MARK: UITableViewDataSource
 
 extension SearchChatViewController: UITableViewDataSource {
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return (self.post != nil) ? 1 : 0
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (self.post != nil) ? 1 : 0
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
 }
@@ -157,15 +157,15 @@ extension SearchChatViewController: UITableViewDataSource {
 //MARK: UITableViewDelegate
 
 extension SearchChatViewController: UITableViewDelegate {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 0
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
     }
     
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return UIView()
     }
 }
@@ -174,7 +174,7 @@ extension SearchChatViewController: UITableViewDelegate {
 //MARK: UITextFieldDelegate
 
 extension SearchChatViewController: UITextFieldDelegate {
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         
     }
 }

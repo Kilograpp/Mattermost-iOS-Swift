@@ -10,15 +10,15 @@ import Foundation
 import WebImage
 
 final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
-    private var file: File! {
+    fileprivate var file: File! {
         didSet { computeFileName() }
     }
-    private var fileName: String?
-    private let fileImageView = UIImageView()
+    fileprivate var fileName: String?
+    fileprivate let fileImageView = UIImageView()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .None
+        self.selectionStyle = .none
         self.setupImageView()
     }
     
@@ -26,32 +26,32 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
         super.init(coder: aDecoder)
     }
     
-    private func setupImageView() {
+    fileprivate func setupImageView() {
         self.fileImageView.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        self.fileImageView.contentMode = .ScaleAspectFit
+        self.fileImageView.contentMode = .scaleAspectFit
         self.addSubview(self.fileImageView)
     }
     
-    func configureWithFile(file: File) {
+    func configureWithFile(_ file: File) {
         self.file = file
         self.configureImageView()
         
     }
     
-    private func configureImageView() {
+    fileprivate func configureImageView() {
         
         let fileName = self.fileName
         let downloadUrl = self.file.thumbURL()!
         
-        if let image = SDImageCache.sharedImageCache().imageFromMemoryCacheForKey(downloadUrl.absoluteString) {
+        if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
             self.fileImageView.image = image
         } else {
             self.fileImageView.image = nil
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
-                dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+                DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                     
-                    var finalImage: UIImage = image
+                    var finalImage: UIImage = image!
                     
                     // Handle unpredictable errors
                     guard image != nil else {
@@ -59,12 +59,12 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
                         return
                     }
                     
-                    if cacheType == .None {
+                    if cacheType == .none {
                         let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
                         let imageHeight = imageWidth * 0.56 - 5
                         
-                        finalImage = image.imageByScalingAndCroppingForSize(CGSize(width: imageWidth, height: imageHeight), radius: 3)
-                        SDImageCache.sharedImageCache().storeImage(finalImage, forKey: downloadUrl.absoluteString)
+                        finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: imageWidth, height: imageHeight), radius: 3)
+                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
                     }
                     
 
@@ -73,22 +73,22 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
                         return
                     }
                     
-                    dispatch_sync(dispatch_get_main_queue(), {
+                    DispatchQueue.main.sync(execute: {
                         self?.fileImageView.image = finalImage
                     })
                     
                 }
             }
             
-            SDWebImageManager.sharedManager().downloadImageWithURL(downloadUrl,
-                                                                   options: .HandleCookies ,
+            SDWebImageManager.shared().downloadImage(with: downloadUrl as URL!,
+                                                                   options: .handleCookies ,
                                                                    progress: nil,
                                                                    completed: imageDownloadCompletionHandler)
         }
 
     }
     
-    private func computeFileName() {
+    fileprivate func computeFileName() {
         self.fileName = self.file?.name
     }
     

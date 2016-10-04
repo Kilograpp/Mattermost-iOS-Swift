@@ -12,11 +12,11 @@ import RestKit
 final class UserStatusMappingsContainer: RKObjectMapping {
     
     static func mapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(forClass: UserStatus.self)
-        mapping.forceCollectionMapping = true
-        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute("identifier")
-        mapping.addAttributeMappingsFromDictionary(["(identifier)" : "backendStatus"])
+        let mapping = RKObjectMapping(for: UserStatus.self)
+        mapping?.forceCollectionMapping = true
+        mapping?.addAttributeMappingFromKeyOfRepresentation(toAttribute: "identifier")
+        mapping?.addAttributeMappings(from: ["(identifier)" : "backendStatus"])
         
-        return mapping
+        return mapping!
     }
 }

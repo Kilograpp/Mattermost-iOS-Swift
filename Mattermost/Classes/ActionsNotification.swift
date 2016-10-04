@@ -17,7 +17,7 @@ final class ActionsNotification {
         self.event = event
     }
     
-    static func notificationNameForChannelIdentifier(channelIdentifier: String!) -> String! {
+    static func notificationNameForChannelIdentifier(_ channelIdentifier: String!) -> String! {
         return "channel.notifications.\(channelIdentifier)"
     }
 }

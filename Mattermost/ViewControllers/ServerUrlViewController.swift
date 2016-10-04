@@ -20,12 +20,12 @@ private protocol Setup {
 
 private protocol Lifecycle {
     func viewDidLoad()
-    func viewWillAppear(animated: Bool)
-    func viewDidAppear(animated: Bool)
+    func viewWillAppear(_ animated: Bool)
+    func viewDidAppear(_ animated: Bool)
 }
 
 private protocol Actions {
-    func nextButtonAction(sender: AnyObject)
+    func nextButtonAction(_ sender: AnyObject)
     func textFieldAction()
 }
 final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
@@ -42,11 +42,11 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     let placeholder = NSLocalizedString("Your team URL", comment: "")
     let buttonText = NSLocalizedString("Next step", comment: "")
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.Default
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return UIStatusBarStyle.default
     }
     
-    private func configureLabels() {
+    fileprivate func configureLabels() {
         self.titleLabel.text = titleName
         self.promtLabel.text = promt
         self.subtitleLabel.text = subtitleName
@@ -54,20 +54,20 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
             return
         }
         self.textField.text = server
-        self.nextButton.enabled = true
+        self.nextButton.isEnabled = true
     }
     
-    private func validateServerUrl() {
+    fileprivate func validateServerUrl() {
         let urlRegEx = "((http|https)://){1}((.)*)"
         let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
-        if urlTest.evaluateWithObject(Preferences.sharedInstance.serverUrl) {
+        if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
             Api.sharedInstance.checkURL(with: { ( error) in
                 if (error != nil) {
                     let alert = UIAlertView.init(title: NSLocalizedString("Error", comment: ""), message: nil, delegate: self,
                         cancelButtonTitle: NSLocalizedString("Cancel", comment: ""))
                     alert.show()
                 } else {
-                    self.performSegueWithIdentifier("showLogin", sender: nil)
+                    self.performSegue(withIdentifier: "showLogin", sender: nil)
                 }
             })
         } else {
@@ -84,11 +84,11 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
                                 cancelButtonTitle: NSLocalizedString("Cancel", comment: ""))
                             alert.show()
                         } else {
-                            self.performSegueWithIdentifier("showLogin", sender: nil)
+                            self.performSegue(withIdentifier: "showLogin", sender: nil)
                         }
                     })
                 } else {
-                    self.performSegueWithIdentifier("showLogin", sender: nil)
+                    self.performSegue(withIdentifier: "showLogin", sender: nil)
                 }
             })
         }
@@ -99,7 +99,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
 //MARK: - Actions 
 
 extension ServerUrlViewController:Actions {
-    @IBAction func nextButtonAction(sender: AnyObject) {
+    @IBAction func nextButtonAction(_ sender: AnyObject) {
         Preferences.sharedInstance.serverUrl = self.textField.text
 //FIXME: вызов методов не должен быть через self
         self.validateServerUrl()
@@ -107,9 +107,9 @@ extension ServerUrlViewController:Actions {
     
     func textFieldAction() {
         if self.textField.text == "" {
-            self.nextButton.enabled = false
+            self.nextButton.isEnabled = false
         } else {
-            self.nextButton.enabled = true
+            self.nextButton.isEnabled = true
         }
     }
 }
@@ -129,13 +129,13 @@ extension ServerUrlViewController:Lifecycle {
         self.configureLabels()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //FIXME: вызов методов не должен быть через self
         self.setupNavigationBar()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.textField.becomeFirstResponder()
@@ -147,46 +147,46 @@ extension ServerUrlViewController:Lifecycle {
 //MARK: - Setup
 
 extension ServerUrlViewController:Setup {
-    private func setupNavigationBar() {
-        self.navigationController?.navigationBar.translucent = true
-        self.navigationController?.navigationBar.backgroundColor = UIColor.clearColor()
+    fileprivate func setupNavigationBar() {
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         
         self.navigationController?.navigationBar.tintColor = ColorBucket.blackColor
-        self.navigationController?.navigationBar.barStyle = .Default
+        self.navigationController?.navigationBar.barStyle = .default
         self.setNeedsStatusBarAppearanceUpdate()
         self.title = ""
     }
     
-    private func setupTitleLabel() {
+    fileprivate func setupTitleLabel() {
         self.titleLabel.font = FontBucket.titleServerUrlFont
         self.titleLabel.textColor = ColorBucket.blackColor
     }
 
-    private func setupSubtitleLabel() {
+    fileprivate func setupSubtitleLabel() {
         self.subtitleLabel.font = FontBucket.subtitleServerUrlFont
         self.subtitleLabel.textColor = ColorBucket.serverUrlSubtitleColor
     }
     
-    private func setupPromtLabel() {
+    fileprivate func setupPromtLabel() {
         self.promtLabel.font = FontBucket.subtitleServerUrlFont
         self.promtLabel.textColor = ColorBucket.grayColor
     }
     
-    private func setupNextButton() {
+    fileprivate func setupNextButton() {
         self.nextButton.layer.cornerRadius = 2
-        self.nextButton.setTitle(buttonText, forState: .Normal)
+        self.nextButton.setTitle(buttonText, for: UIControlState())
         self.nextButton.titleLabel?.font = FontBucket.loginButtonFont
-        self.nextButton.enabled = false
+        self.nextButton.isEnabled = false
     }
     
-    private func setupTextField() {
+    fileprivate func setupTextField() {
         self.textField.delegate = self
         self.textField.textColor = ColorBucket.blackColor
         self.textField.font = FontBucket.loginTextFieldFont
         self.textField.placeholder = placeholder
-        self.textField.autocorrectionType = .No
-        self.textField.addTarget(self, action: #selector(ServerUrlViewController.textFieldAction), forControlEvents: .EditingChanged)
+        self.textField.autocorrectionType = .no
+        self.textField.addTarget(self, action: #selector(ServerUrlViewController.textFieldAction), for: .editingChanged)
     }
 }

@@ -16,7 +16,7 @@ final class AboutViewController: UIViewController {
     @IBOutlet weak var mattermostTextView: UITextView?
     @IBOutlet weak var kilograppTextView: UITextView?
     
-    var iconsResizeAnimationTimer: NSTimer?
+    var iconsResizeAnimationTimer: Timer?
     
     
 //MARK: - Life cycle
@@ -27,13 +27,13 @@ final class AboutViewController: UIViewController {
         initialSetup()
     }
    
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         setupTimer()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         if (self.iconsResizeAnimationTimer != nil) {
@@ -60,18 +60,18 @@ extension AboutViewController {
         let mattermostString = NSMutableAttributedString(string: "Join the Mattermost community at mattermost.org" )
         let kilograppString = NSMutableAttributedString(string: "This application was developed by Kilograpp Team")
         
-        let mattermostLink = NSAttributedString(string: "mattermost.org", attributes: [NSLinkAttributeName : NSURL(string: "https://mattermost.org/")!])
-        let kilograppLink = NSAttributedString(string: "Kilograpp Team", attributes: [NSLinkAttributeName : NSURL(string: "http://kilograpp.com/")!])
+        let mattermostLink = NSAttributedString(string: "mattermost.org", attributes: [NSLinkAttributeName : URL(string: "https://mattermost.org/")!])
+        let kilograppLink = NSAttributedString(string: "Kilograpp Team", attributes: [NSLinkAttributeName : URL(string: "http://kilograpp.com/")!])
         
-        mattermostString.appendAttributedString(mattermostLink)
-        kilograppString.appendAttributedString(kilograppLink)
+        mattermostString.append(mattermostLink)
+        kilograppString.append(kilograppLink)
         
         self.mattermostTextView!.attributedText = mattermostString
         self.kilograppTextView!.attributedText = kilograppString
     }
     
     func setupTimer() {
-        self.iconsResizeAnimationTimer = NSTimer.scheduledTimerWithTimeInterval(0.7, target: self, selector: #selector(iconResizeAnimation), userInfo: nil, repeats: true)
+        self.iconsResizeAnimationTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(iconResizeAnimation), userInfo: nil, repeats: true)
     }
 }
 
@@ -83,15 +83,15 @@ extension AboutViewController {
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDelegate(self)
         UIView.setAnimationDuration(0.15)
-        UIView.setAnimationCurve(UIViewAnimationCurve.EaseOut)
-        self.iconImageView!.transform = CGAffineTransformMakeScale(2.5, 2.5)
+        UIView.setAnimationCurve(UIViewAnimationCurve.easeOut)
+        self.iconImageView!.transform = CGAffineTransform(scaleX: 2.5, y: 2.5)
         UIView.commitAnimations()
         
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDelegate(self)
         UIView.setAnimationDuration(0.2)
-        UIView.setAnimationCurve(UIViewAnimationCurve.EaseOut)
-        self.iconImageView!.transform = CGAffineTransformMakeScale(1.2, 1.2)
+        UIView.setAnimationCurve(UIViewAnimationCurve.easeOut)
+        self.iconImageView!.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
         UIView.commitAnimations()
     }
 }

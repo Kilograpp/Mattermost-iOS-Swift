@@ -11,7 +11,7 @@ import Foundation
 final class ApplicationStateManager {
     static let sharedInstance = ApplicationStateManager()
     
-    private init()  {
+    fileprivate init()  {
         self.subscribeForNotifications()
     }
     deinit {
@@ -32,19 +32,19 @@ private protocol ApplicationDelegate: class {
 
 //MARK: - Notification Subscription
 extension ApplicationStateManager: NotificationsSubscription {
-    private func subscribeForNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self,
+    fileprivate func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(applicationDidEnterBackground),
-                                                         name: UIApplicationDidEnterBackgroundNotification,
+                                                         name: NSNotification.Name.UIApplicationDidEnterBackground,
                                                          object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(applicationDidBecomeActive),
-                                                         name: UIApplicationDidBecomeActiveNotification,
+                                                         name: NSNotification.Name.UIApplicationDidBecomeActive,
                                                          object: nil)
     }
     
-    private func unsubscribeFromNotifications() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    fileprivate func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

@@ -20,7 +20,7 @@ struct Geometry {
 
 private protocol LifeCycle {
     func awakeFromNib()
-    func setSelected(selected: Bool, animated: Bool)
+    func setSelected(_ selected: Bool, animated: Bool)
     func layoutSubviews()
     func prepareForReuse()
 }
@@ -41,7 +41,7 @@ private protocol Private {
 }
 
 private protocol Configuration {
-    func configureLabel(label: UILabel, font: UIFont, color: UIColor)
+    func configureLabel(_ label: UILabel, font: UIFont, color: UIColor)
     func configureCellState()
     func configureBasicLabels()
     func configureAvatarImage()
@@ -54,14 +54,14 @@ private protocol Action {
 class SearchChatTableViewCell: UITableViewCell {
 
 //MARK: Properties
-    private let channelLabel: UILabel = UILabel()
-    private let avatarImageView: UIImageView = UIImageView()
-    private let nameLabel: UILabel = UILabel()
-    private let timeLabel: UILabel = UILabel()
-    private let messageLabel: MessageLabel = MessageLabel()
-    private let detailIconImageView: UIImageView = UIImageView()
+    fileprivate let channelLabel: UILabel = UILabel()
+    fileprivate let avatarImageView: UIImageView = UIImageView()
+    fileprivate let nameLabel: UILabel = UILabel()
+    fileprivate let timeLabel: UILabel = UILabel()
+    fileprivate let messageLabel: MessageLabel = MessageLabel()
+    fileprivate let detailIconImageView: UIImageView = UIImageView()
     
-    private let timeString: String = ""
+    fileprivate let timeString: String = ""
     final var post : Post! {
         didSet { self.postIdentifier = self.post.identifier }
     }
@@ -80,14 +80,14 @@ class SearchChatTableViewCell: UITableViewCell {
         super.init(coder: aDecoder)
     }
     
-    func configureWithPost(post: Post) {
+    func configureWithPost(_ post: Post) {
         self.post = post
         configureBasicLabels()
         configureAvatarImage()
         configureMessageLabel()
     }
     
-    func heighWithPost(post: Post) -> CGFloat {
+    func heighWithPost(_ post: Post) -> CGFloat {
         return 0.0
     }
     
@@ -105,7 +105,7 @@ extension SearchChatTableViewCell: LifeCycle {
         // Initialization code
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state
@@ -135,8 +135,8 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupBackground() {
-        self.selectionStyle = .None
-        self.backgroundColor = UIColor.whiteColor()
+        self.selectionStyle = .none
+        self.backgroundColor = UIColor.white
     }
     
     func setupChannelLabel() {
@@ -145,17 +145,17 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupAvatarImageView() {
-        self.avatarImageView.frame = CGRectMake(8, 8, 40, 40)
-        self.avatarImageView.backgroundColor = UIColor.whiteColor()
-        self.avatarImageView.contentMode = .ScaleAspectFill
-        self.avatarImageView.userInteractionEnabled = true
+        self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
+        self.avatarImageView.backgroundColor = UIColor.white
+        self.avatarImageView.contentMode = .scaleAspectFill
+        self.avatarImageView.isUserInteractionEnabled = true
         self.avatarImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showProfileAction)))
         self.addSubview(self.avatarImageView)
     }
     
     func setupNameLabel() {
         configureLabel(self.nameLabel, font: UIFont.kg_semibold15Font(), color: UIColor.kg_lightBlackColor())
-        self.nameLabel.userInteractionEnabled = true
+        self.nameLabel.isUserInteractionEnabled = true
         self.nameLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showProfileAction)))
         self.addSubview(self.nameLabel)
     }
@@ -166,7 +166,7 @@ extension SearchChatTableViewCell: Setup {
     }
     
     func setupMessageLabel() {
-        self.messageLabel.backgroundColor = UIColor.whiteColor()
+        self.messageLabel.backgroundColor = UIColor.white
         self.messageLabel.numberOfLines = 0
         self.messageLabel.layer.drawsAsynchronously = true
         self.addSubview(self.messageLabel)
@@ -174,8 +174,8 @@ extension SearchChatTableViewCell: Setup {
     
     func setupDetailIconImageView() {
         self.detailIconImageView.image = UIImage(named: "comments_send_icon")
-        self.detailIconImageView.backgroundColor = UIColor.whiteColor()
-        self.detailIconImageView.contentMode = .ScaleAspectFill
+        self.detailIconImageView.backgroundColor = UIColor.white
+        self.detailIconImageView.contentMode = .scaleAspectFill
         self.addSubview(self.detailIconImageView)
     }
 }
@@ -184,10 +184,10 @@ extension SearchChatTableViewCell: Setup {
 //MARK: Configuration
 
 extension SearchChatTableViewCell: Configuration {
-    func configureLabel(label: UILabel, font: UIFont, color: UIColor) {
-        label.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+    func configureLabel(_ label: UILabel, font: UIFont, color: UIColor) {
+        label.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         label.numberOfLines = 1
-        label.backgroundColor = UIColor.whiteColor()
+        label.backgroundColor = UIColor.white
         label.font = font
         label.textColor = color
     }
@@ -215,7 +215,7 @@ extension SearchChatTableViewCell: Configuration {
     
     func configureMessageLabel() {
         self.messageLabel.textStorage = self.post.attributedMessage!
-        guard self.post.messageType == .System else { return }
+        guard self.post.messageType == .system else { return }
         self.messageLabel.alpha = 0.5
     }
 }

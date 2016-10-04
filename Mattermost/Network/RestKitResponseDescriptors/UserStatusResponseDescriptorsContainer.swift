@@ -19,7 +19,7 @@ final class UserStatusResponseDescriptorsContainer: RKResponseDescriptor {
                                                          method: .POST,
                                                          pathPattern: UserPathPatternsContainer.usersStatusPathPattern(),
                                                          keyPath: nil,
-                                                         statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                                         statusCodes: RKStatusCodeIndexSetForClass(.successful))
     
 
     
@@ -32,6 +32,6 @@ extension UserStatusResponseDescriptorsContainer: ResponseDescriptors {
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.usersStatusPathPattern(),
                                     keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
 }

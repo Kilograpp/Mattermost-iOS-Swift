@@ -11,18 +11,18 @@ import RealmSwift
 
 final class RealmUtils {
     
-    private static var realmForMainThread: Realm = {
+    fileprivate static var realmForMainThread: Realm = {
         return try! Realm()
     }()
    
     static func realmForCurrentThread() -> Realm {
-        if NSThread.isMainThread() {
+        if Thread.isMainThread {
             return realmForMainThread
         }
         return try! Realm()
     }
     
-    static func save(objects: [RealmObject]) {
+    static func save(_ objects: [RealmObject]) {
         let realm = realmForCurrentThread()
         
         try! realm.write({
@@ -30,7 +30,7 @@ final class RealmUtils {
         })
     }
     
-    static func save(object: RealmObject) {
+    static func save(_ object: RealmObject) {
         let realm = realmForCurrentThread()
         
         try! realm.write({
@@ -46,7 +46,7 @@ final class RealmUtils {
         })
     }
     
-    static func deleteObject(object:RealmObject) {
+    static func deleteObject(_ object:RealmObject) {
         let realm = realmForCurrentThread()
         
         try! realm.write({

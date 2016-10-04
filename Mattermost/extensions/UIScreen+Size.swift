@@ -10,10 +10,10 @@ import Foundation
 
 extension UIScreen {
     static func screenWidth() -> CGFloat {
-        return CGRectGetWidth(UIScreen.mainScreen().bounds)
+        return UIScreen.main.bounds.width
     }
     
     static func screenHeight() -> CGFloat {
-        return CGRectGetHeight(UIScreen.mainScreen().bounds)
+        return UIScreen.main.bounds.height
     }
 }

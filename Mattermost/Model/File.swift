@@ -10,8 +10,8 @@ import Foundation
 import RealmSwift
 
 private protocol Interface: class {
-    func downloadURL() -> NSURL?
-    func thumbURL() -> NSURL?
+    func downloadURL() -> URL?
+    func thumbURL() -> URL?
 }
 
 final class File: RealmObject {
@@ -29,7 +29,7 @@ final class File: RealmObject {
             computeIsImage()
         }
     }
-    private let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.files.rawValue)
+    fileprivate let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.files.rawValue)
     var post: Post?  {
         return self.posts.first
     }
@@ -67,10 +67,10 @@ private protocol Support: class {
 }
 
 extension File: Computations {
-    private func computeName() {
-        let components = self.rawLink?.componentsSeparatedByString("/")
-        if let components = components where components.count >= 2 {
-            let fileName = components.last!.stringByRemovingPercentEncoding
+    fileprivate func computeName() {
+        let components = self.rawLink?.components(separatedBy: "/")
+        if let components = components , components.count >= 2 {
+            let fileName = components.last!.removingPercentEncoding
             self.name = fileName
         } else {
             self.name = rawLink
@@ -85,7 +85,7 @@ extension File: Computations {
 //        self._thumbLink = FileUtils.thumbLinkForFile(self)?.absoluteString
 //    }
     
-    private func computeIsImage() {
+    fileprivate func computeIsImage() {
         self.isImage = FileUtils.fileIsImage(self)
     }
 }
@@ -101,10 +101,10 @@ extension File: Support {
 }
 
 extension File: Interface {
-    func downloadURL() -> NSURL? {
-        return NSURL(string: self._downloadLink ?? StringUtils.emptyString())
+    func downloadURL() -> URL? {
+        return URL(string: self._downloadLink ?? StringUtils.emptyString())
     }
-    func thumbURL() -> NSURL? {
-        return NSURL(string: self._thumbLink ?? StringUtils.emptyString())
+    func thumbURL() -> URL? {
+        return URL(string: self._thumbLink ?? StringUtils.emptyString())
     }
 }

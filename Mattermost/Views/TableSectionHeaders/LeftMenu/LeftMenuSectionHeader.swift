@@ -9,7 +9,7 @@
 import Foundation
 
 private protocol PublicConfiguration {
-    func configureWithChannelType(channelType: String!)
+    func configureWithChannelType(_ channelType: String!)
 }
 
 private protocol PrivateSetup : class {
@@ -24,8 +24,8 @@ private protocol Actions {
 }
 
 final class LeftMenuSectionHeader: UITableViewHeaderFooterView {
-    private let titleLabel: UILabel = UILabel()
-    private let moreButton: UIButton = UIButton()
+    fileprivate let titleLabel: UILabel = UILabel()
+    fileprivate let moreButton: UIButton = UIButton()
     static let reuseIdentifier = "LeftMenuSectionHeaderReuseIdentifier"
     var addTapHandler : (() -> Void)?
     override init(reuseIdentifier: String?) {
@@ -41,38 +41,38 @@ final class LeftMenuSectionHeader: UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.titleLabel.frame = CGRectMake(15, 9, 150, 13)
-        let xPos = CGRectGetMaxX(self.bounds) - 35
-        self.moreButton.frame = CGRectMake(xPos, 7, 15, 15)
+        self.titleLabel.frame = CGRect(x: 15, y: 9, width: 150, height: 13)
+        let xPos = self.bounds.maxX - 35
+        self.moreButton.frame = CGRect(x: xPos, y: 7, width: 15, height: 15)
     }
 }
 
 extension LeftMenuSectionHeader : PrivateSetup {
-    private func setup() {
+    fileprivate func setup() {
         self.setupTitleLabel()
         self.setupMoreButton()
     }
     
-    private func setupTitleLabel() {
+    fileprivate func setupTitleLabel() {
         self.addSubview(self.titleLabel)
         self.titleLabel.font = FontBucket.headerTitleFont
         self.titleLabel.textColor = ColorBucket.lightGrayColor
     }
     
-    private func setupMoreButton() {
+    fileprivate func setupMoreButton() {
         self.addSubview(self.moreButton)
-        self.moreButton.setBackgroundImage(UIImage(named: "side_menu_more_icon"), forState: .Normal)
-        self.moreButton.addTarget(self, action: #selector(moreAction), forControlEvents: .TouchUpInside)
+        self.moreButton.setBackgroundImage(UIImage(named: "side_menu_more_icon"), for: UIControlState())
+        self.moreButton.addTarget(self, action: #selector(moreAction), for: .touchUpInside)
     }
     
-    private func setupContentView() {
+    fileprivate func setupContentView() {
         self.contentView.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
 }
 
 extension LeftMenuSectionHeader : PublicConfiguration {
-    func configureWithChannelType(channelType: String!) {
-        self.titleLabel.text = channelType.uppercaseString
+    func configureWithChannelType(_ channelType: String!) {
+        self.titleLabel.text = channelType.uppercased()
     }
 }
 

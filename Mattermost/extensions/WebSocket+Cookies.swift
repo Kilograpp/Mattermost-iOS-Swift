@@ -10,9 +10,9 @@ import Foundation
 import Starscream
 
 extension WebSocket {
-    func setCookie(cookie: NSHTTPCookie?) {
+    func setCookie(_ cookie: HTTPCookie?) {
         if let unwrappedCookie = cookie  {
-            self.headers[Constants.Http.Headers.Cookie] = NSHTTPCookie.requestHeaderFieldsWithCookies([unwrappedCookie]).first?.1
+            self.headers[Constants.Http.Headers.Cookie] = HTTPCookie.requestHeaderFields(with: [unwrappedCookie]).first?.1
         }
     }
 }

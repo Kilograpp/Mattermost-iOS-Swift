@@ -25,23 +25,23 @@ class BaseMappingsContainer: RKObjectMapping {
 
 //MARK: - CommonMappings
     class func mapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(forClass: self.classForMapping)
-        mapping.addAttributeMappingsFromDictionary(["id" : CommonAttributes.identifier.rawValue])
-        return mapping;
+        let mapping = RKObjectMapping(for: self.classForMapping)
+        mapping?.addAttributeMappings(from: ["id" : CommonAttributes.identifier.rawValue])
+        return mapping!;
     }
     
     static func emptyResponseMapping() -> RKObjectMapping {
-        return RKObjectMapping(withClass: NSNull.self)
+        return RKObjectMapping(with: NSNull.self)
     }
     
     static func emptyMapping() -> RKObjectMapping {
-        return RKObjectMapping(withClass: self.classForMapping)
+        return RKObjectMapping(with: self.classForMapping)
     }
     
-   override class func requestMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping.requestMapping()
-        mapping.addAttributeMappingsFromDictionary([CommonAttributes.identifier.rawValue : "id"])
-        return mapping;
+   override class func request() -> RKObjectMapping {
+        let mapping = RKObjectMapping.request()
+        mapping?.addAttributeMappings(from: [CommonAttributes.identifier.rawValue : "id"])
+        return mapping!;
     }
 }
 

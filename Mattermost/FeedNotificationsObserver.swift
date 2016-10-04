@@ -11,12 +11,12 @@ import RealmSwift
 
 
 final class FeedNotificationsObserver {
-    private var results: Results<Post>! = nil
-    private var days: Results<Day>! = nil
-    private var tableView: UITableView
-    private var resultsNotificationToken: NotificationToken?
-    private var lastDayNotificationToken: NotificationToken?
-    private let channel: Channel!
+    fileprivate var results: Results<Post>! = nil
+    fileprivate var days: Results<Day>! = nil
+    fileprivate var tableView: UITableView
+    fileprivate var resultsNotificationToken: NotificationToken?
+    fileprivate var lastDayNotificationToken: NotificationToken?
+    fileprivate let channel: Channel!
 
 
     
@@ -39,7 +39,7 @@ final class FeedNotificationsObserver {
     
     @objc func unsubscribeNotifications() {
         self.resultsNotificationToken?.stop()
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func subscribeForRealmNotifications() {
@@ -60,10 +60,10 @@ final class FeedNotificationsObserver {
             (changes: RealmCollectionChange<Results<Post>> ) in
             
             switch changes {
-                case .Initial:
+                case .initial:
                     self.tableView.reloadData()
                     break
-                case .Update(_, let deletions, let insertions, let modifications):
+                case .update(_, let deletions, let insertions, let modifications):
                     
 
                         if deletions.count > 0 {
@@ -87,19 +87,19 @@ final class FeedNotificationsObserver {
                         self.tableView.beginUpdates()
                         if (insertions.count > 0) {
                         
- 
+                            // IndexSet
                             if self.days?.first?.posts.count == 1 {
-                                self.tableView.insertSections(NSIndexSet(index: 0), withRowAnimation: .None)
+                                self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
                             }
                             insertions.forEach({ (index:Int) in
-                                self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .Automatic)
+                                self.tableView.insertRows(at: [NSIndexPath(row: 0, section: 0) as IndexPath], with: .automatic)
                             })
                         
                         }
                     
                         if modifications.count > 0 {
                         modifications.forEach({ (index:Int) in
-                            self.tableView.reloadRowsAtIndexPaths([self.indexPathForPost(self.results[index])], withRowAnimation: .Automatic)
+                            self.tableView.reloadRows(at: [self.indexPathForPost(self.results[index])], with: .automatic)
                         })
                         }
 
@@ -116,11 +116,11 @@ final class FeedNotificationsObserver {
             //self.lastDayNotificationToken = self.results.last?.posts.addNotificationBlock(lastDayNotificationsBlock)
         }
 
-        if NSThread.isMainThread() {
+        if Thread.isMainThread {
             configurationBlock()
             
         } else {
-            dispatch_sync(dispatch_get_main_queue()) {
+            DispatchQueue.main.sync {
                 configurationBlock()
             }
         }
@@ -139,11 +139,11 @@ extension FeedNotificationsObserver {
 //MARK: FetchedResultsController
 extension FeedNotificationsObserver {
     func prepareResults() {
-        if NSThread.isMainThread() {
+        if Thread.isMainThread {
             fetchPosts()
             fetchDays()
         } else {
-            dispatch_sync(dispatch_get_main_queue()) {
+            DispatchQueue.main.sync {
                 self.fetchPosts()
                 self.fetchDays()
             }
@@ -152,17 +152,17 @@ extension FeedNotificationsObserver {
     
     func fetchPosts() {
         let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
-        self.results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted("createdAt", ascending: false)
+        self.results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byProperty: "createdAt", ascending: false)
     }
     func fetchDays() {
         let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
-        self.days = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted("date", ascending: false)
+        self.days = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted(byProperty: "date", ascending: false)
     }
 }
 //refactor
 //MARK: FetchedResultsController
 extension FeedNotificationsObserver {
-    func numberOfRows(section:Int) -> Int {
+    func numberOfRows(_ section:Int) -> Int {
        return self.days![section].posts.count
     }
     
@@ -173,23 +173,23 @@ extension FeedNotificationsObserver {
 //        }.count
 //        return daysCount
     }
-    func postForIndexPath(indexPath:NSIndexPath) -> Post {
+    func postForIndexPath(_ indexPath:IndexPath) -> Post {
 //        return days![indexPath.section].posts[self.numberOfRows(indexPath.section) - indexPath.row - 1]
         return days![indexPath.section].sortedPosts()[self.numberOfRows(indexPath.section) - indexPath.row - 1]
     }
     func lastPost() -> Post {
         return results!.last!
     }
-    func titleForHeader(section:Int) -> String {
+    func titleForHeader(_ section:Int) -> String {
         return self.days![section].text!
     }
-    private func indexPathForPost(post: Post) -> NSIndexPath {
+    fileprivate func indexPathForPost(_ post: Post) -> IndexPath {
         let day = post.day
         let daysPosts = day?.sortedPosts()
-        let indexOfDay = (self.days?.indexOf(day!))!
+        let indexOfDay = (self.days?.index(of: day!))!
 //        let invertedIndexOfPost = (day?.posts.count)! - 1 - (day?.posts.indexOf(post))!
-        let indexOfPost = (day?.posts.count)! - 1 - (daysPosts?.indexOf(post))!
-        let indexPath = NSIndexPath(forRow: indexOfPost, inSection: indexOfDay)
+        let indexOfPost = (day?.posts.count)! - 1 - (daysPosts?.index(of: post))!
+        let indexPath = NSIndexPath(row: indexOfPost, section: indexOfDay) as IndexPath
         
         return indexPath
     }

@@ -10,9 +10,9 @@ import Foundation
 
 extension String {
     func toDictionary() -> [String:AnyObject]? {
-        if let data = self.dataUsingEncoding(NSUTF8StringEncoding) {
+        if let data = self.data(using: String.Encoding.utf8) {
             do {
-                return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
             } catch let error as NSError {
                 print(error)
             }
@@ -23,9 +23,9 @@ extension String {
 
 extension NSString {
     func toDictionary() -> [String:AnyObject]? {
-        if let data = self.dataUsingEncoding(NSUTF8StringEncoding) {
+        if let data = self.data(using: String.Encoding.utf8.rawValue) {
             do {
-                return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
             } catch let error as NSError {
                 print(error)
             }

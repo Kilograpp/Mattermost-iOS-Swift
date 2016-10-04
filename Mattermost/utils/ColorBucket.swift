@@ -72,15 +72,15 @@ extension ColorBucket : PostColors {
     static let systemMessageColor = ColorBucket.gray()
     static let hashtagColor = ColorBucket.blue()
     static let mentionColor = ColorBucket.blue()
-    static let mentionBackgroundColor = UIColor.yellowColor()
+    static let mentionBackgroundColor = UIColor.yellow
     static let linkColor = ColorBucket.blue()
     
     static let editBackgroundColor = ColorBucket.cloudyBlue()
     static let parentBackgroundColor = ColorBucket.cloudyWhite()
     static let parentSeparatorColor = ColorBucket.sideMenuSeparatorColor()
     static let parentAuthorColor = ColorBucket.middleGray()
-    static let parentMessageColor = UIColor.blackColor()
-    static let parentShadowColor = UIColor.blackColor()
+    static let parentMessageColor = UIColor.black
+    static let parentShadowColor = UIColor.black
     static let editSeparatorColor = ColorBucket.brightBlue()
 }
 
@@ -100,7 +100,7 @@ extension ColorBucket : SideMenuColors {
     static let sideMenuHeaderBackgroundColor = ColorBucket.deepLightBlue()
     static let sideMenuCommonTextColor = ColorBucket.sideMenuTextColor()
     static let sideMenuSelectedTextColor = ColorBucket.blackColor
-    static let sideMenuCellHighlightedColor = ColorBucket.whiteColor.colorWithAlphaComponent(0.5)
+    static let sideMenuCellHighlightedColor = ColorBucket.whiteColor.withAlphaComponent(0.5)
     static let sideMenuCellSelectedColor = ColorBucket.whiteColor
     static let rightMenuSeparatorColor = ColorBucket.sideMenuSeparatorColor()
     static let rightMenuTextColor = ColorBucket.lightBlue()
@@ -111,92 +111,93 @@ extension ColorBucket : ServerUrlColors {
 }
 
 extension ColorBucket : GradientColors {
-    static let topBlueColorForGradient = UIColor(rgba: "#1D66DE")
-    static let bottomBlueColorForGradient = UIColor(rgba: "#248BE2")
-    static let topRedColorForGradient = UIColor(rgba: "#9F041B")
-    static let bottomRedColorForGradient = UIColor(rgba: "#F5515F")
-    static let topGreenColorForGradient = UIColor(rgba: "#429321")
-    static let bottomGreenColorForGradient = UIColor(rgba: "#B4EC51")
-    static let topOrangeColorForGradient = UIColor(rgba: "#F76B1C")
-    static let bottomOrangeColorForGradient = UIColor(rgba: "#FAD961")
-    static let topPurpleColorForGradient = UIColor(rgba: "#3023AE")
-    static let bottomPurpleColorForGradient = UIColor(rgba: "#C86DD7")
+    //refactor
+    static let topBlueColorForGradient = try! UIColor(rgba_throws: "#1D66DE")
+    static let bottomBlueColorForGradient = try! UIColor(rgba_throws: "#248BE2")
+    static let topRedColorForGradient = try! UIColor(rgba_throws: "#9F041B")
+    static let bottomRedColorForGradient = try! UIColor(rgba_throws: "#F5515F")
+    static let topGreenColorForGradient = try! UIColor(rgba_throws: "#429321")
+    static let bottomGreenColorForGradient = try! UIColor(rgba_throws: "#B4EC51")
+    static let topOrangeColorForGradient = try! UIColor(rgba_throws: "#F76B1C")
+    static let bottomOrangeColorForGradient = try! UIColor(rgba_throws: "#FAD961")
+    static let topPurpleColorForGradient = try! UIColor(rgba_throws: "#3023AE")
+    static let bottomPurpleColorForGradient = try! UIColor(rgba_throws: "#C86DD7")
 }
 
 extension ColorBucket {
-    private class func black() -> UIColor {
-        return UIColor(rgba: "#3B3B3B")
+    fileprivate class func black() -> UIColor {
+        return try! UIColor(rgba_throws: "#3B3B3B")
     }
     
-    private class func white() -> UIColor {
-        return UIColor(rgba: "#FFFFFF")
+    fileprivate class func white() -> UIColor {
+        return try! UIColor(rgba_throws: "#FFFFFF")
     }
     
-    private class func cloudyWhite() -> UIColor {
-        return UIColor(rgba: "#F7F7F7")
+    fileprivate class func cloudyWhite() -> UIColor {
+        return try! UIColor(rgba_throws: "#F7F7F7")
     }
     
-    private class func blue() -> UIColor {
-        return UIColor(rgba: "#0076FF")
+    fileprivate class func blue() -> UIColor {
+        return try! UIColor(rgba_throws: "#0076FF")
     }
     
-    private class func gray() -> UIColor {
-        return UIColor(rgba: "#979797")
+    fileprivate class func gray() -> UIColor {
+        return try! UIColor(rgba_throws: "#979797")
     }
     
-    private class func lightGray() -> UIColor {
-        return UIColor(rgba: "#AAAAAA")
+    fileprivate class func lightGray() -> UIColor {
+        return try! UIColor(rgba_throws: "#AAAAAA")
     }
     
-    private class func middleGray() -> UIColor {
-        return UIColor (rgba: "#424242")
+    fileprivate class func middleGray() -> UIColor {
+        return try! UIColor (rgba_throws: "#424242")
     }
     
-    private class func darkGray() -> UIColor {
-        return UIColor(rgba: "#D8D8D8")
+    fileprivate class func darkGray() -> UIColor {
+        return try! UIColor(rgba_throws: "#D8D8D8")
     }
     
-    private class func deepBlue() -> UIColor {
-        return UIColor(rgba: "#2071A8")
+    fileprivate class func deepBlue() -> UIColor {
+        return try! UIColor(rgba_throws: "#2071A8")
     }
     
-    private class func deepLightBlue() -> UIColor {
-        return UIColor(rgba: "#2F81B7")
+    fileprivate class func deepLightBlue() -> UIColor {
+        return try! UIColor(rgba_throws: "#2F81B7")
     }
     
-    private class func cloudyBlue() -> UIColor {
-        return UIColor(rgba: "#E7F0F6")
+    fileprivate class func cloudyBlue() -> UIColor {
+        return try! UIColor(rgba_throws: "#E7F0F6")
     }
     
-    private class func darkDarkGray() -> UIColor {
-        return UIColor(rgba: "#334659")
+    fileprivate class func darkDarkGray() -> UIColor {
+        return try! UIColor(rgba_throws: "#334659")
     }
     
-    private class func sideMenuSeparatorColor() -> UIColor {
-        return UIColor(rgba: "#8798A4")
+    fileprivate class func sideMenuSeparatorColor() -> UIColor {
+        return try! UIColor(rgba_throws: "#8798A4")
     }
     
-    private class func lightBlue() -> UIColor {
-        return UIColor(rgba: "#C3CDD4")
+    fileprivate class func lightBlue() -> UIColor {
+        return try! UIColor(rgba_throws: "#C3CDD4")
     }
     
-    private class func brightBlue() -> UIColor {
-        return UIColor(rgba: "#007AFF")
+    fileprivate class func brightBlue() -> UIColor {
+        return try! UIColor(rgba_throws: "#007AFF")
     }
     
-    private class func sideMenuTextColor() -> UIColor {
-        return UIColor (rgba: "#C3CDD4")
+    fileprivate class func sideMenuTextColor() -> UIColor {
+        return try! UIColor (rgba_throws: "#C3CDD4")
     }
     
-    private class func sideMenuHighlightColor() -> UIColor {
-        return UIColor(rgba: "#367fb0")
+    fileprivate class func sideMenuHighlightColor() -> UIColor {
+        return try! UIColor(rgba_throws: "#367fb0")
     }
     
-    private class func awayStatus() -> UIColor {
-        return UIColor(rgba: "#FFCF63")
+    fileprivate class func awayStatus() -> UIColor {
+        return try! UIColor(rgba_throws: "#FFCF63")
     }
     
-    private class func onlineStatus() -> UIColor {
-        return UIColor(rgba: "#81C784")
+    fileprivate class func onlineStatus() -> UIColor {
+        return try! UIColor(rgba_throws: "#81C784")
     }
 }

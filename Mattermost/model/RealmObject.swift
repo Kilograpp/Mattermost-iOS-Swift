@@ -22,20 +22,20 @@ enum CommonAttributes: String {
 }
 
 protocol CommonFinders: class {
-    static func objectById(id: String) -> Self?
-    static func objectByUsername(username: String) -> Self?
+    static func objectById(_ id: String) -> Self?
+    static func objectByUsername(_ username: String) -> Self?
     
 }
 
 // MARK: - Finders
 extension RealmObject : CommonFinders {
-    static func objectById(id: String) -> Self? {
+    static func objectById(_ id: String) -> Self? {
         let realm = try! Realm()
-        return realm.objectForPrimaryKey(self, key: id);
+        return realm.object(ofType: self, forPrimaryKey: id as AnyObject);
         
     }
     
-    static func objectByUsername(username: String) -> Self? {
+    static func objectByUsername(_ username: String) -> Self? {
         let realm = try! Realm()
         return realm.objects(self).filter(CommonAttributes.username.rawValue + " == " + username).first;
     }

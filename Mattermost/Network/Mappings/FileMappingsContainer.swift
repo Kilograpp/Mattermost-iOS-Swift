@@ -29,9 +29,9 @@ extension FileMappingsContainer: ResponseMappings {
     }
     
     static func uploadMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(withClass: NSMutableDictionary.self)
-        mapping.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
+        let mapping = RKObjectMapping(with: NSMutableDictionary.self)
+        mapping?.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
         
-        return mapping
+        return mapping!
     }
 }

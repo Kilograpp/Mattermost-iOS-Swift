@@ -27,7 +27,7 @@ final class RealmAttributedString: Object {
             let range = parameter.range
             parameter.attributes.forEach({ (attribute) in
                 
-                if attribute.type != .Unknown {
+                if attribute.type != .unknown {
                     attributedString.addAttribute(attribute.name!, value: attribute.valueCache!, range: range)
                 }
             })
@@ -46,14 +46,15 @@ final class RealmAttributedString: Object {
         
         self.string = attributedString.string
         
-        attributedString.enumerateAttributesInRange(NSMakeRange(0, attributedString.length), options: NSAttributedStringEnumerationOptions(rawValue: 0)) { (attributes, range, stop) in
+        attributedString.enumerateAttributes(in: NSMakeRange(0, attributedString.length), options: NSAttributedString.EnumerationOptions(rawValue: 0)) { (attributes, range, stop) in
             
             let parameter = StringParameter()
             parameter.range = range
             
             attributes.forEach({ (key, value) in
                 let attribute = StringAttribute()
-                attribute.setValue(value, attributeName: key)
+                //s3 refactor
+                attribute.setValue(value as AnyObject, attributeName: key)
                 parameter.attributes.append(attribute)
             })
             

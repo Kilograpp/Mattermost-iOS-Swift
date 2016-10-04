@@ -13,14 +13,14 @@ import RealmSwift
 extension TSMarkdownParser {
     @nonobjc static let sharedInstance = TSMarkdownParser.customParser()
     
-    private static func customParser() -> TSMarkdownParser {
+    fileprivate static func customParser() -> TSMarkdownParser {
         let defaultParser = TSMarkdownParser()
         defaultParser.setupAttributes()
         defaultParser.setupDefaultParsers()
         return defaultParser
     }
     
-    private static func addAttributes(attributesArray: [[String : AnyObject]], atIndex level: UInt, toString attributedString: NSMutableAttributedString, range: NSRange) {
+    fileprivate static func addAttributes(_ attributesArray: [[String : AnyObject]], atIndex level: UInt, toString attributedString: NSMutableAttributedString, range: NSRange) {
         guard attributesArray.count != 0 else {
             return
         }
@@ -32,14 +32,14 @@ extension TSMarkdownParser {
 
 // MARK: - Setup
 extension TSMarkdownParser {
-    private func setupAttributes() -> Void {
+    fileprivate func setupAttributes() -> Void {
         self.setupSettings()
         self.setupDefaultAttributes()
         self.setupHeaderAttributes()
         self.setupEmphasisAttributes()
     }
     
-    private func setupDefaultParsers() {
+    fileprivate func setupDefaultParsers() {
         self.addCodeEscapingParsing()
         self.addEscapingParsing()
         self.addHeaderParsing()
@@ -56,16 +56,16 @@ extension TSMarkdownParser {
         self.addEmailParsing()
     }
     
-    private func setupSettings() -> Void {
+    fileprivate func setupSettings() -> Void {
         self.skipLinkAttribute = false
     }
     
-    private func setupDefaultAttributes() -> Void {
+    fileprivate func setupDefaultAttributes() -> Void {
         self.defaultAttributes = [NSFontAttributeName : FontBucket.messageFont,
                                   NSForegroundColorAttributeName : ColorBucket.commonMessageColor]
     }
     
-    private func setupHeaderAttributes() -> Void {
+    fileprivate func setupHeaderAttributes() -> Void {
         let headerAttributes = NSMutableArray()
         
         for index in 0...6 {
@@ -73,13 +73,13 @@ extension TSMarkdownParser {
                 NSFontAttributeName : FontBucket.self.semiboldFontOfSize(CGFloat(26 - 2 * index)),
                 NSForegroundColorAttributeName : ColorBucket.commonMessageColor
             ]
-            headerAttributes.addObject(attributes)
+            headerAttributes.add(attributes)
         }
         
         self.headerAttributes = headerAttributes.copy() as! [[String : AnyObject]]
     }
     
-    private func setupEmphasisAttributes() {
+    fileprivate func setupEmphasisAttributes() {
         self.emphasisAttributes = [
             NSFontAttributeName            : FontBucket.emphasisFont,
             NSForegroundColorAttributeName : ColorBucket.commonMessageColor
@@ -92,53 +92,53 @@ extension TSMarkdownParser {
 
 // MARK: - Parsers
 extension TSMarkdownParser {
-    private func addHeaderParsing() {
-        self.addHeaderParsingWithMaxLevel(0, leadFormattingBlock: { (attributedString, range, level) in
-            attributedString.deleteCharactersInRange(range)
+    fileprivate func addHeaderParsing() {
+        self.addHeaderParsing(withMaxLevel: 0, leadFormattingBlock: { (attributedString, range, level) in
+            attributedString.deleteCharacters(in: range)
         }) { [unowned self] (attributedString, range, level) in
-            TSMarkdownParser.addAttributes(self.headerAttributes, atIndex: level-1, toString: attributedString, range: range)
+            TSMarkdownParser.addAttributes(self.headerAttributes as [[String : AnyObject]], atIndex: level-1, toString: attributedString, range: range)
         }
     }
     
-    private func addListParsing() {
-        self.addListParsingWithMaxLevel(0, leadFormattingBlock: { (attributedString, range, level) in
+    fileprivate func addListParsing() {
+        self.addListParsing(withMaxLevel: 0, leadFormattingBlock: { (attributedString, range, level) in
             let listString = NSMutableString()
-            for _ in level.stride(to: 0, by: -1) {
-                listString.appendString("  ")
+            for _ in stride(from: level, to: 0, by: -1) {
+                listString.append("  ")
             }
-            listString.appendString("• ")
-            attributedString.replaceCharactersInRange(range, withString: listString as String)
+            listString.append("• ")
+            attributedString.replaceCharacters(in: range, with: listString as String)
         }) { [unowned self] (attributedString, range, level) in
-            TSMarkdownParser.addAttributes(self.listAttributes, atIndex: level-1, toString: attributedString, range: range)
+            TSMarkdownParser.addAttributes(self.listAttributes as [[String : AnyObject]], atIndex: level-1, toString: attributedString, range: range)
         }
     }
     
-    private func addQuoteParsing() {
-        self.addQuoteParsingWithMaxLevel(0, leadFormattingBlock: { (attributedString, range, level) in
+    fileprivate func addQuoteParsing() {
+        self.addQuoteParsing(withMaxLevel: 0, leadFormattingBlock: { (attributedString, range, level) in
             let quoteString = NSMutableString()
-            for _ in level.stride(through: 0, by: -1) {
-                quoteString.appendString("\t")
+            for _ in stride(from: level, through: 0, by: -1) {
+                quoteString.append("\t")
             }
-            attributedString.replaceCharactersInRange(range, withString: quoteString as String)
+            attributedString.replaceCharacters(in: range, with: quoteString as String)
         }) { [unowned self] (attributedString, range, level) in
-            TSMarkdownParser.addAttributes(self.quoteAttributes, atIndex: level-1, toString: attributedString, range: range)
+            TSMarkdownParser.addAttributes(self.quoteAttributes as [[String : AnyObject]], atIndex: level-1, toString: attributedString, range: range)
         }
     }
     
-    private func addLinkParsing() {
-        self.addLinkParsingWithLinkFormattingBlock { [unowned self] (attributedString, range, link) in
+    fileprivate func addLinkParsing() {
+        self.addLinkParsing { [unowned self] (attributedString, range, link) in
             if !self.skipLinkAttribute {
-                let preparedLink = link?.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
-                if let url = NSURL(string: preparedLink ?? StringUtils.emptyString()) {
+                let preparedLink = link?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+                if let url = URL(string: preparedLink ?? StringUtils.emptyString()) {
                     attributedString.addAttribute(NSLinkAttributeName, value: url, range: range)
                 }
             }
             attributedString.addAttributes(self.linkAttributes, range: range)
         }
         
-        self.addLinkDetectionWithLinkFormattingBlock { [unowned self] (attributedString, range, link) in
+        self.addLinkDetection { [unowned self] (attributedString, range, link) in
             if !self.skipLinkAttribute {
-                if let url = NSURL(string: link ?? StringUtils.emptyString()) {
+                if let url = URL(string: link ?? StringUtils.emptyString()) {
                     attributedString.addAttribute(NSLinkAttributeName, value: url, range: range)
                 }
             }
@@ -146,12 +146,12 @@ extension TSMarkdownParser {
         }
     }
     
-    private func addEmailParsing() {
+    fileprivate func addEmailParsing() {
         let pattern = "([a-zA-Z]{1,256}@[a-zA-Z0-9]{0,64}.[a-zA-Z0-9]{0,25})"
-        let emailExpression = try! NSRegularExpression(pattern: pattern, options: .CaseInsensitive)
-        self.addParsingRuleWithRegularExpression(emailExpression) { (match, attributedString) in
+        let emailExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        self.addParsingRule(with: emailExpression) { (match, attributedString) in
             let range = NSMakeRange(match.range.location, match.range.length)
-            let email = (attributedString.string as NSString).substringWithRange(range)
+            let email = (attributedString.string as NSString).substring(with: range)
             
             let attributes = [NSForegroundColorAttributeName : ColorBucket.linkColor]
             attributedString.addAttribute(Constants.StringAttributes.Email, value: email, range: match.range)
@@ -160,12 +160,12 @@ extension TSMarkdownParser {
         
     }
     
-    private func addPhoneParsing() {
+    fileprivate func addPhoneParsing() {
         let pattern = "([0-9]{11})"
-        let phoneExpression = try! NSRegularExpression(pattern: pattern, options: .CaseInsensitive)
-        self.addParsingRuleWithRegularExpression(phoneExpression) { (match, attributedString) in
+        let phoneExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        self.addParsingRule(with: phoneExpression) { (match, attributedString) in
             let range = NSMakeRange(match.range.location, match.range.length)
-            let phone = (attributedString.string as NSString).substringWithRange(range)
+            let phone = (attributedString.string as NSString).substring(with: range)
             
             let attributes = [NSForegroundColorAttributeName : ColorBucket.linkColor]
             attributedString.addAttribute(Constants.StringAttributes.Phone, value: phone, range: match.range)
@@ -174,17 +174,17 @@ extension TSMarkdownParser {
         
     }
     
-    private func addCodeUnescapingParsing() {
-        self.addCodeUnescapingParsingWithFormattingBlock { [unowned self] (attributedString, range) in
+    fileprivate func addCodeUnescapingParsing() {
+        self.addCodeUnescapingParsing { [unowned self] (attributedString, range) in
             attributedString.addAttributes(self.monospaceAttributes, range: range)
         }
     }
     
-    private func addHashtagParsing() {
-        let hashtagExpression = try! NSRegularExpression(pattern: "(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)", options: .CaseInsensitive)
-        self.addParsingRuleWithRegularExpression(hashtagExpression) { (match, attributedString) in
+    fileprivate func addHashtagParsing() {
+        let hashtagExpression = try! NSRegularExpression(pattern: "(?:(?<=\\s)|^)#(\\w*[A-Za-z_]+\\w*)", options: .caseInsensitive)
+        self.addParsingRule(with: hashtagExpression) { (match, attributedString) in
             let range = NSMakeRange(match.range.location+1, match.range.length-1)
-            let hashTag = (attributedString.string as NSString).substringWithRange(range)
+            let hashTag = (attributedString.string as NSString).substring(with: range)
             
             let attributes = [NSForegroundColorAttributeName : ColorBucket.hashtagColor]
             
@@ -193,11 +193,11 @@ extension TSMarkdownParser {
         }
     }
     
-    private func addMentionParsing() {
-        let mentionExpression = try! NSRegularExpression(pattern: "@\\w\\S*\\b", options: .CaseInsensitive)
-        self.addParsingRuleWithRegularExpression(mentionExpression) { (match, attributedString) in
+    fileprivate func addMentionParsing() {
+        let mentionExpression = try! NSRegularExpression(pattern: "@\\w\\S*\\b", options: .caseInsensitive)
+        self.addParsingRule(with: mentionExpression) { (match, attributedString) in
             let range = NSMakeRange(match.range.location+1, match.range.length-1)
-            let name = (attributedString.string as NSString).substringWithRange(range)
+            let name = (attributedString.string as NSString).substring(with: range)
             
             guard try! Realm().objects(User.self).filter("%K == %@", UserAttributes.username.rawValue, name).count > 0 ||
                 name == "all" || name == "channel" else {
@@ -216,18 +216,18 @@ extension TSMarkdownParser {
         
     }
     
-    private func addStrongParsing() {
-        self.addStrongParsingWithFormattingBlock { [unowned self] (attributedString, range) in
+    fileprivate func addStrongParsing() {
+        self.addStrongParsing { [unowned self] (attributedString, range) in
             attributedString.addAttributes(self.strongAttributes, range: range)
         }
     }
     
-    private func addEmphasisParsing() {
-        let emphasisExpression = try! NSRegularExpression(pattern: "(?<!\\S)(_)(.*?)(_(?!\\S))", options: .CaseInsensitive)
-        self.addParsingRuleWithRegularExpression(emphasisExpression) { [unowned self] (match, attributedString) in
-            attributedString.deleteCharactersInRange(match.rangeAtIndex(3))
-            attributedString.addAttributes(self.emphasisAttributes, range: match.rangeAtIndex(2))
-            attributedString.deleteCharactersInRange(match.rangeAtIndex(1))
+    fileprivate func addEmphasisParsing() {
+        let emphasisExpression = try! NSRegularExpression(pattern: "(?<!\\S)(_)(.*?)(_(?!\\S))", options: .caseInsensitive)
+        self.addParsingRule(with: emphasisExpression) { [unowned self] (match, attributedString) in
+            attributedString.deleteCharacters(in: match.rangeAt(3))
+            attributedString.addAttributes(self.emphasisAttributes, range: match.rangeAt(2))
+            attributedString.deleteCharacters(in: match.rangeAt(1))
             
         }
     }

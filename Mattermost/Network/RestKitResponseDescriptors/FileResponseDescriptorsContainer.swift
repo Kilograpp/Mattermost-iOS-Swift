@@ -24,7 +24,7 @@ extension FileResponseDescriptorsContainer: ResponseDescriptors {
                                     method: .GET,
                                     pathPattern: FilePathPatternsContainer.updateCommonPathPattern(),
                                     keyPath: nil,
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
     
     static func uploadResponseDescriptor() -> RKResponseDescriptor {
@@ -32,7 +32,7 @@ extension FileResponseDescriptorsContainer: ResponseDescriptors {
                                     method: .POST,
                                     pathPattern: FilePathPatternsContainer.uploadPathPattern(),
                                     keyPath: "filenames",
-                                    statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
     
 }

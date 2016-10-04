@@ -25,7 +25,7 @@ extension UserMappingsContainer: ResponseMappings {
     
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
-        mapping.addAttributeMappingsFromDictionary([
+        mapping.addAttributeMappings(from: [
             "firstName" : UserAttributes.firstName.rawValue,
             "lastName"  : UserAttributes.lastName.rawValue,
             "username"   : UserAttributes.username.rawValue,
@@ -38,8 +38,8 @@ extension UserMappingsContainer: ResponseMappings {
     static func directProfileMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.forceCollectionMapping = true
-        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(UserAttributes.identifier.rawValue)
-        mapping.addAttributeMappingsFromDictionary([
+        mapping.addAttributeMappingFromKeyOfRepresentation(toAttribute: UserAttributes.identifier.rawValue)
+        mapping.addAttributeMappings(from: [
             "(\(UserAttributes.identifier)).first_name" : UserAttributes.firstName.rawValue,
             "(\(UserAttributes.identifier)).last_name" : UserAttributes.lastName.rawValue,
             "(\(UserAttributes.identifier)).username" : UserAttributes.username.rawValue,

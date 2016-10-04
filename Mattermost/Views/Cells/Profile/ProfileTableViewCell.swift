@@ -27,7 +27,7 @@ class ProfileTableViewCell: UITableViewCell, Reusable {
         initialSetup()
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -36,8 +36,8 @@ class ProfileTableViewCell: UITableViewCell, Reusable {
 
 //MARK: - Configuration
     
-    func configureWithObject(object: AnyObject) {
-        self.arrowButton?.setImage(UIImage(named: "login_arrow_icon_passive.png"), forState: UIControlState.Normal)
+    func configureWithObject(_ object: AnyObject) {
+        self.arrowButton?.setImage(UIImage(named: "login_arrow_icon_passive.png"), for: UIControlState())
         
         if (object is ProfileDataSource) {
             let dataSource: ProfileDataSource = object as! ProfileDataSource

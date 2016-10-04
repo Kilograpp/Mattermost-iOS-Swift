@@ -13,13 +13,13 @@ final class FeedFollowUpTableViewCell: FeedBaseTableViewCell {
             return
         }
         let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
-        self.messageLabel.frame = CGRectMake(53, 8, textWidth, CGFloat(self.post.attributedMessageHeight))
+        self.messageLabel.frame = CGRect(x: 53, y: 8, width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
         super.layoutSubviews()
     }
 }
 
 extension FeedFollowUpTableViewCell: TableViewPostDataSource {
-    override class func heightWithPost(post: Post) -> CGFloat {
+    override class func heightWithPost(_ post: Post) -> CGFloat {
         return CGFloat(post.attributedMessageHeight) + 16
     }
 }

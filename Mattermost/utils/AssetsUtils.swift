@@ -10,17 +10,17 @@ import Foundation
 import Photos
 
 class AssetsUtils {
-    static func convertedArrayOfAssets(assets: Array<PHAsset>) -> Array<AssignedPhotoViewItem> {
-        let assetManager = PHImageManager.defaultManager()
+    static func convertedArrayOfAssets(_ assets: Array<PHAsset>) -> Array<AssignedPhotoViewItem> {
+        let assetManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
-        requestOptions.resizeMode = .Exact
-        requestOptions.deliveryMode = .HighQualityFormat
-        requestOptions.synchronous = true
+        requestOptions.resizeMode = .exact
+        requestOptions.deliveryMode = .highQualityFormat
+        requestOptions.isSynchronous = true
         var array = Array<AssignedPhotoViewItem>()
         for asset in assets {
-            assetManager.requestImageForAsset(asset,
+            assetManager.requestImage(for: asset,
                                               targetSize: PHImageManagerMaximumSize,
-                                              contentMode: .AspectFill,
+                                              contentMode: .aspectFill,
                                               options: requestOptions,
                   resultHandler: { (image, metadata) in
                     array.append(AssignedPhotoViewItem(image: image!))

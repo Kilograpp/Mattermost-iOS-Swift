@@ -20,7 +20,7 @@ class ProfileDataSource: NSObject {
     
 //MARK: - Life cycle
     
-    class func entryWithTitle(title: String, iconName: String, info: String, handler: (() -> Void)) -> ProfileDataSource {
+    class func entryWithTitle(_ title: String, iconName: String, info: String, handler: @escaping (() -> Void)) -> ProfileDataSource {
         let object = ProfileDataSource()
         
         object.title = title

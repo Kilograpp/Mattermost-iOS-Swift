@@ -9,7 +9,7 @@
 import UIKit
 
 private protocol Setup {
-    func setupAnimationWithBaseName(baseName: String)
+    func setupAnimationWithBaseName(_ baseName: String)
 }
 
 struct AnimationsBase {
@@ -25,10 +25,11 @@ class SearchingInProcessView: UIView {
 //MARK: Life cycle
     
     class func monkeyChatSearchView() -> SearchingInProcessView {
-       let searchingInProcessView = NSBundle.mainBundle().loadNibNamed("SearchingInProcessView", owner: nil, options: nil)[0]
+        //s3 refactor
+       let searchingInProcessView = Bundle.main.loadNibNamed("SearchingInProcessView", owner: nil, options: nil)?[0] as! SearchingInProcessView
         searchingInProcessView.setupAnimationWithBaseName(AnimationsBase.Monkey)
         
-        return searchingInProcessView as! SearchingInProcessView
+        return searchingInProcessView 
     }
 }
 
@@ -36,7 +37,7 @@ class SearchingInProcessView: UIView {
 //MARK: Setup
 
 extension SearchingInProcessView: Setup {
-    func setupAnimationWithBaseName(baseName: String) {
+    func setupAnimationWithBaseName(_ baseName: String) {
         self.animationImageView.image = UIImage.gifWithName(baseName)
         hide()
     }
@@ -48,11 +49,11 @@ extension SearchingInProcessView: Setup {
 extension SearchingInProcessView {
     func show() {
         self.animationImageView.startAnimating()
-        self.hidden = false
+        self.isHidden = false
     }
     
     func hide() {
         self.animationImageView.stopAnimating()
-        self.hidden = true
+        self.isHidden = true
     }
 }

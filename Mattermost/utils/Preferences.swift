@@ -35,45 +35,46 @@ final class Preferences: NSObject, NSCoding {
     dynamic var siteName: String?
     dynamic var shouldCompressImages: NSNumber?
     
-    private override init() {
+    fileprivate override init() {
         super.init()
         
 #if DEBUG // Save on every move if debugging
-        self.enumeratePropertiesWithBlock { (name, type) in
-            self.addObserver(self, forKeyPath: name, options: .New, context: nil)
+        self.enumerateProperties { (name, type) in
+            //s3 refactor (name -> name!)
+            self.addObserver(self, forKeyPath: name!, options: .new, context: nil)
         }
 #endif
     }
     
 #if DEBUG // Save on every move if debugging
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutableRawPointer) {
         self.save()
     }
 #endif
     
     required init(coder aDecoder: NSCoder) {
         super.init()
-        self.enumeratePropertiesWithBlock { (name, type) in
+        self.enumerateProperties { (name, type) in
             switch(type) {
-                case .TypeObject:
-                    self.setValue(aDecoder.decodeObjectForKey(name), forKey: name)
+                case .typeObject:
+                    self.setValue(aDecoder.decodeObject(forKey: name!), forKey: name!)
                     break
-                case .TypePrimitiveBool:
-                    self.setValue(aDecoder.decodeBoolForKey(name), forKey: name)
+                case .typePrimitiveBool:
+                    self.setValue(aDecoder.decodeBool(forKey: name!), forKey: name!)
                     break
                 default: break
             }
         }
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        self.enumeratePropertiesWithBlock { (name, type) in
+    func encode(with aCoder: NSCoder) {
+        self.enumerateProperties { (name, type) in
             switch(type) {
-                case .TypeObject:
-                    aCoder.encodeObject(self.valueForKey(name), forKey: name)
+                case .typeObject:
+                    aCoder.encode(self.value(forKey: name!), forKey: name!)
                     break
-                case .TypePrimitiveBool:
-                    aCoder.encodeBool(self.valueForKey(name) as! Bool, forKey: name)
+                case .typePrimitiveBool:
+                    aCoder.encode(self.value(forKey: name!) as! Bool, forKey: name!)
                     break
                     
                 default: break
@@ -90,31 +91,31 @@ private protocol Persistence: class {
 }
 
 extension Preferences : Persistence {
-    private static func loadInstanceFromUserDefaults() -> Preferences? {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let data = defaults.objectForKey(Constants.Common.UserDefaultsPreferencesKey) as! NSData?
+    fileprivate static func loadInstanceFromUserDefaults() -> Preferences? {
+        let defaults = UserDefaults.standard
+        let data = defaults.object(forKey: Constants.Common.UserDefaultsPreferencesKey) as! Data?
         if let data = data {
-            return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? Preferences
+            return NSKeyedUnarchiver.unarchiveObject(with: data) as? Preferences
         }
         return nil
     }
     func save() {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setValue(NSKeyedArchiver.archivedDataWithRootObject(self), forKey: Constants.Common.UserDefaultsPreferencesKey)
+        let defaults = UserDefaults.standard
+        defaults.setValue(NSKeyedArchiver.archivedData(withRootObject: self), forKey: Constants.Common.UserDefaultsPreferencesKey)
         defaults.synchronize()
     }
 }
 extension Preferences: Interface {
     func predefinedServerUrl() -> String? {
-        return NSProcessInfo.processInfo().environment["MM_SERVER_URL"]
+        return ProcessInfo.processInfo.environment["MM_SERVER_URL"]
     }
     
     func predefinedLogin() -> String? {
-        return NSProcessInfo.processInfo().environment["MM_LOGIN"]
+        return ProcessInfo.processInfo.environment["MM_LOGIN"]
     }
     
     func predefinedPassword() -> String? {
-        return NSProcessInfo.processInfo().environment["MM_PASSWORD"]
+        return ProcessInfo.processInfo.environment["MM_PASSWORD"]
     }
 }
 

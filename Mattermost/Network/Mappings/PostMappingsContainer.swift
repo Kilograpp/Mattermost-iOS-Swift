@@ -33,7 +33,7 @@ final class PostMappingsContainer: BaseMappingsContainer {
 extension PostMappingsContainer: ResponseMappings {
     class func creationMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
-        mapping.addAttributeMappingsFromDictionary([
+        mapping.addAttributeMappings(from: [
             "id"                : PostAttributes.identifier.rawValue,
             "pending_post_id"   : PostAttributes.pendingId.rawValue,
             "message"           : PostAttributes.message.rawValue,
@@ -51,8 +51,8 @@ extension PostMappingsContainer: ResponseMappings {
         let mapping = super.emptyMapping()
         mapping.forceCollectionMapping = true
         mapping.assignsNilForMissingRelationships = false
-        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(PostAttributes.identifier.rawValue)
-        mapping.addAttributeMappingsFromDictionary([
+        mapping.addAttributeMappingFromKeyOfRepresentation(toAttribute: PostAttributes.identifier.rawValue)
+        mapping.addAttributeMappings(from: [
             "(\(PostAttributes.identifier)).create_at"  : PostAttributes.createdAt.rawValue,
             "(\(PostAttributes.identifier)).update_at"  : PostAttributes.updatedAt.rawValue,
             "(\(PostAttributes.identifier)).message"    : PostAttributes.message.rawValue,
@@ -64,10 +64,10 @@ extension PostMappingsContainer: ResponseMappings {
             ])
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
             toKeyPath: PostRelationships.files.rawValue,
-            withMapping: FileMappingsContainer.simplifiedMapping()))
+            with: FileMappingsContainer.simplifiedMapping()))
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
             toKeyPath: PostRelationships.attachments.rawValue,
-            withMapping: AttachmentMappingsContainer.mapping()))
+            with: AttachmentMappingsContainer.mapping()))
         return mapping
     }
     
@@ -75,8 +75,8 @@ extension PostMappingsContainer: ResponseMappings {
         let mapping = super.emptyMapping()
         mapping.forceCollectionMapping = true
         mapping.assignsNilForMissingRelationships = false
-        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(PostAttributes.identifier.rawValue)
-        mapping.addAttributeMappingsFromDictionary([
+        mapping.addAttributeMappingFromKeyOfRepresentation(toAttribute: PostAttributes.identifier.rawValue)
+        mapping.addAttributeMappings(from: [
             "(\(PostAttributes.identifier)).update_at"  : PostAttributes.updatedAt.rawValue,
             "(\(PostAttributes.identifier)).message"    : PostAttributes.message.rawValue,
             "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue,
@@ -85,16 +85,16 @@ extension PostMappingsContainer: ResponseMappings {
             ])
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
             toKeyPath: PostRelationships.files.rawValue,
-            withMapping: FileMappingsContainer.simplifiedMapping()))
+            with: FileMappingsContainer.simplifiedMapping()))
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
             toKeyPath: PostRelationships.attachments.rawValue,
-            withMapping: AttachmentMappingsContainer.mapping()))
+            with: AttachmentMappingsContainer.mapping()))
         return mapping
     }
     
     class func deletingMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
-        mapping.addAttributeMappingFromKeyOfRepresentationToAttribute(PostAttributes.identifier.rawValue)
+        mapping.addAttributeMappingFromKeyOfRepresentation(toAttribute: PostAttributes.identifier.rawValue)
         return mapping
     }
 }
@@ -102,9 +102,9 @@ extension PostMappingsContainer: ResponseMappings {
 // MARK: - RequestMapping
 extension PostMappingsContainer: RequestMapping {
     static func postRequestMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping.requestMapping()
-        mapping.addAttributeMappingsFromArray([ "message" ])
-        mapping.addAttributeMappingsFromDictionary([
+        let mapping = RKObjectMapping.request()
+        mapping?.addAttributeMappings(from: [ "message" ])
+        mapping?.addAttributeMappings(from: [
             PostAttributes.identifier.rawValue : "id",
             Post.filesLinkPath()               : "filenames",
             PostAttributes.channelId.rawValue  : "channel_id",
@@ -112,6 +112,6 @@ extension PostMappingsContainer: RequestMapping {
             PostAttributes.parentId.rawValue   : "parent_id",
             PostAttributes.rootId.rawValue     : "root_id"
             ])
-        return mapping
+        return mapping!
     }
 }

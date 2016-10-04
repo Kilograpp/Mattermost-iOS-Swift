@@ -9,28 +9,28 @@
 import Foundation
 
 extension NSAttributedString {
-    final func URLAtIndex(index: Int) -> NSURL? {
-        let value = self.attribute(NSLinkAttributeName, atIndex: index, effectiveRange: nil)
+    final func URLAtIndex(_ index: Int) -> URL? {
+        let value = self.attribute(NSLinkAttributeName, at: index, effectiveRange: nil)
         if let string = value as? String{
-            return NSURL(string: string)!
+            return URL(string: string)!
         }
-        return value as? NSURL
+        return value as? URL
 
     }
     
-    final func mentionAtIndex(index: Int) -> String? {
-        return self.attribute(Constants.StringAttributes.Mention, atIndex: index, effectiveRange: nil) as? String
+    final func mentionAtIndex(_ index: Int) -> String? {
+        return self.attribute(Constants.StringAttributes.Mention, at: index, effectiveRange: nil) as? String
     }
     
-    final func hashTagAtIndex(index: Int) -> String? {
-        return self.attribute(Constants.StringAttributes.HashTag, atIndex: index, effectiveRange: nil) as? String
+    final func hashTagAtIndex(_ index: Int) -> String? {
+        return self.attribute(Constants.StringAttributes.HashTag, at: index, effectiveRange: nil) as? String
     }
     
-    final func emailAtIndex(index: Int) -> String? {
-        return self.attribute(Constants.StringAttributes.Email, atIndex: index, effectiveRange: nil) as? String
+    final func emailAtIndex(_ index: Int) -> String? {
+        return self.attribute(Constants.StringAttributes.Email, at: index, effectiveRange: nil) as? String
     }
     
-    final func phoneAtIndex(index: Int) -> String? {
-        return self.attribute(Constants.StringAttributes.Phone, atIndex: index, effectiveRange: nil) as? String
+    final func phoneAtIndex(_ index: Int) -> String? {
+        return self.attribute(Constants.StringAttributes.Phone, at: index, effectiveRange: nil) as? String
     }
 }

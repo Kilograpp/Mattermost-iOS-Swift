@@ -18,7 +18,7 @@ class ChatNavigationBarTitleView: UIView {
     var channel : Channel?
     //var loadingView : UIActivityIndicatorView
     
-    internal func configureWithChannel(channel: Channel, loadingInProgress:Bool) {
+    internal func configureWithChannel(_ channel: Channel, loadingInProgress:Bool) {
         
     }
     
@@ -28,8 +28,8 @@ class ChatNavigationBarTitleView: UIView {
         
     }
     
-    override func drawRect(rect: CGRect) {
-        super.drawRect(rect)
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
         
     }
     
@@ -41,8 +41,8 @@ class ChatNavigationBarTitleView: UIView {
     
     func setupStatusView() {
         let xPosition = CGFloat(8)
-        let yPosition = CGFloat(CGRectGetHeight(self.bounds)/2 - 2)
-        self.statusIndicatorView = UIView(frame: CGRectMake(xPosition, yPosition, 8, 8))
+        let yPosition = CGFloat(self.bounds.height/2 - 2)
+        self.statusIndicatorView = UIView(frame: CGRect(x: xPosition, y: yPosition, width: 8, height: 8))
         self.addSubview(self.statusIndicatorView!)
         self.statusIndicatorView?.layer.cornerRadius = 4
     }
@@ -52,7 +52,7 @@ class ChatNavigationBarTitleView: UIView {
         let yPosition = CGFloat(0)
         let titleWight = CGFloat(20)
         let titleHeight = CGFloat(20)
-        self.titleLabel = UILabel(frame: CGRectMake(xPosition, yPosition, titleWight, titleHeight))
+        self.titleLabel = UILabel(frame: CGRect(x: xPosition, y: yPosition, width: titleWight, height: titleHeight))
         self.addSubview(self.titleLabel!)
         self.titleLabel?.textColor = ColorBucket.blackColor
         self.titleLabel?.font = FontBucket.normalTitleFont

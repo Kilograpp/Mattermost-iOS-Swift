@@ -38,11 +38,11 @@ final class User: RealmObject {
         return UserAttributes.identifier.rawValue
     }
     
-    func avatarURL() -> NSURL {
-        return NSURL(string: self.avatarLink)!
+    func avatarURL() -> URL {
+        return URL(string: self.avatarLink)!
     }
     func smallAvatarCacheKey() -> String {
-        return self.avatarLink.stringByAppendingString("_small")
+        return self.avatarLink + "_small"
     }
 }
 
@@ -71,7 +71,7 @@ extension User: Computatations {
         self.nickname = self.username
     }
     func computeDisplayNameWidth() {
-        self.displayNameWidth = StringUtils.widthOfString(self.displayName, font: FontBucket.postAuthorNameFont)
+        self.displayNameWidth = StringUtils.widthOfString(self.displayName as NSString!, font: FontBucket.postAuthorNameFont)
     }
     
     func computeAvatarUrl() {

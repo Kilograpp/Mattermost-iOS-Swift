@@ -8,16 +8,16 @@
 
 import Foundation
 
-extension NSDateFormatter {
-    @nonobjc static let sharedConversionSectionsDateFormatter = NSDateFormatter.conversionSectionsDateFormatter()
+extension DateFormatter {
+    @nonobjc static let sharedConversionSectionsDateFormatter = DateFormatter.conversionSectionsDateFormatter()
     
-    private static func conversionSectionsDateFormatter() -> NSDateFormatter! {
-        let formatter = NSDateFormatter()
+    fileprivate static func conversionSectionsDateFormatter() -> DateFormatter! {
+        let formatter = DateFormatter()
         formatter.dateFormat = "MMM dd,yyyy"
         return formatter
     }
     
-    func formattedDateForFeedSection(date: NSDate) -> String {
-        return date.formattedDateWithFormat("MMM dd,yyyy", locale: NSLocale.init(localeIdentifier: "en_US_POSIX"))
+    func formattedDateForFeedSection(_ date: Date) -> String {
+        return (date as NSDate).formattedDate(withFormat: "MMM dd,yyyy", locale: Locale.init(identifier: "en_US_POSIX"))
     }
 }

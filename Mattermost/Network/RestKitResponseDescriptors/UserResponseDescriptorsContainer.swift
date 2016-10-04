@@ -27,27 +27,27 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.loginPathPattern(),
                                     keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     static func logoutResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: UserMappingsContainer.emptyMapping(),
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.logoutPathPattern(),
                                     keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "direct_profiles",
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     static func completeListResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.completeListPathPattern(),
                                     keyPath: nil,
-                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
 }

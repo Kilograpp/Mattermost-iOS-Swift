@@ -9,13 +9,13 @@
 class FeedAttachmentView: UIView {
     var file: File?
     var size: CGSize?
-    let sizeForImage = CGSizeMake(UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings, 80)
-    let sizeForFile = CGSizeMake(UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings, 40)
+    let sizeForImage = CGSize(width: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings, height: 80)
+    let sizeForFile = CGSize(width: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings, height: 40)
     
     init(file: File) {
         self.file = file
         self.size = file.isImage == true ? sizeForImage : sizeForFile
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,12 +27,12 @@ class FeedAttachmentView: UIView {
         
         self.backgroundColor = ColorBucket.whiteColor
     }
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
-        let ref = UIBezierPath(roundedRect: rect, cornerRadius: 10).CGPath
-        CGContextAddPath(context, ref)
-        CGContextSetFillColorWithColor(context, UIColor(white: 0.95, alpha: 1).CGColor)
-        CGContextFillPath(context)
+        let ref = UIBezierPath(roundedRect: rect, cornerRadius: 10).cgPath
+        context?.addPath(ref)
+        context?.setFillColor(UIColor(white: 0.95, alpha: 1).cgColor)
+        context?.fillPath()
 //        let image = UIGraphicsGetImageFromCurrentImageContext() as UIImage;
         UIGraphicsEndImageContext()
     }
@@ -61,11 +61,11 @@ extension FeedAttachmentView : Configuration {
 
 //MARK: - Private
 extension FeedAttachmentView : Private {
-    private func configureForImageAttachment() {
+    fileprivate func configureForImageAttachment() {
         
     }
     
-    private func configureForFileAttachment() {
+    fileprivate func configureForFileAttachment() {
         
     }
 }

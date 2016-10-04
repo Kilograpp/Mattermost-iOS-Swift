@@ -10,7 +10,7 @@ import Foundation
 
 class TeamTableViewCell : UITableViewCell, Reusable {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
         
         setupGeneral()
     }
@@ -21,7 +21,7 @@ class TeamTableViewCell : UITableViewCell, Reusable {
 }
 
 private protocol Configuration: class {
-    func configureWithTeam(team:Team)
+    func configureWithTeam(_ team:Team)
 }
 private protocol Setup: class {
     func setupGeneral()
@@ -30,12 +30,12 @@ private protocol Setup: class {
 //MARK: - Setup
 extension TeamTableViewCell: Setup {
     func setupGeneral() {
-        accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        accessoryType = UITableViewCellAccessoryType.disclosureIndicator
     }
 }
 //MARK: - Configuration
 extension TeamTableViewCell: Configuration {
-    func configureWithTeam(team: Team) {
+    func configureWithTeam(_ team: Team) {
         self.textLabel?.text = team.displayName!
     }
 }

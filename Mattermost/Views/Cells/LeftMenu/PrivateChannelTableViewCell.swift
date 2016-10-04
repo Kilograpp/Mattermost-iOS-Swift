@@ -12,21 +12,21 @@ private protocol PrivateConfiguration : class {
     func configureStatusView()
     func configurehighlightView()
     func configureUserFormPrivateChannel()
-    func configureStatusViewWithBackendStatus(backendStatus: String)
+    func configureStatusViewWithBackendStatus(_ backendStatus: String)
     func highlightViewBackgroundColor() -> UIColor
 }
 
 //FIXME: CodeReview: Следование протоколу должно быть отдельным extension
 final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol {
-    @IBOutlet private weak var statusView: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var badgeLabel: UILabel!
-    @IBOutlet private weak var highlightView: UIView!
+    @IBOutlet fileprivate weak var statusView: UIView!
+    @IBOutlet fileprivate weak var titleLabel: UILabel!
+    @IBOutlet fileprivate weak var badgeLabel: UILabel!
+    @IBOutlet fileprivate weak var highlightView: UIView!
     
     //FIXME: CodeReview: Может быть такое, что ячейка без канала работает? Если нет, то implicity unwrapped ее. Тоже самое со сторой
     var channel : Channel?
-    private var user : User?
-    private var userBackendStatus: String?
+    fileprivate var user : User?
+    fileprivate var userBackendStatus: String?
     
     var test : (() -> Void)?
     
@@ -41,16 +41,16 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
     
     
 //MARK: - Configuration
-    func configureStatusViewWithNotification(notification: NSNotification) {
+    func configureStatusViewWithNotification(_ notification: Notification) {
 //        self.test?()
         configureStatusViewWithBackendStatus(notification.object as! String)
     }
 
 //MARK: - Override
     
-    override func setHighlighted(highlighted: Bool, animated: Bool) {
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
-        self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.colorWithAlphaComponent(0.5) : self.highlightViewBackgroundColor()
+        self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.withAlphaComponent(0.5) : self.highlightViewBackgroundColor()
     }
     
     override func prepareForReuse() {
@@ -61,53 +61,53 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
 }
 
 extension PrivateChannelTableViewCell : PrivateConfiguration {
-    private func configureContentView() {
+    fileprivate func configureContentView() {
         self.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        self.badgeLabel.hidden = true
+        self.badgeLabel.isHidden = true
     }
     
-    private func configureTitleLabel() {
+    fileprivate func configureTitleLabel() {
         self.titleLabel.font = FontBucket.normalTitleFont
         self.titleLabel.textColor = ColorBucket.sideMenuCommonTextColor
     }
     
-    private func configureStatusView() {
+    fileprivate func configureStatusView() {
         self.statusView.layer.cornerRadius = 4
-        self.statusView.layer.borderColor = ColorBucket.lightGrayColor.CGColor
+        self.statusView.layer.borderColor = ColorBucket.lightGrayColor.cgColor
         self.statusView.layer.borderWidth = 1;
     }
     
-    private func configurehighlightView() {
+    fileprivate func configurehighlightView() {
         self.highlightView.layer.cornerRadius = 3;
     }
     
-    private func configureUserFormPrivateChannel() {
+    fileprivate func configureUserFormPrivateChannel() {
         self.user = self.channel?.interlocuterFromPrivateChannel()
     }
-    private func configureStatusViewWithBackendStatus(backendStatus: String) {
+    fileprivate func configureStatusViewWithBackendStatus(_ backendStatus: String) {
         //FIXME в свифте есть swith из строк
         if backendStatus == "offline" {
-            self.statusView.backgroundColor = UIColor.clearColor()
+            self.statusView.backgroundColor = UIColor.clear
             self.statusView.layer.borderWidth = 1;
         } else if backendStatus == "online" {
-            self.statusView.backgroundColor = UIColor.greenColor()
+            self.statusView.backgroundColor = UIColor.green
             self.statusView.layer.borderWidth = 0;
         } else if backendStatus == "away" {
-            self.statusView.backgroundColor = UIColor.yellowColor()
+            self.statusView.backgroundColor = UIColor.yellow
             self.statusView.layer.borderWidth = 0;
         } else {
             self.statusView.layer.borderWidth = 0;
-            self.statusView.backgroundColor = UIColor.blackColor()
+            self.statusView.backgroundColor = UIColor.black
         }
     }
     
-    private func highlightViewBackgroundColor() -> UIColor {
+    fileprivate func highlightViewBackgroundColor() -> UIColor {
         return self.channel?.isSelected == true ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
     }
 }
 
 extension PrivateChannelTableViewCell {
-    func configureWithChannel(channel: Channel, selected: Bool) {
+    func configureWithChannel(_ channel: Channel, selected: Bool) {
         self.channel = channel
         self.configureUserFormPrivateChannel()
         self.subscribeToNotifications()
@@ -132,9 +132,10 @@ extension PrivateChannelTableViewCell {
     
     func subscribeToNotifications() {
 //        print("SUBSCRIBED_TO \(self.channel?.interlocuterFromPrivateChannel().identifier  as String!)")
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        //s3 refactor identifier / as String! / .map
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(configureStatusViewWithNotification(_:)),
-                                                         name: self.channel?.interlocuterFromPrivateChannel().identifier as String!,
+                                                         name: (self.channel?.interlocuterFromPrivateChannel().identifier).map { NSNotification.Name(rawValue: $0) },
                                                          object: nil)
     }
 }

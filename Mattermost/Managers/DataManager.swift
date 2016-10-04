@@ -38,10 +38,10 @@ class DataManager {
     
 
     @objc func clearCachedResponses() {
-        NSURLCache.sharedURLCache().removeAllCachedResponses()
+        URLCache.shared.removeAllCachedResponses()
     }
     
-    private init() {
+    fileprivate init() {
         subscribeNotifications()
     }
 }

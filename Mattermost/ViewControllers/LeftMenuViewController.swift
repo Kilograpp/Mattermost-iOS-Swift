@@ -7,7 +7,6 @@
 //
 
 import RealmSwift
-import SwiftFetchedResultsController
 
 final class LeftMenuViewController: UIViewController {
 
@@ -17,8 +16,8 @@ final class LeftMenuViewController: UIViewController {
     @IBOutlet weak var teamNameLabel: UILabel!
     @IBOutlet weak var membersListButton: UIButton!
     var realm: Realm?
-    private var resultsPublic: Results<Channel>! = nil
-    private var resultsPrivate: Results<Channel>! = nil
+    fileprivate var resultsPublic: Results<Channel>! = nil
+    fileprivate var resultsPrivate: Results<Channel>! = nil
 
 //MARK: - Override
     override func viewDidLoad() {
@@ -44,73 +43,73 @@ private protocol Configure : class {
 }
 
 private protocol Navigation : class {
-    func didSelectChannelAtIndexPath(indexPath: NSIndexPath)
-    func navigateToMoreChannel(section: Int)
+    func didSelectChannelAtIndexPath(_ indexPath: IndexPath)
+    func navigateToMoreChannel(_ section: Int)
     func toggleLeftSideMenu()
-    func membersListAction(sender: AnyObject)
+    func membersListAction(_ sender: AnyObject)
 }
 
 //MARK: - Configuration
 extension LeftMenuViewController : Configure {
     
-    private func configureView() {
+    fileprivate func configureView() {
         self.teamNameLabel.font = FontBucket.menuTitleFont
         self.teamNameLabel.textColor = ColorBucket.whiteColor
         self.teamNameLabel.text = DataManager.sharedInstance.currentTeam?.displayName as String!
         self.headerView.backgroundColor = ColorBucket.sideMenuHeaderBackgroundColor
     }
     
-    private func configureTableView() {
-        self.tableView.separatorStyle = .None
+    fileprivate func configureTableView() {
+        self.tableView.separatorStyle = .none
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
         
-        self.tableView.registerClass(LeftMenuSectionHeader.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionHeader.reuseIdentifier)
-        self.tableView.registerClass(LeftMenuSectionFooter.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionFooter.reuseIdentifier)
+        self.tableView.register(LeftMenuSectionHeader.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionHeader.reuseIdentifier)
+        self.tableView.register(LeftMenuSectionFooter.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionFooter.reuseIdentifier)
     }
     
-    private func configureInitialSelectedChannel() {
-        let indexPathForFirstRow = NSIndexPath(forRow: 0, inSection: 0) as NSIndexPath
+    fileprivate func configureInitialSelectedChannel() {
+        let indexPathForFirstRow = IndexPath(row: 0, section: 0) as IndexPath
         let initialSelectedChannel = self.resultsPublic[indexPathForFirstRow.row]
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
     }
     
-    private func configureStartUpdating() {
+    fileprivate func configureStartUpdating() {
         // UserStatusObserver Updating
 //        UserStatusObserver.sharedObserver.startUpdating()
     }
     
-    private func configureResults () {
+    fileprivate func configureResults () {
         let privateTypePredicate = NSPredicate (format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)
         let publicTypePredicate = NSPredicate (format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let sortName = ChannelAttributes.displayName.rawValue
         self.resultsPublic =
-            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(publicTypePredicate).filter(currentUserInChannelPredicate).sorted(sortName, ascending: true)
+            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(publicTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsPrivate =
-            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(sortName, ascending: true)
+            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
     }
     
 }
 
 //MARK: - UITableViewDataSource
 extension LeftMenuViewController : UITableViewDataSource {
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let numberOfRowsInSection = section == 0 ? resultsPublic.count : resultsPrivate.count
         return numberOfRowsInSection
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let reuseIdentifier = indexPath.section == 0 ? PublicChannelTableViewCell.reuseIdentifier : PrivateChannelTableViewCell.reuseIdentifier
-        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! LeftMenuTableViewCellProtocol
-        let channel = indexPath.section == 0 ? self.resultsPublic[indexPath.row] as Channel! : self.resultsPrivate[indexPath.row] as Channel!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let reuseIdentifier = (indexPath as NSIndexPath).section == 0 ? PublicChannelTableViewCell.reuseIdentifier : PrivateChannelTableViewCell.reuseIdentifier
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! LeftMenuTableViewCellProtocol
+        let channel = (indexPath as NSIndexPath).section == 0 ? self.resultsPublic[indexPath.row] as Channel! : self.resultsPrivate[indexPath.row] as Channel!
         cell.configureWithChannel(channel!, selected: (channel?.isSelected)!)
         cell.test = {
             //FIXME: REFACTOR:!!!!
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
@@ -122,31 +121,31 @@ extension LeftMenuViewController : UITableViewDataSource {
 //MARK: - UITableViewDelegate
 extension LeftMenuViewController : UITableViewDelegate {
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         didSelectChannelAtIndexPath(indexPath)
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 42
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 25
     }
     
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 30
     }
 
-    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
         view.moreTapHandler = { self.navigateToMoreChannel(section) }
 
         return view
     }
     
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
         let sectionName = section == 0 ? Constants.ChannelType.PublicTypeChannel : Constants.ChannelType.PrivateTypeChannel
         view.configureWithChannelType(Channel.privateTypeDisplayName(sectionName))
         view.addTapHandler = { print("ADD CHANNEL") }
@@ -159,25 +158,25 @@ extension LeftMenuViewController : UITableViewDelegate {
 //MARK: - Navigation
 extension LeftMenuViewController : Navigation {
     
-    private func didSelectChannelAtIndexPath(indexPath: NSIndexPath) {
-        let selectedChannel = indexPath.section == 0 ? self.resultsPublic[indexPath.row] as Channel : self.resultsPrivate[indexPath.row] as Channel
+    fileprivate func didSelectChannelAtIndexPath(_ indexPath: IndexPath) {
+        let selectedChannel = (indexPath as NSIndexPath).section == 0 ? self.resultsPublic[indexPath.row] as Channel : self.resultsPrivate[indexPath.row] as Channel
         ChannelObserver.sharedObserver.selectedChannel = selectedChannel
         self.tableView.reloadData()
         toggleLeftSideMenu()
     }
     
-    private func navigateToMoreChannel(section: Int)  {
-        let moreViewController = self.storyboard!.instantiateViewControllerWithIdentifier("MoreChannelsViewController") as! MoreChannelsViewController
+    fileprivate func navigateToMoreChannel(_ section: Int)  {
+        let moreViewController = self.storyboard!.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
         moreViewController.isPrivateChannel = (section == 0) ? false : true
-        self.menuContainerViewController!.centerViewController.pushViewController(moreViewController, animated: true)
+        (self.menuContainerViewController!.centerViewController as AnyObject).pushViewController(moreViewController, animated: true)
         toggleLeftSideMenu()
     }
     
-    private func toggleLeftSideMenu() {
+    fileprivate func toggleLeftSideMenu() {
         self.menuContainerViewController.toggleLeftSideMenuCompletion(nil)
     }
     
-    @IBAction func membersListAction(sender: AnyObject) {
+    @IBAction func membersListAction(_ sender: AnyObject) {
         print("MEMBERS_LIST")
     }
 

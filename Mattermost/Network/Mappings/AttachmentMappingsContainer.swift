@@ -23,7 +23,7 @@ final class AttachmentMappingsContainer: BaseMappingsContainer{
 extension AttachmentMappingsContainer: ResponseMappings {
     override static func mapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
-        mapping.addAttributeMappingsFromArray([
+        mapping.addAttributeMappings(from: [
             AttachmentAttributes.text.rawValue,
             AttachmentAttributes.color.rawValue,
             AttachmentAttributes.pretext.rawValue,
@@ -31,7 +31,7 @@ extension AttachmentMappingsContainer: ResponseMappings {
             ])
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "fields",
             toKeyPath: AttachmentRelationship.fields.rawValue,
-            withMapping: AttachmentFieldMappingsContainer.mapping()))
+            with: AttachmentFieldMappingsContainer.mapping()))
         
         return mapping
     }

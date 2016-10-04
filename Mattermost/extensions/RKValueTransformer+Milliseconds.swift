@@ -11,9 +11,9 @@ import Foundation
 extension RKValueTransformer {
     class func millisecondsToDateValueTransformer() -> RKValueTransformer {
         return RKBlockValueTransformer(validationBlock: { (sourceClass, destinationClass) -> Bool in
-            return sourceClass.isSubclassOfClass(NSNumber) && destinationClass.isSubclassOfClass(NSDate)
+            return (sourceClass is NSNumber) && (destinationClass is Date)
         }) { (inputValue, outputValuePointer, outputValueClass, errorPointer) -> Bool in
-            outputValuePointer.memory = NSDate(timeIntervalSince1970: (inputValue as? NSNumber)!.doubleValue / 1000)
+            outputValuePointer?.pointee = NSDate(timeIntervalSince1970: (inputValue as? NSNumber)!.doubleValue / 1000)
             return true;
         }
     }

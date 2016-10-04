@@ -11,82 +11,82 @@ import Realm
 import RealmSwift
 
 private protocol Public : class {
-    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void)
-    func sendExistingPost(post:Post, completion: (error: Mattermost.Error?) -> Void)
-    func resendPost(post:Post, completion: (error: Mattermost.Error?) -> Void)
-    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void)
-    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void)
-    func deletePost(post: Post, completion: (error: Mattermost.Error?) -> Void)
-    func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Mattermost.Error?) -> Void,  progress:(value: Float, index: Int) -> Void)
-    func cancelImageItemUploading(item: AssignedPhotoViewItem)
+    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func sendExistingPost(_ post:Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func resendPost(_ post:Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func sendReplyToPost(_ post: Post, channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
+    func cancelImageItemUploading(_ item: AssignedPhotoViewItem)
 }
 
 private protocol Private : class {
 //    func assignFilesToPost(post: Post)
-    func assignFilesToPostIfNeeded(post: Post)
+    func assignFilesToPostIfNeeded(_ post: Post)
     func clearUploadedAttachments()
 }
 
 final class PostUtils: NSObject {
     
     static let sharedInstance = PostUtils()
-    private let upload_images_group = dispatch_group_create()
-    private var images: Array<AssignedPhotoViewItem>?
+    fileprivate let upload_images_group = DispatchGroup()
+    fileprivate var images: Array<AssignedPhotoViewItem>?
     
-    private var test: File?
+    fileprivate var test: File?
     
-    private func configureBackendPendingId(post: Post) {
+    fileprivate func configureBackendPendingId(_ post: Post) {
         let id = (DataManager.sharedInstance.currentUser?.identifier)!
         let time = "\((post.createdAt?.timeIntervalSince1970)!)"
         post.pendingId = "\(id):\(time)"
     }
     
-    private var assignedFiles: Array<File> = Array()
+    fileprivate var assignedFiles: Array<File> = Array()
 }
 
 extension PostUtils : Public {
-    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void) {
+    func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let postToSend = Post()
         
 //        RealmUtils.save(self.assignedFiles)
         postToSend.message = message
-        postToSend.createdAt = NSDate()
+        postToSend.createdAt = Date()
         postToSend.channelId = channel.identifier
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
         postToSend.computeMissingFields()
-        postToSend.status = .Sending
+        postToSend.status = .sending
         RealmUtils.save(postToSend)
         self.clearUploadedAttachments()
         sendExistingPost(postToSend, completion: completion)
     }
     
-    func sendExistingPost(post:Post, completion: (error: Mattermost.Error?) -> Void) {
+    func sendExistingPost(_ post:Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         Api.sharedInstance.sendPost(post) { (error) in
-            completion(error: error)
+            completion(error)
             if error != nil {
                 print("error")
                 try! RealmUtils.realmForCurrentThread().write({
-                    post.status = .Error
+                    post.status = .error
                 })
             }
             
         }
     }
     
-    func resendPost(post:Post, completion: (error: Mattermost.Error?) -> Void) {
+    func resendPost(_ post:Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         try! RealmUtils.realmForCurrentThread().write({
-            post.status = .Sending
+            post.status = .sending
         })
         sendExistingPost(post, completion: completion)
     }
     
-    func sendReplyToPost(post: Post, channel: Channel, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void) {
+    func sendReplyToPost(_ post: Post, channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let postToSend = Post()
         
         postToSend.message = message
-        postToSend.createdAt = NSDate()
+        postToSend.createdAt = Date()
         postToSend.channelId = channel.identifier
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         postToSend.parentId = post.identifier
@@ -97,65 +97,65 @@ extension PostUtils : Public {
         RealmUtils.save(postToSend)
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
-            completion(error: error)
+            completion(error)
             self.clearUploadedAttachments()
         }
     }
 
-    func updateSinglePost(post: Post, message: String, attachments: NSArray?, completion: (error: Mattermost.Error?) -> Void) {
+    func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         try! RealmUtils.realmForCurrentThread().write({
             post.message = message
-            post.updatedAt = NSDate()
+            post.updatedAt = NSDate() as Date
             self.configureBackendPendingId(post)
             self.assignFilesToPostIfNeeded(post)
             post.computeMissingFields()
         })
     
         Api.sharedInstance.updateSinglePost(post) { (error) in
-            completion(error: error)
+            completion(error)
         }
     }
     
-    func deletePost(post: Post, completion: (error: Mattermost.Error?) -> Void) {
+    func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         // identifier == nil -> post exists only in database
         let day = post.day
         guard post.identifier != nil else {
-            completion(error: nil)
+            completion(nil)
             return
         }
         Api.sharedInstance.deletePost(post) { (error) in
-            completion(error: error)
+            completion(error)
             if day?.posts.count == 0 {
                 RealmUtils.deleteObject(day!)
             }
         }
     }
     
-    func uploadImages(channel: Channel, images: Array<AssignedPhotoViewItem>, completion: (finished: Bool, error: Mattermost.Error?) -> Void, progress:(value: Float, index: Int) -> Void) {
+    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.images = images
         for item in self.images! {
             if !item.uploaded {
-                dispatch_group_enter(self.upload_images_group)
+                self.upload_images_group.enter()
                 item.uploading = true
                 Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
-                    completion(finished: false, error: error)
+                    completion(false, error)
                     if self.assignedFiles.count == 0 {
                         self.test = file
                     }
                     self.assignedFiles.append(file!)
-                    dispatch_group_leave(self.upload_images_group)
+                    self.upload_images_group.leave()
                     }, progress: { (identifier, value) in
-                        let index = self.images!.indexOf({$0.identifier == identifier})
+                        let index = self.images!.index(where: {$0.identifier == identifier})
                         guard (index != nil) else {
                             return
                         }
-                        progress(value: value, index: index!)
+                        progress(value, index!)
                 })
             }
             
-            dispatch_group_notify(self.upload_images_group, dispatch_get_main_queue(), {
+            self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
                 //FIXME: add error
-                completion(finished: true, error: nil)
+                completion(true, nil)
             })
         }
     }
@@ -164,16 +164,16 @@ extension PostUtils : Public {
 //        post.files = List(self.assignedFiles)
 //    }
     
-    func cancelImageItemUploading(item: AssignedPhotoViewItem) {
+    func cancelImageItemUploading(_ item: AssignedPhotoViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
         self.images?.removeObject(item)
     }
 }
 
 extension PostUtils : Private {
-    private func assignFilesToPostIfNeeded(post: Post) {
+    fileprivate func assignFilesToPostIfNeeded(_ post: Post) {
         if self.assignedFiles.count > 0 {
-            post.files.appendContentsOf(self.assignedFiles)
+            post.files.append(objectsIn: self.assignedFiles)
         }
     }
     

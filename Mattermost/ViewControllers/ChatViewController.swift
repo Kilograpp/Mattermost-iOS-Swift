@@ -8,8 +8,7 @@
 
 import SlackTextViewController
 import RealmSwift
-import SwiftFetchedResultsController
-import ImagePickerSheetController
+// import ImagePickerSheetController
 import UITableView_Cache
 
 private protocol Setup {
@@ -37,7 +36,7 @@ private protocol Private {
 }
 
 private protocol Action {
-    func searchButtonAction(sender: AnyObject)
+    func searchButtonAction(_ sender: AnyObject)
     func sendPostAction()
     func assignPhotosAction()
     func refreshControlValueChanged()
@@ -60,14 +59,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     
 //MARK: Properties
     
-    private var channel : Channel?
-    private var resultsObserver: FeedNotificationsObserver! = nil
-    private lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
+    fileprivate var channel : Channel?
+    fileprivate var resultsObserver: FeedNotificationsObserver! = nil
+    fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
 //    private var results: Results<Post>! = nil
 //    private var days: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
-    private let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
-    private let postAttachmentsView = PostAttachmentsView()
+    fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
+    fileprivate let postAttachmentsView = PostAttachmentsView()
     
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
@@ -80,9 +79,9 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
             self.toggleSendButtonAvailability()
         }
     }
-    private var assignedPhotosArray = Array<AssignedPhotoViewItem>()
-    private var selectedPost: Post! = nil
-    private var selectedAction: String = Constants.PostActionType.SendNew
+    fileprivate var assignedPhotosArray = Array<AssignedPhotoViewItem>()
+    fileprivate var selectedPost: Post! = nil
+    fileprivate var selectedAction: String = Constants.PostActionType.SendNew
 }
 
 
@@ -96,21 +95,21 @@ extension ChatViewController {
         initialSetup()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         addSLKKeyboardObservers()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         removeSLKKeyboardObservers()
     }
     
-    override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
-        return .Grouped
+    override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
+        return .grouped
     }
 }
 
@@ -129,13 +128,13 @@ extension ChatViewController: Setup {
     }
     
     func setupTableView() {
-        self.tableView.separatorStyle = .None
-        self.tableView.keyboardDismissMode = .OnDrag
+        self.tableView.separatorStyle = .none
+        self.tableView.keyboardDismissMode = .onDrag
         self.tableView.backgroundColor = ColorBucket.whiteColor
-        self.tableView.registerClass(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier, cacheSize: 10)
-        self.tableView.registerClass(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier, cacheSize: 10)
-        self.tableView.registerClass(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier, cacheSize: 18)
-        self.tableView.registerClass(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
+        self.tableView.register(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.register(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.register(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier, cacheSize: 18)
+        self.tableView.register(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
     
     func setupInputBar() {
@@ -154,31 +153,31 @@ extension ChatViewController: Setup {
     
     func setupInputViewButtons() {
         self.rightButton.titleLabel!.font = FontBucket.feedSendButtonTitleFont;
-        self.rightButton.setTitle("Send", forState: .Normal)
-        self.rightButton.addTarget(self, action: #selector(sendPostAction), forControlEvents: .TouchUpInside)
+        self.rightButton.setTitle("Send", for: UIControlState())
+        self.rightButton.addTarget(self, action: #selector(sendPostAction), for: .touchUpInside)
         
-        self.leftButton.setImage(UIImage(named: "chat_photo_icon"), forState: .Normal)
-        self.leftButton.tintColor = UIColor.grayColor()
-        self.leftButton.addTarget(self, action: #selector(attachmentSelection), forControlEvents: .TouchUpInside)
+        self.leftButton.setImage(UIImage(named: "chat_photo_icon"), for: UIControlState())
+        self.leftButton.tintColor = UIColor.gray
+        self.leftButton.addTarget(self, action: #selector(attachmentSelection), for: .touchUpInside)
     }
     
     func setupToolbar() {
         self.textInputbar.autoHideRightButton = false;
-        self.textInputbar.translucent = false;
+        self.textInputbar.isTranslucent = false;
         // TODO: Code Review: Заменить на стиль из темы
-        self.textInputbar.barTintColor = UIColor.whiteColor()
+        self.textInputbar.barTintColor = UIColor.white
     }
     
-    private func setupRefreshControl() {
+    fileprivate func setupRefreshControl() {
         let tableVc = UITableViewController.init() as UITableViewController
         tableVc.tableView = self.tableView
         self.refreshControl = UIRefreshControl.init()
-        self.refreshControl?.addTarget(self, action: #selector(refreshControlValueChanged), forControlEvents: .ValueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(refreshControlValueChanged), for: .valueChanged)
         tableVc.refreshControl = self.refreshControl
     }
     
-    private func setupPostAttachmentsView() {
-        self.postAttachmentsView.backgroundColor = UIColor.blueColor()
+    fileprivate func setupPostAttachmentsView() {
+        self.postAttachmentsView.backgroundColor = UIColor.blue
         self.view.insertSubview(self.postAttachmentsView, belowSubview: self.textInputbar)
         self.postAttachmentsView.anchorView = self.textInputbar
         
@@ -187,7 +186,7 @@ extension ChatViewController: Setup {
     }
     
     func setupTopActivityIndicator() {
-        self.topActivityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        self.topActivityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         self.topActivityIndicatorView!.transform = self.tableView.transform;
     }
     
@@ -199,26 +198,26 @@ extension ChatViewController: Setup {
     func setupCompactPost() {
         let size = self.completePost.requeredSize()
         self.completePost.translatesAutoresizingMaskIntoConstraints = false
-        self.completePost.hidden = true
+        self.completePost.isHidden = true
         self.completePost.cancelHandler = {
             self.selectedPost = nil
             self.clearTextView()
             self.dismissKeyboard(true)
-            self.completePost.hidden = true
+            self.completePost.isHidden = true
             self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendNew)
         }
         
         self.view.addSubview(self.completePost)
         
-        let horizontal = NSLayoutConstraint(item: self.completePost, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
+        let horizontal = NSLayoutConstraint(item: self.completePost, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
         view.addConstraint(horizontal)
-        let vertical = NSLayoutConstraint(item: self.completePost, attribute: .Bottom, relatedBy: .Equal, toItem: self.textView, attribute: .Top, multiplier: 1, constant: 0)
+        let vertical = NSLayoutConstraint(item: self.completePost, attribute: .bottom, relatedBy: .equal, toItem: self.textView, attribute: .top, multiplier: 1, constant: 0)
         view.addConstraint(vertical)
         
-        let width = NSLayoutConstraint(item: self.completePost, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: size.width)
+        let width = NSLayoutConstraint(item: self.completePost, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.width)
         view.addConstraint(width)
         
-        let height = NSLayoutConstraint(item: self.completePost, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: size.height)
+        let height = NSLayoutConstraint(item: self.completePost, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height)
         view.addConstraint(height)
     }
 }
@@ -242,44 +241,45 @@ extension ChatViewController : Private {
 
 //TopActivityIndicator
     func showTopActivityIndicator() {
-        let activityIndicatorHeight = CGRectGetHeight(self.topActivityIndicatorView!.bounds)
-        let tableFooterView = UIView(frame:CGRectMake(0, 0, CGRectGetWidth(self.tableView.bounds), activityIndicatorHeight * 2))
-        self.topActivityIndicatorView!.center = CGPointMake(tableFooterView.center.x, tableFooterView.center.y - activityIndicatorHeight / 5)
+        let activityIndicatorHeight = self.topActivityIndicatorView!.bounds.height
+        let tableFooterView = UIView(frame:CGRect(x: 0, y: 0, width: self.tableView.bounds.width, height: activityIndicatorHeight * 2))
+        self.topActivityIndicatorView!.center = CGPoint(x: tableFooterView.center.x, y: tableFooterView.center.y - activityIndicatorHeight / 5)
         tableFooterView.addSubview(self.topActivityIndicatorView!)
         self.tableView.tableFooterView = tableFooterView;
         self.topActivityIndicatorView!.startAnimating()
     }
     
     func attachmentSelection() {
-        let controller = UIAlertController(title: "Attachment", message: "Choose what u want to attach", preferredStyle: .ActionSheet)
-        controller.addAction(UIAlertAction(title: "Photo", style: .Default, handler: { (action:UIAlertAction) in
+        let controller = UIAlertController(title: "Attachment", message: "Choose what u want to attach", preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: "Photo", style: .default, handler: { (action:UIAlertAction) in
             self.assignPhotos()
         }))
-        controller.addAction(UIAlertAction(title: "File", style: .Default, handler: { (action:UIAlertAction) in
+        controller.addAction(UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
 //            let path = NSBundle.mainBundle().resourcePath!
 //            let fileManager = NSFileManager()
         }))
-        controller.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action:UIAlertAction) in
+        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
             print("canceled")
         }))
-        presentViewController(controller, animated: true) {}
+        present(controller, animated: true) {}
     }
     
     func hideTopActivityIndicator() {
         self.topActivityIndicatorView!.stopAnimating()
-        self.tableView.tableFooterView = UIView(frame: CGRectZero)
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
  
 //Images
     func assignPhotos() -> Void {
+        /*
         //TODO: MORE REFACTOR
-        let presentImagePickerController: UIImagePickerControllerSourceType -> () = { source in
+        let presentImagePickerController: (UIImagePickerControllerSourceType) -> () = { source in
             let controller = UIImagePickerController()
             controller.delegate = self
             let sourceType = source
             controller.sourceType = sourceType
             
-            self.presentViewController(controller, animated: true, completion: nil)
+            self.present(controller, animated: true, completion: nil)
         }
         
         let controller = ImagePickerSheetController(mediaType: .ImageAndVideo)
@@ -304,12 +304,13 @@ extension ChatViewController : Private {
         }))
         
         presentViewController(controller, animated: true, completion: nil)
+ */
     }
 
 //Interface
     func toggleSendButtonAvailability() {
-        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-            self.rightButton.enabled = self.fileUploadingInProgress
+        DispatchQueue.main.async { [unowned self] in
+            self.rightButton.isEnabled = self.fileUploadingInProgress
         }
     }
     
@@ -321,50 +322,50 @@ extension ChatViewController : Private {
         self.textView.text = nil
     }
     
-    func configureRightButtonWithTitle(title: String, action: String) {
-            self.rightButton.setTitle(title, forState: .Normal)
+    func configureRightButtonWithTitle(_ title: String, action: String) {
+            self.rightButton.setTitle(title, for: UIControlState())
             self.selectedAction = action
     }
     
-    func showActionSheetControllerForPost(post: Post) {
-        let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+    func showActionSheetControllerForPost(_ post: Post) {
+        let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         self.selectedPost = post
         
-        let replyAction = UIAlertAction(title: "Reply", style: .Default) { action -> Void in
+        let replyAction = UIAlertAction(title: "Reply", style: .default) { action -> Void in
             self.completePost.configureWithPost(post, action: ActionType.Reply)
             self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendReply)
-            self.completePost.hidden = false
+            self.completePost.isHidden = false
             self.presentKeyboard(true)
         }
         actionSheetController.addAction(replyAction)
         
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
             self.selectedPost = nil
         }
         actionSheetController.addAction(cancelAction)
         
         if (post.author.identifier == Preferences.sharedInstance.currentUserId) {
-            let editAction = UIAlertAction(title: "Edit", style: .Default) { action -> Void in
+            let editAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
                 self.selectedPost = post
                 self.completePost.configureWithPost(post, action: ActionType.Edit)
-                self.completePost.hidden = false
+                self.completePost.isHidden = false
                 self.configureRightButtonWithTitle("Save", action: Constants.PostActionType.SendUpdate)
                 self.presentKeyboard(true)
                 self.textView.text = self.selectedPost.message
             }
             actionSheetController.addAction(editAction)
             
-            let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { action -> Void in
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { action -> Void in
                 self.selectedAction = Constants.PostActionType.DeleteOwn
                 self.deletePost()
             }
             actionSheetController.addAction(deleteAction)
         }
         
-        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        self.present(actionSheetController, animated: true, completion: nil)
     }
 
-    private func showCompletePost(post: Post, action: String) {
+    fileprivate func showCompletePost(_ post: Post, action: String) {
         
     }
 
@@ -374,7 +375,7 @@ extension ChatViewController : Private {
 //MARK: Action
 
 extension ChatViewController: Action {
-    @IBAction func searchButtonAction(sender: AnyObject) {
+    @IBAction func searchButtonAction(_ sender: AnyObject) {
         proceedToSearchChat()
     }
     
@@ -397,8 +398,8 @@ extension ChatViewController: Action {
         self.loadFirstPageOfData()
     }
     
-    func longPressAction(gestureRecognizer: UILongPressGestureRecognizer) {
-        guard let indexPath = self.tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(self.tableView)) else { return }
+    func longPressAction(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        guard let indexPath = self.tableView.indexPathForRow(at: gestureRecognizer.location(in: self.tableView)) else { return }
         let post = resultsObserver?.postForIndexPath(indexPath)
         showActionSheetControllerForPost(post!)
     }
@@ -414,9 +415,9 @@ extension ChatViewController: Navigation {
         transaction.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
         transaction.type = kCATransitionMoveIn
         transaction.subtype = kCATransitionFromBottom
-        self.navigationController!.view.layer.addAnimation(transaction, forKey: kCATransition)
+        self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
         
-        let searchChat = self.storyboard?.instantiateViewControllerWithIdentifier(String(SearchChatViewController)) as! SearchChatViewController
+        let searchChat = self.storyboard?.instantiateViewController(withIdentifier: String(describing: SearchChatViewController())) as! SearchChatViewController
         self.navigationController?.pushViewController(searchChat, animated: false)
     }
 }
@@ -428,7 +429,7 @@ extension ChatViewController: Request {
     func loadFirstPageAndReload() {
         self.isLoadingInProgress = true
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
+            self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true
         })
@@ -436,7 +437,7 @@ extension ChatViewController: Request {
     func loadFirstPageOfData() {
         self.isLoadingInProgress = true
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.performSelector(#selector(self.endRefreshing), withObject: nil, afterDelay: 0.05)
+            self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true
             
@@ -522,15 +523,15 @@ extension ChatViewController: Request {
 //MARK: UITableViewDataSource
 
 extension ChatViewController {
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return self.resultsObserver?.numberOfSections() ?? 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.resultsObserver?.numberOfRows(section) ?? 0
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let post = resultsObserver?.postForIndexPath(indexPath)
         if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             self.loadNextPageOfData()
@@ -548,30 +549,30 @@ extension ChatViewController {
 //MARK: UITableViewDelegate
 
 extension ChatViewController {
-    override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard resultsObserver != nil else { return UIView() }
-        var view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
+        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
         if view == nil {
             view = FeedTableViewSectionHeader(reuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
         }
         let frcTitleForHeader = resultsObserver.titleForHeader(section)
-        let titleDate = NSDateFormatter.sharedConversionSectionsDateFormatter.dateFromString(frcTitleForHeader)!
-        let titleString = titleDate.feedSectionDateFormat()
-        view!.configureWithTitle(titleString)
+        let titleDate = DateFormatter.sharedConversionSectionsDateFormatter?.date(from: frcTitleForHeader)!
+        let titleString = titleDate?.feedSectionDateFormat()
+        view!.configureWithTitle(titleString!)
         view!.transform = tableView.transform
         
         return view!
     }
     
-    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return FeedTableViewSectionHeader.height()
     }
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return CGFloat.min
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let post = resultsObserver?.postForIndexPath(indexPath)
         return self.builder.heightForPost(post!)
     }
@@ -581,7 +582,7 @@ extension ChatViewController {
 
 extension ChatViewController: ChannelObserverDelegate {
 
-    func didSelectChannelWithIdentifier(identifier: String!) -> Void {
+    func didSelectChannelWithIdentifier(_ identifier: String!) -> Void {
         //unsubscribing from realm and channelActionNotifications
         if resultsObserver != nil {
             resultsObserver.unsubscribeNotifications()
@@ -590,19 +591,20 @@ extension ChatViewController: ChannelObserverDelegate {
         if self.channel != nil {
             //remove action observer from old channel
             //after relogin
-            NSNotificationCenter.defaultCenter().removeObserver(self,
-                                                                name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
+            NotificationCenter.default.removeObserver(self,
+                                                                name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                                                                 object: nil)
         }
         self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         self.loadFirstPageOfData()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleChannelNotification),
-                                                         name: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier),
+        let notificationName = NSNotification.Name(rawValue: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier))
+        NotificationCenter.default.addObserver(self, selector: #selector(handleChannelNotification),
+                                                         name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                                                          object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(handleLogoutNotification),
-                                                         name: Constants.NotificationsNames.UserLogoutNotificationName,
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLogoutNotification),
+                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
                                                          object: nil)
     }
 }
@@ -611,7 +613,7 @@ extension ChatViewController: ChannelObserverDelegate {
 //MARK: PostAttachmentViewDataSource
 
 extension ChatViewController: PostAttachmentViewDataSource {
-    func itemAtIndex(index: Int) -> AssignedPhotoViewItem {
+    func itemAtIndex(_ index: Int) -> AssignedPhotoViewItem {
         return self.assignedPhotosArray[index]
     }
     
@@ -624,7 +626,7 @@ extension ChatViewController: PostAttachmentViewDataSource {
 //MARK: PostAttachmentViewDelegate
 
 extension ChatViewController: PostAttachmentViewDelegate {
-    func didRemovePhoto(photo: AssignedPhotoViewItem) {
+    func didRemovePhoto(_ photo: AssignedPhotoViewItem) {
         PostUtils.sharedInstance.cancelImageItemUploading(photo)
         self.assignedPhotosArray.removeObject(photo)
         
@@ -650,7 +652,7 @@ extension ChatViewController: PostAttachmentViewDelegate {
 
 //MARK: Handlers
 extension ChatViewController {
-    func handleChannelNotification(notification: NSNotification) {
+    func handleChannelNotification(_ notification: Notification) {
         if let actionNotification = notification.object as? ActionsNotification {
             let user = User.self.objectById(actionNotification.userIdentifier)
             switch (actionNotification.event!) {
@@ -671,20 +673,20 @@ extension ChatViewController {
         ChannelObserver.sharedObserver.delegate = nil
     }
     
-    func errorAction(post: Post) {
-        let controller = UIAlertController(title: "Error on sending post", message: "What to do?", preferredStyle: .ActionSheet)
-        controller.addAction(UIAlertAction(title: "Resend", style: .Default, handler: { (action:UIAlertAction) in
+    func errorAction(_ post: Post) {
+        let controller = UIAlertController(title: "Error on sending post", message: "What to do?", preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: "Resend", style: .default, handler: { (action:UIAlertAction) in
             self.resendAction(post)
         }))
-        controller.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { _ in
+        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             print("Cancelled")
             }))
-        presentViewController(controller, animated: true) {}
+        present(controller, animated: true) {}
     }
 }
 //MARK: - Action {
 extension ChatViewController {
-    func resendAction(post:Post) {
+    func resendAction(_ post:Post) {
         PostUtils.sharedInstance.resendPost(post) { _ in }
 
     }
@@ -693,18 +695,18 @@ extension ChatViewController {
 //MARK: - UITextViewDelegate
 extension ChatViewController {
     func addSLKKeyboardObservers() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: SLKKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
     }
     
     func removeSLKKeyboardObservers() {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: SLKKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
     }
     
     func handleKeyboardWillHideeNotification() {
-        self.completePost.hidden = true
+        self.completePost.isHidden = true
     }
     
-    override func textViewDidChange(textView: UITextView) {
+    override func textViewDidChange(_ textView: UITextView) {
         SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
     }
 }
