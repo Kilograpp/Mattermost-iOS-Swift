@@ -58,7 +58,7 @@ extension UIImage {
 
         let scaleFactor  = size.height / self.size.height
         let scaledWidth  = self.size.width * scaleFactor
-        let scaledHeight = self.size.width * scaleFactor
+        let scaledHeight = self.size.height * scaleFactor
         
         UIGraphicsBeginImageContextWithOptions(size, true, 2)
         
