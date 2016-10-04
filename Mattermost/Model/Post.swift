@@ -15,6 +15,8 @@ private protocol Inteface {
     func hasAttachments() -> Bool
     func hasSameAuthor(post: Post!) -> Bool
     func timeIntervalSincePost(post: Post!) -> NSTimeInterval
+    func hasParentPost() -> Bool
+    func parentPost() -> Post?
 }
 
 private protocol Delegate {
@@ -26,6 +28,8 @@ enum PostAttributes: String {
     case channelId = "channelId"
     case pendingId = "pendingId"
     case createdAt = "createdAt"
+    case parentId = "parentId"
+    case rootId = "rootId"
     case creationDay = "creationDay"
     case deletedAt = "deletedAt"
     case identifier = "identifier"
@@ -36,6 +40,7 @@ enum PostAttributes: String {
     case attributedMessage = "attributedMessage"
     case attributedMessageHeight = "attributedMessageHeight"
     case hasObserverAttached = "hasObserverAttached"
+    case localId = "localIdentifier"
 }
 
 enum PostRelationships: String {
@@ -73,12 +78,16 @@ final class Post: RealmObject {
     dynamic var channelId: String?
     dynamic var authorId: String?
     dynamic var pendingId: String?
+    dynamic var parentId: String?
+    dynamic var rootId: String?
     dynamic var createdAt: NSDate?
     dynamic var createdAtString: String?
     dynamic var createdAtStringWidth: Float = 0.0
     dynamic var updatedAt: NSDate?
     dynamic var deletedAt: NSDate?
     dynamic var status: PostStatus = .Default
+    dynamic var localIdentifier: String?
+
     dynamic var identifier: String? {
         didSet {
             resetStatus()
@@ -131,17 +140,18 @@ final class Post: RealmObject {
     }
     
     override class func primaryKey() -> String {
-        return PostAttributes.identifier.rawValue
+        return PostAttributes.localId.rawValue
     }
     
     override class func indexedProperties() -> [String] {
-        return [PostAttributes.createdAt.rawValue, PostAttributes.identifier.rawValue]
+        return [PostAttributes.createdAt.rawValue, PostAttributes.identifier.rawValue, PostAttributes.localId.rawValue]
     }
     
 }
 
 private protocol Computations: class {
     func resetStatus()
+    func computeLocalIdentifier()
     func computeDay()
     func computePendingId()
     func computeCreatedAtString()
@@ -189,7 +199,19 @@ extension Post: Inteface {
     func timeIntervalSincePost(post: Post!) -> NSTimeInterval {
         return createdAt!.timeIntervalSinceDate(post.createdAt!)
     }
-
+    func hasParentPost() -> Bool {
+        return (self.parentId != "" && self.parentId != nil)
+//        return self.parentId != nil
+    }
+    
+    func parentPost() -> Post? {
+        //temp!!! will be a post instead of parent post
+//        return (self.parentId != nil) ? try! Realm().objects(Post).filter("identifier = %@", self.parentId!).last : nil
+        if let parentPost = try! Realm().objects(Post).filter("identifier = %@", self.parentId!).last {
+                return parentPost
+        }
+        return self
+    }
 }
 
 // MARK: - Delegate
@@ -207,7 +229,6 @@ extension Post: Delegate {
 
 // MARK: - Computations
 extension Post: Computations {
-    
     private func computeDay() {
         let unitFlags: NSCalendarUnit = [.Year, .Month, .Day]
         let calendar = NSCalendar.sharedGregorianCalendar
@@ -243,6 +264,10 @@ extension Post: Computations {
     private func computeAttributedMessageHeight() {
         self.attributedMessageHeight = StringUtils.heightOfAttributedString(self.attributedMessage)
     }
+    private func computeLocalIdentifier() {
+        guard localIdentifier == nil else { return }
+         self.localIdentifier = channelId! + authorId! + (createdAt?.formattedDateWithFormat("MM-dd-yyyy_HH:mm:ss"))!
+    }
 
     func setSystemAuthorIfNeeded() {
         guard self.messageType == .System else { return }
@@ -260,6 +285,7 @@ extension Post: Computations {
         self.computeCreatedAtString()
         self.computeCreatedAtStringWidth()
         self.computeDay()
+        self.computeLocalIdentifier()
     }
 }
 

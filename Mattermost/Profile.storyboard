@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fkQ-Jl-hJG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fkQ-Jl-hJG">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -9,7 +9,6 @@
         <!--Profile View Controller-->
         <scene sceneID="UJq-Zq-n7d">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ODc-yS-HhL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="fkQ-Jl-hJG" customClass="ProfileViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="esy-tQ-r5v"/>
@@ -71,6 +70,7 @@
                         <outlet property="tableView" destination="cns-FX-dAE" id="5t5-kR-wbN"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ODc-yS-HhL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="339.5" y="230.5"/>
         </scene>

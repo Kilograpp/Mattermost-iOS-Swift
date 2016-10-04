@@ -9,9 +9,10 @@
 import WebImage
 
 class FeedCommonTableViewCell: FeedBaseTableViewCell {
-    private let avatarImageView : UIImageView = UIImageView()
-    private let nameLabel : UILabel = UILabel()
-    private let dateLabel : UILabel = UILabel()
+    private let avatarImageView: UIImageView = UIImageView()
+    private let nameLabel: UILabel = UILabel()
+    private let dateLabel: UILabel = UILabel()
+    private let parentView: CompactPostView = CompactPostView.compactPostView(ActionType.CompleteReply)
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -31,6 +32,7 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
 protocol _FeedCommonTableViewCellConfiguration : class {
     func configureAvatarImage()
     func configureBasicLabels()
+    func configureParentView()
 }
 
 protocol _FeedCommonTableViewCellSetup : class {
@@ -44,16 +46,26 @@ protocol _FeedCommonTableViewCellLifeCycle: class {
     func layoutSubviews()
 }
 
+protocol ParentComment: class {
+    func setupParentCommentView()
+}
 
 extension FeedCommonTableViewCell : TableViewPostDataSource {
     override func configureWithPost(post: Post) {
         super.configureWithPost(post)
         self.configureAvatarImage()
         self.configureBasicLabels()
+        configureParentView()
+        
     }
     
     override class func heightWithPost(post: Post) -> CGFloat {
-        return CGFloat(post.attributedMessageHeight) + 44
+        var height = CGFloat(post.attributedMessageHeight) + 44
+        if (post.hasParentPost()) {
+            height += 64 + Constants.UI.ShortPaddingSize
+        }
+        
+        return height
     }
 }
 
@@ -72,14 +84,22 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
             self?.avatarImageView.image = image
 
         }
-        
     }
     
     final func configureBasicLabels() {
         self.nameLabel.text = self.post.author.displayName
         self.dateLabel.text = self.post.createdAtString
     }
-  
+    
+    final func configureParentView() {
+        if (self.post.hasParentPost()) {
+            self.parentView.configureWithCompletePost(self.post.parentPost()!)
+            self.addSubview(self.parentView)
+        }
+        else {
+            self.parentView.removeFromSuperview()
+        }
+    }
 }
 
 //MARK: - Setup
@@ -110,22 +130,22 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         //FIXME: CodeReview: Заменить на конкретный цвет
         self.dateLabel.textColor = ColorBucket.grayColor
     }
-    
-
 }
 
 extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
     override func layoutSubviews() {
-        
-        
         let nameWidth = CGFloat(self.post.author.displayNameWidth)
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
         
-        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
         
-        self.messageLabel.frame = CGRectMake(53, 36, textWidth, CGFloat(self.post.attributedMessageHeight))
+        let originY = self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36
+        self.messageLabel.frame = CGRectMake(53, originY, textWidth, CGFloat(self.post.attributedMessageHeight))
         self.nameLabel.frame = CGRectMake(53, 8, nameWidth, 20)
         self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.nameLabel.frame) + 5, 8, dateWidth, 20)
+        
+        let size = self.parentView.requeredSize()
+        self.parentView.frame = CGRectMake(60, 36, size.width, size.height)
         
         super.layoutSubviews()
     }
@@ -135,4 +155,3 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
     }
     
 }
-

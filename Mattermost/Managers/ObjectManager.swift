@@ -118,6 +118,24 @@ extension ObjectManager: PostRequests {
         }
     }
     
+    func deletePost(with post: Post!,
+                        path: String!,
+                        parameters: Dictionary<String, String>?,
+                        success: ((mappingResult: RKMappingResult) -> Void)?,
+                        failure: ((error: Error) -> Void)?) {
+        
+        let request: NSMutableURLRequest = self.requestWithObject(nil, method: .POST, path: path, parameters: parameters)
+        let successHandlerBlock = {(operation: RKObjectRequestOperation!, mappingResult: RKMappingResult!) -> Void in
+            success?(mappingResult: mappingResult)
+        }
+        let failureHandlerBlock = {(operation: RKObjectRequestOperation!, error: NSError!) -> Void in
+            failure?(error: self.handleOperation(operation, withError: error))
+        }
+        
+        let operation: RKObjectRequestOperation =  self.objectRequestOperationWithRequest(request, success: successHandlerBlock, failure: failureHandlerBlock)
+        self.enqueueObjectRequestOperation(operation)
+    }
+    
     func postImage(with image: UIImage!,
                         name: String!,
                         path: String!,

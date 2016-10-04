@@ -10,7 +10,7 @@ import UIKit
 
 private protocol Inteface: class {
     func heightForPost(post: Post) -> CGFloat
-    func cellForPost(post: Post) -> UITableViewCell
+    func cellForPost(post: Post, errorHandler: (post:Post) -> Void) -> UITableViewCell
 }
 
 final class FeedCellBuilder {
@@ -30,20 +30,20 @@ final class FeedCellBuilder {
         if post.hasAttachments() {
             return .Attachment
         }
-        if let _ = previous where post.hasSameAuthor(previous)  {
-            
-            if previous?.day!.date!.compare(post.day!.date!) == .OrderedSame {
-               return .FollowUp
-            }
-            
-        }
+//        if let _ = previous where post.hasSameAuthor(previous)  {
+//            
+//            if previous?.day!.date!.compare(post.day!.date!) == .OrderedSame {
+//               return .FollowUp
+//            }
+//            
+//        }
         return .Common
     }
 }
 
 
 extension FeedCellBuilder: Inteface {
-    func cellForPost(post: Post) -> UITableViewCell {
+    func cellForPost(post: Post, errorHandler: (post:Post) -> Void) -> UITableViewCell {
         
         var reuseIdentifier: String
     
@@ -52,17 +52,23 @@ extension FeedCellBuilder: Inteface {
             reuseIdentifier = FeedAttachmentsTableViewCell.reuseIdentifier
             break
         case .FollowUp:
-            reuseIdentifier =  FeedFollowUpTableViewCell.reuseIdentifier
+//            reuseIdentifier =  FeedFollowUpTableViewCell.reuseIdentifier
+//            break
+            reuseIdentifier = FeedCommonTableViewCell.reuseIdentifier
             break
         case .Common:
             reuseIdentifier = FeedCommonTableViewCell.reuseIdentifier
             break
         }
         
-        let cell = self.tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as! FeedBaseTableViewCell
-        cell.transform = self.tableView.transform
-        cell.configureWithPost(post)
-        return cell
+        var cell = self.tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) as? FeedBaseTableViewCell
+        if cell == nil {
+            cell = FeedBaseTableViewCell(style: .Default, reuseIdentifier: FeedBaseTableViewCell.reuseIdentifier)
+        }
+        cell!.transform = self.tableView.transform
+        cell?.errorHandler = errorHandler
+        cell!.configureWithPost(post)
+        return cell!
     }
     
     func heightForPost(post: Post) -> CGFloat {
@@ -70,7 +76,8 @@ extension FeedCellBuilder: Inteface {
             case .Attachment:
                 return FeedAttachmentsTableViewCell.heightWithPost(post)
             case .FollowUp:
-                return FeedFollowUpTableViewCell.heightWithPost(post)
+//                return FeedFollowUpTableViewCell.heightWithPost(post)
+                return FeedCommonTableViewCell.heightWithPost(post)
             case .Common:
                 return FeedCommonTableViewCell.heightWithPost(post)
         }

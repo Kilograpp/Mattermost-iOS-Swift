@@ -26,4 +26,11 @@ extension NSAttributedString {
         return self.attribute(Constants.StringAttributes.HashTag, atIndex: index, effectiveRange: nil) as? String
     }
     
+    final func emailAtIndex(index: Int) -> String? {
+        return self.attribute(Constants.StringAttributes.Email, atIndex: index, effectiveRange: nil) as? String
+    }
+    
+    final func phoneAtIndex(index: Int) -> String? {
+        return self.attribute(Constants.StringAttributes.Phone, atIndex: index, effectiveRange: nil) as? String
+    }
 }

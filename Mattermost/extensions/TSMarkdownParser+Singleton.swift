@@ -52,6 +52,8 @@ extension TSMarkdownParser {
         self.addUnescapingParsing()
         self.addMentionParsing()
         self.addHashtagParsing()
+        self.addPhoneParsing()
+        self.addEmailParsing()
     }
     
     private func setupSettings() -> Void {
@@ -142,6 +144,34 @@ extension TSMarkdownParser {
             }
             attributedString.addAttributes(self.linkAttributes, range: range)
         }
+    }
+    
+    private func addEmailParsing() {
+        let pattern = "([a-zA-Z]{1,256}@[a-zA-Z0-9]{0,64}.[a-zA-Z0-9]{0,25})"
+        let emailExpression = try! NSRegularExpression(pattern: pattern, options: .CaseInsensitive)
+        self.addParsingRuleWithRegularExpression(emailExpression) { (match, attributedString) in
+            let range = NSMakeRange(match.range.location, match.range.length)
+            let email = (attributedString.string as NSString).substringWithRange(range)
+            
+            let attributes = [NSForegroundColorAttributeName : ColorBucket.linkColor]
+            attributedString.addAttribute(Constants.StringAttributes.Email, value: email, range: match.range)
+            attributedString.addAttributes(attributes, range: match.range)
+        }
+        
+    }
+    
+    private func addPhoneParsing() {
+        let pattern = "([0-9]{11})"
+        let phoneExpression = try! NSRegularExpression(pattern: pattern, options: .CaseInsensitive)
+        self.addParsingRuleWithRegularExpression(phoneExpression) { (match, attributedString) in
+            let range = NSMakeRange(match.range.location, match.range.length)
+            let phone = (attributedString.string as NSString).substringWithRange(range)
+            
+            let attributes = [NSForegroundColorAttributeName : ColorBucket.linkColor]
+            attributedString.addAttribute(Constants.StringAttributes.Phone, value: phone, range: match.range)
+            attributedString.addAttributes(attributes, range: match.range)
+        }
+        
     }
     
     private func addCodeUnescapingParsing() {

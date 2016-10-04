@@ -77,4 +77,16 @@ extension UIImage {
         
         return resultImage
     }
+    
+    func kg_resizedImageWithHeight(height: CGFloat) -> UIImage {
+        let newHeight = UIScreen.mainScreen().scale * height
+        let scale: CGFloat = self.size.width / self.size.height
+        let size: CGSize = CGSizeMake(newHeight * scale, height)
+        UIGraphicsBeginImageContext(size)
+        self.drawInRect(CGRectMake(0, 0, size.width, size.height))
+        let destImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return destImage
+    }
 }
