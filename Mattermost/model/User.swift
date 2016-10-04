@@ -27,6 +27,7 @@ final class User: RealmObject {
     dynamic var displayName: String? {
         didSet { computeDisplayNameWidth() }
     }
+    let channels = LinkingObjects(fromType: Channel.self, property: ChannelRelationships.members.rawValue)
     dynamic var username: String? {
         didSet { computeNicknameIfRequired() }
     }
