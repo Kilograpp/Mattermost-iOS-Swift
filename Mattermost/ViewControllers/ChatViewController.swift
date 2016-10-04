@@ -159,7 +159,7 @@ extension ChatViewController: Setup {
         
         self.leftButton.setImage(UIImage(named: "chat_photo_icon"), forState: .Normal)
         self.leftButton.tintColor = UIColor.grayColor()
-        self.leftButton.addTarget(self, action: #selector(assignPhotosAction), forControlEvents: .TouchUpInside)
+        self.leftButton.addTarget(self, action: #selector(attachmentSelection), forControlEvents: .TouchUpInside)
     }
     
     func setupToolbar() {
@@ -248,6 +248,21 @@ extension ChatViewController : Private {
         tableFooterView.addSubview(self.topActivityIndicatorView!)
         self.tableView.tableFooterView = tableFooterView;
         self.topActivityIndicatorView!.startAnimating()
+    }
+    
+    func attachmentSelection() {
+        let controller = UIAlertController(title: "Attachment", message: "Choose what u want to attach", preferredStyle: .ActionSheet)
+        controller.addAction(UIAlertAction(title: "Photo", style: .Default, handler: { (action:UIAlertAction) in
+            self.assignPhotos()
+        }))
+        controller.addAction(UIAlertAction(title: "File", style: .Default, handler: { (action:UIAlertAction) in
+//            let path = NSBundle.mainBundle().resourcePath!
+//            let fileManager = NSFileManager()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action:UIAlertAction) in
+            print("canceled")
+        }))
+        presentViewController(controller, animated: true) {}
     }
     
     func hideTopActivityIndicator() {
