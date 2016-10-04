@@ -15,11 +15,15 @@ protocol TableViewPostDataSource: class {
 
 class FeedBaseTableViewCell: UITableViewCell, Reusable {
     final var onMentionTap: ((nickname : String) -> Void)?
+    var errorHandler: ((post: Post) -> Void)?
     final var post : Post! {
-        didSet { self.postIdentifier = self.post.identifier }
+        didSet { self.postIdentifier = self.post.identifier
+            self.parentPostIdentifier = self.post.hasParentPost() ? self.post.parentId : nil}
     }
     final var postIdentifier: String?
+    final var parentPostIdentifier: String?
     final var messageLabel = MessageLabel()
+    final var postStatusView: PostStatusView!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -38,6 +42,8 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     }
     
     override func layoutSubviews() {
+        postStatusView.frame = CGRectMake(UIScreen.screenWidth() - Constants.UI.PostStatusViewSize, (CGRectGetHeight(frame) - Constants.UI.PostStatusViewSize)/2, Constants.UI.PostStatusViewSize, Constants.UI.PostStatusViewSize)
+        
         self.align()
         self.alignSubviews()
     }
@@ -52,6 +58,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     private func setup() {
         self.setupBasics()
         self.setupMessageLabel()
+        setupPostStatusView()
     }
     
     private func setupBasics() {
@@ -76,15 +83,20 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         self.addSubview(self.messageLabel)
     }
     
+    private func setupPostStatusView() {
+        postStatusView = PostStatusView()
+        self.addSubview(postStatusView)
+    }
+    
 }
 
-protocol TextTapActions {
+protocol ChatMessageTapActions {
     func emailTapAction(email:String)
     func phoneTapAction(phone:String)
     func openURL(url:NSURL)
 }
 
-extension FeedBaseTableViewCell: TextTapActions {
+extension FeedBaseTableViewCell: ChatMessageTapActions {
     func emailTapAction(email:String) {
         let url = NSURL(string: "mailto:" + email)
         UIApplication.sharedApplication().openURL(url!)
@@ -102,6 +114,8 @@ extension FeedBaseTableViewCell {
     func configureWithPost(post: Post) {
         self.post = post
         self.configureMessage()
+        postStatusView.configureWithStatus(post)
+        postStatusView.errorHandler = self.errorHandler
     }
     
     class func heightWithPost(post: Post) -> CGFloat {

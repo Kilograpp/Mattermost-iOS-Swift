@@ -13,6 +13,9 @@ private protocol ResponseDescriptor: class {
     static func updateResponseDescriptor() -> RKResponseDescriptor
     static func nextPageResponseDescriptor() -> RKResponseDescriptor
     static func firstPageResponseDescriptor() -> RKResponseDescriptor
+    static func creationResponseDescriptor() -> RKResponseDescriptor
+    static func updatingResponseDescriptor() -> RKResponseDescriptor
+    static func deletingResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class PostResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -47,5 +50,19 @@ extension PostResponseDescriptorsContainer: ResponseDescriptor {
                                     pathPattern: PostPathPatternsContainer.creationPathPattern(),
                                     keyPath: nil,
                                     statusCodes:  RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func updatingResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: PostMappingsContainer.updatingMapping(),
+                                    method: .POST,
+                                    pathPattern: PostPathPatternsContainer.updatingPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
+    }
+    static func deletingResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: PostMappingsContainer.deletingMapping(),
+                                    method: .POST,
+                                    pathPattern: PostPathPatternsContainer.deletingPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.Successful))
     }
 }

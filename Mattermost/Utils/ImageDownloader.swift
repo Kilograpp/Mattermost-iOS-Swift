@@ -47,4 +47,40 @@ final class ImageDownloader {
                                                                    completed: imageDownloadCompletionHandler)
         }
     }
+    
+    static func downloadFullAvatarForUser(user: User, complection: (image: UIImage?, error: NSError?) -> Void) {
+        guard !user.isSystem() else {
+            complection(image: UIImage.sharedAvatarPlaceholder, error: nil)
+            return
+        }
+        
+        let fullAvatarCacheKey = user.avatarLink
+        
+        if let image = SDImageCache.sharedImageCache().imageFromDiskCacheForKey(fullAvatarCacheKey) {
+            complection(image:  image, error: nil)
+        }
+        else {
+            let imageDownloadComplectionHandler: SDWebImageCompletionWithFinishedBlock = {
+                (image, error, cacheType, isFinished, imageUrl) in
+                dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0)) {
+                    guard image != nil else {
+                        complection(image: nil, error: error)
+                        return
+                    }
+                    
+                    let processedImage = UIImage.roundedImageOfSize(image, size: CGSizeMake(130, 130))
+                    SDImageCache.sharedImageCache().storeImage(processedImage, forKey: fullAvatarCacheKey)
+                    
+                    dispatch_sync(dispatch_get_main_queue(), {
+                        complection(image: processedImage, error: nil)
+                    })
+                }
+            }
+            
+            SDWebImageManager.sharedManager().downloadImageWithURL(user.avatarURL(),
+                                                                   options: .HandleCookies ,
+                                                                   progress: nil,
+                                                                   completed: imageDownloadComplectionHandler)
+        }
+    }
 }

@@ -1,4 +1,4 @@
-fastlane_version "1.98.0"
+fastlane_version "1.102.0"
 
 default_platform :ios
 
@@ -31,12 +31,19 @@ platform :ios do
   end 
 
   after_all do |lane|
-    
+    branchName = ENV['TRAVIS_BRANCH'].capitalize
+    slack(
+      message: "**#{branchName}** » Successfully distributed version **#{number_of_commits}** :rocket:",
+      default_payloads: [],
+    )   
   end
 
   error do |lane, exception|
-    puts exception
-    return if lane_context[SharedValues::LANE_NAME] == 'ios register'
-    #raise 'Exit Jenkins'
+    branchName = ENV['TRAVIS_BRANCH'].capitalize
+    slack(
+      message: "**#{branchName}** » Failed to build:exclamation:",
+      default_payloads: [],
+      success: false
+    )
   end
 end

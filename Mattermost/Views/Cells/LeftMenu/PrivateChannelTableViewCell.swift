@@ -42,7 +42,8 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
     
 //MARK: - Configuration
     func configureStatusViewWithNotification(notification: NSNotification) {
-        self.test?()
+//        self.test?()
+        configureStatusViewWithBackendStatus(notification.object as! String)
     }
 
 //MARK: - Override

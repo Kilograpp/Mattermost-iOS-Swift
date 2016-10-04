@@ -12,6 +12,9 @@ private protocol PostFonts: class {
     static var messageFont: UIFont {get}
     static var postDateFont: UIFont {get}
     static var postAuthorNameFont: UIFont {get}
+    static var parentAuthorNameFont: UIFont {get}
+    static var parentMessageFont: UIFont {get}
+    static var editTypeFont: UIFont {get}
 }
 
 private protocol FeedFonts: class {
@@ -65,9 +68,12 @@ final class FontBucket {
 }
 
 extension FontBucket : PostFonts {
-     static let messageFont = FontBucket.regularFontOfSize(15)
-     static let postDateFont = FontBucket.regularFontOfSize(13)
-     static let postAuthorNameFont = FontBucket.semiboldFontOfSize(16)
+    static let messageFont = FontBucket.regularFontOfSize(15)
+    static let postDateFont = FontBucket.regularFontOfSize(13)
+    static let postAuthorNameFont = FontBucket.semiboldFontOfSize(16)
+    static let parentAuthorNameFont = FontBucket.semiboldFontOfSize(13)
+    static let parentMessageFont = FontBucket.regularFontOfSize(14)
+    static let editTypeFont = FontBucket.regularFontOfSize(13)
 }
 
 extension FontBucket : FeedFonts {

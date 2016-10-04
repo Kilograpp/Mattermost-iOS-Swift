@@ -16,6 +16,14 @@ private protocol PostColors: class {
     static var mentionColor: UIColor {get}
     static var mentionBackgroundColor: UIColor {get}
     static var linkColor: UIColor {get}
+
+    static var editBackgroundColor: UIColor {get}
+    static var parentBackgroundColor: UIColor {get}
+    static var parentSeparatorColor: UIColor {get}
+    static var parentAuthorColor: UIColor {get}
+    static var parentMessageColor: UIColor {get}
+    static var parentShadowColor: UIColor {get}
+    static var editSeparatorColor: UIColor {get}
 }
 
 private protocol CommonColors: class {
@@ -66,6 +74,14 @@ extension ColorBucket : PostColors {
     static let mentionColor = ColorBucket.blue()
     static let mentionBackgroundColor = UIColor.yellowColor()
     static let linkColor = ColorBucket.blue()
+    
+    static let editBackgroundColor = ColorBucket.cloudyBlue()
+    static let parentBackgroundColor = ColorBucket.cloudyWhite()
+    static let parentSeparatorColor = ColorBucket.sideMenuSeparatorColor()
+    static let parentAuthorColor = ColorBucket.middleGray()
+    static let parentMessageColor = UIColor.blackColor()
+    static let parentShadowColor = UIColor.blackColor()
+    static let editSeparatorColor = ColorBucket.brightBlue()
 }
 
 extension ColorBucket : CommonColors {
@@ -116,6 +132,10 @@ extension ColorBucket {
         return UIColor(rgba: "#FFFFFF")
     }
     
+    private class func cloudyWhite() -> UIColor {
+        return UIColor(rgba: "#F7F7F7")
+    }
+    
     private class func blue() -> UIColor {
         return UIColor(rgba: "#0076FF")
     }
@@ -126,6 +146,10 @@ extension ColorBucket {
     
     private class func lightGray() -> UIColor {
         return UIColor(rgba: "#AAAAAA")
+    }
+    
+    private class func middleGray() -> UIColor {
+        return UIColor (rgba: "#424242")
     }
     
     private class func darkGray() -> UIColor {
@@ -140,6 +164,10 @@ extension ColorBucket {
         return UIColor(rgba: "#2F81B7")
     }
     
+    private class func cloudyBlue() -> UIColor {
+        return UIColor(rgba: "#E7F0F6")
+    }
+    
     private class func darkDarkGray() -> UIColor {
         return UIColor(rgba: "#334659")
     }
@@ -150,6 +178,10 @@ extension ColorBucket {
     
     private class func lightBlue() -> UIColor {
         return UIColor(rgba: "#C3CDD4")
+    }
+    
+    private class func brightBlue() -> UIColor {
+        return UIColor(rgba: "#007AFF")
     }
     
     private class func sideMenuTextColor() -> UIColor {
@@ -167,5 +199,4 @@ extension ColorBucket {
     private class func onlineStatus() -> UIColor {
         return UIColor(rgba: "#81C784")
     }
-    
 }

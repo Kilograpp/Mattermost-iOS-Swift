@@ -79,7 +79,31 @@ extension ProfileViewController {
         self.avatarImageView?.clipsToBounds = true
         self.avatarImageView?.backgroundColor = UIColor.whiteColor()
         self.avatarImageView?.setIndicatorStyle(UIActivityIndicatorViewStyle.Gray)
-        self.avatarImageView?.sd_setImageWithURL(self.user!.avatarURL(), placeholderImage: nil, completed: nil)
+        //print(self.user?.avatarURL())
+        //self.avatarImageView?.sd_setImageWithURL(self.user!.avatarURL(), placeholderImage: nil, completed: nil)
+        self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
+        
+      /*
+        ImageDownloader.downloadFullAvatarForUser(self.user!) { (image, error) in
+            if (image == nil) {
+                print(error?.localizedDescription)
+            }
+            self.avatarImageView.image = image
+        }*/
+        
+        print(self.user?.avatarURL())
+        ImageDownloader.downloadFeedAvatarForUser(self.user!) { [weak self] (image, error) in
+            if (image == nil) {
+                print(error?.localizedDescription)
+            }
+            self?.avatarImageView.image = image
+        }
+        
+        print(self.user?.firstName)
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(changeProfilePhoto))
+        self.avatarImageView?.userInteractionEnabled = true
+        self.avatarImageView.addGestureRecognizer(tapGestureRecognizer);
     }
     
     func setupTable() {
@@ -179,11 +203,58 @@ extension ProfileViewController: UITableViewDataSource {
     }
 }
 
+
 //MARK: - UITableViewDelegate
 
 extension ProfileViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 15
+    }
+}
+
+
+//MARK: - UIImagePickerController
+
+extension ProfileViewController {
+    func changeProfilePhoto() {
+        let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .ActionSheet)
+        let openCameraAction = UIAlertAction.init(title: "Take photo", style: .Default) { (action) in
+            self.presentImagePickerControllerWithType(.Camera)
+        }
+        let openGalleryAction = UIAlertAction.init(title: "Take from library", style: .Default) { (action) in
+            self.presentImagePickerControllerWithType(.PhotoLibrary)
+        }
+        let cancelAction = UIAlertAction.init(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(openCameraAction)
+        alertController.addAction(openGalleryAction)
+        alertController.addAction(cancelAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func presentImagePickerControllerWithType(type: UIImagePickerControllerSourceType) {
+        let pickerController = UIImagePickerController.init()
+        pickerController.sourceType = type
+        pickerController.delegate = self
+        
+        self.presentViewController(pickerController, animated: true, completion: nil)
+    }
+}
+
+
+//MARK: - UIImagePickerControllerDelegate
+
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        self.avatarImageView.image = image
+        //Api.sharedInstance.updateImageForCurrentUser(image) { (error) in
+            
+        //}
+        
+        
+        //let image = info.keys.
     }
 }
 

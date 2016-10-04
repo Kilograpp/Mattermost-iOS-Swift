@@ -1,10 +1,10 @@
 #!/bin/bash
 
 if [[ "$TRAVIS_BRANCH" == "development" ]]; then
-    fastlane beta
+    bundle exec fastlane beta
     exit $?
 else
-    fastlane release
+    bundle exec fastlane release
     exit $?
 fi
 

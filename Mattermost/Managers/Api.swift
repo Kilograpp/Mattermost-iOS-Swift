@@ -20,7 +20,7 @@ private protocol Interface: class {
 private protocol UserApi: class {
     func login(email: String, password: String, completion: (error: Error?) -> Void)
     func loadCompleteUsersList(completion:(error: Error?) -> Void)
-    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void)
+//    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void)
 }
 
 private protocol TeamApi: class {
@@ -37,6 +37,8 @@ private protocol ChannelApi: class {
 private protocol PostApi: class {
     func sendPost(post: Post, completion: (error: Error?) -> Void)
     func updatePost(post: Post, completion: (error: Error?) -> Void)
+    func updateSinglePost(post: Post, completion: (error: Error?) -> Void)
+    func deletePost(post: Post, completion: (error: Error?) -> Void)
     func loadFirstPage(channel: Channel, completion: (error: Error?) -> Void)
     func loadNextPage(channel: Channel, fromPost: Post, completion: (isLastPage: Bool, error: Error?) -> Void)
 }
@@ -113,17 +115,17 @@ extension Api: UserApi {
         }, failure: completion)
     }
     
-    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void) {
-        let path = UserPathPatternsContainer.usersStatusPathPattern()
-        let params = (users as NSArray).valueForKey(UserAttributes.identifier.rawValue)
-        self.manager.postObject(nil, path: path, parametersAsArray: params as! [AnyObject], success: { (operation: RKObjectRequestOperation!, mappingResult: RKMappingResult!) in
-            UserStatusObserver.sharedObserver.reloadWithStatusesArray(mappingResult.array() as! Array<UserStatus>)
-            completion(error: nil)
-            }) { (operation, error) in
-                    let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
-                    print(eror)
-         }
-        }
+//    func updateStatusForUsers(users: Array<User>, completion: (error: Error?) -> Void) {
+//        let path = UserPathPatternsContainer.usersStatusPathPattern()
+//        let params = (users as NSArray).valueForKey(UserAttributes.identifier.rawValue)
+//        self.manager.postObject(nil, path: path, parametersAsArray: params as! [AnyObject], success: { (operation: RKObjectRequestOperation!, mappingResult: RKMappingResult!) in
+//            UserStatusObserver.sharedObserver.reloadWithStatusesArray(mappingResult.array() as! Array<UserStatus>)
+//            completion(error: nil)
+//            }) { (operation, error) in
+//                    let eror = try! RKNSJSONSerialization.objectFromData(operation.HTTPRequestOperation.request.HTTPBody)
+//                    print(eror)
+//         }
+//        }
 }
 
 extension Api: TeamApi {
@@ -274,9 +276,31 @@ extension Api: PostApi {
     func sendPost(post: Post, completion: (error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
-            RealmUtils.save(mappingResult.firstObject as! Post)
+            let resultPost = mappingResult.firstObject as! Post
+            resultPost.computeMissingFields()
+            resultPost.localIdentifier = post.localIdentifier
+            RealmUtils.save(resultPost)
             completion(error: nil)
         }, failure: completion)
+    }
+    func updateSinglePost(post: Post, completion: (error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)
+        self.manager.postObject(post, path: path, success: { (mappingResult) in
+            RealmUtils.save(mappingResult.firstObject as! Post)
+            completion(error: nil)
+            }, failure: completion)
+    }
+    func deletePost(post: Post, completion: (error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.deletingPathPattern(), post)
+        let params = ["team_id"    : Preferences.sharedInstance.currentTeamId!,
+                      "channel_id" : post.channelId!,
+                      "post_id"    : post.identifier!]
+  
+        self.manager.deletePost(with: post, path: path, parameters: params, success: { (mappingResult) in
+            completion(error: nil)
+            }) { (error) in
+            completion(error: error)
+        }
     }
     
     func updatePost(post: Post, completion: (error: Error?) -> Void) {
@@ -285,7 +309,6 @@ extension Api: PostApi {
             RealmUtils.save(MappingUtils.fetchPostFromUpdate(mappingResult))
             completion(error: nil)
         }, failure: completion)
-        
     }
 }
 
