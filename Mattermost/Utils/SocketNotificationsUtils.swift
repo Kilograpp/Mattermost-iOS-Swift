@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 struct NotificationKeys {
     // General
@@ -85,7 +86,7 @@ final class SocketNotificationUtils {
     
     static func dataForActionRequest(_ action:ChannelAction, seq:Int, channelId:String?) -> Data {
         //Uncomment after adding SwiftyJSON
-        /*
+
         var parameters = [String: JSON]()
         parameters[NotificationKeys.Action] = JSON(stringLiteral: action.rawValue)
         parameters[NotificationKeys.Seq] = JSON(integerLiteral: seq)
@@ -99,8 +100,6 @@ final class SocketNotificationUtils {
         }
         let json = JSON(parameters)
         return try! json.rawData()
-         */
-        return Data()
     }
     
     //todo: files supporting (NotificationKeys.DataKeys.PostKeys.Files)
