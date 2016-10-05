@@ -179,14 +179,18 @@ extension Api: ChannelApi {
                     $0.computeDispayNameIfNeeded()
                 }
                 realm.add(channels, update: true)
-                for channel in members {
-                    var dictionary: [String: AnyObject] = [String: AnyObject] ()
-                    dictionary[ChannelAttributes.lastViewDate.rawValue] = channel.lastViewDate as AnyObject
-                    dictionary[ChannelAttributes.lastPostDate.rawValue] = channel.lastPostDate as AnyObject
-                    dictionary[ChannelAttributes.identifier.rawValue] = channel.identifier as AnyObject
-                    realm.create(Channel.self, value: dictionary, update: true)
-                    
-                }
+//                for channel in members {
+//                    var dictionary: [String: AnyObject] = [String: AnyObject] ()
+////                    dictionary[ChannelAttributes.lastViewDate.rawValue] = channel.lastViewDate as AnyObject
+////                    dictionary[ChannelAttributes.lastPostDate.rawValue] = channel.lastPostDate as AnyObject
+////                    dictionary[ChannelAttributes.identifier.rawValue] = channel.identifier as AnyObject
+////                    realm.create(Channel.self, value: dictionary, update: true)
+//                    let newChannel = Channel()
+//                    newChannel.lastViewDate = channel.lastViewDate
+//                    newChannel.lastPostDate = channel.lastPostDate
+//                    newChannel.identifier = channel.identifier
+//                    realm.create(Channel.self, value: newChannel, update: true)
+//                }
             })
             
             completion(nil)

@@ -61,6 +61,10 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        //temp, s3 refactor
+        if (self.title == nil) {
+            self.title = "SWIFT3"
+        }
         let width = CGFloat(StringUtils.widthOfString(self.title as NSString!, font: FontBucket.postAuthorNameFont))// as CGFloat
         self.titleLabel!.frame = CGRect(x: UIScreen.screenWidth() - 10 - ceil(width), y: 5, width: ceil(width), height: 18);
         if ((self.barView) != nil) {

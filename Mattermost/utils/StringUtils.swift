@@ -33,8 +33,8 @@ final class StringUtils {
         return matches.count > 0
     }
     
-    static func widthOfString(_ string: NSString!, font: UIFont!) -> Float {
-        let attributes = [NSFontAttributeName : font]
+    static func widthOfString(_ string: NSString!, font: UIFont?) -> Float {
+        let attributes = [NSFontAttributeName : font!]
         return ceilf(Float(string.size(attributes: attributes).width))
     }
     

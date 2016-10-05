@@ -120,6 +120,7 @@ extension Channel: Support {
     }
     
     func hasNewMessages() -> Bool {
+        guard lastViewDate != nil else { return true }
       return ((self.lastViewDate as NSDate?)?.isEarlierThan(self.lastPostDate))!
     }
 }

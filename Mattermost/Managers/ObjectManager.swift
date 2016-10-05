@@ -57,10 +57,10 @@ extension ObjectManager: GetRequests {
         
         
         let cachedUrlResponse = URLCache.shared.cachedResponse(for: self.request(with: object, method: .GET, path: path, parameters: parameters) as URLRequest)
-        let cachedETag = (cachedUrlResponse?.response as? HTTPURLResponse)?.allHeaderFields["ETag"] as? String
+        let cachedETag = (cachedUrlResponse?.response as? HTTPURLResponse)?.allHeaderFields["Etag"] as? String
         
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            let eTag = operation?.httpRequestOperation.response.allHeaderFields["ETag"] as? String
+            let eTag = operation?.httpRequestOperation.response.allHeaderFields["Etag"] as? String
             success?(mappingResult!, eTag == cachedETag)
         }) { (operation, error) in
             failure?(self.handleOperation(operation!, withError: error!))
