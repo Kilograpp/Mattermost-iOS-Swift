@@ -47,7 +47,7 @@ final class Preferences: NSObject, NSCoding {
     }
     
 #if DEBUG // Save on every move if debugging
-    func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutableRawPointer) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         self.save()
     }
 #endif

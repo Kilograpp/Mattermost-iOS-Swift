@@ -200,6 +200,9 @@ Pods/
 
 # Carthage - A simple, decentralized dependency manager for Cocoa
 Carthage/
+Carthage/Build
+Carthage/Checkouts
+Cartfile.resolved
 
 # Fastlane
 fastlane/README.md
