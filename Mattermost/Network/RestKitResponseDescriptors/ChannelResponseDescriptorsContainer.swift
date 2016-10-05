@@ -40,7 +40,7 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
     static func extraInfoResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
                                     method: .GET,
-                                    pathPattern: ChannelPathPatternsContainer.extraInfoPathPattern(),
+                                    pathPattern: ChannelPathPatternsContainer.loadOnePathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

@@ -11,7 +11,7 @@ import Foundation
 private protocol PathPatterns: class {
     static func listPathPattern() -> String
     static func moreListPathPattern() -> String
-    static func extraInfoPathPattern() -> String
+    static func loadOnePathPattern() -> String
     static func addUserPathPattern() -> String
     static func updateLastViewDatePathPattern() -> String
 }
@@ -25,8 +25,8 @@ final class ChannelPathPatternsContainer: PathPatterns {
     static func listPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/"
     }
-    static func extraInfoPathPattern() -> String {
-        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/extra_info"
+    static func loadOnePathPattern() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)"
     }
     static func addUserPathPattern() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/add"

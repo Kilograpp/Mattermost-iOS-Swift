@@ -198,7 +198,7 @@ extension Api: ChannelApi {
     }
     
     func loadExtraInfoForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.extraInfoPathPattern(), channel)
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.loadOnePathPattern(), channel)
 //        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
 //            try! RealmUtils.realmForCurrentThread().write({
 //                RealmUtils.realmForCurrentThread().create(Channel.self,value: Reflection.fetchNotNullValues(mappingResult.firstObject as! Channel),
