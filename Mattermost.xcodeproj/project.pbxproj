@@ -21,6 +21,8 @@
 		4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */; };
 		4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */; };
 		4B7DB5A31DA52303000908FB /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */; };
+		4B7DB5A51DA5500F000908FB /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A41DA5500F000908FB /* Member.swift */; };
+		4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */; };
 		4BD16B081DA4ED9000473279 /* SkyFloatingLabelTextField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */; };
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
@@ -211,6 +213,8 @@
 		4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketNotificationsUtils.swift; sourceTree = "<group>"; };
 		4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+Animation.swift"; sourceTree = "<group>"; };
 		4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
+		4B7DB5A41DA5500F000908FB /* Member.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemberMappingsContainer.swift; path = Mappings/MemberMappingsContainer.swift; sourceTree = "<group>"; };
 		4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyFloatingLabelTextField.framework; path = Carthage/Build/iOS/SkyFloatingLabelTextField.framework; sourceTree = "<group>"; };
 		4BEA108B1D79B551006BB298 /* TeamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
@@ -546,6 +550,7 @@
 				D83305F51D5636EF00E92CD6 /* Attachment.swift */,
 				D83305F71D5637B800E92CD6 /* AttachmentField.swift */,
 				D8D601371D5E007700951F18 /* Day.swift */,
+				4B7DB5A41DA5500F000908FB /* Member.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -663,6 +668,7 @@
 				CDB4BC6E1D806CCD00662231 /* UserStatusMappingsContainer.swift */,
 				CDB4BC721D80725600662231 /* AttachmentMappingsContainer.swift */,
 				CDB4BC741D8074E800662231 /* AttachmentFieldMappingsContainer.swift */,
+				4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */,
 			);
 			name = Mappings;
 			sourceTree = "<group>";
@@ -1139,6 +1145,7 @@
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */,
+				4B7DB5A51DA5500F000908FB /* Member.swift in Sources */,
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
@@ -1274,6 +1281,7 @@
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
 				D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */,
 				D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */,
+				4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */,
 				D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -170,11 +170,24 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.listPathPattern(), DataManager.sharedInstance.currentTeam)
         self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
-            let members  = mappingResult.dictionary()["members"]  as! [Channel]
+            //uncomment later
+//            let members  = mappingResult.dictionary()["members"]  as! [Member]
+//            let currentUserId = Preferences.sharedInstance.currentUserId
+            // + save to database
+            //refactor
+            
+//            var membersViews = [String : Date]()
+//            members.forEach({ (member:Member) in
+//                if (member.userId == currentUserId) {
+//                    membersViews[member.channelId!] = member.lastViewedAt
+//                }
+//            })
+            
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
                 channels.forEach {
                     $0.currentUserInChannel = true
+//                    $0.lastViewDate = membersViews[$0.identifier!]
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
                 }

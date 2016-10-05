@@ -65,7 +65,11 @@ final class FeedNotificationsObserver {
                     break
                 case .update(_, let deletions, let insertions, let modifications):
                     
-
+                        if insertions.count > 3 {
+                            self.tableView.reloadData()
+                             break
+                        }
+                        
                         if deletions.count > 0 {
 //                            // for last section (don't work at others) with 0 posts
 //                            if (self.numberOfRows(0) == 0) {

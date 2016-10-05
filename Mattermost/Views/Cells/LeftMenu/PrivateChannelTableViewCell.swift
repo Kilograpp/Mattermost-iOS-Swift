@@ -43,6 +43,7 @@ final class PrivateChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellP
 //MARK: - Configuration
     func configureStatusViewWithNotification(_ notification: Notification) {
 //        self.test?()
+        
         configureStatusViewWithBackendStatus(notification.object as! String)
     }
 
@@ -85,6 +86,7 @@ extension PrivateChannelTableViewCell : PrivateConfiguration {
         self.user = self.channel?.interlocuterFromPrivateChannel()
     }
     fileprivate func configureStatusViewWithBackendStatus(_ backendStatus: String) {
+        print("\(user?.displayName) is \(backendStatus)")
         //FIXME в свифте есть swith из строк
         if backendStatus == "offline" {
             self.statusView.backgroundColor = UIColor.clear
@@ -135,7 +137,7 @@ extension PrivateChannelTableViewCell {
         //s3 refactor identifier / as String! / .map
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(configureStatusViewWithNotification(_:)),
-                                                         name: (self.channel?.interlocuterFromPrivateChannel().identifier).map { NSNotification.Name(rawValue: $0) },
+                                                         name: NSNotification.Name((self.channel?.interlocuterFromPrivateChannel().identifier)!),
                                                          object: nil)
     }
 }
