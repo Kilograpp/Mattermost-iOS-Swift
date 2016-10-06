@@ -269,6 +269,8 @@ extension ChatViewController : Private {
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
  
+// TODO: Code Review: clean unused code
+    
 //Images
     func assignPhotos() -> Void {
         /*

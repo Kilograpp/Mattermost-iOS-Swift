@@ -32,6 +32,7 @@ final class PostStatusView: UIView {
     }
 }
 
+
 //MARK: - Setup
 extension PostStatusView {
     func setupErrorView() {
@@ -44,6 +45,8 @@ extension PostStatusView {
         
     }
 }
+
+
 //MARK: - Action
 extension PostStatusView {
     func errorAction() {
@@ -51,6 +54,7 @@ extension PostStatusView {
         errorHandler!(post!)
     }
 }
+
 
 //MARK: - Configuration
 extension PostStatusView {

@@ -41,7 +41,13 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     fileprivate func configureImageView() {
         
         let fileName = self.fileName
-        let downloadUrl = self.file.thumbURL()!
+        var downloadUrl = self.file.thumbURL()!
+        
+//MARK: addition for search attachment cell
+        if (downloadUrl.absoluteString.contains("(null)")) {
+            let fixedPath = downloadUrl.absoluteString.replacingOccurrences(of: "(null)", with: Preferences.sharedInstance.currentTeamId!)
+            downloadUrl = NSURL(string: fixedPath)! as URL
+        }
         
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
             self.fileImageView.image = image

@@ -13,6 +13,7 @@ private protocol PathPatterns: class {
     static func firstPagePathPattern() -> String
     static func nextPagePathPattern() -> String
     static func creationPathPattern() -> String
+    static func gettingPathPattern() -> String
     static func updatingPathPattern() -> String
     static func deletingPathPattern() -> String
     static func searchingPathPattern() -> String 
@@ -35,6 +36,9 @@ final class PostPathPatternsContainer: PathPatterns {
     }
     static func creationPathPattern() -> String {
         return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/posts/create"
+    }
+    static func gettingPathPattern() -> String {
+        return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/posts/:\(PostAttributes.identifier)/get"
     }
     static func updatingPathPattern() -> String {
         return "teams/:\(Post.teamIdentifierPath())/channels/:\(Post.channelIdentifierPath())/posts/update"

@@ -145,7 +145,7 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         self.dateLabel.frame = CGRect(x: self.nameLabel.frame.maxX + 5, y: 8, width: dateWidth, height: 20)
         
         let size = self.parentView.requeredSize()
-        self.parentView.frame = CGRect(x: 60, y: 36, width: size.width, height: size.height)
+        self.parentView.frame = CGRect(x: 53, y: 36, width: size.width, height: size.height)
         
         super.layoutSubviews()
     }

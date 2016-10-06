@@ -108,7 +108,7 @@ extension CompactPostView: Setup {
         self.contentView.layer.shadowOpacity = 0.15
         self.contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
         self.contentView.layer.cornerRadius = 3.0
-        let width = UIScreen.screenWidth() - Constants.UI.StandardPaddingSize
+        let width = self.requeredSize().width - Constants.UI.StandardPaddingSize
         self.contentView.frame = CGRect(x: Constants.UI.MiddlePaddingSize, y: Constants.UI.LongPaddingSize, width: width, height: ContentHeight)
         self.addSubview(self.contentView)
     }
@@ -132,7 +132,7 @@ extension CompactPostView: Setup {
         self.nameLabel.font = FontBucket.parentAuthorNameFont
         self.nameLabel.textColor = ColorBucket.parentAuthorColor
         let originX = Constants.UI.DoublePaddingSize + Constants.UI.StandardPaddingSize + Constants.UI.ShortPaddingSize
-        let width = UIScreen.screenWidth() - (originX + Constants.UI.DoublePaddingSize)
+        let width = self.requeredSize().width - (originX + Constants.UI.DoublePaddingSize)
         self.nameLabel.frame = CGRect(x: originX, y: Constants.UI.ShortPaddingSize, width: width, height: Constants.UI.StandardPaddingSize)
         self.contentView.addSubview(self.nameLabel)
     }
@@ -141,7 +141,7 @@ extension CompactPostView: Setup {
         self.typeLabel.backgroundColor = self.contentView.backgroundColor
         self.typeLabel.font = FontBucket.editTypeFont
         self.typeLabel.textColor = ColorBucket.editSeparatorColor
-        let width = UIScreen.screenWidth() - (3 * Constants.UI.DoublePaddingSize + Constants.UI.ShortPaddingSize)
+        let width = self.requeredSize().width - (3 * Constants.UI.DoublePaddingSize + Constants.UI.ShortPaddingSize)
         self.typeLabel.frame = CGRect(x: Constants.UI.DoublePaddingSize, y: Constants.UI.LongPaddingSize, width: width, height: 14)
         self.contentView.addSubview(self.typeLabel)
     }
@@ -159,7 +159,7 @@ extension CompactPostView: Setup {
         self.messageLabel.backgroundColor = self.contentView.backgroundColor
         self.messageLabel.font = (self.actionType == ActionType.CompleteReply) ? FontBucket.parentMessageFont : FontBucket.messageFont
         self.messageLabel.textColor = ColorBucket.parentMessageColor
-        let width = UIScreen.screenWidth() - 2 * Constants.UI.DoublePaddingSize
+        let width = self.requeredSize().width - 2 * Constants.UI.DoublePaddingSize
         self.messageLabel.frame = CGRect(x: Constants.UI.DoublePaddingSize, y: Constants.UI.DoublePaddingSize + Constants.UI.MiddlePaddingSize, width: width, height: Constants.UI.StandardPaddingSize)
         self.contentView.addSubview(self.messageLabel)
     }

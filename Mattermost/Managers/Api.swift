@@ -37,6 +37,7 @@ private protocol ChannelApi: class {
 
 private protocol PostApi: class {
     func sendPost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
+    func getPostWithId(_ identifier: String, channel: Channel, completion: @escaping ((_ post: Post?, _ error: Error?) -> Void))
     func updatePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func updateSinglePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
@@ -310,6 +311,20 @@ extension Api: PostApi {
             RealmUtils.save(resultPost)
             completion(nil)
         }, failure: completion)
+    }
+    func getPostWithId(_ identifier: String, channel: Channel, completion: @escaping ((_ post: Post?, _ error: Error?) -> Void)) {
+        var path = "teams/" + (channel.team?.identifier)!
+            path += "/channels/" + channel.identifier!
+            path += "/posts/" + identifier + "/get"
+        self.manager.getObject(path: path, success: { (mappingResult, canSkipMapping) in
+            let resultPost = mappingResult.firstObject as! Post
+            resultPost.computeMissingFields()
+            RealmUtils.save(resultPost)
+            completion(resultPost, nil)
+    
+        }) { (error) in
+            completion(nil, error)
+        }
     }
     func updateSinglePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)

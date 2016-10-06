@@ -60,6 +60,9 @@ extension ObjectManager: GetRequests {
         let cachedETag = (cachedUrlResponse?.response as? HTTPURLResponse)?.allHeaderFields["Etag"] as? String
         
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
+            
+            print(operation?.httpRequestOperation.responseString)
+            
             let eTag = operation?.httpRequestOperation.response.allHeaderFields["Etag"] as? String
             success?(mappingResult!, eTag == cachedETag)
         }) { (operation, error) in

@@ -29,6 +29,7 @@ extension UserStatusManager {
     }
 }
 
+
 //MARK: - User state
 extension UserStatusManager {
     func cookie() -> HTTPCookie? {

@@ -51,6 +51,13 @@ extension PostResponseDescriptorsContainer: ResponseDescriptor {
                                     keyPath: nil,
                                     statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
+    static func gettingResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
+                                    method: .GET,
+                                    pathPattern: PostPathPatternsContainer.gettingPathPattern(),
+                                    keyPath: "posts",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
+    }
     static func updatingResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: PostMappingsContainer.updatingMapping(),
                                     method: .POST,
