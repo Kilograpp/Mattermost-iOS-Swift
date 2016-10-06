@@ -7,7 +7,8 @@
 //
 
 import UIKit
-
+// FIXME: CodeReview: Приватные протоколы должны находиться внизу, после определения класса
+// Иерархия следования: public protocol -> class -> private protocol -> extensions
 private protocol Setup {
     func setupAnimationWithBaseName(_ baseName: String)
 }
@@ -25,7 +26,7 @@ class SearchingInProcessView: UIView {
 //MARK: Life cycle
     
     class func monkeyChatSearchView() -> SearchingInProcessView {
-        //s3 refactor
+
        let searchingInProcessView = Bundle.main.loadNibNamed("SearchingInProcessView", owner: nil, options: nil)?[0] as! SearchingInProcessView
         searchingInProcessView.setupAnimationWithBaseName(AnimationsBase.Monkey)
         

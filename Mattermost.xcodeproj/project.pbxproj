@@ -961,6 +961,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9B82200F26897BF577153F76 /* Build configuration list for PBXNativeTarget "Mattermost" */;
 			buildPhases = (
+				4B5FBDC61DA641ED00EF7AC8 /* FIXME highlights */,
 				BE5F6F50DF894BE52BFD4C06 /* [CP] Check Pods Manifest.lock */,
 				9B822E8644EB6D1CAB6E3D29 /* Sources */,
 				9B8226327E3FF187CFC613FA /* Frameworks */,
@@ -1070,6 +1071,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		4B5FBDC61DA641ED00EF7AC8 /* FIXME highlights */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "FIXME highlights";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\nERRORTAG=\"ERROR:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"";
 		};
 		743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
