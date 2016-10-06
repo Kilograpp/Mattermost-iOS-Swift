@@ -207,6 +207,7 @@
 		4B3CD9FE1D918CC400E6FDB4 /* UserStatusManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatusManager.swift; sourceTree = "<group>"; };
 		4B404A791D92914A002F9F6D /* ObserverUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverUtils.swift; sourceTree = "<group>"; };
 		4B4497F31D93ECA9009939A9 /* PostStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostStatusView.swift; sourceTree = "<group>"; };
+		4B4FBAEB1DA687B400202326 /* Mattermost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mattermost.entitlements; sourceTree = "<group>"; };
 		4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamTableViewCell.swift; path = Teams/TeamTableViewCell.swift; sourceTree = "<group>"; };
 		4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginNavigationController.swift; path = NavigationControllers/LoginNavigationController.swift; sourceTree = "<group>"; };
 		4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerUrlViewController.swift; sourceTree = "<group>"; };
@@ -471,6 +472,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				4B4FBAEB1DA687B400202326 /* Mattermost.entitlements */,
 				CD157A891D75EA3F0079BD30 /* NavigationControllers */,
 				D8935BAD1D5B7FF80037E7ED /* Helpers */,
 				D8935BAA1D5B75B70037E7ED /* Builders */,
@@ -995,6 +997,11 @@
 					9B822B33AE7605DB4C6B3995 = {
 						DevelopmentTeam = X4SVWSJYVW;
 						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1339,6 +1346,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Mattermost/Mattermost.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
@@ -1351,8 +1359,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0be856e6-a209-49d9-875f-2dadc97936e1";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
+				PROVISIONING_PROFILE = "0841e89f-2b2b-4efb-a8dd-f9c35ac3d790";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost 1475760125";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -1378,6 +1386,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Mattermost/Mattermost.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
 				ENABLE_BITCODE = YES;
@@ -1389,8 +1398,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0be856e6-a209-49d9-875f-2dadc97936e1";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
+				PROVISIONING_PROFILE = "11a5e7d4-4584-4ac6-92f8-f248a545214c";
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

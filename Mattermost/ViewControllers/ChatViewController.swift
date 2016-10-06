@@ -257,6 +257,7 @@ extension ChatViewController : Private {
         controller.addAction(UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
 //            let path = NSBundle.mainBundle().resourcePath!
 //            let fileManager = NSFileManager()
+            self.proceedToFileSelection()
         }))
         controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
             print("canceled")
@@ -708,5 +709,19 @@ extension ChatViewController {
     
     override func textViewDidChange(_ textView: UITextView) {
         SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
+    }
+}
+
+
+extension ChatViewController: UIDocumentPickerDelegate {
+    func proceedToFileSelection() {
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.content"], in: .open)
+        documentPicker.delegate = self
+        documentPicker.modalPresentationStyle = .formSheet
+        self.present(documentPicker, animated:true, completion:nil)
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        print("url is : \(url)")
     }
 }
