@@ -277,6 +277,7 @@ extension Api: PostApi {
     }
     
     func loadNextPage(_ channel: Channel, fromPost: Post, completion: @escaping (_ isLastPage: Bool, _ error: Mattermost.Error?) -> Void) {
+        guard fromPost.identifier != nil else { return }
         let postIdentifier = fromPost.identifier!
         let wrapper = PageWrapper(channel: channel, lastPostId: postIdentifier)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.nextPagePathPattern(), wrapper)
