@@ -31,7 +31,16 @@ private protocol PostRequests: class {
                     parameters: [AnyHashable: Any]?,
                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
                     failure: ((_ error: Mattermost.Error) -> Void)?)
-
+    func deletePost(with post: Post!,
+                    path: String!,
+                    parameters: Dictionary<String, String>?,
+                    success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                    failure: ((_ error: Error) -> Void)?)
+    func searchPosts(with terms: String!,
+                     path: String!,
+                     parameters: Dictionary<String, String>?,
+                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                     failure: ((_ error: Error) -> Void)?)
     func postImage(with image: UIImage!,
                    name: String!,
                    path: String!,
@@ -60,9 +69,6 @@ extension ObjectManager: GetRequests {
         let cachedETag = (cachedUrlResponse?.response as? HTTPURLResponse)?.allHeaderFields["Etag"] as? String
         
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            
-            print(operation?.httpRequestOperation.responseString)
-            
             let eTag = operation?.httpRequestOperation.response.allHeaderFields["Etag"] as? String
             success?(mappingResult!, eTag == cachedETag)
         }) { (operation, error) in
@@ -137,6 +143,35 @@ extension ObjectManager: PostRequests {
         
         let operation: RKObjectRequestOperation =  self.objectRequestOperation(with: request as URLRequest!, success: successHandlerBlock, failure: failureHandlerBlock)
         self.enqueue(operation)
+    }
+    
+    func searchPosts(with terms: String!,
+                     path: String!,
+                     parameters: Dictionary<String, String>?,
+                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                     failure: ((_ error: Error) -> Void)?) {
+        let request: NSMutableURLRequest = self.request(with: nil, method: .POST, path: path, parameters: parameters)
+        request.httpBody = try! JSONSerialization.data(withJSONObject: ["terms" : terms!, "is_or_search": true], options: .prettyPrinted)
+        
+        let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
+            success?(mappingResult!)
+        }
+        let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
+            print(operation?.httpRequestOperation.responseString)
+            if (operation?.httpRequestOperation.responseString == "{\"order\":null,\"posts\":null}") {
+                success?(RKMappingResult())
+            }
+            else {
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
+
+        }
+        
+        let operation: RKObjectRequestOperation = self.objectRequestOperation(with: request as URLRequest!,
+                                                                              success: successHandlerBlock,
+                                                                              failure: failureHandlerBlock)
+        self.enqueue(operation)
+
     }
     
     func postImage(with image: UIImage!,

@@ -26,6 +26,10 @@
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
 		8B882D661DA5A21F0028F13D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B882D681DA5A21F0028F13D /* Localizable.strings */; };
+		8B882D6B1DA6566F0028F13D /* SearchCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B882D6A1DA6566F0028F13D /* SearchCellBuilder.swift */; };
+		8B882D6D1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */; };
+		8B882D6F1DA6575F0028F13D /* FeedSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B882D6E1DA6575F0028F13D /* FeedSearchTableViewCell.swift */; };
+		8B882D711DA6F8A10028F13D /* EmojiTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */; };
 		8B8F6FFE1D77451A00ACF626 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */; };
 		8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */; };
 		8B8F70031D7747A900ACF626 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */; };
@@ -219,6 +223,10 @@
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
 		8B882D671DA5A21F0028F13D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B882D691DA5A2220028F13D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8B882D6A1DA6566F0028F13D /* SearchCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCellBuilder.swift; sourceTree = "<group>"; };
+		8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedSearchAttachmentTableViewCell.swift; sourceTree = "<group>"; };
+		8B882D6E1DA6575F0028F13D /* FeedSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedSearchTableViewCell.swift; sourceTree = "<group>"; };
+		8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiTableViewCell.swift; sourceTree = "<group>"; };
 		8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
@@ -812,6 +820,8 @@
 		D6E165851D47C0960014C831 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				8B882D6E1DA6575F0028F13D /* FeedSearchTableViewCell.swift */,
+				8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */,
 				D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */,
 				D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */,
 				D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */,
@@ -819,6 +829,7 @@
 				D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */,
 				D86EF7F91D59F13C00BD49A3 /* AttachmentFileCell.swift */,
 				D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */,
+				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -889,6 +900,7 @@
 		D8935BAA1D5B75B70037E7ED /* Builders */ = {
 			isa = PBXGroup;
 			children = (
+				8B882D6A1DA6566F0028F13D /* SearchCellBuilder.swift */,
 				D8935BA61D5B4FC70037E7ED /* FeedCellBuilder.swift */,
 			);
 			name = Builders;
@@ -1151,10 +1163,12 @@
 				D83306001D5694DC00E92CD6 /* MessageLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
+				8B882D711DA6F8A10028F13D /* EmojiTableViewCell.swift in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */,
 				CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */,
 				4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */,
+				8B882D6F1DA6575F0028F13D /* FeedSearchTableViewCell.swift in Sources */,
 				D6C0B46F1D5DFBC2006C506A /* UserStatus.swift in Sources */,
 				D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */,
 				4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */,
@@ -1201,6 +1215,7 @@
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				CDB6D3BD1D78925B00C3018C /* String+Localized.swift in Sources */,
 				D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */,
+				8B882D6D1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift in Sources */,
 				8BE969BE1D7730760010A524 /* ProfileTableViewController.swift in Sources */,
 				D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */,
 				D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */,
@@ -1281,6 +1296,7 @@
 				D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */,
 				4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */,
 				D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */,
+				8B882D6B1DA6566F0028F13D /* SearchCellBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

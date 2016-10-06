@@ -35,6 +35,10 @@ private enum PrivateType {
     case privateChannel
 }
 
+private protocol Computatations: class {
+    func computeDisplayNameWidth()
+}
+
 final class Channel: RealmObject {
     
     class func privateTypeDisplayName(_ privateTypeString: String) -> String {
@@ -58,11 +62,14 @@ final class Channel: RealmObject {
     dynamic var lastViewDate: Date?
     dynamic var identifier: String?
     dynamic var name: String?
+    dynamic var displayNameWidth: Float = 0.0
     dynamic var purpose: String?
     dynamic var header: String?
     dynamic var messagesCount: String?
     dynamic var lastPostDate: Date?
-    dynamic var displayName: String?
+    dynamic var displayName: String? {
+        didSet { computeDisplayNameWidth() }
+    }
     dynamic var currentUserInChannel: Bool = false
     
     dynamic var team: Team?
@@ -122,5 +129,11 @@ extension Channel: Support {
     func hasNewMessages() -> Bool {
         guard lastViewDate != nil else { return true }
       return ((self.lastViewDate as NSDate?)?.isEarlierThan(self.lastPostDate))!
+    }
+}
+
+extension Channel: Computatations {
+    func computeDisplayNameWidth() {
+        self.displayNameWidth = StringUtils.widthOfString(self.displayName! as NSString!, font: FontBucket.postAuthorNameFont)
     }
 }

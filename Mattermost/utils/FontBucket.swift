@@ -9,6 +9,7 @@
 import Foundation
 
 private protocol PostFonts: class {
+    static var channelFont: UIFont {get}
     static var messageFont: UIFont {get}
     static var postDateFont: UIFont {get}
     static var postAuthorNameFont: UIFont {get}
@@ -68,6 +69,7 @@ final class FontBucket {
 }
 
 extension FontBucket : PostFonts {
+    static let channelFont = FontBucket.semiboldFontOfSize(13)
     static let messageFont = FontBucket.regularFontOfSize(15)
     static let postDateFont = FontBucket.regularFontOfSize(13)
     static let postAuthorNameFont = FontBucket.semiboldFontOfSize(16)

@@ -41,8 +41,11 @@ private protocol PostApi: class {
     func updatePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func updateSinglePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
+    func searchPostsWithTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>?, _ error: Error?) -> Void)
     func loadFirstPage(_ channel: Channel, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func loadNextPage(_ channel: Channel, fromPost: Post, completion:  @escaping(_ isLastPage: Bool, _ error: Mattermost.Error?) -> Void)
+    func loadPostsBeforePost(post: Post, shortList: Bool?, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void)
+    func loadPostsAfterPost(post: Post, shortList: Bool?, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void)
 }
 
 private protocol FileApi : class {
@@ -302,6 +305,57 @@ extension Api: PostApi {
             completion(isLastPage, error)
         }
     }
+    
+    func loadPostsBeforePost(post: Post, shortList: Bool? = false, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void) {
+        let size = (shortList == true) ? 10 : 60
+        let wrapper = PageWrapper(size: size, channel: post.channel, lastPostId: post.identifier)
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.beforePostPathPattern(), wrapper)
+        
+        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+            guard !skipMapping else {
+                completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
+                return
+            }
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
+                DispatchQueue.main.sync {
+                    completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
+                }
+            })
+        }) { (error) in
+            var isLastPage = false
+            if error!.code == 1001 {
+                isLastPage = true
+            }
+            completion(isLastPage, error)
+        }
+    }
+    
+    func loadPostsAfterPost(post: Post, shortList: Bool? = false, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void) {
+        let size = (shortList == true) ? 10 : 60
+        let wrapper = PageWrapper(size: size, channel: post.channel, lastPostId: post.identifier)
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.afterPostPathPattern(), wrapper)
+        
+        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+            guard !skipMapping else {
+                completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
+                return
+            }
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
+                DispatchQueue.main.sync {
+                    completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
+                }
+            })
+        }) { (error) in
+            var isLastPage = false
+            if error!.code == 1001 {
+                isLastPage = true
+            }
+            completion(isLastPage, error)
+        }
+    }
+    
     func sendPost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
@@ -343,6 +397,18 @@ extension Api: PostApi {
             completion(nil)
             }) { (error) in
             completion(error)
+        }
+    }
+    
+    func searchPostsWithTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>?, _ error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.searchingPathPattern(), channel)
+        let params = ["team_id" : Preferences.sharedInstance.currentTeamId!]
+        
+        self.manager.searchPosts(with: terms, path: path, parameters: params, success: { (mappingResult) in
+            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+            completion(posts, nil)
+        }) { (error) in
+            completion(nil, error)
         }
     }
     

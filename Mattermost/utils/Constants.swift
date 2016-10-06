@@ -45,18 +45,15 @@ struct Constants {
     
     struct UI {
         static let FeedCellMessageLabelPaddings: CGFloat = 61
-        static let FeedCellIndicatorPadding: CGFloat = 22
-        static let PostStatusViewSize: CGFloat = 34
-        static let ShortPaddingSize: CGFloat = 5
-        static let MiddlePaddingSize: CGFloat = 8
-        static let StandardPaddingSize: CGFloat = 16
-        static let LongPaddingSize: CGFloat = 10
-        static let DoublePaddingSize: CGFloat = 20
+        static let FeedCellIndicatorPadding: CGFloat     = 22
+        static let PostStatusViewSize: CGFloat           = 34
+        static let ShortPaddingSize: CGFloat             = 5
+        static let MiddlePaddingSize: CGFloat            = 8
+        static let StandardPaddingSize: CGFloat          = 16
+        static let LongPaddingSize: CGFloat              = 10
+        static let DoublePaddingSize: CGFloat            = 20
+        static let MessagePaddingSize: CGFloat           = 53
     }
-    
-//    struct UserStatus {
-//        <#fields#>
-//    }
     
     struct PostActionType {
         static let SendNew     = "sendNew"

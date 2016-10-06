@@ -44,6 +44,20 @@ extension PostResponseDescriptorsContainer: ResponseDescriptor {
                                     keyPath: "posts",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
+    static func beforePostResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
+                                    method: .GET,
+                                    pathPattern: PostPathPatternsContainer.beforePostPathPattern(),
+                                    keyPath: "posts",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func afterResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
+                                    method: .GET,
+                                    pathPattern: PostPathPatternsContainer.afterPostPathPattern(),
+                                    keyPath: "posts",
+                                    statusCodes:  RKStatusCodeIndexSetForClass(.successful))
+    }
     static func creationResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: PostMappingsContainer.creationMapping(),
                                     method: .POST,
@@ -70,6 +84,13 @@ extension PostResponseDescriptorsContainer: ResponseDescriptor {
                                     method: .POST,
                                     pathPattern: PostPathPatternsContainer.deletingPathPattern(),
                                     keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func searchingResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: PostMappingsContainer.listMapping(),
+                                    method: .POST,
+                                    pathPattern: PostPathPatternsContainer.searchingPathPattern(),
+                                    keyPath: "posts",
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
 }
