@@ -130,6 +130,10 @@ extension PostUtils : Public {
             }
         }
     }
+    //TODO: with fileItem and progress AND with more files (if DocumentPicker can do it)
+    func uploadFiles(_ channel: Channel, file: File, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+             self.assignedFiles.append(file)
+    }
     
     func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.images = images

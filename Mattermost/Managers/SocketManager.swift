@@ -165,8 +165,9 @@ extension SocketManager: Notifications {
         // if user is not author
         let day = deletedPost.day
         if deletedPost.authorId != Preferences.sharedInstance.currentUserId {
-            let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first!
-            RealmUtils.deleteObject(post)
+            let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first
+            guard post != nil else { return }
+            RealmUtils.deleteObject(post!)
             if day?.posts.count == 0 {
                 RealmUtils.deleteObject(day!)
             }

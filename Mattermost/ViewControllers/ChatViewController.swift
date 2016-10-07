@@ -80,6 +80,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         }
     }
     fileprivate var assignedPhotosArray = Array<AssignedPhotoViewItem>()
+    //TODO: file array
+    fileprivate var assignedFile: File?
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
 }
@@ -250,15 +252,20 @@ extension ChatViewController : Private {
     }
     
     func attachmentSelection() {
-        let controller = UIAlertController(title: "Attachment", message: "Choose what u want to attach", preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: "Photo", style: .default, handler: { (action:UIAlertAction) in
+        let controller = UIAlertController(title: "Attachment", message: "What you want to attach?", preferredStyle: .actionSheet)
+        let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
             self.assignPhotos()
-        }))
-        controller.addAction(UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
-//            let path = NSBundle.mainBundle().resourcePath!
-//            let fileManager = NSFileManager()
+        })
+        gallerySelectionAction.setValue(UIImage(named:"gallery_icon"), forKey: "image")
+        controller.addAction(gallerySelectionAction)
+        
+        let fileSelectionAction = UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
+            //            let path = NSBundle.mainBundle().resourcePath!
+            //            let fileManager = NSFileManager()
             self.proceedToFileSelection()
-        }))
+        })
+        fileSelectionAction.setValue(UIImage(named:"iCloud_icon"), forKey: "image")
+        controller.addAction(fileSelectionAction)
         controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
             print("canceled")
         }))
@@ -518,6 +525,14 @@ extension ChatViewController: Request {
             self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
         }
     }
+    
+    func uploadFile() {
+        PostUtils.sharedInstance.uploadFiles(self.channel!, file: self.assignedFile!, completion: { (finished, error) in
+            print("finished")
+            }) { (value, index) in
+            print("in progress")
+        }
+    }
 }
 
 
@@ -593,14 +608,13 @@ extension ChatViewController: ChannelObserverDelegate {
             //remove action observer from old channel
             //after relogin
             NotificationCenter.default.removeObserver(self,
-                                                                name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
-                                                                object: nil)
+                                                    name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
+                                                    object: nil)
         }
-        self.channel = try! Realm().objects(Channel).filter("identifier = %@", identifier).first!
+        self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         self.loadFirstPageOfData()
-        let notificationName = NSNotification.Name(rawValue: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier))
         NotificationCenter.default.addObserver(self, selector: #selector(handleChannelNotification),
                                                          name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                                                          object: nil)
@@ -715,13 +729,25 @@ extension ChatViewController {
 
 extension ChatViewController: UIDocumentPickerDelegate {
     func proceedToFileSelection() {
-        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.content"], in: .open)
+        
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.content"], in: .import)
         documentPicker.delegate = self
         documentPicker.modalPresentationStyle = .formSheet
         self.present(documentPicker, animated:true, completion:nil)
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        let data = try! Data(contentsOf: url)
+        //TODO: for progress
+        //TODO: REFACTOR mechanism
+        let fileItem = AssignedFileItem(data: data)
+        Api.sharedInstance.uploadFileItemAtChannel(url, channel: self.channel!, completion: { (file, error) in
+            self.assignedFile = file
+            self.uploadFile()
+            print("uploaded")
+            }) { (str, flo) in
+                print("in progress")
+        }
         print("url is : \(url)")
     }
 }
