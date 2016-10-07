@@ -375,7 +375,7 @@ extension Api : FileApi {
         self.manager.cancelUploadingOperationForImageItem(item)
     }
     
-    func uploadFileItemAtChannel(_ url: URL,
+    func uploadFileItemAtChannel(_ item: AssignedPhotoViewItem, url: URL,
                                   channel: Channel,
                                   completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
@@ -394,7 +394,7 @@ extension Api : FileApi {
             }, failure: { (error) in
                 completion(nil, nil)
         }) { (value) in
-//            progress(item.identifier, value)
+            progress(item.identifier, value)
         }
     }
 }

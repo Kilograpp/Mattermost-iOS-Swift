@@ -525,12 +525,19 @@ extension ChatViewController: Request {
             self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
         }
     }
-    
-    func uploadFile() {
-        PostUtils.sharedInstance.uploadFiles(self.channel!, file: self.assignedFile!, completion: { (finished, error) in
-            print("finished")
+    //refactor mechanism
+    func uploadFile(from url:URL, fileItem:AssignedPhotoViewItem) {
+        PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
+            if error != nil {
+                //TODO: handle error
+            } else {
+                self.fileUploadingInProgress = finished
+            }
             }) { (value, index) in
-            print("in progress")
+                self.assignedPhotosArray[index].uploaded = value == 1
+                self.assignedPhotosArray[index].uploading = value < 1
+                self.assignedPhotosArray[index].uploadProgress = value
+                self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
         }
     }
 }
@@ -737,17 +744,15 @@ extension ChatViewController: UIDocumentPickerDelegate {
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        let data = try! Data(contentsOf: url)
         //TODO: for progress
         //TODO: REFACTOR mechanism
-        let fileItem = AssignedFileItem(data: data)
-        Api.sharedInstance.uploadFileItemAtChannel(url, channel: self.channel!, completion: { (file, error) in
-            self.assignedFile = file
-            self.uploadFile()
-            print("uploaded")
-            }) { (str, flo) in
-                print("in progress")
-        }
-        print("url is : \(url)")
+
+        let fileItem = AssignedPhotoViewItem(image: UIImage(named: "message_file_icon")!)
+        fileItem.fileName = File.fileNameFromUrl(url: url)
+        fileItem.isFile = true
+        self.assignedPhotosArray.append(fileItem)
+        self.postAttachmentsView.showAnimated()
+        self.postAttachmentsView.updateAppearance()
+        self.uploadFile(from:url, fileItem: fileItem)
     }
 }

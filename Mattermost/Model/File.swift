@@ -88,6 +88,19 @@ extension File: Computations {
     fileprivate func computeIsImage() {
         self.isImage = FileUtils.fileIsImage(self)
     }
+    
+    static func fileNameFromUrl(url:URL) -> String {
+        let rawLink = url.absoluteString
+            let components = rawLink.components(separatedBy: "/")
+            if components.count >= 2 {
+                let fileName = components.last!.removingPercentEncoding
+                print(fileName)
+                return fileName!
+            } else {
+                print(rawLink)
+                return rawLink
+            }
+    }
 }
 
 extension File: Support {

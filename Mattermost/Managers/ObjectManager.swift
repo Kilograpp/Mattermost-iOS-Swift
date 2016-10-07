@@ -203,13 +203,11 @@ extension ObjectManager: PostRequests {
                                                                               success: successHandlerBlock,
                                                                               failure: failureHandlerBlock)
         
-        // для progress
-//        let kg_operation = operation as! KGObjectRequestOperation
-//        kg_operation.image = image
-//        kg_operation.httpRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
-//            let value = Float(totalWritten) / Float(expectedToWrite)
-//            progress?(value)
-//        }
+        let kg_operation = operation as! KGObjectRequestOperation
+        kg_operation.httpRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
+            let value = Float(totalWritten) / Float(expectedToWrite)
+            progress?(value)
+        }
         self.enqueue(operation)
     }
 }
