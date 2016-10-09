@@ -84,11 +84,6 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
-    fileprivate var emojiArray: Array = ["angry", "blush", "cold_sweat", "confounded", "cry", "disappointed", "disappointed_relieved", "fearful", "flushed", "grin",
-                                         "grinning", "heart_eyes", "joy", "kissing", "kissing_closed_eyes", "kissing_heart", "kissing_smiling_eyes", "laughing",
-                                         "pensive", "persevere", "pout", "rage", "relaxed", "relieved", "satisfied", "scream", "sleepy", "smile", "smiley", "sob",
-                                         "stuck_out_tongue", "stuck_out_tongue_closed_eyes", "stuck_out_tongue_winking_eye", "sweat", "sweat_smile", "tired_face",
-                                         "triumph", "unamused", "weary", "wink"]
 }
 
 
@@ -100,6 +95,7 @@ extension ChatViewController {
         
         ChannelObserver.sharedObserver.delegate = self
         initialSetup()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -579,11 +575,19 @@ extension ChatViewController: Request {
 
 extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return self.resultsObserver?.numberOfSections() ?? 1
+        if (tableView == self.tableView) {
+            return self.resultsObserver?.numberOfSections() ?? 1
+        }
+        
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.resultsObserver?.numberOfRows(section) ?? 0
+        if (tableView == self.tableView) {
+            return self.resultsObserver?.numberOfRows(section) ?? 0
+        }
+        
+        return (self.emojiResult != nil) ? (self.emojiResult?.count)! : 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -609,6 +613,7 @@ extension ChatViewController {
 
 extension ChatViewController {
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard tableView == self.tableView else { return nil }
         guard resultsObserver != nil else { return UIView() }
         var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
         if view == nil {
@@ -624,7 +629,7 @@ extension ChatViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return FeedTableViewSectionHeader.height()
+        return (tableView == self.tableView) ? FeedTableViewSectionHeader.height() : 0
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -632,8 +637,12 @@ extension ChatViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let post = resultsObserver?.postForIndexPath(indexPath)
-        return self.builder.heightForPost(post!)
+        if (tableView == self.tableView) {
+            let post = resultsObserver?.postForIndexPath(indexPath)
+            return self.builder.heightForPost(post!)
+        }
+        
+        return 40
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -798,11 +807,13 @@ extension ChatViewController {
         guard let prefix = self.foundPrefix else { return cell }
         
         var text = searchResult[indexPath.row]
-        if (prefix == ":") {
-            text = ":\(text):"
-        }
+     //   if (prefix == ":") {
+     //       text = ":\(text):"
+     //   }
         
-        cell.configureWith(name: text, indexPath: indexPath)
+        let originalIndex = Constants.EmojiArrays.mattermost.index(of: text)
+        cell.configureWith(index: originalIndex)
+        //cell.configureWith(name: text, indexPath: indexPath)
         
         return cell
     }
@@ -816,7 +827,7 @@ extension ChatViewController {
         self.emojiResult = nil
         
         if (prefix == ":") && word.characters.count > 0 {
-            array = self.emojiArray.filter { NSPredicate(format: "self BEGINSWITH[c] %@", word).evaluate(with: $0) };
+            array = Constants.EmojiArrays.mattermost.filter { NSPredicate(format: "self BEGINSWITH[c] %@", word).evaluate(with: $0) };
         }
         
         var show = false
@@ -831,10 +842,8 @@ extension ChatViewController {
     
     override func heightForAutoCompletionView() -> CGFloat {
         guard let smilesResult = self.emojiResult else { return 0 }
+        let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
         
-        let cellHeight = self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0))
-        guard let height = cellHeight else { return 0 }
-        
-        return height * CGFloat(smilesResult.count)
+        return cellHeight * CGFloat(smilesResult.count)
     }
 }

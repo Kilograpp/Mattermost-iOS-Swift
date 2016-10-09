@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TSMarkdownParser
 
 private protocol EmojiTableViewCellSetup {
 
@@ -16,8 +17,8 @@ private protocol EmojiTableViewCellSetup {
 class EmojiTableViewCell: UITableViewCell, Reusable {
 
 //MARK: Properties
-    internal let thumbnailImageView: UIImageView = UIImageView()
-    private let nameLabel: UILabel = UILabel()
+    fileprivate var thumbnailLabel = MessageLabel()
+    fileprivate var nameLabel = UILabel()
     
     fileprivate var indexPath: IndexPath = IndexPath()
     
@@ -30,11 +31,11 @@ class EmojiTableViewCell: UITableViewCell, Reusable {
         self.setup()
     }
     
-    func configureWith(name: String!, indexPath: IndexPath!) {
-        self.indexPath = indexPath
-        self.nameLabel.text = name
+    func configureWith(index: Int!) {
+        let attributedString = TSMarkdownParser.sharedInstance.attributedString(fromMarkdown: Constants.EmojiArrays.apple[index])
+        self.thumbnailLabel.textStorage = NSTextStorage(attributedString: attributedString)
+        self.nameLabel.text = Constants.EmojiArrays.mattermost[index]
     }
-    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -48,20 +49,33 @@ class EmojiTableViewCell: UITableViewCell, Reusable {
     }
     
     override func prepareForReuse() {
+        self.thumbnailLabel.textStorage = nil
+        self.nameLabel.text = nil
     }
     
     override func layoutSubviews() {
-        //postStatusView.frame = CGRect(x: UIScreen.screenWidth() - Constants.UI.PostStatusViewSize, y: (frame.height - Constants.UI.PostStatusViewSize)/2, width: Constants.UI.PostStatusViewSize, height: Constants.UI.PostStatusViewSize)
+        self.thumbnailLabel.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
+        self.nameLabel.frame = CGRect(x: 50, y: 5, width: 60, height: 20)
         
-        //self.align()
-        //self.alignSubviews()
+        self.align()
+        self.alignSubviews()
     }
 }
 
 extension EmojiTableViewCell: EmojiTableViewCellSetup {
-    fileprivate func setup() {
+    func setup() {
+        setupThumbnailLabel()
+        setupNameLabel()
         //self.setupBasics()
         //self.setupMessageLabel()
         //setupPostStatusView()
+    }
+    
+    func setupThumbnailLabel() {
+        self.addSubview(self.thumbnailLabel)
+    }
+    
+    func setupNameLabel() {
+        self.addSubview(self.nameLabel)
     }
 }

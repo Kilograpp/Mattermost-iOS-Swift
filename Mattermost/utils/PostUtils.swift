@@ -17,6 +17,7 @@ private protocol Public : class {
     func sendReplyToPost(_ post: Post, channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void)
     func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
     func cancelImageItemUploading(_ item: AssignedPhotoViewItem)
 }
@@ -128,6 +129,12 @@ extension PostUtils : Public {
             if day?.posts.count == 0 {
                 RealmUtils.deleteObject(day!)
             }
+        }
+    }
+    
+    func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void) {
+        Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
+            completion(posts!, error)
         }
     }
     

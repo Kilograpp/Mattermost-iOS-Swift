@@ -66,4 +66,15 @@ struct Constants {
         static let PublicTypeChannel  = "O"
         static let PrivateTypeChannel = "D"
     }
+    
+    struct EmojiArrays {
+        static let apple: Array = [ "😠", "☺️", "😰", "😖", "😢", "😞", "😥", "😨", "😳", "😁", "😀", "😍", "😂", "😗", "😚", "😘", "😙", "😆", "😔",
+                                    "😣", "😡", "😡", "😊", "😌", "😆", "😱", "😪", "😄", "😃", "😭", "😛", "😜", "😝", "😓", "😅", "😩", "😤", "😒",
+                                    "😫", "😉" ]
+        static let mattermost: Array = [ "angry", "blush", "cold_sweat", "confounded", "cry", "disappointed", "disappointed_relieved", "fearful", "flushed",
+                                         "grin", "grinning", "heart_eyes", "joy", "kissing", "kissing_closed_eyes", "kissing_heart", "kissing_smiling_eyes",
+                                         "laughing", "pensive", "persevere", "pout", "rage", "relaxed", "relieved", "satisfied", "scream", "sleepy", "smile",
+                                         "smiley", "sob", "stuck_out_tongue", "stuck_out_tongue_closed_eyes", "stuck_out_tongue_winking_eye", "sweat",
+                                         "sweat_smile", "tired_face", "triumph", "unamused", "weary", "wink" ]
+    }
 }
