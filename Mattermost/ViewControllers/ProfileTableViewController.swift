@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 @objc private enum InfoSections : Int {
     case base
@@ -24,12 +25,11 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    var dataSourceFirstSection: NSArray?
-    var dataSourceSecondSection: NSArray?
+    fileprivate lazy var cellBuilder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView)
     var user: User?
     
     
-//MARK: - Life cycle
+//MARK: Life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,22 +41,15 @@ class ProfileViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-     //   initialSetup()
-    }
 }
 
 
-//MARK: - Setup
+//MARK: Setup
 
 extension ProfileViewController {
     func initialSetup() {
         self.user = DataManager.sharedInstance.currentUser!
     
-        setupDataSource()
         setupNavigationBar()
         setupHeader()
         setupTable()
@@ -72,34 +65,16 @@ extension ProfileViewController {
     func setupHeader() {
         self.nameLabel?.font = UIFont.kg_semibold30Font()
         self.nameLabel?.textColor = UIColor.kg_blackColor()
-        self.nameLabel?.text = self.user!.nickname
+        self.nameLabel?.text = self.user!.firstName
         
-        self.avatarImageView?.layer.cornerRadius = self.avatarImageView!.bounds.height / 2
         self.avatarImageView?.layer.drawsAsynchronously = true
-        self.avatarImageView?.clipsToBounds = true
-        self.avatarImageView?.backgroundColor = UIColor.white
+        self.avatarImageView?.backgroundColor = UIColor.red
         self.avatarImageView?.setIndicatorStyle(UIActivityIndicatorViewStyle.gray)
-        //print(self.user?.avatarURL())
-        //self.avatarImageView?.sd_setImageWithURL(self.user!.avatarURL(), placeholderImage: nil, completed: nil)
-        self.avatarImageView?.image = UIImage.sharedAvatarPlaceholder
         
-      /*
-        ImageDownloader.downloadFullAvatarForUser(self.user!) { (image, error) in
-            if (image == nil) {
-                print(error?.localizedDescription)
-            }
-            self.avatarImageView.image = image
-        }*/
-        
-        print(self.user?.avatarURL())
-        ImageDownloader.downloadFeedAvatarForUser(self.user!) { [weak self] (image, error) in
-            if (image == nil) {
-                print(error?.localizedDescription)
-            }
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+           ImageDownloader.downloadFullAvatarForUser(self.user!) { [weak self] (image, error) in
             self?.avatarImageView.image = image
         }
-        
-        print(self.user?.firstName)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(changeProfilePhoto))
         self.avatarImageView?.isUserInteractionEnabled = true
@@ -113,41 +88,7 @@ extension ProfileViewController {
 }
 
 
-//MARK: - Private
-
-extension ProfileViewController {
-    func setupDataSource() {
-        let firstSection = NSMutableArray()
-        firstSection.add(ProfileDataSource.entryWithTitle("Name", iconName: "profile_name_icon", info: self.user!.firstName!, handler: {
-            NSLog("Navigate to profile")
-        }))
-        firstSection.add(ProfileDataSource.entryWithTitle("Username", iconName: "profile_usename_icon", info: self.user!.nickname!, handler: {
-            NSLog("Navigate to profile")
-        }))
-        firstSection.add(ProfileDataSource.entryWithTitle("Nickname", iconName: "profile_nick_icon", info: self.user!.nickname!, handler: {
-            NSLog("Navigate to profile")
-        }))
-        firstSection.add(ProfileDataSource.entryWithTitle("Profile photo", iconName: "profile_photo_icon", info: String(), handler: {
-            NSLog("Navigate to profile")
-        }))
-        self.dataSourceFirstSection = firstSection
-        
-        let secondSection = NSMutableArray()
-        secondSection.add(ProfileDataSource.entryWithTitle("Email", iconName: "profile_email_icon", info: self.user!.email!, handler: {
-            NSLog("Navigate to profile")
-        }))
-        secondSection.add(ProfileDataSource.entryWithTitle("Change password", iconName: "profile_pass_icon", info: String(), handler: {
-            NSLog("Navigate to profile")
-        }))
-        secondSection.add(ProfileDataSource.entryWithTitle("Notification", iconName: "profile_notification_icon", info: "On", handler: {
-            NSLog("Navigate to profile")
-        }))
-        self.dataSourceSecondSection = secondSection
-    }
-}
-
-
-//MARK: - Actions
+//MARK: Actions
 
 extension ProfileViewController {
     func backAction() {
@@ -156,51 +97,19 @@ extension ProfileViewController {
 }
 
 
-//MARK: - UITableViewDataSource
+//MARK: UITableViewDataSource
 
 extension ProfileViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        print(InfoSections.count)
-        return InfoSections.count
+        return Constants.Profile.SectionsCount
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case InfoSections.base.rawValue:
-            print(self.dataSourceFirstSection?.count)
-            return (self.dataSourceFirstSection?.count)!
-            
-        case InfoSections.registration.rawValue:
-            print(self.dataSourceSecondSection?.count)
-            return (self.dataSourceSecondSection?.count)!
-            
-        default:
-            break
-        }
-        
-        return 0
+        return (section == 0) ? Constants.Profile.FirsSectionDataSource.count : Constants.Profile.SecondSecionDataSource.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let identifier = ProfileTableViewCell.reuseIdentifier
-        
-        var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
-        if (cell == nil) {
-            cell = UITableViewCell(style: .default, reuseIdentifier:identifier) as! ProfileTableViewCell
-        }
-        
-        switch (indexPath as NSIndexPath).section {
-        case InfoSections.base.rawValue:
-            //s3 refactor // as AnyObject
-            (cell as! ProfileTableViewCell).configureWithObject(self.dataSourceFirstSection![(indexPath as NSIndexPath).row] as AnyObject)
-            
-        case InfoSections.registration.rawValue:
-            (cell as! ProfileTableViewCell).configureWithObject(self.dataSourceSecondSection![(indexPath as NSIndexPath).row] as AnyObject)
-            
-        default:
-            break
-        }
-        return cell!
+        return self.cellBuilder.cellFor(user: self.user!, indexPath: indexPath)
     }
 }
 

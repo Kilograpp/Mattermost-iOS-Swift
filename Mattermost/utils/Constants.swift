@@ -77,4 +77,13 @@ struct Constants {
                                          "smiley", "sob", "stuck_out_tongue", "stuck_out_tongue_closed_eyes", "stuck_out_tongue_winking_eye", "sweat",
                                          "sweat_smile", "tired_face", "triumph", "unamused", "weary", "wink" ]
     }
+    
+    struct Profile {
+        static let SectionsCount = 2
+        static let FirsSectionDataSource = [ (title: "Name", icon: "profile_name_icon"), (title: "Username", icon: "profile_usename_icon"),
+                                             (title: "Nickname", icon: "profile_usename_icon"), (title: "Profile photo", icon: "profile_photo_icon") ]
+        static let SecondSecionDataSource = [ (title: "Email", icon: "profile_email_icon"), (title: "Change password", icon: "profile_email_icon"),
+                                              (title: "Notification", icon: "profile_notification_icon") ]
+    }
+    
 }
