@@ -26,6 +26,7 @@ final class ImageDownloader {
                     
                     // Handle unpredictable errors
                     guard image != nil else {
+                        print(imageUrl?.absoluteString)
                         completion(nil, error as NSError?)
                         return
                     }
@@ -42,7 +43,7 @@ final class ImageDownloader {
             }
             
             SDWebImageManager.shared().downloadImage(with: user.avatarURL() as URL!,
-                                                                   options: .handleCookies ,
+                                                     options: [.handleCookies , .retryFailed ],
                                                                    progress: nil,
                                                                    completed: imageDownloadCompletionHandler)
         }
