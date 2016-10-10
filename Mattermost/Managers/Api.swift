@@ -366,7 +366,7 @@ extension Api : FileApi {
             completion(file, nil)
             RealmUtils.save(file)
             }, failure: { (error) in
-                completion(nil, nil)
+                completion(nil, error)
             }) { (value) in
                 progress(item.identifier, value)
         }
@@ -394,7 +394,7 @@ extension Api : FileApi {
             completion(file, nil)
             RealmUtils.save(file)
             }, failure: { (error) in
-                completion(nil, nil)
+                completion(nil, error)
         }) { (value) in
             progress(item.identifier, value)
         }

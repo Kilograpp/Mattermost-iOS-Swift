@@ -471,7 +471,9 @@ extension ChatViewController: Request {
     
     func sendPost() {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
-
+            if (error != nil) {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+            }
         }
         self.dismissKeyboard(true)
         self.clearTextView()
@@ -481,6 +483,9 @@ extension ChatViewController: Request {
         guard (self.selectedPost != nil) else { return }
         
         PostUtils.sharedInstance.sendReplyToPost(self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+            if (error != nil) {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+            }
             self.selectedPost = nil
         }
         self.clearTextView()
@@ -514,11 +519,17 @@ extension ChatViewController: Request {
         PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error, item) in
             if error != nil {
                 //TODO: handle error
+                //refactor обработка этой ошибки в отдельную функцию
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
                 print("error with \(item.fileName)")
                 self.assignedPhotosArray.removeObject(item)
                 self.postAttachmentsView.updateAppearance()
+                if (self.assignedPhotosArray.count == 0) {
+                    self.postAttachmentsView.hideAnimated()
+                }
             } else {
                 self.fileUploadingInProgress = finished
+                
             }
         }) { (value, index) in
             self.assignedPhotosArray[index].uploaded = value == 1
@@ -532,8 +543,12 @@ extension ChatViewController: Request {
         PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
             if error != nil {
                 //TODO: handle error
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
                 self.assignedPhotosArray.removeObject(fileItem)
                 self.postAttachmentsView.updateAppearance()
+                if (self.assignedPhotosArray.count == 0) {
+                    self.postAttachmentsView.hideAnimated()
+                }
             } else {
                 self.fileUploadingInProgress = finished
             }

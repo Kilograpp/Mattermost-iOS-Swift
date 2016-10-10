@@ -135,11 +135,10 @@ extension PostUtils : Public {
     func uploadFiles(_ channel: Channel,fileItem:AssignedPhotoViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
             self.files.append(fileItem)
             Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
-                if (error != nil) {
-                    completion(false, error)
-                } else {
-                    self.assignedFiles.append(file!)
-                }
+                completion(false, error)
+                guard error == nil else { return }
+                self.assignedFiles.append(file!)
+                
                 print("uploaded")
             }) { (identifier, value) in
                 
@@ -160,6 +159,7 @@ extension PostUtils : Public {
                 item.uploading = true
                 Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
                     completion(false, error, item)
+                    guard error == nil else { return }
                     if self.assignedFiles.count == 0 {
                         self.test = file
                     }
