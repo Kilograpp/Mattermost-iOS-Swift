@@ -10,6 +10,7 @@ import SlackTextViewController
 import RealmSwift
 // import ImagePickerSheetController
 import UITableView_Cache
+import MFSideMenu
 
 private protocol Setup {
     func initialSetup()
@@ -36,6 +37,8 @@ private protocol Private {
 }
 
 private protocol Action {
+    func leftMenuButtonAction(_ sender: AnyObject)
+    func rigthMenuButtonAction(_ sender: AnyObject)
     func searchButtonAction(_ sender: AnyObject)
     func sendPostAction()
     func assignPhotosAction()
@@ -392,6 +395,14 @@ extension ChatViewController : Private {
 //MARK: Action
 
 extension ChatViewController: Action {
+    @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
+        self.menuContainerViewController.setMenuState(MFSideMenuStateLeftMenuOpen, completion: nil)
+    }
+    
+    @IBAction func rigthMenuButtonAction(_ sender: AnyObject) {
+        self.menuContainerViewController.setMenuState(MFSideMenuStateRightMenuOpen, completion: nil)
+    }
+    
     @IBAction func searchButtonAction(_ sender: AnyObject) {
         proceedToSearchChat()
     }
