@@ -396,6 +396,8 @@ extension ChatViewController: Action {
         default:
             sendPost()
         }
+        self.assignedPhotosArray.removeAll()
+        self.postAttachmentsView.hideAnimated()
     }
     
     func assignPhotosAction() {
@@ -473,6 +475,7 @@ extension ChatViewController: Request {
     
     func sendPost() {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+
         }
         self.dismissKeyboard(true)
         self.clearTextView()
@@ -651,7 +654,6 @@ extension ChatViewController: PostAttachmentViewDelegate {
     func didRemovePhoto(_ photo: AssignedPhotoViewItem) {
         PostUtils.sharedInstance.cancelImageItemUploading(photo)
         self.assignedPhotosArray.removeObject(photo)
-        
         guard self.assignedPhotosArray.count != 0 else {
             self.postAttachmentsView.hideAnimated()
             return
@@ -747,7 +749,7 @@ extension ChatViewController: UIDocumentPickerDelegate {
         //TODO: for progress
         //TODO: REFACTOR mechanism
 
-        let fileItem = AssignedPhotoViewItem(image: UIImage(named: "message_file_icon")!)
+        let fileItem = AssignedPhotoViewItem(image: UIImage(named: "attach_file_icon")!)
         fileItem.fileName = File.fileNameFromUrl(url: url)
         fileItem.isFile = true
         self.assignedPhotosArray.append(fileItem)

@@ -10,7 +10,7 @@ import Foundation
 
 
 class PostFileViewCell: PostAttachmentsViewCell {
-    let nameLabel = UILabel()
+    let nameLabel = UILabel(frame: CGRect(x: 5, y: 0, width: 65, height: 0))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,6 +21,8 @@ class PostFileViewCell: PostAttachmentsViewCell {
         super.configureWithItem(item)
         
         self.nameLabel.text = item.fileName
+        self.nameLabel.sizeToFit()
+        self.nameLabel.setNeedsLayout()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -28,9 +30,9 @@ class PostFileViewCell: PostAttachmentsViewCell {
     }
     
     override func layoutSubviews() {
-        super.layoutSubviews()
+        self.nameLabel.frame = CGRect(x: 5, y: self.bounds.height/2 - self.nameLabel.frame.height, width: 65, height: self.nameLabel.frame.height)
         
-        self.nameLabel.frame = CGRect(x: 0, y: self.bounds.height/2 - 10, width: self.bounds.width, height: 20)
+        super.layoutSubviews()
     }
 }
 
@@ -41,7 +43,7 @@ private protocol Setup {
 extension PostFileViewCell: Setup {
     func setupLabel() {
         self.backgroundImageView?.backgroundColor = UIColor.clear
-        self.nameLabel.font = UIFont.systemFont(ofSize: 14)
+        self.nameLabel.font = UIFont.systemFont(ofSize: 13)
         self.nameLabel.textColor = UIColor.black
         self.addSubview(self.nameLabel)
         self.bringSubview(toFront: nameLabel)

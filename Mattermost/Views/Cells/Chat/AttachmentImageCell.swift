@@ -15,11 +15,14 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     }
     fileprivate var fileName: String?
     fileprivate let fileImageView = UIImageView()
+    fileprivate let fileNameLabel = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         self.selectionStyle = .none
-        self.setupImageView()
+        setupImageView()
+        setupLabel()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,15 +30,30 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     }
     
     fileprivate func setupImageView() {
-        self.fileImageView.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        self.fileImageView.contentMode = .scaleAspectFit
+//        self.fileImageView.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        self.fileImageView.contentMode = .scaleToFill
         self.addSubview(self.fileImageView)
+        self.fileImageView.backgroundColor = UIColor.clear
+    }
+    
+    fileprivate func setupLabel() {
+        fileNameLabel.font = UIFont.systemFont(ofSize: 13)
+        fileNameLabel.textColor = ColorBucket.blueColor
+        fileNameLabel.numberOfLines = 0
+        self.addSubview(fileNameLabel)
     }
     
     func configureWithFile(_ file: File) {
         self.file = file
-        self.configureImageView()
-        
+        configureImageView()
+        configureLabel()
+    }
+    
+    fileprivate func configureLabel() {
+        guard fileName != nil else { return }
+        fileNameLabel.text = fileName
+        fileNameLabel.sizeToFit()
+        self.layoutSubviews()
     }
     
     fileprivate func configureImageView() {
@@ -93,7 +111,16 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     }
     
     override func layoutSubviews() {
-        self.fileImageView.frame = self.bounds
+        self.fileNameLabel.sizeToFit()
+        self.fileNameLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.fileNameLabel.frame.height)
+        self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.height, width: self.bounds.width, height: self.bounds.height - self.fileNameLabel.frame.height)
+        
+//        self.fileImageView.frame = CGRect(x: 0, y: 0, width: self.bounds.width * 0.6, height: self.bounds.height)
+//        self.fileNameLabel.frame = CGRect(x: self.bounds.width * 0.6,
+//                                          y: self.bounds.height / 2 - self.fileNameLabel.frame.height,
+//                                          width: self.bounds.width * 0.4,
+//                                          height: self.fileNameLabel.frame.height)
+        
         super.layoutSubviews()
     }
     

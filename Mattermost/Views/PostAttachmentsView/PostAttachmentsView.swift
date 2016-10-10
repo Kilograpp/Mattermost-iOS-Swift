@@ -113,8 +113,8 @@ extension PostAttachmentsView : Private {
 
 extension PostAttachmentsView : Public {
     func updateProgressValueAtIndex(_ index: Int, value: Float) {
-        let cellAtIndex = self.collectionView?.cellForItem(at: IndexPath(item:index, section: 0)) as! PostAttachmentsViewCell
-        cellAtIndex.updateProgressViewWithValue(value)
+        guard let cellAtIndex = self.collectionView?.cellForItem(at: IndexPath(item:index, section: 0)) else { return }
+        (cellAtIndex  as! PostAttachmentsViewCell).updateProgressViewWithValue(value)
     }
     
     func updateAppearance() {

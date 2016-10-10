@@ -20,9 +20,11 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
         let iconFrame = CGRect(x: 5, y: 5, width: 44, height: 44).offsetBy(dx: frame.origin.x, dy: frame.origin.y)
         UIImage(named: "message_file_icon")?.draw(in: iconFrame)
         
-
+        let textColor = ColorBucket.blueColor
+        let textFont =  UIFont.systemFont(ofSize: 13)
+        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
         let nameFrame = CGRect(x: iconFrame.maxX + 5, y: 8, width: frame.width - 64, height: 20).offsetBy(dx: 0, dy: frame.origin.y)
-        (self.file.name! as NSString).draw(in: nameFrame, withAttributes: nil)
+        (self.file.name! as NSString).draw(in: nameFrame, withAttributes: attributes)
         
 //        let nameFrame = CGRectOffset(CGRectMake(iconFrame.maxX + 5, 8, frame.size.width - 64, 20), 0, frame.origin.y)
 //        (self.file.name as? NSString)?.drawInRect(nameFrame, withAttributes: )

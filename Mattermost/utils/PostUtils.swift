@@ -32,7 +32,7 @@ final class PostUtils: NSObject {
     static let sharedInstance = PostUtils()
     fileprivate let upload_images_group = DispatchGroup()
     //refactor rename files
-    fileprivate var images = Array<AssignedPhotoViewItem>()
+    fileprivate var files = Array<AssignedPhotoViewItem>()
     
     fileprivate var test: File?
     
@@ -133,13 +133,13 @@ extension PostUtils : Public {
     }
     //TODO: with fileItem and progress AND with more files (if DocumentPicker can do it)
     func uploadFiles(_ channel: Channel,fileItem:AssignedPhotoViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
-            self.images.append(fileItem)
+            self.files.append(fileItem)
             Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
                 self.assignedFiles.append(file!)
                 print("uploaded")
             }) { (identifier, value) in
                 
-                let index = self.images.index(where: {$0.identifier == identifier})
+                let index = self.files.index(where: {$0.identifier == identifier})
                 guard (index != nil) else {
                     return
                 }
@@ -149,8 +149,8 @@ extension PostUtils : Public {
     }
     
     func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
-        self.images = images
-        for item in self.images {
+        self.files.append(contentsOf: images)
+        for item in images {
             if !item.uploaded {
                 self.upload_images_group.enter()
                 item.uploading = true
@@ -162,7 +162,7 @@ extension PostUtils : Public {
                     self.assignedFiles.append(file!)
                     self.upload_images_group.leave()
                     }, progress: { (identifier, value) in
-                        let index = self.images.index(where: {$0.identifier == identifier})
+                        let index = self.files.index(where: {$0.identifier == identifier})
                         guard (index != nil) else {
                             return
                         }
@@ -183,7 +183,8 @@ extension PostUtils : Public {
     
     func cancelImageItemUploading(_ item: AssignedPhotoViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-        self.images.removeObject(item)
+        self.assignedFiles.remove(at: files.index(of: item)!)
+        self.files.removeObject(item)
     }
 }
 
@@ -196,6 +197,6 @@ extension PostUtils : Private {
     
     func clearUploadedAttachments() {
         self.assignedFiles.removeAll()
-        self.images.removeAll()
+        self.files.removeAll()
     }
 }

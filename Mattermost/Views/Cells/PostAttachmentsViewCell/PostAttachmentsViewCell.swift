@@ -23,7 +23,7 @@ class PostAttachmentsViewCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupBackgroundImage()
-        setupremoveButton()
+        setupRemoveButton()
         setupProgressView()
     }
     
@@ -45,7 +45,7 @@ class PostAttachmentsViewCell : UICollectionViewCell {
 
 public protocol PrivatePostAttachmentsViewCell : class {
     func setupBackgroundImage()
-    func setupremoveButton()
+    func setupRemoveButton()
     func setupProgressView()
     
     func removeButtonAction()
@@ -58,7 +58,7 @@ public protocol PublicPostAttachmentsViewCell : class {
 extension PostAttachmentsViewCell : PrivatePostAttachmentsViewCell {
     func setupBackgroundImage() {
         self.backgroundImageView = UIImageView()
-        self.backgroundImageView?.backgroundColor = ColorBucket.blueColor
+//        self.backgroundImageView?.backgroundColor = ColorBucket.blueColor
         self.backgroundImageView?.layer.cornerRadius = 3
         self.backgroundImageView?.clipsToBounds = true
         self.backgroundImageView?.contentMode = .scaleAspectFill
@@ -71,7 +71,7 @@ extension PostAttachmentsViewCell : PrivatePostAttachmentsViewCell {
         self.addConstraints([left, right, top, bottom])
     }
     
-    func setupremoveButton() {
+    func setupRemoveButton() {
         self.removeButton = UIButton()
         self.addSubview(self.removeButton!)
         self.removeButton?.translatesAutoresizingMaskIntoConstraints = false
