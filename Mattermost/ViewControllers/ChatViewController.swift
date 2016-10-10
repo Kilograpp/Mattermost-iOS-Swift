@@ -8,7 +8,7 @@
 
 import SlackTextViewController
 import RealmSwift
-// import ImagePickerSheetController
+import ImagePickerSheetController
 import UITableView_Cache
 
 private protocol Setup {
@@ -158,7 +158,7 @@ extension ChatViewController: Setup {
         self.rightButton.setTitle("Send", for: UIControlState())
         self.rightButton.addTarget(self, action: #selector(sendPostAction), for: .touchUpInside)
         
-        self.leftButton.setImage(UIImage(named: "chat_photo_icon"), for: UIControlState())
+        self.leftButton.setImage(UIImage(named: "common_attache_icon"), for: UIControlState())
         self.leftButton.tintColor = UIColor.gray
         self.leftButton.addTarget(self, action: #selector(attachmentSelection), for: .touchUpInside)
     }
@@ -252,7 +252,7 @@ extension ChatViewController : Private {
     }
     
     func attachmentSelection() {
-        let controller = UIAlertController(title: "Attachment", message: "What you want to attach?", preferredStyle: .actionSheet)
+        let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
         let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
             self.assignPhotos()
         })
@@ -260,8 +260,6 @@ extension ChatViewController : Private {
         controller.addAction(gallerySelectionAction)
         
         let fileSelectionAction = UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
-            //            let path = NSBundle.mainBundle().resourcePath!
-            //            let fileManager = NSFileManager()
             self.proceedToFileSelection()
         })
         fileSelectionAction.setValue(UIImage(named:"iCloud_icon"), forKey: "image")
@@ -279,7 +277,6 @@ extension ChatViewController : Private {
  
 //Images
     func assignPhotos() -> Void {
-        /*
         //TODO: MORE REFACTOR
         let presentImagePickerController: (UIImagePickerControllerSourceType) -> () = { source in
             let controller = UIImagePickerController()
@@ -290,29 +287,28 @@ extension ChatViewController : Private {
             self.present(controller, animated: true, completion: nil)
         }
         
-        let controller = ImagePickerSheetController(mediaType: .ImageAndVideo)
+        let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
         controller.maximumSelection = 5
         
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
-            presentImagePickerController(.Camera)
+            presentImagePickerController(.camera)
             }, secondaryHandler: { _, numberOfPhotos in
                 let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-                self.assignedPhotosArray.appendContentsOf(convertedAssets)
+                self.assignedPhotosArray.append(contentsOf: convertedAssets)
                 self.postAttachmentsView.showAnimated()
                 self.postAttachmentsView.updateAppearance()
                 self.uploadImages()
         }))
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
-            presentImagePickerController(.PhotoLibrary)
+            presentImagePickerController(.photoLibrary)
             }, secondaryHandler: { _ in
-                presentImagePickerController(.PhotoLibrary)
+                presentImagePickerController(.photoLibrary)
         }))
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .Cancel, handler: { _ in
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .cancel, handler: { _ in
             print("Cancelled")
         }))
         
-        presentViewController(controller, animated: true, completion: nil)
- */
+        present(controller, animated: true, completion: nil)
     }
 
 //Interface
@@ -515,9 +511,12 @@ extension ChatViewController: Request {
     }
     
     func uploadImages() {
-        PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error) in
+        PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error, item) in
             if error != nil {
                 //TODO: handle error
+                print("error with \(item.fileName)")
+                self.assignedPhotosArray.removeObject(item)
+                self.postAttachmentsView.updateAppearance()
             } else {
                 self.fileUploadingInProgress = finished
             }
@@ -533,6 +532,8 @@ extension ChatViewController: Request {
         PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
             if error != nil {
                 //TODO: handle error
+                self.assignedPhotosArray.removeObject(fileItem)
+                self.postAttachmentsView.updateAppearance()
             } else {
                 self.fileUploadingInProgress = finished
             }
@@ -698,7 +699,7 @@ extension ChatViewController {
     }
     
     func errorAction(_ post: Post) {
-        let controller = UIAlertController(title: "Error on sending post", message: "What to do?", preferredStyle: .actionSheet)
+        let controller = UIAlertController(title: "Your message was not sent", message: "Tap resend to send this message again", preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: "Resend", style: .default, handler: { (action:UIAlertAction) in
             self.resendAction(post)
         }))

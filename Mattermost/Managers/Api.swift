@@ -361,6 +361,7 @@ extension Api : FileApi {
             //s3 refactor
             let dictionary = mappingResult.firstObject as! [String:String]
             let rawLink = dictionary[FileAttributes.rawLink.rawValue]
+            file.identifier = params["client_ids"]
             file.rawLink = rawLink
             completion(file, nil)
             RealmUtils.save(file)
@@ -388,6 +389,7 @@ extension Api : FileApi {
             //refactor
             let dictionary = mappingResult.firstObject as! [String:String]
             let rawLink = dictionary[FileAttributes.rawLink.rawValue]
+            file.identifier = params["client_ids"]
             file.rawLink = rawLink
             completion(file, nil)
             RealmUtils.save(file)

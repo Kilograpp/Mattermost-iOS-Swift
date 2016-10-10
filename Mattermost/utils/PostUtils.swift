@@ -17,7 +17,7 @@ private protocol Public : class {
     func sendReplyToPost(_ post: Post, channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
+    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
     func cancelImageItemUploading(_ item: AssignedPhotoViewItem)
 }
 
@@ -131,11 +131,15 @@ extension PostUtils : Public {
             }
         }
     }
-    //TODO: with fileItem and progress AND with more files (if DocumentPicker can do it)
+    //refactor uploadItemAtChannel
     func uploadFiles(_ channel: Channel,fileItem:AssignedPhotoViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
             self.files.append(fileItem)
             Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
-                self.assignedFiles.append(file!)
+                if (error != nil) {
+                    completion(false, error)
+                } else {
+                    self.assignedFiles.append(file!)
+                }
                 print("uploaded")
             }) { (identifier, value) in
                 
@@ -148,14 +152,14 @@ extension PostUtils : Public {
             }
     }
     
-    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.files.append(contentsOf: images)
-        for item in images {
+        for item in files {
             if !item.uploaded {
                 self.upload_images_group.enter()
                 item.uploading = true
                 Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
-                    completion(false, error)
+                    completion(false, error, item)
                     if self.assignedFiles.count == 0 {
                         self.test = file
                     }
@@ -172,7 +176,7 @@ extension PostUtils : Public {
             
             self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
                 //FIXME: add error
-                completion(true, nil)
+                completion(true, nil, item)
             })
         }
     }

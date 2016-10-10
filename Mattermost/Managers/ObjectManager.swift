@@ -145,7 +145,7 @@ extension ObjectManager: PostRequests {
                         progress: ((_ progressValue: Float) -> Void)?) {
         
         let constructingBodyWithBlock = {(formData: AFRKMultipartFormData?) -> Void in
-            formData?.appendPart(withFileData: UIImagePNGRepresentation(image), name: name, fileName: "file.png", mimeType: "image/png")
+            formData?.appendPart(withFileData: UIImagePNGRepresentation(image), name: name, fileName: name, mimeType: "image/png")
         }
         
         let request: NSMutableURLRequest = self.multipartFormRequest(with: nil,

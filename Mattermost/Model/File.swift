@@ -16,6 +16,7 @@ private protocol Interface: class {
 
 final class File: RealmObject {
     dynamic var name: String?
+    dynamic var identifier: String?
     dynamic var isImage: Bool = false
     var _downloadLink: String? {
         return FileUtils.downloadLinkForFile(self)?.absoluteString
@@ -27,6 +28,7 @@ final class File: RealmObject {
         didSet {
             computeName()
             computeIsImage()
+            computeIdentifierIfNeeded()
         }
     }
     fileprivate let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.files.rawValue)
@@ -35,11 +37,11 @@ final class File: RealmObject {
     }
     
     override class func primaryKey() -> String {
-        return FileAttributes.name.rawValue
+        return FileAttributes.identifier.rawValue
     }
     
     override class func indexedProperties() -> [String] {
-        return [FileAttributes.name.rawValue]
+        return [FileAttributes.identifier.rawValue]
     }
 }
 
@@ -47,6 +49,7 @@ enum FileAttributes: String {
     case isImage = "isImage"
     case rawLink = "rawLink"
     case name = "name"
+    case identifier = "identifier"
 }
 
 enum FileRelationships: String {
@@ -58,6 +61,7 @@ private protocol Computations: class {
 //    func computeDownloadLink()
 //    func computeThumbLink()
     func computeIsImage()
+    func computeIdentifierIfNeeded()
 }
 
 
@@ -67,6 +71,10 @@ private protocol Support: class {
 }
 
 extension File: Computations {
+    fileprivate func computeIdentifierIfNeeded() {
+        guard self.identifier == nil else { return }
+        self.identifier = StringUtils.randomUUID()
+    }
     fileprivate func computeName() {
         let components = self.rawLink?.components(separatedBy: "/")
         if let components = components , components.count >= 2 {
