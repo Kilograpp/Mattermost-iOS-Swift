@@ -99,7 +99,7 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
             }
             
             SDWebImageManager.shared().downloadImage(with: downloadUrl as URL!,
-                                                                   options: .handleCookies ,
+                                                                   options: [ .handleCookies, .retryFailed ] ,
                                                                    progress: nil,
                                                                    completed: imageDownloadCompletionHandler)
         }
