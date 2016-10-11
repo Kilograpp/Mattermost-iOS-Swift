@@ -12,8 +12,7 @@
 # - Fixed typo in "xccheckout" line - thanks to @lyck for pointing it out!
 # - Fixed the .idea optional ignore. Thanks to @hashier for pointing this out
 # - Finally added "xccheckout" to the ignore. Apple still refuses to answer support requests about this, but in practice it seems you should ignore it.
-# - minor tweaks from Jona and Coeur (slightly more precise xc* filtering/names)
-# 2014 updates:
+# - minor tweaks from Jona and Coeur (slightly more precise xc* filtering/names) # 2014 updates:
 # - appended non-standard items DISABLED by default (uncomment if you use those tools)
 # - removed the edit that an SO.com moderator made without bothering to ask me
 # - researched CocoaPods .lock more carefully, thanks to Gokhan Celiker
@@ -32,7 +31,6 @@
 # OS X temporary files that should never be committed
 #
 # c.f. http://www.westwind.com/reference/os-x/invisibles.html
-
 .DS_Store
 
 # c.f. http://www.westwind.com/reference/os-x/invisibles.html
@@ -202,7 +200,6 @@ Pods/
 Carthage/
 Carthage/Build
 Carthage/Checkouts
-Cartfile.resolved
 
 # Fastlane
 fastlane/README.md
