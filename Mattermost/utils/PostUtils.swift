@@ -18,6 +18,7 @@ private protocol Public : class {
     func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
+    func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void)
     func cancelImageItemUploading(_ item: AssignedPhotoViewItem)
 }
 
@@ -136,7 +137,11 @@ extension PostUtils : Public {
             self.files.append(fileItem)
             Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
                 completion(false, error)
-                guard error == nil else { return }
+                if error != nil {
+                    self.files.removeObject(fileItem)
+                    return
+                }
+
                 self.assignedFiles.append(file!)
                 
                 print("uploaded")
@@ -151,6 +156,13 @@ extension PostUtils : Public {
             }
     }
     
+
+    func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void) {
+    Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
+    completion(posts!, error)
+    }
+    }
+    
     func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.files.append(contentsOf: images)
         for item in files {
@@ -159,7 +171,11 @@ extension PostUtils : Public {
                 item.uploading = true
                 Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
                     completion(false, error, item)
-                    guard error == nil else { return }
+                    if error != nil {
+                        self.files.removeObject(item)
+                        return
+                    }
+                    
                     if self.assignedFiles.count == 0 {
                         self.test = file
                     }

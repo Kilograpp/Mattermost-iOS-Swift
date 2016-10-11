@@ -8,6 +8,10 @@
 
 import UIKit
 
+private protocol ProfileTableViewCellSetup {
+    func initialSetup()
+}
+
 class ProfileTableViewCell: UITableViewCell, Reusable {
 
 //MARK: - Properties
@@ -36,6 +40,12 @@ class ProfileTableViewCell: UITableViewCell, Reusable {
 
 //MARK: - Configuration
     
+    func configureWith(title: String, info: String?, icon: String) {
+        self.titleLabel?.text = title
+        self.iconImageView?.image = UIImage(named: icon)
+        self.infoLabel?.text = info
+    }
+    
     func configureWithObject(_ object: AnyObject) {
         self.arrowButton?.setImage(UIImage(named: "login_arrow_icon_passive.png"), for: UIControlState())
         
@@ -52,8 +62,9 @@ class ProfileTableViewCell: UITableViewCell, Reusable {
 
 //MARK: - Setup
 
-extension ProfileTableViewCell {
+extension ProfileTableViewCell: ProfileTableViewCellSetup {
     func initialSetup() {
+        self.arrowButton?.setImage(UIImage(named: "login_arrow_icon_passive.png"), for: .normal)
         self.titleLabel?.font = UIFont.kg_regular16Font()
         self.infoLabel?.font = UIFont.kg_regular16Font()
         self.titleLabel?.textColor = UIColor.kg_blackColor()

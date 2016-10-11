@@ -31,12 +31,17 @@ private protocol Setup {
     func setupSearchView()
 }
 
+private protocol Requests {
+    
+}
+
 private protocol Action {
     func cancelBarButtonAction(_ sender: AnyObject)
 }
 
 private protocol Navigation {
     func returnToChat()
+    func proceedToChatWithPost(post: Post)
 }
 
 class SearchChatViewController: UIViewController {
@@ -49,14 +54,18 @@ class SearchChatViewController: UIViewController {
     @IBOutlet weak var noResultView: UIView!
     @IBOutlet weak var loadingEmozziView: UIView!
     
-    var searchingInProcessView: SearchingInProcessView?
-    var post: Post?
-
-
+    fileprivate var searchingInProcessView: SearchingInProcessView?
+    fileprivate lazy var builder: SearchCellBuilder = SearchCellBuilder(tableView: self.tableView)
+    fileprivate var channel: Channel?
+    
+    fileprivate var posts: Array<Post>! = Array()
+    fileprivate var dates: Array<NSDate>! = Array()
+    
+    
 //MARK: Public
     
-    func capConfigureWith(_ post: Post) {
-        self.post = post
+    func configureWithChannel(channel: Channel) {
+        self.channel = channel
     }
 }
 
@@ -66,8 +75,13 @@ class SearchChatViewController: UIViewController {
 extension SearchChatViewController: LifeCycle {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         initialSetup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        configureForSearchStage(SearchStage.SearchNotStarted)
     }
 }
 
@@ -79,7 +93,6 @@ extension SearchChatViewController: Setup {
         setupNavigationBar()
         setupTableView()
         setupSearchView()
-        
     }
     
     func setupNavigationBar() {
@@ -87,7 +100,12 @@ extension SearchChatViewController: Setup {
     }
     
     func setupTableView() {
-        
+        self.tableView.separatorStyle = .none
+        self.tableView.keyboardDismissMode = .onDrag
+        self.tableView.backgroundColor = ColorBucket.whiteColor
+        self.tableView.register(FeedSearchTableViewCell.self, forCellReuseIdentifier: FeedSearchTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.register(FeedSearchAttachmentTableViewCell.self, forCellReuseIdentifier: FeedSearchAttachmentTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.register(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
     
     func setupSearchView() {
@@ -106,8 +124,23 @@ extension SearchChatViewController: Setup {
 extension SearchChatViewController: Private {
     func configureForSearchStage(_ searchStage: Int) {
         self.infoView.isHidden = (searchStage != SearchStage.SearchNotStarted)
+        self.loadingEmozziView.isHidden = (searchStage != SearchStage.SearchRequstInProgress)
         self.tableView.isHidden = (searchStage != SearchStage.SearchResultsDisplay)
         self.noResultView.isHidden = (searchStage != SearchStage.SearchNoResults)
+        
+        if (self.loadingEmozziView.isHidden) {
+            self.searchingInProcessView?.hide()
+        }
+        else {
+            self.searchingInProcessView?.show()
+        }
+    }
+    
+    func postsForDate(date: NSDate) -> [Post] {
+        let predicate = NSPredicate(format: "day.date == %@", argumentArray: [date])
+        let filteredPosts = self.posts.filter{ predicate.evaluate(with: $0) }
+        
+        return filteredPosts
     }
 }
 
@@ -132,7 +165,67 @@ extension SearchChatViewController {
         transition.subtype = kCATransitionFromTop
         
         self.navigationController?.view.layer.add(transition, forKey: kCATransition)
-        self.navigationController?.popViewController(animated: false)
+        _ = self.navigationController?.popViewController(animated: false)
+    }
+    
+    func proceedToChatWithPost(post: Post) {
+        let viewControllers: Array = (self.navigationController?.viewControllers)!
+        let chat: ChatViewController = viewControllers[viewControllers.count - 2] as! ChatViewController
+        
+        //post.computeMissingFields()
+        RealmUtils.save(post)
+        chat.configureWithPost(post: post)
+        _ = self.navigationController?.popViewController(animated: true)
+    }
+}
+
+
+//MARK: FetchedResultsController
+
+extension SearchChatViewController {
+    func prepareSearchResults() {
+        let terms = self.searchTextField.text!
+        if ((terms as NSString).length > 0) {
+            configureForSearchStage(SearchStage.SearchRequstInProgress)
+            searchWithTerms(terms: terms)
+        }
+        else {
+            configureForSearchStage(SearchStage.SearchNotStarted)
+        }
+    }
+}
+
+
+//MARK: Requests
+
+extension SearchChatViewController: Requests {
+    func searchWithTerms(terms: String) {
+        PostUtils.sharedInstance.searchTerms(terms: terms, channel: self.channel!) { (posts, error) in
+            if (error == nil) {
+                self.posts = posts
+                self.dates.removeAll()
+                if (self.posts.count == 0) {
+                    self.configureForSearchStage(SearchStage.SearchNoResults)
+                }
+                else {
+                    for post in self.posts {
+                        let day = post.day!
+                        let index = (self.dates as NSArray).index(of: day.date!)
+                        if (index == NSNotFound) {
+                            self.dates.append(day.date! as NSDate)
+                        }
+                    }
+                    
+                    DispatchQueue.main.async{
+                        self.configureForSearchStage(SearchStage.SearchResultsDisplay)
+                        self.tableView.reloadData()
+                    }
+                    
+                    //self.configureForSearchStage(SearchStage.SearchResultsDisplay)
+                    //self.tableView.reloadData()
+                }
+            }
+        }
     }
 }
 
@@ -140,16 +233,22 @@ extension SearchChatViewController {
 //MARK: UITableViewDataSource
 
 extension SearchChatViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return (self.post != nil) ? 1 : 0
+    private func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return (self.dates.count != 0) ? self.dates.count : 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (self.post != nil) ? 1 : 0
+        return (section < self.dates.count) ? postsForDate(date: self.dates[section]).count : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let post = postsForDate(date: self.dates[indexPath.section])[indexPath.row]
+        let cell = self.builder.cellForPost(post: post, searchingText: self.searchTextField.text!)
+        (cell as! FeedSearchTableViewCell).disclosureTapHandler = {
+            self.proceedToChatWithPost(post: post)
+        }
+        
+        return cell
     }
 }
 
@@ -157,16 +256,29 @@ extension SearchChatViewController: UITableViewDataSource {
 //MARK: UITableViewDelegate
 
 extension SearchChatViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 0
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
+        if view == nil {
+            view = FeedTableViewSectionHeader(reuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
+        }
+        let titleString = (section < self.dates.count) ? (self.dates[section] as Date).feedSectionDateFormat() : ""
+        view?.configureWithTitle(titleString)
+        view?.transform = tableView.transform
+        
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0
+        return FeedTableViewSectionHeader.height()
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let post = postsForDate(date: self.dates[indexPath.section])[indexPath.row]
+        return self.builder.heightForPost(post: post)
     }
 }
 
@@ -176,5 +288,13 @@ extension SearchChatViewController: UITableViewDelegate {
 extension SearchChatViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let newString: NSString = textField.text! as NSString
+        textField.text = newString.replacingCharacters(in: range, with: string)
+        prepareSearchResults()
+        
+        return false
     }
 }

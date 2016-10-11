@@ -31,8 +31,17 @@ private protocol PostRequests: class {
                     parameters: [AnyHashable: Any]?,
                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
                     failure: ((_ error: Mattermost.Error) -> Void)?)
-
-    func postImage(with image: UIImage!,
+    func deletePost(with post: Post!,
+                    path: String!,
+                    parameters: Dictionary<String, String>?,
+                    success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                    failure: ((_ error: Error) -> Void)?)
+    func searchPosts(with terms: String!,
+                     path: String!,
+                     parameters: Dictionary<String, String>?,
+                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                     failure: ((_ error: Error) -> Void)?)
+    func postImage(with image: UIImage!, identifier: String,
                    name: String!,
                    path: String!,
                    parameters: [String : String]?,
@@ -136,7 +145,37 @@ extension ObjectManager: PostRequests {
         self.enqueue(operation)
     }
     
+    func searchPosts(with terms: String!,
+                     path: String!,
+                     parameters: Dictionary<String, String>?,
+                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                     failure: ((_ error: Error) -> Void)?) {
+        let request: NSMutableURLRequest = self.request(with: nil, method: .POST, path: path, parameters: parameters)
+        request.httpBody = try! JSONSerialization.data(withJSONObject: ["terms" : terms!, "is_or_search": true], options: .prettyPrinted)
+        
+        let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
+            success?(mappingResult!)
+        }
+        let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
+            print(operation?.httpRequestOperation.responseString)
+            if (operation?.httpRequestOperation.responseString == "{\"order\":null,\"posts\":null}") {
+                success?(RKMappingResult())
+            }
+            else {
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
+
+        }
+        
+        let operation: RKObjectRequestOperation = self.objectRequestOperation(with: request as URLRequest!,
+                                                                              success: successHandlerBlock,
+                                                                              failure: failureHandlerBlock)
+        self.enqueue(operation)
+
+    }
+    
     func postImage(with image: UIImage!,
+                   identifier: String,
                         name: String!,
                         path: String!,
                         parameters: Dictionary<String, String>?,
@@ -144,8 +183,9 @@ extension ObjectManager: PostRequests {
                         failure: ((_ error: Mattermost.Error) -> Void)?,
                         progress: ((_ progressValue: Float) -> Void)?) {
         
+        let imageName = "\(identifier).png"
         let constructingBodyWithBlock = {(formData: AFRKMultipartFormData?) -> Void in
-            formData?.appendPart(withFileData: UIImagePNGRepresentation(image), name: name, fileName: name, mimeType: "image/png")
+            formData?.appendPart(withFileData: UIImagePNGRepresentation(image), name: name, fileName: imageName, mimeType: "image/png")
         }
         
         let request: NSMutableURLRequest = self.multipartFormRequest(with: nil,

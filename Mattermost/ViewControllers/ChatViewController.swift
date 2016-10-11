@@ -10,6 +10,7 @@ import SlackTextViewController
 import RealmSwift
 import ImagePickerSheetController
 import UITableView_Cache
+import MFSideMenu
 
 private protocol Setup {
     func initialSetup()
@@ -36,6 +37,8 @@ private protocol Private {
 }
 
 private protocol Action {
+    func leftMenuButtonAction(_ sender: AnyObject)
+    func rigthMenuButtonAction(_ sender: AnyObject)
     func searchButtonAction(_ sender: AnyObject)
     func sendPostAction()
     func assignPhotosAction()
@@ -72,6 +75,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var topActivityIndicatorView: UIActivityIndicatorView?
     
     var hasNextPage: Bool = true
+    var postFromSearch: Post! = nil
     var isLoadingInProgress: Bool = false
     
     var fileUploadingInProgress: Bool = true {
@@ -84,6 +88,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var assignedFile: File?
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
+    fileprivate var emojiResult: [String]?
 }
 
 
@@ -95,6 +100,7 @@ extension ChatViewController {
         
         ChannelObserver.sharedObserver.delegate = self
         initialSetup()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,6 +118,16 @@ extension ChatViewController {
     
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
         return .grouped
+    }
+    
+    func configureWithPost(post: Post) {
+        self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", post.channel.identifier!).first!
+        self.title = self.channel?.displayName
+        self.postFromSearch = post
+        self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
+        
+        loadPostsBeforePost(post: post)
+        loadPostsAfterPost(post: post)
     }
 }
 
@@ -137,6 +153,8 @@ extension ChatViewController: Setup {
         self.tableView.register(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier, cacheSize: 10)
         self.tableView.register(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier, cacheSize: 18)
         self.tableView.register(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
+        self.autoCompletionView.register(EmojiTableViewCell.classForCoder(), forCellReuseIdentifier: EmojiTableViewCell.reuseIdentifier)
+        self.registerPrefixes(forAutoCompletion: [":"])
     }
     
     func setupInputBar() {
@@ -275,6 +293,8 @@ extension ChatViewController : Private {
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
  
+// TODO: Code Review: clean unused code
+    
 //Images
     func assignPhotos() -> Void {
         //TODO: MORE REFACTOR
@@ -379,6 +399,14 @@ extension ChatViewController : Private {
 //MARK: Action
 
 extension ChatViewController: Action {
+    @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
+        self.menuContainerViewController.setMenuState(MFSideMenuStateLeftMenuOpen, completion: nil)
+    }
+    
+    @IBAction func rigthMenuButtonAction(_ sender: AnyObject) {
+        self.menuContainerViewController.setMenuState(MFSideMenuStateRightMenuOpen, completion: nil)
+    }
+    
     @IBAction func searchButtonAction(_ sender: AnyObject) {
         proceedToSearchChat()
     }
@@ -422,8 +450,9 @@ extension ChatViewController: Navigation {
         transaction.type = kCATransitionMoveIn
         transaction.subtype = kCATransitionFromBottom
         self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
-        
-        let searchChat = self.storyboard?.instantiateViewController(withIdentifier: String(describing: SearchChatViewController())) as! SearchChatViewController
+        let identifier = String(describing: SearchChatViewController.self)
+        let searchChat = self.storyboard?.instantiateViewController(withIdentifier: identifier) as! SearchChatViewController
+        searchChat.configureWithChannel(channel: self.channel!)
         self.navigationController?.pushViewController(searchChat, animated: false)
     }
 }
@@ -462,6 +491,39 @@ extension ChatViewController: Request {
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
+            
+            self.resultsObserver.unsubscribeNotifications()
+            self.resultsObserver.prepareResults()
+            self.resultsObserver.subscribeNotifications()
+        }
+    }
+    
+    func loadPostsBeforePost(post: Post, shortSize: Bool? = false) {
+        guard !self.isLoadingInProgress else { return }
+        
+        self.isLoadingInProgress = true
+        Api.sharedInstance.loadPostsBeforePost(post: post, shortList: shortSize) { (isLastPage, error) in
+            self.hasNextPage = !isLastPage
+            if self.hasNextPage {
+                self.postFromSearch = nil
+                return
+            }
+            
+            self.isLoadingInProgress = false
+            
+            self.resultsObserver.unsubscribeNotifications()
+            self.resultsObserver.prepareResults()
+            self.resultsObserver.subscribeNotifications()
+        }
+    }
+    
+    func loadPostsAfterPost(post: Post, shortSize: Bool? = false) {
+        guard !self.isLoadingInProgress else { return }
+        
+        self.isLoadingInProgress = true
+        Api.sharedInstance.loadPostsAfterPost(post: post, shortList: shortSize) { (isLastPage, error) in
+            self.hasNextPage = !isLastPage
+            self.isLoadingInProgress = false
             
             self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
@@ -566,24 +628,36 @@ extension ChatViewController: Request {
 
 extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return self.resultsObserver?.numberOfSections() ?? 1
+        if (tableView == self.tableView) {
+            return self.resultsObserver?.numberOfSections() ?? 1
+        }
+        
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.resultsObserver?.numberOfRows(section) ?? 0
+        if (tableView == self.tableView) {
+            return self.resultsObserver?.numberOfRows(section) ?? 0
+        }
+        
+        return (self.emojiResult != nil) ? (self.emojiResult?.count)! : 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let post = resultsObserver?.postForIndexPath(indexPath)
-        if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
-            self.loadNextPageOfData()
-        }
+        if (tableView == self.tableView) {
+            let post = resultsObserver?.postForIndexPath(indexPath)
+            if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
+                self.loadNextPageOfData()
+            }
         
-        let errorHandler = { (post:Post) in
-            self.errorAction(post)
+            let errorHandler = { (post:Post) in
+                self.errorAction(post)
+            }
+            return self.builder.cellForPost(post!, errorHandler: errorHandler)
         }
-        
-        return self.builder.cellForPost(post!, errorHandler: errorHandler)
+        else {
+            return autoCompletionCellForRowAtIndexPath(indexPath)
+        }
     }
 }
 
@@ -592,6 +666,7 @@ extension ChatViewController {
 
 extension ChatViewController {
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard tableView == self.tableView else { return nil }
         guard resultsObserver != nil else { return UIView() }
         var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
         if view == nil {
@@ -607,7 +682,7 @@ extension ChatViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return FeedTableViewSectionHeader.height()
+        return (tableView == self.tableView) ? FeedTableViewSectionHeader.height() : 0
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -615,10 +690,30 @@ extension ChatViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let post = resultsObserver?.postForIndexPath(indexPath)
-        return self.builder.heightForPost(post!)
+        if (tableView == self.tableView) {
+            let post = resultsObserver?.postForIndexPath(indexPath)
+            return self.builder.heightForPost(post!)
+        }
+        
+        return 40
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (tableView == self.autoCompletionView) {
+            guard let emojiResult = self.emojiResult else { return }
+            var item = emojiResult[indexPath.row]
+            if (self.foundPrefix == ":") {
+                item += ":"
+            }
+            
+            item += " "
+            
+            self.acceptAutoCompletion(with: item, keepPrefix: true)
+        }
     }
 }
+
+
 
 //MARK: ChannelObserverDelegate
 
@@ -752,6 +847,7 @@ extension ChatViewController {
 }
 
 
+//MARK: UIDocumentPickerDelegate
 extension ChatViewController: UIDocumentPickerDelegate {
     func proceedToFileSelection() {
         
@@ -762,7 +858,6 @@ extension ChatViewController: UIDocumentPickerDelegate {
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        //TODO: for progress
         //TODO: REFACTOR mechanism
 
         let fileItem = AssignedPhotoViewItem(image: UIImage(named: "attach_file_icon")!)
@@ -772,5 +867,57 @@ extension ChatViewController: UIDocumentPickerDelegate {
         self.postAttachmentsView.showAnimated()
         self.postAttachmentsView.updateAppearance()
         self.uploadFile(from:url, fileItem: fileItem)
+    }
+}
+
+//MARK: AutoCompletionView
+
+extension ChatViewController {
+    func autoCompletionCellForRowAtIndexPath(_ indexPath: IndexPath) -> EmojiTableViewCell {
+        let cell = self.autoCompletionView.dequeueReusableCell(withIdentifier: EmojiTableViewCell.reuseIdentifier) as! EmojiTableViewCell
+        cell.selectionStyle = .default
+        
+        guard let searchResult = self.emojiResult else { return cell }
+        guard let prefix = self.foundPrefix else { return cell }
+        
+        var text = searchResult[indexPath.row]
+     //   if (prefix == ":") {
+     //       text = ":\(text):"
+     //   }
+        
+        let originalIndex = Constants.EmojiArrays.mattermost.index(of: text)
+        cell.configureWith(index: originalIndex)
+        //cell.configureWith(name: text, indexPath: indexPath)
+        
+        return cell
+    }
+    
+    override func shouldProcessText(forAutoCompletion text: String) -> Bool {
+        return true
+    }
+    
+    override func didChangeAutoCompletionPrefix(_ prefix: String, andWord word: String) {
+        var array:Array<String> = []
+        self.emojiResult = nil
+        
+        if (prefix == ":") && word.characters.count > 0 {
+            array = Constants.EmojiArrays.mattermost.filter { NSPredicate(format: "self BEGINSWITH[c] %@", word).evaluate(with: $0) };
+        }
+        
+        var show = false
+        if array.count > 0 {
+            let sortedArray = array.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
+            self.emojiResult = sortedArray
+            show = sortedArray.count > 0
+        }
+        
+        self.showAutoCompletionView(show)
+    }
+    
+    override func heightForAutoCompletionView() -> CGFloat {
+        guard let smilesResult = self.emojiResult else { return 0 }
+        let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
+        
+        return cellHeight * CGFloat(smilesResult.count)
     }
 }

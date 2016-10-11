@@ -12,12 +12,11 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     fileprivate var title : String?
     
     static func reuseIdentifier() -> String {
-        return "\(String(describing: FeedTableViewSectionHeader()))Identifier"
+        return "\(String(describing: self))Identifier"
     }
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        
         self.setup()
     }
     

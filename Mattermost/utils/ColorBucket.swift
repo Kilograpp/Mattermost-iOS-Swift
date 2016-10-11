@@ -10,6 +10,8 @@ import Foundation
 import HEXColor
 
 private protocol PostColors: class {
+    static var channelColor: UIColor {get}
+    static var authorColor: UIColor {get}
     static var commonMessageColor: UIColor {get}
     static var systemMessageColor: UIColor {get}
     static var hashtagColor: UIColor {get}
@@ -68,6 +70,8 @@ final class ColorBucket {
 }
 
 extension ColorBucket : PostColors {
+    static let channelColor = ColorBucket.middleGray()
+    static let authorColor = ColorBucket.middleGray()
     static let commonMessageColor = ColorBucket.black()
     static let systemMessageColor = ColorBucket.gray()
     static let hashtagColor = ColorBucket.blue()
@@ -82,6 +86,8 @@ extension ColorBucket : PostColors {
     static let parentMessageColor = UIColor.black
     static let parentShadowColor = UIColor.black
     static let editSeparatorColor = ColorBucket.brightBlue()
+    static let searchTextColor = ColorBucket.brightBlue()
+    static let searchTextBackgroundColor = ColorBucket.transparentOrange()
 }
 
 extension ColorBucket : CommonColors {
@@ -195,6 +201,10 @@ extension ColorBucket {
     
     fileprivate class func awayStatus() -> UIColor {
         return try! UIColor(rgba_throws: "#FFCF63")
+    }
+    
+    fileprivate class func transparentOrange() -> UIColor {
+        return UIColor(hex6: 0xFFCF63, alpha: 0.3)
     }
     
     fileprivate class func onlineStatus() -> UIColor {

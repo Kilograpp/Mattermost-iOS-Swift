@@ -129,6 +129,7 @@ extension SocketManager: MessageHandling {
     }
 }
 
+
 //MARK: - Notifications
 extension SocketManager: Notifications {
     func publishBackendNotificationAboutAction(_ action: ChannelAction, channelId:String) {
@@ -194,6 +195,7 @@ extension SocketManager: Notifications {
     }
 }
 
+
 //MARK: - State Control
 extension SocketManager: StateControl {
     fileprivate func shouldConnect() -> Bool{
@@ -211,6 +213,7 @@ extension SocketManager: StateControl {
         return false
     }
 }
+
 
 //MARK: - Validation
 extension SocketManager: Validation {

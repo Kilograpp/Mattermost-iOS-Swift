@@ -78,7 +78,6 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         self.postIdentifier = postIdentifier
         
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
-        
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }
             self?.avatarImageView.image = image
@@ -109,6 +108,8 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         //FIXME: CodeReview: Конкретный цвет
         self.avatarImageView.backgroundColor = ColorBucket.whiteColor
         self.avatarImageView.contentMode = .scaleAspectFill
+        self.avatarImageView.layer.cornerRadius = 20
+        self.avatarImageView.layer.masksToBounds = true
         self.addSubview(self.avatarImageView)
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         //TODO: add gesture recognizer
@@ -145,7 +146,7 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
         self.dateLabel.frame = CGRect(x: self.nameLabel.frame.maxX + 5, y: 8, width: dateWidth, height: 20)
         
         let size = self.parentView.requeredSize()
-        self.parentView.frame = CGRect(x: 60, y: 36, width: size.width, height: size.height)
+        self.parentView.frame = CGRect(x: 53, y: 36, width: size.width, height: size.height)
         
         super.layoutSubviews()
     }
