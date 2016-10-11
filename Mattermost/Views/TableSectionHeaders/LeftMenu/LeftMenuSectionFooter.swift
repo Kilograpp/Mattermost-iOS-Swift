@@ -50,6 +50,7 @@ extension LeftMenuSectionFooter : PrivateSetup {
         self.addSubview(self.titleButton)
         self.titleButton.setImage(UIImage(named: "common_arrow_icon_passive"), for: UIControlState())
         self.titleButton.titleLabel?.font = FontBucket.footerTitleFont
+        self.titleButton.titleLabel?.textColor = ColorBucket.leftMenuMoreTextColor
         self.titleButton.setTitle("more ", for: UIControlState())
         self.titleButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
         self.titleButton.titleLabel!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
