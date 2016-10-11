@@ -53,9 +53,14 @@ extension RightMenuViewController : PrivateConfig {
         
         let user = DataManager.sharedInstance.currentUser
         self.usernameLabel.text = user!.displayName
-        self.avatarImageView.sd_setImage(with: user!.avatarURL())
+        
+        
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         self.avatarImageView.layer.cornerRadius = 18
         self.avatarImageView.layer.masksToBounds = true
+        ImageDownloader.downloadFeedAvatarForUser(user!) { [weak self] (image, error) in
+            self?.avatarImageView.image = image
+        }
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerTapAction))
         self.headerView.addGestureRecognizer(tapGestureRecognizer)

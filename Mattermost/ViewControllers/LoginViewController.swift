@@ -110,7 +110,7 @@ extension LoginViewController: TextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.isEqual(self.loginTextField) {
-            self.passwordTextField.becomeFirstResponder()
+            _ = self.passwordTextField.becomeFirstResponder()
         }
         if textField .isEqual(self.passwordTextField) {
             self.loginAction(self)
@@ -143,7 +143,7 @@ extension LoginViewController: Lifecylce {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.loginTextField.becomeFirstResponder()
+        _ = self.loginTextField.becomeFirstResponder()
     }
 }
 

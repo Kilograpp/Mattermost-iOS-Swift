@@ -138,7 +138,7 @@ extension ServerUrlViewController:Lifecycle {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.textField.becomeFirstResponder()
+        _ = self.textField.becomeFirstResponder()
     }
     
 }

@@ -817,14 +817,9 @@ extension ChatViewController {
         guard let searchResult = self.emojiResult else { return cell }
         guard let prefix = self.foundPrefix else { return cell }
         
-        var text = searchResult[indexPath.row]
-     //   if (prefix == ":") {
-     //       text = ":\(text):"
-     //   }
-        
+        let text = searchResult[indexPath.row]
         let originalIndex = Constants.EmojiArrays.mattermost.index(of: text)
         cell.configureWith(index: originalIndex)
-        //cell.configureWith(name: text, indexPath: indexPath)
         
         return cell
     }

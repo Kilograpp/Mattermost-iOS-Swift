@@ -42,7 +42,7 @@ final class ImageDownloader {
             }
             
             SDWebImageManager.shared().downloadImage(with: user.avatarURL() as URL!,
-                                                                   options: .handleCookies ,
+                                                                   options: [.handleCookies , .retryFailed ] ,
                                                                    progress: nil,
                                                                    completed: imageDownloadCompletionHandler)
         }
