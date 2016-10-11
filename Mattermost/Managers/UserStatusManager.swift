@@ -20,7 +20,8 @@ extension UserStatusManager {
     func logout() {
         Api.sharedInstance.logout { (error) in
             // cookie deleting automatically? (Api.shared...cookie becomes nil)
-            //            SocketManager.sharedInstance.disconnect()
+            SocketManager.sharedInstance.disconnect()
+            Preferences.sharedInstance.save()
             
             NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName), object: nil))
             RealmUtils.deleteAll()

@@ -21,12 +21,7 @@ private protocol Interface: class {
     //refactor seqNumber
     static var seqNumber = 1
     fileprivate var lastNotificationDate: Date?
-    fileprivate lazy var socket: WebSocket = {
-        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().appendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
-        webSocket.delegate = self
-        webSocket.setCookie(UserStatusManager.sharedInstance.cookie())
-        return webSocket
-    }()
+    fileprivate var socket: WebSocket!
 }
 
 private protocol Notifications: class {
@@ -54,6 +49,7 @@ private protocol MessageHandling: class {
 extension SocketManager: WebSocketDelegate{
     func websocketDidConnect(socket: WebSocket) {
         NSLog("Socket did connect")
+//        publishBackendNotificationFetchStatuses()
     }
     func websocketDidReceiveData(socket: Starscream.WebSocket, data: Data) {}
     func websocketDidDisconnect(socket: Starscream.WebSocket, error: NSError?) {
@@ -73,12 +69,19 @@ extension SocketManager: Interface {
         self.publishBackendNotificationAboutAction(action, channelId: channel.identifier!)
     }
     func setNeedsConnect() {
+        setupSocket()
         if shouldConnect() {
             self.socket.connect()
         }
     }
     func disconnect() {
         socket.disconnect(forceTimeout: 0)
+    }
+    
+    func setupSocket() {
+        self.socket = WebSocket(url: Api.sharedInstance.baseURL().appendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
+        self.socket.setCookie(UserStatusManager.sharedInstance.cookie())
+        self.socket.delegate = self
     }
 }
 
