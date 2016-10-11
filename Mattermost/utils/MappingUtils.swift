@@ -62,6 +62,10 @@ extension MappingUtils: PostMethods {
         posts.forEach {
             $0.setSystemAuthorIfNeeded()
             $0.computeMissingFields()
+            let existingPost = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", $0.identifier!).first
+            if existingPost != nil {
+                $0.localIdentifier = existingPost!.localIdentifier!
+            }
             $0.cellType = FeedCellBuilder.typeForPost($0, previous: previousPost)
             previousPost = $0
         }

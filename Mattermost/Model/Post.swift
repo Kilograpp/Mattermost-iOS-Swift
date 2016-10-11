@@ -273,8 +273,9 @@ extension Post: Computations {
     fileprivate func computeLocalIdentifier() {
         guard localIdentifier == nil else { return }
         //s3 refactor
-        let dateString = createdAt!.dateFormatForPostKey()
-         self.localIdentifier = channelId! + authorId! + dateString
+//        let dateString = createdAt!.dateFormatForPostKey()
+//         self.localIdentifier = channelId! + authorId! + dateString
+        self.localIdentifier = "\(StringUtils.randomUUID())-\(self.createdAt?.timeIntervalSince1970)"
     }
 
     func setSystemAuthorIfNeeded() {
