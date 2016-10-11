@@ -21,7 +21,13 @@ private protocol Interface: class {
     //refactor seqNumber
     static var seqNumber = 1
     fileprivate var lastNotificationDate: Date?
-    fileprivate var socket: WebSocket!
+    fileprivate lazy var socket: WebSocket = {
+        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().appendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
+        webSocket.delegate = self
+        webSocket.setCookie(UserStatusManager.sharedInstance.cookie())
+        return webSocket
+    }()
+
 }
 
 private protocol Notifications: class {
@@ -69,7 +75,7 @@ extension SocketManager: Interface {
         self.publishBackendNotificationAboutAction(action, channelId: channel.identifier!)
     }
     func setNeedsConnect() {
-        setupSocket()
+//        setupSocket()
         if shouldConnect() {
             self.socket.connect()
         }
@@ -79,9 +85,7 @@ extension SocketManager: Interface {
     }
     
     func setupSocket() {
-        self.socket = WebSocket(url: Api.sharedInstance.baseURL().appendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
-        self.socket.setCookie(UserStatusManager.sharedInstance.cookie())
-        self.socket.delegate = self
+        
     }
 }
 
