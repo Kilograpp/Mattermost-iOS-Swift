@@ -128,6 +128,8 @@ extension SocketManager: MessageHandling {
                 publishLocalNotificationStatusSetup(statuses)
             case .receivingTyping:
                 publishLocalNotificationWithChannelIdentifier(channelId!, userIdentifier: userId!, action: Event.Typing.rawValue)
+            case .joinedUser:
+                publishLocalNotificationJoin(userIdentifier: userId!, to: channelId!)
             default:
                 print("UNKNW: "+text)
                 //reply with event:"hello"
@@ -199,6 +201,40 @@ extension SocketManager: Notifications {
     fileprivate func publishLocalNotificationStatusSetup(_ statuses:[String:String]) {
         let notificationName = Constants.NotificationsNames.StatusesSocketNotification
         NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: statuses)
+    }
+    fileprivate func publishLocalNotificationJoin(userIdentifier: String, to channelIdentifier: String) {
+        
+        let user = RealmUtils.realmForCurrentThread().objects(User.self).filter("%K == %@", "identifier", userIdentifier).first
+        var channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("%K == %@", "identifier", channelIdentifier).first
+        
+        //user joined to team -> loadUsers
+        if user == nil {
+            //request for user information
+        }
+        
+        if channel == nil {
+            //request for chanel information (temp load all channels)
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard error == nil else { return }
+                channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("%K == %@", "identifier", channelIdentifier).first
+                self.handleUserJoined(user: user!, channel: channel!)
+            })
+        } else {
+            handleUserJoined(user: user!, channel: channel!)
+        }
+    }
+    
+    fileprivate func handleUserJoined(user: User, channel: Channel) {
+        try! RealmUtils.realmForCurrentThread().write {
+            channel.members.append(user)
+            channel.currentUserInChannel = true
+        }
+        
+        //Если это мы присоединились -> обновить данные в левом меню
+        let notificationName = Constants.NotificationsNames.UserJoinNotification
+        if user.identifier == Preferences.sharedInstance.currentUserId {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: channel)
+        }
     }
 }
 
