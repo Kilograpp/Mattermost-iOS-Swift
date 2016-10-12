@@ -10,11 +10,11 @@ import Foundation
 
 protocol PostAttachmentViewDataSource {
     func numberOfItems() -> Int
-    func itemAtIndex(_ index: Int) -> AssignedPhotoViewItem
+    func itemAtIndex(_ index: Int) -> AssignedAttachmentViewItem
 }
 
 protocol PostAttachmentViewDelegate {
-    func didRemovePhoto(_ photo: AssignedPhotoViewItem)
+    func didRemovePhoto(_ photo: AssignedAttachmentViewItem)
     func attachmentsViewWillAppear()
     func attachmentViewWillDisappear()
 }

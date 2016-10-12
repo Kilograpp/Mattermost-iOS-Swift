@@ -49,8 +49,8 @@ private protocol PostApi: class {
 }
 
 private protocol FileApi : class {
-    func uploadImageItemAtChannel(_ item: AssignedPhotoViewItem,channel: Channel, completion:  @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void, progress:  @escaping(_ identifier: String, _ value: Float) -> Void)
-    func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem)
+    func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,channel: Channel, completion:  @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void, progress:  @escaping(_ identifier: String, _ value: Float) -> Void)
+    func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
 }
 
 final class Api {
@@ -434,7 +434,7 @@ extension Api: PostApi {
 }
 
 extension Api : FileApi {
-    func uploadImageItemAtChannel(_ item: AssignedPhotoViewItem,
+    func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,
                                   channel: Channel,
                                   completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
@@ -459,11 +459,11 @@ extension Api : FileApi {
         }
     }
     
-    func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem) {
+    func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem) {
         self.manager.cancelUploadingOperationForImageItem(item)
     }
     
-    func uploadFileItemAtChannel(_ item: AssignedPhotoViewItem, url: URL,
+    func uploadFileItemAtChannel(_ item: AssignedAttachmentViewItem, url: URL,
                                   channel: Channel,
                                   completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {

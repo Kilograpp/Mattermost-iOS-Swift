@@ -65,8 +65,6 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var channel : Channel?
     fileprivate var resultsObserver: FeedNotificationsObserver! = nil
     fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
-//    private var results: Results<Post>! = nil
-//    private var days: Results<Day>! = nil
     override var tableView: UITableView! { return super.tableView }
     fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
     fileprivate let postAttachmentsView = PostAttachmentsView()
@@ -84,9 +82,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
             self.toggleSendButtonAvailability()
         }
     }
-    fileprivate var assignedPhotosArray = Array<AssignedPhotoViewItem>()
-    //TODO: file array
-    fileprivate var assignedFile: File?
+    fileprivate var assignedFileItemsArray = Array<AssignedAttachmentViewItem>()
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
@@ -331,7 +327,7 @@ extension ChatViewController : Private {
             presentImagePickerController(.camera)
             }, secondaryHandler: { _, numberOfPhotos in
                 let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-                self.assignedPhotosArray.append(contentsOf: convertedAssets)
+                self.assignedFileItemsArray.append(contentsOf: convertedAssets)
                 self.postAttachmentsView.showAnimated()
                 self.updateTableViewBottomConstraint(postViewShowed: true)
                 self.postAttachmentsView.updateAppearance()
@@ -438,7 +434,7 @@ extension ChatViewController: Action {
         default:
             sendPost()
         }
-        self.assignedPhotosArray.removeAll()
+        self.assignedFileItemsArray.removeAll()
         self.postAttachmentsView.hideAnimated()
         self.updateTableViewBottomConstraint(postViewShowed: false)
     }
@@ -597,15 +593,15 @@ extension ChatViewController: Request {
     }
     
     func uploadImages() {
-        PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error, item) in
+        PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedFileItemsArray, completion: { (finished, error, item) in
             if error != nil {
                 //TODO: handle error
                 //refactor обработка этой ошибки в отдельную функцию
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
                 print("error with \(item.fileName)")
-                self.assignedPhotosArray.removeObject(item)
+                self.assignedFileItemsArray.removeObject(item)
                 self.postAttachmentsView.updateAppearance()
-                if (self.assignedPhotosArray.count == 0) {
+                if (self.assignedFileItemsArray.count == 0) {
                     self.postAttachmentsView.hideAnimated()
                     self.updateTableViewBottomConstraint(postViewShowed: false)
                 }
@@ -614,21 +610,21 @@ extension ChatViewController: Request {
                 
             }
         }) { (value, index) in
-            self.assignedPhotosArray[index].uploaded = value == 1
-            self.assignedPhotosArray[index].uploading = value < 1
-            self.assignedPhotosArray[index].uploadProgress = value
+            self.assignedFileItemsArray[index].uploaded = value == 1
+            self.assignedFileItemsArray[index].uploading = value < 1
+            self.assignedFileItemsArray[index].uploadProgress = value
             self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
         }
     }
     //refactor mechanism
-    func uploadFile(from url:URL, fileItem:AssignedPhotoViewItem) {
+    func uploadFile(from url:URL, fileItem:AssignedAttachmentViewItem) {
         PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
             if error != nil {
                 //TODO: handle error
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
-                self.assignedPhotosArray.removeObject(fileItem)
+                self.assignedFileItemsArray.removeObject(fileItem)
                 self.postAttachmentsView.updateAppearance()
-                if (self.assignedPhotosArray.count == 0) {
+                if (self.assignedFileItemsArray.count == 0) {
                     self.postAttachmentsView.hideAnimated()
                     self.updateTableViewBottomConstraint(postViewShowed: false)
                 }
@@ -636,9 +632,9 @@ extension ChatViewController: Request {
                 self.fileUploadingInProgress = finished
             }
             }) { (value, index) in
-                self.assignedPhotosArray[index].uploaded = value == 1
-                self.assignedPhotosArray[index].uploading = value < 1
-                self.assignedPhotosArray[index].uploadProgress = value
+                self.assignedFileItemsArray[index].uploaded = value == 1
+                self.assignedFileItemsArray[index].uploading = value < 1
+                self.assignedFileItemsArray[index].uploadProgress = value
                 self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
         }
     }
@@ -770,12 +766,12 @@ extension ChatViewController: ChannelObserverDelegate {
 //MARK: PostAttachmentViewDataSource
 
 extension ChatViewController: PostAttachmentViewDataSource {
-    func itemAtIndex(_ index: Int) -> AssignedPhotoViewItem {
-        return self.assignedPhotosArray[index]
+    func itemAtIndex(_ index: Int) -> AssignedAttachmentViewItem {
+        return self.assignedFileItemsArray[index]
     }
     
     func numberOfItems() -> Int {
-        return self.assignedPhotosArray.count
+        return self.assignedFileItemsArray.count
     }
 }
 
@@ -783,10 +779,10 @@ extension ChatViewController: PostAttachmentViewDataSource {
 //MARK: PostAttachmentViewDelegate
 
 extension ChatViewController: PostAttachmentViewDelegate {
-    func didRemovePhoto(_ photo: AssignedPhotoViewItem) {
-        PostUtils.sharedInstance.cancelImageItemUploading(photo)
-        self.assignedPhotosArray.removeObject(photo)
-        guard self.assignedPhotosArray.count != 0 else {
+    func didRemovePhoto(_ item: AssignedAttachmentViewItem) {
+        PostUtils.sharedInstance.cancelImageItemUploading(item)
+        self.assignedFileItemsArray.removeObject(item)
+        guard self.assignedFileItemsArray.count != 0 else {
             self.postAttachmentsView.hideAnimated()
             self.updateTableViewBottomConstraint(postViewShowed: false)
             return
@@ -882,10 +878,10 @@ extension ChatViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         //TODO: REFACTOR mechanism
 
-        let fileItem = AssignedPhotoViewItem(image: UIImage(named: "attach_file_icon")!)
+        let fileItem = AssignedAttachmentViewItem(image: UIImage(named: "attach_file_icon")!)
         fileItem.fileName = File.fileNameFromUrl(url: url)
         fileItem.isFile = true
-        self.assignedPhotosArray.append(fileItem)
+        self.assignedFileItemsArray.append(fileItem)
         self.postAttachmentsView.showAnimated()
         self.updateTableViewBottomConstraint(postViewShowed: true)
         self.postAttachmentsView.updateAppearance()

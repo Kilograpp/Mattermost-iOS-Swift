@@ -15,9 +15,9 @@ class PostAttachmentsViewCell : UICollectionViewCell {
     var backgroundImageView : UIImageView?
     fileprivate var removeButton : UIButton?
     fileprivate var progressView : UIProgressView?
-    fileprivate var imageItem: AssignedPhotoViewItem?
+    fileprivate var imageItem: AssignedAttachmentViewItem?
     
-    var removeTapHandler : ((_ image: AssignedPhotoViewItem) -> Void)?
+    var removeTapHandler : ((_ image: AssignedAttachmentViewItem) -> Void)?
     var index: Int?
 
     override init(frame: CGRect) {
@@ -31,7 +31,7 @@ class PostAttachmentsViewCell : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureWithItem(_ item: AssignedPhotoViewItem) {
+    func configureWithItem(_ item: AssignedAttachmentViewItem) {
         self.progressView?.isHidden = item.uploaded
         self.imageItem = item
         self.backgroundImageView?.image = imageItem?.image
