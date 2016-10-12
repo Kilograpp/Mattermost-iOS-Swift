@@ -83,6 +83,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         }
     }
     fileprivate var assignedFileItemsArray = Array<AssignedAttachmentViewItem>()
+    fileprivate var assignedImages = Array<AssignedAttachmentViewItem>()
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
@@ -239,6 +240,7 @@ extension ChatViewController: Setup {
         view.addConstraint(height)
     }
     
+    //TODO: FIX WITHOUT CONSTRAINTS (Content insets!)
     func updateTableViewBottomConstraint(postViewShowed: Bool) {
         let constantValue = postViewShowed ? -80 : 0
         self.tableViewBottomConstraint.constant = CGFloat(constantValue)
@@ -328,6 +330,7 @@ extension ChatViewController : Private {
             }, secondaryHandler: { _, numberOfPhotos in
                 let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
                 self.assignedFileItemsArray.append(contentsOf: convertedAssets)
+                self.assignedImages = convertedAssets
                 self.postAttachmentsView.showAnimated()
                 self.updateTableViewBottomConstraint(postViewShowed: true)
                 self.postAttachmentsView.updateAppearance()
@@ -593,7 +596,9 @@ extension ChatViewController: Request {
     }
     
     func uploadImages() {
-        PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedFileItemsArray, completion: { (finished, error, item) in
+        //TODO: FIX THIS!
+        //Собственный array для images (передавать в images: ...). Это массив с выбранными картинками. (т.к передается весь массив из вью айтемс, где лежат еще и файлы)
+        PostUtils.sharedInstance.uploadImages(self.channel!, images: assignedImages, completion: { (finished, error, item) in
             if error != nil {
                 //TODO: handle error
                 //refactor обработка этой ошибки в отдельную функцию
@@ -630,9 +635,10 @@ extension ChatViewController: Request {
                 }
             } else {
                 self.fileUploadingInProgress = finished
+                fileItem.uploaded = true
             }
             }) { (value, index) in
-                self.assignedFileItemsArray[index].uploaded = value == 1
+//                self.assignedFileItemsArray[index].uploaded = value == 1
                 self.assignedFileItemsArray[index].uploading = value < 1
                 self.assignedFileItemsArray[index].uploadProgress = value
                 self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)

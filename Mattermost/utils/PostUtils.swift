@@ -166,6 +166,7 @@ extension PostUtils : Public {
     func uploadImages(_ channel: Channel, images: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.files.append(contentsOf: images)
         for item in files {
+            //For all images (not files) that not uploaded yet
             if !item.uploaded && !item.isFile {
                 self.upload_images_group.enter()
                 item.uploading = true
