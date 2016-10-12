@@ -476,9 +476,9 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hasNextPage = true
             
-            self.resultsObserver.unsubscribeNotifications()
-            self.resultsObserver.prepareResults()
-            self.resultsObserver.subscribeNotifications()
+//            self.resultsObserver.unsubscribeNotifications()
+//            self.resultsObserver.prepareResults()
+//            self.resultsObserver.subscribeNotifications()
         })
     }
     
@@ -492,9 +492,9 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
             
-            self.resultsObserver.unsubscribeNotifications()
-            self.resultsObserver.prepareResults()
-            self.resultsObserver.subscribeNotifications()
+//            self.resultsObserver.unsubscribeNotifications()
+//            self.resultsObserver.prepareResults()
+//            self.resultsObserver.subscribeNotifications()
         }
     }
     
