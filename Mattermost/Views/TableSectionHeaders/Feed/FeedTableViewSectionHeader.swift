@@ -74,7 +74,5 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     
     override func prepareForReuse() {
         self.titleLabel!.text = nil;
-        self.barView = nil;
-
     }
 }

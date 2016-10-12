@@ -262,8 +262,8 @@ extension SearchChatViewController: UITableViewDelegate {
             view = FeedTableViewSectionHeader(reuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
         }
         let titleString = (section < self.dates.count) ? (self.dates[section] as Date).feedSectionDateFormat() : ""
-        view?.configureWithTitle(titleString)
-        view?.transform = tableView.transform
+        view!.configureWithTitle(titleString)
+        view!.transform = tableView.transform
         
         return view
     }
