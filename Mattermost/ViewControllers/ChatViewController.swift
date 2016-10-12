@@ -22,6 +22,7 @@ private protocol Setup {
     func setupPostAttachmentsView()
     func setupTopActivityIndicator()
     func setupCompactPost()
+    func setupNoPostsLabel()
 }
 
 private protocol Private {
@@ -67,6 +68,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     override var tableView: UITableView! { return super.tableView }
     fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
     fileprivate let postAttachmentsView = PostAttachmentsView()
+    fileprivate let noPostsLabel: UILabel = UILabel()
     
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
@@ -138,6 +140,7 @@ extension ChatViewController: Setup {
         setupTopActivityIndicator()
         setupLongCellSelection()
         setupCompactPost()
+        setupNoPostsLabel()
     }
     
     func setupTableView() {
@@ -208,6 +211,19 @@ extension ChatViewController: Setup {
     func setupLongCellSelection() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
         self.tableView.addGestureRecognizer(longPressGestureRecognizer)
+    }
+    
+    func setupNoPostsLabel() {
+        self.noPostsLabel.text = "No messages in this\n channel yet"
+        self.noPostsLabel.textAlignment = .center
+        self.noPostsLabel.numberOfLines = 0
+        self.noPostsLabel.font = FontBucket.feedbackTitleFont
+        self.noPostsLabel.textColor = UIColor.black
+        self.noPostsLabel.backgroundColor = self.tableView.backgroundColor
+        self.noPostsLabel.frame = CGRect(x: 0, y: 0, width: 280, height: 60)
+        self.noPostsLabel.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: 100)
+        self.noPostsLabel.isHidden = true
+        self.view.insertSubview(self.noPostsLabel, aboveSubview: self.tableView)
     }
     
     func setupCompactPost() {
@@ -461,6 +477,7 @@ extension ChatViewController: Request {
             
             self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
+            self.noPostsLabel.isHidden = (self.resultsObserver.numberOfSections() != 0)
             self.resultsObserver.subscribeNotifications()
         })
     }
@@ -672,6 +689,7 @@ extension ChatViewController: ChannelObserverDelegate {
             resultsObserver.unsubscribeNotifications()
         }
         self.resultsObserver = nil
+        self.noPostsLabel.isHidden = true
         if self.channel != nil {
             //remove action observer from old channel
             //after relogin
