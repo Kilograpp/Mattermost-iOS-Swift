@@ -61,6 +61,7 @@ enum NotificationType: Int {
     case receivingTyping        //receiving action
     case receivingStatus    //receiving user status change
     case receivingStatuses  //receiving all user statuses
+    case joinedUser         //user joined to channel
     case unknown
 }
 
@@ -144,6 +145,8 @@ final class SocketNotificationUtils {
             return .receivingUpdatedPost
         case Event.StatusChanged.rawValue:
             return .receivingStatus
+        case Event.UserAdded.rawValue:
+            return .joinedUser
         default:
             return .unknown
         }

@@ -29,7 +29,7 @@ private protocol TeamApi: class {
 
 private protocol ChannelApi: class {
     func loadChannels(with completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func loadExtraInfoForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func loadExtraInfoForChannel(_ channelId: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -49,8 +49,8 @@ private protocol PostApi: class {
 }
 
 private protocol FileApi : class {
-    func uploadImageItemAtChannel(_ item: AssignedPhotoViewItem,channel: Channel, completion:  @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void, progress:  @escaping(_ identifier: String, _ value: Float) -> Void)
-    func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem)
+    func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,channel: Channel, completion:  @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void, progress:  @escaping(_ identifier: String, _ value: Float) -> Void)
+    func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
 }
 
 final class Api {
@@ -213,16 +213,21 @@ extension Api: ChannelApi {
             completion(nil)
             }, failure: completion)
     }
-    
-    func loadExtraInfoForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.loadOnePathPattern(), channel)
-//        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
+
+    func loadExtraInfoForChannel(_ channelId: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let teamId = Preferences.sharedInstance.currentTeamId
+        let newChannel = Channel()
+        newChannel.identifier = channelId
+        newChannel.team = RealmUtils.realmForCurrentThread().object(ofType: Team.self, forPrimaryKey: teamId)
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.loadOnePathPattern(), newChannel)
+        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+            RealmUtils.save(mappingResult.firstObject as! Channel)
 //            try! RealmUtils.realmForCurrentThread().write({
 //                RealmUtils.realmForCurrentThread().create(Channel.self,value: Reflection.fetchNotNullValues(mappingResult.firstObject as! Channel),
 //                                                                    update: true)
 //            })
-//            completion(error: nil)
-//        }, failure: completion)
+            completion(nil)
+        }, failure: completion)
     }
     
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -429,7 +434,7 @@ extension Api: PostApi {
 }
 
 extension Api : FileApi {
-    func uploadImageItemAtChannel(_ item: AssignedPhotoViewItem,
+    func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,
                                   channel: Channel,
                                   completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
@@ -454,11 +459,11 @@ extension Api : FileApi {
         }
     }
     
-    func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem) {
+    func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem) {
         self.manager.cancelUploadingOperationForImageItem(item)
     }
     
-    func uploadFileItemAtChannel(_ item: AssignedPhotoViewItem, url: URL,
+    func uploadFileItemAtChannel(_ item: AssignedAttachmentViewItem, url: URL,
                                   channel: Channel,
                                   completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {

@@ -17,7 +17,7 @@ class PostFileViewCell: PostAttachmentsViewCell {
         setupLabel()
     }
     
-    override func configureWithItem(_ item: AssignedPhotoViewItem) {
+    override func configureWithItem(_ item: AssignedAttachmentViewItem) {
         super.configureWithItem(item)
         
         self.nameLabel.text = item.fileName

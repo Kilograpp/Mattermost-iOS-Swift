@@ -52,7 +52,7 @@ private protocol PostRequests: class {
 
 private protocol Helpers: class {
     func handleOperation(_ operation: RKObjectRequestOperation, withError error: Swift.Error) -> Mattermost.Error
-    func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem)
+    func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
 }
 
 // MARK: Get Requests
@@ -259,7 +259,7 @@ extension ObjectManager: Helpers {
         return Error.errorWithGenericError(error)
     }
     
-    func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem) {
+    func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem) {
         for operation in self.operationQueue.operations {
             if operation.isKind(of: KGObjectRequestOperation.self) {
                 let convertedOperation = operation as! KGObjectRequestOperation

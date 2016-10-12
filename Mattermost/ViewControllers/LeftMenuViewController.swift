@@ -28,8 +28,22 @@ final class LeftMenuViewController: UIViewController {
         configureView()
         configureInitialSelectedChannel()
         configureStartUpdating()
+        setupChannelsObserver()
     }
-
+    
+    //refactor later -> ObserverUtils
+    func setupChannelsObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateResults),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification),
+                                               object: nil)
+    }
+    
+    func updateResults() {
+        configureResults()
+        self.tableView.reloadData()
+    }
+    
 }
 
 //MARK: - PrivateProtocols
