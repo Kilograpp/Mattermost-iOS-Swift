@@ -17,9 +17,9 @@ private protocol Public : class {
     func sendReplyToPost(_ post: Post, channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
+    func uploadImages(_ channel: Channel, images: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
     func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void)
-    func cancelImageItemUploading(_ item: AssignedPhotoViewItem)
+    func cancelImageItemUploading(_ item: AssignedAttachmentViewItem)
 }
 
 private protocol Private : class {
@@ -33,7 +33,7 @@ final class PostUtils: NSObject {
     static let sharedInstance = PostUtils()
     fileprivate let upload_images_group = DispatchGroup()
     //refactor rename files
-    fileprivate var files = Array<AssignedPhotoViewItem>()
+    fileprivate var files = Array<AssignedAttachmentViewItem>()
     
     fileprivate var test: File?
     
@@ -133,7 +133,7 @@ extension PostUtils : Public {
         }
     }
     //refactor uploadItemAtChannel
-    func uploadFiles(_ channel: Channel,fileItem:AssignedPhotoViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+    func uploadFiles(_ channel: Channel,fileItem:AssignedAttachmentViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
             self.files.append(fileItem)
             Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
                 completion(false, error)
@@ -168,10 +168,11 @@ extension PostUtils : Public {
         }
     }
     
-    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+    func uploadImages(_ channel: Channel, images: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.files.append(contentsOf: images)
         for item in files {
-            if !item.uploaded {
+            //For all images (not files) that not uploaded yet
+            if !item.uploaded && !item.isFile {
                 self.upload_images_group.enter()
                 item.uploading = true
                 Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
@@ -206,9 +207,11 @@ extension PostUtils : Public {
 //        post.files = List(self.assignedFiles)
 //    }
     
-    func cancelImageItemUploading(_ item: AssignedPhotoViewItem) {
+    func cancelImageItemUploading(_ item: AssignedAttachmentViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-        self.assignedFiles.remove(at: files.index(of: item)!)
+        if item.uploaded  {
+            self.assignedFiles.remove(at: files.index(of: item)!)
+        }
         self.files.removeObject(item)
     }
 }
