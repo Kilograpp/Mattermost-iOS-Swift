@@ -237,7 +237,7 @@ extension SearchChatViewController: Requests {
 //MARK: UITableViewDataSource
 
 extension SearchChatViewController: UITableViewDataSource {
-    private func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return (self.dates.count != 0) ? self.dates.count : 0
     }
     
