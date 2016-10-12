@@ -8,6 +8,7 @@
 
 import UIKit
 import ImageIO
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -30,11 +31,14 @@ extension UIImage {
     }
 
     public class func gifWithURL(_ gifUrl:String) -> UIImage? {
+        // FIXME: CodeReview: Нет необходимости явно указывать тип после двоеточия.
+        // FIXME: CodeReview: else после guard должен быть одной строкой ( else { ... } )
         guard let bundleURL:URL? = URL(string: gifUrl)
             else {
                 return nil
         }
-
+        // FIXME: CodeReview: bundleURL не опциональный, нет неоходимости в force unwrap
+        // FIXME: CodeReview: else после guard должен быть одной строкой
         guard let imageData = try? Data(contentsOf: bundleURL!) else {
             return nil
         }
@@ -43,11 +47,13 @@ extension UIImage {
     }
 
     public class func gifWithName(_ name: String) -> UIImage? {
+        // FIXME: CodeReview: else после guard должен быть одной строкой
         guard let bundleURL = Bundle.main
           .url(forResource: name, withExtension: "gif") else {
             return nil
         }
-
+        
+        // FIXME: CodeReview: else после guard должен быть одной строкой
         guard let imageData = try? Data(contentsOf: bundleURL) else {
             return nil
         }
@@ -56,6 +62,8 @@ extension UIImage {
     }
 
     class func delayForImageAtIndex(_ index: Int, source: CGImageSource!) -> Double {
+        // FIXME: CodeReview: Переменная delay меняется только в конце. Стоит возвращать delayObject as! Double, 
+        // либо если она не всегда равна delayObject as! Double - поставить тернарный оператор
         var delay = 0.1
 
         let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil)
@@ -63,11 +71,12 @@ extension UIImage {
             CFDictionaryGetValue(cfProperties,
                 Unmanaged.passUnretained(kCGImagePropertyGIFDictionary).toOpaque()),
             to: CFDictionary.self)
-
+        // FIXME: CodeReview: Если delayObject переприсваивается, то возможно стоит сделать его константой (let) и присваивать в зависимости от выполнения условия
         var delayObject: AnyObject = unsafeBitCast(
             CFDictionaryGetValue(gifProperties,
                 Unmanaged.passUnretained(kCGImagePropertyGIFUnclampedDelayTime).toOpaque()),
             to: AnyObject.self)
+        // FIXME: CodeReview: В swift скобки после if можно не ставить
         if (delayObject.doubleValue == 0) {
             delayObject = unsafeBitCast(CFDictionaryGetValue(gifProperties,
                 Unmanaged.passUnretained(kCGImagePropertyGIFDelayTime).toOpaque()), to: AnyObject.self)
@@ -81,6 +90,14 @@ extension UIImage {
     class func gcdForPair(_ a: Int?, _ b: Int?) -> Int {
         var a = a
         var b = b
+        // FIXME: CodeReview: Для лучшей читаемости можно перестроить выражения через guard
+        /*
+         if ((b == nil) || (a == nil)) {
+            guard a != nil else { return a! }
+            guard b != nil else { return b! }
+            return 0 //т.е если они оба nil (условие выполнится, если пройдет все guard)
+         }
+         */
         if ((b == nil) || (a == nil)) {
             if (b != nil) {
                 return b!
@@ -90,12 +107,13 @@ extension UIImage {
                 return 0
             }
         }
-
+        // FIXME: CodeReview: swap(&a, &b) меняет местами значения в переменных
         if (a < b) {
             let c = a
             a = b
             b = c
         }
+        
 
         var rest: Int
         while true {

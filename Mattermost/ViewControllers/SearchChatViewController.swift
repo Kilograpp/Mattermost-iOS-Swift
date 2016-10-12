@@ -14,7 +14,7 @@ struct SearchStage {
     static let SearchResultsDisplay: Int   = 2
     static let SearchNoResults: Int        = 3
 }
-
+// FIXME: CodeReview: Приватные протоколы вниз (см. FIXME в view и cell для поиска)
 private protocol LifeCycle {
     func viewDidLoad()
     func didReceiveMemoryWarning()

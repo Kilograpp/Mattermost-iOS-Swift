@@ -8,8 +8,9 @@
 
 import SlackTextViewController
 import RealmSwift
-// import ImagePickerSheetController
+import ImagePickerSheetController
 import UITableView_Cache
+import MFSideMenu
 
 private protocol Setup {
     func initialSetup()
@@ -37,6 +38,8 @@ private protocol Private {
 }
 
 private protocol Action {
+    func leftMenuButtonAction(_ sender: AnyObject)
+    func rigthMenuButtonAction(_ sender: AnyObject)
     func searchButtonAction(_ sender: AnyObject)
     func sendPostAction()
     func assignPhotosAction()
@@ -83,6 +86,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         }
     }
     fileprivate var assignedPhotosArray = Array<AssignedPhotoViewItem>()
+    //TODO: file array
+    fileprivate var assignedFile: File?
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
@@ -174,7 +179,7 @@ extension ChatViewController: Setup {
         self.rightButton.setTitle("Send", for: UIControlState())
         self.rightButton.addTarget(self, action: #selector(sendPostAction), for: .touchUpInside)
         
-        self.leftButton.setImage(UIImage(named: "chat_photo_icon"), for: UIControlState())
+        self.leftButton.setImage(UIImage(named: "common_attache_icon"), for: UIControlState())
         self.leftButton.tintColor = UIColor.gray
         self.leftButton.addTarget(self, action: #selector(attachmentSelection), for: .touchUpInside)
     }
@@ -281,14 +286,18 @@ extension ChatViewController : Private {
     }
     
     func attachmentSelection() {
-        let controller = UIAlertController(title: "Attachment", message: "Choose what u want to attach", preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: "Photo", style: .default, handler: { (action:UIAlertAction) in
+        let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
+        let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
             self.assignPhotos()
-        }))
-        controller.addAction(UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
-//            let path = NSBundle.mainBundle().resourcePath!
-//            let fileManager = NSFileManager()
-        }))
+        })
+        gallerySelectionAction.setValue(UIImage(named:"gallery_icon"), forKey: "image")
+        controller.addAction(gallerySelectionAction)
+        
+        let fileSelectionAction = UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
+            self.proceedToFileSelection()
+        })
+        fileSelectionAction.setValue(UIImage(named:"iCloud_icon"), forKey: "image")
+        controller.addAction(fileSelectionAction)
         controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
             print("canceled")
         }))
@@ -304,7 +313,6 @@ extension ChatViewController : Private {
     
 //Images
     func assignPhotos() -> Void {
-        /*
         //TODO: MORE REFACTOR
         let presentImagePickerController: (UIImagePickerControllerSourceType) -> () = { source in
             let controller = UIImagePickerController()
@@ -315,29 +323,28 @@ extension ChatViewController : Private {
             self.present(controller, animated: true, completion: nil)
         }
         
-        let controller = ImagePickerSheetController(mediaType: .ImageAndVideo)
+        let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
         controller.maximumSelection = 5
         
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
-            presentImagePickerController(.Camera)
+            presentImagePickerController(.camera)
             }, secondaryHandler: { _, numberOfPhotos in
                 let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-                self.assignedPhotosArray.appendContentsOf(convertedAssets)
+                self.assignedPhotosArray.append(contentsOf: convertedAssets)
                 self.postAttachmentsView.showAnimated()
                 self.postAttachmentsView.updateAppearance()
                 self.uploadImages()
         }))
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
-            presentImagePickerController(.PhotoLibrary)
+            presentImagePickerController(.photoLibrary)
             }, secondaryHandler: { _ in
-                presentImagePickerController(.PhotoLibrary)
+                presentImagePickerController(.photoLibrary)
         }))
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .Cancel, handler: { _ in
+        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .cancel, handler: { _ in
             print("Cancelled")
         }))
         
-        presentViewController(controller, animated: true, completion: nil)
- */
+        present(controller, animated: true, completion: nil)
     }
 
 //Interface
@@ -408,6 +415,14 @@ extension ChatViewController : Private {
 //MARK: Action
 
 extension ChatViewController: Action {
+    @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
+        self.menuContainerViewController.setMenuState(MFSideMenuStateLeftMenuOpen, completion: nil)
+    }
+    
+    @IBAction func rigthMenuButtonAction(_ sender: AnyObject) {
+        self.menuContainerViewController.setMenuState(MFSideMenuStateRightMenuOpen, completion: nil)
+    }
+    
     @IBAction func searchButtonAction(_ sender: AnyObject) {
         proceedToSearchChat()
     }
@@ -421,6 +436,8 @@ extension ChatViewController: Action {
         default:
             sendPost()
         }
+        self.assignedPhotosArray.removeAll()
+        self.postAttachmentsView.hideAnimated()
     }
     
     func assignPhotosAction() {
@@ -533,6 +550,9 @@ extension ChatViewController: Request {
     
     func sendPost() {
         PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+            if (error != nil) {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+            }
         }
         self.dismissKeyboard(true)
         self.clearTextView()
@@ -542,6 +562,9 @@ extension ChatViewController: Request {
         guard (self.selectedPost != nil) else { return }
         
         PostUtils.sharedInstance.sendReplyToPost(self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+            if (error != nil) {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+            }
             self.selectedPost = nil
         }
         self.clearTextView()
@@ -572,17 +595,47 @@ extension ChatViewController: Request {
     }
     
     func uploadImages() {
-        PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error) in
+        PostUtils.sharedInstance.uploadImages(self.channel!, images: self.assignedPhotosArray, completion: { (finished, error, item) in
             if error != nil {
                 //TODO: handle error
+                //refactor обработка этой ошибки в отдельную функцию
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+                print("error with \(item.fileName)")
+                self.assignedPhotosArray.removeObject(item)
+                self.postAttachmentsView.updateAppearance()
+                if (self.assignedPhotosArray.count == 0) {
+                    self.postAttachmentsView.hideAnimated()
+                }
             } else {
                 self.fileUploadingInProgress = finished
+                
             }
         }) { (value, index) in
             self.assignedPhotosArray[index].uploaded = value == 1
             self.assignedPhotosArray[index].uploading = value < 1
             self.assignedPhotosArray[index].uploadProgress = value
             self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
+        }
+    }
+    //refactor mechanism
+    func uploadFile(from url:URL, fileItem:AssignedPhotoViewItem) {
+        PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
+            if error != nil {
+                //TODO: handle error
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+                self.assignedPhotosArray.removeObject(fileItem)
+                self.postAttachmentsView.updateAppearance()
+                if (self.assignedPhotosArray.count == 0) {
+                    self.postAttachmentsView.hideAnimated()
+                }
+            } else {
+                self.fileUploadingInProgress = finished
+            }
+            }) { (value, index) in
+                self.assignedPhotosArray[index].uploaded = value == 1
+                self.assignedPhotosArray[index].uploading = value < 1
+                self.assignedPhotosArray[index].uploadProgress = value
+                self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
         }
     }
 }
@@ -694,14 +747,13 @@ extension ChatViewController: ChannelObserverDelegate {
             //remove action observer from old channel
             //after relogin
             NotificationCenter.default.removeObserver(self,
-                                                                name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
-                                                                object: nil)
+                                                    name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
+                                                    object: nil)
         }
         self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         self.loadFirstPageOfData()
-        _ = NSNotification.Name(rawValue: ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier))
         NotificationCenter.default.addObserver(self, selector: #selector(handleChannelNotification),
                                                          name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                                                          object: nil)
@@ -731,7 +783,6 @@ extension ChatViewController: PostAttachmentViewDelegate {
     func didRemovePhoto(_ photo: AssignedPhotoViewItem) {
         PostUtils.sharedInstance.cancelImageItemUploading(photo)
         self.assignedPhotosArray.removeObject(photo)
-        
         guard self.assignedPhotosArray.count != 0 else {
             self.postAttachmentsView.hideAnimated()
             return
@@ -776,7 +827,7 @@ extension ChatViewController {
     }
     
     func errorAction(_ post: Post) {
-        let controller = UIAlertController(title: "Error on sending post", message: "What to do?", preferredStyle: .actionSheet)
+        let controller = UIAlertController(title: "Your message was not sent", message: "Tap resend to send this message again", preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: "Resend", style: .default, handler: { (action:UIAlertAction) in
             self.resendAction(post)
         }))
@@ -813,6 +864,29 @@ extension ChatViewController {
     }
 }
 
+
+//MARK: UIDocumentPickerDelegate
+extension ChatViewController: UIDocumentPickerDelegate {
+    func proceedToFileSelection() {
+        
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.content"], in: .import)
+        documentPicker.delegate = self
+        documentPicker.modalPresentationStyle = .formSheet
+        self.present(documentPicker, animated:true, completion:nil)
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        //TODO: REFACTOR mechanism
+
+        let fileItem = AssignedPhotoViewItem(image: UIImage(named: "attach_file_icon")!)
+        fileItem.fileName = File.fileNameFromUrl(url: url)
+        fileItem.isFile = true
+        self.assignedPhotosArray.append(fileItem)
+        self.postAttachmentsView.showAnimated()
+        self.postAttachmentsView.updateAppearance()
+        self.uploadFile(from:url, fileItem: fileItem)
+    }
+}
 
 //MARK: AutoCompletionView
 

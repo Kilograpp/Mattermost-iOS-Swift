@@ -10,17 +10,22 @@
 		413B76221D58C6CD00F297BE /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B76211D58C6CD00F297BE /* en.lproj */; };
 		413B762C1D58CF4100F297BE /* ru.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B762B1D58CF4100F297BE /* ru.lproj */; };
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
+		4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */; };
 		4B3CD9FF1D918CC400E6FDB4 /* UserStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3CD9FE1D918CC400E6FDB4 /* UserStatusManager.swift */; };
 		4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B404A791D92914A002F9F6D /* ObserverUtils.swift */; };
 		4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4497F31D93ECA9009939A9 /* PostStatusView.swift */; };
 		4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */; };
 		4B4FE7951D802CE00088ABEC /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */; };
 		4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */; };
+		4B68E79D1DABDD71008C2E75 /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B68E79C1DABDD71008C2E75 /* ImagePickerSheetController.framework */; };
 		4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */; };
+		4B7270801DABF3C400445586 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B72707F1DABF3C400445586 /* AlertManager.swift */; };
+		4B7270821DABF4C000445586 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7270811DABF4C000445586 /* AlertView.swift */; };
 		4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */; };
 		4B7DB5A31DA52303000908FB /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */; };
 		4B7DB5A51DA5500F000908FB /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A41DA5500F000908FB /* Member.swift */; };
 		4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */; };
+		4B870EBD1DA790BE00F29E49 /* AssignedFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B870EBC1DA790BE00F29E49 /* AssignedFileItem.swift */; };
 		4BD16B081DA4ED9000473279 /* SkyFloatingLabelTextField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */; };
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
@@ -207,17 +212,23 @@
 		413B76211D58C6CD00F297BE /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en.lproj; path = Settings.bundle/en.lproj; sourceTree = "<group>"; };
 		413B762B1D58CF4100F297BE /* ru.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ru.lproj; sourceTree = "<group>"; };
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
+		4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostFileViewCell.swift; path = PostAttachmentsViewCell/PostFileViewCell.swift; sourceTree = "<group>"; };
 		4B3CD9FE1D918CC400E6FDB4 /* UserStatusManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatusManager.swift; sourceTree = "<group>"; };
 		4B404A791D92914A002F9F6D /* ObserverUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverUtils.swift; sourceTree = "<group>"; };
 		4B4497F31D93ECA9009939A9 /* PostStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostStatusView.swift; sourceTree = "<group>"; };
+		4B4FBAEB1DA687B400202326 /* Mattermost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mattermost.entitlements; sourceTree = "<group>"; };
 		4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamTableViewCell.swift; path = Teams/TeamTableViewCell.swift; sourceTree = "<group>"; };
 		4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginNavigationController.swift; path = NavigationControllers/LoginNavigationController.swift; sourceTree = "<group>"; };
 		4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerUrlViewController.swift; sourceTree = "<group>"; };
+		4B68E79C1DABDD71008C2E75 /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
 		4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketNotificationsUtils.swift; sourceTree = "<group>"; };
+		4B72707F1DABF3C400445586 /* AlertManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		4B7270811DABF4C000445586 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+Animation.swift"; sourceTree = "<group>"; };
 		4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
 		4B7DB5A41DA5500F000908FB /* Member.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemberMappingsContainer.swift; path = Mappings/MemberMappingsContainer.swift; sourceTree = "<group>"; };
+		4B870EBC1DA790BE00F29E49 /* AssignedFileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignedFileItem.swift; sourceTree = "<group>"; };
 		4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyFloatingLabelTextField.framework; path = Carthage/Build/iOS/SkyFloatingLabelTextField.framework; sourceTree = "<group>"; };
 		4BEA108B1D79B551006BB298 /* TeamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
@@ -408,6 +419,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B68E79D1DABDD71008C2E75 /* ImagePickerSheetController.framework in Frameworks */,
 				8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */,
 				4B7DB5A31DA52303000908FB /* SwiftyJSON.framework in Frameworks */,
 				4BD16B081DA4ED9000473279 /* SkyFloatingLabelTextField.framework in Frameworks */,
@@ -483,6 +495,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				4B4FBAEB1DA687B400202326 /* Mattermost.entitlements */,
 				CD157A891D75EA3F0079BD30 /* NavigationControllers */,
 				D8935BAD1D5B7FF80037E7ED /* Helpers */,
 				D8935BAA1D5B75B70037E7ED /* Builders */,
@@ -778,6 +791,7 @@
 			isa = PBXGroup;
 			children = (
 				D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */,
+				4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */,
 			);
 			name = PostAttachmentsViewCell;
 			sourceTree = "<group>";
@@ -803,6 +817,7 @@
 				D65626661D49674700981057 /* TableSectionHeadersFooters */,
 				4B4497F31D93ECA9009939A9 /* PostStatusView.swift */,
 				8B31024E1D985455001FE701 /* CompactPostView.swift */,
+				4B7270811DABF4C000445586 /* AlertView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -884,6 +899,7 @@
 				D6C0B46E1D5DFBC2006C506A /* UserStatus.swift */,
 				D67A42F51D747B80003E2466 /* AssignedPhotoViewItem.swift */,
 				8BE969BA1D76AA420010A524 /* ProfileDataSource.swift */,
+				4B870EBC1DA790BE00F29E49 /* AssignedFileItem.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -898,6 +914,7 @@
 				D8812C301D46D54F00436B5C /* SocketManager.swift */,
 				D8935BA41D5A81780037E7ED /* PerformanceManager.swift */,
 				4B3CD9FE1D918CC400E6FDB4 /* UserStatusManager.swift */,
+				4B72707F1DABF3C400445586 /* AlertManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -931,6 +948,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B68E79C1DABDD71008C2E75 /* ImagePickerSheetController.framework */,
 				8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */,
 				4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */,
 				4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */,
@@ -978,6 +996,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9B82200F26897BF577153F76 /* Build configuration list for PBXNativeTarget "Mattermost" */;
 			buildPhases = (
+				4B5FBDC61DA641ED00EF7AC8 /* FIXME highlights */,
 				BE5F6F50DF894BE52BFD4C06 /* [CP] Check Pods Manifest.lock */,
 				9B822E8644EB6D1CAB6E3D29 /* Sources */,
 				9B8226327E3FF187CFC613FA /* Frameworks */,
@@ -1011,6 +1030,12 @@
 					9B822B33AE7605DB4C6B3995 = {
 						DevelopmentTeam = X4SVWSJYVW;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1088,6 +1113,20 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		4B5FBDC61DA641ED00EF7AC8 /* FIXME highlights */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "FIXME highlights";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:\"\nERRORTAG=\"ERROR:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"";
+		};
 		743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1137,6 +1176,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/UITableView_Cache.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/NVActivityIndicatorView.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ImagePickerSheetController.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -1191,6 +1231,7 @@
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
+				4B7270821DABF4C000445586 /* AlertView.swift in Sources */,
 				D8D6013A1D5E1BD800951F18 /* FeedNotificationsObserver.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
@@ -1215,12 +1256,14 @@
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
 				8BBA7DC81D87DD06003A5B99 /* UIImage+Gif.swift in Sources */,
 				D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */,
+				4B870EBD1DA790BE00F29E49 /* AssignedFileItem.swift in Sources */,
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */,
 				4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */,
 				CDF07ED41D7F1DB500172D1E /* TeamPathPatternsContainer.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				CDB6D3BD1D78925B00C3018C /* String+Localized.swift in Sources */,
+				4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */,
 				D86EF7F81D592FD500BD49A3 /* AttributedLabel.swift in Sources */,
 				8B882D6D1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift in Sources */,
 				8BE969BE1D7730760010A524 /* ProfileTableViewController.swift in Sources */,
@@ -1283,6 +1326,7 @@
 				8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
+				4B7270801DABF3C400445586 /* AlertManager.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
 				CDF07ED01D7F1D8900172D1E /* FilePathPatternsContainer.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
@@ -1356,8 +1400,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = Mattermost/Mattermost.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Maxim Gubin (26358JFF57)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Maxim Gubin (26358JFF57)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1365,10 +1410,11 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Mattermost/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0be856e6-a209-49d9-875f-2dadc97936e1";
+				PROVISIONING_PROFILE = "5ee0d565-1835-4a86-a5d1-2ca5859ba861";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1395,7 +1441,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Mattermost/Mattermost.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1403,11 +1451,12 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Mattermost/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0be856e6-a209-49d9-875f-2dadc97936e1";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
+				PROVISIONING_PROFILE = "11a5e7d4-4584-4ac6-92f8-f248a545214c";
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

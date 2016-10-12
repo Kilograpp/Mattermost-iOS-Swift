@@ -41,7 +41,7 @@ private protocol PostRequests: class {
                      parameters: Dictionary<String, String>?,
                      success: ((_ mappingResult: RKMappingResult) -> Void)?,
                      failure: ((_ error: Error) -> Void)?)
-    func postImage(with image: UIImage!,
+    func postImage(with image: UIImage!, identifier: String,
                    name: String!,
                    path: String!,
                    parameters: [String : String]?,
@@ -175,6 +175,7 @@ extension ObjectManager: PostRequests {
     }
     
     func postImage(with image: UIImage!,
+                   identifier: String,
                         name: String!,
                         path: String!,
                         parameters: Dictionary<String, String>?,
@@ -182,8 +183,9 @@ extension ObjectManager: PostRequests {
                         failure: ((_ error: Mattermost.Error) -> Void)?,
                         progress: ((_ progressValue: Float) -> Void)?) {
         
+        let imageName = "\(identifier).png"
         let constructingBodyWithBlock = {(formData: AFRKMultipartFormData?) -> Void in
-            formData?.appendPart(withFileData: UIImagePNGRepresentation(image), name: name, fileName: "file.png", mimeType: "image/png")
+            formData?.appendPart(withFileData: UIImagePNGRepresentation(image), name: name, fileName: imageName, mimeType: "image/png")
         }
         
         let request: NSMutableURLRequest = self.multipartFormRequest(with: nil,
@@ -205,6 +207,43 @@ extension ObjectManager: PostRequests {
         
         let kg_operation = operation as! KGObjectRequestOperation
         kg_operation.image = image
+        kg_operation.httpRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
+            let value = Float(totalWritten) / Float(expectedToWrite)
+            progress?(value)
+        }
+        self.enqueue(operation)
+    }
+    
+    func postFile(with url: URL!,
+                   name: String!,
+                   path: String!,
+                   parameters: Dictionary<String, String>?,
+                   success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                   failure: ((_ error: Mattermost.Error) -> Void)?,
+                   progress: ((_ progressValue: Float) -> Void)?) {
+
+        let constructingBodyWithBlock = {(formData: AFRKMultipartFormData?) -> Void in
+            try! formData?.appendPart(withFileURL: url, name: name)
+        }
+        
+        let request: NSMutableURLRequest = self.multipartFormRequest(with: nil,
+                                                                     method: .POST,
+                                                                     path: path,
+                                                                     parameters: parameters,
+                                                                     constructingBodyWith: constructingBodyWithBlock)
+        
+        let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
+            success?(mappingResult!)
+        }
+        let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
+            failure?(self.handleOperation(operation!, withError: error!))
+        }
+        
+        let operation: RKObjectRequestOperation = self.objectRequestOperation(with: request as URLRequest!,
+                                                                              success: successHandlerBlock,
+                                                                              failure: failureHandlerBlock)
+        
+        let kg_operation = operation as! KGObjectRequestOperation
         kg_operation.httpRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
             let value = Float(totalWritten) / Float(expectedToWrite)
             progress?(value)

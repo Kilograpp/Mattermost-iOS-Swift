@@ -281,6 +281,7 @@ extension Api: PostApi {
     }
     
     func loadNextPage(_ channel: Channel, fromPost: Post, completion: @escaping (_ isLastPage: Bool, _ error: Mattermost.Error?) -> Void) {
+        guard fromPost.identifier != nil else { return }
         let postIdentifier = fromPost.identifier!
         let wrapper = PageWrapper(channel: channel, lastPostId: postIdentifier)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.nextPagePathPattern(), wrapper)
@@ -360,9 +361,15 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
         self.manager.postObject(post, path: path, success: { (mappingResult) in
             let resultPost = mappingResult.firstObject as! Post
-            resultPost.computeMissingFields()
-            resultPost.localIdentifier = post.localIdentifier
-            RealmUtils.save(resultPost)
+//            resultPost.computeMissingFields()
+//            resultPost.cellType = post.cellType
+//            resultPost.localIdentifier = post.localIdentifier
+//            RealmUtils.save(resultPost)
+            try! RealmUtils.realmForCurrentThread().write {
+                //не достающие параметры
+                post.status = .default
+                post.identifier = resultPost.identifier
+            }
             completion(nil)
         }, failure: completion)
     }
@@ -430,16 +437,18 @@ extension Api : FileApi {
         let params = ["channel_id" : channel.identifier!,
                       "client_ids"  : StringUtils.randomUUID()]
         
-        self.manager.postImage(with: item.image, name: "files", path: path, parameters: params, success: { (mappingResult) in
+        self.manager.postImage(with: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
             let file = File()
             //s3 refactor
-            let array = mappingResult.firstObject as! [String:String]
-            let rawLink = array[FileAttributes.rawLink.rawValue]
+            let dictionary = mappingResult.firstObject as! [String:String]
+            let rawLink = dictionary[FileAttributes.rawLink.rawValue]
+            file.identifier = params["client_ids"]
             file.rawLink = rawLink
+//            file.isImage = true
             completion(file, nil)
             RealmUtils.save(file)
             }, failure: { (error) in
-                completion(nil, nil)
+                completion(nil, error)
             }) { (value) in
                 progress(item.identifier, value)
         }
@@ -447,6 +456,30 @@ extension Api : FileApi {
     
     func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem) {
         self.manager.cancelUploadingOperationForImageItem(item)
+    }
+    
+    func uploadFileItemAtChannel(_ item: AssignedPhotoViewItem, url: URL,
+                                  channel: Channel,
+                                  completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
+                                  progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
+        let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
+        let params = ["channel_id" : channel.identifier!,
+                      "client_ids"  : StringUtils.randomUUID()]
+        
+        self.manager.postFile(with: url, name: "files", path: path, parameters: params, success: { (mappingResult) in
+            let file = File()
+            //refactor
+            let dictionary = mappingResult.firstObject as! [String:String]
+            let rawLink = dictionary[FileAttributes.rawLink.rawValue]
+            file.identifier = params["client_ids"]
+            file.rawLink = rawLink
+            completion(file, nil)
+            RealmUtils.save(file)
+            }, failure: { (error) in
+                completion(nil, error)
+        }) { (value) in
+            progress(item.identifier, value)
+        }
     }
 }
 

@@ -78,6 +78,7 @@ extension PostAttachmentsView : Private {
         self.collectionView?.dataSource = self
         
         self.collectionView?.register(PostAttachmentsViewCell.self, forCellWithReuseIdentifier: PostAttachmentsViewCell.identifier)
+        self.collectionView?.register(PostFileViewCell.self, forCellWithReuseIdentifier: PostFileViewCell.identifier)
         
         self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         let left = NSLayoutConstraint(item: self.collectionView!, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
@@ -112,8 +113,8 @@ extension PostAttachmentsView : Private {
 
 extension PostAttachmentsView : Public {
     func updateProgressValueAtIndex(_ index: Int, value: Float) {
-        let cellAtIndex = self.collectionView?.cellForItem(at: IndexPath(item:index, section: 0)) as! PostAttachmentsViewCell
-        cellAtIndex.updateProgressViewWithValue(value)
+        guard let cellAtIndex = self.collectionView?.cellForItem(at: IndexPath(item:index, section: 0)) else { return }
+        (cellAtIndex  as! PostAttachmentsViewCell).updateProgressViewWithValue(value)
     }
     
     func updateAppearance() {
@@ -154,8 +155,19 @@ extension PostAttachmentsView : UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostAttachmentsViewCell.identifier, for: indexPath)
-        let convertedCell = cell as! PostAttachmentsViewCell
+        //FIXME: builder!
+        let item = self.dataSource?.itemAtIndex((indexPath as NSIndexPath).row)
+        var reuseIdentifier = PostAttachmentsViewCell.identifier
+        
+        if item!.isFile {
+            reuseIdentifier = PostFileViewCell.identifier
+        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        var convertedCell = cell as! PostAttachmentsViewCell
+        if item!.isFile {
+            convertedCell = cell as! PostFileViewCell
+        }
+        
         convertedCell.configureWithItem((self.dataSource?.itemAtIndex((indexPath as NSIndexPath).row))!)
         convertedCell.removeTapHandler = {(imageItem) in
             self.delegate?.didRemovePhoto(imageItem)
