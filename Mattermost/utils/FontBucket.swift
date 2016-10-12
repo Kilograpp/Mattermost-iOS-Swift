@@ -22,6 +22,7 @@ private protocol FeedFonts: class {
     static var feedSendButtonTitleFont: UIFont {get}
     static var inputTextViewFont: UIFont {get}
     static var sectionTitleFont: UIFont {get}
+    static var feedbackTitleFont: UIFont {get}
 }
 
 private protocol LeftMenuFonts {
@@ -52,6 +53,7 @@ private protocol MarkdownFonts: class {
     
     static func semiboldFontOfSize(_ size: CGFloat) -> UIFont
     static func regularFontOfSize(_ size: CGFloat) -> UIFont
+    static func regularDisplayFontOfSize(_ size: CGFloat) -> UIFont
 }
 
 private protocol MoreChannelsFonts: class {
@@ -82,6 +84,7 @@ extension FontBucket : FeedFonts {
     static let feedSendButtonTitleFont = FontBucket.semiboldFontOfSize(16)
     static let inputTextViewFont = FontBucket.regularFontOfSize(15)
     static let sectionTitleFont = FontBucket.semiboldFontOfSize(16)
+    static let feedbackTitleFont = FontBucket.regularDisplayFontOfSize(23)
 }
 
 extension FontBucket : LeftMenuFonts {
@@ -143,6 +146,10 @@ extension FontBucket {
     
     fileprivate static func boldFontOfSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.Bold, size: size)!
+    }
+    
+    fileprivate static func regularDisplayFontOfSize(_ size: CGFloat) -> UIFont {
+        return UIFont(name: FontNames.RegularDisplay, size: size)!
     }
 }
 

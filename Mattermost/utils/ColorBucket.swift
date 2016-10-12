@@ -47,6 +47,7 @@ private protocol SideMenuColors {
     static var sideMenuCellHighlightedColor: UIColor {get}
     static var sideMenuCellSelectedColor: UIColor {get}
     static var rightMenuSeparatorColor: UIColor {get}
+    static var leftMenuMoreTextColor: UIColor {get}
 }
 
 private protocol ServerUrlColors {
@@ -110,6 +111,7 @@ extension ColorBucket : SideMenuColors {
     static let sideMenuCellSelectedColor = ColorBucket.whiteColor
     static let rightMenuSeparatorColor = ColorBucket.sideMenuSeparatorColor()
     static let rightMenuTextColor = ColorBucket.lightBlue()
+    static let leftMenuMoreTextColor = ColorBucket.darkWhite()
 }
 
 extension ColorBucket : ServerUrlColors {
@@ -137,6 +139,10 @@ extension ColorBucket {
     
     fileprivate class func white() -> UIColor {
         return try! UIColor(rgba_throws: "#FFFFFF")
+    }
+    
+    fileprivate class func darkWhite() -> UIColor {
+        return try! UIColor(rgba_throws: "#EFEFF4")
     }
     
     fileprivate class func cloudyWhite() -> UIColor {
