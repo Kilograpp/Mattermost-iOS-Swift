@@ -157,7 +157,6 @@ extension ObjectManager: PostRequests {
             success?(mappingResult!)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
-            print(operation?.httpRequestOperation.responseString)
             if (operation?.httpRequestOperation.responseString == "{\"order\":null,\"posts\":null}") {
                 success?(RKMappingResult())
             }

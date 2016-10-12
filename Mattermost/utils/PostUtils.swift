@@ -158,9 +158,14 @@ extension PostUtils : Public {
     
 
     func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void) {
-    Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
-    completion(posts!, error)
-    }
+        Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
+            if error?.code == -999 {
+                completion(Array(), error)
+            }
+            else {
+                completion(posts!, error)
+            }
+        }
     }
     
     func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {

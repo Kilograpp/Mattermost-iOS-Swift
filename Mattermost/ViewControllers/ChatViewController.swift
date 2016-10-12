@@ -494,7 +494,6 @@ extension ChatViewController: Request {
             
             self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
-            print(self.resultsObserver.numberOfSections())
             self.noPostsLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
             self.resultsObserver.subscribeNotifications()
         })

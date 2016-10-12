@@ -69,7 +69,6 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
         if ((self.barView) != nil) {
             self.barView!.frame = CGRect(x: 0, y: 12, width: self.titleLabel!.frame.minX - 10, height: 1);
         }
-        
     }
     
     override func prepareForReuse() {

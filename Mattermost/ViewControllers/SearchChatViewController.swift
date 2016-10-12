@@ -185,11 +185,13 @@ extension SearchChatViewController {
 extension SearchChatViewController {
     func prepareSearchResults() {
         let terms = self.searchTextField.text!
+        print(terms)
         if ((terms as NSString).length > 0) {
             configureForSearchStage(SearchStage.SearchRequstInProgress)
             searchWithTerms(terms: terms)
         }
         else {
+            Api.sharedInstance.cancelSearchRequestFor(channel: self.channel!)
             configureForSearchStage(SearchStage.SearchNotStarted)
         }
     }
@@ -220,9 +222,11 @@ extension SearchChatViewController: Requests {
                         self.configureForSearchStage(SearchStage.SearchResultsDisplay)
                         self.tableView.reloadData()
                     }
-                    
-                    //self.configureForSearchStage(SearchStage.SearchResultsDisplay)
-                    //self.tableView.reloadData()
+                }
+            }
+            else {
+                if (error?.code != -999) {
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 }
             }
         }

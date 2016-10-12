@@ -15,6 +15,8 @@ private protocol Interface: class {
     func baseURL() -> URL!
 //    func cookie() -> NSHTTPCookie?
     func avatarLinkForUser(_ user: User) -> String
+    
+    func cancelSearchRequestFor(channel: Channel)
 }
 
 private protocol UserApi: class {
@@ -491,5 +493,10 @@ extension Api: Interface {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.avatarPathPattern(), user)
         let url = URL(string: path!, relativeTo: self.manager.httpClient.baseURL)
         return url!.absoluteString
+    }
+    
+    func cancelSearchRequestFor(channel: Channel) {
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.searchingPathPattern(), channel)
+        self.manager.cancelAllObjectRequestOperations(with: .any, matchingPathPattern: path)
     }
 }
