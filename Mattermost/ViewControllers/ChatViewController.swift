@@ -501,6 +501,8 @@ extension ChatViewController: Request {
             self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true
+            
+            self.noPostsLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
         })
     }
     func loadFirstPageOfData() {
