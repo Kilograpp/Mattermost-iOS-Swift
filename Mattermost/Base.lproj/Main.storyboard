@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Ts1-GG-mjn">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -450,6 +449,15 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hzb-s2-IhM">
                                 <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Here are the search results" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mA8-ff-KfQ">
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="2hP-QF-MpW"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="SFUIDisplay-Regular" family="SF UI Display" pointSize="23"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6vr-W6-7OZ">
                                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
@@ -515,11 +523,14 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
+                                    <constraint firstItem="mA8-ff-KfQ" firstAttribute="leading" secondItem="Hzb-s2-IhM" secondAttribute="leading" constant="20" id="JQZ-3M-Mdd"/>
                                     <constraint firstItem="cPm-r9-FMP" firstAttribute="top" secondItem="6vr-W6-7OZ" secondAttribute="bottom" constant="6" id="Su7-To-PYU"/>
-                                    <constraint firstItem="6vr-W6-7OZ" firstAttribute="top" secondItem="Hzb-s2-IhM" secondAttribute="top" constant="30" id="Ywl-Dm-4uP"/>
+                                    <constraint firstAttribute="trailing" secondItem="mA8-ff-KfQ" secondAttribute="trailing" constant="20" id="WF8-Tl-i3q"/>
+                                    <constraint firstItem="6vr-W6-7OZ" firstAttribute="top" secondItem="Hzb-s2-IhM" secondAttribute="top" constant="50" id="Ywl-Dm-4uP"/>
                                     <constraint firstAttribute="trailing" secondItem="Jj8-lb-f1I" secondAttribute="trailing" constant="20" id="dIr-gf-x7D"/>
                                     <constraint firstItem="Jj8-lb-f1I" firstAttribute="leading" secondItem="Hzb-s2-IhM" secondAttribute="leading" constant="20" id="eZW-hb-HT4"/>
                                     <constraint firstAttribute="trailing" secondItem="cPm-r9-FMP" secondAttribute="trailing" constant="20" id="lCI-E3-JrM"/>
+                                    <constraint firstItem="mA8-ff-KfQ" firstAttribute="top" secondItem="Hzb-s2-IhM" secondAttribute="top" constant="1" id="lSb-sE-Ubm"/>
                                     <constraint firstItem="cPm-r9-FMP" firstAttribute="leading" secondItem="Hzb-s2-IhM" secondAttribute="leading" constant="20" id="mN9-ul-aUm"/>
                                     <constraint firstItem="6vr-W6-7OZ" firstAttribute="leading" secondItem="Hzb-s2-IhM" secondAttribute="leading" constant="20" id="org-6i-4Uo"/>
                                     <constraint firstItem="Jj8-lb-f1I" firstAttribute="top" secondItem="cPm-r9-FMP" secondAttribute="bottom" constant="6" id="reR-8p-QsN"/>
@@ -580,8 +591,7 @@
                                             <rect key="frame" x="55" y="20" width="245" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xP9-pf-veq">
-                                                    <frame key="frameInset" minX="8" minY="8" width="285" height="28"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xP9-pf-veq">
                                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="28" id="Ghd-kb-wPc"/>
