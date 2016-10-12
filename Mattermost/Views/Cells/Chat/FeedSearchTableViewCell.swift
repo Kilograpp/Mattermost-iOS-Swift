@@ -117,6 +117,8 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
         self.avatarImageView.backgroundColor = ColorBucket.whiteColor
         self.avatarImageView.contentMode = .scaleAspectFill
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        self.avatarImageView.layer.cornerRadius = 20
+        self.avatarImageView.layer.masksToBounds = true
         self.addSubview(self.avatarImageView)
     }
     
