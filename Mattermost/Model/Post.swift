@@ -160,6 +160,7 @@ private protocol Computations: class {
     func computeAttributedString()
     func computeAttributedStringData()
     func computeAttributedMessageHeight()
+    func computeCellType()
     func setSystemAuthorIfNeeded()
 }
 
@@ -229,6 +230,11 @@ extension Post: Delegate {
 
 // MARK: - Computations
 extension Post: Computations {
+    func computeCellType() {
+        if self.hasAttachments() {
+            self.cellType = .attachment
+        }
+    }
     fileprivate func computeDay() {
         let unitFlags: Set<Calendar.Component> = [.year, .month, .day]
         let calendar = Calendar.sharedGregorianCalendar
@@ -267,8 +273,9 @@ extension Post: Computations {
     fileprivate func computeLocalIdentifier() {
         guard localIdentifier == nil else { return }
         //s3 refactor
-        let dateString = createdAt!.dateFormatForPostKey()
-         self.localIdentifier = channelId! + authorId! + dateString
+//        let dateString = createdAt!.dateFormatForPostKey()
+//         self.localIdentifier = channelId! + authorId! + dateString
+        self.localIdentifier = "\(StringUtils.randomUUID())-\(self.createdAt?.timeIntervalSince1970)"
     }
 
     func setSystemAuthorIfNeeded() {
@@ -281,13 +288,14 @@ extension Post: Computations {
     
 
     func computeMissingFields() {
-        self.computeAttributedString()
-        self.computeAttributedStringData()
-        self.computeAttributedMessageHeight()
-        self.computeCreatedAtString()
-        self.computeCreatedAtStringWidth()
-        self.computeDay()
-        self.computeLocalIdentifier()
+        computeAttributedString()
+        computeAttributedStringData()
+        computeAttributedMessageHeight()
+        computeCreatedAtString()
+        computeCreatedAtStringWidth()
+        computeDay()
+        computeCellType()
+        computeLocalIdentifier()
     }
 }
 

@@ -15,11 +15,13 @@ final class AssignedPhotoViewItem {
         self.identifier = StringUtils.randomUUID()
     }
     
-    let image: UIImage
+    var image: UIImage
     var uploaded = false
     var uploading = false
     var uploadProgress: Float = 0
     let identifier: String
+    var fileName: String?
+    var isFile = false
 }
 
 extension AssignedPhotoViewItem: Equatable {}

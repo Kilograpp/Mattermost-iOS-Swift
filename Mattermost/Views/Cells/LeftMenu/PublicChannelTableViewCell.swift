@@ -66,7 +66,7 @@ extension PublicChannelTableViewCell : PrivateConfiguration {
 extension PublicChannelTableViewCell {
     func configureWithChannel(_ channel: Channel, selected: Bool) {
         self.channel = channel
-        self.titleLabel.text = "# \(channel.displayName!)"
+        self.titleLabel.text = channel.displayName!
         self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
         self.titleLabel.font = (channel.hasNewMessages()) ? FontBucket.highlighTedTitleFont : FontBucket.normalTitleFont
         if selected {

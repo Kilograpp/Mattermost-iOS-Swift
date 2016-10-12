@@ -68,6 +68,12 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
             (error) in
             // FIXME: CodeReview: гуард
             if (error != nil){
+                //Т.к на сервере нет обработки ошибки 400 (при вводе неверных данных)
+                if (error?.code == -1011) {
+                    AlertManager.sharedManager.showErrorWithMessage(message: "Incorrect email or password!", viewController: self)
+                } else {
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                }
                 print("Error!")
         } else {
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in

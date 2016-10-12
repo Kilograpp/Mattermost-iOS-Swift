@@ -169,7 +169,7 @@ extension MoreChannelsTableViewCell : Configure {
 //MARK: - ConfigureTextLabel
     fileprivate func configureLastPostLabelTextForPrivateChannel(_ channel:Channel) {
         //self.lastPostLabel.text = channel.posts.last?.message
-        let lastPost = try! Realm().objects(Post).filter("channelId = %@", channel.identifier!).last
+        let lastPost = try! Realm().objects(Post.self).filter("channelId = %@", channel.identifier!).last
         self.lastPostLabel.text = lastPost?.message
     }
     

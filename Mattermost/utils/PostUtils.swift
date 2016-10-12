@@ -17,8 +17,8 @@ private protocol Public : class {
     func sendReplyToPost(_ post: Post, channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
     func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void)
-    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
     func cancelImageItemUploading(_ item: AssignedPhotoViewItem)
 }
 
@@ -32,7 +32,8 @@ final class PostUtils: NSObject {
     
     static let sharedInstance = PostUtils()
     fileprivate let upload_images_group = DispatchGroup()
-    fileprivate var images: Array<AssignedPhotoViewItem>?
+    //refactor rename files
+    fileprivate var files = Array<AssignedPhotoViewItem>()
     
     fileprivate var test: File?
     
@@ -131,28 +132,57 @@ extension PostUtils : Public {
             }
         }
     }
-    
-    func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void) {
-        Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
-            completion(posts!, error)
-        }
+    //refactor uploadItemAtChannel
+    func uploadFiles(_ channel: Channel,fileItem:AssignedPhotoViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+            self.files.append(fileItem)
+            Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
+                completion(false, error)
+                if error != nil {
+                    self.files.removeObject(fileItem)
+                    return
+                }
+
+                self.assignedFiles.append(file!)
+                
+                print("uploaded")
+            }) { (identifier, value) in
+                
+                let index = self.files.index(where: {$0.identifier == identifier})
+                guard (index != nil) else {
+                    return
+                }
+                print("\(index) in progress: \(value)")
+                progress(value, index!)
+            }
     }
     
-    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
-        self.images = images
-        for item in self.images! {
+
+    func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void) {
+    Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
+    completion(posts!, error)
+    }
+    }
+    
+    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+        self.files.append(contentsOf: images)
+        for item in files {
             if !item.uploaded {
                 self.upload_images_group.enter()
                 item.uploading = true
                 Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
-                    completion(false, error)
+                    completion(false, error, item)
+                    if error != nil {
+                        self.files.removeObject(item)
+                        return
+                    }
+                    
                     if self.assignedFiles.count == 0 {
                         self.test = file
                     }
                     self.assignedFiles.append(file!)
                     self.upload_images_group.leave()
                     }, progress: { (identifier, value) in
-                        let index = self.images!.index(where: {$0.identifier == identifier})
+                        let index = self.files.index(where: {$0.identifier == identifier})
                         guard (index != nil) else {
                             return
                         }
@@ -162,7 +192,7 @@ extension PostUtils : Public {
             
             self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
                 //FIXME: add error
-                completion(true, nil)
+                completion(true, nil, item)
             })
         }
     }
@@ -173,7 +203,8 @@ extension PostUtils : Public {
     
     func cancelImageItemUploading(_ item: AssignedPhotoViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-        self.images?.removeObject(item)
+        self.assignedFiles.remove(at: files.index(of: item)!)
+        self.files.removeObject(item)
     }
 }
 
@@ -186,6 +217,6 @@ extension PostUtils : Private {
     
     func clearUploadedAttachments() {
         self.assignedFiles.removeAll()
-        self.images?.removeAll()
+        self.files.removeAll()
     }
 }

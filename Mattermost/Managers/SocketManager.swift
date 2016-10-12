@@ -27,6 +27,7 @@ private protocol Interface: class {
         webSocket.setCookie(UserStatusManager.sharedInstance.cookie())
         return webSocket
     }()
+
 }
 
 private protocol Notifications: class {
@@ -54,6 +55,7 @@ private protocol MessageHandling: class {
 extension SocketManager: WebSocketDelegate{
     func websocketDidConnect(socket: WebSocket) {
         NSLog("Socket did connect")
+//        publishBackendNotificationFetchStatuses()
     }
     func websocketDidReceiveData(socket: Starscream.WebSocket, data: Data) {}
     func websocketDidDisconnect(socket: Starscream.WebSocket, error: NSError?) {
@@ -73,12 +75,17 @@ extension SocketManager: Interface {
         self.publishBackendNotificationAboutAction(action, channelId: channel.identifier!)
     }
     func setNeedsConnect() {
+//        setupSocket()
         if shouldConnect() {
             self.socket.connect()
         }
     }
     func disconnect() {
         socket.disconnect(forceTimeout: 0)
+    }
+    
+    func setupSocket() {
+        
     }
 }
 
@@ -166,8 +173,9 @@ extension SocketManager: Notifications {
         // if user is not author
         let day = deletedPost.day
         if deletedPost.authorId != Preferences.sharedInstance.currentUserId {
-            let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first!
-            RealmUtils.deleteObject(post)
+            let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first
+            guard post != nil else { return }
+            RealmUtils.deleteObject(post!)
             if day?.posts.count == 0 {
                 RealmUtils.deleteObject(day!)
             }

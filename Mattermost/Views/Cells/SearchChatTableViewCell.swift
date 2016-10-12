@@ -17,7 +17,7 @@ struct Geometry {
     static let SmallPadding: CGFloat    = 5.0
     static let ErrorViewSize: CGFloat   = 34.0
 }
-
+// FIXME: CodeReview: Приватные протоколы должны находиться после определения класса (
 private protocol LifeCycle {
     func awakeFromNib()
     func setSelected(_ selected: Bool, animated: Bool)
@@ -54,6 +54,7 @@ private protocol Action {
 class SearchChatTableViewCell: UITableViewCell {
 
 //MARK: Properties
+    // FIXME: CodeReview: Если у переменной указывается конструктор, то нет необходимости явно указывать тип после двоеточия, он определится сам.
     fileprivate let channelLabel: UILabel = UILabel()
     fileprivate let avatarImageView: UIImageView = UIImageView()
     fileprivate let nameLabel: UILabel = UILabel()
@@ -62,6 +63,7 @@ class SearchChatTableViewCell: UITableViewCell {
     fileprivate let detailIconImageView: UIImageView = UIImageView()
     
     fileprivate let timeString: String = ""
+    // FIXME: CodeReview: Зачем держать сразу и post, и его identifier? Даже посты без identifier (т.е неотправленные) присутствуют в бд и отображаются.
     final var post : Post! {
         didSet { self.postIdentifier = self.post.identifier }
     }
@@ -100,6 +102,9 @@ class SearchChatTableViewCell: UITableViewCell {
 //MARK: LifeCycle
 
 extension SearchChatTableViewCell: LifeCycle {
+    // FIXME: CodeReview: Если переопределенный метод не отличается от от родительского - нет смысла его переопределять.
+    // FIXME: CodeReview: +переопределенные методы в extension не работают (лучше указывать их в классе) 
+    //                      см. http://stackoverflow.com/questions/38213286/overriding-methods-in-swift-extensions
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -167,6 +172,7 @@ extension SearchChatTableViewCell: Setup {
     
     func setupMessageLabel() {
         self.messageLabel.backgroundColor = UIColor.white
+        // FIXME: CodeReview: 0 по умолчанию
         self.messageLabel.numberOfLines = 0
         self.messageLabel.layer.drawsAsynchronously = true
         self.addSubview(self.messageLabel)
@@ -207,6 +213,7 @@ extension SearchChatTableViewCell: Configuration {
         let postIdentifier = self.post.identifier
         self.postIdentifier = postIdentifier
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        // FIXME: CodeReview: зачем проверять наличие у поста identifier?
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }
             self?.avatarImageView.image = image
