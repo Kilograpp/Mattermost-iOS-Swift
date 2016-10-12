@@ -73,6 +73,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
+    var tableViewBottomConstraint: NSLayoutConstraint!
     
     var hasNextPage: Bool = true
     var postFromSearch: Post! = nil
@@ -143,6 +144,7 @@ extension ChatViewController: Setup {
         setupTopActivityIndicator()
         setupLongCellSelection()
         setupCompactPost()
+        setupInitialTableViewConstraints()
     }
     
     func setupTableView() {
@@ -240,6 +242,21 @@ extension ChatViewController: Setup {
         let height = NSLayoutConstraint(item: self.completePost, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height)
         view.addConstraint(height)
     }
+    
+    func updateTableViewBottomConstraint(postViewShowed: Bool) {
+        let constantValue = postViewShowed ? -80 : 0
+        self.tableViewBottomConstraint.constant = CGFloat(constantValue)
+        self.view.updateConstraints()
+        self.view.layoutIfNeeded()
+    }
+    
+    func setupInitialTableViewConstraints() {
+        let top = NSLayoutConstraint(item: self.tableView, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 0)
+        self.tableViewBottomConstraint = NSLayoutConstraint(item: self.tableView, attribute: .bottom, relatedBy: .equal, toItem: self.textView, attribute: .top, multiplier: 1, constant: 0)
+        let left = NSLayoutConstraint(item: self.tableView, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1, constant: 0)
+        let right = NSLayoutConstraint(item: self.tableView, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1, constant: 0)
+        self.view.addConstraints([top, tableViewBottomConstraint, left, right])
+    }
 }
 
 
@@ -316,6 +333,7 @@ extension ChatViewController : Private {
                 let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
                 self.assignedPhotosArray.append(contentsOf: convertedAssets)
                 self.postAttachmentsView.showAnimated()
+                self.updateTableViewBottomConstraint(postViewShowed: true)
                 self.postAttachmentsView.updateAppearance()
                 self.uploadImages()
         }))
@@ -422,6 +440,7 @@ extension ChatViewController: Action {
         }
         self.assignedPhotosArray.removeAll()
         self.postAttachmentsView.hideAnimated()
+        self.updateTableViewBottomConstraint(postViewShowed: false)
     }
     
     func assignPhotosAction() {
@@ -588,6 +607,7 @@ extension ChatViewController: Request {
                 self.postAttachmentsView.updateAppearance()
                 if (self.assignedPhotosArray.count == 0) {
                     self.postAttachmentsView.hideAnimated()
+                    self.updateTableViewBottomConstraint(postViewShowed: false)
                 }
             } else {
                 self.fileUploadingInProgress = finished
@@ -610,6 +630,7 @@ extension ChatViewController: Request {
                 self.postAttachmentsView.updateAppearance()
                 if (self.assignedPhotosArray.count == 0) {
                     self.postAttachmentsView.hideAnimated()
+                    self.updateTableViewBottomConstraint(postViewShowed: false)
                 }
             } else {
                 self.fileUploadingInProgress = finished
@@ -767,6 +788,7 @@ extension ChatViewController: PostAttachmentViewDelegate {
         self.assignedPhotosArray.removeObject(photo)
         guard self.assignedPhotosArray.count != 0 else {
             self.postAttachmentsView.hideAnimated()
+            self.updateTableViewBottomConstraint(postViewShowed: false)
             return
         }
     }
@@ -865,6 +887,7 @@ extension ChatViewController: UIDocumentPickerDelegate {
         fileItem.isFile = true
         self.assignedPhotosArray.append(fileItem)
         self.postAttachmentsView.showAnimated()
+        self.updateTableViewBottomConstraint(postViewShowed: true)
         self.postAttachmentsView.updateAppearance()
         self.uploadFile(from:url, fileItem: fileItem)
     }
