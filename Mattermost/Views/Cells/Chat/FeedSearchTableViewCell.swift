@@ -61,7 +61,7 @@ extension FeedSearchTableViewCell: TableViewPostDataSource {
     }
     
     final func configureSelectionWithText(text: String) {
-        let range = (self.post.message! as NSString).range(of: text)
+        let range = (self.post.message!.lowercased() as NSString).range(of: text.lowercased())
         self.messageLabel.textStorage?.addAttributes([NSBackgroundColorAttributeName : ColorBucket.searchTextBackgroundColor], range: range)
         self.messageLabel.textStorage?.addAttributes([NSForegroundColorAttributeName : ColorBucket.searchTextColor], range: range)
     }
@@ -76,7 +76,7 @@ extension FeedSearchTableViewCell: TableViewPostDataSource {
 
 extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
     final func configureBasicLabels() {
-        self.channelLabel.text = "#" + self.post.channel.displayName!
+        self.channelLabel.text = self.post.channel.displayName!
         self.nameLabel.text = self.post.author.displayName
         self.timeLabel.text = self.post.createdAtString
     }
