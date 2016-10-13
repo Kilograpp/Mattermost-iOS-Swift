@@ -142,7 +142,7 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
         self.arrowImageView.backgroundColor = ColorBucket.whiteColor
         self.arrowImageView.isUserInteractionEnabled = true
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(self.disclosureTapAction))
-        self.arrowImageView.addGestureRecognizer(tapGestureRecognizer)
+        self.addGestureRecognizer(tapGestureRecognizer)
         self.addSubview(self.arrowImageView)
     }
 }
