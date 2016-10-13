@@ -89,6 +89,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
+
 }
 
 
@@ -315,6 +316,19 @@ extension ChatViewController : Private {
 // TODO: Code Review: clean unused code
     
 //Images
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        let image = info["UIImagePickerControllerOriginalImage"] as! UIImage
+        let imageItem = AssignedAttachmentViewItem(image: image)
+        self.assignedImages = [imageItem]
+        self.assignedFileItemsArray.append(imageItem)
+        self.postAttachmentsView.showAnimated()
+        self.showAttachmentsView()
+        self.postAttachmentsView.updateAppearance()
+        self.uploadImages()
+        picker.dismiss(animated: true) { }
+    }
+    
     func assignPhotos() -> Void {
         //TODO: MORE REFACTOR
         let presentImagePickerController: (UIImagePickerControllerSourceType) -> () = { source in
@@ -329,27 +343,58 @@ extension ChatViewController : Private {
         let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
         controller.maximumSelection = 5 - self.assignedFileItemsArray.count
         print("Images to selection:\(controller.maximumSelection)")
-        
-        
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
+        let assignImagesHandler = {
+            let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
+            self.assignedFileItemsArray.append(contentsOf: convertedAssets)
+            self.assignedImages = convertedAssets
+            self.postAttachmentsView.showAnimated()
+            self.showAttachmentsView()
+            self.postAttachmentsView.updateAppearance()
+            self.uploadImages()
+        }
+    
+    
+        let cameraAction = ImagePickerAction(title: "Take Photo Or Video", secondaryTitle: "Send", style: .default, handler: { _ in
             presentImagePickerController(.camera)
-            }, secondaryHandler: { _, numberOfPhotos in
-                let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-                self.assignedFileItemsArray.append(contentsOf: convertedAssets)
-                self.assignedImages = convertedAssets
-                self.postAttachmentsView.showAnimated()
-                self.showAttachmentsView()
-                self.postAttachmentsView.updateAppearance()
-                self.uploadImages()
-        }))
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
-            presentImagePickerController(.photoLibrary)
-            }, secondaryHandler: { _ in
-                presentImagePickerController(.photoLibrary)
-        }))
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .cancel, handler: { _ in
-            print("Cancelled")
-        }))
+            }) { (_, numberOfPhotos) in
+                assignImagesHandler()
+            }
+        controller.addAction(cameraAction)
+        
+//        let galeryAction = ImagePickerAction(title: "Take Photo Or Video", secondaryTitle: "AddComment", style: .default, handler: { _ in
+//            presentImagePickerController(.photoLibrary)
+//        }) { (_, numberOfPhotos) in
+//            assignImagesHandler()
+//        }
+        
+//        controller.addAction(galeryAction)
+        
+        
+        
+        
+        controller.addAction(ImagePickerAction(cancelTitle: NSLocalizedString("Cancel", comment: "Action Title")))
+        
+        
+        
+//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
+//            presentImagePickerController(.camera)
+//            }, secondaryHandler: { _, numberOfPhotos in
+//                let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
+//                self.assignedFileItemsArray.append(contentsOf: convertedAssets)
+//                self.assignedImages = convertedAssets
+//                self.postAttachmentsView.showAnimated()
+//                self.showAttachmentsView()
+//                self.postAttachmentsView.updateAppearance()
+//                self.uploadImages()
+//        }))
+//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
+//            presentImagePickerController(.photoLibrary)
+//            }, secondaryHandler: { _ in
+//                presentImagePickerController(.photoLibrary)
+//        }))
+//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .cancel, handler: { _ in
+//            print("Cancelled")
+//        }))
         
         present(controller, animated: true, completion: nil)
     }
@@ -752,6 +797,7 @@ extension ChatViewController {
 extension ChatViewController: ChannelObserverDelegate {
 
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void {
+        //old channel
         //unsubscribing from realm and channelActionNotifications
         if resultsObserver != nil {
             resultsObserver.unsubscribeNotifications()
@@ -765,6 +811,10 @@ extension ChatViewController: ChannelObserverDelegate {
                                                     name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                                                     object: nil)
         }
+        
+        self.typingIndicatorView?.dismissIndicator()
+        
+        //new channel
         self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
