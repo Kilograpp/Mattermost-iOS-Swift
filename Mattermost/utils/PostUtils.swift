@@ -103,7 +103,7 @@ extension PostUtils : Public {
             if error != nil {
                 print("error")
                 try! RealmUtils.realmForCurrentThread().write({
-                    post.status = .error
+                    postToSend.status = .error
                 })
             }
             completion(error)
