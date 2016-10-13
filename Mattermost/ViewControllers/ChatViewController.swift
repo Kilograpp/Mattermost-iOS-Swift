@@ -285,22 +285,24 @@ extension ChatViewController : Private {
     }
     
     func attachmentSelection() {
-        let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
-        let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
-            self.assignPhotos()
-        })
-        gallerySelectionAction.setValue(UIImage(named:"gallery_icon"), forKey: "image")
-        controller.addAction(gallerySelectionAction)
-        
-        let fileSelectionAction = UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
-            self.proceedToFileSelection()
-        })
-        fileSelectionAction.setValue(UIImage(named:"iCloud_icon"), forKey: "image")
-        controller.addAction(fileSelectionAction)
-        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
-            print("canceled")
-        }))
-        present(controller, animated: true) {}
+        if (self.assignedFileItemsArray.count < 5) {
+            let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
+            let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
+                self.assignPhotos()
+            })
+            gallerySelectionAction.setValue(UIImage(named:"gallery_icon"), forKey: "image")
+            controller.addAction(gallerySelectionAction)
+            
+            let fileSelectionAction = UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
+                self.proceedToFileSelection()
+            })
+            fileSelectionAction.setValue(UIImage(named:"iCloud_icon"), forKey: "image")
+            controller.addAction(fileSelectionAction)
+            controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
+                print("canceled")
+            }))
+            present(controller, animated: true) {}
+        }
     }
     
     func hideTopActivityIndicator() {
@@ -323,7 +325,9 @@ extension ChatViewController : Private {
         }
         
         let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
-        controller.maximumSelection = 5
+        controller.maximumSelection = 5 - self.assignedFileItemsArray.count
+        print("Images to selection:\(controller.maximumSelection)")
+        
         
         controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
             presentImagePickerController(.camera)
