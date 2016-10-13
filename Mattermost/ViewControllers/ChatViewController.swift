@@ -302,6 +302,8 @@ extension ChatViewController : Private {
                 print("canceled")
             }))
             present(controller, animated: true) {}
+        } else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Maximum of attachments reached", viewController: self)
         }
     }
     
@@ -602,7 +604,8 @@ extension ChatViewController: Request {
     func uploadImages() {
         //TODO: FIX THIS!
         //Собственный array для images (передавать в images: ...). Это массив с выбранными картинками. (т.к передается весь массив из вью айтемс, где лежат еще и файлы)
-        PostUtils.sharedInstance.uploadImages(self.channel!, images: assignedImages, completion: { (finished, error, item) in
+        let images = assignedImages
+        PostUtils.sharedInstance.uploadImages(self.channel!, images: images, completion: { (finished, error, item) in
             if error != nil {
                 //TODO: handle error
                 //refactor обработка этой ошибки в отдельную функцию
@@ -616,10 +619,12 @@ extension ChatViewController: Request {
                 }
             } else {
                 self.fileUploadingInProgress = finished
-                
+                images.forEach({ (item) in
+                    item.uploaded = true
+                })
             }
         }) { (value, index) in
-            self.assignedFileItemsArray[index].uploaded = value == 1
+//            self.assignedFileItemsArray[index].uploaded = value == 1
             self.assignedFileItemsArray[index].uploading = value < 1
             self.assignedFileItemsArray[index].uploadProgress = value
             self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
