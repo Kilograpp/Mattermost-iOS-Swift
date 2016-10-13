@@ -187,7 +187,7 @@ extension FeedNotificationsObserver {
     func titleForHeader(_ section:Int) -> String {
         return self.days![section].text!
     }
-    fileprivate func indexPathForPost(_ post: Post) -> IndexPath {
+    func indexPathForPost(_ post: Post) -> IndexPath {
         let day = post.day
         let daysPosts = day?.sortedPosts()
         let indexOfDay = (self.days?.index(of: day!))!

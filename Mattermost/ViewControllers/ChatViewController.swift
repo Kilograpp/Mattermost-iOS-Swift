@@ -127,7 +127,6 @@ extension ChatViewController {
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         
         loadPostsBeforePost(post: post)
-        loadPostsAfterPost(post: post)
     }
 }
 
@@ -525,10 +524,8 @@ extension ChatViewController: Request {
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
-            
-//            self.resultsObserver.unsubscribeNotifications()
-//            self.resultsObserver.prepareResults()
-//            self.resultsObserver.subscribeNotifications()
+        
+            self.resultsObserver.prepareResults()
         }
     }
     
@@ -544,10 +541,8 @@ extension ChatViewController: Request {
             }
             
             self.isLoadingInProgress = false
-            
-            self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
-            self.resultsObserver.subscribeNotifications()
+            self.loadPostsAfterPost(post: post)
         }
     }
     
@@ -562,6 +557,9 @@ extension ChatViewController: Request {
             self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
             self.resultsObserver.subscribeNotifications()
+            
+            let indexPath =  self.resultsObserver.indexPathForPost(post)
+            self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
     }
     
