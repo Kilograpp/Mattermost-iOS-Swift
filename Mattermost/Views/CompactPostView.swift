@@ -124,6 +124,7 @@ extension CompactPostView: Setup {
         self.avatarImageView.frame = CGRect(x: Constants.UI.DoublePaddingSize, y: Constants.UI.ShortPaddingSize,
                                                 width: Constants.UI.StandardPaddingSize, height: Constants.UI.StandardPaddingSize)
         self.avatarImageView.layer.cornerRadius = Constants.UI.MiddlePaddingSize
+        self.avatarImageView.layer.masksToBounds = true
         self.contentView.addSubview(self.avatarImageView)
     }
     
