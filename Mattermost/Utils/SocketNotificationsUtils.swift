@@ -111,6 +111,7 @@ final class SocketNotificationUtils {
         post.identifier = dictionary[NotificationKeys.Identifier] as? String
         post.authorId = dictionary[NotificationKeys.UserIdentifier] as? String
         post.channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
+        post.pendingId = dictionary[NotificationKeys.PendingPostIdentifier] as? String
  
         post.createdAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! TimeInterval/1000.0)
         post.updatedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Update_at] as! TimeInterval/1000.0)

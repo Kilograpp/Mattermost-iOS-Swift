@@ -584,6 +584,7 @@ extension ChatViewController: Request {
             }
             self.selectedPost = nil
         }
+        self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
         self.dismissKeyboard(true)
     }
@@ -593,11 +594,10 @@ extension ChatViewController: Request {
     
         PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil, completion: { (error) in
             self.selectedPost = nil
-            self.dismissKeyboard(true)
-            self.selectedAction = Constants.PostActionType.SendNew
 //            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
         })
-        
+        self.dismissKeyboard(true)
+        self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
     }
     

@@ -159,13 +159,13 @@ extension SocketManager: Notifications {
     
     func handleReceivingNewPost(_ channelId:String,channelName:String,channelType:String,senderName:String,post:Post) {
         // if user is not author
-        if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.localIdentifier!) {
+        if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.pendingId!) {
             RealmUtils.save(post)
         }
     }
     
     func handleReceivingUpdatedPost(_ updatedPost:Post) {
-        if postExistsWithIdentifier(updatedPost.identifier!, pendingIdentifier: updatedPost.localIdentifier!) {
+        if postExistsWithIdentifier(updatedPost.identifier!, pendingIdentifier: updatedPost.pendingId!) {
             let existedPost = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", PostAttributes.identifier.rawValue, updatedPost.identifier!).first!
             updatedPost.localIdentifier = existedPost.localIdentifier
         }
@@ -175,7 +175,7 @@ extension SocketManager: Notifications {
     func handleReceivingDeletedPost(_ deletedPost:Post) {
         // if user is not author
         let day = deletedPost.day
-        if postExistsWithIdentifier(deletedPost.identifier!, pendingIdentifier: deletedPost.localIdentifier!) {
+        if postExistsWithIdentifier(deletedPost.identifier!, pendingIdentifier: deletedPost.pendingId!) {
             let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first
             guard post != nil else { return }
             RealmUtils.deleteObject(post!)
@@ -265,7 +265,7 @@ extension SocketManager: StateControl {
 extension SocketManager: Validation {
     fileprivate func postExistsWithIdentifier(_ identifier: String, pendingIdentifier: String) -> Bool {
         let realm = try! Realm()
-        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.localId.rawValue, pendingIdentifier)
-        return realm.objects(Post).filter(predicate).first != nil
+        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.pendingId.rawValue, pendingIdentifier)
+        return realm.objects(Post.self).filter(predicate).first != nil
     }
 }
