@@ -111,6 +111,7 @@ final class SocketNotificationUtils {
         post.authorId = dictionary[NotificationKeys.UserIdentifier] as? String
         post.channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
         post.pendingId = dictionary[NotificationKeys.PendingPostIdentifier] as? String
+        post.parentId = dictionary[NotificationKeys.DataKeys.PostKeys.ParentIdentifier] as? String
         let files = dictionary[NotificationKeys.DataKeys.PostKeys.Files] as! [String]
         files.forEach { (fileName) in
             let file = File()

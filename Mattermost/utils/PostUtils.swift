@@ -93,12 +93,19 @@ extension PostUtils : Public {
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         postToSend.parentId = post.identifier
         postToSend.rootId = post.identifier
+        postToSend.status = .sending
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
         postToSend.computeMissingFields()
         RealmUtils.save(postToSend)
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
+            if error != nil {
+                print("error")
+                try! RealmUtils.realmForCurrentThread().write({
+                    post.status = .error
+                })
+            }
             completion(error)
             self.clearUploadedAttachments()
         }
