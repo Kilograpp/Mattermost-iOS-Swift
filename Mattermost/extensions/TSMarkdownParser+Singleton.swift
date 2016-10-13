@@ -161,15 +161,25 @@ extension TSMarkdownParser {
     }
     
     fileprivate func addPhoneParsing() {
-        let pattern = "([0-9]{11})"
+        let pattern = "(^|\\D{1})([0-9]{6,11})(\\D{1}|$)"
         let phoneExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         self.addParsingRule(with: phoneExpression) { (match, attributedString) in
-            let range = NSMakeRange(match.range.location, match.range.length)
+            var range = NSMakeRange(match.range.location, match.range.length)
+            
+            if (Int(attributedString.string[match.range.location]) == nil) {
+                range.location += 1
+                range.length -= 1
+            }
+            
+            if (Int(attributedString.string[match.range.location + match.range.length - 1]) == nil) {
+                range.length -= 1
+            }
+            
             let phone = (attributedString.string as NSString).substring(with: range)
             
             let attributes = [NSForegroundColorAttributeName : ColorBucket.linkColor]
-            attributedString.addAttribute(Constants.StringAttributes.Phone, value: phone, range: match.range)
-            attributedString.addAttributes(attributes, range: match.range)
+            attributedString.addAttribute(Constants.StringAttributes.Phone, value: phone, range: range)
+            attributedString.addAttributes(attributes, range: range)
         }
         
     }
