@@ -21,7 +21,7 @@ class PostFileViewCell: PostAttachmentsViewCell {
         super.configureWithItem(item)
         
         self.nameLabel.text = item.fileName
-        self.nameLabel.numberOfLines = 2
+        self.nameLabel.numberOfLines = 1
         self.nameLabel.sizeToFit()
     }
     
