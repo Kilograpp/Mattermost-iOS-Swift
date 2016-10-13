@@ -91,7 +91,7 @@ final class FeedNotificationsObserver {
                         self.tableView.beginUpdates()
                         if (insertions.count > 0) {
                         
-                            // IndexSet
+                            
                             if self.days?.first?.posts.count == 1 {
                                 self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
                             }
