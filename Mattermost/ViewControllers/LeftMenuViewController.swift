@@ -18,6 +18,9 @@ final class LeftMenuViewController: UIViewController {
     var realm: Realm?
     fileprivate var resultsPublic: Results<Channel>! = nil
     fileprivate var resultsPrivate: Results<Channel>! = nil
+    
+    //temp timer
+    var statusesTimer: Timer?
 
 //MARK: - Override
     override func viewDidLoad() {
@@ -27,9 +30,14 @@ final class LeftMenuViewController: UIViewController {
         configureTableView()
         configureView()
         configureInitialSelectedChannel()
-        configureStartUpdating()
         setupChannelsObserver()
+        configureStartUpdating()
     }
+    
+    
+    
+    
+    
     
     //refactor later -> ObserverUtils
     func setupChannelsObserver() {
@@ -37,12 +45,38 @@ final class LeftMenuViewController: UIViewController {
                                                selector: #selector(updateResults),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification),
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(stopTimer),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
+                                               object: nil)
+    }
+    
+    //TEMP TODO:  update statuses
+    fileprivate func configureStartUpdating() {
+        //Костыль (для инициализации UserStatusObserver)
+        UserStatusObserver.sharedObserver
+        self.statusesTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(updateStatuses), userInfo: nil, repeats: true)
+        
+    }
+    
+    func updateStatuses() {
+        SocketManager.sharedInstance.publishBackendNotificationFetchStatuses()
+    }
+    
+    func stopTimer() {
+        if (self.statusesTimer != nil) {
+            self.statusesTimer?.invalidate()
+            self.statusesTimer = nil
+        }
     }
     
     func updateResults() {
         configureResults()
         self.tableView.reloadData()
     }
+    
+    
+    
     
 }
 
@@ -87,10 +121,6 @@ extension LeftMenuViewController : Configure {
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
     }
     
-    fileprivate func configureStartUpdating() {
-        // UserStatusObserver Updating
-//        UserStatusObserver.sharedObserver.startUpdating()
-    }
     
     fileprivate func configureResults () {
         let privateTypePredicate = NSPredicate (format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)

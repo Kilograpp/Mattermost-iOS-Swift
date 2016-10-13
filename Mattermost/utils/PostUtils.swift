@@ -93,12 +93,19 @@ extension PostUtils : Public {
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         postToSend.parentId = post.identifier
         postToSend.rootId = post.identifier
+        postToSend.status = .sending
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
         postToSend.computeMissingFields()
         RealmUtils.save(postToSend)
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
+            if error != nil {
+                print("error")
+                try! RealmUtils.realmForCurrentThread().write({
+                    postToSend.status = .error
+                })
+            }
             completion(error)
             self.clearUploadedAttachments()
         }
@@ -136,7 +143,7 @@ extension PostUtils : Public {
     func uploadFiles(_ channel: Channel,fileItem:AssignedAttachmentViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
             self.files.append(fileItem)
             Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
-                completion(false, error)
+                completion(true, error)
                 if error != nil {
                     self.files.removeObject(fileItem)
                     return

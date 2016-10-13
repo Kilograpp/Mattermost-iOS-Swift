@@ -73,7 +73,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
-    var tableViewBottomConstraint: NSLayoutConstraint!
+
     
     var hasNextPage: Bool = true
     var postFromSearch: Post! = nil
@@ -89,6 +89,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
+
 }
 
 
@@ -143,7 +144,6 @@ extension ChatViewController: Setup {
         setupLongCellSelection()
         setupCompactPost()
         setupNoPostsLabel()
-        setupInitialTableViewConstraints()
     }
     
     func setupTableView() {
@@ -254,22 +254,6 @@ extension ChatViewController: Setup {
         let height = NSLayoutConstraint(item: self.completePost, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height)
         view.addConstraint(height)
     }
-    
-    //TODO: FIX WITHOUT CONSTRAINTS (Content insets!)
-    func updateTableViewBottomConstraint(postViewShowed: Bool) {
-        let constantValue = postViewShowed ? -80 : 0
-        self.tableViewBottomConstraint.constant = CGFloat(constantValue)
-        self.view.updateConstraints()
-        self.view.layoutIfNeeded()
-    }
-    
-    func setupInitialTableViewConstraints() {
-        let top = NSLayoutConstraint(item: self.tableView, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1, constant: 0)
-        self.tableViewBottomConstraint = NSLayoutConstraint(item: self.tableView, attribute: .bottom, relatedBy: .equal, toItem: self.textView, attribute: .top, multiplier: 1, constant: 0)
-        let left = NSLayoutConstraint(item: self.tableView, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1, constant: 0)
-        let right = NSLayoutConstraint(item: self.tableView, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1, constant: 0)
-        self.view.addConstraints([top, tableViewBottomConstraint, left, right])
-    }
 }
 
 
@@ -287,6 +271,7 @@ extension ChatViewController : Private {
         var oldInset = self.tableView.contentInset
         oldInset.top = 0
         self.tableView.contentInset = oldInset
+        self.view.layoutSubviews()
     }
 
 //TopActivityIndicator
@@ -300,22 +285,26 @@ extension ChatViewController : Private {
     }
     
     func attachmentSelection() {
-        let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
-        let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
-            self.assignPhotos()
-        })
-        gallerySelectionAction.setValue(UIImage(named:"gallery_icon"), forKey: "image")
-        controller.addAction(gallerySelectionAction)
-        
-        let fileSelectionAction = UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
-            self.proceedToFileSelection()
-        })
-        fileSelectionAction.setValue(UIImage(named:"iCloud_icon"), forKey: "image")
-        controller.addAction(fileSelectionAction)
-        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
-            print("canceled")
-        }))
-        present(controller, animated: true) {}
+        if (self.assignedFileItemsArray.count < 5) {
+            let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
+            let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
+                self.assignPhotos()
+            })
+            gallerySelectionAction.setValue(UIImage(named:"gallery_icon"), forKey: "image")
+            controller.addAction(gallerySelectionAction)
+            
+            let fileSelectionAction = UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
+                self.proceedToFileSelection()
+            })
+            fileSelectionAction.setValue(UIImage(named:"iCloud_icon"), forKey: "image")
+            controller.addAction(fileSelectionAction)
+            controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
+                print("canceled")
+            }))
+            present(controller, animated: true) {}
+        } else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Maximum of attachments reached", viewController: self)
+        }
     }
     
     func hideTopActivityIndicator() {
@@ -326,6 +315,19 @@ extension ChatViewController : Private {
 // TODO: Code Review: clean unused code
     
 //Images
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        let image = info["UIImagePickerControllerOriginalImage"] as! UIImage
+        let imageItem = AssignedAttachmentViewItem(image: image)
+        self.assignedImages = [imageItem]
+        self.assignedFileItemsArray.append(imageItem)
+        self.postAttachmentsView.showAnimated()
+        self.showAttachmentsView()
+        self.postAttachmentsView.updateAppearance()
+        self.uploadImages()
+        picker.dismiss(animated: true) { }
+    }
+    
     func assignPhotos() -> Void {
         //TODO: MORE REFACTOR
         let presentImagePickerController: (UIImagePickerControllerSourceType) -> () = { source in
@@ -338,27 +340,60 @@ extension ChatViewController : Private {
         }
         
         let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
-        controller.maximumSelection = 5
-        
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
+        controller.maximumSelection = 5 - self.assignedFileItemsArray.count
+        print("Images to selection:\(controller.maximumSelection)")
+        let assignImagesHandler = {
+            let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
+            self.assignedFileItemsArray.append(contentsOf: convertedAssets)
+            self.assignedImages = convertedAssets
+            self.postAttachmentsView.showAnimated()
+            self.showAttachmentsView()
+            self.postAttachmentsView.updateAppearance()
+            self.uploadImages()
+        }
+    
+    
+        let cameraAction = ImagePickerAction(title: "Take Photo Or Video", secondaryTitle: "Send", style: .default, handler: { _ in
             presentImagePickerController(.camera)
-            }, secondaryHandler: { _, numberOfPhotos in
-                let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-                self.assignedFileItemsArray.append(contentsOf: convertedAssets)
-                self.assignedImages = convertedAssets
-                self.postAttachmentsView.showAnimated()
-                self.updateTableViewBottomConstraint(postViewShowed: true)
-                self.postAttachmentsView.updateAppearance()
-                self.uploadImages()
-        }))
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
-            presentImagePickerController(.photoLibrary)
-            }, secondaryHandler: { _ in
-                presentImagePickerController(.photoLibrary)
-        }))
-        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .cancel, handler: { _ in
-            print("Cancelled")
-        }))
+            }) { (_, numberOfPhotos) in
+                assignImagesHandler()
+            }
+        controller.addAction(cameraAction)
+        
+//        let galeryAction = ImagePickerAction(title: "Take Photo Or Video", secondaryTitle: "AddComment", style: .default, handler: { _ in
+//            presentImagePickerController(.photoLibrary)
+//        }) { (_, numberOfPhotos) in
+//            assignImagesHandler()
+//        }
+        
+//        controller.addAction(galeryAction)
+        
+        
+        
+        
+        controller.addAction(ImagePickerAction(cancelTitle: NSLocalizedString("Cancel", comment: "Action Title")))
+        
+        
+        
+//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
+//            presentImagePickerController(.camera)
+//            }, secondaryHandler: { _, numberOfPhotos in
+//                let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
+//                self.assignedFileItemsArray.append(contentsOf: convertedAssets)
+//                self.assignedImages = convertedAssets
+//                self.postAttachmentsView.showAnimated()
+//                self.showAttachmentsView()
+//                self.postAttachmentsView.updateAppearance()
+//                self.uploadImages()
+//        }))
+//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
+//            presentImagePickerController(.photoLibrary)
+//            }, secondaryHandler: { _ in
+//                presentImagePickerController(.photoLibrary)
+//        }))
+//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .cancel, handler: { _ in
+//            print("Cancelled")
+//        }))
         
         present(controller, animated: true, completion: nil)
     }
@@ -455,7 +490,7 @@ extension ChatViewController: Action {
         }
         self.assignedFileItemsArray.removeAll()
         self.postAttachmentsView.hideAnimated()
-        self.updateTableViewBottomConstraint(postViewShowed: false)
+        self.hideAttachmentsView()
     }
     
     func assignPhotosAction() {
@@ -581,6 +616,7 @@ extension ChatViewController: Request {
             }
             self.selectedPost = nil
         }
+        self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
         self.dismissKeyboard(true)
     }
@@ -590,11 +626,10 @@ extension ChatViewController: Request {
     
         PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil, completion: { (error) in
             self.selectedPost = nil
-            self.dismissKeyboard(true)
-            self.selectedAction = Constants.PostActionType.SendNew
 //            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
         })
-        
+        self.dismissKeyboard(true)
+        self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
     }
     
@@ -611,7 +646,8 @@ extension ChatViewController: Request {
     func uploadImages() {
         //TODO: FIX THIS!
         //Собственный array для images (передавать в images: ...). Это массив с выбранными картинками. (т.к передается весь массив из вью айтемс, где лежат еще и файлы)
-        PostUtils.sharedInstance.uploadImages(self.channel!, images: assignedImages, completion: { (finished, error, item) in
+        let images = assignedImages
+        PostUtils.sharedInstance.uploadImages(self.channel!, images: images, completion: { (finished, error, item) in
             if error != nil {
                 //TODO: handle error
                 //refactor обработка этой ошибки в отдельную функцию
@@ -621,14 +657,16 @@ extension ChatViewController: Request {
                 self.postAttachmentsView.updateAppearance()
                 if (self.assignedFileItemsArray.count == 0) {
                     self.postAttachmentsView.hideAnimated()
-                    self.updateTableViewBottomConstraint(postViewShowed: false)
+                    self.hideAttachmentsView()
                 }
             } else {
                 self.fileUploadingInProgress = finished
-                
+                images.forEach({ (item) in
+                    item.uploaded = true
+                })
             }
         }) { (value, index) in
-            self.assignedFileItemsArray[index].uploaded = value == 1
+//            self.assignedFileItemsArray[index].uploaded = value == 1
             self.assignedFileItemsArray[index].uploading = value < 1
             self.assignedFileItemsArray[index].uploadProgress = value
             self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
@@ -644,7 +682,7 @@ extension ChatViewController: Request {
                 self.postAttachmentsView.updateAppearance()
                 if (self.assignedFileItemsArray.count == 0) {
                     self.postAttachmentsView.hideAnimated()
-                    self.updateTableViewBottomConstraint(postViewShowed: false)
+                    self.hideAttachmentsView()
                 }
             } else {
                 self.fileUploadingInProgress = finished
@@ -756,6 +794,7 @@ extension ChatViewController {
 extension ChatViewController: ChannelObserverDelegate {
 
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void {
+        //old channel
         //unsubscribing from realm and channelActionNotifications
         if resultsObserver != nil {
             resultsObserver.unsubscribeNotifications()
@@ -769,6 +808,10 @@ extension ChatViewController: ChannelObserverDelegate {
                                                     name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                                                     object: nil)
         }
+        
+        self.typingIndicatorView?.dismissIndicator()
+        
+        //new channel
         self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
@@ -804,7 +847,7 @@ extension ChatViewController: PostAttachmentViewDelegate {
         self.assignedFileItemsArray.removeObject(item)
         guard self.assignedFileItemsArray.count != 0 else {
             self.postAttachmentsView.hideAnimated()
-            self.updateTableViewBottomConstraint(postViewShowed: false)
+            self.hideAttachmentsView()
             return
         }
     }
@@ -903,7 +946,7 @@ extension ChatViewController: UIDocumentPickerDelegate {
         fileItem.isFile = true
         self.assignedFileItemsArray.append(fileItem)
         self.postAttachmentsView.showAnimated()
-        self.updateTableViewBottomConstraint(postViewShowed: true)
+        self.showAttachmentsView()
         self.postAttachmentsView.updateAppearance()
         self.uploadFile(from:url, fileItem: fileItem)
     }

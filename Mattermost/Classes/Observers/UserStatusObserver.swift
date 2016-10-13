@@ -33,12 +33,42 @@ final class UserStatusObserver {
         
         return status
     }
+    
+    
 }
 
 extension UserStatusObserver : Private {
     @objc fileprivate func didLogout() {
         // unsubscribe from all observers
     }
+    
+}
+
+//MARK: - Notifications
+extension UserStatusObserver {
+    fileprivate func subscribeForLogoutNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didLogout),
+                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
+                                                         object: nil)
+    }
+    
+    func subscribeForStatusChangingNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateStatusForUser(_:)),
+                                                         name: NSNotification.Name(rawValue: StatusChangingSocketNotification.notificationName()),
+                                                         object: nil)
+    }
+    func subscribeForStatusesNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(setupStatuses(_:)),
+                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
+                                                         object: nil)
+    }
+    
+    fileprivate func sendUpdateNotification(_ userIdentifier:String, status:String) {
+        let notificationName = userIdentifier
+        NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: status)
+        
+    }
+    
     @objc func updateStatusForUser(_ notification: Notification) {
         let statusNotification = notification.object as! StatusChangingSocketNotification
         statuses[statusNotification.userId] = statusNotification.status
@@ -51,31 +81,5 @@ extension UserStatusObserver : Private {
             statuses.updateValue(value, forKey: key)
             sendUpdateNotification(key, status:value)
         }
-    }
-}
-
-//MARK: - Notifications
-extension UserStatusObserver {
-    fileprivate func subscribeForLogoutNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didLogout),
-                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
-                                                         object: nil)
-    }
-    
-    fileprivate func subscribeForStatusChangingNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateStatusForUser),
-                                                         name: NSNotification.Name(rawValue: StatusChangingSocketNotification.notificationName()),
-                                                         object: nil)
-    }
-    fileprivate func subscribeForStatusesNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(setupStatuses),
-                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
-                                                         object: nil)
-    }
-    
-    fileprivate func sendUpdateNotification(_ userIdentifier:String, status:String) {
-        let notificationName = userIdentifier
-        NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: status)
-        
     }
 }

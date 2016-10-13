@@ -103,14 +103,22 @@ final class SocketNotificationUtils {
         return try! json.rawData()
     }
     
-    //todo: files supporting (NotificationKeys.DataKeys.PostKeys.Files)
+
     static func postFromDictionary(_ dictionary:[String:AnyObject]) -> Post {
         let post = Post()
-        // ? pending post id
         post.message = dictionary[NotificationKeys.DataKeys.PostKeys.Message] as? String
         post.identifier = dictionary[NotificationKeys.Identifier] as? String
         post.authorId = dictionary[NotificationKeys.UserIdentifier] as? String
         post.channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
+        post.pendingId = dictionary[NotificationKeys.PendingPostIdentifier] as? String
+        post.parentId = dictionary[NotificationKeys.DataKeys.PostKeys.ParentIdentifier] as? String
+        let files = dictionary[NotificationKeys.DataKeys.PostKeys.Files] as! [String]
+        files.forEach { (fileName) in
+            let file = File()
+            file.rawLink = fileName
+            RealmUtils.save(file)
+            post.files.append(file)
+        }
  
         post.createdAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! TimeInterval/1000.0)
         post.updatedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Update_at] as! TimeInterval/1000.0)
