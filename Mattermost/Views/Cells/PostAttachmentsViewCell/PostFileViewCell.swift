@@ -21,7 +21,7 @@ class PostFileViewCell: PostAttachmentsViewCell {
         super.configureWithItem(item)
         
         self.nameLabel.text = item.fileName
-        self.nameLabel.numberOfLines = 1
+        self.nameLabel.numberOfLines = 2
         self.nameLabel.sizeToFit()
     }
     
@@ -30,7 +30,7 @@ class PostFileViewCell: PostAttachmentsViewCell {
     }
     
     override func layoutSubviews() {
-        self.nameLabel.frame = CGRect(x: 5, y: 25, width: 65, height: self.nameLabel.frame.height)
+        self.nameLabel.frame = CGRect(x: 5, y: 25, width: 63, height: self.nameLabel.frame.height)
         
         super.layoutSubviews()
     }

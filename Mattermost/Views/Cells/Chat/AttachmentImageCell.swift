@@ -40,7 +40,7 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     fileprivate func setupLabel() {
         fileNameLabel.font = UIFont.systemFont(ofSize: 13)
         fileNameLabel.textColor = ColorBucket.blueColor
-        fileNameLabel.numberOfLines = 0
+        fileNameLabel.numberOfLines = 1
         self.addSubview(fileNameLabel)
     }
     
