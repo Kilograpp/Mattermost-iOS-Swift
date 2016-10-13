@@ -62,14 +62,13 @@ extension AlertView: Setup {
     
     func setupBackgroud(for type:AlertType) {
         var backgroundColor = UIColor.brown
-        //TODO: заменить цвета
         switch (type) {
         case .success:
-            backgroundColor = UIColor.green
+            backgroundColor = ColorBucket.successAlertColor
         case .error:
-            backgroundColor = UIColor.red
+            backgroundColor = ColorBucket.errorAlertColor
         case .warning:
-            backgroundColor = UIColor.yellow
+            backgroundColor = ColorBucket.warningAlertColor
             
         default:
             break
@@ -87,7 +86,8 @@ extension AlertView {
     }
     
     func addToSuperview() {
-        self.presentingViewController.view.addSubview(self)
+//        self.presentingViewController.view.addSubview(self)
+        self.presentingViewController.navigationController?.view.addSubview(self)
     }
     
     func hideAlertView(animated: Bool) {

@@ -136,7 +136,7 @@ extension PostUtils : Public {
     func uploadFiles(_ channel: Channel,fileItem:AssignedAttachmentViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
             self.files.append(fileItem)
             Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
-                completion(false, error)
+                completion(true, error)
                 if error != nil {
                     self.files.removeObject(fileItem)
                     return
