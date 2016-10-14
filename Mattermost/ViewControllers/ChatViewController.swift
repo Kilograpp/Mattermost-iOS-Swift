@@ -334,7 +334,8 @@ extension ChatViewController : Private {
             self.uploadFile(from:url, fileItem: fileItem)
         } else {
             let image = info["UIImagePickerControllerOriginalImage"] as! UIImage
-            let imageItem = AssignedAttachmentViewItem(image: image)
+            let orientedImage = UIImage(cgImage: image.cgImage!, scale: 0, orientation: .up)
+            let imageItem = AssignedAttachmentViewItem(image: orientedImage)
             self.assignedImages = [imageItem]
             self.assignedFileItemsArray.append(imageItem)
             self.postAttachmentsView.showAnimated()
