@@ -61,7 +61,8 @@ extension FeedSearchTableViewCell: TableViewPostDataSource {
     }
     
     final func configureSelectionWithText(text: String) {
-        let range = (self.post.message!.lowercased() as NSString).range(of: text.lowercased())
+        let range = (self.messageLabel.textStorage!.string.lowercased() as NSString).range(of: text.lowercased())
+
         self.messageLabel.textStorage?.addAttributes([NSBackgroundColorAttributeName : ColorBucket.searchTextBackgroundColor], range: range)
         self.messageLabel.textStorage?.addAttributes([NSForegroundColorAttributeName : ColorBucket.searchTextColor], range: range)
     }
