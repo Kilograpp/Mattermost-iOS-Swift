@@ -632,8 +632,8 @@ extension ChatViewController: Request {
     
         PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil, completion: { (error) in
             self.selectedPost = nil
-//            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
         })
+        self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
         self.dismissKeyboard(true)
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
@@ -650,6 +650,7 @@ extension ChatViewController: Request {
     }
     
     func uploadImages() {
+        self.fileUploadingInProgress = false
         //TODO: FIX THIS!
         //Собственный array для images (передавать в images: ...). Это массив с выбранными картинками. (т.к передается весь массив из вью айтемс, где лежат еще и файлы)
         let images = assignedImages
@@ -680,6 +681,7 @@ extension ChatViewController: Request {
     }
     //refactor mechanism
     func uploadFile(from url:URL, fileItem:AssignedAttachmentViewItem) {
+        self.fileUploadingInProgress = false
         PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
             if error != nil {
                 //TODO: handle error

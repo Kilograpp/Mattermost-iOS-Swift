@@ -17,6 +17,8 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
         fileView = AttachmentFileView(file: file, frame: self.bounds)
         contentView.addSubview(fileView)
         self.backgroundColor = UIColor.white
+        //TEMP TODO: files uploading
+        self.selectionStyle = .none
         self.setNeedsDisplay()
     }
     
