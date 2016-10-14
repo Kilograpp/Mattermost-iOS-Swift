@@ -62,6 +62,11 @@ extension PostUtils : Public {
         RealmUtils.save(postToSend)
         self.clearUploadedAttachments()
         sendExistingPost(postToSend, completion: completion)
+        self.files.forEach { (item) in
+            if !item.uploaded {
+                self.cancelImageItemUploading(item)
+            }
+        }
     }
     
     func sendExistingPost(_ post:Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {

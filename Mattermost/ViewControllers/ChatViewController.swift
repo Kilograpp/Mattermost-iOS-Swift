@@ -609,6 +609,7 @@ extension ChatViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
             }
         }
+        self.assignedFileItemsArray.removeAll()
         self.dismissKeyboard(true)
         self.clearTextView()
     }
@@ -681,7 +682,6 @@ extension ChatViewController: Request {
     }
     //refactor mechanism
     func uploadFile(from url:URL, fileItem:AssignedAttachmentViewItem) {
-        self.fileUploadingInProgress = false
         PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
             if error != nil {
                 //TODO: handle error
