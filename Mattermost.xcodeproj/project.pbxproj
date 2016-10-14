@@ -1414,8 +1414,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5ee0d565-1835-4a86-a5d1-2ca5859ba861";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
+				PROVISIONING_PROFILE = "50c1c843-d8e1-4b87-a8a7-383756243568";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Production";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
