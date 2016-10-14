@@ -342,9 +342,12 @@ extension ChatViewController : Private {
             self.postAttachmentsView.updateAppearance()
             uploadAttachments()
         } else {
-            let image = info["UIImagePickerControllerOriginalImage"] as! UIImage
+            var image = info["UIImagePickerControllerOriginalImage"] as! UIImage
+            //TODO: 0 -> constants 
+            image = image.fixedOrientation()
+            let presentImage = UIImage(data:UIImageJPEGRepresentation(image, 0)!)
 //            let orientedImage = UIImage(cgImage: image.cgImage!, scale: 0, orientation: .up)
-            let imageItem = AssignedAttachmentViewItem(image: image)
+            let imageItem = AssignedAttachmentViewItem(image: presentImage!)
             self.selectedAttachments = [imageItem]
             self.postAttachmentsView.showAnimated()
             self.showAttachmentsView()

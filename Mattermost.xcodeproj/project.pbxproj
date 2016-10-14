@@ -26,6 +26,7 @@
 		4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */; };
 		4B870EBD1DA790BE00F29E49 /* AssignedFileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B870EBC1DA790BE00F29E49 /* AssignedFileItem.swift */; };
 		4B9DD4BB1DB0C94800AB4D2D /* AttachmentFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */; };
+		4B9DD4BD1DB1445200AB4D2D /* UIImage+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9DD4BC1DB1445200AB4D2D /* UIImage+Orientation.swift */; };
 		4BD16B081DA4ED9000473279 /* SkyFloatingLabelTextField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */; };
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */; };
@@ -230,6 +231,7 @@
 		4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemberMappingsContainer.swift; path = Mappings/MemberMappingsContainer.swift; sourceTree = "<group>"; };
 		4B870EBC1DA790BE00F29E49 /* AssignedFileItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignedFileItem.swift; sourceTree = "<group>"; };
 		4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentFileView.swift; sourceTree = "<group>"; };
+		4B9DD4BC1DB1445200AB4D2D /* UIImage+Orientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Orientation.swift"; sourceTree = "<group>"; };
 		4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyFloatingLabelTextField.framework; path = Carthage/Build/iOS/SkyFloatingLabelTextField.framework; sourceTree = "<group>"; };
 		4BEA108B1D79B551006BB298 /* TeamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
@@ -611,6 +613,7 @@
 				CDB6D3BA1D78423600C3018C /* String+IntSubscript.swift */,
 				CDB6D3BC1D78925B00C3018C /* String+Localized.swift */,
 				4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */,
+				4B9DD4BC1DB1445200AB4D2D /* UIImage+Orientation.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1352,6 +1355,7 @@
 				8BA8EDEA1DAAE0A0000BF560 /* ProfileCellBuilder.swift in Sources */,
 				4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */,
 				D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */,
+				4B9DD4BD1DB1445200AB4D2D /* UIImage+Orientation.swift in Sources */,
 				8B882D6B1DA6566F0028F13D /* SearchCellBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
