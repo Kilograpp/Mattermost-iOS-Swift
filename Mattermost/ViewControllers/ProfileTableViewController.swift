@@ -57,8 +57,8 @@ extension ProfileViewController {
     
     func setupNavigationBar() {
         self.title = "Профиль"
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_close_icon"), style: .done, target: self, action: #selector(backAction))
-        backButton.tintColor = UIColor.black
+
+        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
     }
     
@@ -92,7 +92,7 @@ extension ProfileViewController {
 
 extension ProfileViewController {
     func backAction() {
-        self.dismiss(animated: true, completion: nil)
+        _ = self.navigationController?.popViewController(animated: true)
     }
 }
 

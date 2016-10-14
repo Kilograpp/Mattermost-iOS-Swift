@@ -34,12 +34,13 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
         self.fileImageView.contentMode = .scaleToFill
         self.addSubview(self.fileImageView)
         self.fileImageView.backgroundColor = UIColor.clear
+        self.fileImageView.contentMode = .scaleAspectFit
     }
     
     fileprivate func setupLabel() {
         fileNameLabel.font = UIFont.systemFont(ofSize: 13)
         fileNameLabel.textColor = ColorBucket.blueColor
-        fileNameLabel.numberOfLines = 0
+        fileNameLabel.numberOfLines = 1
         self.addSubview(fileNameLabel)
     }
     
@@ -74,33 +75,26 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
                 DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-                    
                     var finalImage: UIImage = image!
                     
                     // Handle unpredictable errors
-                    guard image != nil else {
-                        print(error)
-                        return
-                    }
+                    guard image != nil else { return }
                     
                     if cacheType == .none {
-                        let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+                        var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
                         let imageHeight = imageWidth * 0.56 - 5
+                        imageWidth = imageHeight / (image?.size.height)! * (image?.size.width)!
                         
                         finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: imageWidth, height: imageHeight), radius: 3)
                         SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
                     }
                     
-
                     // Ensure the post is still the same
-                    guard self?.fileName == fileName else {
-                        return
-                    }
+                    guard self?.fileName == fileName else { return }
                     
                     DispatchQueue.main.sync(execute: {
                         self?.fileImageView.image = finalImage
                     })
-                    
                 }
             }
             
@@ -109,7 +103,6 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
                                                                    progress: nil,
                                                                    completed: imageDownloadCompletionHandler)
         }
-
     }
     
     fileprivate func computeFileName() {
@@ -119,7 +112,12 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     override func layoutSubviews() {
         self.fileNameLabel.sizeToFit()
         self.fileNameLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.fileNameLabel.frame.height)
-        self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.height, width: self.bounds.width, height: self.bounds.height - self.fileNameLabel.frame.height)
+        
+        
+        let height = self.bounds.height - self.fileNameLabel.frame.height
+        let width = self.bounds.width
+        
+        self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.height, width: width, height: height)
         
 //        self.fileImageView.frame = CGRect(x: 0, y: 0, width: self.bounds.width * 0.6, height: self.bounds.height)
 //        self.fileNameLabel.frame = CGRect(x: self.bounds.width * 0.6,

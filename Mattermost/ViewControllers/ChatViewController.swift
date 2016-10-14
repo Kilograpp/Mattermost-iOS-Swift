@@ -122,12 +122,17 @@ extension ChatViewController {
     }
     
     func configureWithPost(post: Post) {
-        self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", post.channel.identifier!).first!
-        self.title = self.channel?.displayName
-        self.postFromSearch = post
-        self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
+       // self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", post.channel.identifier!).first!
+        //self.title = self.channel?.displayName
         
-        loadPostsBeforePost(post: post)
+       // self.resultsObserver.unsubscribeNotifications()
+        
+        self.postFromSearch = post
+        ChannelObserver.sharedObserver.selectedChannel = post.channel
+        
+      //  self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
+        
+        //loadPostsBeforePost(post: post)
     }
 }
 
@@ -576,7 +581,7 @@ extension ChatViewController: Request {
             
             self.isLoadingInProgress = false
             self.resultsObserver.prepareResults()
-            self.loadPostsAfterPost(post: post)
+          //  self.loadPostsAfterPost(post: post)
         }
     }
     
@@ -795,7 +800,7 @@ extension ChatViewController: ChannelObserverDelegate {
 
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void {
         //old channel
-        //unsubscribing from realm and channelActionNotifications
+        //unsubscribing from realm and channelActionxtions
         if resultsObserver != nil {
             resultsObserver.unsubscribeNotifications()
         }
