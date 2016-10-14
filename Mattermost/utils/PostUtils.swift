@@ -17,7 +17,7 @@ private protocol Public : class {
     func sendReplyToPost(_ post: Post, channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func uploadImages(_ channel: Channel, images: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
+//    func uploadImages(_ channel: Channel, images: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
     func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void)
     func cancelImageItemUploading(_ item: AssignedAttachmentViewItem)
 }
@@ -229,17 +229,16 @@ extension PostUtils : Public {
                 Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (file, error) in
                     defer {
                         completion(false, error, item)
+                        self.upload_images_group.leave()
+                        print("\(item.identifier) is finishing")
                     }
                     guard error == nil else {
                         self.files.removeObject(item)
-                        print("\(item.identifier) is finishing with error")
-                        self.upload_images_group.leave()
                         return
                     }
                     self.assignedFiles.append(file!)
-                    self.upload_images_group.leave()
                     
-                    print("\(item.identifier) is finishing")
+                    
                     }, progress: { (identifier, value) in
                         let index = self.files.index(where: {$0.identifier == identifier})
                         guard (index != nil) else {
