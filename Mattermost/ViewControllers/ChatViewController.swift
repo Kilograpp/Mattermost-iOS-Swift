@@ -55,7 +55,7 @@ private protocol Request {
     func loadFirstPageOfData()
     func loadNextPageOfData()
     func sendPost()
-    func uploadImages()
+    func uploadAttachments()
 }
 
 
@@ -84,8 +84,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
             self.toggleSendButtonAvailability()
         }
     }
-    fileprivate var assignedFileItemsArray = Array<AssignedAttachmentViewItem>()
-    fileprivate var assignedImages = Array<AssignedAttachmentViewItem>()
+    fileprivate var assignedAttachmentItemsArray = Array<AssignedAttachmentViewItem>()
+    fileprivate var selectedAttachments = Array<AssignedAttachmentViewItem>()
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
@@ -259,6 +259,14 @@ extension ChatViewController: Setup {
         let height = NSLayoutConstraint(item: self.completePost, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height)
         view.addConstraint(height)
     }
+    
+    override func textWillUpdate() {
+        super.textWillUpdate()
+        
+        if (assignedAttachmentItemsArray.count > 0) {
+            self.rightButton.isEnabled = self.fileUploadingInProgress
+        }
+    }
 }
 
 
@@ -290,7 +298,7 @@ extension ChatViewController : Private {
     }
     
     func attachmentSelection() {
-        if (self.assignedFileItemsArray.count < 5) {
+        if (self.assignedAttachmentItemsArray.count < 5) {
             let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
             let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
                 self.assignPhotos()
@@ -327,21 +335,21 @@ extension ChatViewController : Private {
             let url = info["UIImagePickerControllerMediaURL"] as! URL
             fileItem.fileName = File.fileNameFromUrl(url: url)
             fileItem.isFile = true
-            self.assignedFileItemsArray.append(fileItem)
+            fileItem.url = url
+            self.selectedAttachments = [ fileItem ]
             self.postAttachmentsView.showAnimated()
             self.showAttachmentsView()
             self.postAttachmentsView.updateAppearance()
-            self.uploadFile(from:url, fileItem: fileItem)
+            uploadAttachments()
         } else {
             let image = info["UIImagePickerControllerOriginalImage"] as! UIImage
-            let orientedImage = UIImage(cgImage: image.cgImage!, scale: 0, orientation: .up)
-            let imageItem = AssignedAttachmentViewItem(image: orientedImage)
-            self.assignedImages = [imageItem]
-            self.assignedFileItemsArray.append(imageItem)
+//            let orientedImage = UIImage(cgImage: image.cgImage!, scale: 0, orientation: .up)
+            let imageItem = AssignedAttachmentViewItem(image: image)
+            self.selectedAttachments = [imageItem]
             self.postAttachmentsView.showAnimated()
             self.showAttachmentsView()
             self.postAttachmentsView.updateAppearance()
-            self.uploadImages()
+            uploadAttachments()
         }
         picker.dismiss(animated: true) { }
     }
@@ -359,22 +367,19 @@ extension ChatViewController : Private {
                 }
             picker.cameraCaptureMode = cameraMode
             }
-        
-
             self.present(picker, animated: true, completion: nil)
         }
         
         let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
-        controller.maximumSelection = 5 - self.assignedFileItemsArray.count
+        controller.maximumSelection = 5 - self.assignedAttachmentItemsArray.count
         print("Images to selection:\(controller.maximumSelection)")
         let assignImagesHandler = {
             let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-            self.assignedFileItemsArray.append(contentsOf: convertedAssets)
-            self.assignedImages = convertedAssets
+            self.selectedAttachments = convertedAssets
             self.postAttachmentsView.showAnimated()
             self.showAttachmentsView()
             self.postAttachmentsView.updateAppearance()
-            self.uploadImages()
+            self.uploadAttachments()
         }
     
     
@@ -494,7 +499,8 @@ extension ChatViewController: Action {
         default:
             sendPost()
         }
-        self.assignedFileItemsArray.removeAll()
+        self.assignedAttachmentItemsArray.removeAll()
+        self.selectedAttachments.removeAll()
         self.postAttachmentsView.hideAnimated()
         self.hideAttachmentsView()
     }
@@ -609,7 +615,6 @@ extension ChatViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
             }
         }
-        self.assignedFileItemsArray.removeAll()
         self.dismissKeyboard(true)
         self.clearTextView()
     }
@@ -650,60 +655,59 @@ extension ChatViewController: Request {
         }
     }
     
-    func uploadImages() {
+    func uploadAttachments() {
         self.fileUploadingInProgress = false
-        //TODO: FIX THIS!
-        //Собственный array для images (передавать в images: ...). Это массив с выбранными картинками. (т.к передается весь массив из вью айтемс, где лежат еще и файлы)
-        let images = assignedImages
-        PostUtils.sharedInstance.uploadImages(self.channel!, images: images, completion: { (finished, error, item) in
+        //Собственный array для images (передавать в images: ...). Это массив с выбранными картинками.
+        let images = selectedAttachments
+        assignedAttachmentItemsArray.append(contentsOf: self.selectedAttachments)
+        PostUtils.sharedInstance.uploadAttachment(self.channel!, items: images, completion: { (finished, error, item) in
             if error != nil {
                 //TODO: handle error
                 //refactor обработка этой ошибки в отдельную функцию
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
-                print("error with \(item.fileName)")
-                self.assignedFileItemsArray.removeObject(item)
+                // Обработка item, который закончился с error
+                self.assignedAttachmentItemsArray.removeObject(item)
                 self.postAttachmentsView.updateAppearance()
-                if (self.assignedFileItemsArray.count == 0) {
+                if (self.assignedAttachmentItemsArray.count == 0) {
                     self.postAttachmentsView.hideAnimated()
                     self.hideAttachmentsView()
                 }
             } else {
                 self.fileUploadingInProgress = finished
-                images.forEach({ (item) in
-                    item.uploaded = true
-                })
+                print ("\(item.identifier) uploaded: \(finished)")
+                print ("All files uploaded: \(finished)")
             }
         }) { (value, index) in
-//            self.assignedFileItemsArray[index].uploaded = value == 1
-            self.assignedFileItemsArray[index].uploading = value < 1
-            self.assignedFileItemsArray[index].uploadProgress = value
+            self.assignedAttachmentItemsArray[index].uploaded = value == 1
+            self.assignedAttachmentItemsArray[index].uploading = value < 1
+            self.assignedAttachmentItemsArray[index].uploadProgress = value
             self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
         }
     }
-    //refactor mechanism
-    func uploadFile(from url:URL, fileItem:AssignedAttachmentViewItem) {
-        PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
-            if error != nil {
-                //TODO: handle error
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
-                self.assignedFileItemsArray.removeObject(fileItem)
-                self.postAttachmentsView.updateAppearance()
-                if (self.assignedFileItemsArray.count == 0) {
-                    self.postAttachmentsView.hideAnimated()
-                    self.hideAttachmentsView()
-                }
-            } else {
-                self.fileUploadingInProgress = finished
-                fileItem.uploaded = true
-            }
-            }) { (value, index) in
-//                self.assignedFileItemsArray[index].uploaded = value == 1
-                self.assignedFileItemsArray[index].uploading = value < 1
-                self.assignedFileItemsArray[index].uploadProgress = value
-                self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
-        }
-    }
 }
+//    //
+//    func uploadFile(from url:URL, fileItem:AssignedAttachmentViewItem) {
+//        PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
+//            if error != nil {
+//                //TODO: handle error
+//                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+//                self.assignedAttachmentItemsArray.removeObject(fileItem)
+//                self.postAttachmentsView.updateAppearance()
+//                if (self.assignedAttachmentItemsArray.count == 0) {
+//                    self.postAttachmentsView.hideAnimated()
+//                    self.hideAttachmentsView()
+//                }
+//            } else {
+//                self.fileUploadingInProgress = finished
+//                fileItem.uploaded = true
+//            }
+//            }) { (value, index) in
+////                self.assignedFileItemsArray[index].uploaded = value == 1
+//                self.assignedAttachmentItemsArray[index].uploading = value < 1
+//                self.assignedAttachmentItemsArray[index].uploadProgress = value
+//                self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
+//        }
+//    }
 
 
 //MARK: UITableViewDataSource
@@ -803,7 +807,7 @@ extension ChatViewController: ChannelObserverDelegate {
 
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void {
         //old channel
-        //unsubscribing from realm and channelActionxtions
+        //unsubscribing from realm and channelActions
         if resultsObserver != nil {
             resultsObserver.unsubscribeNotifications()
         }
@@ -838,11 +842,11 @@ extension ChatViewController: ChannelObserverDelegate {
 
 extension ChatViewController: PostAttachmentViewDataSource {
     func itemAtIndex(_ index: Int) -> AssignedAttachmentViewItem {
-        return self.assignedFileItemsArray[index]
+        return self.assignedAttachmentItemsArray[index]
     }
     
     func numberOfItems() -> Int {
-        return self.assignedFileItemsArray.count
+        return self.assignedAttachmentItemsArray.count
     }
 }
 
@@ -852,8 +856,8 @@ extension ChatViewController: PostAttachmentViewDataSource {
 extension ChatViewController: PostAttachmentViewDelegate {
     func didRemovePhoto(_ item: AssignedAttachmentViewItem) {
         PostUtils.sharedInstance.cancelImageItemUploading(item)
-        self.assignedFileItemsArray.removeObject(item)
-        guard self.assignedFileItemsArray.count != 0 else {
+        self.assignedAttachmentItemsArray.removeObject(item)
+        guard self.assignedAttachmentItemsArray.count != 0 else {
             self.fileUploadingInProgress = false
             self.postAttachmentsView.hideAnimated()
             self.hideAttachmentsView()
@@ -953,11 +957,12 @@ extension ChatViewController: UIDocumentPickerDelegate {
         let fileItem = AssignedAttachmentViewItem(image: UIImage(named: "attach_file_icon")!)
         fileItem.fileName = File.fileNameFromUrl(url: url)
         fileItem.isFile = true
-        self.assignedFileItemsArray.append(fileItem)
+        fileItem.url = url
+        self.selectedAttachments = [ fileItem ]
         self.postAttachmentsView.showAnimated()
         self.showAttachmentsView()
         self.postAttachmentsView.updateAppearance()
-        self.uploadFile(from:url, fileItem: fileItem)
+        self.uploadAttachments()
     }
 }
 

@@ -147,7 +147,8 @@ extension PostUtils : Public {
     //refactor uploadItemAtChannel
     func uploadFiles(_ channel: Channel,fileItem:AssignedAttachmentViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
             self.files.append(fileItem)
-            Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
+            self.upload_images_group.enter()
+            Api.sharedInstance.uploadFileItemAtChannel(fileItem, channel: channel, completion: { (file, error) in
                 completion(true, error)
                 if error != nil {
                     self.files.removeObject(fileItem)
@@ -166,6 +167,11 @@ extension PostUtils : Public {
                 print("\(index) in progress: \(value)")
                 progress(value, index!)
             }
+        
+        self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
+            //FIXME: add error
+            completion(true, nil)
+        })
     }
     
 
@@ -180,25 +186,60 @@ extension PostUtils : Public {
         }
     }
     
-    func uploadImages(_ channel: Channel, images: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
-        self.files.append(contentsOf: images)
-        for item in files {
-            //For all images (not files) that not uploaded yet
-            if !item.uploaded && !item.isFile {
+//    func uploadImages(_ channel: Channel, images: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+//        self.files.append(contentsOf: images)
+//        for item in files {
+//            if !item.uploaded && !item.isFile {
+//                self.upload_images_group.enter()
+//                item.uploading = true
+//                Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
+//                    completion(false, error, item)
+//                    if error != nil {
+//                        self.files.removeObject(item)
+//                        return
+//                    }
+//                    
+//                    if self.assignedFiles.count == 0 {
+//                        self.test = file
+//                    }
+//                    self.assignedFiles.append(file!)
+//                    self.upload_images_group.leave()
+//                    }, progress: { (identifier, value) in
+//                        let index = self.files.index(where: {$0.identifier == identifier})
+//                        guard (index != nil) else {
+//                            return
+//                        }
+//                        progress(value, index!)
+//                })
+//            }
+//            
+//            self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
+//                //FIXME: add error
+//                completion(true, nil, item)
+//            })
+//        }
+//    }
+    
+    func uploadAttachment(_ channel: Channel, items: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+        self.files.append(contentsOf: items)
+            for item in items {
+                print("\(item.identifier) is starting")
                 self.upload_images_group.enter()
                 item.uploading = true
-                Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
-                    completion(false, error, item)
-                    if error != nil {
-                        self.files.removeObject(item)
-                        return
+                Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (file, error) in
+                    defer {
+                        completion(false, error, item)
                     }
-                    
-                    if self.assignedFiles.count == 0 {
-                        self.test = file
+                    guard error == nil else {
+                        self.files.removeObject(item)
+                        print("\(item.identifier) is finishing with error")
+                        self.upload_images_group.leave()
+                        return
                     }
                     self.assignedFiles.append(file!)
                     self.upload_images_group.leave()
+                    
+                    print("\(item.identifier) is finishing")
                     }, progress: { (identifier, value) in
                         let index = self.files.index(where: {$0.identifier == identifier})
                         guard (index != nil) else {
@@ -207,13 +248,16 @@ extension PostUtils : Public {
                         progress(value, index!)
                 })
             }
-            
-            self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
-                //FIXME: add error
-                completion(true, nil, item)
-            })
-        }
+        
+        self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
+            //FIXME: add error
+            print("UPLOADING NOTIFY")
+            //completion(false,nil,item=nil)
+            completion(true, nil, AssignedAttachmentViewItem(image: UIImage()))
+        })
     }
+    
+    
     
 //    func assignFilesToPost(post: Post) {
 //        post.files = List(self.assignedFiles)
@@ -221,6 +265,7 @@ extension PostUtils : Public {
     
     func cancelImageItemUploading(_ item: AssignedAttachmentViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
+        self.upload_images_group.leave()
         if item.uploaded  {
             self.assignedFiles.remove(at: files.index(of: item)!)
         }

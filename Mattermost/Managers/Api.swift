@@ -465,7 +465,7 @@ extension Api : FileApi {
         self.manager.cancelUploadingOperationForImageItem(item)
     }
     
-    func uploadFileItemAtChannel(_ item: AssignedAttachmentViewItem, url: URL,
+    func uploadFileItemAtChannel(_ item: AssignedAttachmentViewItem,
                                   channel: Channel,
                                   completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
@@ -473,19 +473,36 @@ extension Api : FileApi {
         let params = ["channel_id" : channel.identifier!,
                       "client_ids"  : StringUtils.randomUUID()]
         
-        self.manager.postFile(with: url, name: "files", path: path, parameters: params, success: { (mappingResult) in
-            let file = File()
-            //refactor
-            let dictionary = mappingResult.firstObject as! [String:String]
-            let rawLink = dictionary[FileAttributes.rawLink.rawValue]
-            file.identifier = params["client_ids"]
-            file.rawLink = rawLink
-            completion(file, nil)
-            RealmUtils.save(file)
-            }, failure: { (error) in
-                completion(nil, error)
-        }) { (value) in
-            progress(item.identifier, value)
+        
+        if item.isFile {
+            self.manager.postFile(with: item.url, name: "files", path: path, parameters: params, success: { (mappingResult) in
+                let file = File()
+                //refactor
+                let dictionary = mappingResult.firstObject as! [String:String]
+                let rawLink = dictionary[FileAttributes.rawLink.rawValue]
+                file.identifier = params["client_ids"]
+                file.rawLink = rawLink
+                completion(file, nil)
+                RealmUtils.save(file)
+                }, failure: { (error) in
+                    completion(nil, error)
+            }) { (value) in
+                progress(item.identifier, value)
+            }
+        } else {
+            self.manager.postImage(with: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
+                let file = File()
+                let dictionary = mappingResult.firstObject as! [String:String]
+                let rawLink = dictionary[FileAttributes.rawLink.rawValue]
+                file.identifier = params["client_ids"]
+                file.rawLink = rawLink
+                completion(file, nil)
+                RealmUtils.save(file)
+                }, failure: { (error) in
+                    completion(nil, error)
+            }) { (value) in
+                progress(item.identifier, value)
+            }
         }
     }
 }

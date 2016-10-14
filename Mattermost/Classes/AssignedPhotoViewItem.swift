@@ -22,6 +22,7 @@ final class AssignedAttachmentViewItem {
     let identifier: String
     var fileName: String?
     var isFile = false
+    var url: URL?
 }
 
 extension AssignedAttachmentViewItem: Equatable {}
