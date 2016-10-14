@@ -322,26 +322,46 @@ extension ChatViewController : Private {
 //Images
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let image = info["UIImagePickerControllerOriginalImage"] as! UIImage
-        let imageItem = AssignedAttachmentViewItem(image: image)
-        self.assignedImages = [imageItem]
-        self.assignedFileItemsArray.append(imageItem)
-        self.postAttachmentsView.showAnimated()
-        self.showAttachmentsView()
-        self.postAttachmentsView.updateAppearance()
-        self.uploadImages()
+        if ((info["UIImagePickerControllerMediaType"] as! String) == "public.movie") {
+            let fileItem = AssignedAttachmentViewItem(image: UIImage(named: "attach_file_icon")!)
+            let url = info["UIImagePickerControllerMediaURL"] as! URL
+            fileItem.fileName = File.fileNameFromUrl(url: url)
+            fileItem.isFile = true
+            self.assignedFileItemsArray.append(fileItem)
+            self.postAttachmentsView.showAnimated()
+            self.showAttachmentsView()
+            self.postAttachmentsView.updateAppearance()
+            self.uploadFile(from:url, fileItem: fileItem)
+        } else {
+            let image = info["UIImagePickerControllerOriginalImage"] as! UIImage
+            let orientedImage = UIImage(cgImage: image.cgImage!, scale: 0, orientation: .up)
+            let imageItem = AssignedAttachmentViewItem(image: orientedImage)
+            self.assignedImages = [imageItem]
+            self.assignedFileItemsArray.append(imageItem)
+            self.postAttachmentsView.showAnimated()
+            self.showAttachmentsView()
+            self.postAttachmentsView.updateAppearance()
+            self.uploadImages()
+        }
         picker.dismiss(animated: true) { }
     }
     
     func assignPhotos() -> Void {
         //TODO: MORE REFACTOR
-        let presentImagePickerController: (UIImagePickerControllerSourceType) -> () = { source in
-            let controller = UIImagePickerController()
-            controller.delegate = self
+        let presentImagePickerController: (UIImagePickerControllerSourceType, UIImagePickerControllerCameraCaptureMode) -> () = { source, cameraMode in
+            let picker = UIImagePickerController()
+            picker.delegate = self
             let sourceType = source
-            controller.sourceType = sourceType
-            
-            self.present(controller, animated: true, completion: nil)
+            picker.sourceType = sourceType
+            if sourceType == .camera {
+                if cameraMode == .video {
+                    picker.mediaTypes = ["public.movie"]
+                }
+            picker.cameraCaptureMode = cameraMode
+            }
+        
+
+            self.present(picker, animated: true, completion: nil)
         }
         
         let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
@@ -358,48 +378,29 @@ extension ChatViewController : Private {
         }
     
     
-        let cameraAction = ImagePickerAction(title: "Take Photo Or Video", secondaryTitle: "Send", style: .default, handler: { _ in
-            presentImagePickerController(.camera)
+        let cameraAction = ImagePickerAction(title: "Gallery", secondaryTitle: "Send", style: .default, handler: { _ in
+                presentImagePickerController(.photoLibrary, .photo)
             }) { (_, numberOfPhotos) in
                 assignImagesHandler()
             }
         controller.addAction(cameraAction)
         
-//        let galeryAction = ImagePickerAction(title: "Take Photo Or Video", secondaryTitle: "AddComment", style: .default, handler: { _ in
-//            presentImagePickerController(.photoLibrary)
-//        }) { (_, numberOfPhotos) in
-//            assignImagesHandler()
-//        }
+        let videoAction = ImagePickerAction(title: "Take Video", secondaryTitle: "Take Video", style: .default, handler: { _ in
+            presentImagePickerController(.camera, .video)
+        }) { (_, numberOfPhotos) in
+            presentImagePickerController(.camera, .video)
+        }
+        controller.addAction(videoAction)
         
-//        controller.addAction(galeryAction)
-        
-        
+        let photoAction = ImagePickerAction(title: "Take Photo", secondaryTitle: "Take Photo", style: .default, handler: { _ in
+            presentImagePickerController(.camera, .photo)
+        }) { (_, numberOfPhotos) in
+            presentImagePickerController(.camera, .photo)
+        }
+        controller.addAction(photoAction)
         
         
         controller.addAction(ImagePickerAction(cancelTitle: NSLocalizedString("Cancel", comment: "Action Title")))
-        
-        
-        
-//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Take Photo Or Video", comment: "Action Title"), secondaryTitle: NSLocalizedString("Send", comment: "Action Title"), handler: { _ in
-//            presentImagePickerController(.camera)
-//            }, secondaryHandler: { _, numberOfPhotos in
-//                let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-//                self.assignedFileItemsArray.append(contentsOf: convertedAssets)
-//                self.assignedImages = convertedAssets
-//                self.postAttachmentsView.showAnimated()
-//                self.showAttachmentsView()
-//                self.postAttachmentsView.updateAppearance()
-//                self.uploadImages()
-//        }))
-//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Photo Library", comment: "Action Title"), secondaryTitle: NSLocalizedString("Photo Library", comment: "Action Title"), handler: { _ in
-//            presentImagePickerController(.photoLibrary)
-//            }, secondaryHandler: { _ in
-//                presentImagePickerController(.photoLibrary)
-//        }))
-//        controller.addAction(ImagePickerAction(title: NSLocalizedString("Cancel", comment: "Action Title"), style: .cancel, handler: { _ in
-//            print("Cancelled")
-//        }))
-        
         present(controller, animated: true, completion: nil)
     }
 
@@ -851,6 +852,7 @@ extension ChatViewController: PostAttachmentViewDelegate {
         PostUtils.sharedInstance.cancelImageItemUploading(item)
         self.assignedFileItemsArray.removeObject(item)
         guard self.assignedFileItemsArray.count != 0 else {
+            self.fileUploadingInProgress = false
             self.postAttachmentsView.hideAnimated()
             self.hideAttachmentsView()
             return
