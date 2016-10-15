@@ -109,6 +109,10 @@ extension ChatViewController {
         
         self.navigationController?.isNavigationBarHidden = false
         addSLKKeyboardObservers()
+        
+        if (self.postFromSearch != nil) {
+            changeChannelForPostFromSearch()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -122,17 +126,11 @@ extension ChatViewController {
     }
     
     func configureWithPost(post: Post) {
-       // self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", post.channel.identifier!).first!
-        //self.title = self.channel?.displayName
-        
-       // self.resultsObserver.unsubscribeNotifications()
-        
         self.postFromSearch = post
-        ChannelObserver.sharedObserver.selectedChannel = post.channel
-        
-      //  self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
-        
-        //loadPostsBeforePost(post: post)
+    }
+    
+    func changeChannelForPostFromSearch() {
+        ChannelObserver.sharedObserver.selectedChannel = self.postFromSearch.channel
     }
 }
 
@@ -474,7 +472,6 @@ extension ChatViewController : Private {
     fileprivate func showCompletePost(_ post: Post, action: String) {
         
     }
-
 }
 
 
@@ -521,6 +518,10 @@ extension ChatViewController: Action {
         let post = resultsObserver?.postForIndexPath(indexPath)
         showActionSheetControllerForPost(post!)
     }
+    
+    func resendAction(_ post:Post) {
+        PostUtils.sharedInstance.resendPost(post) { _ in }
+    }
 }
 
 
@@ -551,11 +552,10 @@ extension ChatViewController: Request {
             self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true
-            
-           // self.noPostsLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
         })
     }
     func loadFirstPageOfData() {
+        print("loadFirstPageOfData")
         self.isLoadingInProgress = true
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
@@ -565,6 +565,7 @@ extension ChatViewController: Request {
     }
     
     func loadNextPageOfData() {
+        print("loadNextPageOfData")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
@@ -579,23 +580,25 @@ extension ChatViewController: Request {
     }
     
     func loadPostsBeforePost(post: Post, shortSize: Bool? = false) {
+        print("loadPostsBeforePost")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
         Api.sharedInstance.loadPostsBeforePost(post: post, shortList: shortSize) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
-            if self.hasNextPage {
+            if !self.hasNextPage {
                 self.postFromSearch = nil
                 return
             }
             
             self.isLoadingInProgress = false
             self.resultsObserver.prepareResults()
-          //  self.loadPostsAfterPost(post: post)
+            self.loadPostsAfterPost(post: post, shortSize: true)
         }
     }
     
     func loadPostsAfterPost(post: Post, shortSize: Bool? = false) {
+        print("loadPostsAfterPost")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
@@ -688,29 +691,6 @@ extension ChatViewController: Request {
         }
     }
 }
-//    //
-//    func uploadFile(from url:URL, fileItem:AssignedAttachmentViewItem) {
-//        PostUtils.sharedInstance.uploadFiles(self.channel!,fileItem: fileItem, url: url, completion: { (finished, error) in
-//            if error != nil {
-//                //TODO: handle error
-//                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
-//                self.assignedAttachmentItemsArray.removeObject(fileItem)
-//                self.postAttachmentsView.updateAppearance()
-//                if (self.assignedAttachmentItemsArray.count == 0) {
-//                    self.postAttachmentsView.hideAnimated()
-//                    self.hideAttachmentsView()
-//                }
-//            } else {
-//                self.fileUploadingInProgress = finished
-//                fileItem.uploaded = true
-//            }
-//            }) { (value, index) in
-////                self.assignedFileItemsArray[index].uploaded = value == 1
-//                self.assignedAttachmentItemsArray[index].uploading = value < 1
-//                self.assignedAttachmentItemsArray[index].uploadProgress = value
-//                self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
-//        }
-//    }
 
 
 //MARK: UITableViewDataSource
@@ -830,7 +810,15 @@ extension ChatViewController: ChannelObserverDelegate {
         self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
-        self.loadFirstPageOfData()
+        
+        if (self.postFromSearch == nil) {
+            self.loadFirstPageOfData()
+        }
+        else {
+            loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
+        }
+        
+        
         NotificationCenter.default.addObserver(self, selector: #selector(handleChannelNotification),
                                                          name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                                                          object: nil)
@@ -916,15 +904,10 @@ extension ChatViewController {
         present(controller, animated: true) {}
     }
 }
-//MARK: - Action {
-extension ChatViewController {
-    func resendAction(_ post:Post) {
-        PostUtils.sharedInstance.resendPost(post) { _ in }
 
-    }
-}
 
-//MARK: - UITextViewDelegate
+//MARK: UITextViewDelegate
+
 extension ChatViewController {
     func addSLKKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
@@ -979,14 +962,10 @@ extension ChatViewController {
         guard let searchResult = self.emojiResult else { return cell }
         guard let prefix = self.foundPrefix else { return cell }
         
-        var text = searchResult[indexPath.row]
-     //   if (prefix == ":") {
-     //       text = ":\(text):"
-     //   }
+        let text = searchResult[indexPath.row]
         
         let originalIndex = Constants.EmojiArrays.mattermost.index(of: text)
         cell.configureWith(index: originalIndex)
-        //cell.configureWith(name: text, indexPath: indexPath)
         
         return cell
     }
