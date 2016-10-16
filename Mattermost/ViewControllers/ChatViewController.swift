@@ -432,11 +432,13 @@ extension ChatViewController : Private {
     }
     
     func showActionSheetControllerForPost(_ post: Post) {
+        
         let actionSheetController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         self.selectedPost = post
         
         let replyAction = UIAlertAction(title: "Reply", style: .default) { action -> Void in
-            self.completePost.configureWithPost(post, action: ActionType.Reply)
+            self.selectedPost = post
+            self.completePost.configureWithPost(self.selectedPost, action: ActionType.Reply)
             self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendReply)
             self.completePost.isHidden = false
             self.presentKeyboard(true)
@@ -450,8 +452,8 @@ extension ChatViewController : Private {
         
         if (post.author.identifier == Preferences.sharedInstance.currentUserId) {
             let editAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                self.selectedPost = post
-                self.completePost.configureWithPost(post, action: ActionType.Edit)
+                //self.selectedPost = post
+                self.completePost.configureWithPost(self.selectedPost, action: ActionType.Edit)
                 self.completePost.isHidden = false
                 self.configureRightButtonWithTitle("Save", action: Constants.PostActionType.SendUpdate)
                 self.presentKeyboard(true)

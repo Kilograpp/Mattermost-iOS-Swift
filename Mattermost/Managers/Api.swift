@@ -406,10 +406,10 @@ extension Api: PostApi {
         let params = ["team_id"    : Preferences.sharedInstance.currentTeamId!,
                       "channel_id" : post.channelId!,
                       "post_id"    : post.identifier!]
-  
-        self.manager.deletePost(with: post, path: path, parameters: params, success: { (mappingResult) in
+        
+        self.manager.deletePost(with: path, parameters: params, success: { (mappingResult) in
             completion(nil)
-            }) { (error) in
+        }) { (error) in
             completion(error)
         }
     }

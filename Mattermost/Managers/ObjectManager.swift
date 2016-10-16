@@ -31,11 +31,10 @@ private protocol PostRequests: class {
                     parameters: [AnyHashable: Any]?,
                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
                     failure: ((_ error: Mattermost.Error) -> Void)?)
-    func deletePost(with post: Post!,
-                    path: String!,
-                    parameters: Dictionary<String, String>?,
-                    success: ((_ mappingResult: RKMappingResult) -> Void)?,
-                    failure: ((_ error: Error) -> Void)?)
+    func deletePost(with path: String!,
+                         parameters: Dictionary<String, String>?,
+                         success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                         failure: ((_ error: Error) -> Void)?)
     func searchPosts(with terms: String!,
                      path: String!,
                      parameters: Dictionary<String, String>?,
@@ -127,11 +126,10 @@ extension ObjectManager: PostRequests {
         }
     }
     
-    func deletePost(with post: Post!,
-                        path: String!,
-                        parameters: Dictionary<String, String>?,
-                        success: ((_ mappingResult: RKMappingResult) -> Void)?,
-                        failure: ((_ error: Mattermost.Error) -> Void)?) {
+    func deletePost(with path: String!,
+                         parameters: Dictionary<String, String>?,
+                         success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                         failure: ((_ error: Mattermost.Error) -> Void)?) {
         
         let request: NSMutableURLRequest = self.request(with: nil, method: .POST, path: path, parameters: parameters)
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
