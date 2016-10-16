@@ -84,6 +84,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
             self.toggleSendButtonAvailability()
         }
     }
+    
     fileprivate var assignedAttachmentItemsArray = Array<AssignedAttachmentViewItem>()
     fileprivate var selectedAttachments = Array<AssignedAttachmentViewItem>()
     fileprivate var selectedPost: Post! = nil
@@ -559,7 +560,14 @@ extension ChatViewController: Request {
     func loadFirstPageOfData() {
         print("loadFirstPageOfData")
         self.isLoadingInProgress = true
+        
+        let activityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        activityIndicatorView.center = self.tableView.center
+        activityIndicatorView.startAnimating()
+        self.tableView.addSubview(activityIndicatorView)
+        
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
+            activityIndicatorView.removeFromSuperview()
             self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true
