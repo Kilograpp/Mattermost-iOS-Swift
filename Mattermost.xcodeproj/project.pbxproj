@@ -151,6 +151,12 @@
 		D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF41D429393001918E8 /* UIScreen+Size.swift */; };
 		D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8087AF61D429610001918E8 /* TSMarkdownParser.framework */; };
 		D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */; };
+		D8117D261DB4E7AE0058F003 /* EmptyDialogueLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8117D251DB4E7AE0058F003 /* EmptyDialogueLabel.swift */; };
+		D8117D291DB5054C0058F003 /* AttachmentsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8117D281DB5054C0058F003 /* AttachmentsModule.swift */; };
+		D8117D2B1DB511D90058F003 /* ImagePickingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8117D2A1DB511D90058F003 /* ImagePickingModule.swift */; };
+		D8117D2E1DB531250058F003 /* DocumentPickingModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8117D2D1DB531250058F003 /* DocumentPickingModule.swift */; };
+		D8117D321DB57C900058F003 /* FilesPickingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8117D311DB57C900058F003 /* FilesPickingController.swift */; };
+		D8117D341DB580C40058F003 /* FilesPickingModuleBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8117D331DB580C40058F003 /* FilesPickingModuleBase.swift */; };
 		D83305F11D53890500E92CD6 /* AttachmentImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */; };
 		D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F51D5636EF00E92CD6 /* Attachment.swift */; };
 		D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83305F71D5637B800E92CD6 /* AttachmentField.swift */; };
@@ -365,6 +371,12 @@
 		D8087AF41D429393001918E8 /* UIScreen+Size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Size.swift"; sourceTree = "<group>"; };
 		D8087AF61D429610001918E8 /* TSMarkdownParser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSMarkdownParser.framework; path = Carthage/Build/iOS/TSMarkdownParser.framework; sourceTree = "<group>"; };
 		D8087AF91D429844001918E8 /* TSMarkdownParser+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TSMarkdownParser+Singleton.swift"; sourceTree = "<group>"; };
+		D8117D251DB4E7AE0058F003 /* EmptyDialogueLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyDialogueLabel.swift; sourceTree = "<group>"; };
+		D8117D281DB5054C0058F003 /* AttachmentsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentsModule.swift; sourceTree = "<group>"; };
+		D8117D2A1DB511D90058F003 /* ImagePickingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickingModule.swift; sourceTree = "<group>"; };
+		D8117D2D1DB531250058F003 /* DocumentPickingModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickingModule.swift; sourceTree = "<group>"; };
+		D8117D311DB57C900058F003 /* FilesPickingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesPickingController.swift; sourceTree = "<group>"; };
+		D8117D331DB580C40058F003 /* FilesPickingModuleBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesPickingModuleBase.swift; sourceTree = "<group>"; };
 		D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentImageCell.swift; sourceTree = "<group>"; };
 		D83305F51D5636EF00E92CD6 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		D83305F71D5637B800E92CD6 /* AttachmentField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentField.swift; sourceTree = "<group>"; };
@@ -499,6 +511,7 @@
 		9B8226364A9CB357915ABAC5 /* Mattermost */ = {
 			isa = PBXGroup;
 			children = (
+				D8117D271DB5051C0058F003 /* Modules */,
 				4B4FBAEB1DA687B400202326 /* Mattermost.entitlements */,
 				CD157A891D75EA3F0079BD30 /* NavigationControllers */,
 				D8935BAD1D5B7FF80037E7ED /* Helpers */,
@@ -812,6 +825,8 @@
 		D6E165831D47C0890014C831 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D8117D241DB4E7730058F003 /* Labels */,
+				D8117D231DB4E76B0058F003 /* Tables */,
 				8BBA7DC21D874F0F003A5B99 /* Xibs */,
 				D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */,
 				D615A3061D4F90E3000DA2D6 /* FeedAttachmentView.swift */,
@@ -867,6 +882,49 @@
 				D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */,
 			);
 			name = LeftMenu;
+			sourceTree = "<group>";
+		};
+		D8117D231DB4E76B0058F003 /* Tables */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Tables;
+			sourceTree = "<group>";
+		};
+		D8117D241DB4E7730058F003 /* Labels */ = {
+			isa = PBXGroup;
+			children = (
+				D8117D251DB4E7AE0058F003 /* EmptyDialogueLabel.swift */,
+			);
+			name = Labels;
+			sourceTree = "<group>";
+		};
+		D8117D271DB5051C0058F003 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				D8117D2C1DB52B620058F003 /* Dialogue */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
+		D8117D2C1DB52B620058F003 /* Dialogue */ = {
+			isa = PBXGroup;
+			children = (
+				D8117D351DB588870058F003 /* Pickers */,
+				D8117D281DB5054C0058F003 /* AttachmentsModule.swift */,
+				D8117D311DB57C900058F003 /* FilesPickingController.swift */,
+			);
+			name = Dialogue;
+			sourceTree = "<group>";
+		};
+		D8117D351DB588870058F003 /* Pickers */ = {
+			isa = PBXGroup;
+			children = (
+				D8117D2A1DB511D90058F003 /* ImagePickingModule.swift */,
+				D8117D2D1DB531250058F003 /* DocumentPickingModule.swift */,
+				D8117D331DB580C40058F003 /* FilesPickingModuleBase.swift */,
+			);
+			name = Pickers;
 			sourceTree = "<group>";
 		};
 		D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */ = {
@@ -1002,8 +1060,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9B82200F26897BF577153F76 /* Build configuration list for PBXNativeTarget "Mattermost" */;
 			buildPhases = (
-				4B5FBDC61DA641ED00EF7AC8 /* FIXME highlights */,
 				BE5F6F50DF894BE52BFD4C06 /* [CP] Check Pods Manifest.lock */,
+				4B5FBDC61DA641ED00EF7AC8 /* FIXME highlights */,
 				9B822E8644EB6D1CAB6E3D29 /* Sources */,
 				9B8226327E3FF187CFC613FA /* Frameworks */,
 				9B8225917DC3A9EF0EB8303D /* Resources */,
@@ -1219,6 +1277,7 @@
 				8B882D711DA6F8A10028F13D /* EmojiTableViewCell.swift in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */,
+				D8117D2E1DB531250058F003 /* DocumentPickingModule.swift in Sources */,
 				CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */,
 				4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */,
 				8B882D6F1DA6575F0028F13D /* FeedSearchTableViewCell.swift in Sources */,
@@ -1243,6 +1302,7 @@
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
 				D8D601381D5E007700951F18 /* Day.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
+				D8117D291DB5054C0058F003 /* AttachmentsModule.swift in Sources */,
 				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
 				8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */,
@@ -1296,10 +1356,12 @@
 				D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */,
+				D8117D341DB580C40058F003 /* FilesPickingModuleBase.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */,
 				CDB6D3CE1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift in Sources */,
 				CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */,
+				D8117D2B1DB511D90058F003 /* ImagePickingModule.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
 				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,
 				D62FEB931D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift in Sources */,
@@ -1308,6 +1370,7 @@
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
 				CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */,
+				D8117D321DB57C900058F003 /* FilesPickingController.swift in Sources */,
 				D86EF7FE1D5A325800BD49A3 /* UIView+Align.swift in Sources */,
 				CDB6D3BB1D78423600C3018C /* String+IntSubscript.swift in Sources */,
 				8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */,
@@ -1354,6 +1417,7 @@
 				D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */,
 				8BA8EDEA1DAAE0A0000BF560 /* ProfileCellBuilder.swift in Sources */,
 				4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */,
+				D8117D261DB4E7AE0058F003 /* EmptyDialogueLabel.swift in Sources */,
 				D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */,
 				4B9DD4BD1DB1445200AB4D2D /* UIImage+Orientation.swift in Sources */,
 				8B882D6B1DA6566F0028F13D /* SearchCellBuilder.swift in Sources */,
@@ -1422,8 +1486,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5d718e9e-193a-41be-8a8c-7bcd7502269b";
-				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.kilograpp.mattermost";
+				PROVISIONING_PROFILE = "f93249bb-910c-4804-bf49-2cc8ff645729";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;

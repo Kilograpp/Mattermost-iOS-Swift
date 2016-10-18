@@ -120,8 +120,8 @@ extension PostUtils : Public {
         try! RealmUtils.realmForCurrentThread().write({
             post.message = message
             post.updatedAt = NSDate() as Date
-            self.configureBackendPendingId(post)
-            self.assignFilesToPostIfNeeded(post)
+            configureBackendPendingId(post)
+            assignFilesToPostIfNeeded(post)
             post.computeMissingFields()
         })
     
@@ -139,9 +139,9 @@ extension PostUtils : Public {
         }
         Api.sharedInstance.deletePost(post) { (error) in
             completion(error)
-            if day?.posts.count == 0 {
-                RealmUtils.deleteObject(day!)
-            }
+            guard day?.posts.count == 0 else { return }
+            RealmUtils.deleteObject(day!)
+            
         }
     }
     //refactor uploadItemAtChannel
@@ -227,6 +227,10 @@ extension PostUtils : Public {
                 self.upload_images_group.enter()
                 item.uploading = true
                 Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (file, error) in
+                    
+                    
+                    guard self.files.contains(item) else { return }
+                    
                     defer {
                         completion(false, error, item)
                         self.upload_images_group.leave()
@@ -265,10 +269,12 @@ extension PostUtils : Public {
     func cancelImageItemUploading(_ item: AssignedAttachmentViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
         self.upload_images_group.leave()
-        if item.uploaded  {
-            self.assignedFiles.remove(at: files.index(of: item)!)
-        }
         self.files.removeObject(item)
+        
+        guard item.uploaded else { return }
+        guard self.assignedFiles.count > 0 else { return }
+        self.assignedFiles.remove(at: files.index(of: item)!)
+        
     }
 }
 

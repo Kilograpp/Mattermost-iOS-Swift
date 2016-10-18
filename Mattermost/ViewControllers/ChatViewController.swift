@@ -12,7 +12,45 @@ import ImagePickerSheetController
 import UITableView_Cache
 import MFSideMenu
 
-private protocol Setup {
+
+
+
+final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
+
+
+    
+//MARK: Properties
+    
+    var channel : Channel!
+    fileprivate var resultsObserver: FeedNotificationsObserver! = nil
+    fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
+    override var tableView: UITableView { return super.tableView! }
+    fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
+    internal let attachmentsView = PostAttachmentsView()
+    fileprivate let emptyDialogueLabel = EmptyDialogueLabel()
+    fileprivate var filesAttachmentsModule: AttachmentsModule!
+    fileprivate var filesPickingController: FilesPickingController!
+    var refreshControl: UIRefreshControl?
+    var topActivityIndicatorView: UIActivityIndicatorView?
+
+    
+    var hasNextPage: Bool = true
+    var postFromSearch: Post! = nil
+    var isLoadingInProgress: Bool = false
+    
+    func uploading(inProgress: Bool) {
+        DispatchQueue.main.async { [unowned self] in
+            self.rightButton.isEnabled = inProgress
+        }
+    }
+    
+    fileprivate var selectedPost: Post! = nil
+    fileprivate var selectedAction: String = Constants.PostActionType.SendNew
+    fileprivate var emojiResult: [String]?
+
+}
+
+fileprivate protocol Setup {
     func initialSetup()
     func setupTableView()
     func setupInputBar()
@@ -23,16 +61,13 @@ private protocol Setup {
     func setupPostAttachmentsView()
     func setupTopActivityIndicator()
     func setupCompactPost()
-    func setupNoPostsLabel()
+    func setupEmptyDialogueLabel()
+    func setupModules()
 }
 
-private protocol Private {
-    func showAttachmentsView()
-    func hideAttachmentsView()
+fileprivate protocol Private {
     func showTopActivityIndicator()
     func hideTopActivityIndicator()
-    func assignPhotos()
-    func toggleSendButtonAvailability()
     func endRefreshing()
     func clearTextView()
 }
@@ -42,7 +77,6 @@ private protocol Action {
     func rigthMenuButtonAction(_ sender: AnyObject)
     func searchButtonAction(_ sender: AnyObject)
     func sendPostAction()
-    func assignPhotosAction()
     func refreshControlValueChanged()
 }
 
@@ -55,54 +89,19 @@ private protocol Request {
     func loadFirstPageOfData()
     func loadNextPageOfData()
     func sendPost()
-    func uploadAttachments()
-}
-
-
-final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-//MARK: Properties
-    
-    fileprivate var channel : Channel?
-    fileprivate var resultsObserver: FeedNotificationsObserver! = nil
-    fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
-    override var tableView: UITableView! { return super.tableView }
-    fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
-    fileprivate let postAttachmentsView = PostAttachmentsView()
-    fileprivate let noPostsLabel: UILabel = UILabel()
-    
-    var refreshControl: UIRefreshControl?
-    var topActivityIndicatorView: UIActivityIndicatorView?
-
-    
-    var hasNextPage: Bool = true
-    var postFromSearch: Post! = nil
-    var isLoadingInProgress: Bool = false
-    
-    var fileUploadingInProgress: Bool = true {
-        didSet {
-            self.toggleSendButtonAvailability()
-        }
-    }
-    
-    fileprivate var assignedAttachmentItemsArray = Array<AssignedAttachmentViewItem>()
-    fileprivate var selectedAttachments = Array<AssignedAttachmentViewItem>()
-    fileprivate var selectedPost: Post! = nil
-    fileprivate var selectedAction: String = Constants.PostActionType.SendNew
-    fileprivate var emojiResult: [String]?
-
 }
 
 
 //MARK: LifeCycle
 
 extension ChatViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         ChannelObserver.sharedObserver.delegate = self
         initialSetup()
-        
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -136,10 +135,12 @@ extension ChatViewController {
 }
 
 
+
+
 //MARK: Setup
 
 extension ChatViewController: Setup {
-    func initialSetup() {
+    fileprivate func initialSetup() {
         setupInputBar()
         setupTableView()
         setupRefreshControl()
@@ -147,10 +148,16 @@ extension ChatViewController: Setup {
         setupTopActivityIndicator()
         setupLongCellSelection()
         setupCompactPost()
-        setupNoPostsLabel()
+        setupEmptyDialogueLabel()
+        setupModules()
     }
     
-    func setupTableView() {
+    fileprivate func setupModules() {
+        self.filesAttachmentsModule = AttachmentsModule(delegate: self, dataSource: self)
+        self.filesPickingController = FilesPickingController(dataSource: self)
+    }
+    
+    fileprivate func setupTableView() {
         self.tableView.separatorStyle = .none
         self.tableView.keyboardDismissMode = .onDrag
         self.tableView.backgroundColor = ColorBucket.whiteColor
@@ -162,13 +169,13 @@ extension ChatViewController: Setup {
         self.registerPrefixes(forAutoCompletion: [":"])
     }
     
-    func setupInputBar() {
+    fileprivate func setupInputBar() {
         setupTextView()
         setupInputViewButtons()
         setupToolbar()
     }
     
-    func setupTextView() {
+    fileprivate func setupTextView() {
         self.shouldClearTextAtRightButtonPress = false;
         self.textView.delegate = self;
         self.textView.placeholder = "Type something..."
@@ -176,7 +183,7 @@ extension ChatViewController: Setup {
         self.textInputbar.textView.font = FontBucket.inputTextViewFont;
     }
     
-    func setupInputViewButtons() {
+    fileprivate func setupInputViewButtons() {
         self.rightButton.titleLabel!.font = FontBucket.feedSendButtonTitleFont;
         self.rightButton.setTitle("Send", for: UIControlState())
         self.rightButton.addTarget(self, action: #selector(sendPostAction), for: .touchUpInside)
@@ -186,7 +193,7 @@ extension ChatViewController: Setup {
         self.leftButton.addTarget(self, action: #selector(attachmentSelection), for: .touchUpInside)
     }
     
-    func setupToolbar() {
+    fileprivate func setupToolbar() {
         self.textInputbar.autoHideRightButton = false;
         self.textInputbar.isTranslucent = false;
         // TODO: Code Review: Заменить на стиль из темы
@@ -194,46 +201,34 @@ extension ChatViewController: Setup {
     }
     
     fileprivate func setupRefreshControl() {
-        let tableVc = UITableViewController.init() as UITableViewController
+        let tableVc = UITableViewController() as UITableViewController
         tableVc.tableView = self.tableView
-        self.refreshControl = UIRefreshControl.init()
+        self.refreshControl = UIRefreshControl()
         self.refreshControl?.addTarget(self, action: #selector(refreshControlValueChanged), for: .valueChanged)
         tableVc.refreshControl = self.refreshControl
     }
     
     fileprivate func setupPostAttachmentsView() {
-        self.postAttachmentsView.backgroundColor = UIColor.blue
-        self.view.insertSubview(self.postAttachmentsView, belowSubview: self.textInputbar)
-        self.postAttachmentsView.anchorView = self.textInputbar
-        
-        self.postAttachmentsView.dataSource = self
-        self.postAttachmentsView.delegate = self
+        self.attachmentsView.backgroundColor = UIColor.blue
+        self.view.insertSubview(self.attachmentsView, belowSubview: self.textInputbar)
+        self.attachmentsView.anchorView = self.textInputbar
     }
     
-    func setupTopActivityIndicator() {
+    fileprivate func setupTopActivityIndicator() {
         self.topActivityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         self.topActivityIndicatorView!.transform = self.tableView.transform;
     }
     
-    func setupLongCellSelection() {
+    fileprivate func setupLongCellSelection() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
         self.tableView.addGestureRecognizer(longPressGestureRecognizer)
     }
     
-    func setupNoPostsLabel() {
-        self.noPostsLabel.text = "No messages in this\n channel yet"
-        self.noPostsLabel.textAlignment = .center
-        self.noPostsLabel.numberOfLines = 0
-        self.noPostsLabel.font = FontBucket.feedbackTitleFont
-        self.noPostsLabel.textColor = UIColor.black
-        self.noPostsLabel.backgroundColor = self.tableView.backgroundColor
-        self.noPostsLabel.frame = CGRect(x: 0, y: 0, width: 280, height: 60)
-        self.noPostsLabel.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: 100)
-        self.noPostsLabel.isHidden = true
-        self.view.insertSubview(self.noPostsLabel, aboveSubview: self.tableView)
+    fileprivate func setupEmptyDialogueLabel() {
+        self.view.insertSubview(self.emptyDialogueLabel, aboveSubview: self.tableView)
     }
     
-    func setupCompactPost() {
+    fileprivate func setupCompactPost() {
         let size = self.completePost.requeredSize()
         self.completePost.translatesAutoresizingMaskIntoConstraints = false
         self.completePost.isHidden = true
@@ -262,9 +257,8 @@ extension ChatViewController: Setup {
     override func textWillUpdate() {
         super.textWillUpdate()
         
-        if (assignedAttachmentItemsArray.count > 0) {
-            self.rightButton.isEnabled = self.fileUploadingInProgress
-        }
+        guard self.filesPickingController.attachmentItems.count > 0 else { return }
+        self.rightButton.isEnabled = !self.filesAttachmentsModule.fileUploadingInProgress
     }
 }
 
@@ -272,19 +266,6 @@ extension ChatViewController: Setup {
 //MARK: Private
 
 extension ChatViewController : Private {
-//AttachmentsView
-    func showAttachmentsView() {
-        var oldInset = self.tableView.contentInset
-        oldInset.top = PostAttachmentsView.attachmentsViewHeight
-        self.tableView.contentInset = oldInset
-    }
-    
-    func hideAttachmentsView() {
-        var oldInset = self.tableView.contentInset
-        oldInset.top = 0
-        self.tableView.contentInset = oldInset
-        self.view.layoutSubviews()
-    }
 
 //TopActivityIndicator
     func showTopActivityIndicator() {
@@ -297,26 +278,7 @@ extension ChatViewController : Private {
     }
     
     func attachmentSelection() {
-        if (self.assignedAttachmentItemsArray.count < 5) {
-            let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
-            let gallerySelectionAction = UIAlertAction(title: "Photo/Picture", style: .default, handler: { (action:UIAlertAction) in
-                self.assignPhotos()
-            })
-            gallerySelectionAction.setValue(UIImage(named:"gallery_icon"), forKey: "image")
-            controller.addAction(gallerySelectionAction)
-            
-            let fileSelectionAction = UIAlertAction(title: "File", style: .default, handler: { (action:UIAlertAction) in
-                self.proceedToFileSelection()
-            })
-            fileSelectionAction.setValue(UIImage(named:"iCloud_icon"), forKey: "image")
-            controller.addAction(fileSelectionAction)
-            controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action:UIAlertAction) in
-                print("canceled")
-            }))
-            present(controller, animated: true) {}
-        } else {
-            AlertManager.sharedManager.showWarningWithMessage(message: "Maximum of attachments reached", viewController: self)
-        }
+        self.filesPickingController.pick()
     }
     
     func hideTopActivityIndicator() {
@@ -324,102 +286,9 @@ extension ChatViewController : Private {
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
  
-// TODO: Code Review: clean unused code
-    
-//Images
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if ((info["UIImagePickerControllerMediaType"] as! String) == "public.movie") {
-            let fileItem = AssignedAttachmentViewItem(image: UIImage(named: "attach_file_icon")!)
-            let url = info["UIImagePickerControllerMediaURL"] as! URL
-            fileItem.fileName = File.fileNameFromUrl(url: url)
-            fileItem.isFile = true
-            fileItem.url = url
-            self.selectedAttachments = [ fileItem ]
-            self.postAttachmentsView.showAnimated()
-            self.showAttachmentsView()
-            self.postAttachmentsView.updateAppearance()
-            uploadAttachments()
-        } else {
-            var image = info["UIImagePickerControllerOriginalImage"] as! UIImage
-            //TODO: 0 -> constants 
-            image = image.fixedOrientation()
-            let presentImage = UIImage(data:UIImageJPEGRepresentation(image, 0)!)
-//            let orientedImage = UIImage(cgImage: image.cgImage!, scale: 0, orientation: .up)
-            let imageItem = AssignedAttachmentViewItem(image: presentImage!)
-            self.selectedAttachments = [imageItem]
-            self.postAttachmentsView.showAnimated()
-            self.showAttachmentsView()
-            self.postAttachmentsView.updateAppearance()
-            uploadAttachments()
-        }
-        picker.dismiss(animated: true) { }
-    }
-    
-    func assignPhotos() -> Void {
-        //TODO: MORE REFACTOR
-        let presentImagePickerController: (UIImagePickerControllerSourceType, UIImagePickerControllerCameraCaptureMode) -> () = { source, cameraMode in
-            let picker = UIImagePickerController()
-            picker.delegate = self
-            let sourceType = source
-            picker.sourceType = sourceType
-            if sourceType == .camera {
-                if cameraMode == .video {
-                    picker.mediaTypes = ["public.movie"]
-                }
-            picker.cameraCaptureMode = cameraMode
-            }
-            self.present(picker, animated: true, completion: nil)
-        }
-        
-        let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
-        controller.maximumSelection = 5 - self.assignedAttachmentItemsArray.count
-        print("Images to selection:\(controller.maximumSelection)")
-        let assignImagesHandler = {
-            let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
-            self.selectedAttachments = convertedAssets
-            self.postAttachmentsView.showAnimated()
-            self.showAttachmentsView()
-            self.postAttachmentsView.updateAppearance()
-            self.uploadAttachments()
-        }
-    
-    
-        let cameraAction = ImagePickerAction(title: "Gallery", secondaryTitle: "Send", style: .default, handler: { _ in
-                presentImagePickerController(.photoLibrary, .photo)
-            }) { (_, numberOfPhotos) in
-                assignImagesHandler()
-            }
-        controller.addAction(cameraAction)
-        
-        let videoAction = ImagePickerAction(title: "Take Video", secondaryTitle: "Take Video", style: .default, handler: { _ in
-            presentImagePickerController(.camera, .video)
-        }) { (_, numberOfPhotos) in
-            presentImagePickerController(.camera, .video)
-        }
-        controller.addAction(videoAction)
-        
-        let photoAction = ImagePickerAction(title: "Take Photo", secondaryTitle: "Take Photo", style: .default, handler: { _ in
-            presentImagePickerController(.camera, .photo)
-        }) { (_, numberOfPhotos) in
-            presentImagePickerController(.camera, .photo)
-        }
-        controller.addAction(photoAction)
-        
-        
-        controller.addAction(ImagePickerAction(cancelTitle: NSLocalizedString("Cancel", comment: "Action Title")))
-        present(controller, animated: true, completion: nil)
-    }
-
-//Interface
-    func toggleSendButtonAvailability() {
-        DispatchQueue.main.async { [unowned self] in
-            self.rightButton.isEnabled = self.fileUploadingInProgress
-        }
-    }
     
     func endRefreshing() {
-        self.noPostsLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+        self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
         self.refreshControl?.endRefreshing()
     }
     
@@ -502,15 +371,11 @@ extension ChatViewController: Action {
         default:
             sendPost()
         }
-        self.assignedAttachmentItemsArray.removeAll()
-        self.selectedAttachments.removeAll()
-        self.postAttachmentsView.hideAnimated()
-        self.hideAttachmentsView()
+        
+        self.filesPickingController.reset()
+        self.filesAttachmentsModule.reset()
     }
     
-    func assignPhotosAction() {
-        assignPhotos()
-    }
     
     func refreshControlValueChanged() {
         self.loadFirstPageOfData()
@@ -652,9 +517,9 @@ extension ChatViewController: Request {
     func updatePost() {
         guard (self.selectedPost != nil) else { return }
     
-        PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil, completion: { (error) in
+        PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil) {_ in 
             self.selectedPost = nil
-        })
+        }
         self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
         self.dismissKeyboard(true)
         self.selectedAction = Constants.PostActionType.SendNew
@@ -671,35 +536,6 @@ extension ChatViewController: Request {
         }
     }
     
-    func uploadAttachments() {
-        self.fileUploadingInProgress = false
-        //Собственный array для images (передавать в images: ...). Это массив с выбранными картинками.
-        let images = selectedAttachments
-        assignedAttachmentItemsArray.append(contentsOf: self.selectedAttachments)
-        PostUtils.sharedInstance.uploadAttachment(self.channel!, items: images, completion: { (finished, error, item) in
-            if error != nil {
-                //TODO: handle error
-                //refactor обработка этой ошибки в отдельную функцию
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
-                // Обработка item, который закончился с error
-                self.assignedAttachmentItemsArray.removeObject(item)
-                self.postAttachmentsView.updateAppearance()
-                if (self.assignedAttachmentItemsArray.count == 0) {
-                    self.postAttachmentsView.hideAnimated()
-                    self.hideAttachmentsView()
-                }
-            } else {
-                self.fileUploadingInProgress = finished
-                print ("\(item.identifier) uploaded: \(finished)")
-                print ("All files uploaded: \(finished)")
-            }
-        }) { (value, index) in
-            self.assignedAttachmentItemsArray[index].uploaded = value == 1
-            self.assignedAttachmentItemsArray[index].uploading = value < 1
-            self.assignedAttachmentItemsArray[index].uploadProgress = value
-            self.postAttachmentsView.updateProgressValueAtIndex(index, value: value)
-        }
-    }
 }
 
 
@@ -805,7 +641,7 @@ extension ChatViewController: ChannelObserverDelegate {
             resultsObserver.unsubscribeNotifications()
         }
         self.resultsObserver = nil
-        self.noPostsLabel.isHidden = true
+        self.emptyDialogueLabel.isHidden = true
         if self.channel != nil {
             //remove action observer from old channel
             //after relogin
@@ -828,54 +664,12 @@ extension ChatViewController: ChannelObserverDelegate {
             loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
         }
         
-        
         NotificationCenter.default.addObserver(self, selector: #selector(handleChannelNotification),
                                                          name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                                                          object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleLogoutNotification),
                                                          name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
                                                          object: nil)
-    }
-}
-
-
-//MARK: PostAttachmentViewDataSource
-
-extension ChatViewController: PostAttachmentViewDataSource {
-    func itemAtIndex(_ index: Int) -> AssignedAttachmentViewItem {
-        return self.assignedAttachmentItemsArray[index]
-    }
-    
-    func numberOfItems() -> Int {
-        return self.assignedAttachmentItemsArray.count
-    }
-}
-
-
-//MARK: PostAttachmentViewDelegate
-
-extension ChatViewController: PostAttachmentViewDelegate {
-    func didRemovePhoto(_ item: AssignedAttachmentViewItem) {
-        PostUtils.sharedInstance.cancelImageItemUploading(item)
-        self.assignedAttachmentItemsArray.removeObject(item)
-        guard self.assignedAttachmentItemsArray.count != 0 else {
-            self.fileUploadingInProgress = false
-            self.postAttachmentsView.hideAnimated()
-            self.hideAttachmentsView()
-            return
-        }
-    }
-    
-    func attachmentsViewWillAppear() {
-        var oldInset = self.tableView.contentInset
-        oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
-        self.tableView.contentInset = oldInset
-    }
-    
-    func attachmentViewWillDisappear() {
-        var oldInset = self.tableView.contentInset
-        oldInset.top = 0
-        self.tableView.contentInset = oldInset
     }
 }
 
@@ -936,29 +730,21 @@ extension ChatViewController {
     }
 }
 
-
-//MARK: UIDocumentPickerDelegate
-extension ChatViewController: UIDocumentPickerDelegate {
-    func proceedToFileSelection() {
-        
-        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.content"], in: .import)
-        documentPicker.delegate = self
-        documentPicker.modalPresentationStyle = .formSheet
-        self.present(documentPicker, animated:true, completion:nil)
+extension ChatViewController: FilesPickingControllerDataSource {
+    func attachmentsModule(controller: FilesPickingController) -> AttachmentsModule {
+        return self.filesAttachmentsModule
     }
-    
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        //TODO: REFACTOR mechanism
+}
 
-        let fileItem = AssignedAttachmentViewItem(image: UIImage(named: "attach_file_icon")!)
-        fileItem.fileName = File.fileNameFromUrl(url: url)
-        fileItem.isFile = true
-        fileItem.url = url
-        self.selectedAttachments = [ fileItem ]
-        self.postAttachmentsView.showAnimated()
-        self.showAttachmentsView()
-        self.postAttachmentsView.updateAppearance()
-        self.uploadAttachments()
+extension ChatViewController: AttachmentsModuleDataSource {
+    func tableView(attachmentsModule: AttachmentsModule) -> UITableView {
+        return self.tableView
+    }
+    func postAttachmentsView(attachmentsModule: AttachmentsModule) -> PostAttachmentsView {
+        return self.attachmentsView
+    }
+    func channel(attachmentsModule: AttachmentsModule) -> Channel {
+        return self.channel
     }
 }
 

@@ -10,11 +10,11 @@ import Foundation
 
 protocol PostAttachmentViewDataSource {
     func numberOfItems() -> Int
-    func itemAtIndex(_ index: Int) -> AssignedAttachmentViewItem
+    func item(atIndex index: Int) -> AssignedAttachmentViewItem
 }
 
 protocol PostAttachmentViewDelegate {
-    func didRemovePhoto(_ photo: AssignedAttachmentViewItem)
+    func didRemove(item: AssignedAttachmentViewItem)
     func attachmentsViewWillAppear()
     func attachmentViewWillDisappear()
 }
@@ -156,7 +156,7 @@ extension PostAttachmentsView : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //FIXME: builder!
-        let item = self.dataSource?.itemAtIndex((indexPath as NSIndexPath).row)
+        let item = self.dataSource?.item(atIndex: indexPath.row)
         var reuseIdentifier = PostAttachmentsViewCell.identifier
         
         if item!.isFile {
@@ -168,9 +168,9 @@ extension PostAttachmentsView : UICollectionViewDataSource {
             convertedCell = cell as! PostFileViewCell
         }
         
-        convertedCell.configureWithItem((self.dataSource?.itemAtIndex((indexPath as NSIndexPath).row))!)
+        convertedCell.configureWithItem((self.dataSource?.item(atIndex: indexPath.row))!)
         convertedCell.removeTapHandler = {(imageItem) in
-            self.delegate?.didRemovePhoto(imageItem)
+            self.delegate?.didRemove(item: imageItem)
             self.collectionView?.performBatchUpdates({ 
                 self.collectionView?.deleteItems(at: [indexPath])
                 self.collectionView?.reloadSections(IndexSet(integer: 0))

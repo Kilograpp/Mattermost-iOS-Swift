@@ -47,6 +47,15 @@ private protocol PostRequests: class {
                    success: ((_ mappingResult: RKMappingResult) -> Void)?,
                    failure: ((_ error: Mattermost.Error) -> Void)?,
                    progress: ((_ progressValue: Float) -> Void)?)
+    
+    func postFile(with url: URL!,
+                  identifier: String,
+                  name: String!,
+                  path: String!,
+                  parameters: Dictionary<String, String>?,
+                  success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                  failure: ((_ error: Mattermost.Error) -> Void)?,
+                  progress: ((_ progressValue: Float) -> Void)?)
 }
 
 private protocol Helpers: class {
@@ -204,6 +213,7 @@ extension ObjectManager: PostRequests {
         
         let kg_operation = operation as! KGObjectRequestOperation
         kg_operation.image = image
+        kg_operation.identifier = identifier
         kg_operation.httpRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
             let value = Float(totalWritten) / Float(expectedToWrite)
             progress?(value)
@@ -212,6 +222,7 @@ extension ObjectManager: PostRequests {
     }
     
     func postFile(with url: URL!,
+                  identifier: String,
                    name: String!,
                    path: String!,
                    parameters: Dictionary<String, String>?,
@@ -241,6 +252,7 @@ extension ObjectManager: PostRequests {
                                                                               failure: failureHandlerBlock)
         
         let kg_operation = operation as! KGObjectRequestOperation
+        kg_operation.identifier = identifier
         kg_operation.httpRequestOperation.setUploadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
             let value = Float(totalWritten) / Float(expectedToWrite)
             progress?(value)
@@ -258,12 +270,9 @@ extension ObjectManager: Helpers {
     
     func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem) {
         for operation in self.operationQueue.operations {
-            if operation.isKind(of: KGObjectRequestOperation.self) {
-                let convertedOperation = operation as! KGObjectRequestOperation
-                if convertedOperation.identifier == item.identifier {
-                    operation.cancel()
-                }
-            }
+            guard let operation = operation as? KGObjectRequestOperation else { continue }
+            guard operation.identifier == item.identifier else { continue }
+            operation.cancel()
         }
     }
 }

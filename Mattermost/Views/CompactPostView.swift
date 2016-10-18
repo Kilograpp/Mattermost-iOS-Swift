@@ -90,8 +90,7 @@ extension CompactPostView: Setup {
         if (self.actionType == ActionType.CompleteReply) {
             setupAvatarImageView()
             setupNameLabel()
-        }
-        else {
+        } else {
             setupTypeLabel()
             setupCancelButton()
         }
