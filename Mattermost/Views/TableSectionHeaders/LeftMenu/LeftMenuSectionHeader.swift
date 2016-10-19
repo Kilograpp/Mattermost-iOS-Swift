@@ -8,36 +8,61 @@
 
 import Foundation
 
-private protocol PublicConfiguration {
+private protocol LeftMenuSectionHeaderConfiguration {
     func configureWithChannelType(_ channelType: String!)
 }
 
-private protocol PrivateSetup : class {
-    func setup()
-    func setupTitleLabel()
-    func setupMoreButton()
-    func setupContentView()
-}
-
-private protocol Actions {
-    func moreAction()
-}
-
 final class LeftMenuSectionHeader: UITableViewHeaderFooterView {
+    
+//MARK: Properties
+    
     fileprivate let titleLabel: UILabel = UILabel()
     fileprivate let moreButton: UIButton = UIButton()
     static let reuseIdentifier = "LeftMenuSectionHeaderReuseIdentifier"
     var addTapHandler : (() -> Void)?
+    
+//MARK: Init
+    
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         
-        self.setup()
+        initialSetup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+}
+
+
+//MARK: LeftMenuSectionHeaderConfiguration
+
+extension LeftMenuSectionHeader: LeftMenuSectionHeaderConfiguration {
+    func configureWithChannelType(_ channelType: String!) {
+        self.titleLabel.text = channelType.uppercased()
+    }
+}
+
+
+private protocol LeftMenuSectionHeaderLifeCycle {
+    func layoutSubviews()
+}
+
+private protocol LeftMenuSectionHeaderSetup {
+    func initialSetup()
+    func setupContentView()
+    func setupTitleLabel()
+    func setupMoreButton()
+}
+
+private protocol LeftMenuSectionHeaderAction {
+    func moreAction()
+}
+
+
+//MARK: LeftMenuSectionHeaderLifeCycle
+
+extension LeftMenuSectionHeader: LeftMenuSectionHeaderLifeCycle {
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -47,37 +72,40 @@ final class LeftMenuSectionHeader: UITableViewHeaderFooterView {
     }
 }
 
-extension LeftMenuSectionHeader : PrivateSetup {
-    fileprivate func setup() {
-        self.setupTitleLabel()
-        self.setupMoreButton()
+
+//MARK: LeftMenuSectionHeaderSetup
+
+extension LeftMenuSectionHeader: LeftMenuSectionHeaderSetup {
+    func initialSetup() {
+        setupContentView()
+        setupTitleLabel()
+        setupMoreButton()
     }
     
-    fileprivate func setupTitleLabel() {
-        self.addSubview(self.titleLabel)
-        self.titleLabel.font = FontBucket.headerTitleFont
-        self.titleLabel.textColor = ColorBucket.lightGrayColor
-    }
-    
-    fileprivate func setupMoreButton() {
-        self.addSubview(self.moreButton)
-        self.moreButton.setBackgroundImage(UIImage(named: "side_menu_more_icon"), for: UIControlState())
-        self.moreButton.addTarget(self, action: #selector(moreAction), for: .touchUpInside)
-    }
-    
-    fileprivate func setupContentView() {
+    func setupContentView() {
         self.contentView.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
-}
-
-extension LeftMenuSectionHeader : PublicConfiguration {
-    func configureWithChannelType(_ channelType: String!) {
-        self.titleLabel.text = channelType.uppercased()
+    
+    func setupTitleLabel() {
+        self.titleLabel.font = FontBucket.headerTitleFont
+        self.titleLabel.textColor = ColorBucket.lightGrayColor
+        self.addSubview(self.titleLabel)
+    }
+    
+    func setupMoreButton() {
+        self.moreButton.setBackgroundImage(UIImage(named: "side_menu_more_icon"), for: UIControlState())
+        self.moreButton.addTarget(self, action: #selector(moreAction), for: .touchUpInside)
+        self.addSubview(self.moreButton)
     }
 }
 
-extension LeftMenuSectionHeader : Actions {
+
+//MARK: LeftMenuSectionHeaderAction
+
+extension LeftMenuSectionHeader : LeftMenuSectionHeaderAction {
     func moreAction() {
-        self.addTapHandler!()
+        if (self.addTapHandler != nil) {
+            self.addTapHandler!()
+        }
     }
 }

@@ -41,24 +41,19 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
 
 extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
     func configureWith(channel: Channel) {
-        if (channel.privateType == Constants.ChannelType.PrivateTypeChannel) {
-            configureAvatarForPrivate(channel: channel)
-        }
         if (channel.privateType == Constants.ChannelType.PublicTypeChannel) {
             configureAvatarForPublic(channel: channel)
         }
+        if (channel.privateType == Constants.ChannelType.PrivateTypeChannel) {
+            configureAvatarForPrivate(channel: channel)
+        }
+        if (channel.privateType == Constants.ChannelType.DirectTypeChannel) {
+            configureAvatarForDirect(channel: channel)
+        }
+        
         
         self.nameLabel.text = channel.displayName
         self.checkBoxButton.isSelected = channel.currentUserInChannel
-    }
-    
-    func configureAvatarForPrivate(channel: Channel) {
-        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
-        let user = channel.interlocuterFromPrivateChannel()
-        ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
-            self?.avatarImageView.image = image
-        }
-         self.channelLetterLabel.isHidden = true
     }
     
     func configureAvatarForPublic(channel: Channel) {
@@ -69,6 +64,25 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
         let backgroundLayer = self.channelLetterLabel.superview?.layer.sublayers?[0] as! CAGradientLayer
         backgroundLayer.updateLayer(backgroundLayer)
     }
+
+    func configureAvatarForPrivate(channel: Channel) {
+        self.avatarImageView.image = nil
+        self.channelLetterLabel.isHidden = false
+        self.channelLetterLabel.text = channel.displayName![0]
+        
+        let backgroundLayer = self.channelLetterLabel.superview?.layer.sublayers?[0] as! CAGradientLayer
+        backgroundLayer.updateLayer(backgroundLayer)
+    }
+    
+    func configureAvatarForDirect(channel: Channel) {
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        let user = channel.interlocuterFromPrivateChannel()
+        ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
+            self?.avatarImageView.image = image
+        }
+        self.channelLetterLabel.isHidden = true
+    }
+    
     
     func cellHeigth() -> CGFloat {
         return 60

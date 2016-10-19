@@ -15,6 +15,9 @@ final class LeftMenuViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamNameLabel: UILabel!
     @IBOutlet weak var membersListButton: UIButton!
+    
+    fileprivate lazy var builder: LeftMenuCellBuilder = LeftMenuCellBuilder(tableView: self.tableView)
+    
     var realm: Realm?
     fileprivate var resultsPublic: Results<Channel>! = nil
     fileprivate var resultsPrivate: Results<Channel>! = nil
@@ -85,14 +88,18 @@ extension LeftMenuViewController : Configure {
     }
     
     fileprivate func configureResults () {
-        let privateTypePredicate = NSPredicate (format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)
-        let publicTypePredicate = NSPredicate (format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
+        let publicTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
+        let privateTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)
+        let directTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
+        
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let sortName = ChannelAttributes.displayName.rawValue
         self.resultsPublic =
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(publicTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsPrivate =
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
+        self.resultsDirect =
+            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
     }
     
 }
@@ -117,18 +124,22 @@ extension LeftMenuViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let reuseIdentifier = (indexPath as NSIndexPath).section == 0 ? PublicChannelTableViewCell.reuseIdentifier : PrivateChannelTableViewCell.reuseIdentifier
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! LeftMenuTableViewCellProtocol
-        let channel = (indexPath as NSIndexPath).section == 0 ? self.resultsPublic[indexPath.row] as Channel! : self.resultsPrivate[indexPath.row] as Channel!
-        cell.configureWithChannel(channel!, selected: (channel?.isSelected)!)
-        cell.test = {
-            //FIXME: REFACTOR:!!!!
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+        var channel: Channel!
+        switch indexPath.section {
+        case 0:
+            channel = self.resultsPublic[indexPath.row]
+            break
+        case 1:
+            channel = self.resultsPrivate[indexPath.row]
+            break
+        case 2:
+            channel = self.resultsDirect[indexPath.row]
+            break
+        default:
+            break
         }
         
-        return cell as! UITableViewCell
+        return self.builder.cellFor(channel: channel, indexPath: indexPath)
     }
 }
 
@@ -140,7 +151,7 @@ extension LeftMenuViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 42
+        return self.builder.cellHeight()
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -148,10 +159,12 @@ extension LeftMenuViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 30
+        return (section == 1) ? CGFloat(0.00001) : 30
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard (section != 1) else { return nil }
+        
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
         view.moreTapHandler = { self.navigateToMoreChannel(section) }
 
@@ -160,8 +173,19 @@ extension LeftMenuViewController : UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
-        let sectionName = section == 0 ? Constants.ChannelType.PublicTypeChannel : Constants.ChannelType.PrivateTypeChannel
-        view.configureWithChannelType(Channel.privateTypeDisplayName(sectionName))
+        switch section {
+        case 0:
+            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PublicTypeChannel))
+            break
+        case 1:
+            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PrivateTypeChannel))
+            break
+        case 2:
+            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))
+            break
+        default:
+            break
+        }
         view.addTapHandler = { print("ADD CHANNEL") }
         
         return view
@@ -200,6 +224,5 @@ extension LeftMenuViewController : Navigation {
     @IBAction func membersListAction(_ sender: AnyObject) {
         print("MEMBERS_LIST")
     }
-
 }
 

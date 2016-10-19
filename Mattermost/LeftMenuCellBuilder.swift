@@ -10,7 +10,7 @@ import Foundation
 
 private protocol LeftMenuCellBuilderInteface: class {
     func cellHeight() -> CGFloat
-    func cellFor(channel: Channel) -> UITableViewCell
+    func cellFor(channel: Channel, indexPath: IndexPath) -> UITableViewCell
 }
 
 final class LeftMenuCellBuilder {
@@ -28,21 +28,34 @@ final class LeftMenuCellBuilder {
 
 extension LeftMenuCellBuilder: LeftMenuCellBuilderInteface {
     func cellHeight() -> CGFloat {
-        return 60
+        return 42
     }
     
-    func cellFor(channel: Channel) -> UITableViewCell {
-        let reuseIdentifier = ChannelsMoreTableViewCell.reuseIdentifier
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! ChannelsMoreTableViewCell
-        cell.transform = self.tableView.transform
-        cell.configureWith(channel: channel)
-        cell.checkBoxHandler = {
-            try! RealmUtils.realmForCurrentThread().write({
-                let oldState = channel.currentUserInChannel
-                channel.currentUserInChannel = !oldState
-            })
+    func cellFor(channel: Channel, indexPath: IndexPath) -> UITableViewCell {
+        var reuseIdentifier = ""
+        switch indexPath.section {
+        case 0:
+            reuseIdentifier = PublicChannelTableViewCell.reuseIdentifier
+            break
+        case 1:
+            reuseIdentifier = PrivateChannelTableViewCell.reuseIdentifier
+            break
+        case 2:
+            reuseIdentifier = DirectChannelTableViewCell.reuseIdentifier
+            break
+        default:
+            break
         }
         
-        return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! LeftMenuTableViewCellProtocol
+        cell.configureWithChannel(channel, selected: channel.isSelected)
+        cell.test = {
+            //FIXME: REFACTOR:!!!!
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+        
+        return cell as! UITableViewCell
     }
 }

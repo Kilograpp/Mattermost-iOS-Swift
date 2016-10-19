@@ -92,7 +92,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 }
 
 
-//MARK: LifeCycle
+//MARK: LifeСycle
 
 extension ChatViewController {
     override func viewDidLoad() {

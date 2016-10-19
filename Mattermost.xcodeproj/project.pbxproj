@@ -43,6 +43,7 @@
 		8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */; };
 		8B8F70031D7747A900ACF626 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */; };
 		8B9E1C111DB6DAA700C05B36 /* LeftMenuCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E1C101DB6DAA700C05B36 /* LeftMenuCellBuilder.swift */; };
+		8B9E1C131DB7454900C05B36 /* DirectChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E1C121DB7454900C05B36 /* DirectChannelTableViewCell.swift */; };
 		8BA8EDEA1DAAE0A0000BF560 /* ProfileCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8EDE91DAAE0A0000BF560 /* ProfileCellBuilder.swift */; };
 		8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */; };
 		8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */; };
@@ -252,6 +253,7 @@
 		8B8F70001D7747A900ACF626 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
 		8B9E1C101DB6DAA700C05B36 /* LeftMenuCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftMenuCellBuilder.swift; sourceTree = "<group>"; };
+		8B9E1C121DB7454900C05B36 /* DirectChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectChannelTableViewCell.swift; path = LeftMenu/DirectChannelTableViewCell.swift; sourceTree = "<group>"; };
 		8BA8EDE91DAAE0A0000BF560 /* ProfileCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCellBuilder.swift; sourceTree = "<group>"; };
 		8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatViewController.swift; sourceTree = "<group>"; };
 		8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingInProcessView.swift; sourceTree = "<group>"; };
@@ -741,8 +743,9 @@
 			isa = PBXGroup;
 			children = (
 				D62FEB901D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift */,
-				D62FEB911D4F2AD700390EBC /* PrivateChannelTableViewCell.swift */,
 				D62FEB921D4F2AD700390EBC /* PublicChannelTableViewCell.swift */,
+				D62FEB911D4F2AD700390EBC /* PrivateChannelTableViewCell.swift */,
+				8B9E1C121DB7454900C05B36 /* DirectChannelTableViewCell.swift */,
 				D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */,
 			);
 			name = LeftMenu;
@@ -1323,6 +1326,7 @@
 				8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
 				D67A42F61D747B80003E2466 /* AssignedPhotoViewItem.swift in Sources */,
+				8B9E1C131DB7454900C05B36 /* DirectChannelTableViewCell.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */,
 				D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */,
