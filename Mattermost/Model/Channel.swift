@@ -43,10 +43,12 @@ final class Channel: RealmObject {
     
     class func privateTypeDisplayName(_ privateTypeString: String) -> String {
         switch privateTypeString {
-        case Constants.ChannelType.PrivateTypeChannel:
-            return "Private message"
         case Constants.ChannelType.PublicTypeChannel:
             return "Public channel"
+        case Constants.ChannelType.PrivateTypeChannel:
+            return "Private message"
+        case Constants.ChannelType.DirectTypeChannel:
+            return "Direct message"
         default:
             return "UNKNOWN"
         }

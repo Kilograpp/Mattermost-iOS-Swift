@@ -54,6 +54,13 @@ private protocol ServerUrlColors {
     static var serverUrlSubtitleColor: UIColor {get}
 }
 
+private protocol MoreTableColors {
+    static var searchTextFieldBackgroundColor: UIColor {get}
+    static var checkButtonBorderColor: UIColor {get}
+    static var avatarImageViewColor: UIColor {get}
+    static var separatorViewBackgroundColor: UIColor {get}
+}
+
 private protocol GradientColors {
     static var topBlueColorForGradient: UIColor {get}
     static var bottomBlueColorForGradient: UIColor {get}
@@ -118,6 +125,13 @@ extension ColorBucket : ServerUrlColors {
     static let serverUrlSubtitleColor = ColorBucket.darkDarkGray()
 }
 
+extension ColorBucket: MoreTableColors {
+    static let searchTextFieldBackgroundColor = ColorBucket.darkWhite()
+    static let checkButtonBorderColor = ColorBucket.lightLightGray()
+    static let avatarImageViewColor = ColorBucket.randomBrightColor()
+    static let separatorViewBackgroundColor = try! UIColor(rgba_throws: "#C9D2D8")
+}
+
 extension ColorBucket : GradientColors {
     //refactor
     static let topBlueColorForGradient = try! UIColor(rgba_throws: "#1D66DE")
@@ -159,6 +173,10 @@ extension ColorBucket {
     
     fileprivate class func lightGray() -> UIColor {
         return try! UIColor(rgba_throws: "#AAAAAA")
+    }
+    
+    fileprivate class func lightLightGray() -> UIColor {
+        return try! UIColor(rgba_throws: "#8E8E93")
     }
     
     fileprivate class func middleGray() -> UIColor {
@@ -215,5 +233,12 @@ extension ColorBucket {
     
     fileprivate class func onlineStatus() -> UIColor {
         return try! UIColor(rgba_throws: "#81C784")
+    }
+    
+    fileprivate class func randomBrightColor() -> UIColor {
+        let randomRed:CGFloat = CGFloat(arc4random()) / CGFloat(UInt32.max)
+        let randomGreen:CGFloat = CGFloat(arc4random()) / CGFloat(UInt32.max)
+        let randomBlue:CGFloat = CGFloat(arc4random()) / CGFloat(UInt32.max)
+        return UIColor(red: randomRed, green: randomGreen, blue: randomBlue, alpha: 1.0)
     }
 }

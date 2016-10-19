@@ -353,6 +353,7 @@ extension ChatViewController : Private {
     }
     
     func endRefreshing() {
+        self.noPostsLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
         self.refreshControl?.endRefreshing()
     }
     
@@ -492,7 +493,6 @@ extension ChatViewController: Request {
             
             self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
-            self.noPostsLabel.isHidden = (self.resultsObserver.numberOfSections() != 0)
             self.resultsObserver.subscribeNotifications()
         })
     }

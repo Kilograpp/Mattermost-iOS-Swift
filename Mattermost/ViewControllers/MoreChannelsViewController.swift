@@ -11,22 +11,19 @@ import RealmSwift
 
 final class MoreChannelsViewController: UIViewController {
     
-//MARK: - Property
-    @IBOutlet weak var tableView: UITableView!
-    var realm: Realm?
-    var isPrivateChannel : Bool = false
-    fileprivate let showChatViewController = "showChatViewController"
-    fileprivate var results: Results<Channel>! = nil
+//MARK: Property
     
-//MARK: - Override
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupNavigationBar()
-        setupTableView()
-        configureResults()
-        loadData()
-    }
+    @IBOutlet weak var tableView: UITableView!
+    
+    var realm: Realm?
+    fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
+    fileprivate let showChatViewController = "showChatViewController"
+    
+    fileprivate var results: Results<Channel>! = nil
+    fileprivate var filteredResults: Results<Channel>! = nil
+    
+    var isPrivateChannel: Bool = false
+    var isSearchActive: Bool = false
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let selectedChannel = sender else { return }
@@ -34,77 +31,175 @@ final class MoreChannelsViewController: UIViewController {
     }
 }
 
-//MARK: - PrivateProtocols
-private protocol Setup : class {
+
+private protocol MoreChannelsViewControllerLifeCycle {
+    func viewDidLoad()
+}
+
+private protocol MoreChannelsViewControllerSetup {
+    func initialSetup()
     func setupNavigationBar()
     func setupTableView()
 }
 
-private protocol Configure : class {
+private protocol MoreChannelsViewControllerConfiguration : class {
     var isPrivateChannel : Bool {get set}
-    func configureResults()
-    func loadData()
+    func prepareResults()
 }
 
-//MARK: - UITableViewDataSource
-extension MoreChannelsViewController : UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.results.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MoreChannelsTableViewCell.reuseIdentifier) as! MoreChannelsTableViewCell
-        let channel = self.results[indexPath.row] as Channel?
-        cell.configureCellWithObject(channel!)
-        return cell
-    }
-    
+private protocol MoreChannelsViewControllerRequests {
+    func loadChannels()
 }
 
-//MARK: - UITableViewDelegate
-
-extension MoreChannelsViewController : UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: showChatViewController, sender: self.results[indexPath.row])
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return MoreChannelsTableViewCell.height()
-    }
-
+private protocol MoreChannelsViewControllerAction {
+    func backAction()
+    func addDoneAction()
 }
 
-//MARK: - Setup
-extension MoreChannelsViewController: Setup {
+private protocol MoreChannelsViewControllerNavigation {
+    func returnToChannel()
+}
 
-    func setupNavigationBar() {
-        self.title = "More Channel".localized
+//MARK: LifeCycle
+
+extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
+        initialSetup()
+        prepareResults()
+        loadChannels()
+    }
+}
+
+
+//MARK: Setup
+
+extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
+    func initialSetup() {
+        setupNavigationBar()
+        setupTableView()
     }
     
-    func setupTableView () {
+    func setupNavigationBar() {
+        self.title = self.isPrivateChannel ? "Add Users".localized : "More Channel".localized
+        
+        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
+        self.navigationItem.leftBarButtonItem = backButton
+        
+        let addDoneTitle = self.isPrivateChannel ? "Done".localized : "Add".localized
+        let addDoneButton = UIBarButtonItem.init(title: addDoneTitle, style: .done, target: self, action: #selector(addDoneAction))
+        self.navigationItem.rightBarButtonItem = addDoneButton
+    }
+    
+    func setupTableView() {
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
-        self.tableView.register(MoreChannelsTableViewCell.nib, forCellReuseIdentifier: MoreChannelsTableViewCell.reuseIdentifier)
+        self.tableView.register(ChannelsMoreTableViewCell.self, forCellReuseIdentifier: ChannelsMoreTableViewCell.reuseIdentifier, cacheSize: 10)
     }
 }
 
-//MARK: - Configure
-extension  MoreChannelsViewController: Configure  {
-    func configureResults() {
-        
+
+//MARK: Configuration
+
+extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  {
+    func prepareResults() {
         let typeValue = self.isPrivateChannel ? Constants.ChannelType.PrivateTypeChannel : Constants.ChannelType.PublicTypeChannel
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
     }
-    
-    func loadData(){
-       Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
-            self.configureResults()
+}
+
+
+extension MoreChannelsViewController: MoreChannelsViewControllerRequests {
+    func loadChannels() {
+        Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
+            self.prepareResults()
             self.tableView.reloadData()
         }
     }
+}
 
+
+//MARK: Action
+
+extension MoreChannelsViewController: MoreChannelsViewControllerAction {
+    func backAction() {
+        returnToChannel()
+    }
+    
+    func addDoneAction() {
+        for channel in self .results {
+            RealmUtils.save(channel)
+        }
+        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).reloadMenu()
+    }
+}
+
+
+//MARK: Navigation
+
+extension MoreChannelsViewController: MoreChannelsViewControllerNavigation {
+    func returnToChannel() {
+       _ = self.navigationController?.popViewController(animated: true)
+    }
+}
+
+
+//MARK: UITableViewDataSource
+
+extension MoreChannelsViewController : UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (self.isSearchActive) ? self.filteredResults.count : self.results.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let channel = (self.isSearchActive) ? self.filteredResults[indexPath.row] : self.results[indexPath.row]
+        let cell = self.builder.cellFor(channel: channel)
+
+        return cell
+    }
+}
+
+
+//MARK: UITableViewDelegate
+
+extension MoreChannelsViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+      //  performSegue(withIdentifier: showChatViewController, sender: self.results[indexPath.row])
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return self.builder.cellHeight()
+    }
+}
+
+
+//MARK: UISearchBarDelegate
+
+extension MoreChannelsViewController: UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.isSearchActive = true;
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        self.isSearchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.isSearchActive = false;
+        self.tableView.reloadData()
+        self.filteredResults = nil;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.isSearchActive = false;
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        let predicate = NSPredicate(format: "displayName BEGINSWITH[c] %@", searchText)
+        self.filteredResults = self.results.filter(predicate)
+        self.tableView.reloadData()
+    }
 }

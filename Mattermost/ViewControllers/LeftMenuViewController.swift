@@ -18,6 +18,7 @@ final class LeftMenuViewController: UIViewController {
     var realm: Realm?
     fileprivate var resultsPublic: Results<Channel>! = nil
     fileprivate var resultsPrivate: Results<Channel>! = nil
+    fileprivate var resultsDirect: Results<Channel>! = nil
 
 //MARK: - Override
     override func viewDidLoad() {
@@ -29,7 +30,12 @@ final class LeftMenuViewController: UIViewController {
         configureInitialSelectedChannel()
         configureStartUpdating()
     }
-
+    
+    func reloadMenu() {
+        configureResults ()
+        self.tableView.reloadData()
+        configureInitialSelectedChannel()
+    }
 }
 
 //MARK: - PrivateProtocols
@@ -94,12 +100,20 @@ extension LeftMenuViewController : Configure {
 //MARK: - UITableViewDataSource
 extension LeftMenuViewController : UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let numberOfRowsInSection = section == 0 ? resultsPublic.count : resultsPrivate.count
-        return numberOfRowsInSection
+        switch section {
+        case 0:
+            return resultsPublic.count
+        case 1:
+            return resultsPrivate.count
+        case 2:
+            return resultsDirect.count
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -166,10 +180,17 @@ extension LeftMenuViewController : Navigation {
     }
     
     fileprivate func navigateToMoreChannel(_ section: Int)  {
-        let moreViewController = self.storyboard!.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
+        let moreStoryboard = UIStoryboard(name:  "More", bundle: Bundle.main)
+        let moreViewController = moreStoryboard.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
         moreViewController.isPrivateChannel = (section == 0) ? false : true
         (self.menuContainerViewController!.centerViewController as AnyObject).pushViewController(moreViewController, animated: true)
         toggleLeftSideMenu()
+        
+        
+/*        let moreViewController = self.storyboard!.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
+        moreViewController.isPrivateChannel = (section == 0) ? false : true
+        (self.menuContainerViewController!.centerViewController as AnyObject).pushViewController(moreViewController, animated: true)
+        toggleLeftSideMenu()*/
     }
     
     fileprivate func toggleLeftSideMenu() {

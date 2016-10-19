@@ -64,7 +64,8 @@ struct Constants {
     
     struct ChannelType {
         static let PublicTypeChannel  = "O"
-        static let PrivateTypeChannel = "D"
+        static let PrivateTypeChannel = "P"
+        static let DirectTypeChannel = "D"
     }
     
     struct EmojiArrays {
@@ -86,4 +87,8 @@ struct Constants {
                                               (title: "Notification", icon: "profile_notification_icon") ]
     }
     
+    struct More {
+        static let ChannelSource: Int = 0
+        static let UserSource: Int    = 1
+    }
 }
