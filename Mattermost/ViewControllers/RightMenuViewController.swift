@@ -118,6 +118,7 @@ extension RightMenuViewController: RightMenuViewControllerNavigation {
     func proceedToProfile() {
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
+        (profile as! ProfileViewController).configureForCurrentUser()
         let navigation = self.menuContainerViewController.centerViewController
         (navigation! as AnyObject).pushViewController(profile!, animated:true)
     }

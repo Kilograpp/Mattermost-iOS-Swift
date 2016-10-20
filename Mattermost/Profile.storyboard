@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="fkQ-Jl-hJG">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -25,11 +24,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="230"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeN-Xe-dr2">
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V5c-mI-3eK">
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="V5c-mI-3eK" secondAttribute="height" multiplier="1:1" id="SIO-sf-yvx"/>
@@ -41,13 +35,25 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nickname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeN-Xe-dr2">
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Full Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xwU-b8-tuX">
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstItem="V5c-mI-3eK" firstAttribute="centerY" secondItem="8zU-3B-P4A" secondAttribute="centerY" constant="-20" id="P2B-DU-YA4"/>
+                                        <constraint firstItem="xwU-b8-tuX" firstAttribute="centerX" secondItem="8zU-3B-P4A" secondAttribute="centerX" id="TxZ-xa-q2p"/>
                                         <constraint firstItem="V5c-mI-3eK" firstAttribute="centerX" secondItem="8zU-3B-P4A" secondAttribute="centerX" id="Zac-93-3eh"/>
                                         <constraint firstItem="eeN-Xe-dr2" firstAttribute="top" secondItem="V5c-mI-3eK" secondAttribute="bottom" constant="10" id="efP-SO-42C"/>
                                         <constraint firstItem="eeN-Xe-dr2" firstAttribute="centerX" secondItem="8zU-3B-P4A" secondAttribute="centerX" id="kwI-cR-9t7"/>
+                                        <constraint firstItem="xwU-b8-tuX" firstAttribute="top" secondItem="eeN-Xe-dr2" secondAttribute="bottom" constant="6.5" id="rQs-Jw-gJn"/>
                                     </constraints>
                                 </view>
                                 <sections/>
@@ -67,8 +73,9 @@
                     </view>
                     <connections>
                         <outlet property="avatarImageView" destination="V5c-mI-3eK" id="2Ir-Yo-mlA"/>
+                        <outlet property="fullnameLabel" destination="xwU-b8-tuX" id="ont-g4-Uob"/>
                         <outlet property="headerView" destination="8zU-3B-P4A" id="5wp-On-7o6"/>
-                        <outlet property="nameLabel" destination="eeN-Xe-dr2" id="wX8-ml-mKj"/>
+                        <outlet property="nicknameLabel" destination="eeN-Xe-dr2" id="fBR-Gm-8hM"/>
                         <outlet property="tableView" destination="cns-FX-dAE" id="5t5-kR-wbN"/>
                     </connections>
                 </viewController>

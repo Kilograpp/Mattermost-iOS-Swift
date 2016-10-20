@@ -48,6 +48,7 @@ private protocol Action {
 
 private protocol Navigation {
     func proceedToSearchChat()
+    func proceedToProfileFor(user: User)
 }
 
 private protocol Request {
@@ -470,6 +471,14 @@ extension ChatViewController: Navigation {
         searchChat.configureWithChannel(channel: self.channel!)
         self.navigationController?.pushViewController(searchChat, animated: false)
     }
+    
+    func proceedToProfileFor(user: User) {
+        let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
+        let profile = storyboard.instantiateInitialViewController()
+        (profile as! ProfileViewController).configureFor(user: user)
+        let navigation = self.menuContainerViewController.centerViewController
+        (navigation! as AnyObject).pushViewController(profile!, animated:true)
+    }
 }
 
 
@@ -668,7 +677,15 @@ extension ChatViewController {
             let errorHandler = { (post:Post) in
                 self.errorAction(post)
             }
-            return self.builder.cellForPost(post!, errorHandler: errorHandler)
+            
+            let cell = self.builder.cellForPost(post!, errorHandler: errorHandler)
+            if (cell.isKind(of: FeedCommonTableViewCell.self)) {
+                (cell as! FeedCommonTableViewCell).avatarTapHandler = {
+                    self.proceedToProfileFor(user: (post?.author)!)
+                }
+            }
+            
+            return cell
         }
         else {
             return autoCompletionCellForRowAtIndexPath(indexPath)

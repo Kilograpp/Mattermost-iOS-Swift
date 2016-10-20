@@ -82,9 +82,8 @@ struct Constants {
     struct Profile {
         static let SectionsCount = 2
         static let FirsSectionDataSource = [ (title: "Name", icon: "profile_name_icon"), (title: "Username", icon: "profile_usename_icon"),
-                                             (title: "Nickname", icon: "profile_usename_icon"), (title: "Profile photo", icon: "profile_photo_icon") ]
-        static let SecondSecionDataSource = [ (title: "Email", icon: "profile_email_icon"), (title: "Change password", icon: "profile_email_icon"),
-                                              (title: "Notification", icon: "profile_notification_icon") ]
+                                             (title: "Nickname", icon: "profile_nick_icon"), ]
+        static let SecondSecionDataSource = [ (title: "Email", icon: "profile_email_icon") ]
     }
     
     struct RightMenuRows {

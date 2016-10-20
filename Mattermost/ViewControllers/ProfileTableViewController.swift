@@ -16,40 +16,74 @@ import QuartzCore
     static var count: Int { return InfoSections.registration.rawValue + 1}
 }
 
+protocol ProfileViewControllerConfiguration {
+    func configureForCurrentUser()
+    func configureFor(user: User)
+}
+
+
 class ProfileViewController: UIViewController {
 
 //MARK: - Properties
     
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var avatarImageView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var nicknameLabel: UILabel!
+    @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
     fileprivate lazy var cellBuilder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView)
     var user: User?
     
-    
-//MARK: Life cycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        initialSetup()
+}
+
+
+extension ProfileViewController: ProfileViewControllerConfiguration {
+    func configureForCurrentUser() {
+        self.user = DataManager.sharedInstance.currentUser!
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func configureFor(user: User) {
+        self.user = user
     }
 }
 
 
-//MARK: Setup
+protocol ProfileViewControllerLifeCycle {
+    func viewDidLoad()
+}
 
-extension ProfileViewController {
+protocol ProfileViewControllerSetup {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupHeader()
+    func setupTable()
+}
+
+protocol ProfileViewControllerAction {
+    func backAction()
+}
+
+protocol ProfileViewControllerNavigation {
+    func returnToChat()
+}
+
+
+//MARK: ProfileViewControllerLifeCycle
+
+extension ProfileViewController: ProfileViewControllerLifeCycle {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        initialSetup()
+    }
+}
+
+
+//MARK: ProfileViewControllerSetup
+
+extension ProfileViewController: ProfileViewControllerSetup {
     func initialSetup() {
-        self.user = DataManager.sharedInstance.currentUser!
-    
         setupNavigationBar()
         setupHeader()
         setupTable()
@@ -57,15 +91,19 @@ extension ProfileViewController {
     
     func setupNavigationBar() {
         self.title = "Профиль"
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_close_icon"), style: .done, target: self, action: #selector(backAction))
-        backButton.tintColor = UIColor.black
+        
+        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
     }
     
     func setupHeader() {
-        self.nameLabel?.font = UIFont.kg_semibold30Font()
-        self.nameLabel?.textColor = UIColor.kg_blackColor()
-        self.nameLabel?.text = self.user!.firstName
+        self.nicknameLabel?.font = UIFont.kg_semibold30Font()
+        self.nicknameLabel?.textColor = UIColor.kg_blackColor()
+        self.nicknameLabel?.text = self.user?.displayName
+        
+        self.fullnameLabel.font = UIFont.kg_semibold20Font()
+        self.fullnameLabel.textColor = UIColor.kg_blackColor()
+        self.fullnameLabel.text = (self.user?.firstName)! + " " + (self.user?.lastName)!
         
         self.avatarImageView?.layer.drawsAsynchronously = true
         self.avatarImageView?.backgroundColor = UIColor.red
@@ -88,11 +126,21 @@ extension ProfileViewController {
 }
 
 
-//MARK: Actions
+//MARK: ProfileViewControllerAction
 
-extension ProfileViewController {
+extension ProfileViewController: ProfileViewControllerAction {
     func backAction() {
-        self.dismiss(animated: true, completion: nil)
+        returnToChat()
+        
+    }
+}
+
+
+//MARK: ProfileViewControllerNavigation
+
+extension ProfileViewController: ProfileViewControllerNavigation {
+    func returnToChat() {
+       _ = self.navigationController?.popViewController(animated: true)
     }
 }
 
