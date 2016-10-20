@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--About View Controller-->
+        <scene sceneID="ATD-uk-klB">
+            <objects>
+                <viewController storyboardIdentifier="AboutViewController" id="JFA-LR-q9f" customClass="AboutViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OQZ-HM-Zpa"/>
+                        <viewControllerLayoutGuide type="bottom" id="io6-5e-md0"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="mqV-op-gde">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about_mattermost_icon" translatesAutoresizingMaskIntoConstraints="NO" id="hIv-YO-Koh">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="R8a-Ye-71q"/>
+                                    <constraint firstAttribute="height" constant="150" id="boB-VM-slP"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about_kg_icon" translatesAutoresizingMaskIntoConstraints="NO" id="k3b-sD-KPm">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="pHW-mV-O6H"/>
+                                    <constraint firstAttribute="height" constant="60" id="rZO-f0-psa"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mattermost Team Edition" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Hd-UN-PVW">
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All your team communication in one place, instantly searchable and accessible anywhere." textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Bm-21-v3r">
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version: 3.0.0 (3.0.3)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5a-CS-SPI">
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Copyright 2016 Mattermost, Inc. All rights reserved." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zJ0-O5-dZe">
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="This application was developed by Kilograpp Team" translatesAutoresizingMaskIntoConstraints="NO" id="gTQ-58-3ds" userLabel="kilograppLinkView">
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="dg6-Yz-AI9"/>
+                                </constraints>
+                                <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Join the Mattermost community at mattermost.org" translatesAutoresizingMaskIntoConstraints="NO" id="g0m-7o-4Sb" userLabel="matterMostLinkView">
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="aoN-1I-3rQ"/>
+                                </constraints>
+                                <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="hIv-YO-Koh" firstAttribute="centerX" secondItem="mqV-op-gde" secondAttribute="centerX" id="0H5-Zg-G1h"/>
+                            <constraint firstItem="zJ0-O5-dZe" firstAttribute="top" secondItem="gTQ-58-3ds" secondAttribute="bottom" priority="500" constant="100" id="0tf-TN-RDC"/>
+                            <constraint firstItem="io6-5e-md0" firstAttribute="top" secondItem="zJ0-O5-dZe" secondAttribute="bottom" constant="26" id="4pY-2X-bfQ"/>
+                            <constraint firstItem="zJ0-O5-dZe" firstAttribute="trailing" secondItem="gTQ-58-3ds" secondAttribute="trailing" id="ExW-Cc-Mi5"/>
+                            <constraint firstItem="4Hd-UN-PVW" firstAttribute="top" secondItem="hIv-YO-Koh" secondAttribute="bottom" constant="30" id="LxJ-HV-nXj"/>
+                            <constraint firstItem="l5a-CS-SPI" firstAttribute="top" secondItem="2Bm-21-v3r" secondAttribute="bottom" constant="30" id="NUY-pw-kKd"/>
+                            <constraint firstItem="4Hd-UN-PVW" firstAttribute="leading" secondItem="mqV-op-gde" secondAttribute="leading" constant="15" id="V93-Is-h1L"/>
+                            <constraint firstItem="l5a-CS-SPI" firstAttribute="trailing" secondItem="2Bm-21-v3r" secondAttribute="trailing" id="Wms-y6-cFQ"/>
+                            <constraint firstItem="k3b-sD-KPm" firstAttribute="trailing" secondItem="hIv-YO-Koh" secondAttribute="trailing" constant="5" id="ZoZ-2S-w6L"/>
+                            <constraint firstItem="g0m-7o-4Sb" firstAttribute="top" secondItem="l5a-CS-SPI" secondAttribute="bottom" constant="20" id="bM9-TV-XIi"/>
+                            <constraint firstItem="gTQ-58-3ds" firstAttribute="trailing" secondItem="g0m-7o-4Sb" secondAttribute="trailing" id="cAK-QU-swb"/>
+                            <constraint firstItem="2Bm-21-v3r" firstAttribute="leading" secondItem="4Hd-UN-PVW" secondAttribute="leading" id="e5S-Er-diI"/>
+                            <constraint firstItem="hIv-YO-Koh" firstAttribute="top" secondItem="OQZ-HM-Zpa" secondAttribute="bottom" constant="15" id="gbp-rr-gBu"/>
+                            <constraint firstItem="gTQ-58-3ds" firstAttribute="leading" secondItem="g0m-7o-4Sb" secondAttribute="leading" id="lIQ-Lm-son"/>
+                            <constraint firstItem="2Bm-21-v3r" firstAttribute="top" secondItem="4Hd-UN-PVW" secondAttribute="bottom" constant="10" id="phi-6Y-AAs"/>
+                            <constraint firstItem="g0m-7o-4Sb" firstAttribute="trailing" secondItem="l5a-CS-SPI" secondAttribute="trailing" id="rec-nu-04h"/>
+                            <constraint firstItem="l5a-CS-SPI" firstAttribute="leading" secondItem="2Bm-21-v3r" secondAttribute="leading" id="sBM-i4-tjF"/>
+                            <constraint firstItem="gTQ-58-3ds" firstAttribute="top" secondItem="g0m-7o-4Sb" secondAttribute="bottom" constant="-10" id="sdz-iH-jTa"/>
+                            <constraint firstItem="k3b-sD-KPm" firstAttribute="bottom" secondItem="hIv-YO-Koh" secondAttribute="bottom" constant="-10" id="uTE-B4-x9i"/>
+                            <constraint firstItem="2Bm-21-v3r" firstAttribute="trailing" secondItem="4Hd-UN-PVW" secondAttribute="trailing" id="unx-jQ-g9E"/>
+                            <constraint firstItem="g0m-7o-4Sb" firstAttribute="leading" secondItem="l5a-CS-SPI" secondAttribute="leading" id="vvf-m5-GLa"/>
+                            <constraint firstItem="zJ0-O5-dZe" firstAttribute="leading" secondItem="gTQ-58-3ds" secondAttribute="leading" id="yPx-5g-qgL"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4Hd-UN-PVW" secondAttribute="trailing" constant="5" id="zmy-z4-zMs"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="iconImageView" destination="k3b-sD-KPm" id="9iE-JE-gAt"/>
+                        <outlet property="kilograppTextView" destination="gTQ-58-3ds" id="Ps6-Pm-sqd"/>
+                        <outlet property="mattermostTextView" destination="g0m-7o-4Sb" id="tx2-g4-Wku"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zbg-P4-umH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1857.5" y="1629.5"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="about_kg_icon" width="144" height="144"/>
+        <image name="about_mattermost_icon" width="450" height="450"/>
+    </resources>
+</document>

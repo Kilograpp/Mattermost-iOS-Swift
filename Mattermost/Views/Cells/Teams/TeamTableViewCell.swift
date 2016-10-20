@@ -8,11 +8,15 @@
 
 import Foundation
 
+protocol TeamTableViewCellConfiguration {
+    func configureWithTeam(_ team:Team)
+}
+
 class TeamTableViewCell : UITableViewCell, Reusable {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         
-        setupGeneral()
+        initialSetup()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -20,22 +24,31 @@ class TeamTableViewCell : UITableViewCell, Reusable {
     }
 }
 
-private protocol Configuration: class {
-    func configureWithTeam(_ team:Team)
-}
-private protocol Setup: class {
-    func setupGeneral()
-}
 
-//MARK: - Setup
-extension TeamTableViewCell: Setup {
-    func setupGeneral() {
-        accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-    }
-}
-//MARK: - Configuration
-extension TeamTableViewCell: Configuration {
+//MARK: TeamTableViewCellConfiguration
+
+extension TeamTableViewCell: TeamTableViewCellConfiguration {
     func configureWithTeam(_ team: Team) {
         self.textLabel?.text = team.displayName!
+    }
+}
+
+
+private protocol TeamTableViewCellSetup {
+    func initialSetup()
+}
+
+
+//MARK: TeamTableViewCellSetup
+
+extension TeamTableViewCell: TeamTableViewCellSetup {
+    func initialSetup() {
+        accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+        
+        let width = UIScreen.screenWidth() - 2 * Constants.UI.StandardPaddingSize
+        let frame = CGRect(x: Constants.UI.StandardPaddingSize, y: 59, width: width, height: 1)
+        let separatorView = UIView(frame: frame)
+        separatorView.backgroundColor = ColorBucket.rightMenuTextColor
+        self.addSubview(separatorView)
     }
 }

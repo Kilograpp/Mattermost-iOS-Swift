@@ -44,6 +44,9 @@
 		8B8F70031D7747A900ACF626 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */; };
 		8B9E1C111DB6DAA700C05B36 /* LeftMenuCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E1C101DB6DAA700C05B36 /* LeftMenuCellBuilder.swift */; };
 		8B9E1C131DB7454900C05B36 /* DirectChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E1C121DB7454900C05B36 /* DirectChannelTableViewCell.swift */; };
+		8B9E1C151DB822A500C05B36 /* TeamCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E1C141DB822A500C05B36 /* TeamCellBuilder.swift */; };
+		8B9E1C171DB8994100C05B36 /* RightMenuCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E1C161DB8994100C05B36 /* RightMenuCellBuilder.swift */; };
+		8B9E1C191DB8B6F700C05B36 /* RightMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B9E1C181DB8B6F700C05B36 /* RightMenu.storyboard */; };
 		8BA8EDEA1DAAE0A0000BF560 /* ProfileCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8EDE91DAAE0A0000BF560 /* ProfileCellBuilder.swift */; };
 		8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */; };
 		8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */; };
@@ -254,6 +257,9 @@
 		8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
 		8B9E1C101DB6DAA700C05B36 /* LeftMenuCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftMenuCellBuilder.swift; sourceTree = "<group>"; };
 		8B9E1C121DB7454900C05B36 /* DirectChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectChannelTableViewCell.swift; path = LeftMenu/DirectChannelTableViewCell.swift; sourceTree = "<group>"; };
+		8B9E1C141DB822A500C05B36 /* TeamCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCellBuilder.swift; sourceTree = "<group>"; };
+		8B9E1C161DB8994100C05B36 /* RightMenuCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightMenuCellBuilder.swift; sourceTree = "<group>"; };
+		8B9E1C181DB8B6F700C05B36 /* RightMenu.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = RightMenu.storyboard; sourceTree = "<group>"; };
 		8BA8EDE91DAAE0A0000BF560 /* ProfileCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCellBuilder.swift; sourceTree = "<group>"; };
 		8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatViewController.swift; sourceTree = "<group>"; };
 		8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingInProcessView.swift; sourceTree = "<group>"; };
@@ -759,6 +765,7 @@
 				D62FEB971D4F2B3400390EBC /* Login.storyboard */,
 				8B8F6FFD1D77451A00ACF626 /* Profile.storyboard */,
 				8B4718B21DB585C50010747C /* More.storyboard */,
+				8B9E1C181DB8B6F700C05B36 /* RightMenu.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -940,6 +947,8 @@
 				8BA8EDE91DAAE0A0000BF560 /* ProfileCellBuilder.swift */,
 				8B4718B01DB581C30010747C /* MoreCellBuilder.swift */,
 				8B9E1C101DB6DAA700C05B36 /* LeftMenuCellBuilder.swift */,
+				8B9E1C141DB822A500C05B36 /* TeamCellBuilder.swift */,
+				8B9E1C161DB8994100C05B36 /* RightMenuCellBuilder.swift */,
 			);
 			name = Builders;
 			sourceTree = "<group>";
@@ -1092,6 +1101,7 @@
 				8B4718B31DB585C50010747C /* More.storyboard in Resources */,
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
 				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
+				8B9E1C191DB8B6F700C05B36 /* RightMenu.storyboard in Resources */,
 				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
 				CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */,
 				D62FEB981D4F2B3400390EBC /* Login.storyboard in Resources */,
@@ -1264,6 +1274,7 @@
 				8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
 				CDF07ED21D7F1DA300172D1E /* PostPathPatternsContainer.swift in Sources */,
+				8B9E1C151DB822A500C05B36 /* TeamCellBuilder.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
 				D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */,
 				CDB4BC691D806C7000662231 /* FileMappingsContainer.swift in Sources */,
@@ -1348,6 +1359,7 @@
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
 				4B7270801DABF3C400445586 /* AlertManager.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
+				8B9E1C171DB8994100C05B36 /* RightMenuCellBuilder.swift in Sources */,
 				CDF07ED01D7F1D8900172D1E /* FilePathPatternsContainer.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
 				8BE969BB1D76AA420010A524 /* ProfileDataSource.swift in Sources */,

@@ -8,37 +8,72 @@
 
 import Foundation
 
-@objc private enum RightMenuRows : Int {
-    case switchTeam
-    case settings = 1
-    case inviteNewMembers = 2
-    case about = 3
-    case logout = 4
-}
-
 class RightMenuViewController: UIViewController {
+
+//MARK: Properties
+    
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
+    fileprivate lazy var builder: RightMenuCellBuilder = RightMenuCellBuilder(tableView: self.tableView)
+    
+  
+}
+
+
+private protocol RightMenuViewControllerLifeCycle {
+    func viewDidLoad()
+}
+
+private protocol RightMenuViewControllerSetup {
+    func  initialSetup()
+    func setupTableView()
+    func setupHeaderView()
+}
+
+private protocol RightMenuViewControllerAction {
+    func headerTapAction()
+}
+
+private protocol RightMenuViewControllerNavigation {
+    func proceedToProfile()
+    func proceedToTeams()
+    func proceedToFiles()
+    func proceedToSettings()
+    func proceedToInvite()
+    func proceedToHelp()
+    func proceedToReport()
+    func proceedToAbout()
+    func logOut()
+}
+
+private protocol RightMenuViewControllerPrivate {
+    func toggleRightSideMenu()
+}
+
+
+//MARK: RightMenuViewControllerLifeCycle
+
+extension RightMenuViewController: RightMenuViewControllerLifeCycle {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//FIXME: вызов методов не должен быть через self
-        self.configureTableView()
-        self.configureHeaderVIew()
+        initialSetup()
     }
 }
 
-private protocol PrivateConfig {
-    func configureTableView()
-    func configureHeaderVIew()
-    func configureCellAtIndexPath(_ cell: UITableViewCell, indexPath: IndexPath)
-}
 
-extension RightMenuViewController : PrivateConfig {
-    fileprivate func configureTableView() {
+//MARK: RightMenuViewControllerSetup
+
+extension RightMenuViewController: RightMenuViewControllerSetup {
+    func  initialSetup() {
+        setupTableView()
+        setupHeaderView()
+    }
+    
+    func setupTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
@@ -46,14 +81,13 @@ extension RightMenuViewController : PrivateConfig {
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
     }
     
-    fileprivate func configureHeaderVIew() {
+    func setupHeaderView() {
         self.headerView.backgroundColor = ColorBucket.sideMenuHeaderBackgroundColor
         self.usernameLabel.font = FontBucket.rightMenuFont
         self.usernameLabel.textColor = ColorBucket.whiteColor
         
         let user = DataManager.sharedInstance.currentUser
         self.usernameLabel.text = user!.displayName
-        
         
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         self.avatarImageView.layer.cornerRadius = 18
@@ -65,49 +99,12 @@ extension RightMenuViewController : PrivateConfig {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerTapAction))
         self.headerView.addGestureRecognizer(tapGestureRecognizer)
     }
-    
-    func configureCellAtIndexPath(_ cell: UITableViewCell, indexPath: IndexPath) {
-        switch (indexPath as NSIndexPath).row {
-        case RightMenuRows.switchTeam.rawValue:
-            cell.textLabel?.text = "Switch team"
-            cell.imageView?.image = UIImage(named: "menu_switch_icon")
-            
-        case RightMenuRows.settings.rawValue:
-            cell.textLabel?.text = "Settings"
-            cell.imageView?.image = UIImage(named: "menu_settings_icon")
-            
-        case RightMenuRows.inviteNewMembers.rawValue:
-            cell.textLabel?.text = "Invite new members"
-            cell.imageView?.image = UIImage(named: "menu_invite_icon")
-            
-        case RightMenuRows.about.rawValue:
-            cell.textLabel?.text = "About Mattermost"
-            cell.imageView?.image = UIImage(named: "menu_question_icon")
-            
-        case RightMenuRows.logout.rawValue:
-            cell.textLabel?.text = "Logout"
-            cell.imageView?.image = UIImage(named: "menu_logout_icon")
-            
-        default:
-            return
-        }
-
-    }
 }
 
 
-//MARK: - Private
+//MARK: RightMenuViewControllerAction
 
-extension RightMenuViewController {
-    fileprivate func toggleRightSideMenu() {
-        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
-    }
-}
-
-
-//MARK: - Actions
-
-extension RightMenuViewController {
+extension RightMenuViewController: RightMenuViewControllerAction {
     func headerTapAction() {
         toggleRightSideMenu()
         proceedToProfile()
@@ -115,73 +112,9 @@ extension RightMenuViewController {
 }
 
 
-//MARK: - UITableViewDelegate
+//MARK: RightMenuViewControllerNavigation
 
-extension RightMenuViewController : UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch (indexPath as NSIndexPath).row {
-        case RightMenuRows.settings.rawValue:
-            toggleRightSideMenu()
-            proceedToSettings()
-        case RightMenuRows.switchTeam.rawValue:
-            proceedToTeams()
-        case RightMenuRows.about.rawValue:
-            toggleRightSideMenu()
-            proceedToAbout()
-        case RightMenuRows.logout.rawValue:
-            logOut()
-            
-        default:
-            return
-        }
-    }
-}
-
-
-//MARK: - UITableViewDataSource
-
-extension RightMenuViewController : UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
-        if cell == nil {
-            cell = UITableViewCell(style: .default, reuseIdentifier:"Cell")
-        }
-        
-        self.configureCellAtIndexPath(cell!, indexPath: indexPath)
-        cell?.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        cell!.preservesSuperviewLayoutMargins = false;
-        cell!.separatorInset = UIEdgeInsets.zero;
-        cell!.layoutMargins = UIEdgeInsets.zero;
-        cell?.selectionStyle = .default
-        
-        cell?.selectedBackgroundView = UIView(frame: cell!.bounds)
-        cell?.selectedBackgroundView?.backgroundColor = ColorBucket.sideMenuCellHighlightedColor
-        
-        cell?.textLabel?.textColor = (indexPath as NSIndexPath).row == RightMenuRows.logout.rawValue ? ColorBucket.whiteColor : ColorBucket.rightMenuTextColor
-        cell?.textLabel?.font = FontBucket.rightMenuFont
-        
-        return cell!
-    }
-}
-
-//MARK: - Navigation
-extension RightMenuViewController {
-    func proceedToTeams() {
-        let teamViewController = UIStoryboard(name:  "Login",
-            bundle: Bundle.main).instantiateViewController(withIdentifier: "TeamViewController")
-        let loginNavigationController = LoginNavigationController(rootViewController: teamViewController)
-        self.present(loginNavigationController, animated: true, completion: nil)
-        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
-    }
-    
+extension RightMenuViewController: RightMenuViewControllerNavigation {
     func proceedToProfile() {
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
@@ -189,17 +122,16 @@ extension RightMenuViewController {
         (navigation! as AnyObject).pushViewController(profile!, animated:true)
     }
     
-    func proceedToAbout() {
-        // UNCOMMENT THIS
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let about = storyboard.instantiateViewController(withIdentifier: "AboutViewController")
-        let navigation = self.menuContainerViewController.centerViewController
-        (navigation! as AnyObject).pushViewController(about, animated:true)
-        // DELETE THIS
-//        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-//        let about = storyboard.instantiateViewController(withIdentifier: String("MembersViewController"))
-//        let navigation = self.menuContainerViewController.centerViewController
-//        (navigation! as AnyObject).pushViewController(about, animated:true)
+    func proceedToTeams() {
+        let storyboard = UIStoryboard.init(name: "Login", bundle: nil)
+        let teamViewController = storyboard.instantiateViewController(withIdentifier: "TeamViewController")
+        let loginNavigationController = LoginNavigationController(rootViewController: teamViewController)
+        self.present(loginNavigationController, animated: true, completion: nil)
+        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
+    }
+    
+    func proceedToFiles() {
+    
     }
     
     func proceedToSettings() {
@@ -208,7 +140,92 @@ extension RightMenuViewController {
         let navigation = self.menuContainerViewController.centerViewController
         (navigation! as AnyObject).pushViewController(settings!, animated:true)
     }
+    
+    func proceedToInvite() {
+    
+    }
+    
+    func proceedToHelp() {
+    
+    }
+    
+    func proceedToReport() {
+    
+    }
+    
+    func proceedToAbout() {
+        let storyboard = UIStoryboard.init(name: "RightMenu", bundle: nil)
+        let about = storyboard.instantiateViewController(withIdentifier: "AboutViewController")
+        let navigation = self.menuContainerViewController.centerViewController
+        (navigation! as AnyObject).pushViewController(about, animated:true)
+    }
+    
+    
     func logOut() {
         UserStatusManager.sharedInstance.logout()
+    }
+}
+
+
+//MARK: RightMenuViewControllerPrivate
+
+extension RightMenuViewController: RightMenuViewControllerPrivate {
+    func toggleRightSideMenu() {
+        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
+    }
+}
+
+
+//MARK: UITableViewDataSource
+
+extension RightMenuViewController : UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 8
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return self.builder.cellFor(indexPath: indexPath)
+    }
+}
+
+
+//MARK: UITableViewDelegate
+
+extension RightMenuViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return self.builder.cellHeight()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch (indexPath as NSIndexPath).row {
+        case Constants.RightMenuRows.SwitchTeam:
+            proceedToTeams()
+            
+        case Constants.RightMenuRows.Files:
+            print("Constants.RightMenuRows.Files")
+            
+         case Constants.RightMenuRows.Settings:
+            toggleRightSideMenu()
+            proceedToSettings()
+         
+        case Constants.RightMenuRows.InviteNewMembers:
+            print("Constants.RightMenuRows.InviteNewMembers")
+            
+        case Constants.RightMenuRows.Help:
+            print("Constants.RightMenuRows.Help")
+            
+        case Constants.RightMenuRows.Report:
+            print("Constants.RightMenuRows.Report")
+        
+        case Constants.RightMenuRows.About:
+            toggleRightSideMenu()
+            proceedToAbout()
+        
+        case Constants.RightMenuRows.Logout:
+            logOut()
+         
+        default:
+            return
+        }
     }
 }

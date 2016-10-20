@@ -9,48 +9,91 @@
 import Foundation
 import RealmSwift
 
-let teamCellHeight: CGFloat = 60
-
 final class TeamViewController: UIViewController {
+    
+//MARK: Properties
     
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
     
-
     var realm: Realm?
+    fileprivate var results: Results<Team>! = nil
+    fileprivate lazy var builder: TeamCellBuilder = TeamCellBuilder(tableView: self.tableView)
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupTitleLabel()
-        setupTableView()
-        setupNavigationView()
-    }
 }
 
-private protocol Setup {
+
+private protocol TeamViewControllerLifeCycle {
+    func viewDidLoad()
+}
+
+private protocol TeamViewControllerSetup {
+    func initialSetup()
     func setupTitleLabel()
     func setupTableView()
     func setupNavigationView()
 }
 
-// MARK: - Setup
-extension TeamViewController: Setup {
-    fileprivate func setupTableView() {
+private protocol TeamViewControllerAction {
+    func backAction()
+}
+
+private protocol TeamViewControllerNavigation {
+    func returnToChat()
+}
+
+private protocol TeamViewControllerConfiguration {
+    func prepareResults()
+}
+
+private protocol TeamViewControllerRequest {
+    func reloadChat()
+}
+
+
+//MARK: TeamViewControllerLifeCycle
+
+extension TeamViewController: TeamViewControllerLifeCycle {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        initialSetup()
+        prepareResults()
+    }
+}
+
+
+//MARK: TeamViewControllerSetup
+
+extension TeamViewController: TeamViewControllerSetup {
+    func initialSetup() {
+        setupNavigationBar()
+        setupTitleLabel()
+        setupTableView()
+        setupNavigationView()
+    }
+    
+    func setupNavigationBar() {
+        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon2"), style: .done, target: self, action: #selector(backAction))
+        backButton.tintColor = UIColor.white
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    func setupTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.register(TeamTableViewCell.classForCoder(), forCellReuseIdentifier: TeamTableViewCell.reuseIdentifier)
     }
     
-    fileprivate func setupTitleLabel() {
+    func setupTitleLabel() {
         self.titleLabel.font = FontBucket.titleURLFont
         self.titleLabel.text = Preferences.sharedInstance.siteName
         self.titleLabel.textColor = ColorBucket.whiteColor
     }
     
-    fileprivate func setupNavigationView() {
+    func setupNavigationView() {
         let bgLayer = CAGradientLayer.blueGradientForNavigationBar()
         bgLayer.frame = CGRect(x:0,y:0,width:self.navigationView.bounds.width,height: self.navigationView.bounds.height)
         bgLayer.animateLayerInfinitely(bgLayer)
@@ -59,10 +102,67 @@ extension TeamViewController: Setup {
     }
 }
 
-// MARK: - UITableViewDelegate
+
+//MARK: Action
+
+extension TeamViewController: TeamViewControllerAction {
+    func backAction() {
+        returnToChat()
+    }
+}
+
+
+//MARK: Navigation
+
+extension TeamViewController: TeamViewControllerNavigation {
+    func returnToChat() {
+        self.dismiss(animated: true, completion: nil)
+    }
+}
+
+
+//MARK: Configuration
+
+extension  TeamViewController: TeamViewControllerConfiguration  {
+    func prepareResults() {
+        let sortName = TeamAttributes.displayName.rawValue
+        self.results = RealmUtils.realmForCurrentThread().objects(Team.self).sorted(byProperty: sortName, ascending: true)
+    }
+}
+
+
+//MARK: Request
+
+extension TeamViewController: TeamViewControllerRequest {
+    func reloadChat() {
+        Api.sharedInstance.loadChannels(with: { (error) in
+            Api.sharedInstance.loadCompleteUsersList({ (error) in
+                RouterUtils.loadInitialScreen()
+            })
+        })
+    }
+}
+
+
+//MARK: UITableViewDataSource
+
+extension TeamViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.results.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let team = self.results[indexPath.row]
+        return self.builder.cellFor(team: team, indexPath: indexPath)
+    }
+}
+
+
+//MARK: UITableViewDelegate
+
 extension TeamViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return teamCellHeight;
+        return self.builder.cellHeight()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -72,33 +172,5 @@ extension TeamViewController: UITableViewDelegate {
             self.reloadChat()
         }
         self.dismiss(animated: true, completion: nil)
-    }
-}
-
-// MARK: - UITableViewDataSource
-extension TeamViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TeamTableViewCell.reuseIdentifier, for: indexPath)
-        let team = Team()
-        (cell as! TeamTableViewCell).configureWithTeam(team)
-        return cell
-    }
-}
-
-
-extension TeamViewController {
-    // TODO: without FRC
-    
-    // MARK: - Navigation
-    func reloadChat() {
-        Api.sharedInstance.loadChannels(with: { (error) in
-            Api.sharedInstance.loadCompleteUsersList({ (error) in
-                RouterUtils.loadInitialScreen()
-            })
-        })
     }
 }
