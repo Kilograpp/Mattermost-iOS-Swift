@@ -35,7 +35,7 @@ class SettingsTableViewController: UITableViewController {
 
 extension SettingsTableViewController {
     func initialSetup() {
-        setupimagesCompressSwitch()
+       // setupimagesCompressSwitch()
     }
     
     func setupimagesCompressSwitch() {

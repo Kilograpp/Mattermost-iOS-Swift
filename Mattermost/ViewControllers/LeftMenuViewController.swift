@@ -195,10 +195,18 @@ extension LeftMenuViewController : UITableViewDelegate {
 
 //MARK: - Navigation
 extension LeftMenuViewController : Navigation {
-    
     fileprivate func didSelectChannelAtIndexPath(_ indexPath: IndexPath) {
-        let selectedChannel = (indexPath as NSIndexPath).section == 0 ? self.resultsPublic[indexPath.row] as Channel : self.resultsPrivate[indexPath.row] as Channel
-        ChannelObserver.sharedObserver.selectedChannel = selectedChannel
+        switch indexPath.section {
+        case 0:
+            ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[indexPath.row]
+        case 1:
+            ChannelObserver.sharedObserver.selectedChannel = self.resultsPrivate[indexPath.row]
+        case 2:
+            ChannelObserver.sharedObserver.selectedChannel = self.resultsDirect[indexPath.row]
+        default:
+            print("unknown channel type")
+        }
+        
         self.tableView.reloadData()
         toggleLeftSideMenu()
     }
