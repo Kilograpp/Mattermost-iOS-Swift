@@ -141,9 +141,7 @@ extension PostUtils : Public {
                     self.files.removeObject(fileItem)
                     return
                 }
-
                 self.assignedFiles.append(file!)
-                
                 print("uploaded")
             }) { (identifier, value) in
                 
@@ -163,8 +161,14 @@ extension PostUtils : Public {
     }
     }
     
-    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
-        self.files.append(contentsOf: images)
+    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item:
+        AssignedPhotoViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+        //self.files.append(contentsOf: images)
+        for image in images {
+            if !self.files.contains(image) {
+                self.files.append(image)
+            }
+        }
         for item in files {
             if !item.uploaded {
                 self.upload_images_group.enter()
@@ -179,13 +183,20 @@ extension PostUtils : Public {
                     if self.assignedFiles.count == 0 {
                         self.test = file
                     }
-                    self.assignedFiles.append(file!)
+                    
+                    let index = self.files.index(where: {$0.identifier == item.identifier})
+                    if (index != nil) {
+                        self.assignedFiles.append(file!)
+                        print("uploaded")
+                    }
+                    
+                    //print("uploaded")
+                    //self.assignedFiles.append(file!)
                     self.upload_images_group.leave()
                     }, progress: { (identifier, value) in
                         let index = self.files.index(where: {$0.identifier == identifier})
-                        guard (index != nil) else {
-                            return
-                        }
+                        guard (index != nil) else { return }
+                        print("\(index) in progress: \(value)")
                         progress(value, index!)
                 })
             }
@@ -202,8 +213,19 @@ extension PostUtils : Public {
 //    }
     
     func cancelImageItemUploading(_ item: AssignedPhotoViewItem) {
+        print("upCanceled")
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-        self.assignedFiles.remove(at: files.index(of: item)!)
+        
+        print("removed: ", item.identifier)
+        print("all assigned")
+        for file in self.assignedFiles {
+            print(file.identifier)
+        }
+        
+        let index = self.assignedFiles.index(where: {$0.identifier == item.identifier})
+        if (index != nil) {
+            self.assignedFiles.remove(at: index!)
+        }
         self.files.removeObject(item)
     }
 }
