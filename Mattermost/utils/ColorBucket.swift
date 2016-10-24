@@ -74,6 +74,12 @@ private protocol GradientColors {
     static var bottomPurpleColorForGradient: UIColor {get}
 }
 
+private protocol AlertViewColors {
+    static var warningAlertColor: UIColor {get}
+    static var errorAlertColor: UIColor {get}
+    static var successAlertColor: UIColor {get}
+}
+
 final class ColorBucket {
 }
 
@@ -144,6 +150,12 @@ extension ColorBucket : GradientColors {
     static let bottomOrangeColorForGradient = try! UIColor(rgba_throws: "#FAD961")
     static let topPurpleColorForGradient = try! UIColor(rgba_throws: "#3023AE")
     static let bottomPurpleColorForGradient = try! UIColor(rgba_throws: "#C86DD7")
+}
+
+extension ColorBucket : AlertViewColors {
+    static let warningAlertColor = try! UIColor(rgba_throws: "#F9A825")
+    static let errorAlertColor = try! UIColor(rgba_throws: "#F1453D")
+    static let successAlertColor = try! UIColor(rgba_throws: "#43A047")
 }
 
 extension ColorBucket {

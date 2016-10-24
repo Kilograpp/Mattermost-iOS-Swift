@@ -41,6 +41,7 @@ struct Constants {
     struct NotificationsNames {
         static let UserLogoutNotificationName = "LogoutNotification"
         static let StatusesSocketNotification = "StatusesSocketNotification"
+        static let UserJoinNotification = "UserJoinNotification"
     }
     
     struct UI {

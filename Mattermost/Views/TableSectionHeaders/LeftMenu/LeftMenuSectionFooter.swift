@@ -52,6 +52,7 @@ extension LeftMenuSectionFooter : PrivateSetup {
         self.titleButton.titleLabel?.font = FontBucket.footerTitleFont
         self.titleButton.setTitleColor(ColorBucket.sideMenuCommonTextColor, for: .normal)
         self.titleButton.setTitle("more ", for: UIControlState())
+        self.titleButton.setTitleColor(ColorBucket.sideMenuCommonTextColor, for: .normal)
         self.titleButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
         self.titleButton.titleLabel!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
         self.titleButton.imageView!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);

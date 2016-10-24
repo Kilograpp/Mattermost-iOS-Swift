@@ -65,9 +65,9 @@ final class FeedNotificationsObserver {
                     break
                 case .update(_, let deletions, let insertions, let modifications):
                     
-                        if insertions.count > 3 {
+                        if insertions.count > 1 || deletions.count > 1 || modifications.count > 1 {
                             self.tableView.reloadData()
-                             break
+                            break
                         }
                         
                         if deletions.count > 0 {
@@ -91,7 +91,7 @@ final class FeedNotificationsObserver {
                         self.tableView.beginUpdates()
                         if (insertions.count > 0) {
                         
-                            // IndexSet
+                            
                             if self.days?.first?.posts.count == 1 {
                                 self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
                             }
@@ -187,7 +187,7 @@ extension FeedNotificationsObserver {
     func titleForHeader(_ section:Int) -> String {
         return self.days![section].text!
     }
-    fileprivate func indexPathForPost(_ post: Post) -> IndexPath {
+    func indexPathForPost(_ post: Post) -> IndexPath {
         let day = post.day
         let daysPosts = day?.sortedPosts()
         let indexOfDay = (self.days?.index(of: day!))!

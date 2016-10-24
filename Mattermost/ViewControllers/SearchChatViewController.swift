@@ -185,11 +185,13 @@ extension SearchChatViewController {
 extension SearchChatViewController {
     func prepareSearchResults() {
         let terms = self.searchTextField.text!
+        print(terms)
         if ((terms as NSString).length > 0) {
             configureForSearchStage(SearchStage.SearchRequstInProgress)
             searchWithTerms(terms: terms)
         }
         else {
+            Api.sharedInstance.cancelSearchRequestFor(channel: self.channel!)
             configureForSearchStage(SearchStage.SearchNotStarted)
         }
     }
@@ -220,9 +222,11 @@ extension SearchChatViewController: Requests {
                         self.configureForSearchStage(SearchStage.SearchResultsDisplay)
                         self.tableView.reloadData()
                     }
-                    
-                    //self.configureForSearchStage(SearchStage.SearchResultsDisplay)
-                    //self.tableView.reloadData()
+                }
+            }
+            else {
+                if (error?.code != -999) {
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 }
             }
         }
@@ -233,7 +237,7 @@ extension SearchChatViewController: Requests {
 //MARK: UITableViewDataSource
 
 extension SearchChatViewController: UITableViewDataSource {
-    private func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return (self.dates.count != 0) ? self.dates.count : 0
     }
     
@@ -262,8 +266,8 @@ extension SearchChatViewController: UITableViewDelegate {
             view = FeedTableViewSectionHeader(reuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
         }
         let titleString = (section < self.dates.count) ? (self.dates[section] as Date).feedSectionDateFormat() : ""
-        view?.configureWithTitle(titleString)
-        view?.transform = tableView.transform
+        view!.configureWithTitle(titleString)
+        view!.transform = tableView.transform
         
         return view
     }

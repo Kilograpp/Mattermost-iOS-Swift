@@ -240,7 +240,7 @@ extension Post: Computations {
         let calendar = Calendar.sharedGregorianCalendar
         let components = calendar!.dateComponents(unitFlags, from: createdAt!)
         let dayDate = calendar!.date(from: components)
-        let key = "\(dayDate!.timeIntervalSince1970)_\(self.channel.identifier!)"
+        let key = "\(dayDate!.timeIntervalSince1970)_\(channelId!)"
         var day: Day! = RealmUtils.realmForCurrentThread().object(ofType: Day.self, forPrimaryKey: key)
 
         defer { self.day = day }

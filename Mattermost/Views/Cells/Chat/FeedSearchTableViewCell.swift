@@ -61,7 +61,8 @@ extension FeedSearchTableViewCell: TableViewPostDataSource {
     }
     
     final func configureSelectionWithText(text: String) {
-        let range = (self.post.message! as NSString).range(of: text)
+        let range = (self.messageLabel.textStorage!.string.lowercased() as NSString).range(of: text.lowercased())
+
         self.messageLabel.textStorage?.addAttributes([NSBackgroundColorAttributeName : ColorBucket.searchTextBackgroundColor], range: range)
         self.messageLabel.textStorage?.addAttributes([NSForegroundColorAttributeName : ColorBucket.searchTextColor], range: range)
     }
@@ -76,7 +77,7 @@ extension FeedSearchTableViewCell: TableViewPostDataSource {
 
 extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
     final func configureBasicLabels() {
-        self.channelLabel.text = "#" + self.post.channel.displayName!
+        self.channelLabel.text = self.post.channel.displayName!
         self.nameLabel.text = self.post.author.displayName
         self.timeLabel.text = self.post.createdAtString
     }
@@ -117,6 +118,8 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
         self.avatarImageView.backgroundColor = ColorBucket.whiteColor
         self.avatarImageView.contentMode = .scaleAspectFill
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        self.avatarImageView.layer.cornerRadius = 20
+        self.avatarImageView.layer.masksToBounds = true
         self.addSubview(self.avatarImageView)
     }
     
@@ -140,7 +143,7 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
         self.arrowImageView.backgroundColor = ColorBucket.whiteColor
         self.arrowImageView.isUserInteractionEnabled = true
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(self.disclosureTapAction))
-        self.arrowImageView.addGestureRecognizer(tapGestureRecognizer)
+        self.addGestureRecognizer(tapGestureRecognizer)
         self.addSubview(self.arrowImageView)
     }
 }

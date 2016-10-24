@@ -31,6 +31,7 @@ final class LeftMenuViewController: UIViewController {
         configureTableView()
         configureView()
         configureInitialSelectedChannel()
+        setupChannelsObserver()
         configureStartUpdating()
     }
     
@@ -82,10 +83,6 @@ extension LeftMenuViewController : Configure {
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
     }
     
-    fileprivate func configureStartUpdating() {
-        // UserStatusObserver Updating
-//        UserStatusObserver.sharedObserver.startUpdating()
-    }
     
     fileprivate func configureResults () {
         let publicTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)

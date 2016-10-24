@@ -31,11 +31,10 @@ private protocol PostRequests: class {
                     parameters: [AnyHashable: Any]?,
                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
                     failure: ((_ error: Mattermost.Error) -> Void)?)
-    func deletePost(with post: Post!,
-                    path: String!,
-                    parameters: Dictionary<String, String>?,
-                    success: ((_ mappingResult: RKMappingResult) -> Void)?,
-                    failure: ((_ error: Error) -> Void)?)
+    func deletePost(with path: String!,
+                         parameters: Dictionary<String, String>?,
+                         success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                         failure: ((_ error: Error) -> Void)?)
     func searchPosts(with terms: String!,
                      path: String!,
                      parameters: Dictionary<String, String>?,
@@ -52,7 +51,7 @@ private protocol PostRequests: class {
 
 private protocol Helpers: class {
     func handleOperation(_ operation: RKObjectRequestOperation, withError error: Swift.Error) -> Mattermost.Error
-    func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem)
+    func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
 }
 
 // MARK: Get Requests
@@ -127,11 +126,10 @@ extension ObjectManager: PostRequests {
         }
     }
     
-    func deletePost(with post: Post!,
-                        path: String!,
-                        parameters: Dictionary<String, String>?,
-                        success: ((_ mappingResult: RKMappingResult) -> Void)?,
-                        failure: ((_ error: Mattermost.Error) -> Void)?) {
+    func deletePost(with path: String!,
+                         parameters: Dictionary<String, String>?,
+                         success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                         failure: ((_ error: Mattermost.Error) -> Void)?) {
         
         let request: NSMutableURLRequest = self.request(with: nil, method: .POST, path: path, parameters: parameters)
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
@@ -157,7 +155,6 @@ extension ObjectManager: PostRequests {
             success?(mappingResult!)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
-            print(operation?.httpRequestOperation.responseString)
             if (operation?.httpRequestOperation.responseString == "{\"order\":null,\"posts\":null}") {
                 success?(RKMappingResult())
             }
@@ -262,7 +259,7 @@ extension ObjectManager: Helpers {
         return Error.errorWithGenericError(error)
     }
     
-    func cancelUploadingOperationForImageItem(_ item: AssignedPhotoViewItem) {
+    func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem) {
         for operation in self.operationQueue.operations {
             if operation.isKind(of: KGObjectRequestOperation.self) {
                 let convertedOperation = operation as! KGObjectRequestOperation

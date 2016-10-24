@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class AssignedPhotoViewItem {
+final class AssignedAttachmentViewItem {
     
     init(image: UIImage) {
         self.image = image
@@ -22,13 +22,14 @@ final class AssignedPhotoViewItem {
     let identifier: String
     var fileName: String?
     var isFile = false
+    var url: URL?
 }
 
-extension AssignedPhotoViewItem: Equatable {}
+extension AssignedAttachmentViewItem: Equatable {}
 
 // MARK: Equatable
 
-func ==(lhs: AssignedPhotoViewItem, rhs: AssignedPhotoViewItem) -> Bool {
+func ==(lhs: AssignedAttachmentViewItem, rhs: AssignedAttachmentViewItem) -> Bool {
     return lhs.identifier == rhs.identifier
 }
 

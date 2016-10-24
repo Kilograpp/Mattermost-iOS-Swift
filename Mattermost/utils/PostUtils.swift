@@ -17,9 +17,9 @@ private protocol Public : class {
     func sendReplyToPost(_ post: Post, channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedPhotoViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
+//    func uploadImages(_ channel: Channel, images: Array<AssignedAttachmentViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void,  progress:@escaping (_ value: Float, _ index: Int) -> Void)
     func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void)
-    func cancelImageItemUploading(_ item: AssignedPhotoViewItem)
+    func cancelImageItemUploading(_ item: AssignedAttachmentViewItem)
 }
 
 private protocol Private : class {
@@ -33,7 +33,7 @@ final class PostUtils: NSObject {
     static let sharedInstance = PostUtils()
     fileprivate let upload_images_group = DispatchGroup()
     //refactor rename files
-    fileprivate var files = Array<AssignedPhotoViewItem>()
+    fileprivate var files = Array<AssignedAttachmentViewItem>()
     
     fileprivate var test: File?
     
@@ -62,6 +62,11 @@ extension PostUtils : Public {
         RealmUtils.save(postToSend)
         self.clearUploadedAttachments()
         sendExistingPost(postToSend, completion: completion)
+        self.files.forEach { (item) in
+            if !item.uploaded {
+                self.cancelImageItemUploading(item)
+            }
+        }
     }
     
     func sendExistingPost(_ post:Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -93,12 +98,19 @@ extension PostUtils : Public {
         postToSend.authorId = Preferences.sharedInstance.currentUserId
         postToSend.parentId = post.identifier
         postToSend.rootId = post.identifier
+        postToSend.status = .sending
         self.configureBackendPendingId(postToSend)
         self.assignFilesToPostIfNeeded(postToSend)
         postToSend.computeMissingFields()
         RealmUtils.save(postToSend)
         
         Api.sharedInstance.sendPost(postToSend) { (error) in
+            if error != nil {
+                print("error")
+                try! RealmUtils.realmForCurrentThread().write({
+                    postToSend.status = .error
+                })
+            }
             completion(error)
             self.clearUploadedAttachments()
         }
@@ -133,10 +145,11 @@ extension PostUtils : Public {
         }
     }
     //refactor uploadItemAtChannel
-    func uploadFiles(_ channel: Channel,fileItem:AssignedPhotoViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+    func uploadFiles(_ channel: Channel,fileItem:AssignedAttachmentViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
             self.files.append(fileItem)
-            Api.sharedInstance.uploadFileItemAtChannel(fileItem, url: url, channel: channel, completion: { (file, error) in
-                completion(false, error)
+            self.upload_images_group.enter()
+            Api.sharedInstance.uploadFileItemAtChannel(fileItem, channel: channel, completion: { (file, error) in
+                completion(true, error)
                 if error != nil {
                     self.files.removeObject(fileItem)
                     return
@@ -152,13 +165,23 @@ extension PostUtils : Public {
                 print("\(index) in progress: \(value)")
                 progress(value, index!)
             }
+        
+        self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
+            //FIXME: add error
+            completion(true, nil)
+        })
     }
     
 
     func searchTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void) {
-    Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
-    completion(posts!, error)
-    }
+        Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
+            if error?.code == -999 {
+                completion(Array(), error)
+            }
+            else {
+                completion(posts!, error)
+            }
+        }
     }
     
     func uploadImages(_ channel: Channel, images: Array<AssignedPhotoViewItem>, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item:
@@ -173,9 +196,13 @@ extension PostUtils : Public {
             if !item.uploaded {
                 self.upload_images_group.enter()
                 item.uploading = true
-                Api.sharedInstance.uploadImageItemAtChannel(item, channel: channel, completion: { (file, error) in
-                    completion(false, error, item)
-                    if error != nil {
+                Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (file, error) in
+                    defer {
+                        completion(false, error, item)
+                        self.upload_images_group.leave()
+                        print("\(item.identifier) is finishing")
+                    }
+                    guard error == nil else {
                         self.files.removeObject(item)
                         return
                     }
@@ -200,13 +227,16 @@ extension PostUtils : Public {
                         progress(value, index!)
                 })
             }
-            
-            self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
-                //FIXME: add error
-                completion(true, nil, item)
-            })
-        }
+        
+        self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
+            //FIXME: add error
+            print("UPLOADING NOTIFY")
+            //completion(false,nil,item=nil)
+            completion(true, nil, AssignedAttachmentViewItem(image: UIImage()))
+        })
     }
+    
+    
     
 //    func assignFilesToPost(post: Post) {
 //        post.files = List(self.assignedFiles)

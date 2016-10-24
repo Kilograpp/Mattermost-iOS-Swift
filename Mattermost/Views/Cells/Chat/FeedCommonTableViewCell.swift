@@ -88,7 +88,6 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }
             self?.avatarImageView.image = image
-
         }
     }
     

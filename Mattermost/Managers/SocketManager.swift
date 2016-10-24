@@ -124,14 +124,17 @@ extension SocketManager: MessageHandling {
                 guard let status = dictionary[NotificationKeys.Data]?[NotificationKeys.Status] as? String else { return }
                 publishLocalNotificationStatusChanged(userId!, status: status)
             case .receivingStatuses:
+                print(text)
                 guard let statuses = dictionary[NotificationKeys.Data] as? [String:String] else { return }
                 publishLocalNotificationStatusSetup(statuses)
             case .receivingTyping:
                 publishLocalNotificationWithChannelIdentifier(channelId!, userIdentifier: userId!, action: Event.Typing.rawValue)
+            case .joinedUser:
+                publishLocalNotificationJoin(userIdentifier: userId!, to: channelId!)
             default:
                 print("UNKNW: "+text)
                 //reply with event:"hello"
-                publishBackendNotificationFetchStatuses()
+//                publishBackendNotificationFetchStatuses()
         }
     }
 }
@@ -157,22 +160,23 @@ extension SocketManager: Notifications {
     
     func handleReceivingNewPost(_ channelId:String,channelName:String,channelType:String,senderName:String,post:Post) {
         // if user is not author
-        if post.authorId != Preferences.sharedInstance.currentUserId {
+        if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.pendingId!) {
             RealmUtils.save(post)
         }
     }
     
     func handleReceivingUpdatedPost(_ updatedPost:Post) {
-        // if user is not author
-        if updatedPost.authorId != Preferences.sharedInstance.currentUserId {
-            RealmUtils.save(updatedPost)
+        if postExistsWithIdentifier(updatedPost.identifier!, pendingIdentifier: updatedPost.pendingId!) {
+            let existedPost = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", PostAttributes.identifier.rawValue, updatedPost.identifier!).first!
+            updatedPost.localIdentifier = existedPost.localIdentifier
         }
+        RealmUtils.save(updatedPost)
     }
     
     func handleReceivingDeletedPost(_ deletedPost:Post) {
         // if user is not author
         let day = deletedPost.day
-        if deletedPost.authorId != Preferences.sharedInstance.currentUserId {
+        if postExistsWithIdentifier(deletedPost.identifier!, pendingIdentifier: deletedPost.pendingId!) {
             let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first
             guard post != nil else { return }
             RealmUtils.deleteObject(post!)
@@ -199,6 +203,42 @@ extension SocketManager: Notifications {
     fileprivate func publishLocalNotificationStatusSetup(_ statuses:[String:String]) {
         let notificationName = Constants.NotificationsNames.StatusesSocketNotification
         NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: statuses)
+    }
+    fileprivate func publishLocalNotificationJoin(userIdentifier: String, to channelIdentifier: String) {
+        
+        let user = RealmUtils.realmForCurrentThread().objects(User.self).filter("%K == %@", "identifier", userIdentifier).first
+        var channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("%K == %@", "identifier", channelIdentifier).first
+        
+        //user joined to team -> loadUsers
+        if user == nil {
+            //request for user information
+        }
+        
+        if channel == nil {
+            //request for chanel information (temp load all channels)
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard error == nil else { return }
+                channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("%K == %@", "identifier", channelIdentifier).first
+                self.handleUserJoined(user: user!, channel: channel!)
+            })
+        } else {
+            handleUserJoined(user: user!, channel: channel!)
+        }
+    }
+    
+    fileprivate func handleUserJoined(user: User, channel: Channel) {
+        try! RealmUtils.realmForCurrentThread().write {
+            channel.members.append(user)
+        }
+        
+        //If joined current user -> reload left menu
+        let notificationName = Constants.NotificationsNames.UserJoinNotification
+        try! RealmUtils.realmForCurrentThread().write {
+            channel.currentUserInChannel = true
+        }
+        if user.identifier == Preferences.sharedInstance.currentUserId {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: channel)
+        }
     }
 }
 
@@ -227,6 +267,6 @@ extension SocketManager: Validation {
     fileprivate func postExistsWithIdentifier(_ identifier: String, pendingIdentifier: String) -> Bool {
         let realm = try! Realm()
         let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.pendingId.rawValue, pendingIdentifier)
-        return realm.objects(Post).filter(predicate).first != nil
+        return realm.objects(Post.self).filter(predicate).first != nil
     }
 }
