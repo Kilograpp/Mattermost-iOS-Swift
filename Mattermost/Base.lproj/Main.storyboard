@@ -585,6 +585,7 @@
                                     <constraint firstItem="f4S-xS-ffQ" firstAttribute="leading" secondItem="Hzb-s2-IhM" secondAttribute="leading" constant="20" id="Et7-G2-Ttl"/>
                                     <constraint firstItem="f4S-xS-ffQ" firstAttribute="top" secondItem="Hzb-s2-IhM" secondAttribute="top" constant="1" id="FRb-lZ-OUt"/>
                                     <constraint firstItem="cPm-r9-FMP" firstAttribute="top" secondItem="6vr-W6-7OZ" secondAttribute="bottom" constant="6" id="Su7-To-PYU"/>
+                                    <constraint firstAttribute="trailing" secondItem="mA8-ff-KfQ" secondAttribute="trailing" constant="20" id="WF8-Tl-i3q"/>
                                     <constraint firstItem="6vr-W6-7OZ" firstAttribute="top" secondItem="Hzb-s2-IhM" secondAttribute="top" constant="50" id="Ywl-Dm-4uP"/>
                                     <constraint firstAttribute="trailing" secondItem="Jj8-lb-f1I" secondAttribute="trailing" constant="20" id="dIr-gf-x7D"/>
                                     <constraint firstItem="Jj8-lb-f1I" firstAttribute="leading" secondItem="Hzb-s2-IhM" secondAttribute="leading" constant="20" id="eZW-hb-HT4"/>

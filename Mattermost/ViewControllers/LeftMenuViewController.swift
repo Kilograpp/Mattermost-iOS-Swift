@@ -22,6 +22,9 @@ final class LeftMenuViewController: UIViewController {
     fileprivate var resultsPublic: Results<Channel>! = nil
     fileprivate var resultsPrivate: Results<Channel>! = nil
     fileprivate var resultsDirect: Results<Channel>! = nil
+    
+    //temp timer
+    var statusesTimer: Timer?
 
 //MARK: - Override
     override func viewDidLoad() {
@@ -35,11 +38,51 @@ final class LeftMenuViewController: UIViewController {
         configureStartUpdating()
     }
     
-    func reloadMenu() {
-        configureResults ()
+    
+    
+    
+    
+    
+    //refactor later -> ObserverUtils
+    func setupChannelsObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateResults),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(stopTimer),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
+                                               object: nil)
+    }
+    
+    //TEMP TODO:  update statuses
+    fileprivate func configureStartUpdating() {
+        //Костыль (для инициализации UserStatusObserver)
+        UserStatusObserver.sharedObserver
+        self.statusesTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(updateStatuses), userInfo: nil, repeats: true)
+        
+    }
+    
+    func updateStatuses() {
+        SocketManager.sharedInstance.publishBackendNotificationFetchStatuses()
+    }
+    
+    func stopTimer() {
+        if (self.statusesTimer != nil) {
+            self.statusesTimer?.invalidate()
+            self.statusesTimer = nil
+        }
+    }
+    
+    func updateResults() {
+        configureResults()
         self.tableView.reloadData()
         configureInitialSelectedChannel()
     }
+    
+    
+    
+    
 }
 
 //MARK: - PrivateProtocols

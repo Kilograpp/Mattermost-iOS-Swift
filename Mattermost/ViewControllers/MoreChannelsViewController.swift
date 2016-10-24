@@ -133,7 +133,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerAction {
         for channel in self .results {
             RealmUtils.save(channel)
         }
-        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).reloadMenu()
+       // (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).reloadMenu()
     }
 }
 

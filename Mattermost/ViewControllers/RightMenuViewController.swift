@@ -96,6 +96,12 @@ extension RightMenuViewController: RightMenuViewControllerSetup {
             self?.avatarImageView.image = image
         }
         
+        ImageDownloader.downloadFeedAvatarForUser(user!) { (image, error) in
+            if (image != nil) {
+                self.avatarImageView.image = image
+            }
+        }
+        
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerTapAction))
         self.headerView.addGestureRecognizer(tapGestureRecognizer)
     }
