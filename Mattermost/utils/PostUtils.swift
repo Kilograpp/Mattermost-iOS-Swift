@@ -311,6 +311,7 @@ extension PostUtils : Public {
 //    }
     
     // CODEREVIEW: Переименовать в cancelUpload(item:
+    // CODEREVIEW: В целом немного кривоватый метод, потом будет дополнительное ревью с конкретными уточнениями, что можно сделать
     func cancelImageItemUploading(_ item: AssignedAttachmentViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
         self.upload_images_group.leave()
@@ -319,7 +320,9 @@ extension PostUtils : Public {
             self.assignedFiles.remove(at: files.index(of: item)!)
         }
         
+        
         let index = self.assignedFiles.index(where: {$0.identifier == item.identifier})
+        
         if (index != nil) {
             self.assignedFiles.remove(at: index!)
         }
