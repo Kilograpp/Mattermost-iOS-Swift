@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,12 +30,12 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h3j-6T-QFm">
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h3j-6T-QFm">
                         <constraints>
                             <constraint firstAttribute="width" constant="8" id="gG2-KL-FX8"/>
                             <constraint firstAttribute="height" constant="12" id="n61-z8-rIk"/>
                         </constraints>
-                        <state key="normal" title="Button" image="login_arrow_icon_passive"/>
+                        <state key="normal" title="Button" image="AC785472-A50C-4CB4-A60F-99FC560E5B46"/>
                     </button>
                 </subviews>
                 <constraints>
@@ -52,7 +51,6 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="arrowButton" destination="h3j-6T-QFm" id="Ill-qZ-3zV"/>
                 <outlet property="iconImageView" destination="E71-Ra-EOX" id="MOJ-lS-lNH"/>
                 <outlet property="infoLabel" destination="67C-DX-Cu3" id="ybb-0x-mwR"/>
                 <outlet property="titleLabel" destination="idt-00-Amw" id="0w1-P4-6BI"/>
@@ -61,6 +59,86 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="login_arrow_icon_passive" width="12" height="12"/>
+        <image name="AC785472-A50C-4CB4-A60F-99FC560E5B46" width="12" height="12">
+            <mutableData key="keyedArchiveRepresentation">
+YnBsaXN0MDDUAQIDBAUGQkNYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK8QDwcI
+ERYbHCUmJygwMzY8P1UkbnVsbNQJCgsMDQ4PEFYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVwc1dOU0Nv
+bG9ygA4SAMAAAIACgAzSEgkTFVpOUy5vYmplY3RzoRSAA4AL0hIJFxqiGBmABIAFgAoQANUdHh8gCSEb
+IiMkVk5TU2l6ZV8QD05TQml0c1BlclNhbXBsZV8QEE5TQ29sb3JTcGFjZU5hbWVZTlNQREZEYXRhgAaA
+B4AIgAlYezEyLCAxMn1fEBlOU0NhbGlicmF0ZWRSR0JDb2xvclNwYWNlTxEPNCVQREYtMS4zCiXE5fLl
+66fzoNDExgo0IDAgb2JqCjw8IC9MZW5ndGggNSAwIFIgL0ZpbHRlciAvRmxhdGVEZWNvZGUgPj4Kc3Ry
+ZWFtCngBTY1LCsIwFEXnXcUZC415SfoSx66gIxdQFIVUqNk/mGhLe0fncN9nYWTBczHJtzATjGhNRIRc
+i9W0yl5V8bity+i637Wxw7nM86gztxNvrFFenK9FmEqzaIeUXKU/hEZBJOrQlYne0QdEf+8izvK582D8
+ApXKJ4kKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjEyMQplbmRvYmoKMiAwIG9iago8PCAvVHlwZSAv
+UGFnZSAvUGFyZW50IDMgMCBSIC9SZXNvdXJjZXMgNiAwIFIgL0NvbnRlbnRzIDQgMCBSIC9NZWRpYUJv
+eCBbMCAwIDEyIDEyXQo+PgplbmRvYmoKNiAwIG9iago8PCAvUHJvY1NldCBbIC9QREYgXSAvQ29sb3JT
+cGFjZSA8PCAvQ3MxIDcgMCBSID4+ID4+CmVuZG9iago4IDAgb2JqCjw8IC9MZW5ndGggOSAwIFIgL04g
+MyAvQWx0ZXJuYXRlIC9EZXZpY2VSR0IgL0ZpbHRlciAvRmxhdGVEZWNvZGUgPj4Kc3RyZWFtCngBnZZ3
+VFPZFofPvTe90BIiICX0GnoJINI7SBUEUYlJgFAChoQmdkQFRhQRKVZkVMABR4ciY0UUC4OCYtcJ8hBQ
+xsFRREXl3YxrCe+tNfPemv3HWd/Z57fX2Wfvfde6AFD8ggTCdFgBgDShWBTu68FcEhPLxPcCGBABDlgB
+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
+M6nRqc1phLT4tNNCJWGKsCtdMz0nvS/DNKMwQ7rKadXuVROiQNGRTChzWWa7mI7+TPVIjCSbJYNZC7Nq
+st5nR2WfylHMEeb05JrkbssdyfPJ+341ZjV3dWe+dv6G/ME17msOrYXWrlzbuU53XcG64fW+649tIG1I
+2fDLRsuNZRvfbore1FGgUbC+YGiz7+bGQrlCUeG9Lc5bDmzFbBVs7d1ms61q25ciXtH1YsviiuJPJdyS
+699ZfVf53cz2hO29pfal+3fgdgh33N3puvNYmWJZXtnQruBdreXM8qLyt7tX7L5WYVtxYA9pj2SPtDKo
+sr1Kr2pH1afqpOqBGo+a5r3qe7ftndrH29e/321/0wGNA8UHPh4UHLx/yPdQa61BbcVh3OGsw8/rouq6
+v2d/X39E7Ujxkc9HhUelx8KPddU71Nc3qDeUNsKNksax43HHb/3g9UN7E6vpUDOjufgEOCE58eLH+B/v
+ngw82XmKfarpJ/2f9rbQWopaodbc1om2pDZpe0x73+mA050dzh0tP5v/fPSM9pmas8pnS8+RzhWcmzmf
+d37yQsaF8YuJF4c6V3Q+urTk0p2usK7ey4GXr17xuXKp2737/FWXq2euOV07fZ19ve2G/Y3WHruell/s
+fmnpte9tvelws/2W462OvgV95/pd+y/e9rp95Y7/nRsDiwb67i6+e/9e3D3pfd790QepD14/zHo4/Wj9
+Y+zjoicKTyqeqj+t/dX412apvfTsoNdgz7OIZ4+GuEMv/5X5r0/DBc+pzytGtEbqR61Hz4z5jN16sfTF
+8MuMl9Pjhb8p/rb3ldGrn353+71nYsnE8GvR65k/St6ovjn61vZt52To5NN3ae+mp4req74/9oH9oftj
+9MeR6exP+E+Vn40/d3wJ/PJ4Jm1m5t/3hPP7CmVuZHN0cmVhbQplbmRvYmoKOSAwIG9iagoyNjEyCmVu
+ZG9iago3IDAgb2JqClsgL0lDQ0Jhc2VkIDggMCBSIF0KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1Bh
+Z2VzIC9NZWRpYUJveCBbMCAwIDEyIDEyXSAvQ291bnQgMSAvS2lkcyBbIDIgMCBSIF0gPj4KZW5kb2Jq
+CjEwIDAgb2JqCjw8IC9UeXBlIC9DYXRhbG9nIC9QYWdlcyAzIDAgUiA+PgplbmRvYmoKMTEgMCBvYmoK
+KE1hYyBPUyBYIDEwLjExLjUgUXVhcnR6IFBERkNvbnRleHQpCmVuZG9iagoxMiAwIG9iagooRDoyMDE2
+MDYxMjE0MTk0NVowMCcwMCcpCmVuZG9iagoxIDAgb2JqCjw8IC9Qcm9kdWNlciAxMSAwIFIgL0NyZWF0
+aW9uRGF0ZSAxMiAwIFIgL01vZERhdGUgMTIgMCBSID4+CmVuZG9iagp4cmVmCjAgMTMKMDAwMDAwMDAw
+MCA2NTUzNSBmIAowMDAwMDAzNDAwIDAwMDAwIG4gCjAwMDAwMDAyMzYgMDAwMDAgbiAKMDAwMDAwMzE3
+NCAwMDAwMCBuIAowMDAwMDAwMDIyIDAwMDAwIG4gCjAwMDAwMDAyMTcgMDAwMDAgbiAKMDAwMDAwMDMz
+OCAwMDAwMCBuIAowMDAwMDAzMTM5IDAwMDAwIG4gCjAwMDAwMDA0MDYgMDAwMDAgbiAKMDAwMDAwMzEx
+OSAwMDAwMCBuIAowMDAwMDAzMjU1IDAwMDAwIG4gCjAwMDAwMDMzMDUgMDAwMDAgbiAKMDAwMDAwMzM1
+OCAwMDAwMCBuIAp0cmFpbGVyCjw8IC9TaXplIDEzIC9Sb290IDEwIDAgUiAvSW5mbyAxIDAgUiAvSUQg
+WyA8MjdmY2MxYzUzN2RiM2VhN2EwOWFmNjkyNjRmYzVmZTM+CjwyN2ZjYzFjNTM3ZGIzZWE3YTA5YWY2
+OTI2NGZjNWZlMz4gXSA+PgpzdGFydHhyZWYKMzQ3NQolJUVPRgrSKSorLFokY2xhc3NuYW1lWCRjbGFz
+c2VzXU5TUERGSW1hZ2VSZXCjLS4vXU5TUERGSW1hZ2VSZXBaTlNJbWFnZVJlcFhOU09iamVjdNIpKjEy
+V05TQXJyYXmiMS/SKSo0NV5OU011dGFibGVBcnJheaM0MS/TNzgJOTo7V05TV2hpdGVcTlNDb2xvclNw
+YWNlRDAgMAAQA4AN0ikqPT5XTlNDb2xvcqI9L9IpKkBBV05TSW1hZ2WiQC9fEA9OU0tleWVkQXJjaGl2
+ZXLRREVUcm9vdIABAAgAEQAaACMALQAyADcASQBPAFgAXwBsAHMAewB9AIIAhACGAIsAlgCYAJoAnACh
+AKQApgCoAKoArAC3AL4A0ADjAO0A7wDxAPMA9QD+ARoQUhBXEGIQaxB5EH0QixCWEJ8QpBCsEK8QtBDD
+EMcQzhDWEOMQ6BDqEOwQ8RD5EPwRAREJEQwRHhEhESYAAAAAAAACAQAAAAAAAABGAAAAAAAAAAAAAAAA
+AAARKA
+</mutableData>
+        </image>
     </resources>
 </document>

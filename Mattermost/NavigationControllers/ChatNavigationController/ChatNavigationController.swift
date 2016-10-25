@@ -25,7 +25,7 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        UIStatusBarStyle.default
+        _ = UIStatusBarStyle.default
     }
     
     func setupNavigationBar()  {

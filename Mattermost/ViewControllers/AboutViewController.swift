@@ -18,15 +18,44 @@ final class AboutViewController: UIViewController {
     
     var iconsResizeAnimationTimer: Timer?
     
-    
-//MARK: - Life cycle
-    
+}
+
+
+private protocol AboutViewControllerLifeCycle {
+    func viewDidLoad()
+    func viewWillAppear(_ animated: Bool)
+    func viewWillDisappear(_ animated: Bool)
+}
+
+private protocol AboutViewControllerSetup {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupLinks()
+    func setupTimer()
+}
+
+private protocol AboutViewControllerAction {
+    func backAction()
+}
+
+private protocol AboutViewControllerNavigation {
+    func returnToChat()
+}
+
+private protocol AboutViewControllerHelper {
+    func iconResizeAnimation()
+}
+
+
+//MARK: AboutViewController
+
+extension AboutViewController: AboutViewControllerLifeCycle {
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initialSetup()
     }
-   
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -44,16 +73,19 @@ final class AboutViewController: UIViewController {
 }
 
 
-//MARK: - Setup
+//MARK: AboutViewControllerSetup
 
-extension AboutViewController {
+extension AboutViewController: AboutViewControllerSetup {
     func initialSetup() {
-        setupTitle()
+        setupNavigationBar()
         setupLinks()
     }
     
-    func setupTitle() {
+    func setupNavigationBar() {
         self.title = "About Mattermost"
+        
+        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
+        self.navigationItem.leftBarButtonItem = backButton
     }
     
     func setupLinks() {
@@ -76,9 +108,27 @@ extension AboutViewController {
 }
 
 
-//MARK: -Icon animation
+//MARK: AboutViewControllerAction
 
-extension AboutViewController {
+extension AboutViewController: AboutViewControllerAction {
+    func backAction() {
+        returnToChat()
+    }
+}
+
+
+//MARK: AboutViewControllerNavigation
+
+extension AboutViewController: AboutViewControllerNavigation {
+    func returnToChat() {
+       _ = self.navigationController?.popViewController(animated: true)
+    }
+}
+
+
+//MARK: AboutViewControllerHelper
+
+extension AboutViewController: AboutViewControllerHelper {
     func iconResizeAnimation() {
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDelegate(self)

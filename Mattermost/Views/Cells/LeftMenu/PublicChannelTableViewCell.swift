@@ -6,14 +6,10 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-private protocol PrivateConfiguration : class {
-    func configureContentView()
-    func configureTitleLabel()
-    func configurehighlightView()
-    func highlightViewBackgroundColor() -> UIColor
-}
-
-final class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellProtocol {
+final class PublicChannelTableViewCell: UITableViewCell {
+    
+//MARK: Properies
+    
     @IBOutlet fileprivate weak var badgeLabel: UILabel!
     @IBOutlet fileprivate weak var titleLabel: UILabel!
     @IBOutlet fileprivate weak var highlightView: UIView!
@@ -22,20 +18,34 @@ final class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellPr
     var channel : Channel?
     var test : (() -> Void)?
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        configureContentView()
-        configureTitleLabel()
-        configurehighlightView()
-    }
-    
-    //MARK: - Configuration
     func configureStatusViewWithNotification(_ notification: Notification) {
         self.test?()
     }
+}
 
-//MARK: - Override
+
+private protocol PublicChannelTableViewCellLifeCycle {
+    func awakeFromNib()
+    func setHighlighted(_ highlighted: Bool, animated: Bool)
+}
+
+private protocol PublicChannelTableViewCellSetup {
+    func initialSetup()
+    func setupContentView()
+    func setupTitleLabel()
+    func setupHighlightView()
+    func highlightViewBackgroundColor() -> UIColor
+}
+
+
+//MARK: PublicChannelTableViewCellLifeCycle
+
+extension PublicChannelTableViewCell: PublicChannelTableViewCellLifeCycle {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        initialSetup()
+    }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
@@ -43,27 +53,39 @@ final class PublicChannelTableViewCell: UITableViewCell, LeftMenuTableViewCellPr
     }
 }
 
-extension PublicChannelTableViewCell : PrivateConfiguration {
-    fileprivate func configureContentView() {
+
+//MARK: PublicChannelTableViewCellSetup
+
+extension PublicChannelTableViewCell: PublicChannelTableViewCellSetup {
+    func initialSetup() {
+        setupContentView()
+        setupTitleLabel()
+        setupHighlightView()
+    }
+    
+    func setupContentView() {
         self.backgroundColor = ColorBucket.sideMenuBackgroundColor
         self.badgeLabel.isHidden = true
     }
     
-    fileprivate func configureTitleLabel() {
+    func setupTitleLabel() {
         self.titleLabel.font = FontBucket.normalTitleFont
         self.titleLabel.textColor = ColorBucket.lightGrayColor
     }
     
-    fileprivate func configurehighlightView() {
+    func setupHighlightView() {
         self.highlightView.layer.cornerRadius = 3;
     }
-
-    fileprivate func highlightViewBackgroundColor() -> UIColor {
-        return self.channel?.isSelected == true ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
+    
+    func highlightViewBackgroundColor() -> UIColor {
+        return (self.channel?.isSelected == true) ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
     }
 }
 
-extension PublicChannelTableViewCell {
+
+//MARK: LeftMenuTableViewCellProtocol
+
+extension PublicChannelTableViewCell: LeftMenuTableViewCellProtocol {
     func configureWithChannel(_ channel: Channel, selected: Bool) {
         self.channel = channel
         self.titleLabel.text = channel.displayName!
@@ -78,11 +100,11 @@ extension PublicChannelTableViewCell {
     
     func subscribeToNotifications() {
         NotificationCenter.default.addObserver(self,
-                                                         selector: #selector(configureStatusViewWithNotification(_:)),
-                                                         name: (self.channel?.displayName).map { NSNotification.Name(rawValue: $0) } ,
-                                                         object: nil)
-
-
+                                               selector: #selector(configureStatusViewWithNotification(_:)),
+                                               name: (self.channel?.displayName).map { NSNotification.Name(rawValue: $0) } ,
+                                               object: nil)
+        
+        
     }
     
     func reloadCell() {

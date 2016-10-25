@@ -201,12 +201,15 @@ extension ObjectManager: PostRequests {
                                                                                constructingBodyWith: constructingBodyWithBlock)
         
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
+            print("upOk")
             success?(mappingResult!)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
+            print("upFail")
             failure?(self.handleOperation(operation!, withError: error!))
         }
         
+        print("upStart")
         let operation: RKObjectRequestOperation = self.objectRequestOperation(with: request as URLRequest!,
                                                                                          success: successHandlerBlock,
                                                                                          failure: failureHandlerBlock)

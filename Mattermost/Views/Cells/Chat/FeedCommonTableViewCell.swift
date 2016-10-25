@@ -14,6 +14,8 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
     fileprivate let dateLabel: UILabel = UILabel()
     fileprivate let parentView: CompactPostView = CompactPostView.compactPostView(ActionType.CompleteReply)
 
+    var avatarTapHandler : (() -> Void)?
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -41,6 +43,10 @@ protocol _FeedCommonTableViewCellSetup : class {
     func setupDateLabel()
 }
 
+protocol _FeedCommonTableViewCellAction: class {
+    func avatarTapAction()
+}
+
 protocol _FeedCommonTableViewCellLifeCycle: class {
     func prepareForReuse()
     func layoutSubviews()
@@ -49,6 +55,7 @@ protocol _FeedCommonTableViewCellLifeCycle: class {
 protocol ParentComment: class {
     func setupParentCommentView()
 }
+
 
 extension FeedCommonTableViewCell : TableViewPostDataSource {
     override func configureWithPost(_ post: Post) {
@@ -111,7 +118,10 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         self.avatarImageView.layer.masksToBounds = true
         self.addSubview(self.avatarImageView)
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
-        //TODO: add gesture recognizer
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(avatarTapAction))
+        self.avatarImageView.isUserInteractionEnabled = true
+        self.avatarImageView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     final func setupNameLabel() {
@@ -129,6 +139,14 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         self.dateLabel.font = FontBucket.postDateFont
         //FIXME: CodeReview: Заменить на конкретный цвет
         self.dateLabel.textColor = ColorBucket.grayColor
+    }
+}
+
+extension FeedCommonTableViewCell: _FeedCommonTableViewCellAction {
+    func avatarTapAction() {
+        if (self.avatarTapHandler != nil) {
+            self.avatarTapHandler!()
+        }
     }
 }
 

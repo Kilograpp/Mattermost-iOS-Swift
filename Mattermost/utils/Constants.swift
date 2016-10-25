@@ -65,7 +65,8 @@ struct Constants {
     
     struct ChannelType {
         static let PublicTypeChannel  = "O"
-        static let PrivateTypeChannel = "D"
+        static let PrivateTypeChannel = "P"
+        static let DirectTypeChannel = "D"
     }
 
     
@@ -83,9 +84,19 @@ struct Constants {
     struct Profile {
         static let SectionsCount = 2
         static let FirsSectionDataSource = [ (title: "Name", icon: "profile_name_icon"), (title: "Username", icon: "profile_usename_icon"),
-                                             (title: "Nickname", icon: "profile_usename_icon"), (title: "Profile photo", icon: "profile_photo_icon") ]
-        static let SecondSecionDataSource = [ (title: "Email", icon: "profile_email_icon"), (title: "Change password", icon: "profile_email_icon"),
-                                              (title: "Notification", icon: "profile_notification_icon") ]
+                                             (title: "Nickname", icon: "profile_nick_icon"), ]
+        static let SecondSecionDataSource = [ (title: "Email", icon: "profile_email_icon") ]
     }
     
+    struct RightMenuRows {
+        static let SwitchTeam: Int       = 0
+        static let Files: Int            = 1
+        static let Settings: Int         = 2
+        static let InviteNewMembers: Int = 3
+        static let Help: Int             = 4
+        static let Report: Int           = 5
+        static let About: Int            = 6
+        static let Logout: Int           = 7
+    }
+
 }

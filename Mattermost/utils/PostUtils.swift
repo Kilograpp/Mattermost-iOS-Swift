@@ -154,9 +154,7 @@ extension PostUtils : Public {
                     self.files.removeObject(fileItem)
                     return
                 }
-
                 self.assignedFiles.append(file!)
-                
                 print("uploaded")
             }) { (identifier, value) in
                 
@@ -242,12 +240,23 @@ extension PostUtils : Public {
                     }
                     self.assignedFiles.append(file!)
                     
+                    if self.assignedFiles.count == 0 {
+                        self.test = file
+                    }
                     
+                    let index = self.files.index(where: {$0.identifier == item.identifier})
+                    if (index != nil) {
+                        self.assignedFiles.append(file!)
+                        print("uploaded")
+                    }
+                    
+                    //print("uploaded")
+                    //self.assignedFiles.append(file!)
+                    self.upload_images_group.leave()
                     }, progress: { (identifier, value) in
                         let index = self.files.index(where: {$0.identifier == identifier})
-                        guard (index != nil) else {
-                            return
-                        }
+                        guard (index != nil) else { return }
+                        print("\(index) in progress: \(value)")
                         progress(value, index!)
                 })
             }
@@ -269,6 +278,16 @@ extension PostUtils : Public {
     func cancelImageItemUploading(_ item: AssignedAttachmentViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
         self.upload_images_group.leave()
+
+        if item.uploaded  {
+            self.assignedFiles.remove(at: files.index(of: item)!)
+        }
+        
+        let index = self.assignedFiles.index(where: {$0.identifier == item.identifier})
+        if (index != nil) {
+            self.assignedFiles.remove(at: index!)
+        }
+z
         self.files.removeObject(item)
         
         guard item.uploaded else { return }

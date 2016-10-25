@@ -47,10 +47,18 @@ private protocol SideMenuColors {
     static var sideMenuCellHighlightedColor: UIColor {get}
     static var sideMenuCellSelectedColor: UIColor {get}
     static var rightMenuSeparatorColor: UIColor {get}
+    static var leftMenuMoreTextColor: UIColor {get}
 }
 
 private protocol ServerUrlColors {
     static var serverUrlSubtitleColor: UIColor {get}
+}
+
+private protocol MoreTableColors {
+    static var searchTextFieldBackgroundColor: UIColor {get}
+    static var checkButtonBorderColor: UIColor {get}
+    static var avatarImageViewColor: UIColor {get}
+    static var separatorViewBackgroundColor: UIColor {get}
 }
 
 private protocol GradientColors {
@@ -116,10 +124,18 @@ extension ColorBucket : SideMenuColors {
     static let sideMenuCellSelectedColor = ColorBucket.whiteColor
     static let rightMenuSeparatorColor = ColorBucket.sideMenuSeparatorColor()
     static let rightMenuTextColor = ColorBucket.lightBlue()
+    static let leftMenuMoreTextColor = ColorBucket.darkWhite()
 }
 
 extension ColorBucket : ServerUrlColors {
     static let serverUrlSubtitleColor = ColorBucket.darkDarkGray()
+}
+
+extension ColorBucket: MoreTableColors {
+    static let searchTextFieldBackgroundColor = ColorBucket.darkWhite()
+    static let checkButtonBorderColor = ColorBucket.lightLightGray()
+    static let avatarImageViewColor = ColorBucket.randomBrightColor()
+    static let separatorViewBackgroundColor = try! UIColor(rgba_throws: "#C9D2D8")
 }
 
 extension ColorBucket : GradientColors {
@@ -151,6 +167,10 @@ extension ColorBucket {
         return try! UIColor(rgba_throws: "#FFFFFF")
     }
     
+    fileprivate class func darkWhite() -> UIColor {
+        return try! UIColor(rgba_throws: "#EFEFF4")
+    }
+    
     fileprivate class func cloudyWhite() -> UIColor {
         return try! UIColor(rgba_throws: "#F7F7F7")
     }
@@ -165,6 +185,10 @@ extension ColorBucket {
     
     fileprivate class func lightGray() -> UIColor {
         return try! UIColor(rgba_throws: "#AAAAAA")
+    }
+    
+    fileprivate class func lightLightGray() -> UIColor {
+        return try! UIColor(rgba_throws: "#8E8E93")
     }
     
     fileprivate class func middleGray() -> UIColor {
@@ -221,5 +245,12 @@ extension ColorBucket {
     
     fileprivate class func onlineStatus() -> UIColor {
         return try! UIColor(rgba_throws: "#81C784")
+    }
+    
+    fileprivate class func randomBrightColor() -> UIColor {
+        let randomRed:CGFloat = CGFloat(arc4random()) / CGFloat(UInt32.max)
+        let randomGreen:CGFloat = CGFloat(arc4random()) / CGFloat(UInt32.max)
+        let randomBlue:CGFloat = CGFloat(arc4random()) / CGFloat(UInt32.max)
+        return UIColor(red: randomRed, green: randomGreen, blue: randomBlue, alpha: 1.0)
     }
 }

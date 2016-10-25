@@ -20,6 +20,12 @@ extension CAGradientLayer {
         return makeGradientForTopColor(topColor, bottomColor: bottomColor)
     }
     
+    static func blueGradientForAvatarImageView() -> CAGradientLayer {
+        let topColor = ColorBucket.topBlueColorForGradient
+        let bottomColor = ColorBucket.bottomBlueColorForGradient
+        return makeGradientForTopColor(topColor, bottomColor: bottomColor)
+    }
+    
     static func makeGradientForTopColor(_ topColor:UIColor, bottomColor:UIColor) -> CAGradientLayer {
         let colors = [topColor.cgColor, bottomColor.cgColor]
         let stopTop = CGFloat(0.0)
@@ -75,4 +81,9 @@ extension CAGradientLayer {
         return colorsArray
     }
     
+    func updateLayer(_ labelLayer: CAGradientLayer) {
+        let colorsArray = makeArrayColors(labelLayer)
+        let index = Int(arc4random_uniform(6))
+        labelLayer.colors = colorsArray[index]
+    }
 }

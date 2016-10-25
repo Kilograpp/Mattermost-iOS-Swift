@@ -176,7 +176,7 @@ extension TSMarkdownParser {
             }
             
             let phone = (attributedString.string as NSString).substring(with: range)
-            
+ 
             let attributes = [NSForegroundColorAttributeName : ColorBucket.linkColor]
             attributedString.addAttribute(Constants.StringAttributes.Phone, value: phone, range: range)
             attributedString.addAttributes(attributes, range: range)

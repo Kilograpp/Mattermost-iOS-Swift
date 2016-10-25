@@ -42,7 +42,7 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     }
     
     
-    //MARK: Lifecycle
+    //MARK: LifeCycle
     
     override func layoutSubviews() {
         self.tableView.frame = CGRect(x: 53,
