@@ -58,8 +58,6 @@ final class PostUtils: NSObject {
 extension PostUtils : Public {
     // CODEREVIEW: Опечатка в слове senD
     // CODEREVIEW: переименовать в sendPost(channel:, message:, attachments:, completion:). Длинные предварительные названия - это не Swift way'
-    // CODEREVIEW: Лишний -> void в конце 
-
     func sentPostForChannel(with channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let postToSend = Post()
         
@@ -138,7 +136,6 @@ extension PostUtils : Public {
     }
 
     // CODEREVIEW: переименовать в update(post
-    // CODEREVIEW: Убрать -> void
     func updateSinglePost(_ post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         // CODEREVIEW: Каша из абстракций.
         try! RealmUtils.realmForCurrentThread().write({
@@ -155,7 +152,6 @@ extension PostUtils : Public {
     }
     
     // CODEREVIEW:  Переименовать в delete(post
-    // CODEREVIEW: Убрать -> void
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         // identifier == nil -> post exists only in database
         let day = post.day
@@ -172,8 +168,6 @@ extension PostUtils : Public {
     }
     //refactor uploadItemAtChannel
     // CODEREVIEW: Переименовать в upload(file: Assignedattac.., channel: )
-    // CODEREVIEW: Убрать -> Void
-    // CODEREVIEW: Убрать _. Нет необходимости проглатывать параметры
     func uploadFiles(_ channel: Channel,fileItem:AssignedAttachmentViewItem, url:URL, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
             self.files.append(fileItem)
             self.upload_images_group.enter()
