@@ -10,6 +10,7 @@ import Foundation
 
 private protocol PathPatterns: class {
     static func loginPathPattern() -> String
+    static func loadCurrentUser() -> String
     static func avatarPathPattern() -> String
     static func socketPathPattern() -> String
     static func initialLoadPathPattern() -> String
@@ -23,10 +24,13 @@ final class UserPathPatternsContainer: PathPatterns {
         return "users/:\(UserAttributes.identifier)/image"
     }
     static func loginPathPattern() -> String {
-        return "users/login";
+        return "users/login"
     }
     static func logoutPathPattern() -> String {
-        return "users/logout";
+        return "users/logout"
+    }
+    static func loadCurrentUser() -> String {
+        return "users/me"
     }
     static func initialLoadPathPattern() -> String {
         return TeamPathPatternsContainer.initialLoadPathPattern()

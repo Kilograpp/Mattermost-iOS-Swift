@@ -143,13 +143,18 @@ extension RightMenuViewController: RightMenuViewControllerNavigation {
     
     func proceedToSettings() {
         let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
-        let settings = storyboard.instantiateInitialViewController()
+        //let settings = storyboard.instantiateInitialViewController()
+        let nSettings = storyboard.instantiateViewController(withIdentifier: "NSettingsTableViewController")
         let navigation = self.menuContainerViewController.centerViewController
-        (navigation! as AnyObject).pushViewController(settings!, animated:true)
+        //(navigation! as AnyObject).pushViewController(nSettings!, animated:true)
+        (navigation! as AnyObject).pushViewController(nSettings, animated: true)
     }
     
     func proceedToInvite() {
-    
+        let storyboard = UIStoryboard.init(name: "RightMenu", bundle: nil)
+        let about = storyboard.instantiateViewController(withIdentifier: "InviteNewMemberTableViewController")
+        let navigation = self.menuContainerViewController.centerViewController
+        (navigation! as AnyObject).pushViewController(about, animated:true)
     }
     
     func proceedToHelp() {
@@ -204,6 +209,7 @@ extension RightMenuViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         switch (indexPath as NSIndexPath).row {
         case Constants.RightMenuRows.SwitchTeam:
             proceedToTeams()
@@ -216,7 +222,8 @@ extension RightMenuViewController : UITableViewDelegate {
             proceedToSettings()
          
         case Constants.RightMenuRows.InviteNewMembers:
-            print("Constants.RightMenuRows.InviteNewMembers")
+            toggleRightSideMenu()
+            proceedToInvite()
             
         case Constants.RightMenuRows.Help:
             print("Constants.RightMenuRows.Help")

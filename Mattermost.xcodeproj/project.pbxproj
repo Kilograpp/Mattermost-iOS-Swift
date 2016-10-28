@@ -33,9 +33,16 @@
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
+		8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */; };
+		8B3C3ED61DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */; };
+		8B3C3ED81DC28487005FCAFE /* CheckSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */; };
+		8B3C3EDA1DC29080005FCAFE /* TextSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED91DC29080005FCAFE /* TextSettingsTableViewCell.swift */; };
+		8B3C3EDE1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */; };
 		8B4718B11DB581C30010747C /* MoreCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4718B01DB581C30010747C /* MoreCellBuilder.swift */; };
 		8B4718B31DB585C50010747C /* More.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B4718B21DB585C50010747C /* More.storyboard */; };
 		8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */; };
+		8B77B5DE1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */; };
+		8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */; };
 		8B882D661DA5A21F0028F13D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B882D681DA5A21F0028F13D /* Localizable.strings */; };
 		8B882D6B1DA6566F0028F13D /* SearchCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B882D6A1DA6566F0028F13D /* SearchCellBuilder.swift */; };
 		8B882D6D1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */; };
@@ -49,6 +56,9 @@
 		8B9E1C151DB822A500C05B36 /* TeamCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E1C141DB822A500C05B36 /* TeamCellBuilder.swift */; };
 		8B9E1C171DB8994100C05B36 /* RightMenuCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E1C161DB8994100C05B36 /* RightMenuCellBuilder.swift */; };
 		8B9E1C191DB8B6F700C05B36 /* RightMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B9E1C181DB8B6F700C05B36 /* RightMenu.storyboard */; };
+		8B9E27C91DC0984300543C6C /* MPNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27C81DC0984300543C6C /* MPNSettingsTableViewController.swift */; };
+		8B9E27CB1DC0985D00543C6C /* NSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */; };
+		8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */; };
 		8BA8EDEA1DAAE0A0000BF560 /* ProfileCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8EDE91DAAE0A0000BF560 /* ProfileCellBuilder.swift */; };
 		8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */; };
 		8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */; };
@@ -247,9 +257,16 @@
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
+		8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyProps.swift; sourceTree = "<group>"; };
+		8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotifyPropsMappingContainer.swift; path = Mappings/NotifyPropsMappingContainer.swift; sourceTree = "<group>"; };
+		8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		8B3C3ED91DC29080005FCAFE /* TextSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteNewMemberTableViewCell.swift; sourceTree = "<group>"; };
 		8B4718B01DB581C30010747C /* MoreCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreCellBuilder.swift; sourceTree = "<group>"; };
 		8B4718B21DB585C50010747C /* More.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = More.storyboard; sourceTree = "<group>"; };
 		8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteNewMemberTableViewController.swift; sourceTree = "<group>"; };
+		8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessInviteNewMembreViewController.swift; sourceTree = "<group>"; };
 		8B882D671DA5A21F0028F13D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B882D691DA5A2220028F13D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B882D6A1DA6566F0028F13D /* SearchCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCellBuilder.swift; sourceTree = "<group>"; };
@@ -264,6 +281,9 @@
 		8B9E1C141DB822A500C05B36 /* TeamCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCellBuilder.swift; sourceTree = "<group>"; };
 		8B9E1C161DB8994100C05B36 /* RightMenuCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightMenuCellBuilder.swift; sourceTree = "<group>"; };
 		8B9E1C181DB8B6F700C05B36 /* RightMenu.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = RightMenu.storyboard; sourceTree = "<group>"; };
+		8B9E27C81DC0984300543C6C /* MPNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPNSettingsTableViewController.swift; sourceTree = "<group>"; };
+		8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSettingsTableViewController.swift; sourceTree = "<group>"; };
+		8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BA8EDE91DAAE0A0000BF560 /* ProfileCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCellBuilder.swift; sourceTree = "<group>"; };
 		8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatViewController.swift; sourceTree = "<group>"; };
 		8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingInProcessView.swift; sourceTree = "<group>"; };
@@ -486,6 +506,24 @@
 			name = Teams;
 			sourceTree = "<group>";
 		};
+		8B3C3ED21DC1F8AB005FCAFE /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */,
+				8B3C3ED91DC29080005FCAFE /* TextSettingsTableViewCell.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		8B77B5DC1DC31CCE00DF0689 /* InviteNewMember */ = {
+			isa = PBXGroup;
+			children = (
+				8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */,
+				8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */,
+			);
+			path = InviteNewMember;
+			sourceTree = "<group>";
+		};
 		8B8F6FFF1D7747A900ACF626 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -493,6 +531,16 @@
 				8B8F70011D7747A900ACF626 /* ProfileTableViewCell.xib */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		8B9E27C51DC0971700543C6C /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				8B9E27C81DC0984300543C6C /* MPNSettingsTableViewController.swift */,
+				8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */,
+				8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		8BBA7DC21D874F0F003A5B99 /* Xibs */ = {
@@ -596,6 +644,7 @@
 				D83305F71D5637B800E92CD6 /* AttachmentField.swift */,
 				D8D601371D5E007700951F18 /* Day.swift */,
 				4B7DB5A41DA5500F000908FB /* Member.swift */,
+				8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -716,6 +765,7 @@
 				CDB4BC721D80725600662231 /* AttachmentMappingsContainer.swift */,
 				CDB4BC741D8074E800662231 /* AttachmentFieldMappingsContainer.swift */,
 				4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */,
+				8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */,
 			);
 			name = Mappings;
 			sourceTree = "<group>";
@@ -735,6 +785,8 @@
 		D617E69B1D46AEF000283C0A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				8B9E27C51DC0971700543C6C /* Settings */,
+				8B77B5DC1DC31CCE00DF0689 /* InviteNewMember */,
 				4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */,
 				4BEA108B1D79B551006BB298 /* TeamViewController.swift */,
 				CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */,
@@ -850,6 +902,7 @@
 		D6E165841D47C08F0014C831 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				8B3C3ED21DC1F8AB005FCAFE /* Settings */,
 				4B4FE7911D800E0C0088ABEC /* Teams */,
 				D67A42F71D7486F7003E2466 /* PostAttachmentsViewCell */,
 				8B8F6FFF1D7747A900ACF626 /* Profile */,
@@ -858,6 +911,7 @@
 				D6E165851D47C0960014C831 /* Chat */,
 				D6E165861D47C1200014C831 /* Reusable.swift */,
 				8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */,
+				8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1263,8 +1317,10 @@
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				D8812C311D46D54F00436B5C /* SocketManager.swift in Sources */,
+				8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */,
 				4B7270821DABF4C000445586 /* AlertView.swift in Sources */,
 				D8D6013A1D5E1BD800951F18 /* FeedNotificationsObserver.swift in Sources */,
+				8B3C3ED61DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
 				8B9E1C111DB6DAA700C05B36 /* LeftMenuCellBuilder.swift in Sources */,
@@ -1273,16 +1329,19 @@
 				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
 				8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */,
+				8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */,
 				CDB4BC671D80678000662231 /* BaseRequestDescriptorsContainer.swift in Sources */,
 				CDF07ECC1D7F127400172D1E /* ChannelMappingsContainer.swift in Sources */,
 				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
+				8B3C3EDE1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift in Sources */,
 				8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
 				CDF07ED21D7F1DA300172D1E /* PostPathPatternsContainer.swift in Sources */,
 				8B9E1C151DB822A500C05B36 /* TeamCellBuilder.swift in Sources */,
 				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
 				D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */,
+				8B3C3ED81DC28487005FCAFE /* CheckSettingsTableViewCell.swift in Sources */,
 				CDB4BC691D806C7000662231 /* FileMappingsContainer.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				CDB6D3D01D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift in Sources */,
@@ -1340,9 +1399,11 @@
 				CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */,
 				D86EF7FE1D5A325800BD49A3 /* UIView+Align.swift in Sources */,
 				CDB6D3BB1D78423600C3018C /* String+IntSubscript.swift in Sources */,
+				8B9E27CB1DC0985D00543C6C /* NSettingsTableViewController.swift in Sources */,
 				8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */,
 				4B9DD4BB1DB0C94800AB4D2D /* AttachmentFileView.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
+				8B3C3EDA1DC29080005FCAFE /* TextSettingsTableViewCell.swift in Sources */,
 				D67A42F61D747B80003E2466 /* AssignedPhotoViewItem.swift in Sources */,
 				8B9E1C131DB7454900C05B36 /* DirectChannelTableViewCell.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
@@ -1366,6 +1427,7 @@
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
 				4B7270801DABF3C400445586 /* AlertManager.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
+				8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */,
 				8B9E1C171DB8994100C05B36 /* RightMenuCellBuilder.swift in Sources */,
 				CDF07ED01D7F1D8900172D1E /* FilePathPatternsContainer.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
@@ -1382,12 +1444,14 @@
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
+				8B77B5DE1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift in Sources */,
 				D83305F61D5636EF00E92CD6 /* Attachment.swift in Sources */,
 				D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */,
 				8BA8EDEA1DAAE0A0000BF560 /* ProfileCellBuilder.swift in Sources */,
 				4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */,
 				D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */,
 				4B9DD4BD1DB1445200AB4D2D /* UIImage+Orientation.swift in Sources */,
+				8B9E27C91DC0984300543C6C /* MPNSettingsTableViewController.swift in Sources */,
 				8B882D6B1DA6566F0028F13D /* SearchCellBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

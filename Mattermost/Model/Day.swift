@@ -32,7 +32,6 @@ final class Day: RealmObject {
     let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.day.rawValue)
     
 
-    
     override class func primaryKey() -> String {
         return DayAttributes.key.rawValue
     }

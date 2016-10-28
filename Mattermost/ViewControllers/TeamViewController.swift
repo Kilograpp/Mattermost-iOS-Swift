@@ -40,7 +40,7 @@ private protocol TeamViewControllerAction {
 }
 
 private protocol TeamViewControllerNavigation {
-    func returnToChat()
+    func returnToPrevious()
 }
 
 private protocol TeamViewControllerConfiguration {
@@ -103,25 +103,25 @@ extension TeamViewController: TeamViewControllerSetup {
 }
 
 
-//MARK: Action
+//MARK: TeamViewControllerAction
 
 extension TeamViewController: TeamViewControllerAction {
     func backAction() {
-        returnToChat()
+        returnToPrevious()
     }
 }
 
 
-//MARK: Navigation
+//MARK: TeamViewControllerNavigation
 
 extension TeamViewController: TeamViewControllerNavigation {
-    func returnToChat() {
+    func returnToPrevious() {
         self.dismiss(animated: true, completion: nil)
     }
 }
 
 
-//MARK: Configuration
+//MARK: TeamViewControllerConfiguration
 
 extension  TeamViewController: TeamViewControllerConfiguration  {
     func prepareResults() {
@@ -131,15 +131,27 @@ extension  TeamViewController: TeamViewControllerConfiguration  {
 }
 
 
-//MARK: Request
+//MARK: TeamViewControllerRequest
 
 extension TeamViewController: TeamViewControllerRequest {
     func reloadChat() {
-        Api.sharedInstance.loadChannels(with: { (error) in
-            Api.sharedInstance.loadCompleteUsersList({ (error) in
-                RouterUtils.loadInitialScreen()
-            })
-        })
+        
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName), object: nil))
+        
+        RealmUtils.refresh()
+        
+        Api.sharedInstance.loadTeams { (userShouldSelectTeam, error) in
+
+            Api.sharedInstance.loadCurrentUser { (error) in
+                Api.sharedInstance.loadChannels(with: { (error) in
+                    Api.sharedInstance.loadCompleteUsersList({ (error) in
+                        RouterUtils.loadInitialScreen()
+                        
+                        self.dismiss(animated: true, completion: nil)
+                    })
+                })
+            }
+        }
     }
 }
 
@@ -166,7 +178,16 @@ extension TeamViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let team = Team()
+        let team = self.results[indexPath.row]
+        
+        guard (Preferences.sharedInstance.currentTeamId != nil) else {
+            Preferences.sharedInstance.currentTeamId = team.identifier
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification), object: nil)
+            self.dismiss(animated: true, completion: nil)
+            
+            return
+        }
+        
         if (Preferences.sharedInstance.currentTeamId != team.identifier) {
             Preferences.sharedInstance.currentTeamId = team.identifier
             self.reloadChat()

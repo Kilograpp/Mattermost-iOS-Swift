@@ -92,6 +92,11 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
 
+    
+    func forceUnsubscribeFromNotifications() {
+        self.resultsObserver.unsubscribeNotifications()
+    }
+    
 }
 
 

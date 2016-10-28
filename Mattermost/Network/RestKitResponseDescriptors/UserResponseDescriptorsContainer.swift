@@ -12,6 +12,7 @@ import RestKit
 private protocol ResponseDescriptors: class {
     static func loginResponseDescriptor() -> RKResponseDescriptor
     static func logoutResponseDescriptor() -> RKResponseDescriptor
+    static func loadCurrentUserResponseDescriptor() -> RKResponseDescriptor
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor
     static func completeListResponseDescriptor() -> RKResponseDescriptor
 }
@@ -33,6 +34,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: UserMappingsContainer.emptyMapping(),
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.logoutPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func loadCurrentUserResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: UserMappingsContainer.mapping(),
+                                    method: .GET,
+                                    pathPattern: UserPathPatternsContainer.loadCurrentUser(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

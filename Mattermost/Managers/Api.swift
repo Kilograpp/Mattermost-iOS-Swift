@@ -22,11 +22,13 @@ private protocol Interface: class {
 private protocol UserApi: class {
     func login(_ email: String, password: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadCompleteUsersList(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func loadCurrentUser(completion: @escaping (_ error: Mattermost.Error?) -> Void)
 //    func updateStatusForUsers(users: Array<User>, completion: (error: Mattermost.Error?) -> Void)
 }
 
 private protocol TeamApi: class {
     func loadTeams(with completion: @escaping (_ userShouldSelectTeam: Bool, _ error: Mattermost.Error?) -> Void)
+    func sendInvites(_ invites: [Dictionary<String , String>], completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol ChannelApi: class {
@@ -95,6 +97,9 @@ extension Api: UserApi {
         let parameters = ["login_id" : email, "password": password, "token" : ""]
         self.manager.postObject(path: path, parameters: parameters as [AnyHashable: Any]?, success: { (mappingResult) in
             let user = mappingResult.firstObject as! User
+            
+            print(user)
+            
             let systemUser = DataManager.sharedInstance.instantiateSystemUser()
             user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user
@@ -108,6 +113,19 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.logoutPathPattern()
         let parameters = ["user_id" : Preferences.sharedInstance.currentUserId!]
         self.manager.postObject(path: path, parameters: parameters, success: { (mappingResult) in
+            completion(nil)
+            }, failure: completion)
+    }
+    
+    func loadCurrentUser(completion: @escaping (Error?) -> Void) {
+        let path = UserPathPatternsContainer.loadCurrentUser()
+        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
+            let user = mappingResult.firstObject as! User
+            let systemUser = DataManager.sharedInstance.instantiateSystemUser()
+            user.computeDisplayName()
+            DataManager.sharedInstance.currentUser = user
+            RealmUtils.save([user, systemUser])
+            SocketManager.sharedInstance.setNeedsConnect()
             completion(nil)
             }, failure: completion)
     }
@@ -166,6 +184,17 @@ extension Api: TeamApi {
             completion(nil)
         }) { (error) in
             completion(error)
+        }
+    }
+    
+    func sendInvites(_ invites: [Dictionary<String , String>], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(TeamPathPatternsContainer.teamInviteMembers(), DataManager.sharedInstance.currentTeam)
+        let params: Dictionary = ["invites" : invites]
+        
+        self.manager.postObject(nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(nil)
+            }) { (error) in
+                completion(error)
         }
     }
 }

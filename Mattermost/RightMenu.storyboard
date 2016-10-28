@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="SF-UI-Display-Regular.otf">
+            <string>SFUIDisplay-Regular</string>
+        </array>
+        <array key="SF-UI-Text-Regular.otf">
+            <string>SFUIText-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--About View Controller-->
         <scene sceneID="ATD-uk-klB">
@@ -106,7 +115,90 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zbg-P4-umH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1857.5" y="1629.5"/>
+            <point key="canvasLocation" x="-4362" y="-1081"/>
+        </scene>
+        <!--Invite new member-->
+        <scene sceneID="yYa-UF-gFF">
+            <objects>
+                <tableViewController storyboardIdentifier="InviteNewMemberTableViewController" id="mAG-HC-mWD" customClass="InviteNewMemberTableViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="mDv-dd-iCa">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="Onn-vV-7rN">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="46"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="93q-28-ucI">
+                                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                                    <state key="normal" title="Add another"/>
+                                    <connections>
+                                        <action selector="addAnoterAction:" destination="mAG-HC-mWD" eventType="touchUpInside" id="PG0-r8-jgo"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="93q-28-ucI" firstAttribute="leading" secondItem="Onn-vV-7rN" secondAttribute="leading" id="1Y6-ga-ckF"/>
+                                <constraint firstAttribute="bottom" secondItem="93q-28-ucI" secondAttribute="bottom" id="6cp-HM-HEy"/>
+                                <constraint firstItem="93q-28-ucI" firstAttribute="top" secondItem="Onn-vV-7rN" secondAttribute="top" id="pF5-jD-0bM"/>
+                                <constraint firstAttribute="trailing" secondItem="93q-28-ucI" secondAttribute="trailing" id="zAF-aA-T6f"/>
+                            </constraints>
+                        </view>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="mAG-HC-mWD" id="D2Z-7i-nyJ"/>
+                            <outlet property="delegate" destination="mAG-HC-mWD" id="c7t-0r-Hj8"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Invite new member" id="S4L-2A-ODz"/>
+                    <connections>
+                        <segue destination="rXS-iK-o4s" kind="show" id="QcG-vM-isw"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fsO-Ar-qS6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4362.3999999999996" y="-292.80359820089956"/>
+        </scene>
+        <!--Success Invite New Membre View Controller-->
+        <scene sceneID="cRy-2M-wEL">
+            <objects>
+                <viewController storyboardIdentifier="SuccessInviteNewMemberTableViewController" id="rXS-iK-o4s" customClass="SuccessInviteNewMembreViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Bzi-Oo-F9e"/>
+                        <viewControllerLayoutGuide type="bottom" id="IQz-5U-6lY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="KoU-M3-YCL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Success invite!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QVy-3n-ti9">
+                                <fontDescription key="fontDescription" name="SFUIDisplay-Regular" family="SF UI Display" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8f3-Zi-2ps">
+                                <fontDescription key="fontDescription" name="SFUIDisplay-Regular" family="SF UI Display" pointSize="17"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.27450980392156865" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="QVy-3n-ti9" firstAttribute="centerX" secondItem="KoU-M3-YCL" secondAttribute="centerX" id="CWZ-sS-G4t"/>
+                            <constraint firstItem="8f3-Zi-2ps" firstAttribute="leading" secondItem="KoU-M3-YCL" secondAttribute="leadingMargin" constant="15" id="Kg1-7e-4X1"/>
+                            <constraint firstItem="8f3-Zi-2ps" firstAttribute="top" secondItem="QVy-3n-ti9" secondAttribute="bottom" constant="10" id="L6e-6g-gYd"/>
+                            <constraint firstItem="QVy-3n-ti9" firstAttribute="centerY" secondItem="KoU-M3-YCL" secondAttribute="centerY" constant="-120" id="rzN-j1-q9i"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="8f3-Zi-2ps" secondAttribute="trailing" constant="15" id="xGu-aq-LYj"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="invitesCountLabel" destination="8f3-Zi-2ps" id="Sxc-u3-d27"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="70J-90-xci" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3436" y="-293"/>
         </scene>
     </scenes>
     <resources>

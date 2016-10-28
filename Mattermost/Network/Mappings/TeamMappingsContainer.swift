@@ -12,6 +12,7 @@ import RestKit
 private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
     static func initialLoadConfigMapping() -> RKObjectMapping
+    static func invitationMapping() -> RKObjectMapping
 }
 
 final class TeamMappingsContainer: BaseMappingsContainer {
@@ -31,6 +32,10 @@ extension TeamMappingsContainer: ResponseMappings {
     static func initialLoadConfigMapping() -> RKObjectMapping {
         let entityMapping = RKObjectMapping(for: NSMutableDictionary.self)
         entityMapping?.addAttributeMappings(from: ["SiteName" : PreferencesAttributes.siteName.rawValue])
+        return entityMapping!
+    }
+    static func invitationMapping() -> RKObjectMapping {
+        let entityMapping = RKObjectMapping(for: NSMutableDictionary.self)
         return entityMapping!
     }
 }
