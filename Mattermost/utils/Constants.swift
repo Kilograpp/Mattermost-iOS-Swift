@@ -69,6 +69,7 @@ struct Constants {
         static let PrivateTypeChannel = "P"
         static let DirectTypeChannel = "D"
     }
+
     
     struct EmojiArrays {
         static let apple: Array = [ "😠", "☺️", "😰", "😖", "😢", "😞", "😥", "😨", "😳", "😁", "😀", "😍", "😂", "😗", "😚", "😘", "😙", "😆", "😔",

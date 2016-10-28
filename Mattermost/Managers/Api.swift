@@ -500,11 +500,11 @@ extension Api : FileApi {
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
         let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
         let params = ["channel_id" : channel.identifier!,
-                      "client_ids"  : StringUtils.randomUUID()]
+                      "client_ids"  :item.identifier]
         
         
         if item.isFile {
-            self.manager.postFile(with: item.url, name: "files", path: path, parameters: params, success: { (mappingResult) in
+            self.manager.postFile(with: item.url, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
                 let file = File()
                 //refactor
                 let dictionary = mappingResult.firstObject as! [String:String]
