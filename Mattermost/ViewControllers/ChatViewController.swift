@@ -85,7 +85,7 @@ private protocol Navigation {
 
 private protocol Request {
     func loadFirstPageAndReload()
-    func loadFirstPageOfData()
+    func loadFirstPageOfData(isInitial: Bool)
     func loadNextPageOfData()
     func sendPost()
 }
@@ -378,7 +378,7 @@ extension ChatViewController: Action {
     
     
     func refreshControlValueChanged() {
-        self.loadFirstPageOfData()
+        self.loadFirstPageOfData(isInitial: false)
     }
     
     func longPressAction(_ gestureRecognizer: UILongPressGestureRecognizer) {
@@ -430,14 +430,16 @@ extension ChatViewController: Request {
             self.hasNextPage = true
         })
     }
-    func loadFirstPageOfData() {
+    func loadFirstPageOfData(isInitial: Bool) {
         print("loadFirstPageOfData")
         self.isLoadingInProgress = true
         
         let activityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-        activityIndicatorView.center = self.tableView.center
-        activityIndicatorView.startAnimating()
-        self.tableView.addSubview(activityIndicatorView)
+        if isInitial {
+            activityIndicatorView.center = self.tableView.center
+            activityIndicatorView.startAnimating()
+            self.tableView.addSubview(activityIndicatorView)
+        }
         
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             activityIndicatorView.removeFromSuperview()
@@ -677,7 +679,7 @@ extension ChatViewController: ChannelObserverDelegate {
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         
         if (self.postFromSearch == nil) {
-            self.loadFirstPageOfData()
+            self.loadFirstPageOfData(isInitial: true)
         }
         else {
             loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
