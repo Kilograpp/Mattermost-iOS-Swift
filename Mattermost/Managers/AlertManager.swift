@@ -29,7 +29,7 @@ class AlertManager {
     
     func showErrorWithMessage(message:String, viewController: UIViewController) {
         let alertView = AlertView(type: .error, message: message)
-        alertView.presentingViewController = viewController.navigationController
+        alertView.presentingViewController = viewController//.navigationController
         alertView.showAlertView(animated: true)
     }
     
