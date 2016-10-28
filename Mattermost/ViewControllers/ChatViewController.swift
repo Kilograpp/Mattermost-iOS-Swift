@@ -74,6 +74,7 @@ private protocol Action {
     func leftMenuButtonAction(_ sender: AnyObject)
     func rigthMenuButtonAction(_ sender: AnyObject)
     func searchButtonAction(_ sender: AnyObject)
+    func titleTapAction()
     func sendPostAction()
     func refreshControlValueChanged()
 }
@@ -183,6 +184,19 @@ extension ChatViewController: Setup {
     }
     
     fileprivate func setupInputViewButtons() {
+        let width = UIScreen.screenWidth() / 3
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: 44))
+        titleLabel.backgroundColor = UIColor.clear
+        titleLabel.textColor = ColorBucket.blackColor
+        titleLabel.isUserInteractionEnabled = true
+        titleLabel.font = FontBucket.titleChannelFont
+        titleLabel.textAlignment = .center
+        titleLabel.text = self.channel?.displayName
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleTapAction))
+        self.navigationItem.titleView = titleLabel
+        self.navigationItem.titleView?.addGestureRecognizer(tapGestureRecognizer)
+        
         self.rightButton.titleLabel!.font = FontBucket.feedSendButtonTitleFont;
         self.rightButton.setTitle("Send", for: UIControlState())
         self.rightButton.addTarget(self, action: #selector(sendPostAction), for: .touchUpInside)
@@ -360,6 +374,12 @@ extension ChatViewController: Action {
     
     @IBAction func searchButtonAction(_ sender: AnyObject) {
         proceedToSearchChat()
+    }
+    
+    func titleTapAction() {
+        if (self.channel.privateType == Constants.ChannelType.DirectTypeChannel) {
+            proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
+        }
     }
     
     func sendPostAction() {
@@ -676,6 +696,10 @@ extension ChatViewController: ChannelObserverDelegate {
         //new channel
         self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", identifier).first!
         self.title = self.channel?.displayName
+        
+        if (self.navigationItem.titleView != nil) {
+            (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
+        }
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         
         if (self.postFromSearch == nil) {
