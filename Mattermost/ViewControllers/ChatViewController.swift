@@ -494,7 +494,7 @@ extension ChatViewController: Request {
             self.resultsObserver.subscribeNotifications()
             
             let indexPath =  self.resultsObserver.indexPathForPost(post)
-            self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         }
     }
     
