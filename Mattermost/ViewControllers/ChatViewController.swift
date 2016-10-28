@@ -224,6 +224,7 @@ extension ChatViewController: Setup {
     }
     
     fileprivate func setupEmptyDialogueLabel() {
+        self.emptyDialogueLabel.backgroundColor = self.tableView.backgroundColor
         self.view.insertSubview(self.emptyDialogueLabel, aboveSubview: self.tableView)
     }
     
@@ -502,6 +503,8 @@ extension ChatViewController: Request {
             if (error != nil) {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
             }
+            self.emptyDialogueLabel.isHidden = true
+            self.hideTopActivityIndicator()
         }
         self.dismissKeyboard(true)
         self.clearTextView()
