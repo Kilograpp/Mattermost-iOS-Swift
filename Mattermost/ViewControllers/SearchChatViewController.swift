@@ -83,6 +83,16 @@ extension SearchChatViewController: LifeCycle {
         
         configureForSearchStage(SearchStage.SearchNotStarted)
     }
+        
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        var frame = self.searchTextField.superview?.frame
+        let delta = (frame?.origin.x)! - 8
+        frame?.origin.x = 8
+        frame?.size.width += delta
+        self.searchTextField.superview?.frame = frame!
+    }
 }
 
 

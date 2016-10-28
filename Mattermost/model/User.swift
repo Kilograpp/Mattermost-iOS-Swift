@@ -58,8 +58,8 @@ enum UserAttributes: String {
     case username = "username"
     case avatarLink = "avatarLink"
 }
-/*
-enum UserRelationships: String {
+
+/*enum UserRelationships: String {
     case notifyProps = "notify_props"
 }*/
 

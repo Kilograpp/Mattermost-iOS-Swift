@@ -4,7 +4,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -451,7 +450,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ts1-GG-mjn" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="TSm-3E-2Y7">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="TSm-3E-2Y7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -649,7 +648,7 @@
                                         <nil key="title"/>
                                         <view key="titleView" contentMode="scaleToFill" id="Env-wZ-ZS7">
                                             <rect key="frame" x="8" y="20" width="245" height="44"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xP9-pf-veq">
                                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -665,9 +664,10 @@
                                             </subviews>
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
-                                                <constraint firstItem="xP9-pf-veq" firstAttribute="width" secondItem="Env-wZ-ZS7" secondAttribute="width" multiplier="0.95" id="AgK-Lp-90h"/>
-                                                <constraint firstItem="xP9-pf-veq" firstAttribute="centerX" secondItem="Env-wZ-ZS7" secondAttribute="centerX" id="I8v-h8-VTT"/>
-                                                <constraint firstItem="xP9-pf-veq" firstAttribute="centerY" secondItem="Env-wZ-ZS7" secondAttribute="centerY" id="YrL-Yc-TKG"/>
+                                                <constraint firstItem="xP9-pf-veq" firstAttribute="leading" secondItem="Env-wZ-ZS7" secondAttribute="leading" id="8jh-oH-CZf"/>
+                                                <constraint firstAttribute="bottom" secondItem="xP9-pf-veq" secondAttribute="bottom" constant="8" id="OPc-Vt-18p"/>
+                                                <constraint firstItem="xP9-pf-veq" firstAttribute="top" secondItem="Env-wZ-ZS7" secondAttribute="top" constant="8" id="cZa-kn-9bM"/>
+                                                <constraint firstAttribute="trailing" secondItem="xP9-pf-veq" secondAttribute="trailing" id="mCj-99-aB7"/>
                                                 <constraint firstAttribute="height" constant="44" id="qBX-cg-Tu3"/>
                                             </constraints>
                                         </view>
