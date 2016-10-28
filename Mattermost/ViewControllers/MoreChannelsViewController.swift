@@ -133,6 +133,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerAction {
         for channel in self .results {
             RealmUtils.save(channel)
         }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
        // (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).reloadMenu()
     }
 }

@@ -79,10 +79,6 @@ final class LeftMenuViewController: UIViewController {
         self.tableView.reloadData()
         configureInitialSelectedChannel()
     }
-    
-    
-    
-    
 }
 
 //MARK: - PrivateProtocols
@@ -257,12 +253,6 @@ extension LeftMenuViewController : Navigation {
         moreViewController.isPrivateChannel = (section == 0) ? false : true
         (self.menuContainerViewController!.centerViewController as AnyObject).pushViewController(moreViewController, animated: true)
         toggleLeftSideMenu()
-        
-        
-/*        let moreViewController = self.storyboard!.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
-        moreViewController.isPrivateChannel = (section == 0) ? false : true
-        (self.menuContainerViewController!.centerViewController as AnyObject).pushViewController(moreViewController, animated: true)
-        toggleLeftSideMenu()*/
     }
     
     fileprivate func toggleLeftSideMenu() {

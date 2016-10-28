@@ -17,8 +17,6 @@ import MFSideMenu
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
 
-
-    
 //MARK: Properties
     
     var channel : Channel!
