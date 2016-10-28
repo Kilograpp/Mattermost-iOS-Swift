@@ -89,8 +89,8 @@ extension AboutViewController: AboutViewControllerSetup {
     }
     
     func setupLinks() {
-        let mattermostString = NSMutableAttributedString(string: "Join the Mattermost community at mattermost.org" )
-        let kilograppString = NSMutableAttributedString(string: "This application was developed by Kilograpp Team")
+        let mattermostString = NSMutableAttributedString(string: "Join the Mattermost community at " )
+        let kilograppString = NSMutableAttributedString(string: "This application was developed by ")
         
         let mattermostLink = NSAttributedString(string: "mattermost.org", attributes: [NSLinkAttributeName : URL(string: "https://mattermost.org/")!])
         let kilograppLink = NSAttributedString(string: "Kilograpp Team", attributes: [NSLinkAttributeName : URL(string: "http://kilograpp.com/")!])
