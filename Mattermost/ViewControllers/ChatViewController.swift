@@ -579,6 +579,7 @@ extension ChatViewController {
             let cell = self.builder.cellForPost(post!, errorHandler: errorHandler)
             if (cell.isKind(of: FeedCommonTableViewCell.self)) {
                 (cell as! FeedCommonTableViewCell).avatarTapHandler = {
+                    guard (post?.author.identifier != "SystemUserIdentifier") else { return }
                     self.proceedToProfileFor(user: (post?.author)!)
                 }
             }
