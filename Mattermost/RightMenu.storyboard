@@ -24,7 +24,7 @@
                         <viewControllerLayoutGuide type="bottom" id="io6-5e-md0"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="mqV-op-gde">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about_mattermost_icon" translatesAutoresizingMaskIntoConstraints="NO" id="hIv-YO-Koh">
@@ -59,20 +59,20 @@
                                 <color key="textColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="This application was developed by Kilograpp Team" translatesAutoresizingMaskIntoConstraints="NO" id="gTQ-58-3ds" userLabel="kilograppLinkView">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="This application was developed by Kilograpp Team" translatesAutoresizingMaskIntoConstraints="NO" id="gTQ-58-3ds" userLabel="kilograppLinkView">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="dg6-Yz-AI9"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="dg6-Yz-AI9"/>
                                 </constraints>
                                 <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <dataDetectorType key="dataDetectorTypes" link="YES"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Join the Mattermost community at mattermost.org" translatesAutoresizingMaskIntoConstraints="NO" id="g0m-7o-4Sb" userLabel="matterMostLinkView">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Join the Mattermost community at mattermost.org" translatesAutoresizingMaskIntoConstraints="NO" id="g0m-7o-4Sb" userLabel="matterMostLinkView">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="aoN-1I-3rQ"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="aoN-1I-3rQ"/>
                                 </constraints>
                                 <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -122,11 +122,11 @@
             <objects>
                 <tableViewController storyboardIdentifier="InviteNewMemberTableViewController" id="mAG-HC-mWD" customClass="InviteNewMemberTableViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="mDv-dd-iCa">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="Onn-vV-7rN">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="46"/>
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="93q-28-ucI">
@@ -169,7 +169,7 @@
                         <viewControllerLayoutGuide type="bottom" id="IQz-5U-6lY"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="KoU-M3-YCL">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Success invite!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QVy-3n-ti9">
