@@ -126,7 +126,12 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequests {
 
 extension MoreChannelsViewController: MoreChannelsViewControllerAction {
     func backAction() {
-        returnToChannel()
+        //loadChannels()
+        Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
+         //   self.prepareResults()
+         //   self.tableView.reloadData()
+            self.returnToChannel()
+        }
     }
     
     func addDoneAction() {
