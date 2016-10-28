@@ -25,6 +25,7 @@ extension UserStatusManager {
             
             NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName), object: nil))
             RealmUtils.deleteAll()
+            Preferences.sharedInstance.currentTeamId = nil
             RouterUtils.loadInitialScreen()
         }
     }

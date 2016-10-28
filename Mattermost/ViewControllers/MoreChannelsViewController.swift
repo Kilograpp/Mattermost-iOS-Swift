@@ -108,6 +108,11 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+        
+        print("channels = ", self.results.count)
+        
+        let users = RealmUtils.realmForCurrentThread().objects(User.self)
+        print("users = ", users.count)
     }
 }
 
@@ -139,7 +144,6 @@ extension MoreChannelsViewController: MoreChannelsViewControllerAction {
             RealmUtils.save(channel)
         }
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
-       // (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).reloadMenu()
     }
 }
 
@@ -173,7 +177,6 @@ extension MoreChannelsViewController : UITableViewDataSource {
 
 extension MoreChannelsViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-      //  performSegue(withIdentifier: showChatViewController, sender: self.results[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

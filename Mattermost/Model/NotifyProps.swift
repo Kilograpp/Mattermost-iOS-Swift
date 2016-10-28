@@ -13,13 +13,13 @@ final class NotifyProps: RealmObject {
     dynamic var channel: Bool = false
     dynamic var comments: String?
     dynamic var desktop: String?
-    dynamic var desktopDuration: Int = 0
-    dynamic var desktopSound: Bool = false
+    dynamic var desktop_duration: Int = 0
+    dynamic var desktop_sound: Bool = false
     dynamic var email: Bool = false
-    dynamic var rirstName: Bool = false
-    dynamic var mentionKeys: String?
+    dynamic var first_name: Bool = false
+    dynamic var mention_keys: String?
     dynamic var push: String?
-    dynamic var pushStatus: String?
+    dynamic var push_status: String?
     
     
 //    let user = LinkingObjects(fromType: User.self, property: UserRelationships.notifyProps.rawValue)
@@ -37,11 +37,11 @@ enum NotifyPropsAttributes: String {
     case channel = "channel"
     case comments = "comments"
     case desktop = "desktop"
-    case desktopDuration = "desktop_duration"
-    case desktopSound = "desktop_sound"
+    case desktop_duration = "desktop_duration"
+    case desktop_sound = "desktop_sound"
     case email = "email"
-    case firstName = "first_name"
-    case mentionKeys = "mention_keys"
+    case first_name = "first_name"
+    case mention_keys = "mention_keys"
     case push = "push"
-    case pushStatus = "push_status"
+    case push_status = "push_status"
 }
