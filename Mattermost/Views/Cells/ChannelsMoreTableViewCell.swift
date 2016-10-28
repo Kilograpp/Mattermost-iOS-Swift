@@ -58,7 +58,7 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
     
     func configureAvatarForPublic(channel: Channel) {
         self.avatarImageView.image = nil
-        self.channelLetterLabel.isHidden = false
+        self.channelLetterLabel.superview?.isHidden = false
         self.channelLetterLabel.text = channel.displayName![0]
         
         let backgroundLayer = self.channelLetterLabel.superview?.layer.sublayers?[0] as! CAGradientLayer
@@ -67,7 +67,7 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
 
     func configureAvatarForPrivate(channel: Channel) {
         self.avatarImageView.image = nil
-        self.channelLetterLabel.isHidden = false
+        self.channelLetterLabel.superview?.isHidden = false
         self.channelLetterLabel.text = channel.displayName![0]
         
         let backgroundLayer = self.channelLetterLabel.superview?.layer.sublayers?[0] as! CAGradientLayer
@@ -80,7 +80,7 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
         ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
             self?.avatarImageView.image = image
         }
-        self.channelLetterLabel.isHidden = true
+        self.channelLetterLabel.superview?.isHidden = true
     }
     
     

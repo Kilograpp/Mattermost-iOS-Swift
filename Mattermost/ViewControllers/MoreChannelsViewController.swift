@@ -104,7 +104,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
 
 extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  {
     func prepareResults() {
-        let typeValue = self.isPrivateChannel ? Constants.ChannelType.PrivateTypeChannel : Constants.ChannelType.PublicTypeChannel
+        let typeValue = self.isPrivateChannel ? Constants.ChannelType.DirectTypeChannel : Constants.ChannelType.PublicTypeChannel
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
