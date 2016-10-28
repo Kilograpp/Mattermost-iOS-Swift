@@ -106,6 +106,7 @@ private protocol ChannelsMoreTableViewCellAction {
 
 extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellSetup {
     func initialSetup() {
+        self.selectionStyle = .none
         setupAvatarImageView()
         setupChannelLetterLabel()
         setupNameLabel()
