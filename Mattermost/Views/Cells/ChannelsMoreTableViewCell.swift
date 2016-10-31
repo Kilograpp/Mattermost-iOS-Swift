@@ -10,10 +10,13 @@ import UIKit
 import WebImage
 
 protocol ChannelsMoreTableViewCellConfiguration {
+    func configureWith(resultTuple: ResultTuple)
+    func cellHeigth() -> CGFloat
+    func configureWith(user: User)
     func configureWith(channel: Channel)
     func configureAvatarForPrivate(channel: Channel)
     func configureAvatarForPublic(channel: Channel)
-    func cellHeigth() -> CGFloat
+    
 }
 
 class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
@@ -40,6 +43,29 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
 //MARK: Configuration
 
 extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
+    func configureWith(resultTuple: ResultTuple) {
+        if (resultTuple.object.isKind(of: Channel.self)) {
+            configureWith(channel: (resultTuple.object as! Channel))
+        }
+        else {
+            configureWith(user: (resultTuple.object as! User))
+        }
+        self.checkBoxButton.isSelected = resultTuple.checked
+    }
+    
+    func cellHeigth() -> CGFloat {
+        return 60
+    }
+    
+    func configureWith(user: User) {
+        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
+            self?.avatarImageView.image = image
+        }
+        self.channelLetterLabel.superview?.isHidden = true
+        self.nameLabel.text = user.displayName
+    }
+    
     func configureWith(channel: Channel) {
         if (channel.privateType == Constants.ChannelType.PublicTypeChannel) {
             configureAvatarForPublic(channel: channel)
@@ -51,9 +77,7 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
             configureAvatarForDirect(channel: channel)
         }
         
-        
         self.nameLabel.text = channel.displayName
-        self.checkBoxButton.isSelected = channel.currentUserInChannel
     }
     
     func configureAvatarForPublic(channel: Channel) {
@@ -81,11 +105,6 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
             self?.avatarImageView.image = image
         }
         self.channelLetterLabel.superview?.isHidden = true
-    }
-    
-    
-    func cellHeigth() -> CGFloat {
-        return 60
     }
 }
 
@@ -191,6 +210,9 @@ extension ChannelsMoreTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        self.avatarImageView.image = nil
+        self.nameLabel.text = nil
     }
 }
 

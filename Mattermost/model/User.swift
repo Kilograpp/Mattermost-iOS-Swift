@@ -12,6 +12,7 @@ import RealmSwift
 
 private protocol Interface {
     func isSystem() -> Bool
+    func hasChannel() -> Bool
 }
 
 final class User: RealmObject {
@@ -91,5 +92,11 @@ extension User: Computatations {
 extension User: Interface {
     func isSystem() -> Bool {
         return self.identifier == Constants.Realm.SystemUserIdentifier
+    }
+    
+    func hasChannel() -> Bool {
+        let predicate =  NSPredicate(format: "displayName == %@", self.username!)
+        let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate)
+        return (channels.count > 0)
     }
 }

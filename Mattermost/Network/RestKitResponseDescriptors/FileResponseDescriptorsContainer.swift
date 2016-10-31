@@ -26,7 +26,6 @@ extension FileResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: nil,
                                     statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
-    
     static func uploadResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: FileMappingsContainer.uploadMapping(),
                                     method: .POST,

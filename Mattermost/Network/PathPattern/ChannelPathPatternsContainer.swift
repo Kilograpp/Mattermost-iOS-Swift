@@ -14,11 +14,12 @@ private protocol PathPatterns: class {
     static func loadOnePathPattern() -> String
     static func addUserPathPattern() -> String
     static func updateLastViewDatePathPattern() -> String
+    static func createDirrectChannelPathPattern() -> String
+    static func leaveChannelPathPattern() -> String
+    static func joinChannelPathPattern() -> String
 }
 
 final class ChannelPathPatternsContainer: PathPatterns {
-    
-    
     static func moreListPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/more"
     }
@@ -33,5 +34,14 @@ final class ChannelPathPatternsContainer: PathPatterns {
     }
     static func updateLastViewDatePathPattern() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/update_last_viewed_at"
+    }
+    static func createDirrectChannelPathPattern() -> String {
+        return "teams/:\(TeamAttributes.identifier.rawValue)/channels/create_direct"
+    }
+    static func leaveChannelPathPattern() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/leave"
+    }
+    static func joinChannelPathPattern() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/join"
     }
 }
