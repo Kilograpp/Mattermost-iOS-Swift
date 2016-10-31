@@ -11,17 +11,22 @@ import RealmSwift
 
 final class MoreChannelsViewController: UIViewController {
     
+    // CODEREVIEW: Лишняя марка
 //MARK: Property
     
     @IBOutlet weak var tableView: UITableView!
     
+    // CODEREVIEW: Реалму нечего делать в контроллере
     var realm: Realm?
     fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
+    // CODEREVIEW: Переменная названа странно, не понятно за что отвечает. И если это костанта, то имеет смысл вынести в статичные переменные.
     fileprivate let showChatViewController = "showChatViewController"
     
+    // CODEREVIEW: Избыточная инициализация
     fileprivate var results: Results<Channel>! = nil
     fileprivate var filteredResults: Results<Channel>! = nil
     
+    // CODEREVIEW: Если это внутренние переменные, то они должны быть fileprivate
     var isPrivateChannel: Bool = false
     var isSearchActive: Bool = false
     
@@ -32,6 +37,9 @@ final class MoreChannelsViewController: UIViewController {
 }
 
 
+// CODEREVIEW: Протоколы должны быть FilePrivate
+// CODEREVIEW: Названия должны быть коротки: LifeCycle
+// CODEREVIEW: viewDidLoad избыточно объявлять в протоколе, это уже существующий метод.
 private protocol MoreChannelsViewControllerLifeCycle {
     func viewDidLoad()
 }
@@ -62,6 +70,7 @@ private protocol MoreChannelsViewControllerNavigation {
 
 //MARK: LifeCycle
 
+// CODEREVIEW: viewDidLoad должны быть внутри класса. override в extension часто вокусы крутит в релизе
 extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +83,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
 
 
 //MARK: Setup
-
+// CODEREVIEW: Сетапы должны быть приватными(fileprivate)
 extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
     func initialSetup() {
         setupNavigationBar()
@@ -105,13 +114,15 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
 extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  {
     func prepareResults() {
         let typeValue = self.isPrivateChannel ? Constants.ChannelType.DirectTypeChannel : Constants.ChannelType.PublicTypeChannel
+        // CODEREVIEW: Нужно использовать аттрибут канала, а не константу privateType
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
-        
+        // CODEREVIEW: Лишние логи
         print("channels = ", self.results.count)
         
         let users = RealmUtils.realmForCurrentThread().objects(User.self)
+        // CODEREVIEW: Лишнее логи
         print("users = ", users.count)
     }
 }
@@ -127,9 +138,11 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequests {
 }
 
 
+// CODEREVIEW: Новой строки между маркой и extension быть не должно. И далее тоже.
 //MARK: Action
 
 extension MoreChannelsViewController: MoreChannelsViewControllerAction {
+    // CODEREVIEW: Мертвый код внутри метода
     func backAction() {
         //loadChannels()
         Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
@@ -139,7 +152,9 @@ extension MoreChannelsViewController: MoreChannelsViewControllerAction {
         }
     }
     
+    // CODEREVIEW: Название не понятное. Нужно как-то переименовать, либо поправить синтаксис.
     func addDoneAction() {
+        // CODEREVIEW: Лишний пробел после self
         for channel in self .results {
             RealmUtils.save(channel)
         }
@@ -151,7 +166,10 @@ extension MoreChannelsViewController: MoreChannelsViewControllerAction {
 //MARK: Navigation
 
 extension MoreChannelsViewController: MoreChannelsViewControllerNavigation {
+    // CODEREVIEW: Вместо return лучше moveBack
+    // CODEREVIEW: Метод должен быть fileprivate, так как не используется снаружи.
     func returnToChannel() {
+        // CODEREVIEW: Поджопник избыточен
        _ = self.navigationController?.popViewController(animated: true)
     }
 }
@@ -165,6 +183,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // CODEREVIEW: Скобочки избыточны
         let channel = (self.isSearchActive) ? self.filteredResults[indexPath.row] : self.results[indexPath.row]
         let cell = self.builder.cellFor(channel: channel)
 
@@ -176,6 +195,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
 //MARK: UITableViewDelegate
 
 extension MoreChannelsViewController : UITableViewDelegate {
+    // CODEREVIEW: Пустой метод, смерть ему.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
     
@@ -189,20 +209,24 @@ extension MoreChannelsViewController : UITableViewDelegate {
 
 extension MoreChannelsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        // CODEREVIEW: Точка с запятой лишняя
         self.isSearchActive = true;
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        // CODEREVIEW: Точка с запятой лишняя
         self.isSearchActive = false;
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        // CODEREVIEW: Точка с запятой лишняя
         self.isSearchActive = false;
         self.tableView.reloadData()
         self.filteredResults = nil;
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // CODEREVIEW: Точка с запятой лишняя
         self.isSearchActive = false;
     }
     
