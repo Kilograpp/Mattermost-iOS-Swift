@@ -29,7 +29,6 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: "teams",
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
-    
     static func teamListingsResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: TeamMappingsContainer.emptyMapping(),
                                     method: .GET,
@@ -37,7 +36,6 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
-    
     static func initalLoadConfigResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: TeamMappingsContainer.initialLoadConfigMapping(),
                                     method: .GET,
@@ -45,7 +43,6 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: "client_cfg",
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
-    
     static func invitationResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: TeamMappingsContainer.invitationMapping(),
                                     method: .POST,

@@ -31,6 +31,19 @@ extension MoreCellBuilder: MoreCellBuilderInteface {
         return 60
     }
     
+    func cellFor(resultTuple: ResultTuple) -> UITableViewCell {
+        let reuseIdentifier = ChannelsMoreTableViewCell.reuseIdentifier
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! ChannelsMoreTableViewCell
+        cell.transform = self.tableView.transform
+        cell.configureWith(resultTuple: resultTuple)
+        //cell.configureWith(channel: channel)
+        /*cell.checkBoxHandler = {
+            resultTuple.checked = true
+        }*/
+        
+        return cell
+    }
+    
     func cellFor(channel: Channel) -> UITableViewCell {
         let reuseIdentifier = ChannelsMoreTableViewCell.reuseIdentifier
         let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! ChannelsMoreTableViewCell

@@ -14,19 +14,14 @@ private protocol ResponseDescriptors: class {
 }
 
 final class UserStatusResponseDescriptorsContainer: RKResponseDescriptor {
-    
     static var responseDescriptor = RKResponseDescriptor(mapping: UserStatusMappingsContainer.mapping(),
                                                          method: .POST,
                                                          pathPattern: UserPathPatternsContainer.usersStatusPathPattern(),
                                                          keyPath: nil,
                                                          statusCodes: RKStatusCodeIndexSetForClass(.successful))
-    
-
-    
 }
 
 extension UserStatusResponseDescriptorsContainer: ResponseDescriptors {
-    
     static func statusResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: UserStatusMappingsContainer.mapping(),
                                     method: .POST,
