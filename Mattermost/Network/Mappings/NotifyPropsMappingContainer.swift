@@ -29,13 +29,13 @@ extension NotifyPropsMappingsContainer: NotifyPropsMappingsContainerResponseMapp
             "firstName"         : NotifyPropsAttributes.channel.rawValue,
             "comments"          : NotifyPropsAttributes.comments.rawValue,
             "desktop"           : NotifyPropsAttributes.desktop.rawValue,
-            "desktop_duration"  : NotifyPropsAttributes.desktop_duration.rawValue,
-            "desktop_sound"     : NotifyPropsAttributes.desktop_sound.rawValue,
+            "desktop_duration"  : NotifyPropsAttributes.desktopDuration.rawValue,
+            "desktop_sound"     : NotifyPropsAttributes.desktopSound.rawValue,
             "email"             : NotifyPropsAttributes.email.rawValue,
-            "first_name"        : NotifyPropsAttributes.first_name.rawValue,
-            "mention_keys"      : NotifyPropsAttributes.mention_keys.rawValue,
+            "first_name"        : NotifyPropsAttributes.firstName.rawValue,
+            "mention_keys"      : NotifyPropsAttributes.mentionKeys.rawValue,
             "push"              : NotifyPropsAttributes.push.rawValue,
-            "push_status"       : NotifyPropsAttributes.push_status.rawValue
+            "push_status"       : NotifyPropsAttributes.pushStatus.rawValue
             ])
         return mapping
     }

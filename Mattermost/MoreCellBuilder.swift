@@ -31,6 +31,10 @@ final class MoreCellBuilder {
 }
 
 extension MoreCellBuilder: MoreCellBuilderInteface {
+    internal func cellFor(channel: Channel) -> UITableViewCell {
+        return UITableViewCell()
+    }
+
     func cellHeight() -> CGFloat {
         return 60
     }
