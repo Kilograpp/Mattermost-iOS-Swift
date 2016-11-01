@@ -13,8 +13,6 @@ import UITableView_Cache
 import MFSideMenu
 
 
-
-
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
 
 //MARK: Properties

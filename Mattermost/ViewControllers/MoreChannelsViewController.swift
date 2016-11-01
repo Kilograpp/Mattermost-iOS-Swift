@@ -9,6 +9,8 @@
 import Foundation
 import RealmSwift
 
+
+
 typealias ResultTuple = (object: RealmObject, checked: Bool)
 
 final class MoreChannelsViewController: UIViewController {
@@ -79,6 +81,12 @@ extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
             loadAllChannels()
         }
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        //MFSideMenuPanModeDefault: MFSideMenuPanMode
+        //self.menuContainerViewController.panMode = MFSideMenuPanModeDefault()
+    }
 }
 
 
@@ -88,6 +96,8 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
     func initialSetup() {
         setupNavigationBar()
         setupTableView()
+        
+      //  self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {
@@ -220,7 +230,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
-            let message = "You has joined " + channel.displayName! + " channel"
+            let message = "You have joined " + channel.displayName! + " channel"
             AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
@@ -233,7 +243,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
                 return
             }
             
-            let message = "You has left " + channel.displayName! + " channel"
+            let message = "You have left " + channel.displayName! + " channel"
             AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
@@ -275,8 +285,8 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
-            let action = result.checked ? "joined " : "left "
-            let message = "You has " + action + user.displayName! + " channel"
+            let action = result.checked ? "added " : "deleted "
+            let message = "Chat with " + user.displayName! + " was " + action + " from your left menu"
             AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
