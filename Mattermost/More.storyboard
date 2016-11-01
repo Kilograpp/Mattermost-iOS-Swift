@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -26,7 +27,7 @@
                                         <searchBar contentMode="redraw" fixedFrame="YES" searchBarStyle="minimal" placeholder="Search" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-gO-Iya">
                                             <frame key="frameInset" height="44"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="namePhonePad" returnKeyType="done"/>
                                             <connections>
                                                 <outlet property="delegate" destination="U0v-P9-gu9" id="y6h-OK-mqa"/>
                                             </connections>
@@ -50,12 +51,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="gdX-pr-O39"/>
                     <connections>
+                        <outlet property="searchBar" destination="Dhs-gO-Iya" id="139-1B-3VU"/>
                         <outlet property="tableView" destination="f37-pz-ydb" id="4mQ-U2-RkR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dyP-jc-B3R" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1614" y="776"/>
+            <point key="canvasLocation" x="-1614.375" y="775.35211267605632"/>
         </scene>
     </scenes>
 </document>

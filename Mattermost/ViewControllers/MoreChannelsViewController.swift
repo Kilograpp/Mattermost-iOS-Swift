@@ -18,6 +18,7 @@ final class MoreChannelsViewController: UIViewController {
 //MARK: Property
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
     fileprivate let showChatViewController = "showChatViewController"
@@ -95,6 +96,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
 extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
     func initialSetup() {
         setupNavigationBar()
+        setupSearchBar()
         setupTableView()
         
         self.menuContainerViewController.panMode = .init(0)
@@ -109,6 +111,11 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
         let addDoneTitle = self.isPrivateChannel ? "Done".localized : "Save".localized
         let addDoneButton = UIBarButtonItem.init(title: addDoneTitle, style: .done, target: self, action: #selector(addDoneAction))
         self.navigationItem.rightBarButtonItem = addDoneButton
+    }
+    
+    func setupSearchBar() {
+        self.searchBar.returnKeyType = .done
+        self.searchBar.enablesReturnKeyAutomatically = false
     }
     
     func setupTableView() {
@@ -336,21 +343,22 @@ extension MoreChannelsViewController : UITableViewDelegate {
 
 extension MoreChannelsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.isSearchActive = true;
+        self.isSearchActive = true
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.isSearchActive = false;
+        self.isSearchActive = false
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.isSearchActive = false;
         self.tableView.reloadData()
-        self.filteredResults = nil;
+        self.filteredResults = nil
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.isSearchActive = false;
+        //self.isSearchActive = false;
+        searchBar.resignFirstResponder()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
