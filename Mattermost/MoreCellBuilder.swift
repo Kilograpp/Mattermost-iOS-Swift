@@ -8,8 +8,11 @@
 
 import Foundation
 
+// CODEREVIEW: fileprivate
+// CODEREVIEW: MoreCellBuilder избыточен, достаточно Interface
 private protocol MoreCellBuilderInteface: class {
     func cellHeight() -> CGFloat
+    // CODEREVIEW: cell(forChannel)
     func cellFor(channel: Channel) -> UITableViewCell
 }
 
@@ -21,6 +24,7 @@ final class MoreCellBuilder {
         self.tableView = tableView
     }
     
+    // CODEREVIEW: Точно ли тут нужен пустой init?
     private init?() {
         return nil
     }
@@ -31,6 +35,7 @@ extension MoreCellBuilder: MoreCellBuilderInteface {
         return 60
     }
     
+    // CODEREVIEW: Переименовать в cell(forChannel:)
     func cellFor(resultTuple: ResultTuple) -> UITableViewCell {
         let reuseIdentifier = ChannelsMoreTableViewCell.reuseIdentifier
         let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! ChannelsMoreTableViewCell
@@ -44,18 +49,5 @@ extension MoreCellBuilder: MoreCellBuilderInteface {
         return cell
     }
     
-    func cellFor(channel: Channel) -> UITableViewCell {
-        let reuseIdentifier = ChannelsMoreTableViewCell.reuseIdentifier
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! ChannelsMoreTableViewCell
-        cell.transform = self.tableView.transform
-        cell.configureWith(channel: channel)
-        cell.checkBoxHandler = {
-            try! RealmUtils.realmForCurrentThread().write({
-                let oldState = channel.currentUserInChannel
-                channel.currentUserInChannel = !oldState
-            })
-        }
-        
-        return cell
-    }
+
 }
