@@ -135,11 +135,13 @@ extension  TeamViewController: TeamViewControllerConfiguration  {
 
 extension TeamViewController: TeamViewControllerRequest {
     func reloadChat() {
+        let vc = self.presentingViewController
+        print(vc)
+        
         
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName), object: nil))
         RealmUtils.refresh()
         Api.sharedInstance.loadTeams { (userShouldSelectTeam, error) in
-
             Api.sharedInstance.loadCurrentUser { (error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
                     Api.sharedInstance.loadCompleteUsersList({ (error) in

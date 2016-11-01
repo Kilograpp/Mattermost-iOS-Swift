@@ -16,6 +16,7 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var loginTextField: KGTextField!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var recoveryButton: UIButton!
+    @IBOutlet weak var loaderView: UIView!
     
     let titleName =  NSLocalizedString("Sign In", comment: "")
     let email = NSLocalizedString("Email", comment: "")
@@ -238,6 +239,7 @@ extension LoginViewController: LoginViewControllerRequest {
     }
     
     func loadChannels() {
+        showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
             guard (error == nil) else { return }
             
@@ -250,6 +252,7 @@ extension LoginViewController: LoginViewControllerRequest {
             guard (error == nil) else { return }
             
             RouterUtils.loadInitialScreen()
+            self.hideLoaderView()
         })
     }
 }
@@ -267,6 +270,20 @@ extension LoginViewController {
         }
         
         return true
+    }
+}
+
+
+//MARK: LoaderView
+extension LoginViewController {
+    func showLoaderView() {
+        (self.loaderView.subviews.first as! UIActivityIndicatorView).startAnimating()
+        self.loaderView.isHidden = false
+    }
+    
+    func hideLoaderView() {
+        (self.loaderView.subviews.first as! UIActivityIndicatorView).startAnimating()
+        self.loaderView.isHidden = false
     }
 }
 

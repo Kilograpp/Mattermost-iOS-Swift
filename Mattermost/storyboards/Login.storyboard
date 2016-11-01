@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="VqN-sf-Nn3">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -16,7 +17,7 @@
         <scene sceneID="Iex-h7-BzT">
             <objects>
                 <navigationController id="VqN-sf-Nn3" customClass="LoginNavigationController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="GGr-vO-pr7">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="GGr-vO-pr7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -90,21 +91,37 @@
                                     <action selector="changeLogin:" destination="k6n-Wu-QkU" eventType="editingChanged" id="ICB-2v-ihr"/>
                                 </connections>
                             </textField>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GXp-iK-xZE">
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="qbi-Fv-PKP">
+                                        <color key="color" red="0.52941176469999995" green="0.59607843140000005" blue="0.64313725489999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="qbi-Fv-PKP" firstAttribute="centerY" secondItem="GXp-iK-xZE" secondAttribute="centerY" constant="-29" id="2l4-Pe-QsP"/>
+                                    <constraint firstItem="qbi-Fv-PKP" firstAttribute="centerX" secondItem="GXp-iK-xZE" secondAttribute="centerX" id="oPw-4e-GdT"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="QDz-lB-paO" firstAttribute="width" secondItem="VBY-jz-cKC" secondAttribute="width" id="1Cp-AQ-eJz"/>
                             <constraint firstItem="Fe4-9Z-OP6" firstAttribute="width" secondItem="D8K-vy-EXh" secondAttribute="width" multiplier="0.9" id="2cK-uK-E57"/>
                             <constraint firstItem="Fe4-9Z-OP6" firstAttribute="centerY" secondItem="D8K-vy-EXh" secondAttribute="centerY" constant="-35" id="4mR-0a-JzG"/>
+                            <constraint firstItem="GXp-iK-xZE" firstAttribute="leading" secondItem="D8K-vy-EXh" secondAttribute="leading" id="6XS-vJ-I8l"/>
                             <constraint firstItem="MwB-Xc-MT1" firstAttribute="centerX" secondItem="D8K-vy-EXh" secondAttribute="centerX" id="BzN-I5-J5N"/>
                             <constraint firstItem="Fe4-9Z-OP6" firstAttribute="top" secondItem="VBY-jz-cKC" secondAttribute="bottom" constant="41" id="CEK-MV-q8U"/>
                             <constraint firstItem="VBY-jz-cKC" firstAttribute="centerX" secondItem="D8K-vy-EXh" secondAttribute="centerX" id="Drs-rq-SbR"/>
                             <constraint firstItem="Fe4-9Z-OP6" firstAttribute="centerX" secondItem="D8K-vy-EXh" secondAttribute="centerX" id="Gc7-43-8Fv"/>
                             <constraint firstItem="MwB-Xc-MT1" firstAttribute="top" secondItem="Fe4-9Z-OP6" secondAttribute="bottom" constant="40" id="KkY-YD-3k7"/>
+                            <constraint firstAttribute="trailing" secondItem="GXp-iK-xZE" secondAttribute="trailing" id="OZF-RS-zCs"/>
                             <constraint firstItem="jJC-XP-PjQ" firstAttribute="leading" secondItem="D8K-vy-EXh" secondAttribute="leading" constant="18" id="aGK-rH-OaV"/>
                             <constraint firstItem="IOi-YG-yKZ" firstAttribute="top" secondItem="OkX-WL-axv" secondAttribute="bottom" constant="-64" id="eem-A0-KRg"/>
                             <constraint firstAttribute="trailing" secondItem="IOi-YG-yKZ" secondAttribute="trailing" id="jDk-DS-Yqw"/>
+                            <constraint firstItem="BkS-Ap-HVy" firstAttribute="top" secondItem="GXp-iK-xZE" secondAttribute="bottom" id="lye-AM-KU8"/>
                             <constraint firstItem="jJC-XP-PjQ" firstAttribute="top" secondItem="Fe4-9Z-OP6" secondAttribute="bottom" constant="8" id="oC2-0L-ayh"/>
+                            <constraint firstItem="GXp-iK-xZE" firstAttribute="top" secondItem="IOi-YG-yKZ" secondAttribute="bottom" id="qhC-i3-tPP"/>
                             <constraint firstItem="VBY-jz-cKC" firstAttribute="width" secondItem="Fe4-9Z-OP6" secondAttribute="width" id="qtM-gU-Ulo"/>
                             <constraint firstItem="IOi-YG-yKZ" firstAttribute="leading" secondItem="D8K-vy-EXh" secondAttribute="leading" id="sdN-jK-Lyg"/>
                             <constraint firstItem="IOi-YG-yKZ" firstAttribute="width" secondItem="D8K-vy-EXh" secondAttribute="height" multiplier="375:130" id="u5V-bS-vhJ"/>
@@ -119,6 +136,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Login" id="Mu6-VB-uGL"/>
                     <connections>
+                        <outlet property="loaderView" destination="GXp-iK-xZE" id="zin-eE-clZ"/>
                         <outlet property="loginButton" destination="MwB-Xc-MT1" id="5Zb-Ne-g13"/>
                         <outlet property="loginTextField" destination="VBY-jz-cKC" id="igE-Du-nZD"/>
                         <outlet property="passwordTextField" destination="Fe4-9Z-OP6" id="lKH-rL-AIt"/>
@@ -129,7 +147,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mW0-wR-MrN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1834" y="487"/>
+            <point key="canvasLocation" x="1833.75" y="486.97183098591552"/>
         </scene>
         <!--Server Url View Controller-->
         <scene sceneID="xsk-Jw-Ie7">

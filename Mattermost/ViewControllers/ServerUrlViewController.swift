@@ -37,7 +37,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var nextButton: UIButton!
     
     let titleName = NSLocalizedString("Mattermost", comment: "")
-    let promt = NSLocalizedString("e.g. https://matttermost.example.com", comment: "")
+    let promt = NSLocalizedString("e.g. https://mattermost.example.com", comment: "")
     let subtitleName = NSLocalizedString("All your team communication in one place, searchable and accessable anywhere.", comment: "")
     let placeholder = NSLocalizedString("Your team URL", comment: "")
     let buttonText = NSLocalizedString("Next step", comment: "")
