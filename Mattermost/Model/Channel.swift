@@ -26,7 +26,6 @@ enum ChannelAttributes: String {
 enum ChannelRelationships: String {
     case team = "team"
     case members = "members"
-  //  case posts = "posts"
 }
 
 private enum PrivateType {

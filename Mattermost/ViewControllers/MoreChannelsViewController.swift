@@ -24,10 +24,6 @@ final class MoreChannelsViewController: UIViewController {
     fileprivate var results: Array<ResultTuple>! = Array()
     fileprivate var filteredResults: Array<ResultTuple>! = Array()
     
-    
-   // fileprivate var results: Results<Channel>! = nil
-    //fileprivate var filteredResults: Results<Channel>! = nil
-    
     var isPrivateChannel: Bool = false
     var isSearchActive: Bool = false
     
@@ -52,10 +48,6 @@ private protocol MoreChannelsViewControllerConfiguration : class {
     var isPrivateChannel : Bool {get set}
     func prepareResults()
 }
-
-/*private protocol MoreChannelsViewControllerRequests {
-    func loadChannels()
-}*/
 
 private protocol MoreChannelsViewControllerAction {
     func backAction()
@@ -84,12 +76,9 @@ extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
         initialSetup()
         if self.isPrivateChannel {
             loadChannels()
-        }
-        else {
+        } else {
             loadAllChannels()
         }
-        
-       // loadChannels()
     }
 }
 
@@ -108,7 +97,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
         
-        let addDoneTitle = self.isPrivateChannel ? "Done".localized : "Add".localized
+        let addDoneTitle = self.isPrivateChannel ? "Done".localized : "Save".localized
         let addDoneButton = UIBarButtonItem.init(title: addDoneTitle, style: .done, target: self, action: #selector(addDoneAction))
         self.navigationItem.rightBarButtonItem = addDoneButton
     }
@@ -127,26 +116,9 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
     func prepareResults() {
         if (self.isPrivateChannel) {
             prepareUserResults()
-        }
-        else {
+        } else {
             prepareChannelResults()
         }
-        
-        /*
-        let typeValue = self.isPrivateChannel ? Constants.ChannelType.DirectTypeChannel : Constants.ChannelType.PublicTypeChannel
-        let predicate =  NSPredicate(format: "privateType == %@", typeValue)
-        let sortName = ChannelAttributes.displayName.rawValue
-        self.results = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
-        
-        print(self.results[0])
-        
-        let users = RealmUtils.realmForCurrentThread().objects(User.self)
-        
-        for user in users {
-            
-        }
-        
-        print("users = ", users.count)*/
     }
     
     func prepareChannelResults() {
@@ -154,7 +126,6 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
         let predicate =  NSPredicate(format: "privateType == %@", typeValue)
         let sortName = ChannelAttributes.displayName.rawValue
         let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
-     //   self.results.removeAll()
         for channel in channels {
             self.results?.append((channel, channel.currentUserInChannel))
         }
@@ -162,19 +133,18 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
     
     func prepareUserResults() {
         let sortName = UserAttributes.username.rawValue
-        let predicate =  NSPredicate(format: "identifier != %@", Constants.Realm.SystemUserIdentifier)
+        let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@", Constants.Realm.SystemUserIdentifier,
+                                                                                      Preferences.sharedInstance.currentUserId!)
         let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
-     //   self.results.removeAll()
         for user in users {
-            self.results?.append((user, user.hasChannel()))
+            self.results?.append((user, user.isSelectedDirectChannel()))
         }
     }
     
     func saveResults() {
         if self.isPrivateChannel {
             saveUserResults()
-        }
-        else {
+        } else {
             saveChannelResults()
         }
     }
@@ -182,12 +152,11 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
     func saveChannelResults() {
         for resultTuple in self.results {
             let channel = (resultTuple.object as! Channel)
-            guard (channel.currentUserInChannel != resultTuple.checked) else { continue }
+            guard channel.currentUserInChannel != resultTuple.checked else { continue }
             
             if resultTuple.checked {
                 joinTo(channel: channel)
-            }
-            else {
+            } else {
                 leave(channel: channel)
             }
         }
@@ -197,45 +166,23 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
         for resultTuple in self.results {
             if !(resultTuple.object as! User).hasChannel() {
                 createDirectChannelWith(result: resultTuple)
-            }
-            else {
+            } else {
                 updatePreferencesSave(result: resultTuple)
             }
         }
     }
 }
 
-/*
-extension MoreChannelsViewController: MoreChannelsViewControllerRequests {
-    func loadChannels() {
-        Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
-            self.prepareResults()
-            self.tableView.reloadData()
-        }
-    }
-}*/
-
 
 //MARK: Action
 
 extension MoreChannelsViewController: MoreChannelsViewControllerAction {
     func backAction() {
-        //loadChannels()
-        Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
-         //   self.prepareResults()
-         //   self.tableView.reloadData()
-            self.returnToChannel()
-        }
+        self.returnToChannel()
     }
     
     func addDoneAction() {
-      //  for channel in self.results {
-       //     RealmUtils.save(channel)
-//        }
-        
         saveResults()
-        
-        //NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
     }
 }
 
@@ -254,8 +201,11 @@ extension MoreChannelsViewController: MoreChannelsViewControllerNavigation {
 extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
     func loadChannels() {
         Api.sharedInstance.loadChannels { (error) in
-            self.prepareResults()
-            self.tableView.reloadData()
+            Api.sharedInstance.listUsersPreferencesWith("direct_channel_show", completion: { (error) in
+                self.prepareResults()
+                self.tableView.reloadData()
+            })
+            
         }
     }
     
@@ -268,39 +218,47 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
     
     func joinTo(channel: Channel) {
         Api.sharedInstance.joinChannel(channel) { (error) in
-            guard (error == nil) else {
+            guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
+            let message = "You has joined " + channel.displayName! + " channel"
+            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }
     
     func leave(channel: Channel) {
         Api.sharedInstance.leaveChannel(channel) { (error) in
-            guard (error == nil) else {
+            guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
+            
+            let message = "You has left " + channel.displayName! + " channel"
+            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }
     
     func createDirectChannelWith(result: ResultTuple) {
-        guard  (result.checked != (result.object as! User).hasChannel()) else { return }
+        guard  result.checked != (result.object as! User).hasChannel() else { return }
         
         Api.sharedInstance.createDirectChannelWith((result.object as! User)) { (channel, error) in
-            guard (error == nil) else {
+            guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
             
             self.updatePreferencesSave(result: result)
-            print(channel)
         }
     }
     
     func updatePreferencesSave(result: ResultTuple) {
-        
         let user = (result.object as! User)
+        
+        guard user.isSelectedDirectChannel() != result.checked else { return }
+        
         let predicate =  NSPredicate(format: "displayName == %@", user.username!)
         let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).first
         
@@ -308,17 +266,21 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
             channel?.currentUserInChannel = result.checked ? true : false
         }
         
-        let preferences: Dictionary<String, String> = [ "category" : "direct_channel_show",
-                            "name" : (result.object as! User).identifier,
-                            "user_id" : (DataManager.sharedInstance.currentUser?.identifier)!,
-                            "value" : result.checked ? "true" : "false"
+        let preferences: Dictionary<String, String> = [ "user_id" : (DataManager.sharedInstance.currentUser?.identifier)!,
+                                                        "category" : "direct_channel_show",
+                                                        "name" : (result.object as! User).identifier,
+                                                        "value" : result.checked ? "true" : "false"
         ]
         
         Api.sharedInstance.savePreferencesWith(preferences) { (error) in
-            guard (error == nil) else {
-                //AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
+            let action = result.checked ? "joined " : "left "
+            let message = "You has " + action + user.displayName! + " channel"
+            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }
 }
@@ -328,8 +290,6 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
 
 extension MoreChannelsViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("count = ", self.results.count)
-        print("countFiltered = ", self.filteredResults.count)
         return (self.isSearchActive) ? self.filteredResults.count : self.results.count
     }
     
@@ -342,8 +302,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
                 self.filteredResults[indexPath.row] = resultTuple
                 let realIndex = self.results.index(where: { return ($0.object == resultTuple.object) })
                 self.results[realIndex!] = resultTuple
-            }
-            else {
+            } else {
                 self.results[indexPath.row] = resultTuple
             }
         }
@@ -390,8 +349,7 @@ extension MoreChannelsViewController: UISearchBarDelegate {
         self.filteredResults = self.results.filter({
             if self.isPrivateChannel {
                 return (($0.object as! User).displayName?.hasPrefix(searchText))!
-            }
-            else {
+            } else {
                 return (($0.object as! Channel).displayName?.hasPrefix(searchText))!
             }
         })

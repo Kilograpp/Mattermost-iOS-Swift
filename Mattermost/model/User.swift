@@ -12,6 +12,8 @@ import RealmSwift
 
 private protocol Interface {
     func isSystem() -> Bool
+    func isSelectedDirectChannel() -> Bool
+    func directChannel() -> Channel?
     func hasChannel() -> Bool
 }
 
@@ -92,6 +94,19 @@ extension User: Computatations {
 extension User: Interface {
     func isSystem() -> Bool {
         return self.identifier == Constants.Realm.SystemUserIdentifier
+    }
+    
+    func isSelectedDirectChannel() -> Bool {
+        let channel = self.directChannel()
+        guard channel != nil else { return false }
+        
+        return channel!.currentUserInChannel
+    }
+    
+    func directChannel() -> Channel? {
+        let predicate =  NSPredicate(format: "displayName == %@", self.username!)
+        let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate)
+        return (channels.count > 0) ? channels.first : nil
     }
     
     func hasChannel() -> Bool {

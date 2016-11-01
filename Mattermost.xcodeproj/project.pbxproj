@@ -43,8 +43,10 @@
 		8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */; };
 		8B77B5DE1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */; };
 		8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */; };
-		8B77B5E21DC69F9C00DF0689 /* PreferencesPathPatterns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatterns.swift */; };
-		8B77B5E41DC6A12800DF0689 /* PreferencesResponseDescriptorContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5E31DC6A12800DF0689 /* PreferencesResponseDescriptorContainer.swift */; };
+		8B77B5E21DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift */; };
+		8B77B5E61DC78C0500DF0689 /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5E51DC78C0500DF0689 /* Preference.swift */; };
+		8B77B5EA1DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5E91DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift */; };
+		8B77B5EC1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5EB1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift */; };
 		8B882D661DA5A21F0028F13D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B882D681DA5A21F0028F13D /* Localizable.strings */; };
 		8B882D6B1DA6566F0028F13D /* SearchCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B882D6A1DA6566F0028F13D /* SearchCellBuilder.swift */; };
 		8B882D6D1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */; };
@@ -275,8 +277,10 @@
 		8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteNewMemberTableViewController.swift; sourceTree = "<group>"; };
 		8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessInviteNewMembreViewController.swift; sourceTree = "<group>"; };
-		8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatterns.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesPathPatterns.swift; path = PathPattern/PreferencesPathPatterns.swift; sourceTree = "<group>"; };
-		8B77B5E31DC6A12800DF0689 /* PreferencesResponseDescriptorContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesResponseDescriptorContainer.swift; path = RestKitResponseDescriptors/PreferencesResponseDescriptorContainer.swift; sourceTree = "<group>"; };
+		8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesPathPatternsContainer.swift; path = PathPattern/PreferencesPathPatternsContainer.swift; sourceTree = "<group>"; };
+		8B77B5E51DC78C0500DF0689 /* Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preference.swift; sourceTree = "<group>"; };
+		8B77B5E91DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferenceMappingsContainer.swift; path = Mappings/PreferenceMappingsContainer.swift; sourceTree = "<group>"; };
+		8B77B5EB1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferenceResponseDescriptorContainer.swift; path = RestKitResponseDescriptors/PreferenceResponseDescriptorContainer.swift; sourceTree = "<group>"; };
 		8B882D671DA5A21F0028F13D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B882D691DA5A2220028F13D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B882D6A1DA6566F0028F13D /* SearchCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCellBuilder.swift; sourceTree = "<group>"; };
@@ -662,6 +666,7 @@
 				D8D601371D5E007700951F18 /* Day.swift */,
 				4B7DB5A41DA5500F000908FB /* Member.swift */,
 				8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */,
+				8B77B5E51DC78C0500DF0689 /* Preference.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -765,7 +770,7 @@
 				CDB4BC5D1D80340900662231 /* TeamResponseDescriptorsContainer.swift */,
 				CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */,
 				CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */,
-				8B77B5E31DC6A12800DF0689 /* PreferencesResponseDescriptorContainer.swift */,
+				8B77B5EB1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift */,
 			);
 			name = RestKitResponseDescriptors;
 			sourceTree = "<group>";
@@ -784,6 +789,7 @@
 				CDB4BC741D8074E800662231 /* AttachmentFieldMappingsContainer.swift */,
 				4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */,
 				8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */,
+				8B77B5E91DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift */,
 			);
 			name = Mappings;
 			sourceTree = "<group>";
@@ -796,7 +802,7 @@
 				CDF07ED11D7F1DA300172D1E /* PostPathPatternsContainer.swift */,
 				CDF07ED31D7F1DB500172D1E /* TeamPathPatternsContainer.swift */,
 				CDF07ED51D7F1DC900172D1E /* UserPathPatternsContainer.swift */,
-				8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatterns.swift */,
+				8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift */,
 			);
 			name = PathPatterns;
 			sourceTree = "<group>";
@@ -1371,6 +1377,7 @@
 				D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */,
 				4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
+				8B77B5EA1DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
 				CDB4BC5C1D8033F700662231 /* PostResponseDescriptorsContainer.swift in Sources */,
@@ -1420,7 +1427,7 @@
 				D62FEB881D4F2A6A00390EBC /* RouterUtils.swift in Sources */,
 				D60B15D81D6749A00052DC34 /* RKObjectRequestOperation+ImageUploading.swift in Sources */,
 				4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */,
-				8B77B5E21DC69F9C00DF0689 /* PreferencesPathPatterns.swift in Sources */,
+				8B77B5E21DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift in Sources */,
 				CDF07ED41D7F1DB500172D1E /* TeamPathPatternsContainer.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
 				CDB6D3BD1D78925B00C3018C /* String+Localized.swift in Sources */,
@@ -1477,7 +1484,6 @@
 				D67A42F61D747B80003E2466 /* AssignedPhotoViewItem.swift in Sources */,
 				8B9E1C131DB7454900C05B36 /* DirectChannelTableViewCell.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
-				8B77B5E41DC6A12800DF0689 /* PreferencesResponseDescriptorContainer.swift in Sources */,
 				D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */,
 				D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */,
 				D8812AEA1D43933400436B5C /* PageWrapper.swift in Sources */,
@@ -1513,6 +1519,7 @@
 				D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */,
 				CDB4BC621D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
+				8B77B5EC1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift in Sources */,
 				4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */,
 				D8436E6B1D26D9B300DEF464 /* RKResponseDescriptor+RuntimeFinder.swift in Sources */,
 				8B77B5DE1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift in Sources */,
@@ -1520,6 +1527,7 @@
 				D617E6A21D46AFB900283C0A /* ChatViewController.swift in Sources */,
 				8BA8EDEA1DAAE0A0000BF560 /* ProfileCellBuilder.swift in Sources */,
 				4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */,
+				8B77B5E61DC78C0500DF0689 /* Preference.swift in Sources */,
 				D8117D261DB4E7AE0058F003 /* EmptyDialogueLabel.swift in Sources */,
 				D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */,
 				4B9DD4BD1DB1445200AB4D2D /* UIImage+Orientation.swift in Sources */,

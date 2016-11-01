@@ -18,6 +18,7 @@ private protocol Interface: class {
 
 private protocol PreferencesApi: class {
     func savePreferencesWith(_ params: Dictionary<String, String>, complection: @escaping (_ error: Mattermost.Error?) -> Void)
+    func listUsersPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol TeamApi: class {
@@ -101,12 +102,36 @@ final class Api {
 
 extension Api: PreferencesApi {
     func savePreferencesWith(_ params: Dictionary<String, String>, complection: @escaping (_ error: Mattermost.Error?) -> Void) {
-        let path = PreferencesPathPatterns.savePathPattern()
-        let object = [params] as AnyObject
+       let path = PreferencesPathPatternsContainer.savePathPattern()
         
-        self.manager.postObject(object, path: path, parameters: nil, success: { (mappingResult) in
-               complection(nil)
-            }, failure: complection)
+        self.manager.savePreferences(with: path, parameters: [params], success: { (success) in
+            complection(nil)
+        }) { (error) in
+            complection(error)
+        }
+    }
+    
+    func listUsersPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        var preference = Preference()
+        preference.category = "direct_channel_show"
+        let path = SOCStringFromStringWithObject(PreferencesPathPatternsContainer.listUsersPreferencesPathPatterns(), preference)!
+        
+        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
+            let preferences = MappingUtils.fetchAllPreferences(mappingResult)
+            for preference in preferences {
+                let user = User.objectById(preference.name!)
+                if (user?.hasChannel())! {
+                    let channel = user?.directChannel()
+                    try! RealmUtils.realmForCurrentThread().write {
+                        channel?.currentUserInChannel = (preference as Preference).value == "true"
+                    }
+                }
+            }
+            completion(nil)
+            }, failure: { (error) in
+                completion(error)
+        
+        })
     }
 }
 
@@ -176,7 +201,6 @@ extension Api: ChannelApi {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
-                    print($0.displayName)
                 }
                 realm.add(channels, update: true)
             })

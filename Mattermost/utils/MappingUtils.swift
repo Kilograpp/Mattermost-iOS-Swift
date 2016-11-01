@@ -12,6 +12,10 @@ import RestKit
 
 final class MappingUtils {}
 
+private protocol PreferenceMethods: class {
+    static func fetchAllPreferences(_ mappingResult: RKMappingResult) -> [Preference]
+}
+
 private protocol TeamMethods: class {
     static func containsSingleTeam(_ mappingResult: RKMappingResult) -> Bool
     static func fetchSiteName(_ mappingResult: RKMappingResult) -> String?
@@ -33,7 +37,18 @@ private protocol UserMethod: class {
     static func fetchUsersFromCompleteList(_ mappingResult: RKMappingResult) -> [User]
 }
 
-// MARK: - Team
+
+//MARK: PreferenceMethods
+
+extension MappingUtils: PreferenceMethods {
+    static func fetchAllPreferences(_ mappingResult: RKMappingResult) -> [Preference] {
+        return mappingResult.array() as! [Preference]
+    }
+}
+
+
+// MARK: Team
+
 extension MappingUtils: TeamMethods {
     static func containsSingleTeam(_ mappingResult: RKMappingResult) -> Bool {
         return (mappingResult.dictionary()["teams"] as AnyObject).count == 1

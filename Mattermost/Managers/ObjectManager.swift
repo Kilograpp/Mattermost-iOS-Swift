@@ -56,6 +56,13 @@ private protocol PostRequests: class {
                   success: ((_ mappingResult: RKMappingResult) -> Void)?,
                   failure: ((_ error: Mattermost.Error) -> Void)?,
                   progress: ((_ progressValue: Float) -> Void)?)
+    
+    
+    
+    func savePreferences(with path: String!,
+                         parameters: [Dictionary<String, String>],
+                         success: ((_ result: Bool) -> Void)?,
+                         failure: ((_ error: Mattermost.Error) -> Void)?)
 }
 
 private protocol Helpers: class {
@@ -77,9 +84,12 @@ extension ObjectManager: GetRequests {
         let cachedETag = (cachedUrlResponse?.response as? HTTPURLResponse)?.allHeaderFields["Etag"] as? String
         
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
+            print(operation?.httpRequestOperation.responseString)
             let eTag = operation?.httpRequestOperation.response.allHeaderFields["Etag"] as? String
             success?(mappingResult!, eTag == cachedETag)
         }) { (operation, error) in
+            print(operation?.httpRequestOperation.responseString)
+            
             failure?(self.handleOperation(operation!, withError: error!))
         }
         
@@ -131,6 +141,7 @@ extension ObjectManager: PostRequests {
             success?(mappingResult!)
         }) { (operation, error) in
             
+            print(operation?.httpRequestOperation.request.httpBody)
             print(operation?.httpRequestOperation.responseString)
             //let error = try! RKNSJSONSerialization.object(from: operation?.httpRequestOperation.request.httpBody)
             failure?(self.handleOperation(operation!, withError: error!))
@@ -158,10 +169,25 @@ extension ObjectManager: PostRequests {
         parameters: [Dictionary<String, String>],
         success: ((_ result: Bool) -> Void)?,
         failure: ((_ error: Mattermost.Error) -> Void)?) {
-        let request: NSMutableURLRequest = self.request(with: parameters, method: .POST, path: path, parameters: nil)
-        let successHandlerBlock = {
-            print("ok")
+
+        let request: NSMutableURLRequest = self.request(with: nil, method: .POST, path: path, parameters: nil)
+        request.httpBody = try! JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
+        
+        let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
+            success?(true)
         }
+        
+        let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
+            guard (operation?.httpRequestOperation.responseString != "true") else { success!(true); return }
+            
+            failure?(self.handleOperation(operation!, withError: error!))
+        }
+        
+        let operation: RKObjectRequestOperation = self.objectRequestOperation(with: request as URLRequest!,
+                                                                              success: successHandlerBlock,
+                                                                              failure: failureHandlerBlock)
+        
+        self.enqueue(operation)
         
     }
     
@@ -190,7 +216,6 @@ extension ObjectManager: PostRequests {
                                                                               success: successHandlerBlock,
                                                                               failure: failureHandlerBlock)
         self.enqueue(operation)
-
     }
     
     func postImage(with image: UIImage!,
