@@ -17,7 +17,6 @@ final class MoreChannelsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var realm: Realm?
     fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
     fileprivate let showChatViewController = "showChatViewController"
     
