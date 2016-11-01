@@ -380,6 +380,9 @@ extension ChatViewController: Action {
         if (self.channel.privateType == Constants.ChannelType.DirectTypeChannel) {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
         }
+        else {
+            
+        }
     }
     
     func sendPostAction() {

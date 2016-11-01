@@ -68,7 +68,7 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
         
-        let inviteButton = UIBarButtonItem.init(title: "invite", style: .done, target: self, action: #selector(inviteAction))
+        let inviteButton = UIBarButtonItem.init(title: "Invite", style: .done, target: self, action: #selector(inviteAction))
         self.navigationItem.rightBarButtonItem = inviteButton
     }
     
