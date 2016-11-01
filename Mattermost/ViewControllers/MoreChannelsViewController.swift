@@ -204,7 +204,6 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
                 self.prepareResults()
                 self.tableView.reloadData()
             })
-            
         }
     }
     
