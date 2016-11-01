@@ -193,22 +193,22 @@ extension InviteNewMemberTableViewController {
 
 extension InviteNewMemberTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let newString: NSString = textField.text! as NSString
-        textField.text = newString.replacingCharacters(in: range, with: string)
+        let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        textField.text = newString
+        
         let tupleIndex = textField.tag / 10
         let fieldIndex = textField.tag % 10
-        
+    
         switch fieldIndex {
         case 0:
-            self.memberTuplesArray[tupleIndex].email = newString as String
+            self.memberTuplesArray[tupleIndex].email = newString
         case 1:
-            self.memberTuplesArray[tupleIndex].firstName = newString as String
+            self.memberTuplesArray[tupleIndex].firstName = newString
         case 2:
-            self.memberTuplesArray[tupleIndex].lastName = newString as String
+            self.memberTuplesArray[tupleIndex].lastName = newString
         default:
             break
         }
-        
         return false
     }
 }

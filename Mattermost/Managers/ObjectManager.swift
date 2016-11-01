@@ -136,6 +136,7 @@ extension ObjectManager: PostRequests {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
             
             print(operation?.httpRequestOperation.responseString)
+            print(operation?.httpRequestOperation.request.httpBody)
             
             //let error = try! RKNSJSONSerialization.object(from: operation?.httpRequestOperation.request.httpBody)
             success?(mappingResult!)
