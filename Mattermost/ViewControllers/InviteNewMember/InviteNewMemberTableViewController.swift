@@ -127,7 +127,10 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
             invites.append(["email" : memberTouple.email, "firstName" : memberTouple.firstName, "lastName" : memberTouple.lastName!])
         }
         Api.sharedInstance.sendInvites(invites) { (error) in
-            guard (error == nil) else { return }
+            guard (error == nil) else {
+                AlertManager.sharedManager.showWarningWithMessage(message: (error?.message)!, viewController: self);
+                return
+            }
             
              self.proceedToSuccessInviteNewMember()
         }

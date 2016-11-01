@@ -310,9 +310,9 @@ extension PostUtils : Public {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
         self.upload_images_group.leave()
 
-        if item.uploaded  {
-            self.assignedFiles.remove(at: files.index(of: item)!)
-        }
+        //if item.uploaded  {
+//            self.assignedFiles.remove(at: files.index(of: item)!)
+//        }
         
         
         let index = self.assignedFiles.index(where: {$0.identifier == item.identifier})
@@ -332,10 +332,9 @@ extension PostUtils : Public {
 
 extension PostUtils : Private {
     fileprivate func assignFilesToPostIfNeeded(_ post: Post) {
-        // CODEREVIEW: Должен быть guard вместо if
-        if self.assignedFiles.count > 0 {
-            post.files.append(objectsIn: self.assignedFiles)
-        }
+        guard self.assignedFiles.count > 0 else { return }
+        
+        post.files.append(objectsIn: self.assignedFiles)
     }
     
     func clearUploadedAttachments() {

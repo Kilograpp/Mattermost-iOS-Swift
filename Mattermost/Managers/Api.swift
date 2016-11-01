@@ -298,6 +298,7 @@ extension Api: ChannelApi {
             try! RealmUtils.realmForCurrentThread().write {
                 Channel.objectById(channelId!)?.currentUserInChannel = true
             }
+            completion(nil)
             }, failure: completion)
     }
 }
