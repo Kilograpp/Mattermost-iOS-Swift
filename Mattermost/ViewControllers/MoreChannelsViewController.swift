@@ -85,7 +85,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         //MFSideMenuPanModeDefault: MFSideMenuPanMode
-        //self.menuContainerViewController.panMode = MFSideMenuPanModeDefault()
+   //     self.menuContainerViewController.setValuesForKeys([MFSideMenuPanMode : MFSideMenuPanModeDefaul])
     }
 }
 
@@ -97,7 +97,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
         setupNavigationBar()
         setupTableView()
         
-      //  self.menuContainerViewController.panMode = .init(0)
+        self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {
