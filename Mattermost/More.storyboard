@@ -18,23 +18,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BK0-1e-qiJ">
+                                <subviews>
+                                    <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-gO-Iya">
+                                        <textInputTraits key="textInputTraits" keyboardType="namePhonePad" returnKeyType="done"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="U0v-P9-gu9" id="y6h-OK-mqa"/>
+                                        </connections>
+                                    </searchBar>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="Dhs-gO-Iya" firstAttribute="top" secondItem="BK0-1e-qiJ" secondAttribute="top" constant="20" id="L6J-jX-kNX"/>
+                                    <constraint firstAttribute="trailing" secondItem="Dhs-gO-Iya" secondAttribute="trailing" id="fV0-V9-mID"/>
+                                    <constraint firstItem="Dhs-gO-Iya" firstAttribute="leading" secondItem="BK0-1e-qiJ" secondAttribute="leading" id="fqe-dh-sog"/>
+                                    <constraint firstAttribute="height" constant="64" id="vzq-o4-c0T"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f37-pz-ydb">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <view key="tableHeaderView" contentMode="scaleToFill" id="BK0-1e-qiJ">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <searchBar contentMode="redraw" fixedFrame="YES" searchBarStyle="minimal" placeholder="Search" translatesAutoresizingMaskIntoConstraints="NO" id="Dhs-gO-Iya">
-                                            <frame key="frameInset" height="44"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <textInputTraits key="textInputTraits" keyboardType="namePhonePad" returnKeyType="done"/>
-                                            <connections>
-                                                <outlet property="delegate" destination="U0v-P9-gu9" id="y6h-OK-mqa"/>
-                                            </connections>
-                                        </searchBar>
-                                    </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </view>
                                 <connections>
                                     <outlet property="dataSource" destination="U0v-P9-gu9" id="IGY-QU-jn4"/>
                                     <outlet property="delegate" destination="U0v-P9-gu9" id="P8M-mM-14W"/>
@@ -44,8 +46,11 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="f37-pz-ydb" firstAttribute="leading" secondItem="IhE-aM-rYF" secondAttribute="leading" id="2xM-8e-sr7"/>
-                            <constraint firstItem="f37-pz-ydb" firstAttribute="top" secondItem="IhE-aM-rYF" secondAttribute="top" id="MoP-1j-28C"/>
+                            <constraint firstItem="f37-pz-ydb" firstAttribute="top" secondItem="IhE-aM-rYF" secondAttribute="top" constant="44" id="MoP-1j-28C"/>
+                            <constraint firstAttribute="trailing" secondItem="BK0-1e-qiJ" secondAttribute="trailing" id="UNl-n2-P2A"/>
+                            <constraint firstItem="BK0-1e-qiJ" firstAttribute="top" secondItem="aAC-qq-5Xp" secondAttribute="bottom" constant="-20" id="W7Q-Wf-OS1"/>
                             <constraint firstAttribute="trailing" secondItem="f37-pz-ydb" secondAttribute="trailing" id="WAo-mT-FvL"/>
+                            <constraint firstItem="BK0-1e-qiJ" firstAttribute="leading" secondItem="IhE-aM-rYF" secondAttribute="leading" id="hke-hZ-6sA"/>
                             <constraint firstItem="tE4-pp-2XB" firstAttribute="top" secondItem="f37-pz-ydb" secondAttribute="bottom" id="ikQ-9d-klg"/>
                         </constraints>
                     </view>

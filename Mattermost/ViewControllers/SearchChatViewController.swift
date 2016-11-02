@@ -123,7 +123,7 @@ extension SearchChatViewController: Setup {
         self.searchingInProcessView?.translatesAutoresizingMaskIntoConstraints = true
         self.view.addSubview(self.searchingInProcessView!)
         
-        self.searchingInProcessView!.center = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
+        self.searchingInProcessView!.center = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY + 64)
         self.searchingInProcessView!.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
     }
 }

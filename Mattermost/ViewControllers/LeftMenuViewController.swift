@@ -258,7 +258,7 @@ extension LeftMenuViewController : Navigation {
     fileprivate func toggleLeftSideMenu() {
         let navigation = self.menuContainerViewController.centerViewController as! UINavigationController
         if navigation.viewControllers.count == 2 {
-            navigation.popViewController(animated: false)
+         //   navigation.popViewController(animated: false)
             let chat = navigation.viewControllers.first as! ChatViewController
             chat.postFromSearch = nil
         }

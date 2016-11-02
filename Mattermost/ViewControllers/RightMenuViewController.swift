@@ -79,6 +79,7 @@ extension RightMenuViewController: RightMenuViewControllerSetup {
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+        self.tableView.isScrollEnabled = false
     }
     
     func setupHeaderView() {

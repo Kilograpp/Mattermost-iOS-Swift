@@ -20,6 +20,8 @@ final class MoreChannelsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    fileprivate let emptySearchLabel = EmptyDialogueLabel()
+    
     fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
     fileprivate let showChatViewController = "showChatViewController"
     
@@ -98,6 +100,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
         setupNavigationBar()
         setupSearchBar()
         setupTableView()
+        setupEmptyDialogueLabel()
         
         self.menuContainerViewController.panMode = .init(0)
     }
@@ -122,6 +125,13 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
         self.tableView.register(ChannelsMoreTableViewCell.self, forCellReuseIdentifier: ChannelsMoreTableViewCell.reuseIdentifier, cacheSize: 10)
+    }
+    
+    fileprivate func setupEmptyDialogueLabel() {
+        self.emptySearchLabel.backgroundColor = self.tableView.backgroundColor
+        let moreType = (self.isPrivateChannel) ? "direct chats" : "channels"
+        self.emptySearchLabel.text = "No " + moreType + " found!"
+        self.view.insertSubview(self.emptySearchLabel, aboveSubview: self.tableView)
     }
 }
 
@@ -343,15 +353,18 @@ extension MoreChannelsViewController : UITableViewDelegate {
 
 extension MoreChannelsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.isSearchActive = true
+        self.isSearchActive = ((self.searchBar.text?.characters.count)! > 0)
+        
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.isSearchActive = false
+        self.isSearchActive = ((self.searchBar.text?.characters.count)! > 0)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.isSearchActive = false;
+        self.searchBar.text = nil
+        self.searchBar.resignFirstResponder()
+        self.isSearchActive = false
         self.tableView.reloadData()
         self.filteredResults = nil
     }
@@ -362,6 +375,7 @@ extension MoreChannelsViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.isSearchActive = (searchText.characters.count > 0)
         self.filteredResults = self.results.filter({
             if self.isPrivateChannel {
                 return (($0.object as! User).displayName?.hasPrefix(searchText))!
@@ -369,6 +383,7 @@ extension MoreChannelsViewController: UISearchBarDelegate {
                 return (($0.object as! Channel).displayName?.hasPrefix(searchText))!
             }
         })
+        self.emptySearchLabel.isHidden = (self.filteredResults.count > 0)
         self.tableView.reloadData()
     }
 }
