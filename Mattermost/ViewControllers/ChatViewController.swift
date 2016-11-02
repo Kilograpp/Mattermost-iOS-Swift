@@ -457,11 +457,14 @@ extension ChatViewController: Request {
         
         
         if self.loadingView == nil {
-            let frame = self.tableView.frame
+            var frame = UIScreen.main.bounds
+            frame.origin.y = 64
+            frame.size.height -= 64
             self.loadingView = UIView(frame: frame)
-            
+            self.loadingView?.backgroundColor = UIColor.white
             let avtivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
             avtivityIndicatorView.center = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+            avtivityIndicatorView.startAnimating()
             self.loadingView?.addSubview(avtivityIndicatorView)
             
             self.view.addSubview(self.loadingView!)
