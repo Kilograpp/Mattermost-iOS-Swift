@@ -90,7 +90,7 @@ extension SearchChatViewController: LifeCycle {
         var frame = self.searchTextField.superview?.frame
         let delta = (frame?.origin.x)! - 8
         frame?.origin.x = 8
-        frame?.size.width += delta
+        frame?.size.width = 245 + delta
         self.searchTextField.superview?.frame = frame!
     }
 }
