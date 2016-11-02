@@ -52,6 +52,12 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
         initialSetup()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.menuContainerViewController.panMode = .init(0)
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         self.menuContainerViewController.panMode = .init(3)
         
@@ -66,7 +72,6 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
     func initialSetup() {
         setupNavigationBar()
         setupTableView()
-        self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {
