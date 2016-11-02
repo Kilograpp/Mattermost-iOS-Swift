@@ -63,6 +63,7 @@ extension AboutViewController: AboutViewControllerLifeCycle {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        self.menuContainerViewController.panMode = .init(3)
         super.viewWillDisappear(animated)
         
         if (self.iconsResizeAnimationTimer != nil) {
@@ -79,6 +80,7 @@ extension AboutViewController: AboutViewControllerSetup {
     func initialSetup() {
         setupNavigationBar()
         setupLinks()
+        self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {

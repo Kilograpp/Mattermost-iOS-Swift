@@ -46,9 +46,16 @@ extension WTMSettingsTableViewController: WTMSettingsTableViewControllerLifeCycl
         initialSetup()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
+         self.menuContainerViewController.panMode = .init(0)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.menuContainerViewController.panMode = .init(3)
+        
+        super.viewWillDisappear(animated)
     }
 }
     

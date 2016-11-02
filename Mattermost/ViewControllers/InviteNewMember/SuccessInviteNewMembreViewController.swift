@@ -52,6 +52,12 @@ extension SuccessInviteNewMembreViewController: SuccessInviteNewMembreViewContro
         
         initialSetup()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.menuContainerViewController.panMode = .init(3)
+        
+        super.viewWillDisappear(animated)
+    }
 }
 
     
@@ -61,6 +67,7 @@ extension SuccessInviteNewMembreViewController: SuccessInviteNewMembreViewContro
     func initialSetup() {
         setupNavigationBar()
         setupInvitesCountLabel()
+        self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {
