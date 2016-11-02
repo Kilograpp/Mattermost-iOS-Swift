@@ -133,8 +133,6 @@ extension ChatViewController {
 }
 
 
-
-
 //MARK: Setup
 
 extension ChatViewController: Setup {
