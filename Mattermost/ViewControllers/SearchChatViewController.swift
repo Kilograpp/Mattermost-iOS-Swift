@@ -214,7 +214,7 @@ extension SearchChatViewController: Requests {
     func searchWithTerms(terms: String) {
         PostUtils.sharedInstance.searchTerms(terms: terms, channel: self.channel!) { (posts, error) in
             if (error == nil) {
-                self.posts = posts
+                self.posts = posts.reversed()
                 self.dates.removeAll()
                 if (self.posts.count == 0) {
                     self.configureForSearchStage(SearchStage.SearchNoResults)

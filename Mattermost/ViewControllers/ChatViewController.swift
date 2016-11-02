@@ -117,6 +117,7 @@ extension ChatViewController {
         super.viewWillDisappear(animated)
         
         removeSLKKeyboardObservers()
+        self.postFromSearch = nil
     }
     
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
