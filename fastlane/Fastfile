@@ -9,7 +9,7 @@ platform :ios do
     sh "cd .. && scripts/carthage.sh"
     cocoapods(use_bundle_exec: true)
     match(readonly: true)
-    increment_version_number(version_number: number_of_commits.to_s)
+    increment_version_number(version_number: ENV['TRAVIS_BUILD_NUMBER'])
     increment_build_number(build_number: lane_context[SharedValues::LANE_NAME].split.last.capitalize)
     gym
   end
@@ -33,7 +33,7 @@ platform :ios do
   after_all do |lane|
     branchName = ENV['TRAVIS_BRANCH'].capitalize
     slack(
-      message: "**#{branchName}** » Successfully distributed version **#{number_of_commits}** :rocket:",
+      message: "**#{branchName}** » Successfully distributed version **#{ENV['TRAVIS_BUILD_NUMBER']}** :rocket:",
       default_payloads: [],
     )   
   end
