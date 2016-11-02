@@ -17,7 +17,7 @@ private protocol Interface: class {
 }
 
 @objc final class SocketManager: NSObject {
-    static let sharedInstance = SocketManager()
+    static var sharedInstance = SocketManager()
     //refactor seqNumber
     static var seqNumber = 1
     fileprivate var lastNotificationDate: Date?
@@ -27,7 +27,10 @@ private protocol Interface: class {
         webSocket.setCookie(UserStatusManager.sharedInstance.cookie())
         return webSocket
     }()
-
+    
+    static func resetSocket() {
+        self.sharedInstance = SocketManager()
+    }
 }
 
 private protocol Notifications: class {

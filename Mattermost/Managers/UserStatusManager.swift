@@ -27,6 +27,7 @@ extension UserStatusManager {
             RealmUtils.deleteAll()
             Preferences.sharedInstance.currentTeamId = nil
             RouterUtils.loadInitialScreen()
+            SocketManager.resetSocket()
         }
     }
 }
