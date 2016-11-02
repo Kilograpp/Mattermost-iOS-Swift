@@ -135,7 +135,28 @@ extension WTMSettingsTableViewController {
         else {
             print("texttt")
         }
+        
+        guard indexPath.section == 0 else { return cell }
+        
+        configure(cell: (cell as! CheckSettingsTableViewCell), indexPath: indexPath)
+        
+        
         return cell
+    }
+    
+    func configure(cell:CheckSettingsTableViewCell, indexPath: IndexPath) {
+        let text = cell.descriptionLabel?.text
+        let user = DataManager.sharedInstance.currentUser
+        switch indexPath.row {
+        case 0:
+            cell.descriptionLabel?.text = text! + "\"" + (user?.firstName)! + "\""
+        case 1:
+             cell.descriptionLabel?.text = text! + "\"" + (user?.username)! + "\""
+        case 2:
+            cell.descriptionLabel?.text = text! + "@\"" + (user?.username)! + "\""
+        default:
+            break
+        }
     }
 }
 

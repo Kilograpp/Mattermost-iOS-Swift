@@ -12,6 +12,7 @@ class CheckSettingsTableViewCell: UITableViewCell {
 
 //MARK: Properties
     
+    @IBOutlet weak var descriptionLabel: UILabel?
     @IBOutlet weak var checkBoxButton: UIButton?
     
     var checkBoxHandler : (() -> Void)?
