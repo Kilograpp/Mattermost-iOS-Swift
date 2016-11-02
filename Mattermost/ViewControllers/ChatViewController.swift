@@ -28,7 +28,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var filesPickingController: FilesPickingController!
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
-
+    var loadingView: UIView?
     
     var hasNextPage: Bool = true
     var postFromSearch: Post! = nil
@@ -455,15 +455,25 @@ extension ChatViewController: Request {
         print("loadFirstPageOfData")
         self.isLoadingInProgress = true
         
-        let activityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-        if isInitial {
-            activityIndicatorView.center = self.tableView.center
-            activityIndicatorView.startAnimating()
-            self.tableView.addSubview(activityIndicatorView)
+        
+        if self.loadingView == nil {
+            let frame = self.tableView.frame
+            self.loadingView = UIView(frame: frame)
+            
+            let avtivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+            avtivityIndicatorView.center = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+            self.loadingView?.addSubview(avtivityIndicatorView)
+            
+            self.view.addSubview(self.loadingView!)
         }
         
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            activityIndicatorView.removeFromSuperview()
+        
+            if self.loadingView != nil {
+                self.loadingView?.removeFromSuperview()
+                self.loadingView = nil
+            }
+            
             self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
             self.isLoadingInProgress = false
             self.hasNextPage = true

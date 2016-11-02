@@ -647,7 +647,7 @@
                                     <navigationItem id="oD8-3B-2ss">
                                         <nil key="title"/>
                                         <view key="titleView" contentMode="scaleToFill" id="Env-wZ-ZS7">
-                                            <rect key="frame" x="8" y="20" width="245" height="44"/>
+                                            <rect key="frame" x="147" y="20" width="26" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xP9-pf-veq">

@@ -17,7 +17,7 @@
         <scene sceneID="Iex-h7-BzT">
             <objects>
                 <navigationController id="VqN-sf-Nn3" customClass="LoginNavigationController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="GGr-vO-pr7">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="GGr-vO-pr7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -271,19 +271,36 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wjG-Jl-oxH">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </tableView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NvN-EB-b6d">
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="fjS-go-1ah">
+                                        <color key="color" red="0.52941176469999995" green="0.59607843140000005" blue="0.64313725489999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="fjS-go-1ah" firstAttribute="centerY" secondItem="NvN-EB-b6d" secondAttribute="centerY" constant="-29" id="HRs-Si-wr6"/>
+                                    <constraint firstItem="fjS-go-1ah" firstAttribute="centerX" secondItem="NvN-EB-b6d" secondAttribute="centerX" id="rrQ-UR-ZzG"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="NvN-EB-b6d" secondAttribute="trailing" id="0kP-PX-zEv"/>
                             <constraint firstItem="wjG-Jl-oxH" firstAttribute="leading" secondItem="3ga-sA-rQs" secondAttribute="leading" id="26S-4w-X9X"/>
                             <constraint firstItem="wjG-Jl-oxH" firstAttribute="top" secondItem="3ga-sA-rQs" secondAttribute="bottom" id="57h-LQ-muo"/>
                             <constraint firstItem="3ga-sA-rQs" firstAttribute="top" secondItem="jbV-B6-Y5n" secondAttribute="bottom" constant="-64" id="Fcz-aC-eEU"/>
                             <constraint firstItem="wjG-Jl-oxH" firstAttribute="trailing" secondItem="3ga-sA-rQs" secondAttribute="trailing" id="ICN-oG-5OF"/>
+                            <constraint firstItem="NvN-EB-b6d" firstAttribute="top" secondItem="jbV-B6-Y5n" secondAttribute="bottom" id="ZUU-P3-Ieq"/>
                             <constraint firstItem="3ga-sA-rQs" firstAttribute="leading" secondItem="RIB-G1-KEo" secondAttribute="leading" id="cdc-nG-iNh"/>
+                            <constraint firstItem="g12-0x-tMw" firstAttribute="top" secondItem="NvN-EB-b6d" secondAttribute="bottom" id="dW0-0I-GrO"/>
+                            <constraint firstItem="NvN-EB-b6d" firstAttribute="leading" secondItem="RIB-G1-KEo" secondAttribute="leading" id="hr9-Zm-fAc"/>
                             <constraint firstItem="g12-0x-tMw" firstAttribute="top" secondItem="wjG-Jl-oxH" secondAttribute="bottom" id="jfb-PM-vnR"/>
                             <constraint firstAttribute="trailing" secondItem="3ga-sA-rQs" secondAttribute="trailing" id="wLn-xN-x3q"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="loaderView" destination="NvN-EB-b6d" id="nH2-Da-NeA"/>
                         <outlet property="navigationView" destination="3ga-sA-rQs" id="J15-Uu-XaK"/>
                         <outlet property="tableView" destination="wjG-Jl-oxH" id="wD1-0U-whO"/>
                         <outlet property="titleLabel" destination="LRN-Cn-uHe" id="xID-Wp-Npa"/>

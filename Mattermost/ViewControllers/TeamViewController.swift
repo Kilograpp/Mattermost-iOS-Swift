@@ -16,6 +16,7 @@ final class TeamViewController: UIViewController {
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var loaderView: UIView!
     
     var realm: Realm?
     fileprivate var results: Results<Team>! = nil
@@ -135,19 +136,24 @@ extension  TeamViewController: TeamViewControllerConfiguration  {
 
 extension TeamViewController: TeamViewControllerRequest {
     func reloadChat() {
-        let vc = self.presentingViewController
-        print(vc)
-        
-        
+        //showLoaderView()
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStartNotification), object: nil))
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName), object: nil))
+        
+        showLoaderView()
+        
         RealmUtils.refresh()
         Api.sharedInstance.loadTeams { (userShouldSelectTeam, error) in
             Api.sharedInstance.loadCurrentUser { (error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
                     Api.sharedInstance.loadCompleteUsersList({ (error) in
                         RouterUtils.loadInitialScreen()
+                        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
                         
-                        self.dismiss(animated: true, completion: nil)
+                        DispatchQueue.main.async{
+                            self.dismiss(animated: true, completion:nil)
+                            self.hideLoaderView()
+                        }
                     })
                 })
             }
@@ -192,6 +198,21 @@ extension TeamViewController: UITableViewDelegate {
             Preferences.sharedInstance.currentTeamId = team.identifier
             self.reloadChat()
         }
+        else {
         self.dismiss(animated: true, completion: nil)
+        }
+    }
+}
+
+//MARK: LoaderView
+extension TeamViewController {
+    func showLoaderView() {
+        (self.loaderView.subviews.first as! UIActivityIndicatorView).startAnimating()
+        self.loaderView.isHidden = false
+    }
+    
+    func hideLoaderView() {
+        (self.loaderView.subviews.first as! UIActivityIndicatorView).startAnimating()
+        self.loaderView.isHidden = false
     }
 }
