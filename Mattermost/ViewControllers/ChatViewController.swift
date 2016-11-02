@@ -132,9 +132,6 @@ extension ChatViewController {
     }
 }
 
-
-
-
 //MARK: Setup
 
 extension ChatViewController: Setup {
@@ -400,6 +397,9 @@ extension ChatViewController: Action {
     
     func refreshControlValueChanged() {
         self.loadFirstPageOfData(isInitial: false)
+        //self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
+        self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+        self.refreshControl?.endRefreshing()
     }
     
     func longPressAction(_ gestureRecognizer: UILongPressGestureRecognizer) {
@@ -459,7 +459,7 @@ extension ChatViewController: Request {
         if self.loadingView == nil {
             var frame = UIScreen.main.bounds
             frame.origin.y = 64
-            frame.size.height -= 64
+            frame.size.height -= 108
             self.loadingView = UIView(frame: frame)
             self.loadingView?.backgroundColor = UIColor.white
             let avtivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
@@ -476,8 +476,6 @@ extension ChatViewController: Request {
                 self.loadingView?.removeFromSuperview()
                 self.loadingView = nil
             }
-            
-            self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
 
             self.isLoadingInProgress = false
             self.hasNextPage = true
