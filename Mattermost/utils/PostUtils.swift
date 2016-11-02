@@ -267,8 +267,7 @@ extension PostUtils : Public {
                         self.files.removeObject(item)
                         return
                     }
-                    self.assignedFiles.append(file!)
-                    
+                  
                     if self.assignedFiles.count == 0 {
                         self.test = file
                     }
@@ -278,10 +277,6 @@ extension PostUtils : Public {
                         self.assignedFiles.append(file!)
                         print("uploaded")
                     }
-                    
-                    //print("uploaded")
-                    //self.assignedFiles.append(file!)
-                    self.upload_images_group.leave()
                     }, progress: { (identifier, value) in
                         let index = self.files.index(where: {$0.identifier == identifier})
                         guard (index != nil) else { return }
