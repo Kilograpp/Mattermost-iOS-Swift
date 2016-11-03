@@ -576,7 +576,7 @@ extension ChatViewController: Request {
         
         PostUtils.sharedInstance.deletePost(self.selectedPost) { (error) in
             self.selectedAction = Constants.PostActionType.SendNew
-            RealmUtils.deleteObject(self.selectedPost)
+           // RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
         }
     }
