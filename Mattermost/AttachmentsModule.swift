@@ -87,7 +87,6 @@ extension AttachmentsModule: Interface {
             self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index, value: value)
         }
     }
-
 }
 
 extension AttachmentsModule: PostAttachmentViewDelegate {

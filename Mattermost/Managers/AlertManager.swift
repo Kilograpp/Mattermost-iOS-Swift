@@ -35,7 +35,7 @@ class AlertManager {
     
     func showWarningWithMessage(message:String, viewController: UIViewController) {
         let alertView = AlertView(type: .warning, message: message)
-        alertView.presentingViewController = viewController.navigationController
+        alertView.presentingViewController = viewController//.navigationController
         alertView.showAlertView(animated: true)
     }
 }

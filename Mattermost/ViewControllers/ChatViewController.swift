@@ -381,6 +381,12 @@ extension ChatViewController: Action {
     }
     
     func sendPostAction() {
+        guard self.filesAttachmentsModule.fileUploadingInProgress else {
+            let message = "Please, wait until download finishes"
+            AlertManager.sharedManager.showWarningWithMessage(message: message, viewController: self)
+            return
+        }
+        
         switch self.selectedAction {
         case Constants.PostActionType.SendReply:
             sendPostReply()
