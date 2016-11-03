@@ -32,6 +32,7 @@ final class User: RealmObject {
     }
 
     let channels = LinkingObjects(fromType: Channel.self, property: ChannelRelationships.members.rawValue)
+    let notifyProps = NotifyProps()
     dynamic var username: String? {
         didSet { computeNicknameIfRequired() }
     }
@@ -62,9 +63,9 @@ enum UserAttributes: String {
     case avatarLink = "avatarLink"
 }
 
-/*enum UserRelationships: String {
-    case notifyProps = "notify_props"
-}*/
+enum UserRelationships: String {
+    case notifyProps = "notifyProps"
+}
 
 private protocol Computatations: class {
     func computeDisplayNameWidth()

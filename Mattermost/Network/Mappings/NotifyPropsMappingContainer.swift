@@ -9,7 +9,7 @@
 import Foundation
 import RestKit
 
-private protocol NotifyPropsMappingsContainerResponseMappings: class {
+private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
 }
 
@@ -22,11 +22,11 @@ final class NotifyPropsMappingsContainer: BaseMappingsContainer {
 
 //MARK: NotifyPropsMappingsContainerResponseMappings
 
-extension NotifyPropsMappingsContainer: NotifyPropsMappingsContainerResponseMappings {
+extension NotifyPropsMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
-            "firstName"         : NotifyPropsAttributes.channel.rawValue,
+            "channel"           : NotifyPropsAttributes.channel.rawValue,
             "comments"          : NotifyPropsAttributes.comments.rawValue,
             "desktop"           : NotifyPropsAttributes.desktop.rawValue,
             "desktop_duration"  : NotifyPropsAttributes.desktopDuration.rawValue,

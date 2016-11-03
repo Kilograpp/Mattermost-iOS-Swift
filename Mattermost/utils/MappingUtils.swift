@@ -35,6 +35,7 @@ private protocol PostMethods: class {
 private protocol UserMethod: class {
     static func fetchUsersFromInitialLoad(_ mappingResult: RKMappingResult) -> [User]
     static func fetchUsersFromCompleteList(_ mappingResult: RKMappingResult) -> [User]
+    static func fetchUserWithNotifyPropsFromUser(_ mappingResult: RKMappingResult) -> User
 }
 
 
@@ -104,6 +105,17 @@ extension MappingUtils: UserMethod {
     }
     static func fetchUsersFromCompleteList(_ mappingResult: RKMappingResult) -> [User] {
         return mappingResult.array() as! [User]
+    }
+    static func fetchUserWithNotifyPropsFromUser(_ mappingResult: RKMappingResult) -> User {
+        var user = mappingResult.dictionary()["<null>"] as! User
+        let notifyProps = mappingResult.dictionary()["notify_props"] as! NotifyProps
+        
+       // user.notifyProps = notifyProps
+        
+        print(user)
+        print(notifyProps)
+        
+        return user//mappingResult.dictionary()["notify_props"] as! NotifyProps
     }
 }
 

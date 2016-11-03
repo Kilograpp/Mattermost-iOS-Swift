@@ -312,7 +312,17 @@ extension Api: UserApi {
         let parameters = ["login_id" : email, "password": password, "token" : ""]
         
         self.manager.postObject(path: path, parameters: parameters as [AnyHashable: Any]?, success: { (mappingResult) in
+            
+            print(mappingResult)
+            
+     //       let user1 = MappingUtils.fetchUserWithNotifyPropsFromUser(mappingResult)
+       //     print(user1)
+            
             let user = mappingResult.firstObject as! User
+            let notifyProps = user.notifyProps
+            print(notifyProps)
+        //    let notif = MappingUtils.fetchNotifyPropsFromUser(mappingResult)
+            //print(notif)
             let systemUser = DataManager.sharedInstance.instantiateSystemUser()
             user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user

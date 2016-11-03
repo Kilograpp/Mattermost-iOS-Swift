@@ -40,6 +40,9 @@ extension NSettingsTableViewController: LifeCycle {
         super.viewDidLoad()
         
         initialSetup()
+        
+        let notifyProps = DataManager.sharedInstance.currentUser
+        print(notifyProps)
     }
     
     override func viewWillAppear(_ animated: Bool) {

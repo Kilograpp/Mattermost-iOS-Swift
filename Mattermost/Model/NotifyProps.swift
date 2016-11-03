@@ -10,38 +10,42 @@ import Foundation
 import RealmSwift
 
 final class NotifyProps: RealmObject {
-    dynamic var channel: Bool = false
+    dynamic var channel: String?
     dynamic var comments: String?
     dynamic var desktop: String?
-    dynamic var desktopDuration: Int = 0
-    dynamic var desktop_sound: Bool = false
-    dynamic var email: Bool = false
-    dynamic var firstName: Bool = false
+    dynamic var desktopDuration: String?
+    dynamic var desktopSound: String?
+    dynamic var email: String?
+    dynamic var firstName: String?
     dynamic var mentionKeys: String?
     dynamic var push: String?
     dynamic var pushStatus: String?
+    dynamic var userId: String?
+    dynamic var key: String!
     
-    
-//    let user = LinkingObjects(fromType: User.self, property: UserRelationships.notifyProps.rawValue)
-    
- /*   override class func primaryKey() -> String {
-        return NotifyPropsAttributes.key.rawValue
+    override static func indexedProperties() -> [String] {
+        return [MemberAttributes.key.rawValue]
+    }
+    override static func primaryKey() -> String? {
+        return MemberAttributes.key.rawValue
     }
     
-    override class func indexedProperties() -> [String] {
-        return [NotifyPropsAttributes.channelId.rawValue, DayAttributes.date.rawValue]
-    }*/
+    func computeKey() {
+        self.key = "\(userId)__notifyProps"
+    }
 }
 
 enum NotifyPropsAttributes: String {
-    case channel = "channel"
-    case comments = "comments"
-    case desktop = "desktop"
+    case channel         = "channel"
+    case comments        = "comments"
+    case desktop         = "desktop"
     case desktopDuration = "desktopDuration"
-    case desktopSound = "desktopSound"
-    case email = "email"
-    case firstName = "firstName"
-    case mentionKeys = "mentionKeys"
-    case push = "push"
-    case pushStatus = "pushStatus"
+    case desktopSound    = "desktopSound"
+    case email           = "email"
+    case firstName       = "firstName"
+    case mentionKeys     = "mentionKeys"
+    case push            = "push"
+    case pushStatus      = "pushStatus"
+    case userId          = "userId"
+    case key             = "key"
 }

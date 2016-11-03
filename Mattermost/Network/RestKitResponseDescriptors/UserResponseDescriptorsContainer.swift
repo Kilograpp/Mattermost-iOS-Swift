@@ -11,17 +11,20 @@ import RestKit
 
 private protocol ResponseDescriptors: class {
     static func loginResponseDescriptor() -> RKResponseDescriptor
+//    static func notifyPropsResponseDescriptor() -> RKResponseDescriptor
     static func logoutResponseDescriptor() -> RKResponseDescriptor
     static func loadCurrentUserResponseDescriptor() -> RKResponseDescriptor
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor
     static func completeListResponseDescriptor() -> RKResponseDescriptor
+    static func updateNotifyResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class UserResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
     
 }
 
-// MARK: - Response Descriptors
+
+// MARK: Response Descriptors
 extension UserResponseDescriptorsContainer: ResponseDescriptors {
     static func loginResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: UserMappingsContainer.mapping(),
@@ -30,6 +33,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
+ /*   static func notifyPropsResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: NotifyPropsMappingsContainer.mapping(),
+                                    method: .POST,
+                                    pathPattern: UserPathPatternsContainer.loginPathPattern(),
+                                    keyPath: "notify_props",
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }*/
     static func logoutResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: UserMappingsContainer.emptyMapping(),
                                     method: .POST,
@@ -55,6 +65,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.completeListPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func updateNotifyResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: UserMappingsContainer.mapping(),
+                                    method: .POST,
+                                    pathPattern: UserPathPatternsContainer.usersUpdateNotifyPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
