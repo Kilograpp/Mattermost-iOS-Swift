@@ -21,17 +21,57 @@ final class NotifyProps: RealmObject {
     dynamic var push: String?
     dynamic var pushStatus: String?
     dynamic var userId: String?
-    dynamic var key: String!
+    dynamic var key: String! = "__notifyProps"
     
     override static func indexedProperties() -> [String] {
-        return [MemberAttributes.key.rawValue]
+        return [NotifyPropsAttributes.key.rawValue]
     }
     override static func primaryKey() -> String? {
-        return MemberAttributes.key.rawValue
+        return NotifyPropsAttributes.key.rawValue
     }
     
     func computeKey() {
-        self.key = "\(userId)__notifyProps"
+        self.key = "\(userId!)__notifyProps"
+    }
+    
+    func isSensitiveFirstName() -> Bool {
+        return self.firstName == "true"
+    }
+    
+    func isNonCaseSensitiveUsername() -> Bool {
+        var mention = self.mentionKeys
+        let username = DataManager.sharedInstance.currentUser?.username
+        mention = mention?.replacingOccurrences(of: ("@" + username!), with: "")
+        
+        return (mention?.contains(username!))!
+    }
+    
+    func isUsernameMentioned() -> Bool {
+        let mention = self.mentionKeys
+        let username = "@" + (DataManager.sharedInstance.currentUser?.username)!
+        
+        return (mention?.contains(username))!
+    }
+    
+    func isChannelWide() -> Bool {
+        return self.channel == "true"
+    }
+    
+    func otherNonCaseSensitive() -> String {
+        var mention = self.mentionKeys
+        let username = DataManager.sharedInstance.currentUser?.username
+        mention = mention?.replacingOccurrences(of: ("@" + username!), with: "")
+        mention = mention?.replacingOccurrences(of: (username!), with: "")
+        mention = mention?.replacingOccurrences(of: ",,", with: ",")
+        if (mention?.hasPrefix(","))! {
+            mention?.remove(at: (mention?.startIndex)!)
+        }
+        
+        if (mention?.hasSuffix(","))! {
+            mention?.remove(at: (mention?.endIndex)!)
+        }
+        
+        return mention!
     }
 }
 

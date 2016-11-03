@@ -25,7 +25,6 @@ final class Member: RealmObject {
     override static func primaryKey() -> String? {
         return MemberAttributes.key.rawValue
     }
-    
     func computeKey() {
         self.key = "\(userId)__\(channelId)"
     }

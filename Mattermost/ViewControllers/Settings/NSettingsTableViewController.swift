@@ -34,15 +34,11 @@ private protocol Navigation {
 
 
 //MARK: LifeCycle
-
 extension NSettingsTableViewController: LifeCycle {
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initialSetup()
-        
-        let notifyProps = DataManager.sharedInstance.currentUser
-        print(notifyProps)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,7 +56,6 @@ extension NSettingsTableViewController: LifeCycle {
 
 
 //MARK: Setup
-
 extension NSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
@@ -79,7 +74,6 @@ extension NSettingsTableViewController: Setup {
 
 
 //MARK: Action
-
 extension NSettingsTableViewController: Action {
     func backAction() {
         returnToChat()
@@ -92,7 +86,6 @@ extension NSettingsTableViewController: Action {
 
 
 //MARK: Navigation
-
 extension NSettingsTableViewController: Navigation {
     func returnToChat() {
         _ = self.navigationController?.popViewController(animated: true)
@@ -112,8 +105,36 @@ extension NSettingsTableViewController: Navigation {
 }
 
 
-//MARK: UITableViewDelegate
+//MARK: UITableViewDataSource
+extension NSettingsTableViewController {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath) as! CommonSettingsTableViewCell
+        let user = DataManager.sharedInstance.currentUser
+        let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
+        
+        switch indexPath.section {
+        case 2:
+            let sendKey = notifyProps?.push
+            let triggerKey = notifyProps?.pushStatus
+            let send = Constants.NotifyProps.MobilePush.Send[sendKey!]
+            let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerKey!]
+            cell.descriptionLabel?.text = send! + " when " + trigger!
+        case 3:
+            var words = (notifyProps?.firstName)! == "true" ? ("\"" + (user?.firstName)! + "\"") : ""
+            let menion = (notifyProps?.mentionKeys)!.replacingOccurrences(of: ",", with: ", ")
+            words += " " + menion
+            words += (notifyProps?.channel) == "true" ? (" ," + Constants.NotifyProps.Words.ChannelWide) : ""
+            cell.descriptionLabel?.text = (words.characters.count > 0) ? words : Constants.NotifyProps.Words.None
+        default:
+            break
+        }
+        
+        return cell
+    }
+}
 
+
+//MARK: UITableViewDelegate
 extension NSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {

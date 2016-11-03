@@ -32,7 +32,10 @@ extension UserMappingsContainer: ResponseMappings {
             "nickname"     : UserAttributes.nickname.rawValue,
             "email"        : UserAttributes.email.rawValue
             ])
-        mapping.addRelationshipMapping(withSourceKeyPath: /*UserRelationships.notifyProps.rawValue*/"notifyProps", mapping: NotifyPropsMappingsContainer.mapping())
+        
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "notify_props",
+                                                         toKeyPath: UserAttributes.notifyProps.rawValue,
+                                                         with: NotifyPropsMappingsContainer.mapping()))
         return mapping
     }
 

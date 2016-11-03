@@ -126,37 +126,56 @@ extension WTMSettingsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if (indexPath.section == 0) {
-            (cell as! CheckSettingsTableViewCell).checkBoxHandler = {
-                print("some check")
-            }
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)        
+        if indexPath.section == 0 {
+            configure(cell: (cell as! CheckSettingsTableViewCell), indexPath: indexPath)
         }
         else {
-            print("texttt")
+            configure(cell: cell as! TextSettingsTableViewCell)
         }
-        
-        guard indexPath.section == 0 else { return cell }
-        
-        configure(cell: (cell as! CheckSettingsTableViewCell), indexPath: indexPath)
-        
         
         return cell
     }
     
     func configure(cell:CheckSettingsTableViewCell, indexPath: IndexPath) {
-        let text = cell.descriptionLabel?.text
         let user = DataManager.sharedInstance.currentUser
+        let notifyProps = user?.notificationProperies()
+        
+        let text = cell.descriptionLabel?.text
         switch indexPath.row {
         case 0:
             cell.descriptionLabel?.text = text! + "\"" + (user?.firstName)! + "\""
+            cell.checkBoxButton?.isSelected = (notifyProps?.isSensitiveFirstName())!
         case 1:
-             cell.descriptionLabel?.text = text! + "\"" + (user?.username)! + "\""
+            cell.descriptionLabel?.text = text! + "\"" + (user?.username)! + "\""
+            cell.checkBoxButton?.isSelected = (notifyProps?.isNonCaseSensitiveUsername())!
         case 2:
             cell.descriptionLabel?.text = text! + "@\"" + (user?.username)! + "\""
+            cell.checkBoxButton?.isSelected = (notifyProps?.isUsernameMentioned())!
+        case 3:
+            cell.checkBoxButton?.isSelected = (notifyProps?.isChannelWide())!
         default:
             break
         }
+    }
+    
+    func configure(cell: TextSettingsTableViewCell) {
+        let user = DataManager.sharedInstance.currentUser
+        let notifyProps = user?.notificationProperies()
+        
+        cell.wordsTextView?.text = notifyProps?.otherNonCaseSensitive()
+        cell.placeholderLabel?.isHidden = ((cell.wordsTextView?.text.characters.count)! > 0)
+    }
+}
+
+
+//MARK: UITableViewDelegate
+extension WTMSettingsTableViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section == 0 else { return }
+        
+        let cell = tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell
+        cell.checkBoxButton?.isSelected = !(cell.checkBoxButton?.isSelected)!
     }
 }
 
