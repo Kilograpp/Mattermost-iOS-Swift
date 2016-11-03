@@ -10,31 +10,7 @@ import UIKit
 
 class NSettingsTableViewController: UITableViewController {
 
-}
-
-
-private protocol LifeCycle {
-    func viewDidLoad()
-}
-
-private protocol Setup {
-    func initialSetup()
-    func setupNavigationBar()
-}
-
-private protocol Action {
-    func backAction()
-}
-
-private protocol Navigation {
-    func returnToChat()
-    func proceedToMPNSettings()
-    func proceedToWTMSettings()
-}
-
-
 //MARK: LifeCycle
-extension NSettingsTableViewController: LifeCycle {
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,6 +28,26 @@ extension NSettingsTableViewController: LifeCycle {
         
         super.viewWillDisappear(animated)
     }
+}
+
+
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupNavigationBar()
+}
+
+fileprivate protocol Action {
+    func backAction()
+}
+
+fileprivate protocol Navigation {
+    func returnToChat()
+    func proceedToMPNSettings()
+    func proceedToWTMSettings()
+}
+
+fileprivate protocol Request {
+    func update()
 }
 
 
@@ -80,7 +76,7 @@ extension NSettingsTableViewController: Action {
     }
     
     func saveAction() {
-        
+        update()
     }
 }
 
@@ -105,6 +101,22 @@ extension NSettingsTableViewController: Navigation {
 }
 
 
+//MARK: Request
+extension NSettingsTableViewController {
+    func update() {
+        let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
+        print(notifyProps)
+        Api.sharedInstance.updateNotifyProps(notifyProps!) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                return
+            }
+            let message = "User notification properties were successfully updated"
+            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+        }
+    }
+}
+
 //MARK: UITableViewDataSource
 extension NSettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -122,8 +134,10 @@ extension NSettingsTableViewController {
         case 3:
             var words = (notifyProps?.firstName)! == "true" ? ("\"" + (user?.firstName)! + "\"") : ""
             let menion = (notifyProps?.mentionKeys)!.replacingOccurrences(of: ",", with: ", ")
-            words += " " + menion
-            words += (notifyProps?.channel) == "true" ? (" ," + Constants.NotifyProps.Words.ChannelWide) : ""
+            words += (words.characters.count > 0) ? " " : ""
+            words += menion
+            words += (words.characters.count > 0) ? " ," : ""
+            words += (notifyProps?.channel) == "true" ? Constants.NotifyProps.Words.ChannelWide : ""
             cell.descriptionLabel?.text = (words.characters.count > 0) ? words : Constants.NotifyProps.Words.None
         default:
             break

@@ -9,37 +9,9 @@
 import UIKit
 
 class WTMSettingsTableViewController: UITableViewController {
-
-}
-
-private protocol WTMSettingsTableViewControllerLifeCycle {
-    func viewDidLoad()
-    func didReceiveMemoryWarning()
-}
-
-private protocol WTMSettingsTableViewControllerSetup {
-    func initialSetup()
-    func setupNavigationBar()
-    func setupForCurrentSettings()
-}
-
-private protocol WTMSettingsTableViewControllerAction {
-    func backAction()
-    func saveAction()
-}
-
-private protocol WTMSettingsTableViewControllerNavigation {
-    func returtToNSettings()
-}
-
-private protocol WTMSettingsTableViewControllerRequest {
-
-}
-
-
-//MARK: WTMSettingsTableViewControllerLifeCycle
-
-extension WTMSettingsTableViewController: WTMSettingsTableViewControllerLifeCycle {
+    
+//MARK: LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,7 +21,7 @@ extension WTMSettingsTableViewController: WTMSettingsTableViewControllerLifeCycl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-         self.menuContainerViewController.panMode = .init(0)
+        self.menuContainerViewController.panMode = .init(0)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,11 +30,34 @@ extension WTMSettingsTableViewController: WTMSettingsTableViewControllerLifeCycl
         super.viewWillDisappear(animated)
     }
 }
-    
 
-//MARK: WTMSettingsTableViewControllerSetup
 
-extension WTMSettingsTableViewController: WTMSettingsTableViewControllerSetup {
+fileprivate protocol LifeCycle {
+    func viewDidLoad()
+    func didReceiveMemoryWarning()
+}
+
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupNavigationBar()
+}
+
+fileprivate protocol Action {
+    func backAction()
+    func saveAction()
+}
+
+fileprivate protocol Navigation {
+    func returtToNSettings()
+}
+
+fileprivate protocol Request {
+
+}
+
+
+//MARK: Setup
+extension WTMSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
     }
@@ -76,46 +71,47 @@ extension WTMSettingsTableViewController: WTMSettingsTableViewControllerSetup {
         let saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
         self.navigationItem.rightBarButtonItem = saveButton
     }
-    
-    func setupForCurrentSettings() {
-        
-    }
 }
     
 
-//MARK: WTMSettingsTableViewControllerAction
-
-extension WTMSettingsTableViewController: WTMSettingsTableViewControllerAction {
+//MARK: Action
+extension WTMSettingsTableViewController: Action {
     func backAction() {
         returtToNSettings()
     }
     
     func saveAction() {
-        saveSettings()
+        update()
     }
 }
 
 
-//MARK: WTMSettingsTableViewControllerNavigation
-
-extension WTMSettingsTableViewController: WTMSettingsTableViewControllerNavigation {
+//MARK: Navigation
+extension WTMSettingsTableViewController: Navigation {
     func returtToNSettings() {
         _ = self.navigationController?.popViewController(animated: true)
     }
 }
 
 
-//MARK: WTMSettingsTableViewControllerRequest
-
-extension WTMSettingsTableViewController: WTMSettingsTableViewControllerRequest {
-    func saveSettings() {
-        
+//MARK: Request
+extension WTMSettingsTableViewController: Request {
+    func update() {
+        let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
+        print(notifyProps)
+        Api.sharedInstance.updateNotifyProps(notifyProps!) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                return
+            }
+            let message = "User notification properties were successfully updated"
+            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+        }
     }
 }
 
 
 //MARK: UITableViewDataSource
-
 extension WTMSettingsTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -181,7 +177,6 @@ extension WTMSettingsTableViewController {
 
 
 //MARK: UITextViewDelegate
-
 extension WTMSettingsTableViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         let indexPath = IndexPath(row: 0, section: 1)

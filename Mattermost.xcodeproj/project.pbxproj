@@ -80,6 +80,9 @@
 		8BE969B71D7638060010A524 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BE969B61D7638060010A524 /* Settings.storyboard */; };
 		8BE969BB1D76AA420010A524 /* ProfileDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969BA1D76AA420010A524 /* ProfileDataSource.swift */; };
 		8BE969BE1D7730760010A524 /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */; };
+		8BEE0C811DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEE0C801DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift */; };
+		8BEE0C851DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEE0C841DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift */; };
+		8BEE0C871DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */; };
 		9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8221EBC8202297FF772024 /* AppDelegate.swift */; };
 		9B8225AB7671DDA50CC816E7 /* ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8226CE0BB2D71C86E0F173 /* ObjectManager.swift */; };
 		9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B82258408C03D292317D1D2 /* LaunchScreen.storyboard */; };
@@ -316,6 +319,9 @@
 		8BE969B61D7638060010A524 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = storyboards/Settings.storyboard; sourceTree = "<group>"; };
 		8BE969BA1D76AA420010A524 /* ProfileDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileDataSource.swift; sourceTree = "<group>"; };
 		8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
+		8BEE0C801DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotifyPropsPathPatternsContainer.swift; path = PathPattern/NotifyPropsPathPatternsContainer.swift; sourceTree = "<group>"; };
+		8BEE0C841DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotifyPropsResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/NotifyPropsResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotifyPropsRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/NotifyPropsRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
 		9B8220F2E4D1D8538A51229B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9B822144F4369B867EA300AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9B8221EBC8202297FF772024 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -741,6 +747,7 @@
 			children = (
 				CDB4BC661D80678000662231 /* BaseRequestDescriptorsContainer.swift */,
 				CDB4BC641D8062B600662231 /* PostRequestDescriptorsContainer.swift */,
+				8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */,
 			);
 			name = RestKitRequestDescriptors;
 			sourceTree = "<group>";
@@ -774,6 +781,7 @@
 				CDB4BC5F1D80341800662231 /* UserResponseDescriptorsContainer.swift */,
 				CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */,
 				8B77B5EB1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift */,
+				8BEE0C841DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift */,
 			);
 			name = RestKitResponseDescriptors;
 			sourceTree = "<group>";
@@ -806,6 +814,7 @@
 				CDF07ED31D7F1DB500172D1E /* TeamPathPatternsContainer.swift */,
 				CDF07ED51D7F1DC900172D1E /* UserPathPatternsContainer.swift */,
 				8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift */,
+				8BEE0C801DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift */,
 			);
 			name = PathPatterns;
 			sourceTree = "<group>";
@@ -1412,6 +1421,7 @@
 				9B82203880219F7C0CB63423 /* AppDelegate.swift in Sources */,
 				8B3C3EDE1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift in Sources */,
 				8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */,
+				8BEE0C811DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift in Sources */,
 				D62FEB9A1D4F2CD700390EBC /* ChannelObserver.swift in Sources */,
 				CDF07ED21D7F1DA300172D1E /* PostPathPatternsContainer.swift in Sources */,
 				8B9E1C151DB822A500C05B36 /* TeamCellBuilder.swift in Sources */,
@@ -1495,6 +1505,7 @@
 				D8BEE3E61D48067900964EC4 /* ActionsNotification.swift in Sources */,
 				D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */,
 				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
+				8BEE0C851DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift in Sources */,
 				CDB4BC651D8062B600662231 /* PostRequestDescriptorsContainer.swift in Sources */,
 				D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */,
 				D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */,
@@ -1510,6 +1521,7 @@
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
 				8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */,
 				8B9E1C171DB8994100C05B36 /* RightMenuCellBuilder.swift in Sources */,
+				8BEE0C871DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift in Sources */,
 				CDF07ED01D7F1D8900172D1E /* FilePathPatternsContainer.swift in Sources */,
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
 				8BE969BB1D76AA420010A524 /* ProfileDataSource.swift in Sources */,

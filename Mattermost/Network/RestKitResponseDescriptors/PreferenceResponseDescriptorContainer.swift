@@ -20,7 +20,6 @@ final class PreferenceResponseDescriptorContainer: BaseResponseDescriptorsContai
 
 
 //MARK: ResponseDescriptors
-
 extension PreferenceResponseDescriptorContainer: ResponseDescriptors {
     static func saveResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: BaseMappingsContainer.emptyResponseMapping(),

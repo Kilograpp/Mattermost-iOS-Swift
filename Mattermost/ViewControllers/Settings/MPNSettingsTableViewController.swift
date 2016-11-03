@@ -122,8 +122,8 @@ extension MPNSettingsTableViewController: MPNSettingsTableViewControllerRequest 
 
 extension MPNSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        DataManager.sharedInstance.currentUser?.notificationProperies().hasUpdated = true
         let number = tableView.numberOfRows(inSection: indexPath.section)
-        
         for row in 0..<number {
             let cell = tableView.cellForRow(at: IndexPath.init(row: row, section: indexPath.section))
             cell?.accessoryType = (row == indexPath.row) ? .checkmark : .none

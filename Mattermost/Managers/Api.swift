@@ -21,6 +21,10 @@ private protocol PreferencesApi: class {
     func listUsersPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
+private protocol NotifyPropsApi: class {
+    func updateNotifyProps(_ notifyProps: NotifyProps, completion: @escaping(_ error: Mattermost.Error?) -> Void)
+}
+
 private protocol TeamApi: class {
     func loadTeams(with completion: @escaping (_ userShouldSelectTeam: Bool, _ error: Mattermost.Error?) -> Void)
     func sendInvites(_ invites: [Dictionary<String , String>], completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -136,8 +140,36 @@ extension Api: PreferencesApi {
 }
 
 
-//MARK: TeamApi
+//MARK: NotifyProps
+extension Api: NotifyPropsApi {
+    func updateNotifyProps(_ notifyProps: NotifyProps, completion: @escaping(_ error: Mattermost.Error?) -> Void) {
+        let path = NotifyPropsPathPatternsContainer.updatePathPattern()
+        
+        self.manager.postObject(notifyProps, path: path, parameters: nil, success: { (mappingResult) in
+            let object = mappingResult.dictionary()["notify_props"] as! NotifyProps
+            let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
+//Will replace afterconnection problems solved
+            try! RealmUtils.realmForCurrentThread().write {
+                notifyProps?.channel = object.channel
+                notifyProps?.comments = object.comments
+                notifyProps?.desktop = object.desktop
+                notifyProps?.desktopDuration = object.desktopDuration
+                notifyProps?.desktopSound = object.desktopSound
+                notifyProps?.email = object.email
+                notifyProps?.firstName = object.firstName
+                notifyProps?.mentionKeys = object.mentionKeys
+                notifyProps?.push = object.push
+                notifyProps?.pushStatus = notifyProps?.pushStatus
+            }
+            completion(nil)
+            }, failure: { (error) in
+                completion(error)
+        })
+    }
+}
 
+
+//MARK: TeamApi
 extension Api: TeamApi {
     
     func loadTeams(with completion:@escaping (_ userShouldSelectTeam: Bool, _ error: Mattermost.Error?) -> Void) {

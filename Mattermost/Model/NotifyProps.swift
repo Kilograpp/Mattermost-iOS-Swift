@@ -22,6 +22,7 @@ final class NotifyProps: RealmObject {
     dynamic var pushStatus: String?
     dynamic var userId: String?
     dynamic var key: String! = "__notifyProps"
+    dynamic var hasUpdated: Bool = false
     
     override static func indexedProperties() -> [String] {
         return [NotifyPropsAttributes.key.rawValue]
@@ -33,7 +34,24 @@ final class NotifyProps: RealmObject {
     func computeKey() {
         self.key = "\(userId!)__notifyProps"
     }
-    
+}
+
+enum NotifyPropsAttributes: String {
+    case channel         = "channel"
+    case comments        = "comments"
+    case desktop         = "desktop"
+    case desktopDuration = "desktopDuration"
+    case desktopSound    = "desktopSound"
+    case email           = "email"
+    case firstName       = "firstName"
+    case mentionKeys     = "mentionKeys"
+    case push            = "push"
+    case pushStatus      = "pushStatus"
+    case userId          = "userId"
+    case key             = "key"
+}
+
+extension NotifyProps {
     func isSensitiveFirstName() -> Bool {
         return self.firstName == "true"
     }
@@ -75,17 +93,3 @@ final class NotifyProps: RealmObject {
     }
 }
 
-enum NotifyPropsAttributes: String {
-    case channel         = "channel"
-    case comments        = "comments"
-    case desktop         = "desktop"
-    case desktopDuration = "desktopDuration"
-    case desktopSound    = "desktopSound"
-    case email           = "email"
-    case firstName       = "firstName"
-    case mentionKeys     = "mentionKeys"
-    case push            = "push"
-    case pushStatus      = "pushStatus"
-    case userId          = "userId"
-    case key             = "key"
-}
