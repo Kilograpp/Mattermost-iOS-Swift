@@ -492,6 +492,8 @@ extension Api: PostApi {
                       "channel_id" : post.channelId!,
                       "post_id"    : post.identifier!]
         
+        
+        
         self.manager.deletePost(with: path, parameters: params, success: { (mappingResult) in
             completion(nil)
         }) { (error) in

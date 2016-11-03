@@ -580,7 +580,6 @@ extension ChatViewController: Request {
             self.selectedPost = nil
         }
     }
-    
 }
 
 
