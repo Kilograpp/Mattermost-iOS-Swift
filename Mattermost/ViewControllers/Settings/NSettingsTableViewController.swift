@@ -9,6 +9,10 @@
 import UIKit
 
 class NSettingsTableViewController: UITableViewController {
+    
+//MARK: Properties
+    fileprivate var notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
+    fileprivate let user = DataManager.sharedInstance.currentUser
 
 //MARK: LifeCycle
     override func viewDidLoad() {
@@ -62,9 +66,6 @@ extension NSettingsTableViewController: Setup {
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
-        
-        let saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
-        self.navigationItem.rightBarButtonItem = saveButton
     }
 }
 
@@ -73,10 +74,6 @@ extension NSettingsTableViewController: Setup {
 extension NSettingsTableViewController: Action {
     func backAction() {
         returnToChat()
-    }
-    
-    func saveAction() {
-        update()
     }
 }
 
@@ -101,43 +98,39 @@ extension NSettingsTableViewController: Navigation {
 }
 
 
-//MARK: Request
-extension NSettingsTableViewController {
-    func update() {
-        let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
-        print(notifyProps)
-        Api.sharedInstance.updateNotifyProps(notifyProps!) { (error) in
-            guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
-                return
-            }
-            let message = "User notification properties were successfully updated"
-            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
-        }
-    }
-}
-
 //MARK: UITableViewDataSource
 extension NSettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath) as! CommonSettingsTableViewCell
-        let user = DataManager.sharedInstance.currentUser
-        let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
         
         switch indexPath.section {
         case 2:
-            let sendKey = notifyProps?.push
-            let triggerKey = notifyProps?.pushStatus
-            let send = Constants.NotifyProps.MobilePush.Send[sendKey!]
-            let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerKey!]
-            cell.descriptionLabel?.text = send! + " when " + trigger!
+            let sendIndex = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.notifyProps?.push)! }!
+            let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.notifyProps?.pushStatus)! }!
+            let send = Constants.NotifyProps.MobilePush.Send[sendIndex].description
+            let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
+            cell.descriptionLabel?.text = send + " when " + trigger
+            break
         case 3:
-            var words = (notifyProps?.firstName)! == "true" ? ("\"" + (user?.firstName)! + "\"") : ""
-            let menion = (notifyProps?.mentionKeys)!.replacingOccurrences(of: ",", with: ", ")
-            words += (words.characters.count > 0) ? " " : ""
-            words += menion
-            words += (words.characters.count > 0) ? " ," : ""
-            words += (notifyProps?.channel) == "true" ? Constants.NotifyProps.Words.ChannelWide : ""
+            var words = (notifyProps?.isSensitiveFirstName())! ? ("\"" + (user?.firstName)! + "\"") : ""
+            if (notifyProps?.isNonCaseSensitiveUsername())! {
+                words += (words.characters.count > 0) ? ", " : ""
+                words += "\"" + (self.user?.username)! + "\""
+            }
+            if (notifyProps?.isUsernameMentioned())! {
+                words += (words.characters.count > 0) ? ", " : ""
+                words += "\"@" + (self.user?.username)! + "\""
+            }
+            if (notifyProps?.isChannelWide())! {
+                words += (words.characters.count > 0) ? ", " : ""
+                words += Constants.NotifyProps.Words.ChannelWide
+            }
+            let otherWords = notifyProps?.otherNonCaseSensitive()
+            if ((otherWords?.characters.count)! > 0) {
+                words += (words.characters.count > 0) ? ", " : ""
+                words += otherWords!
+            }
+            
             cell.descriptionLabel?.text = (words.characters.count > 0) ? words : Constants.NotifyProps.Words.None
         default:
             break

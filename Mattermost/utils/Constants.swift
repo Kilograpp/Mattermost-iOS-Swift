@@ -104,8 +104,8 @@ struct Constants {
     
     struct NotifyProps {
         struct MobilePush {
-            static let Send = ["all" : "For all activity", "mention" : "For mentions and direct messages", "none" : "Never"]
-            static let Trigger = ["online" : "Online, away or offline", "away" : "Away or offline", "offline" : "Offline"]
+            static let Send = [ (state: "all", description: "For all activity"), (state: "mention", description: "For mentions and direct messages"), (state: "none", description: "Never") ]
+            static let Trigger = [ (state: "online", description: "Online, away or offline"), (state: "away", description: "Away or offline"), (state: "offline", description: "Offline")]
         }
         struct Words {
             static let ChannelWide = "\"@channel\", \"@all\""

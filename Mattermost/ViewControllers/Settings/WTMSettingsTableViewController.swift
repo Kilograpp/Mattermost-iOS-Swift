@@ -9,9 +9,14 @@
 import UIKit
 
 class WTMSettingsTableViewController: UITableViewController {
+ 
+//MARK: Properties
+    fileprivate var saveButton: UIBarButtonItem!
+    
+    fileprivate var notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
+    fileprivate let user = DataManager.sharedInstance.currentUser
     
 //MARK: LifeCycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,11 +36,6 @@ class WTMSettingsTableViewController: UITableViewController {
     }
 }
 
-
-fileprivate protocol LifeCycle {
-    func viewDidLoad()
-    func didReceiveMemoryWarning()
-}
 
 fileprivate protocol Setup {
     func initialSetup()
@@ -68,8 +68,9 @@ extension WTMSettingsTableViewController: Setup {
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
         
-        let saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
-        self.navigationItem.rightBarButtonItem = saveButton
+        self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
+        self.saveButton.isEnabled = false
+        self.navigationItem.rightBarButtonItem = self.saveButton
     }
 }
     
@@ -81,7 +82,7 @@ extension WTMSettingsTableViewController: Action {
     }
     
     func saveAction() {
-        update()
+        updateSettings()
     }
 }
 
@@ -96,19 +97,36 @@ extension WTMSettingsTableViewController: Navigation {
 
 //MARK: Request
 extension WTMSettingsTableViewController: Request {
-    func update() {
-        let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
-        print(notifyProps)
-        Api.sharedInstance.updateNotifyProps(notifyProps!) { (error) in
+    func updateSettings() {
+        let firstName = ((self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! ? "true" : "false"
+        var mentionKeys: String = ((self.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! ? (self.user?.username)! : ""
+        if ((self.tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! {
+            mentionKeys += (mentionKeys.characters.count > 0) ? "," : ""
+            mentionKeys += ("@" + (self.user?.username)!)
+        }
+        let otherWords = (self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! TextSettingsTableViewCell).wordsTextView?.text
+        if (otherWords?.characters.count)! > 0 {
+            mentionKeys += (mentionKeys.characters.count > 0) ? "," : ""
+            mentionKeys += otherWords!
+        }
+        let channel = ((self.tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! ? "true" : "false"
+        
+        try! RealmUtils.realmForCurrentThread().write {
+            self.notifyProps?.firstName = firstName
+            self.notifyProps?.channel = channel
+            self.notifyProps?.mentionKeys = mentionKeys
+        }
+        
+        Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
+            self.saveButton.isEnabled = false
             let message = "User notification properties were successfully updated"
             AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
         }
-    }
-}
+    }}
 
 
 //MARK: UITableViewDataSource
@@ -170,6 +188,7 @@ extension WTMSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section == 0 else { return }
         
+        self.saveButton.isEnabled = true
         let cell = tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell
         cell.checkBoxButton?.isSelected = !(cell.checkBoxButton?.isSelected)!
     }
@@ -179,6 +198,7 @@ extension WTMSettingsTableViewController {
 //MARK: UITextViewDelegate
 extension WTMSettingsTableViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
+        self.saveButton.isEnabled = true
         let indexPath = IndexPath(row: 0, section: 1)
         let cell = self.tableView.cellForRow(at: indexPath) as! TextSettingsTableViewCell
         

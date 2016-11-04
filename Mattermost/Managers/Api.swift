@@ -148,7 +148,7 @@ extension Api: NotifyPropsApi {
         self.manager.postObject(notifyProps, path: path, parameters: nil, success: { (mappingResult) in
             let object = mappingResult.dictionary()["notify_props"] as! NotifyProps
             let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
-//Will replace afterconnection problems solved
+//Will replace after connection problems solved
             try! RealmUtils.realmForCurrentThread().write {
                 notifyProps?.channel = object.channel
                 notifyProps?.comments = object.comments
@@ -161,6 +161,8 @@ extension Api: NotifyPropsApi {
                 notifyProps?.push = object.push
                 notifyProps?.pushStatus = notifyProps?.pushStatus
             }
+            
+            print(notifyProps)
             completion(nil)
             }, failure: { (error) in
                 completion(error)
