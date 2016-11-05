@@ -248,10 +248,13 @@ extension LeftMenuViewController : Navigation {
     }
     
     fileprivate func navigateToMoreChannel(_ section: Int)  {
+        let center = (self.menuContainerViewController!.centerViewController as AnyObject)
+        guard !(center.topViewController??.isKind(of: MoreChannelsViewController.self))! else { return }
+        
         let moreStoryboard = UIStoryboard(name:  "More", bundle: Bundle.main)
         let moreViewController = moreStoryboard.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
         moreViewController.isPrivateChannel = (section == 0) ? false : true
-        (self.menuContainerViewController!.centerViewController as AnyObject).pushViewController(moreViewController, animated: true)
+        center.pushViewController(moreViewController, animated: true)
         toggleLeftSideMenu()
     }
     

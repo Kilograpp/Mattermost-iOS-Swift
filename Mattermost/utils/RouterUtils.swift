@@ -52,6 +52,7 @@ extension RouterUtils {
         container.centerViewController = centerViewController
         
         container.leftMenuWidth = UIScreen.screenWidth() - 51
+        container.rightMenuWidth = UIScreen.screenWidth() - 51
         container.menuAnimationDefaultDuration = 0.3
         container.modalTransitionStyle = .crossDissolve
         
