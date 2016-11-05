@@ -20,6 +20,7 @@ final class MoreChannelsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    fileprivate var addDoneButton: UIBarButtonItem!
     fileprivate let emptySearchLabel = EmptyDialogueLabel()
     
     fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
@@ -112,8 +113,9 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
         self.navigationItem.leftBarButtonItem = backButton
         
         let addDoneTitle = self.isPrivateChannel ? "Done".localized : "Save".localized
-        let addDoneButton = UIBarButtonItem.init(title: addDoneTitle, style: .done, target: self, action: #selector(addDoneAction))
-        self.navigationItem.rightBarButtonItem = addDoneButton
+        self.addDoneButton = UIBarButtonItem.init(title: addDoneTitle, style: .done, target: self, action: #selector(addDoneAction))
+        self.addDoneButton.isEnabled = false
+        self.navigationItem.rightBarButtonItem = self.addDoneButton
     }
     
     func setupSearchBar() {
@@ -186,6 +188,7 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
                 leave(channel: channel)
             }
         }
+        self.addDoneButton.isEnabled = false
     }
     
     func saveUserResults() {
@@ -196,6 +199,7 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
                 updatePreferencesSave(result: resultTuple)
             }
         }
+        self.addDoneButton.isEnabled = false
     }
 }
 
@@ -302,6 +306,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
+            self.addDoneButton.isEnabled = false
             let action = result.checked ? "added " : "deleted "
             let message = "Chat with " + user.displayName! + " was " + action + " from your left menu"
             AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
@@ -322,6 +327,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
         var resultTuple = self.isSearchActive ? self.filteredResults[indexPath.row] : self.results[indexPath.row]
         let cell = self.builder.cellFor(resultTuple: resultTuple)
         (cell as! ChannelsMoreTableViewCell).checkBoxHandler = {
+            self.addDoneButton.isEnabled = true
             resultTuple.checked = !resultTuple.checked
             if self.isSearchActive {
                 self.filteredResults[indexPath.row] = resultTuple
