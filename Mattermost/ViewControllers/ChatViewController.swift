@@ -297,8 +297,8 @@ extension ChatViewController : Private {
  
     
     func endRefreshing() {
-        self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
-        self.refreshControl?.endRefreshing()
+     //   self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+//        self.refreshControl?.endRefreshing()
     }
     
     func clearTextView() {
@@ -404,7 +404,8 @@ extension ChatViewController: Action {
     func refreshControlValueChanged() {
         self.loadFirstPageOfData(isInitial: false)
         //self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
-        self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+       // self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+        
         self.refreshControl?.endRefreshing()
     }
     
@@ -500,6 +501,8 @@ extension ChatViewController: Request {
             self.hideTopActivityIndicator()
         
             self.resultsObserver.prepareResults()
+          //  self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+
         }
     }
     
@@ -544,7 +547,7 @@ extension ChatViewController: Request {
             if (error != nil) {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
             }
-            self.emptyDialogueLabel.isHidden = true
+          //  self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
         }
         self.dismissKeyboard(true)
@@ -594,6 +597,7 @@ extension ChatViewController: Request {
 extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         if (tableView == self.tableView) {
+            self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
             return self.resultsObserver?.numberOfSections() ?? 1
         }
         
