@@ -360,11 +360,13 @@ extension ChatViewController : Private {
 
 extension ChatViewController: Action {
     @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
-        self.menuContainerViewController.setMenuState(MFSideMenuStateLeftMenuOpen, completion: nil)
+        let state = (self.menuContainerViewController.menuState == MFSideMenuStateLeftMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateLeftMenuOpen
+        self.menuContainerViewController.setMenuState(state, completion: nil)
     }
     
     @IBAction func rigthMenuButtonAction(_ sender: AnyObject) {
-        self.menuContainerViewController.setMenuState(MFSideMenuStateRightMenuOpen, completion: nil)
+        let state = (self.menuContainerViewController.menuState == MFSideMenuStateRightMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateRightMenuOpen
+        self.menuContainerViewController.setMenuState(state, completion: nil)
     }
     
     @IBAction func searchButtonAction(_ sender: AnyObject) {
