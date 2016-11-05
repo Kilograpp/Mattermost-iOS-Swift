@@ -16,7 +16,6 @@ typealias ResultTuple = (object: RealmObject, checked: Bool)
 final class MoreChannelsViewController: UIViewController {
     
 //MARK: Property
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -28,6 +27,8 @@ final class MoreChannelsViewController: UIViewController {
     
     fileprivate var results: Array<ResultTuple>! = Array()
     fileprivate var filteredResults: Array<ResultTuple>! = Array()
+    fileprivate var updatedCahnnelIndexPaths: Array<IndexPath> = Array()
+    fileprivate var alreadyUpdatedChannelCount: Int = 0
     
     var isPrivateChannel: Bool = false
     var isSearchActive: Bool = false
@@ -251,8 +252,16 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
-            let message = "You have joined " + channel.displayName! + " channel"
-            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+            
+            self.alreadyUpdatedChannelCount += 1
+            if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
+                
+                let message = (self.alreadyUpdatedChannelCount == 1) ? "You have joined " + channel.displayName! + " channel"
+                                                                     : "You have updated " + String(self.alreadyUpdatedChannelCount) + " channels"
+                AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+                self.alreadyUpdatedChannelCount = 0
+                self.updatedCahnnelIndexPaths.removeAll()
+            }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }
@@ -264,8 +273,15 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
                 return
             }
             
-            let message = "You have left " + channel.displayName! + " channel"
-            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+            self.alreadyUpdatedChannelCount += 1
+            if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
+                
+                let message = (self.alreadyUpdatedChannelCount == 1) ? "You have left " + channel.displayName! + " channel"
+                                                                     : "You have updated " + String(self.alreadyUpdatedChannelCount) + " channels"
+                AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+                self.alreadyUpdatedChannelCount = 0
+                self.updatedCahnnelIndexPaths.removeAll()
+            }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }
@@ -307,9 +323,21 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
                 return
             }
             self.addDoneButton.isEnabled = false
-            let action = result.checked ? "added " : "deleted "
-            let message = "Chat with " + user.displayName! + " was " + action + " from your left menu"
-            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+            
+            self.alreadyUpdatedChannelCount += 1
+            if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
+                var message: String = ""
+                if (self.alreadyUpdatedChannelCount == 1) {
+                    let action = result.checked ? "added " : "deleted "
+                    message = "Chat with " + user.displayName! + " was " + action + " from your left menu"
+                } else {
+                    message = "You have updated chats with " + String(self.alreadyUpdatedChannelCount) + " users"
+                }
+                AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+                self.alreadyUpdatedChannelCount = 0
+                self.updatedCahnnelIndexPaths.removeAll()
+            }
+            
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }
@@ -328,6 +356,11 @@ extension MoreChannelsViewController : UITableViewDataSource {
         let cell = self.builder.cellFor(resultTuple: resultTuple)
         (cell as! ChannelsMoreTableViewCell).checkBoxHandler = {
             self.addDoneButton.isEnabled = true
+            
+            if !self.updatedCahnnelIndexPaths.contains(indexPath) {
+                self.updatedCahnnelIndexPaths.append(indexPath)
+            }
+            
             resultTuple.checked = !resultTuple.checked
             if self.isSearchActive {
                 self.filteredResults[indexPath.row] = resultTuple
