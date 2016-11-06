@@ -27,6 +27,11 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
         fileView = nil
     }
     
+    override func layoutSubviews() {
+
+        super.layoutSubviews()
+    }
+    
 //    override func draw(_ rect: CGRect) {
 //        let iconFrame = CGRect(x: 5, y: 5, width: 44, height: 44).offsetBy(dx: frame.origin.x, dy: frame.origin.y)
 //        UIImage(named: "message_file_icon")?.draw(in: iconFrame)
