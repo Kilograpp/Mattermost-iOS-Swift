@@ -124,9 +124,12 @@ extension LeftMenuViewController : Configure {
     
     
     fileprivate func configureResults () {
-        let publicTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
-        let privateTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)
-        let directTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
+        
+         //let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
+        
+        let publicTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PublicTypeChannel, DataManager.sharedInstance.currentTeam!)
+        let privateTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PrivateTypeChannel, DataManager.sharedInstance.currentTeam!)
+        let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
         
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let sortName = ChannelAttributes.displayName.rawValue

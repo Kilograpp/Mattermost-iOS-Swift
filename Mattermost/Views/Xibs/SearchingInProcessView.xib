@@ -35,7 +35,7 @@
             <constraints>
                 <constraint firstItem="tMl-o0-Z0J" firstAttribute="centerX" secondItem="r5e-Cj-rF1" secondAttribute="centerX" id="i6x-az-rFV"/>
                 <constraint firstItem="tMl-o0-Z0J" firstAttribute="top" secondItem="NUm-y5-gXQ" secondAttribute="bottom" constant="20" id="iF7-7T-dbz"/>
-                <constraint firstItem="tMl-o0-Z0J" firstAttribute="centerY" secondItem="r5e-Cj-rF1" secondAttribute="centerY" constant="-20" id="mHH-bb-hmD"/>
+                <constraint firstItem="tMl-o0-Z0J" firstAttribute="centerY" secondItem="r5e-Cj-rF1" secondAttribute="centerY" constant="-50" id="mHH-bb-hmD"/>
                 <constraint firstItem="NUm-y5-gXQ" firstAttribute="centerX" secondItem="r5e-Cj-rF1" secondAttribute="centerX" id="vpI-OF-a0j"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

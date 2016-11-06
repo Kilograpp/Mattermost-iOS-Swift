@@ -152,7 +152,7 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
     
     func prepareChannelResults() {
         let typeValue = self.isPrivateChannel ? Constants.ChannelType.DirectTypeChannel : Constants.ChannelType.PublicTypeChannel
-        let predicate =  NSPredicate(format: "privateType == %@", typeValue)
+        let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
         let sortName = ChannelAttributes.displayName.rawValue
         let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
         for channel in channels {

@@ -187,6 +187,7 @@ extension ProfileViewController: UITableViewDelegate {
 extension ProfileViewController {
     func changeProfilePhoto() {
         guard self.user?.identifier == Preferences.sharedInstance.currentUserId else { return }
+        return
         
         let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
