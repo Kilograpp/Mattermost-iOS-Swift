@@ -464,8 +464,7 @@ extension ChatViewController: Request {
         print("loadFirstPageOfData")
         self.isLoadingInProgress = true
         
-        
-        if self.loadingView == nil {
+        if (self.loadingView == nil) && isInitial {
             var frame = UIScreen.main.bounds
             frame.origin.y = 64
             frame.size.height -= 108
@@ -725,6 +724,8 @@ extension ChatViewController: ChannelObserverDelegate {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
         }
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
+        
+        self.textView.resignFirstResponder()
         
         if (self.postFromSearch == nil) {
             self.loadFirstPageOfData(isInitial: true)

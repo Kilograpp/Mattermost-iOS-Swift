@@ -80,8 +80,6 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
                     guard image != nil else { return }
                     
                     var finalImage: UIImage = image!
-                    
-                    
                     if cacheType == .none {
                         var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
                         let imageHeight = imageWidth * 0.56 - 5

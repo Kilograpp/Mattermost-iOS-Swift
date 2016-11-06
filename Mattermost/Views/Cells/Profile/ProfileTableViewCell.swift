@@ -72,6 +72,7 @@ extension ProfileTableViewCell: ProfileTableViewCellLifeCycle {
 
 extension ProfileTableViewCell: ProfileTableViewCellSetup {
     func initialSetup() {
+        self.selectionStyle = .none
         self.titleLabel?.font = UIFont.kg_regular16Font()
         self.infoLabel?.font = UIFont.kg_regular16Font()
         self.titleLabel?.textColor = UIColor.kg_blackColor()

@@ -202,8 +202,8 @@ extension SearchChatViewController {
 
 extension SearchChatViewController {
     func prepareSearchResults() {
-        let terms = self.searchTextField.text!
-        print(terms)
+        let terms = self.searchTextField.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        
         if ((terms as NSString).length > 0) {
             configureForSearchStage(SearchStage.SearchRequstInProgress)
             searchWithTerms(terms: terms)
