@@ -79,6 +79,30 @@ final class LeftMenuViewController: UIViewController {
         self.tableView.reloadData()
         configureInitialSelectedChannel()
     }
+    
+    func updateSelectionFor(_ channel: Channel) {
+        let indexPath: IndexPath
+        print(channel)
+        switch channel.privateType! as String {
+        case Constants.ChannelType.PublicTypeChannel:
+            let row = self.resultsPublic.index(of: channel)
+            indexPath = IndexPath(row: row!, section: 0)
+        case Constants.ChannelType.PrivateTypeChannel:
+            let row = self.resultsPrivate.index(of: channel)
+            indexPath = IndexPath(row: row!, section: 1)
+        case Constants.ChannelType.DirectTypeChannel:
+            let row = self.resultsDirect.index(of: channel)
+            indexPath = IndexPath(row: row!, section: 2)
+        default:
+            return
+        }
+        
+        print(indexPath)
+     //   self.tableView.deselectRow(at: self.tableView.indexPathForSelectedRow!, animated: false)
+        //let cell = self.tableView.cellForRow(at: indexPath) as! LeftMenuTableViewCellProtocol
+        self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        self.tableView.reloadData()
+    }
 }
 
 //MARK: - PrivateProtocols
@@ -126,7 +150,7 @@ extension LeftMenuViewController : Configure {
     fileprivate func configureResults () {
         
          //let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
-        
+    
         let publicTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PublicTypeChannel, DataManager.sharedInstance.currentTeam!)
         let privateTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PrivateTypeChannel, DataManager.sharedInstance.currentTeam!)
         let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)

@@ -103,7 +103,15 @@ final class FeedNotificationsObserver {
                     
                         if modifications.count > 0 {
                         modifications.forEach({ (index:Int) in
-                            self.tableView.reloadRows(at: [self.indexPathForPost(self.results[index])], with: .automatic)
+                            let post = self.results[index]
+                            var rowsForReload = Array<IndexPath>()
+                            rowsForReload.append(self.indexPathForPost(post))
+                            //self.tableView.reloadRows(at: [self.indexPathForPost(post)], with: .automatic)
+                            let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("parentId == %@", post.identifier!)
+                            for comment in comments {
+                                rowsForReload.append(self.indexPathForPost(comment))
+                            }
+                            self.tableView.reloadRows(at: rowsForReload, with: .automatic)
                         })
                         }
 

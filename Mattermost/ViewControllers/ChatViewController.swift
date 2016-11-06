@@ -125,6 +125,7 @@ extension ChatViewController {
     
     func configureWithPost(post: Post) {
         self.postFromSearch = post
+        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(post.channel)
     }
     
     func changeChannelForPostFromSearch() {
@@ -584,9 +585,16 @@ extension ChatViewController: Request {
     func deletePost() {
         guard (self.selectedPost != nil) else { return }
         
+        let postIdentifier = self.selectedPost.identifier!
         PostUtils.sharedInstance.deletePost(self.selectedPost) { (error) in
             self.selectedAction = Constants.PostActionType.SendNew
-           // RealmUtils.deleteObject(self.selectedPost)
+            
+            let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("parentId == %@", postIdentifier)
+            guard comments.count > 0 else { return }
+            
+            RealmUtils.deletePostObjects(comments)
+           
+            RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
         }
     }
