@@ -56,6 +56,7 @@ extension AlertView: Setup {
         self.messageLabel.textColor = UIColor.white
         self.messageLabel.frame = CGRect(x: 5, y: 5, width: self.bounds.width - 5, height: self.bounds.height - 5)
         self.messageLabel.text = message
+        self.messageLabel.numberOfLines = 0
         self.addSubview(messageLabel)
         //TODO: constraints
     }
