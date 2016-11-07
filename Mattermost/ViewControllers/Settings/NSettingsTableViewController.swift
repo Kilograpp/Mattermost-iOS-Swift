@@ -135,7 +135,6 @@ extension NSettingsTableViewController {
         default:
             break
         }
-        
         return cell
     }
 }
