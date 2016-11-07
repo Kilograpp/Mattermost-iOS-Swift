@@ -15,6 +15,7 @@ private protocol Interface {
     func isSelectedDirectChannel() -> Bool
     func directChannel() -> Channel?
     func hasChannel() -> Bool
+    func notificationProperies() -> NotifyProps
 }
 
 final class User: RealmObject {
@@ -32,6 +33,8 @@ final class User: RealmObject {
     }
 
     let channels = LinkingObjects(fromType: Channel.self, property: ChannelRelationships.members.rawValue)
+    //let notifyProps = NotifyProps()
+    dynamic var notifyProps: NotifyProps?
     dynamic var username: String? {
         didSet { computeNicknameIfRequired() }
     }
@@ -60,11 +63,12 @@ enum UserAttributes: String {
     case status = "status"
     case username = "username"
     case avatarLink = "avatarLink"
+    case notifyProps = "notifyProps"
 }
 
-/*enum UserRelationships: String {
-    case notifyProps = "notify_props"
-}*/
+enum UserRelationships: String {
+    case notifyProps = "notifyProps"
+}
 
 private protocol Computatations: class {
     func computeDisplayNameWidth()
@@ -81,11 +85,9 @@ extension User: Computatations {
     func computeDisplayNameWidth() {
         self.displayNameWidth = StringUtils.widthOfString(self.displayName as NSString!, font: FontBucket.postAuthorNameFont)
     }
-    
     func computeAvatarUrl() {
         self.avatarLink = Api.sharedInstance.avatarLinkForUser(self)
     }
-    
     func computeDisplayName() {
         self.displayName = self.username
     }
@@ -113,5 +115,11 @@ extension User: Interface {
         let predicate =  NSPredicate(format: "displayName == %@", self.username!)
         let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate)
         return (channels.count > 0)
+    }
+    
+    func notificationProperies() -> NotifyProps {
+        let key = self.identifier! + "__notifyProps"
+        let notifyProps = NotifyProps.objectById(key)
+        return notifyProps!
     }
 }

@@ -79,6 +79,30 @@ final class LeftMenuViewController: UIViewController {
         self.tableView.reloadData()
         configureInitialSelectedChannel()
     }
+    
+    func updateSelectionFor(_ channel: Channel) {
+        let indexPath: IndexPath
+        print(channel)
+        switch channel.privateType! as String {
+        case Constants.ChannelType.PublicTypeChannel:
+            let row = self.resultsPublic.index(of: channel)
+            indexPath = IndexPath(row: row!, section: 0)
+        case Constants.ChannelType.PrivateTypeChannel:
+            let row = self.resultsPrivate.index(of: channel)
+            indexPath = IndexPath(row: row!, section: 1)
+        case Constants.ChannelType.DirectTypeChannel:
+            let row = self.resultsDirect.index(of: channel)
+            indexPath = IndexPath(row: row!, section: 2)
+        default:
+            return
+        }
+        
+        print(indexPath)
+     //   self.tableView.deselectRow(at: self.tableView.indexPathForSelectedRow!, animated: false)
+        //let cell = self.tableView.cellForRow(at: indexPath) as! LeftMenuTableViewCellProtocol
+        self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        self.tableView.reloadData()
+    }
 }
 
 //MARK: - PrivateProtocols
@@ -124,9 +148,12 @@ extension LeftMenuViewController : Configure {
     
     
     fileprivate func configureResults () {
-        let publicTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
-        let privateTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)
-        let directTypePredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
+        
+         //let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
+    
+        let publicTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PublicTypeChannel, DataManager.sharedInstance.currentTeam!)
+        let privateTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PrivateTypeChannel, DataManager.sharedInstance.currentTeam!)
+        let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
         
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let sortName = ChannelAttributes.displayName.rawValue
@@ -248,10 +275,13 @@ extension LeftMenuViewController : Navigation {
     }
     
     fileprivate func navigateToMoreChannel(_ section: Int)  {
+        let center = (self.menuContainerViewController!.centerViewController as AnyObject)
+        guard !(center.topViewController??.isKind(of: MoreChannelsViewController.self))! else { return }
+        
         let moreStoryboard = UIStoryboard(name:  "More", bundle: Bundle.main)
         let moreViewController = moreStoryboard.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
         moreViewController.isPrivateChannel = (section == 0) ? false : true
-        (self.menuContainerViewController!.centerViewController as AnyObject).pushViewController(moreViewController, animated: true)
+        center.pushViewController(moreViewController, animated: true)
         toggleLeftSideMenu()
     }
     

@@ -77,6 +77,8 @@ extension FeedSearchTableViewCell: TableViewPostDataSource {
 
 extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
     final func configureBasicLabels() {
+        guard self.post.author != nil else { return }
+        
         self.channelLabel.text = self.post.channel.displayName!
         self.nameLabel.text = self.post.author.displayName
         self.timeLabel.text = self.post.createdAtString
@@ -86,6 +88,8 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
         let postIdentifier = self.post.identifier
         self.postIdentifier = postIdentifier
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        
+        guard self.post.author != nil else { return }
         
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { (image, error) in
             guard (self.postIdentifier == postIdentifier) else { return }

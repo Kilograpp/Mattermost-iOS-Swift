@@ -75,9 +75,9 @@ extension CheckSettingsTableViewCell: CheckSettingsTableViewCellSetup {
 
 extension CheckSettingsTableViewCell: CheckSettingsTableViewCellAction {
     func checkBoxAction() {
-        self.checkBoxButton?.isSelected = !(self.checkBoxButton?.isSelected)!
-        if (self.checkBoxHandler != nil) {
-            self.checkBoxHandler!()
-        }
+     //   self.checkBoxButton?.isSelected = !(self.checkBoxButton?.isSelected)!
+//        if (self.checkBoxHandler != nil) {
+  //          self.checkBoxHandler!()
+    //    }
     }
 }

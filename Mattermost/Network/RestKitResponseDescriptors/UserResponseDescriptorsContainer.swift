@@ -15,13 +15,15 @@ private protocol ResponseDescriptors: class {
     static func loadCurrentUserResponseDescriptor() -> RKResponseDescriptor
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor
     static func completeListResponseDescriptor() -> RKResponseDescriptor
+    static func updateNotifyResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class UserResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
     
 }
 
-// MARK: - Response Descriptors
+
+// MARK: Response Descriptors
 extension UserResponseDescriptorsContainer: ResponseDescriptors {
     static func loginResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: UserMappingsContainer.mapping(),
@@ -55,6 +57,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.completeListPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func updateNotifyResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: UserMappingsContainer.mapping(),
+                                    method: .POST,
+                                    pathPattern: UserPathPatternsContainer.usersUpdateNotifyPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

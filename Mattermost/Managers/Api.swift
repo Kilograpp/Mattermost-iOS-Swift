@@ -21,6 +21,10 @@ private protocol PreferencesApi: class {
     func listUsersPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
+private protocol NotifyPropsApi: class {
+    func updateNotifyProps(_ notifyProps: NotifyProps, completion: @escaping(_ error: Mattermost.Error?) -> Void)
+}
+
 private protocol TeamApi: class {
     func loadTeams(with completion: @escaping (_ userShouldSelectTeam: Bool, _ error: Mattermost.Error?) -> Void)
     func sendInvites(_ invites: [Dictionary<String , String>], completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -136,8 +140,38 @@ extension Api: PreferencesApi {
 }
 
 
-//MARK: TeamApi
+//MARK: NotifyProps
+extension Api: NotifyPropsApi {
+    func updateNotifyProps(_ notifyProps: NotifyProps, completion: @escaping(_ error: Mattermost.Error?) -> Void) {
+        let path = NotifyPropsPathPatternsContainer.updatePathPattern()
+        
+        self.manager.postObject(notifyProps, path: path, parameters: nil, success: { (mappingResult) in
+            let object = mappingResult.dictionary()["notify_props"] as! NotifyProps
+            let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
+//Will replace after connection problems solved
+            try! RealmUtils.realmForCurrentThread().write {
+                notifyProps?.channel = object.channel
+                notifyProps?.comments = object.comments
+                notifyProps?.desktop = object.desktop
+                notifyProps?.desktopDuration = object.desktopDuration
+                notifyProps?.desktopSound = object.desktopSound
+                notifyProps?.email = object.email
+                notifyProps?.firstName = object.firstName
+                notifyProps?.mentionKeys = object.mentionKeys
+                notifyProps?.push = object.push
+                notifyProps?.pushStatus = notifyProps?.pushStatus
+            }
+            
+            print(notifyProps)
+            completion(nil)
+            }, failure: { (error) in
+                completion(error)
+        })
+    }
+}
 
+
+//MARK: TeamApi
 extension Api: TeamApi {
     
     func loadTeams(with completion:@escaping (_ userShouldSelectTeam: Bool, _ error: Mattermost.Error?) -> Void) {
@@ -313,10 +347,18 @@ extension Api: UserApi {
         
         self.manager.postObject(path: path, parameters: parameters as [AnyHashable: Any]?, success: { (mappingResult) in
             let user = mappingResult.firstObject as! User
+            let notifyProps = user.notifyProps
+            notifyProps?.userId = user.identifier
+            notifyProps?.computeKey()
             let systemUser = DataManager.sharedInstance.instantiateSystemUser()
             user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user
             RealmUtils.save([user, systemUser])
+            RealmUtils.save(notifyProps!)
+            
+            let uu = DataManager.sharedInstance.currentUser
+            print(uu)
+            
             SocketManager.sharedInstance.setNeedsConnect()
             completion(nil)
             }, failure: completion)
@@ -483,6 +525,8 @@ extension Api: PostApi {
         let params = ["team_id"    : Preferences.sharedInstance.currentTeamId!,
                       "channel_id" : post.channelId!,
                       "post_id"    : post.identifier!]
+        
+        
         
         self.manager.deletePost(with: path, parameters: params, success: { (mappingResult) in
             completion(nil)

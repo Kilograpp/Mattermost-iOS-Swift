@@ -26,13 +26,16 @@ extension UserMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
-            "firstName" : UserAttributes.firstName.rawValue,
-            "lastName"  : UserAttributes.lastName.rawValue,
-            "username"   : UserAttributes.username.rawValue,
-            "nickname"   : UserAttributes.nickname.rawValue,
-            "email"      : UserAttributes.email.rawValue
+            "firstName"    : UserAttributes.firstName.rawValue,
+            "lastName"     : UserAttributes.lastName.rawValue,
+            "username"     : UserAttributes.username.rawValue,
+            "nickname"     : UserAttributes.nickname.rawValue,
+            "email"        : UserAttributes.email.rawValue
             ])
-       // mapping.addRelationshipMapping(withSourceKeyPath: UserRelationships.notifyProps.rawValue, mapping: NotifyPropsMappingsContainer.mapping())
+        
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "notify_props",
+                                                         toKeyPath: UserAttributes.notifyProps.rawValue,
+                                                         with: NotifyPropsMappingsContainer.mapping()))
         return mapping
     }
 

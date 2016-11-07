@@ -16,10 +16,10 @@ private protocol PathPatterns: class {
     static func initialLoadPathPattern() -> String
     static func completeListPathPattern() -> String
     static func usersStatusPathPattern() -> String
+    static func usersUpdateNotifyPathPattern() -> String
 }
 
 final class UserPathPatternsContainer: PathPatterns {
-    
     static func avatarPathPattern() -> String {
         return "users/:\(UserAttributes.identifier)/image"
     }
@@ -41,8 +41,10 @@ final class UserPathPatternsContainer: PathPatterns {
     static func completeListPathPattern() -> String {
         return "users/profiles/:\(TeamAttributes.identifier)"
     }
-    
     static func usersStatusPathPattern() -> String {
         return "users/status"
+    }
+    static func usersUpdateNotifyPathPattern() -> String {
+        return "users/update_notify"
     }
 }

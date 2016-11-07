@@ -101,5 +101,16 @@ struct Constants {
         static let About: Int            = 6
         static let Logout: Int           = 7
     }
-
+    
+    struct NotifyProps {
+        struct MobilePush {
+            static let Send = [ (state: "all", description: "For all activity"), (state: "mention", description: "For mentions and direct messages"), (state: "none", description: "Never") ]
+            static let Trigger = [ (state: "online", description: "Online, away or offline"), (state: "away", description: "Away or offline"), (state: "offline", description: "Offline")]
+        }
+        struct Words {
+            static let ChannelWide = "\"@channel\", \"@all\""
+            static let None = "No words configured"
+        }
+        
+    }
 }

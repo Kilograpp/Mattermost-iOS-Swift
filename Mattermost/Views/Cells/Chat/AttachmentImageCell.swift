@@ -65,6 +65,7 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
 //MARK: addition for search attachment cell
         if (downloadUrl.absoluteString.contains("(null)")) {
             let fixedPath = downloadUrl.absoluteString.replacingOccurrences(of: "(null)", with: Preferences.sharedInstance.currentTeamId!)
+            print("loading path = ", fixedPath)
             downloadUrl = NSURL(string: fixedPath)! as URL
         }
         
@@ -75,11 +76,10 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
                 DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-                    var finalImage: UIImage = image!
-                    
                     // Handle unpredictable errors
                     guard image != nil else { return }
                     
+                    var finalImage: UIImage = image!
                     if cacheType == .none {
                         var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
                         let imageHeight = imageWidth * 0.56 - 5

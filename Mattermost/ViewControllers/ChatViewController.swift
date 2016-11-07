@@ -125,6 +125,7 @@ extension ChatViewController {
     
     func configureWithPost(post: Post) {
         self.postFromSearch = post
+        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(post.channel)
     }
     
     func changeChannelForPostFromSearch() {
@@ -132,7 +133,10 @@ extension ChatViewController {
     }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4acfd2744fdb9e7f87e45e37a3d1f5c2ddd077ca
 //MARK: Setup
 
 extension ChatViewController: Setup {
@@ -298,8 +302,8 @@ extension ChatViewController : Private {
  
     
     func endRefreshing() {
-        self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
-        self.refreshControl?.endRefreshing()
+     //   self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+//        self.refreshControl?.endRefreshing()
     }
     
     func clearTextView() {
@@ -361,11 +365,13 @@ extension ChatViewController : Private {
 
 extension ChatViewController: Action {
     @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
-        self.menuContainerViewController.setMenuState(MFSideMenuStateLeftMenuOpen, completion: nil)
+        let state = (self.menuContainerViewController.menuState == MFSideMenuStateLeftMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateLeftMenuOpen
+        self.menuContainerViewController.setMenuState(state, completion: nil)
     }
     
     @IBAction func rigthMenuButtonAction(_ sender: AnyObject) {
-        self.menuContainerViewController.setMenuState(MFSideMenuStateRightMenuOpen, completion: nil)
+        let state = (self.menuContainerViewController.menuState == MFSideMenuStateRightMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateRightMenuOpen
+        self.menuContainerViewController.setMenuState(state, completion: nil)
     }
     
     @IBAction func searchButtonAction(_ sender: AnyObject) {
@@ -382,6 +388,12 @@ extension ChatViewController: Action {
     }
     
     func sendPostAction() {
+        guard self.filesAttachmentsModule.fileUploadingInProgress else {
+            let message = "Please, wait until download finishes"
+            AlertManager.sharedManager.showWarningWithMessage(message: message, viewController: self)
+            return
+        }
+        
         switch self.selectedAction {
         case Constants.PostActionType.SendReply:
             sendPostReply()
@@ -398,6 +410,10 @@ extension ChatViewController: Action {
     
     func refreshControlValueChanged() {
         self.loadFirstPageOfData(isInitial: false)
+        //self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
+       // self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+        
+        self.refreshControl?.endRefreshing()
     }
     
     func longPressAction(_ gestureRecognizer: UILongPressGestureRecognizer) {
@@ -453,11 +469,10 @@ extension ChatViewController: Request {
         print("loadFirstPageOfData")
         self.isLoadingInProgress = true
         
-        
-        if self.loadingView == nil {
+        if (self.loadingView == nil) && isInitial {
             var frame = UIScreen.main.bounds
             frame.origin.y = 64
-            frame.size.height -= 64
+            frame.size.height -= 108
             self.loadingView = UIView(frame: frame)
             self.loadingView?.backgroundColor = UIColor.white
             let avtivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
@@ -474,8 +489,6 @@ extension ChatViewController: Request {
                 self.loadingView?.removeFromSuperview()
                 self.loadingView = nil
             }
-            
-            self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
 
             self.isLoadingInProgress = false
             self.hasNextPage = true
@@ -494,6 +507,8 @@ extension ChatViewController: Request {
             self.hideTopActivityIndicator()
         
             self.resultsObserver.prepareResults()
+          //  self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+
         }
     }
     
@@ -538,7 +553,7 @@ extension ChatViewController: Request {
             if (error != nil) {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
             }
-            self.emptyDialogueLabel.isHidden = true
+          //  self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
         }
         self.dismissKeyboard(true)
@@ -574,13 +589,19 @@ extension ChatViewController: Request {
     func deletePost() {
         guard (self.selectedPost != nil) else { return }
         
+        let postIdentifier = self.selectedPost.identifier!
         PostUtils.sharedInstance.deletePost(self.selectedPost) { (error) in
             self.selectedAction = Constants.PostActionType.SendNew
+            
+            let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("parentId == %@", postIdentifier)
+            guard comments.count > 0 else { return }
+            
+            RealmUtils.deletePostObjects(comments)
+           
             RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
         }
     }
-    
 }
 
 
@@ -589,6 +610,7 @@ extension ChatViewController: Request {
 extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         if (tableView == self.tableView) {
+            self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
             return self.resultsObserver?.numberOfSections() ?? 1
         }
         
@@ -714,6 +736,8 @@ extension ChatViewController: ChannelObserverDelegate {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
         }
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
+        
+        self.textView.resignFirstResponder()
         
         if (self.postFromSearch == nil) {
             self.loadFirstPageOfData(isInitial: true)

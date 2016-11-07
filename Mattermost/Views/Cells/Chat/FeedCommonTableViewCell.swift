@@ -60,6 +60,9 @@ protocol ParentComment: class {
 extension FeedCommonTableViewCell : TableViewPostDataSource {
     override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
+        
+        guard self.post.author != nil else { return }
+        
         self.configureAvatarImage()
         self.configureBasicLabels()
         configureParentView()
@@ -85,6 +88,10 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         self.postIdentifier = postIdentifier
         
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        if self.post.author == nil {
+            print("bug")
+        }
+        
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }
             self?.avatarImageView.image = image
@@ -152,6 +159,8 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellAction {
 
 extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
     override func layoutSubviews() {
+        guard self.post.author != nil else { return }
+        
         let nameWidth = CGFloat(self.post.author.displayNameWidth)
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
         

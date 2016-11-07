@@ -77,7 +77,7 @@
                         <sections>
                             <tableViewSection headerTitle="DESCTOP NOTIFICATIONS" id="ERf-8w-2ZT">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="2JO-rg-bzx">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="2JO-rg-bzx" customClass="CommonSettingsTableViewCell" customModule="Mattermost" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="56" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2JO-rg-bzx" id="WYb-m2-x85">
@@ -99,12 +99,15 @@
                                                 <constraint firstAttribute="trailingMargin" secondItem="ent-QK-PtR" secondAttribute="trailing" constant="6" id="qx8-CW-52H"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="descriptionLabel" destination="qiB-RV-r8X" id="0JH-jH-7Gi"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="EMAIL NOTIFICATIONS" id="dgl-BV-3Vs">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="thG-p7-m0U">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="thG-p7-m0U" customClass="CommonSettingsTableViewCell" customModule="Mattermost" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="153" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="thG-p7-m0U" id="wbX-ea-VSs">
@@ -126,12 +129,15 @@
                                                 <constraint firstItem="4G4-zI-sEo" firstAttribute="centerY" secondItem="1r9-mX-PNx" secondAttribute="centerY" id="meY-Gj-3AX"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="descriptionLabel" destination="1r9-mX-PNx" id="axa-TL-e6C"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="MOBILE PUSH NOTIFICATIONS" id="83f-Dd-6UA">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="kpC-rC-AdI">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="kpC-rC-AdI" customClass="CommonSettingsTableViewCell" customModule="Mattermost" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="250" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kpC-rC-AdI" id="uFy-6Z-lTM">
@@ -153,12 +159,15 @@
                                                 <constraint firstItem="7hT-gi-1px" firstAttribute="leading" secondItem="uFy-6Z-lTM" secondAttribute="leading" constant="15" id="yOe-yX-sMI"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="descriptionLabel" destination="7hT-gi-1px" id="JrY-ml-Qlj"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="WORDS THAT TRIGGER MENTIONES" id="B4x-Ma-UC5">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="o8g-L9-L4l">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="o8g-L9-L4l" customClass="CommonSettingsTableViewCell" customModule="Mattermost" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="347" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="o8g-L9-L4l" id="SwV-K7-24u">
@@ -180,12 +189,15 @@
                                                 <constraint firstItem="pen-lX-OKr" firstAttribute="centerY" secondItem="SwV-K7-24u" secondAttribute="centerY" id="yJ4-kz-OZz"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="descriptionLabel" destination="pen-lX-OKr" id="HSZ-Wd-u5b"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="REPLY NOTIFICATIONS" id="aVu-GD-hQg">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="8Hx-JI-iwi">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="8Hx-JI-iwi" customClass="CommonSettingsTableViewCell" customModule="Mattermost" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="444" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8Hx-JI-iwi" id="Che-pS-kTm">
@@ -207,6 +219,9 @@
                                                 <constraint firstItem="aiq-ZV-fmK" firstAttribute="centerY" secondItem="Che-pS-kTm" secondAttribute="centerY" id="sQv-Ai-iA9"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="descriptionLabel" destination="aiq-ZV-fmK" id="JaV-yR-RLq"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>

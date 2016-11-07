@@ -46,6 +46,14 @@ final class RealmUtils {
         })
     }
     
+    static func deletePostObjects(_ objects: Results<Post>) {
+        let realm = realmForCurrentThread()
+        
+        try! realm.write({
+            realm.delete(objects)
+        })
+    }
+    
     static func deleteObject(_ object:RealmObject) {
         let realm = realmForCurrentThread()
         

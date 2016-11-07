@@ -67,6 +67,20 @@ class SearchChatViewController: UIViewController {
     func configureWithChannel(channel: Channel) {
         self.channel = channel
     }
+    
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        configureForSearchStage(SearchStage.SearchNotStarted)
+        self.menuContainerViewController.panMode = .init(0)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.menuContainerViewController.panMode = .init(3)
+        
+        super.viewWillDisappear(animated)
+    }
 }
 
 
@@ -76,12 +90,6 @@ extension SearchChatViewController: LifeCycle {
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        configureForSearchStage(SearchStage.SearchNotStarted)
     }
         
     override func viewDidLayoutSubviews() {
@@ -194,8 +202,8 @@ extension SearchChatViewController {
 
 extension SearchChatViewController {
     func prepareSearchResults() {
-        let terms = self.searchTextField.text!
-        print(terms)
+        let terms = self.searchTextField.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        
         if ((terms as NSString).length > 0) {
             configureForSearchStage(SearchStage.SearchRequstInProgress)
             searchWithTerms(terms: terms)

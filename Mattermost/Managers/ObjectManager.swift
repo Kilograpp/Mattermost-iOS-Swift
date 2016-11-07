@@ -84,11 +84,11 @@ extension ObjectManager: GetRequests {
         let cachedETag = (cachedUrlResponse?.response as? HTTPURLResponse)?.allHeaderFields["Etag"] as? String
         
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            print(operation?.httpRequestOperation.responseString)
+            //print(operation?.httpRequestOperation.responseString)
             let eTag = operation?.httpRequestOperation.response.allHeaderFields["Etag"] as? String
             success?(mappingResult!, eTag == cachedETag)
         }) { (operation, error) in
-            print(operation?.httpRequestOperation.responseString)
+           // print(operation?.httpRequestOperation.responseString)
             
             failure?(self.handleOperation(operation!, withError: error!))
         }
@@ -134,15 +134,10 @@ extension ObjectManager: PostRequests {
                     success: ((_ mappingResult: RKMappingResult) -> Void)?,
                     failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            
             print(operation?.httpRequestOperation.responseString)
-            print(operation?.httpRequestOperation.request.httpBody)
-            
             //let error = try! RKNSJSONSerialization.object(from: operation?.httpRequestOperation.request.httpBody)
             success?(mappingResult!)
         }) { (operation, error) in
-            
-            print(operation?.httpRequestOperation.request.httpBody)
             print(operation?.httpRequestOperation.responseString)
             //let error = try! RKNSJSONSerialization.object(from: operation?.httpRequestOperation.request.httpBody)
             failure?(self.handleOperation(operation!, withError: error!))
