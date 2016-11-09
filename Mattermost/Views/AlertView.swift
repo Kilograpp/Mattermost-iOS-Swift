@@ -83,7 +83,14 @@ extension AlertView: Setup {
 extension AlertView {
     //TODO: Сделать вычисление высоты месседжа
     func heightWithMessage() -> CGFloat {
-        return 60
+        let widthMessage = CGFloat(StringUtils.widthOfString(message as NSString!, font: UIFont.boldSystemFont(ofSize: 13)))
+        var hightMessage = (widthMessage / UIScreen.screenWidth())
+        if (hightMessage <= 1) {
+            hightMessage = 10
+        }else{
+            hightMessage = hightMessage * 10
+        }
+        return 50 + hightMessage
     }
     
     func addToSuperview() {
