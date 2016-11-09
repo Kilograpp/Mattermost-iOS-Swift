@@ -7,27 +7,7 @@
 //
 
 import Foundation
-//import KGTextField
 
-private protocol Setup {
-    func setupTitleLabel()
-    func setupSubtitleLabel()
-    func setupPromtLabel()
-    func setupNextButton()
-    func setupTextField()
-    func setupNavigationBar()
-}
-
-private protocol Lifecycle {
-    func viewDidLoad()
-    func viewWillAppear(_ animated: Bool)
-    func viewDidAppear(_ animated: Bool)
-}
-
-private protocol Actions {
-    func nextButtonAction(_ sender: AnyObject)
-    func textFieldAction()
-}
 final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -41,6 +21,23 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     let subtitleName = NSLocalizedString("All your team communication in one place, searchable and accessable anywhere.", comment: "")
     let placeholder = NSLocalizedString("Your team URL", comment: "")
     let buttonText = NSLocalizedString("Next step", comment: "")
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        initialSetup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupNavigationBar()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        _ = self.textField.becomeFirstResponder()
+    }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return UIStatusBarStyle.default
@@ -94,57 +91,33 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
 }
 
 
-//MARK: - Actions 
-
-extension ServerUrlViewController:Actions {
-    @IBAction func nextButtonAction(_ sender: AnyObject) {
-        Preferences.sharedInstance.serverUrl = self.textField.text
-//FIXME: вызов методов не должен быть через self
-        self.validateServerUrl()
-    }
-    
-    func textFieldAction() {
-        if self.textField.text == "" {
-            self.nextButton.isEnabled = false
-        } else {
-            self.nextButton.isEnabled = true
-        }
-    }
+private protocol Setup {
+    func initialSetup()
+    func setupTitleLabel()
+    func setupSubtitleLabel()
+    func setupPromtLabel()
+    func setupNextButton()
+    func setupTextField()
+    func setupNavigationBar()
 }
 
-//MARK: - Lifecycle
-
-extension ServerUrlViewController:Lifecycle {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-//FIXME: вызов методов не должен быть через self
-        self.setupTitleLabel()
-        self.setupSubtitleLabel()
-        self.setupPromtLabel()
-        self.setupNextButton()
-        self.setupTextField()
-        self.configureLabels()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-//FIXME: вызов методов не должен быть через self
-        self.setupNavigationBar()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        _ = self.textField.becomeFirstResponder()
-    }
-    
+private protocol Actions {
+    func nextButtonAction(_ sender: AnyObject)
+    func textFieldAction()
 }
 
 
-//MARK: - Setup
-
+//MARK: Setup
 extension ServerUrlViewController:Setup {
+    fileprivate func initialSetup() {
+        setupTitleLabel()
+        setupSubtitleLabel()
+        setupPromtLabel()
+        setupNextButton()
+        setupTextField()
+        configureLabels()
+    }
+    
     fileprivate func setupNavigationBar() {
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.backgroundColor = UIColor.clear
@@ -161,7 +134,7 @@ extension ServerUrlViewController:Setup {
         self.titleLabel.font = FontBucket.titleServerUrlFont
         self.titleLabel.textColor = ColorBucket.blackColor
     }
-
+    
     fileprivate func setupSubtitleLabel() {
         self.subtitleLabel.font = FontBucket.subtitleServerUrlFont
         self.subtitleLabel.textColor = ColorBucket.serverUrlSubtitleColor
@@ -186,5 +159,22 @@ extension ServerUrlViewController:Setup {
         self.textField.placeholder = placeholder
         self.textField.autocorrectionType = .no
         self.textField.addTarget(self, action: #selector(ServerUrlViewController.textFieldAction), for: .editingChanged)
+    }
+}
+
+
+//MARK: Actions
+extension ServerUrlViewController: Actions {
+    @IBAction func nextButtonAction(_ sender: AnyObject) {
+        Preferences.sharedInstance.serverUrl = self.textField.text
+        validateServerUrl()
+    }
+    
+    func textFieldAction() {
+        if self.textField.text == "" {
+            self.nextButton.isEnabled = false
+        } else {
+            self.nextButton.isEnabled = true
+        }
     }
 }

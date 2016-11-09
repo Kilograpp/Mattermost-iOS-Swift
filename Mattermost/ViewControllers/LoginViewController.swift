@@ -10,7 +10,6 @@
 final class LoginViewController: UIViewController, UITextFieldDelegate {
 
 //MARK: Properties
-    
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var passwordTextField: KGTextField!
     @IBOutlet weak var loginTextField: KGTextField!
@@ -25,7 +24,6 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     
 
 //MARK: Configuration
-    
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
     }
@@ -84,7 +82,6 @@ private protocol LoginViewControllerRequest {
 
 
 //MARK: LoginViewControllerLifeCylce
-
 extension LoginViewController: LoginViewControllerLifeCylce {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,7 +104,6 @@ extension LoginViewController: LoginViewControllerLifeCylce {
 
 
 //MARK: LoginViewControllerSetup
-
 extension LoginViewController: LoginViewControllerSetup {
     func initialSetup() {
         setupTitleLabel()
@@ -258,8 +254,7 @@ extension LoginViewController: LoginViewControllerRequest {
 }
 
 
-//MARK: - UITextFieldDelegate
-
+//MARK: UITextFieldDelegate
 extension LoginViewController {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.isEqual(self.loginTextField) {

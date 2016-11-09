@@ -7,26 +7,14 @@
 //
 
 import UIKit
-// FIXME: CodeReview: Приватные протоколы должны находиться внизу, после определения класса
-// Иерархия следования: public protocol -> class -> private protocol -> extensions
-private protocol Setup {
-    func setupAnimationWithBaseName(_ baseName: String)
-}
-
-struct AnimationsBase {
-    static let Monkey = "monkey"
-}
 
 class SearchingInProcessView: UIView {
 
 //MARK: Properties
-    
     @IBOutlet weak var animationImageView: UIImageView!
   
-//MARK: Life cycle
-    
+//MARK: LifeCycle
     class func monkeyChatSearchView() -> SearchingInProcessView {
-
        let searchingInProcessView = Bundle.main.loadNibNamed("SearchingInProcessView", owner: nil, options: nil)?[0] as! SearchingInProcessView
         searchingInProcessView.setupAnimationWithBaseName(AnimationsBase.Monkey)
         
@@ -35,8 +23,16 @@ class SearchingInProcessView: UIView {
 }
 
 
-//MARK: Setup
+private protocol Setup {
+    func setupAnimationWithBaseName(_ baseName: String)
+}
 
+struct AnimationsBase {
+    static let Monkey = "monkey"
+}
+
+
+//MARK: Setup
 extension SearchingInProcessView: Setup {
     func setupAnimationWithBaseName(_ baseName: String) {
         self.animationImageView.image = UIImage.gifWithName(baseName)
@@ -46,7 +42,6 @@ extension SearchingInProcessView: Setup {
 
 
 //MARK: Public
-
 extension SearchingInProcessView {
     func show() {
         self.animationImageView.startAnimating()

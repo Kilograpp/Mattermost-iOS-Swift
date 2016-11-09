@@ -53,4 +53,12 @@ final class StringUtils {
         
         return uuidString as! String
     }
+    
+    static func quotedString(_ string: String!) -> String {
+       return "\"" + string + "\""
+    }
+    
+    static func commaTailedString(_ string: String) -> String {
+     return (string.characters.count > 0) ? (string + ", ") : string
+    }
 }

@@ -20,8 +20,7 @@ final class KGTextField: SkyFloatingLabelTextField {
     }
     
     
-    //MARK - Setup
-    
+//MARK: Setup
     func setupPlaceholder() {
         self.lineColor = ColorBucket.lightGrayColor
         self.selectedLineColor = ColorBucket.blueColor
@@ -29,7 +28,5 @@ final class KGTextField: SkyFloatingLabelTextField {
         self.titleColor = ColorBucket.lightGrayColor
         self.lineHeight = 1
         self.selectedLineHeight = 1
-        
-        
     }
 }

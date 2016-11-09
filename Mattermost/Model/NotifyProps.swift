@@ -91,5 +91,37 @@ extension NotifyProps {
         
         return mention!
     }
+    
+    func allMobilePush() -> String {
+        let sendIndex = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.push)! }!
+        let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.pushStatus)! }!
+        let send = Constants.NotifyProps.MobilePush.Send[sendIndex].description
+        let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
+        return send + " when " + trigger
+    }
+    
+    func allSensitiveWord() -> String {
+        let user = DataManager.sharedInstance.currentUser
+        var words = self.isSensitiveFirstName() ? StringUtils.quotedString(user?.firstName) : ""
+        if self.isNonCaseSensitiveUsername() {
+            words += StringUtils.commaTailedString(words)
+            words += StringUtils.quotedString(user?.username!)
+        }
+        if self.isUsernameMentioned() {
+            words += StringUtils.commaTailedString(words)
+            words += StringUtils.quotedString("@" + (user?.username!)!)
+        }
+        if self.isChannelWide() {
+            words += StringUtils.commaTailedString(words)
+            words += Constants.NotifyProps.Words.ChannelWide
+        }
+        let otherWords = self.otherNonCaseSensitive()
+        if (otherWords.characters.count > 0) {
+            words += StringUtils.commaTailedString(words)
+            words += otherWords
+        }
+        
+        return (words.characters.count > 0) ? words : Constants.NotifyProps.Words.None
+    }
 }
 

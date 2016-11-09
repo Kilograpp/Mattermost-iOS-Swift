@@ -8,12 +8,9 @@
 
 import Foundation
 
-// CODEREVIEW: fileprivate
-// CODEREVIEW: MoreCellBuilder избыточен, достаточно Interface
-private protocol MoreCellBuilderInteface: class {
+private protocol Inteface: class {
     func cellHeight() -> CGFloat
-    // CODEREVIEW: cell(forChannel)
-    func cellFor(channel: Channel) -> UITableViewCell
+    func cell(resultTuple: ResultTuple) -> UITableViewCell
 }
 
 final class MoreCellBuilder {
@@ -23,14 +20,9 @@ final class MoreCellBuilder {
     init(tableView: UITableView) {
         self.tableView = tableView
     }
-    
-    // CODEREVIEW: Точно ли тут нужен пустой init?
-    private init?() {
-        return nil
-    }
 }
 
-extension MoreCellBuilder: MoreCellBuilderInteface {
+extension MoreCellBuilder: Inteface {
     internal func cellFor(channel: Channel) -> UITableViewCell {
         return UITableViewCell()
     }
@@ -39,19 +31,12 @@ extension MoreCellBuilder: MoreCellBuilderInteface {
         return 60
     }
     
-    // CODEREVIEW: Переименовать в cell(forChannel:)
-    func cellFor(resultTuple: ResultTuple) -> UITableViewCell {
+    func cell(resultTuple: ResultTuple) -> UITableViewCell {
         let reuseIdentifier = ChannelsMoreTableViewCell.reuseIdentifier
         let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! ChannelsMoreTableViewCell
         cell.transform = self.tableView.transform
         cell.configureWith(resultTuple: resultTuple)
-        //cell.configureWith(channel: channel)
-        /*cell.checkBoxHandler = {
-            resultTuple.checked = true
-        }*/
         
         return cell
     }
-    
-
 }

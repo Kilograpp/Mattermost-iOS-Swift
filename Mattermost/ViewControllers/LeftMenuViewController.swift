@@ -38,11 +38,6 @@ final class LeftMenuViewController: UIViewController {
         configureStartUpdating()
     }
     
-    
-    
-    
-    
-    
     //refactor later -> ObserverUtils
     func setupChannelsObserver() {
         NotificationCenter.default.addObserver(self,
@@ -60,7 +55,6 @@ final class LeftMenuViewController: UIViewController {
         //Костыль (для инициализации UserStatusObserver)
         UserStatusObserver.sharedObserver
         self.statusesTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(updateStatuses), userInfo: nil, repeats: true)
-        
     }
     
     func updateStatuses() {
@@ -97,16 +91,12 @@ final class LeftMenuViewController: UIViewController {
             return
         }
         
-        print(indexPath)
-     //   self.tableView.deselectRow(at: self.tableView.indexPathForSelectedRow!, animated: false)
-        //let cell = self.tableView.cellForRow(at: indexPath) as! LeftMenuTableViewCellProtocol
         self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         self.tableView.reloadData()
     }
 }
 
-//MARK: - PrivateProtocols
-
+//MARK: PrivateProtocols
 private protocol Configure : class {
     func configureView()
     func configureTableView()
@@ -118,13 +108,13 @@ private protocol Configure : class {
 private protocol Navigation : class {
     func didSelectChannelAtIndexPath(_ indexPath: IndexPath)
     func navigateToMoreChannel(_ section: Int)
+    func navigateToCreateChannel(privateType: String)
     func toggleLeftSideMenu()
     func membersListAction(_ sender: AnyObject)
 }
 
-//MARK: - Configuration
+//MARK: Configuration
 extension LeftMenuViewController : Configure {
-    
     fileprivate func configureView() {
         self.teamNameLabel.font = FontBucket.menuTitleFont
         self.teamNameLabel.textColor = ColorBucket.whiteColor
@@ -146,11 +136,7 @@ extension LeftMenuViewController : Configure {
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
     }
     
-    
     fileprivate func configureResults () {
-        
-         //let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
-    
         let publicTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PublicTypeChannel, DataManager.sharedInstance.currentTeam!)
         let privateTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PrivateTypeChannel, DataManager.sharedInstance.currentTeam!)
         let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
@@ -164,10 +150,9 @@ extension LeftMenuViewController : Configure {
         self.resultsDirect =
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
     }
-    
 }
 
-//MARK: - UITableViewDataSource
+//MARK: UITableViewDataSource
 extension LeftMenuViewController : UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
@@ -206,9 +191,8 @@ extension LeftMenuViewController : UITableViewDataSource {
     }
 }
 
-//MARK: - UITableViewDelegate
+//MARK: UITableViewDelegate
 extension LeftMenuViewController : UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         didSelectChannelAtIndexPath(indexPath)
     }
@@ -239,9 +223,11 @@ extension LeftMenuViewController : UITableViewDelegate {
         switch section {
         case 0:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PublicTypeChannel))
+         //   view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
             break
         case 1:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PrivateTypeChannel))
+         //   view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
             break
         case 2:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))
@@ -249,14 +235,13 @@ extension LeftMenuViewController : UITableViewDelegate {
         default:
             break
         }
-        view.addTapHandler = { print("ADD CHANNEL") }
         
         return view
     }
 
 }
 
-//MARK: - Navigation
+//MARK: Navigation
 extension LeftMenuViewController : Navigation {
     fileprivate func didSelectChannelAtIndexPath(_ indexPath: IndexPath) {
         switch indexPath.section {
@@ -279,9 +264,20 @@ extension LeftMenuViewController : Navigation {
         guard !(center.topViewController??.isKind(of: MoreChannelsViewController.self))! else { return }
         
         let moreStoryboard = UIStoryboard(name:  "More", bundle: Bundle.main)
-        let moreViewController = moreStoryboard.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
-        moreViewController.isPrivateChannel = (section == 0) ? false : true
-        center.pushViewController(moreViewController, animated: true)
+        let more = moreStoryboard.instantiateViewController(withIdentifier: "MoreChannelsViewController") as! MoreChannelsViewController
+        more.isPrivateChannel = (section == 0) ? false : true
+        center.pushViewController(more, animated: true)
+        toggleLeftSideMenu()
+    }
+    
+    fileprivate func navigateToCreateChannel(privateType: String) {
+        let center = (self.menuContainerViewController!.centerViewController as AnyObject)
+        guard !(center.topViewController??.isKind(of: CreateChannelViewController.self))! else { return }
+        
+        let moreStoryboard = UIStoryboard(name:  "More", bundle: Bundle.main)
+        let createChannel = moreStoryboard.instantiateViewController(withIdentifier: "CreateChannelViewController") as! CreateChannelViewController
+        createChannel.configure(privateType: privateType)
+        center.pushViewController(createChannel, animated: true)
         toggleLeftSideMenu()
     }
     

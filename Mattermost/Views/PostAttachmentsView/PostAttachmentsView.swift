@@ -71,8 +71,7 @@ extension PostAttachmentsView : Private {
         
         self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         self.addSubview(self.collectionView!)
-        //FIXME: real color
-        self.collectionView?.backgroundColor = UIColor.white
+        self.collectionView?.backgroundColor = ColorBucket.whiteColor
         
         self.collectionView?.delegate = self
         self.collectionView?.dataSource = self

@@ -38,7 +38,7 @@ class FeedAttachmentView: UIView {
     }
 }
 
-private protocol Configuration : class {
+private protocol FeedAttachmentViewConfiguration : class {
     func configure()
 }
 
@@ -48,7 +48,7 @@ private protocol Private : class {
 }
 
 //MARK: - Configuration
-extension FeedAttachmentView : Configuration {
+extension FeedAttachmentView : FeedAttachmentViewConfiguration {
     func configure() {
         if self.file!.isImage == true {
             self.configureForImageAttachment()

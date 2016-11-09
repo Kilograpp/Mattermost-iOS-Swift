@@ -14,40 +14,16 @@ struct SearchStage {
     static let SearchResultsDisplay: Int   = 2
     static let SearchNoResults: Int        = 3
 }
-// FIXME: CodeReview: Приватные протоколы вниз (см. FIXME в view и cell для поиска)
-private protocol LifeCycle {
-    func viewDidLoad()
-    func didReceiveMemoryWarning()
+
+
+protocol SearchChatViewControllerConfiguration: class {
+    func configureWithChannel(channel: Channel)
 }
 
-private protocol Private {
-    func configureForSearchStage(_ searchStage: Int)
-}
-
-private protocol Setup {
-    func initialSetup()
-    func setupNavigationBar()
-    func setupTableView()
-    func setupSearchView()
-}
-
-private protocol Requests {
-    
-}
-
-private protocol Action {
-    func cancelBarButtonAction(_ sender: AnyObject)
-}
-
-private protocol Navigation {
-    func returnToChat()
-    func proceedToChatWithPost(post: Post)
-}
 
 class SearchChatViewController: UIViewController {
     
 //MARK: Properties
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var infoView: UIView!
@@ -61,13 +37,11 @@ class SearchChatViewController: UIViewController {
     fileprivate var posts: Array<Post>! = Array()
     fileprivate var dates: Array<NSDate>! = Array()
     
-    
-//MARK: Public
-    
-    func configureWithChannel(channel: Channel) {
-        self.channel = channel
+//MARK: LifeCycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        initialSetup()
     }
-    
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -81,17 +55,7 @@ class SearchChatViewController: UIViewController {
         
         super.viewWillDisappear(animated)
     }
-}
-
-
-//MARK: Life cycle
-
-extension SearchChatViewController: LifeCycle {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        initialSetup()
-    }
-        
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -104,8 +68,42 @@ extension SearchChatViewController: LifeCycle {
 }
 
 
-//MARK: Setup
+//MARK: Configuration
+extension SearchChatViewController: SearchChatViewControllerConfiguration {
+    func configureWithChannel(channel: Channel) {
+        self.channel = channel
+    }
 
+}
+
+
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupTableView()
+    func setupSearchView()
+}
+
+fileprivate protocol Action {
+    func cancelBarButtonAction(_ sender: AnyObject)
+}
+
+fileprivate protocol Navigation {
+    func returnToChat()
+    func proceedToChatWithPost(post: Post)
+}
+
+fileprivate protocol Requests {
+    func searchWithTerms(terms: String)
+}
+
+fileprivate protocol Private {
+    func configureForSearchStage(_ searchStage: Int)
+    func postsForDate(date: NSDate) -> [Post]
+}
+
+
+//MARK: Setup
 extension SearchChatViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
@@ -137,34 +135,7 @@ extension SearchChatViewController: Setup {
 }
 
 
-//MARK: Private
-
-extension SearchChatViewController: Private {
-    func configureForSearchStage(_ searchStage: Int) {
-        self.infoView.isHidden = (searchStage != SearchStage.SearchNotStarted)
-        self.loadingEmozziView.isHidden = (searchStage != SearchStage.SearchRequstInProgress)
-        self.tableView.isHidden = (searchStage != SearchStage.SearchResultsDisplay)
-        self.noResultView.isHidden = (searchStage != SearchStage.SearchNoResults)
-        
-        if (self.loadingEmozziView.isHidden) {
-            self.searchingInProcessView?.hide()
-        }
-        else {
-            self.searchingInProcessView?.show()
-        }
-    }
-    
-    func postsForDate(date: NSDate) -> [Post] {
-        let predicate = NSPredicate(format: "day.date == %@", argumentArray: [date])
-        let filteredPosts = self.posts.filter{ predicate.evaluate(with: $0) }
-        
-        return filteredPosts
-    }
-}
-
-
 //MARK: Action
-
 extension SearchChatViewController {
     @IBAction func cancelBarButtonAction(_ sender: AnyObject) {
         returnToChat()
@@ -173,7 +144,6 @@ extension SearchChatViewController {
 
 
 //MARK: Navigation
-
 extension SearchChatViewController {
     func returnToChat() {
         let transition = CATransition()
@@ -199,7 +169,6 @@ extension SearchChatViewController {
 
 
 //MARK: FetchedResultsController
-
 extension SearchChatViewController {
     func prepareSearchResults() {
         let terms = self.searchTextField.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -217,10 +186,9 @@ extension SearchChatViewController {
 
 
 //MARK: Requests
-
 extension SearchChatViewController: Requests {
     func searchWithTerms(terms: String) {
-        PostUtils.sharedInstance.searchTerms(terms: terms, channel: self.channel!) { (posts, error) in
+        PostUtils.sharedInstance.search(terms: terms, channel: self.channel!) { (posts, error) in
             if (error == nil) {
                 self.posts = posts.reversed()
                 self.dates.removeAll()
@@ -252,6 +220,31 @@ extension SearchChatViewController: Requests {
 }
 
 
+//MARK: Private
+extension SearchChatViewController: Private {
+    func configureForSearchStage(_ searchStage: Int) {
+        self.infoView.isHidden = (searchStage != SearchStage.SearchNotStarted)
+        self.loadingEmozziView.isHidden = (searchStage != SearchStage.SearchRequstInProgress)
+        self.tableView.isHidden = (searchStage != SearchStage.SearchResultsDisplay)
+        self.noResultView.isHidden = (searchStage != SearchStage.SearchNoResults)
+        
+        if (self.loadingEmozziView.isHidden) {
+            self.searchingInProcessView?.hide()
+        }
+        else {
+            self.searchingInProcessView?.show()
+        }
+    }
+    
+    func postsForDate(date: NSDate) -> [Post] {
+        let predicate = NSPredicate(format: "day.date == %@", argumentArray: [date])
+        let filteredPosts = self.posts.filter{ predicate.evaluate(with: $0) }
+        
+        return filteredPosts
+    }
+}
+
+
 //MARK: UITableViewDataSource
 
 extension SearchChatViewController: UITableViewDataSource {
@@ -276,7 +269,6 @@ extension SearchChatViewController: UITableViewDataSource {
 
 
 //MARK: UITableViewDelegate
-
 extension SearchChatViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
