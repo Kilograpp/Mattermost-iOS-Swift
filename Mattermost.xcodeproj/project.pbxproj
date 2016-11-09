@@ -1167,6 +1167,7 @@
 				4421F39ED493A29E806B1222 /* [CP] Embed Pods Frameworks */,
 				743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */,
 				D84DA70F1D22C14900DCFF4B /* Copy Carthage Frameworks */,
+				8B3CB3811DD326230078DE25 /* Fabric */,
 			);
 			buildRules = (
 			);
@@ -1306,6 +1307,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		8B3CB3811DD326230078DE25 /* Fabric */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Fabric;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 1373df4a388cbef38f2feb69c126b74abc82a69e 9f621d40452e483343b6d9c0150f1a7422c9b5619252363ae1be1a0ec37ad468";
 		};
 		BE5F6F50DF894BE52BFD4C06 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

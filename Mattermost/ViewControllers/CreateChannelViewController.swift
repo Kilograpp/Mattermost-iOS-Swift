@@ -85,7 +85,7 @@ extension CreateChannelViewController: Setup {
     }
     
     func setupNameTextField() {
-     //   self.na
+        self.nameTextField.lineHeight = 0
     }
     
     func setupHeaderTextField() {
