@@ -11,6 +11,7 @@ import UIKit
 class NSettingsTableViewController: UITableViewController {
     
 //MARK: Properties
+    fileprivate lazy var builder: NSettingsCellBuilder = NSettingsCellBuilder(tableView: self.tableView)
     fileprivate var notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
     fileprivate let user = DataManager.sharedInstance.currentUser
 
@@ -101,41 +102,7 @@ extension NSettingsTableViewController: Navigation {
 //MARK: UITableViewDataSource
 extension NSettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAt: indexPath) as! CommonSettingsTableViewCell
-        
-        switch indexPath.section {
-        case 2:
-            let sendIndex = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.notifyProps?.push)! }!
-            let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.notifyProps?.pushStatus)! }!
-            let send = Constants.NotifyProps.MobilePush.Send[sendIndex].description
-            let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
-            cell.descriptionLabel?.text = send + " when " + trigger
-            break
-        case 3:
-            var words = (notifyProps?.isSensitiveFirstName())! ? ("\"" + (user?.firstName)! + "\"") : ""
-            if (notifyProps?.isNonCaseSensitiveUsername())! {
-                words += (words.characters.count > 0) ? ", " : ""
-                words += "\"" + (self.user?.username)! + "\""
-            }
-            if (notifyProps?.isUsernameMentioned())! {
-                words += (words.characters.count > 0) ? ", " : ""
-                words += "\"@" + (self.user?.username)! + "\""
-            }
-            if (notifyProps?.isChannelWide())! {
-                words += (words.characters.count > 0) ? ", " : ""
-                words += Constants.NotifyProps.Words.ChannelWide
-            }
-            let otherWords = notifyProps?.otherNonCaseSensitive()
-            if ((otherWords?.characters.count)! > 0) {
-                words += (words.characters.count > 0) ? ", " : ""
-                words += otherWords!
-            }
-            
-            cell.descriptionLabel?.text = (words.characters.count > 0) ? words : Constants.NotifyProps.Words.None
-        default:
-            break
-        }
-        return cell
+        return self.builder.cellFor(notifyProps: self.notifyProps!, indexPath: indexPath)
     }
 }
 

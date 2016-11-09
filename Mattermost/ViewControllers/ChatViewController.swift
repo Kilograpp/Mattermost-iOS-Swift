@@ -16,7 +16,6 @@ import MFSideMenu
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
 
 //MARK: Properties
-    
     var channel : Channel!
     fileprivate var resultsObserver: FeedNotificationsObserver! = nil
     fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
@@ -205,8 +204,7 @@ extension ChatViewController: Setup {
     fileprivate func setupToolbar() {
         self.textInputbar.autoHideRightButton = false;
         self.textInputbar.isTranslucent = false;
-        // TODO: Code Review: Заменить на стиль из темы
-        self.textInputbar.barTintColor = UIColor.white
+        self.textInputbar.barTintColor = ColorBucket.whiteColor
     }
     
     fileprivate func setupRefreshControl() {
@@ -419,7 +417,7 @@ extension ChatViewController: Action {
     }
     
     func resendAction(_ post:Post) {
-        PostUtils.sharedInstance.resendPost(post) { _ in }
+        PostUtils.sharedInstance.resend(post: post) { _ in }
     }
 }
 
@@ -545,7 +543,7 @@ extension ChatViewController: Request {
     }
     
     func sendPost() {
-        PostUtils.sharedInstance.sentPostForChannel(with: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+        PostUtils.sharedInstance.sendPost(channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
             }
@@ -559,7 +557,8 @@ extension ChatViewController: Request {
     func sendPostReply() {
         guard (self.selectedPost != nil) else { return }
         
-        PostUtils.sharedInstance.sendReplyToPost(self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
+        
+        PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
             }
@@ -573,7 +572,7 @@ extension ChatViewController: Request {
     func updatePost() {
         guard (self.selectedPost != nil) else { return }
     
-        PostUtils.sharedInstance.updateSinglePost(self.selectedPost, message: self.textView.text, attachments: nil) {_ in 
+        PostUtils.sharedInstance.update(post: self.selectedPost, message: self.textView.text, attachments: nil) {_ in
             self.selectedPost = nil
         }
         self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
@@ -586,7 +585,7 @@ extension ChatViewController: Request {
         guard (self.selectedPost != nil) else { return }
         
         let postIdentifier = self.selectedPost.identifier!
-        PostUtils.sharedInstance.deletePost(self.selectedPost) { (error) in
+        PostUtils.sharedInstance.delete(post: self.selectedPost) { (error) in
             self.selectedAction = Constants.PostActionType.SendNew
             
             let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("parentId == %@", postIdentifier)

@@ -308,8 +308,6 @@ extension ChatViewController : Private {
         self.topActivityIndicatorView!.stopAnimating()
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
- 
-// TODO: Code Review: clean unused code
     
 //Images
     func assignPhotos() -> Void {

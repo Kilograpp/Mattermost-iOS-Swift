@@ -353,7 +353,7 @@ extension MoreChannelsViewController : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var resultTuple = self.isSearchActive ? self.filteredResults[indexPath.row] : self.results[indexPath.row]
-        let cell = self.builder.cellFor(resultTuple: resultTuple)
+        let cell = self.builder.cell(resultTuple: resultTuple)
         (cell as! ChannelsMoreTableViewCell).checkBoxHandler = {
             self.addDoneButton.isEnabled = true
             

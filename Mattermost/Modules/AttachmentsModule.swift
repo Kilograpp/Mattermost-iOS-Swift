@@ -69,7 +69,7 @@ extension AttachmentsModule: Interface {
 
         items.append(contentsOf: attachments)
         
-        PostUtils.sharedInstance.uploadAttachment(self.dataSource.channel(attachmentsModule: self), items: attachments, completion: { (finished, error, item) in
+        PostUtils.sharedInstance.upload(items: attachments, channel: self.dataSource.channel(attachmentsModule: self), completion: { (finished, error, item) in
             defer { self.fileUploadingInProgress = finished }
 
             guard let error = error else { return }
@@ -91,7 +91,7 @@ extension AttachmentsModule: Interface {
 
 extension AttachmentsModule: PostAttachmentViewDelegate {
     func didRemove(item: AssignedAttachmentViewItem) {
-        PostUtils.sharedInstance.cancelImageItemUploading(item)
+        PostUtils.sharedInstance.cancelUpload(item: item)
         self.items.removeObject(item)
         
         guard self.items.count == 0 else { return }

@@ -187,8 +187,7 @@ extension ChatViewController: Setup {
     func setupToolbar() {
         self.textInputbar.autoHideRightButton = false;
         self.textInputbar.isTranslucent = false;
-        // TODO: Code Review: Заменить на стиль из темы
-        self.textInputbar.barTintColor = UIColor.white
+        self.textInputbar.barTintColor = ColorBucket.whiteColor
     }
     
     fileprivate func setupRefreshControl() {
