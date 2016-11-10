@@ -10,7 +10,7 @@ import RealmSwift
 
 final class LeftMenuViewController: UIViewController {
 
-//MARK: - Property
+//MARK: Property
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamNameLabel: UILabel!
@@ -26,7 +26,7 @@ final class LeftMenuViewController: UIViewController {
     //temp timer
     var statusesTimer: Timer?
 
-//MARK: - Override
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -223,11 +223,11 @@ extension LeftMenuViewController : UITableViewDelegate {
         switch section {
         case 0:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PublicTypeChannel))
-         //   view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
+            view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
             break
         case 1:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PrivateTypeChannel))
-         //   view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
+            view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
             break
         case 2:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))

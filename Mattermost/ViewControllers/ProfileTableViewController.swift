@@ -24,8 +24,7 @@ protocol ProfileViewControllerConfiguration {
 
 class ProfileViewController: UIViewController {
 
-//MARK: - Properties
-    
+//MARK: Properties
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nicknameLabel: UILabel!
@@ -35,6 +34,13 @@ class ProfileViewController: UIViewController {
     fileprivate lazy var cellBuilder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView)
     var user: User?
  
+//MARK: LifeCycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        initialSetup()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -60,40 +66,24 @@ extension ProfileViewController: ProfileViewControllerConfiguration {
 }
 
 
-protocol ProfileViewControllerLifeCycle {
-    func viewDidLoad()
-}
-
-protocol ProfileViewControllerSetup {
+fileprivate protocol Setup {
     func initialSetup()
     func setupNavigationBar()
     func setupHeader()
     func setupTable()
 }
 
-protocol ProfileViewControllerAction {
+fileprivate protocol Action {
     func backAction()
 }
 
-protocol ProfileViewControllerNavigation {
+fileprivate protocol Navigation {
     func returnToChat()
 }
 
 
-//MARK: ProfileViewControllerLifeCycle
-
-extension ProfileViewController: ProfileViewControllerLifeCycle {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        initialSetup()
-    }
-}
-
-
-//MARK: ProfileViewControllerSetup
-
-extension ProfileViewController: ProfileViewControllerSetup {
+//MARK: Setup
+extension ProfileViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupHeader()
@@ -101,7 +91,7 @@ extension ProfileViewController: ProfileViewControllerSetup {
     }
     
     func setupNavigationBar() {
-        self.title = "Профиль"
+        self.title = "Profile"
 
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
@@ -137,19 +127,16 @@ extension ProfileViewController: ProfileViewControllerSetup {
 }
 
 
-//MARK: ProfileViewControllerAction
-
-extension ProfileViewController: ProfileViewControllerAction {
+//MARK: Action
+extension ProfileViewController: Action {
     func backAction() {
         returnToChat()
-        
     }
 }
 
 
-//MARK: ProfileViewControllerNavigation
-
-extension ProfileViewController: ProfileViewControllerNavigation {
+//MARK: Navigation
+extension ProfileViewController: Navigation {
     func returnToChat() {
        _ = self.navigationController?.popViewController(animated: true)
     }
@@ -157,7 +144,6 @@ extension ProfileViewController: ProfileViewControllerNavigation {
 
 
 //MARK: UITableViewDataSource
-
 extension ProfileViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return Constants.Profile.SectionsCount
@@ -173,8 +159,7 @@ extension ProfileViewController: UITableViewDataSource {
 }
 
 
-//MARK: - UITableViewDelegate
-
+//MARK: UITableViewDelegate
 extension ProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 15
@@ -182,8 +167,7 @@ extension ProfileViewController: UITableViewDelegate {
 }
 
 
-//MARK: - UIImagePickerController
-
+//MARK: UIImagePickerController
 extension ProfileViewController {
     func changeProfilePhoto() {
         guard self.user?.identifier == Preferences.sharedInstance.currentUserId else { return }
@@ -214,19 +198,12 @@ extension ProfileViewController {
 }
 
 
-//MARK: - UIImagePickerControllerDelegate
-
+//MARK: UIImagePickerControllerDelegate
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.avatarImageView.image = image
-        //Api.sharedInstance.updateImageForCurrentUser(image) { (error) in
-            
-        //}
-        
-        
-        //let image = info.keys.
     }
 }
 

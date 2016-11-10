@@ -101,6 +101,14 @@ extension NSettingsTableViewController: Navigation {
 
 //MARK: UITableViewDataSource
 extension NSettingsTableViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return self.builder.numberOfSections()
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.builder.numberOfRows()
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return self.builder.cellFor(notifyProps: self.notifyProps!, indexPath: indexPath)
     }
@@ -124,5 +132,9 @@ extension NSettingsTableViewController {
         default:
             break
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.builder.title(section: section)
     }
 }

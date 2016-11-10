@@ -36,6 +36,7 @@ private protocol ChannelApi: class {
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -68,7 +69,6 @@ private protocol FileApi : class {
 final class Api {
     
 //MARK: Properties
-    
     static let sharedInstance = Api()
     fileprivate var _managerCache: ObjectManager?
     fileprivate var manager: ObjectManager  {
@@ -103,7 +103,6 @@ final class Api {
 
 
 //MARK: PreferencesApi
-
 extension Api: PreferencesApi {
     func savePreferencesWith(_ params: Dictionary<String, String>, complection: @escaping (_ error: Mattermost.Error?) -> Void) {
        let path = PreferencesPathPatternsContainer.savePathPattern()
@@ -134,7 +133,6 @@ extension Api: PreferencesApi {
             completion(nil)
             }, failure: { (error) in
                 completion(error)
-        
         })
     }
 }
@@ -173,7 +171,6 @@ extension Api: NotifyPropsApi {
 
 //MARK: TeamApi
 extension Api: TeamApi {
-    
     func loadTeams(with completion:@escaping (_ userShouldSelectTeam: Bool, _ error: Mattermost.Error?) -> Void) {
         let path = TeamPathPatternsContainer.initialLoadPathPattern()
         
@@ -221,9 +218,7 @@ extension Api: TeamApi {
 
 
 //MARK: ChannelApi
-
 extension Api: ChannelApi {
-    
     func loadChannels(with completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.listPathPattern(), DataManager.sharedInstance.currentTeam)
         
@@ -291,6 +286,38 @@ extension Api: ChannelApi {
             }, failure: completion)
     }
     
+    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createChannelPathPattern(), DataManager.sharedInstance.currentTeam)
+        
+        let params: Dictionary<String, String> = [ "team_id"      : Preferences.sharedInstance.currentTeamId!,
+                                                   "name"         : name,
+                                                   "display_name" : name,
+                                                   "type"         : type,
+                                                   "header"       : header,
+                                                   "purpose"      : purpose
+        ]
+        
+        self.manager.postObject(nil, path: path, parameters: params, success: { (mappingResult) in
+            print(mappingResult)
+            let channel = mappingResult.firstObject as! Channel
+            channel.currentUserInChannel = true
+            channel.computeTeam()
+            channel.computeDispayNameIfNeeded()
+            
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+                let realm = RealmUtils.realmForCurrentThread()
+                
+                try! realm.write({
+                    realm.add(channel, update: true)
+                })
+                DispatchQueue.main.sync { completion(nil) }
+            })
+            completion(nil)
+        }) { (error) in
+            completion(error)
+        }
+    }
+
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createDirrectChannelPathPattern(), DataManager.sharedInstance.currentTeam)
         let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
@@ -339,7 +366,6 @@ extension Api: ChannelApi {
 
 
 //MARK: UserApi
-
 extension Api: UserApi {
     func login(_ email: String, password: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = UserPathPatternsContainer.loginPathPattern()
@@ -401,7 +427,6 @@ extension Api: UserApi {
 
 
 //MARK: PostApi
-
 extension Api: PostApi {
     func loadFirstPage(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let wrapper = PageWrapper(channel: channel)
@@ -490,7 +515,7 @@ extension Api: PostApi {
         self.manager.postObject(post, path: path, success: { (mappingResult) in
             let resultPost = mappingResult.firstObject as! Post
             try! RealmUtils.realmForCurrentThread().write {
-                //не достающие параметры
+                //addition parameters
                 post.status = .default
                 post.identifier = resultPost.identifier
             }
@@ -525,8 +550,6 @@ extension Api: PostApi {
         let params = ["team_id"    : Preferences.sharedInstance.currentTeamId!,
                       "channel_id" : post.channelId!,
                       "post_id"    : post.identifier!]
-        
-        
         
         self.manager.deletePost(with: path, parameters: params, success: { (mappingResult) in
             completion(nil)
@@ -630,7 +653,6 @@ extension Api : FileApi {
 
 
 //MARK: Interface
-
 extension Api: Interface {
     func baseURL() -> URL! {
         return self.manager.httpClient.baseURL

@@ -8,6 +8,10 @@
 
 import Foundation
 
+fileprivate let sectionHeaderTitles: Array = [ "SEND DESKTOP NOTIFICATIONS", "OTHER NON-CASE SENSITIVE WORDS" ]
+fileprivate let standardWordsOptions: Array = [ "Your case sensitive first name ", "Your non-case sensitive username ", "Your username mentioned ", "Channel-wide mentions \"@channel\", \"@all\"" ]
+fileprivate let otherWordsSectionFooterTitle = "Separate by commas."
+
 private protocol Inteface: class {
     func cellFor(notifyProps: NotifyProps, indexPath: IndexPath) -> UITableViewCell
     func switchCellState(indexPath: IndexPath)
@@ -36,19 +40,40 @@ final class WTMSettingsCellBuilder {
 
 //MARK: Interface
 extension WTMSettingsCellBuilder: Inteface {
+    func numberOfSections() -> Int {
+        return sectionHeaderTitles.count
+    }
+    
+    func numberOfRows(section: Int) -> Int {
+        return (section == 0) ? standardWordsOptions.count : 1
+    }
+    
     func cellFor(notifyProps: NotifyProps, indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.tableView.cellForRow(at: indexPath)
-        
+        var cell = UITableViewCell()
         switch indexPath.section {
         case 0:
+            cell = self.tableView.dequeueReusableCell(withIdentifier: "CheckSettingsTableViewCell", for: indexPath)
             configure(cell: (cell as! CheckSettingsTableViewCell), indexPath: indexPath)
         case 1:
+            cell = self.tableView.dequeueReusableCell(withIdentifier: "TextSettingsTableViewCell", for: indexPath)
             configure(cell: cell as! TextSettingsTableViewCell)
         default:
             break
         }
         
-        return cell!
+        return cell
+    }
+    
+    func headerTitle(section: Int) -> String {
+        return sectionHeaderTitles[section]
+    }
+    
+    func footerTitle(section: Int) -> String? {
+        return (section == 1) ? otherWordsSectionFooterTitle : nil
+    }
+    
+    func cellHeight(section: Int) -> CGFloat {
+        return (section == 0) ? 45 : 150
     }
     
     func switchCellState(indexPath: IndexPath) {
@@ -96,18 +121,19 @@ extension WTMSettingsCellBuilder: Configuration {
         let user = DataManager.sharedInstance.currentUser
         let notifyProps = user?.notificationProperies()
         
-        let text = cell.descriptionLabel?.text
+        let base = standardWordsOptions[indexPath.row]
         switch indexPath.row {
         case 0:
-            cell.descriptionLabel?.text = text! + StringUtils.quotedString(user?.firstName)
+            cell.descriptionLabel?.text = base + StringUtils.quotedString(user?.firstName)
             cell.checkBoxButton?.isSelected = (notifyProps?.isSensitiveFirstName())!
         case 1:
-            cell.descriptionLabel?.text = text! + StringUtils.quotedString(user?.username)
+            cell.descriptionLabel?.text = base + StringUtils.quotedString(user?.username)
             cell.checkBoxButton?.isSelected = (notifyProps?.isNonCaseSensitiveUsername())!
         case 2:
-            cell.descriptionLabel?.text = text! + StringUtils.quotedString("@" + (user?.username)!)
+            cell.descriptionLabel?.text = base + StringUtils.quotedString("@" + (user?.username)!)
             cell.checkBoxButton?.isSelected = (notifyProps?.isUsernameMentioned())!
         case 3:
+            cell.descriptionLabel?.text = base
             cell.checkBoxButton?.isSelected = (notifyProps?.isChannelWide())!
         default:
             break

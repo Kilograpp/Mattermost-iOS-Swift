@@ -9,6 +9,32 @@
 import Foundation
 import RealmSwift
 
+protocol Desktop {
+    func completeDesctop() -> String
+}
+
+protocol Email {
+    func completeEmail() -> String
+}
+
+protocol MobilePush {
+    func completeMobilePush() -> String
+}
+
+protocol TriggerWords {
+    func isSensitiveFirstName() -> Bool
+    func isNonCaseSensitiveUsername() -> Bool
+    func isUsernameMentioned() -> Bool
+    func isChannelWide() -> Bool
+    func otherNonCaseSensitive() -> String
+    func completeTriggerWords() -> String
+}
+
+protocol Reply {
+    func completeReply() -> String
+}
+
+
 final class NotifyProps: RealmObject {
     dynamic var channel: String?
     dynamic var comments: String?
@@ -51,7 +77,37 @@ enum NotifyPropsAttributes: String {
     case key             = "key"
 }
 
-extension NotifyProps {
+
+//MARK: Desktop
+extension NotifyProps: Desktop {
+    func completeDesctop() -> String {
+        return "For all activity, with sound, shown for 5 sec"
+    }
+}
+
+
+//MARK: Email
+extension NotifyProps: Email {
+    func completeEmail() -> String {
+        return "Immediately"
+    }
+}
+
+
+//MARK: MobilePush
+extension NotifyProps: MobilePush {
+    func completeMobilePush() -> String{
+        let sendIndex = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.push)! }!
+        let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.pushStatus)! }!
+        let send = Constants.NotifyProps.MobilePush.Send[sendIndex].description
+        let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
+        return send + " when " + trigger
+    }
+}
+
+
+//MARK: TriggerWords
+extension NotifyProps: TriggerWords {
     func isSensitiveFirstName() -> Bool {
         return self.firstName == "true"
     }
@@ -92,15 +148,7 @@ extension NotifyProps {
         return mention!
     }
     
-    func allMobilePush() -> String {
-        let sendIndex = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.push)! }!
-        let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.pushStatus)! }!
-        let send = Constants.NotifyProps.MobilePush.Send[sendIndex].description
-        let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
-        return send + " when " + trigger
-    }
-    
-    func allSensitiveWord() -> String {
+    func completeTriggerWords() -> String {
         let user = DataManager.sharedInstance.currentUser
         var words = self.isSensitiveFirstName() ? StringUtils.quotedString(user?.firstName) : ""
         if self.isNonCaseSensitiveUsername() {
@@ -125,3 +173,10 @@ extension NotifyProps {
     }
 }
 
+
+//MARK: Reply
+extension NotifyProps: Reply {
+    func completeReply() -> String {
+        return "Do not trigger notifications on message"
+    }
+}

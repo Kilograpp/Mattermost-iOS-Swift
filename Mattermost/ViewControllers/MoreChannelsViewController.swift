@@ -33,49 +33,7 @@ final class MoreChannelsViewController: UIViewController {
     var isPrivateChannel: Bool = false
     var isSearchActive: Bool = false
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let selectedChannel = sender else { return }
-        ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
-    }
-}
-
-
-private protocol MoreChannelsViewControllerLifeCycle {
-    func viewDidLoad()
-}
-
-private protocol MoreChannelsViewControllerSetup {
-    func initialSetup()
-    func setupNavigationBar()
-    func setupTableView()
-}
-
-private protocol MoreChannelsViewControllerConfiguration : class {
-    var isPrivateChannel : Bool {get set}
-    func prepareResults()
-}
-
-private protocol MoreChannelsViewControllerAction {
-    func backAction()
-    func addDoneAction()
-}
-
-private protocol MoreChannelsViewControllerNavigation {
-    func returnToChannel()
-}
-
-private protocol MoreChannelsViewControllerRequest {
-    func loadChannels()
-    func loadAllChannels()
-    func joinTo(channel: Channel)
-    func leave(channel: Channel)
-    func createDirectChannelWith(result: ResultTuple)
-    func updatePreferencesSave(result: ResultTuple)
-}
-
 //MARK: LifeCycle
-
-extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -92,12 +50,46 @@ extension MoreChannelsViewController: MoreChannelsViewControllerLifeCycle {
         
         super.viewWillDisappear(animated)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let selectedChannel = sender else { return }
+        ChannelObserver.sharedObserver.selectedChannel = selectedChannel as? Channel
+    }
+}
+
+
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupTableView()
+}
+
+fileprivate protocol Configuration : class {
+    var isPrivateChannel : Bool {get set}
+    func prepareResults()
+}
+
+fileprivate protocol Action {
+    func backAction()
+    func addDoneAction()
+}
+
+fileprivate protocol Navigation {
+    func returnToChannel()
+}
+
+fileprivate protocol Request {
+    func loadChannels()
+    func loadAllChannels()
+    func joinTo(channel: Channel)
+    func leave(channel: Channel)
+    func createDirectChannelWith(result: ResultTuple)
+    func updatePreferencesSave(result: ResultTuple)
 }
 
 
 //MARK: Setup
-
-extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
+extension MoreChannelsViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupSearchBar()
@@ -140,8 +132,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerSetup {
 
 
 //MARK: Configuration
-
-extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  {
+extension  MoreChannelsViewController: Configuration {
     func prepareResults() {
         if (self.isPrivateChannel) {
             prepareUserResults()
@@ -206,8 +197,7 @@ extension  MoreChannelsViewController: MoreChannelsViewControllerConfiguration  
 
 
 //MARK: Action
-
-extension MoreChannelsViewController: MoreChannelsViewControllerAction {
+extension MoreChannelsViewController: Action {
     func backAction() {
         self.returnToChannel()
     }
@@ -219,8 +209,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerAction {
 
 
 //MARK: Navigation
-
-extension MoreChannelsViewController: MoreChannelsViewControllerNavigation {
+extension MoreChannelsViewController: Navigation {
     func returnToChannel() {
        _ = self.navigationController?.popViewController(animated: true)
     }
@@ -228,8 +217,7 @@ extension MoreChannelsViewController: MoreChannelsViewControllerNavigation {
 
 
 //MARK: MoreChannelsViewControllerRequest
-
-extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
+extension MoreChannelsViewController: Request {
     func loadChannels() {
         Api.sharedInstance.loadChannels { (error) in
             Api.sharedInstance.listUsersPreferencesWith("direct_channel_show", completion: { (error) in
@@ -345,7 +333,6 @@ extension MoreChannelsViewController: MoreChannelsViewControllerRequest {
 
 
 //MARK: UITableViewDataSource
-
 extension MoreChannelsViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (self.isSearchActive) ? self.filteredResults.count : self.results.count
@@ -377,7 +364,6 @@ extension MoreChannelsViewController : UITableViewDataSource {
 
 
 //MARK: UITableViewDelegate
-
 extension MoreChannelsViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
@@ -389,7 +375,6 @@ extension MoreChannelsViewController : UITableViewDelegate {
 
 
 //MARK: UISearchBarDelegate
-
 extension MoreChannelsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         self.isSearchActive = ((self.searchBar.text?.characters.count)! > 0)
@@ -409,7 +394,6 @@ extension MoreChannelsViewController: UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        //self.isSearchActive = false;
         searchBar.resignFirstResponder()
     }
     

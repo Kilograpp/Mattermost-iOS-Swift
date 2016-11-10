@@ -70,6 +70,7 @@
 		8B3CB37C1DD269C30078DE25 /* UserStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3731DD269C30078DE25 /* UserStatusManager.swift */; };
 		8B3CB37E1DD26BD00078DE25 /* FeedCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB37D1DD26BD00078DE25 /* FeedCellBuilder.swift */; };
 		8B3CB3801DD28DD20078DE25 /* CreateChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */; };
+		8B3CB3831DD392350078DE25 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */; };
 		8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */; };
 		8B77B5DE1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */; };
 		8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */; };
@@ -98,7 +99,6 @@
 		8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */; };
 		8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */; };
 		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
-		8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */; };
 		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
 		8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */; };
 		8BE969B51D7615EE0010A524 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BE969B41D7615EE0010A524 /* HEXColor.framework */; };
@@ -312,6 +312,7 @@
 		8B3CB3731DD269C30078DE25 /* UserStatusManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatusManager.swift; sourceTree = "<group>"; };
 		8B3CB37D1DD26BD00078DE25 /* FeedCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCellBuilder.swift; sourceTree = "<group>"; };
 		8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChannelViewController.swift; sourceTree = "<group>"; };
+		8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteNewMemberTableViewController.swift; sourceTree = "<group>"; };
 		8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessInviteNewMembreViewController.swift; sourceTree = "<group>"; };
@@ -341,7 +342,6 @@
 		8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NVActivityIndicatorView.framework; path = Carthage/Build/iOS/NVActivityIndicatorView.framework; sourceTree = "<group>"; };
 		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
-		8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
 		8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+PreparedColor.swift"; sourceTree = "<group>"; };
 		8BE969B41D7615EE0010A524 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
@@ -573,6 +573,7 @@
 		8B9E27C51DC0971700543C6C /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */,
 				8B9E27C81DC0984300543C6C /* MPNSettingsTableViewController.swift */,
 				8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */,
 				8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */,
@@ -845,7 +846,6 @@
 				4BEA108B1D79B551006BB298 /* TeamViewController.swift */,
 				CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */,
 				8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */,
-				8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */,
 				8BE969A41D74C73B0010A524 /* AboutViewController.swift */,
 				D61962101D62230600C2E259 /* RightMenuViewController.swift */,
 				D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */,
@@ -1427,7 +1427,6 @@
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
-				8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */,
 				8B3CB3681DD268690078DE25 /* FeedNotificationsObserver.swift in Sources */,
 				8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */,
 				CDB4BC671D80678000662231 /* BaseRequestDescriptorsContainer.swift in Sources */,
@@ -1497,6 +1496,7 @@
 				CDB6D3CE1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift in Sources */,
 				CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
+				8B3CB3831DD392350078DE25 /* SettingsTableViewController.swift in Sources */,
 				8B3CB3631DD268390078DE25 /* FilesPickingModuleBase.swift in Sources */,
 				8B3CB3551DD267EB0078DE25 /* AssignedFileItem.swift in Sources */,
 				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,

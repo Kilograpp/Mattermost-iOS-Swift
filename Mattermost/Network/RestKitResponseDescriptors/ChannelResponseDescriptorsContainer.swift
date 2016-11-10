@@ -15,6 +15,7 @@ private protocol ChannelResponseDescriptors: class {
     static func channelsMoreListResponseDescriptor() -> RKResponseDescriptor
     static func updateLastViewDataResponseDescriptor() -> RKResponseDescriptor
     static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor
+    static func createChannelResponseDescriptor() -> RKResponseDescriptor
     static func createDirectChannelResponseDescriptor() -> RKResponseDescriptor
     static func leaveChannelResponseDescriptor() -> RKResponseDescriptor
     static func joinChannelResponseDescriptor() -> RKResponseDescriptor
@@ -58,6 +59,13 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
                                     method: .GET,
                                     pathPattern: ChannelPathPatternsContainer.moreListPathPattern(),
                                     keyPath: "channels",
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func createChannelResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
+                                    method: .POST,
+                                    pathPattern: ChannelPathPatternsContainer.createChannelPathPattern(),
+                                    keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     static func createDirectChannelResponseDescriptor() -> RKResponseDescriptor {

@@ -7,7 +7,7 @@
 //
 
 
-final class LoginViewController: UIViewController, UITextFieldDelegate {
+final class LoginViewController: UIViewController {
 
 //MARK: Properties
     @IBOutlet weak var loginButton: UIButton!
@@ -22,67 +22,7 @@ final class LoginViewController: UIViewController, UITextFieldDelegate {
     let password = NSLocalizedString("Password", comment: "")
     let forgotPassword = NSLocalizedString("Forgot password?", comment: "")
     
-
-//MARK: Configuration
-    override var preferredStatusBarStyle : UIStatusBarStyle {
-        return .lightContent
-    }
-    
-    fileprivate func configure() {
-        guard let login = Preferences.sharedInstance.predefinedLogin() else { return }
-        self.loginTextField.text = login
-        
-        guard let password = Preferences.sharedInstance.predefinedPassword() else { return }
-        self.passwordTextField.text = password
-        
-        if ((self.loginTextField.text != "") && (self.passwordTextField.text != "")) {
-            self.loginButton.isEnabled = true
-        }
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-}
-
-
-private protocol LoginViewControllerLifeCylce {
-    func viewDidLoad()
-    func viewWillAppear(_ animated: Bool)
-    func viewDidAppear(_ animated: Bool)
-}
-
-private protocol LoginViewControllerSetup {
-    func initialSetup()
-    func setupNavigationBar()
-    func setupTitleLabel()
-    func setupLoginButton()
-    func setupLoginTextField()
-    func setupPasswordTextField()
-    func setupRecoveryButton()
-    func setupNotificationObserver()
-}
-
-private protocol LoginViewControllerAction {
-    func loginAction(_ sender: AnyObject)
-    func changeLogin(_ sender: AnyObject)
-    func changePassword(_ sender: AnyObject)
-}
-
-private protocol LoginViewControllerNavigation {
-    func proceedToTeams()
-}
-
-private protocol LoginViewControllerRequest {
-    func login()
-    func loadTeams()
-    func loadChannels()
-    func loadCompleteUsersList()
-}
-
-
-//MARK: LoginViewControllerLifeCylce
-extension LoginViewController: LoginViewControllerLifeCylce {
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -100,11 +40,49 @@ extension LoginViewController: LoginViewControllerLifeCylce {
         
         _ = self.loginTextField.becomeFirstResponder()
     }
+    
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 
 
-//MARK: LoginViewControllerSetup
-extension LoginViewController: LoginViewControllerSetup {
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupTitleLabel()
+    func setupLoginButton()
+    func setupLoginTextField()
+    func setupPasswordTextField()
+    func setupRecoveryButton()
+    func setupNotificationObserver()
+    func setupTextFieldsContent()
+}
+
+fileprivate protocol Action {
+    func loginAction(_ sender: AnyObject)
+    func changeLogin(_ sender: AnyObject)
+    func changePassword(_ sender: AnyObject)
+}
+
+fileprivate protocol Navigation {
+    func proceedToTeams()
+}
+
+fileprivate protocol Request {
+    func login()
+    func loadTeams()
+    func loadChannels()
+    func loadCompleteUsersList()
+}
+
+
+//MARK: Setup
+extension LoginViewController: Setup {
     func initialSetup() {
         setupTitleLabel()
         setupLoginButton()
@@ -112,7 +90,7 @@ extension LoginViewController: LoginViewControllerSetup {
         setupPasswordTextField()
         setupRecoveryButton()
         setupNotificationObserver()
-        configure()
+        setupTextFieldsContent()
     }
     
     fileprivate func setupNavigationBar() {
@@ -176,12 +154,23 @@ extension LoginViewController: LoginViewControllerSetup {
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification),
                                                object: nil)
     }
+    
+    fileprivate func setupTextFieldsContent() {
+        guard let login = Preferences.sharedInstance.predefinedLogin() else { return }
+        self.loginTextField.text = login
+        
+        guard let password = Preferences.sharedInstance.predefinedPassword() else { return }
+        self.passwordTextField.text = password
+        
+        if ((self.loginTextField.text != "") && (self.passwordTextField.text != "")) {
+            self.loginButton.isEnabled = true
+        }
+    }
 }
 
 
-//MARK: LoginViewControllerAction
-
-extension LoginViewController: LoginViewControllerAction {
+//MARK: Action
+extension LoginViewController: Action {
     @IBAction func loginAction(_ sender: AnyObject) {
         login()
     }
@@ -195,9 +184,8 @@ extension LoginViewController: LoginViewControllerAction {
 }
 
 
-//MARK: LoginViewControllerNavigation
-
-extension LoginViewController: LoginViewControllerNavigation {
+//MARK: Navigation
+extension LoginViewController: Navigation {
     func proceedToTeams() {
         let teamViewController = self.storyboard?.instantiateViewController(withIdentifier: "TeamViewController")
         let loginNavigationController = LoginNavigationController(rootViewController: teamViewController!)
@@ -206,9 +194,8 @@ extension LoginViewController: LoginViewControllerNavigation {
 }
 
 
-//MARK: LoginViewControllerRequest
-
-extension LoginViewController: LoginViewControllerRequest {
+//MARK: Request
+extension LoginViewController: Request {
     func login() {
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in
             guard (error == nil) else {
@@ -255,7 +242,7 @@ extension LoginViewController: LoginViewControllerRequest {
 
 
 //MARK: UITextFieldDelegate
-extension LoginViewController {
+extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.isEqual(self.loginTextField) {
             _ = self.passwordTextField.becomeFirstResponder()
