@@ -51,11 +51,43 @@
                         <outlet property="tableView" destination="xI8-fy-6uY" id="Y1d-cQ-1fh"/>
                         <segue destination="Isq-Mm-oxO" kind="show" identifier="showMembersAdditing" id="UkZ-2t-24m"/>
                         <segue destination="EN6-ZU-d02" kind="show" identifier="showAllMembers" id="Tbj-Oh-nsg"/>
+                        <segue destination="bQt-aE-ekG" kind="show" identifier="showChannelInfo" id="tvG-xm-JGD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gPY-OX-TOF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-369" y="0.0"/>
+        </scene>
+        <!--Channel Header And Description View Controller-->
+        <scene sceneID="aEI-nx-pzy">
+            <objects>
+                <viewController id="bQt-aE-ekG" customClass="ChannelHeaderAndDescriptionViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="W5E-Hh-2B8"/>
+                        <viewControllerLayoutGuide type="bottom" id="EJH-5w-ixt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="X0m-tD-gcL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Sz0-uF-h4r">
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Sz0-uF-h4r" secondAttribute="trailing" id="UmB-ds-ihE"/>
+                            <constraint firstItem="EJH-5w-ixt" firstAttribute="top" secondItem="Sz0-uF-h4r" secondAttribute="bottom" id="dZV-c2-kGs"/>
+                            <constraint firstItem="Sz0-uF-h4r" firstAttribute="leading" secondItem="X0m-tD-gcL" secondAttribute="leading" id="e7k-X4-3p9"/>
+                            <constraint firstItem="Sz0-uF-h4r" firstAttribute="top" secondItem="W5E-Hh-2B8" secondAttribute="bottom" constant="-64" id="elW-Pz-PIZ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="Sz0-uF-h4r" id="jow-v4-Gmh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="I4Y-fn-RdT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="545" y="-774"/>
         </scene>
         <!--Add Members View Controller-->
         <scene sceneID="1Re-Yf-ESR">

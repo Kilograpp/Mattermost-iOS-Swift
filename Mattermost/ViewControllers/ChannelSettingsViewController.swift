@@ -150,5 +150,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         if (indexPath==IndexPath(row: 6, section: 2)){
             performSegue(withIdentifier: "showAllMembers", sender: nil)
         }
+        if (indexPath==IndexPath(row: 0, section: 1) || indexPath==IndexPath(row: 1, section: 1)){
+            performSegue(withIdentifier: "showChannelInfo", sender: nil)
+        }
     }
 }

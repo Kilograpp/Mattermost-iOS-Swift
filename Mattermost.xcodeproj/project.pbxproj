@@ -30,6 +30,9 @@
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
 		8602A8391DD5F6C200A6D21C /* AllMembersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8602A8381DD5F6C200A6D21C /* AllMembersCell.swift */; };
 		8602A83B1DD5F6E600A6D21C /* AllMembersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8602A83A1DD5F6E600A6D21C /* AllMembersCell.xib */; };
+		8602A83D1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8602A83C1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift */; };
+		8602A8401DD60EC300A6D21C /* ChannelInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8602A83E1DD60EC300A6D21C /* ChannelInfoCell.swift */; };
+		8602A8411DD60EC300A6D21C /* ChannelInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8602A83F1DD60EC300A6D21C /* ChannelInfoCell.xib */; };
 		862CCF981DD4508500BE5A38 /* ChannelSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCF971DD4508500BE5A38 /* ChannelSettingsViewController.swift */; };
 		862CCF9A1DD4512D00BE5A38 /* ChannelSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 862CCF991DD4512D00BE5A38 /* ChannelSettings.storyboard */; };
 		862CCF9E1DD4539D00BE5A38 /* HeaderChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 862CCF9D1DD4539D00BE5A38 /* HeaderChannelSettingsCell.xib */; };
@@ -290,6 +293,9 @@
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
 		8602A8381DD5F6C200A6D21C /* AllMembersCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllMembersCell.swift; sourceTree = "<group>"; };
 		8602A83A1DD5F6E600A6D21C /* AllMembersCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AllMembersCell.xib; sourceTree = "<group>"; };
+		8602A83C1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelHeaderAndDescriptionViewController.swift; sourceTree = "<group>"; };
+		8602A83E1DD60EC300A6D21C /* ChannelInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelInfoCell.swift; sourceTree = "<group>"; };
+		8602A83F1DD60EC300A6D21C /* ChannelInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChannelInfoCell.xib; sourceTree = "<group>"; };
 		862CCF971DD4508500BE5A38 /* ChannelSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSettingsViewController.swift; sourceTree = "<group>"; };
 		862CCF991DD4512D00BE5A38 /* ChannelSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ChannelSettings.storyboard; sourceTree = "<group>"; };
 		862CCF9D1DD4539D00BE5A38 /* HeaderChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderChannelSettingsCell.xib; sourceTree = "<group>"; };
@@ -589,6 +595,7 @@
 				868FD8DF1DD4C07100EE20B2 /* LabelChannelSettingsCell.swift */,
 				868FD8E91DD5DFC700EE20B2 /* MemberInAdditingCell.swift */,
 				8602A8381DD5F6C200A6D21C /* AllMembersCell.swift */,
+				8602A83E1DD60EC300A6D21C /* ChannelInfoCell.swift */,
 			);
 			name = ChannelSettings;
 			sourceTree = "<group>";
@@ -603,6 +610,7 @@
 				868FD8E01DD4C07100EE20B2 /* LabelChannelSettingsCell.xib */,
 				868FD8E71DD5DD2700EE20B2 /* MemberInAdditingCell.xib */,
 				8602A83A1DD5F6E600A6D21C /* AllMembersCell.xib */,
+				8602A83F1DD60EC300A6D21C /* ChannelInfoCell.xib */,
 			);
 			name = Xibs;
 			sourceTree = "<group>";
@@ -921,6 +929,7 @@
 				862CCF971DD4508500BE5A38 /* ChannelSettingsViewController.swift */,
 				868FD8E31DD5D9B100EE20B2 /* AddMembersViewController.swift */,
 				868FD8ED1DD5F58000EE20B2 /* AllMembersViewController.swift */,
+				8602A83C1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1306,6 +1315,7 @@
 				868FD8E81DD5DD2700EE20B2 /* MemberInAdditingCell.xib in Resources */,
 				D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */,
 				8B3CB3491DD267C40078DE25 /* Profile.storyboard in Resources */,
+				8602A8411DD60EC300A6D21C /* ChannelInfoCell.xib in Resources */,
 				8BBA7DC61D874F7B003A5B99 /* monkey.gif in Resources */,
 				862CCFA41DD45EE400BE5A38 /* MemberChannelSettingsCell.xib in Resources */,
 				862CCFA21DD45A2700BE5A38 /* AddMembersChannelSettingsCell.xib in Resources */,
@@ -1468,6 +1478,7 @@
 				8B3CB3671DD268690078DE25 /* ChannelObserver.swift in Sources */,
 				8B3CB3441DD2675F0078DE25 /* TeamCellBuilder.swift in Sources */,
 				4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */,
+				8602A8401DD60EC300A6D21C /* ChannelInfoCell.swift in Sources */,
 				8B3CB37E1DD26BD00078DE25 /* FeedCellBuilder.swift in Sources */,
 				862CCFA81DD4715700BE5A38 /* InformationChannelSettingsCell.swift in Sources */,
 				8B3CB37B1DD269C30078DE25 /* SocketManager.swift in Sources */,
@@ -1508,6 +1519,7 @@
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
 				8602A8391DD5F6C200A6D21C /* AllMembersCell.swift in Sources */,
 				8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */,
+				8602A83D1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift in Sources */,
 				8B3CB3681DD268690078DE25 /* FeedNotificationsObserver.swift in Sources */,
 				8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */,
 				CDB4BC671D80678000662231 /* BaseRequestDescriptorsContainer.swift in Sources */,
