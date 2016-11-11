@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="memberChannelSettingsCell" rowHeight="50" id="vsz-i3-GLn" customClass="MemberChannelSettingsCell" customModule="Mattermost" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vsz-i3-GLn" id="PSZ-Pz-RDF">
+                <frame key="frameInset" width="375" height="49"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="VeryveryveryLONGLONGLONG" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zd9-FV-ZCm">
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about_mattermost_icon" translatesAutoresizingMaskIntoConstraints="NO" id="SwW-IR-giw">
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="RiY-u4-Sav"/>
+                            <constraint firstAttribute="width" constant="40" id="vcf-Gh-bK4"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U3w-8b-5d4">
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="U3w-8b-5d4" firstAttribute="leading" secondItem="zd9-FV-ZCm" secondAttribute="trailing" constant="15" id="7cI-0k-i5d"/>
+                    <constraint firstAttribute="trailing" secondItem="U3w-8b-5d4" secondAttribute="trailing" constant="15" id="D8k-Ky-sHD"/>
+                    <constraint firstItem="SwW-IR-giw" firstAttribute="leading" secondItem="PSZ-Pz-RDF" secondAttribute="leading" constant="15" id="IiG-Nt-OEh"/>
+                    <constraint firstItem="zd9-FV-ZCm" firstAttribute="leading" secondItem="SwW-IR-giw" secondAttribute="trailing" constant="15" id="edD-SV-OCa"/>
+                </constraints>
+            </tableViewCellContentView>
+            <constraints>
+                <constraint firstItem="U3w-8b-5d4" firstAttribute="centerY" secondItem="vsz-i3-GLn" secondAttribute="centerY" id="1In-9V-myW"/>
+                <constraint firstItem="SwW-IR-giw" firstAttribute="centerY" secondItem="vsz-i3-GLn" secondAttribute="centerY" id="W4G-m9-Cjp"/>
+                <constraint firstItem="zd9-FV-ZCm" firstAttribute="centerY" secondItem="vsz-i3-GLn" secondAttribute="centerY" id="ehp-02-dDv"/>
+            </constraints>
+            <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <connections>
+                <outlet property="memberImage" destination="SwW-IR-giw" id="jgo-kO-xbp"/>
+                <outlet property="memberName" destination="zd9-FV-ZCm" id="FLK-JY-soz"/>
+                <outlet property="memberStatus" destination="U3w-8b-5d4" id="3Rp-lI-cZ9"/>
+            </connections>
+            <point key="canvasLocation" x="44" y="98"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="about_mattermost_icon" width="450" height="450"/>
+    </resources>
+</document>

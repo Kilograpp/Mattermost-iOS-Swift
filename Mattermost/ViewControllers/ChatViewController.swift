@@ -132,10 +132,6 @@ extension ChatViewController {
     }
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 4acfd2744fdb9e7f87e45e37a3d1f5c2ddd077ca
 //MARK: Setup
 
 extension ChatViewController: Setup {

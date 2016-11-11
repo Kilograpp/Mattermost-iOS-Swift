@@ -10,6 +10,11 @@ import RealmSwift
 
 final class LeftMenuViewController: UIViewController {
 
+    @IBAction func test(_ sender: AnyObject) {
+        let channelSettingsStoryboard : UIStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
+        let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController") as! UINavigationController
+        self.present(channelSettings, animated:true, completion:nil)
+    }
 //MARK: - Property
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var tableView: UITableView!
