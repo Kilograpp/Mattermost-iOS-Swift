@@ -365,6 +365,7 @@ extension ChatViewController: Action {
     @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
         let state = (self.menuContainerViewController.menuState == MFSideMenuStateLeftMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateLeftMenuOpen
         self.menuContainerViewController.setMenuState(state, completion: nil)
+        self.dismissKeyboard(true)
     }
     
     @IBAction func rigthMenuButtonAction(_ sender: AnyObject) {
