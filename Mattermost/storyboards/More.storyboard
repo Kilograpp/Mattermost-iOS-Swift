@@ -117,7 +117,7 @@
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Channel Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="y8W-ow-Mv8" customClass="KGTextField" customModule="Mattermost" customModuleProvider="target">
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="32" id="b2Q-zh-hbH"/>
+                                            <constraint firstAttribute="height" constant="36" id="b2Q-zh-hbH"/>
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>

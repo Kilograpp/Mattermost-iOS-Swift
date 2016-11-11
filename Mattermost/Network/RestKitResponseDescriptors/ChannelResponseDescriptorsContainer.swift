@@ -61,7 +61,7 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
                                     keyPath: "channels",
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
-    static func createChannelResponseDescriptor() -> RKResponseDescriptor {
+     static func createChannelResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
                                     method: .POST,
                                     pathPattern: ChannelPathPatternsContainer.createChannelPathPattern(),

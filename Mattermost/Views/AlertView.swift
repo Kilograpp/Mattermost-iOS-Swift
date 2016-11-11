@@ -87,7 +87,8 @@ extension AlertView {
     
     func addToSuperview() {
 //        self.presentingViewController.view.addSubview(self)
-        self.presentingViewController.navigationController?.view.addSubview(self)
+        //self.presentingViewController.navigationController?.view.addSubview(self)
+        UIApplication.shared.keyWindow?.addSubview(self)
     }
     
     func hideAlertView(animated: Bool) {

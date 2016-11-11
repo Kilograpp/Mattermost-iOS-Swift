@@ -36,7 +36,7 @@ private protocol ChannelApi: class {
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -286,35 +286,30 @@ extension Api: ChannelApi {
             }, failure: completion)
     }
     
-    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (Error?) -> Void) {
+    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createChannelPathPattern(), DataManager.sharedInstance.currentTeam)
+      
+        let newChannel = Channel()
+        newChannel.privateType = type
+        newChannel.name = name
+        newChannel.displayName = name
+        newChannel.header = header
+        newChannel.purpose = purpose
         
-        let params: Dictionary<String, String> = [ "team_id"      : Preferences.sharedInstance.currentTeamId!,
-                                                   "name"         : name,
-                                                   "display_name" : name,
-                                                   "type"         : type,
-                                                   "header"       : header,
-                                                   "purpose"      : purpose
-        ]
+        RealmUtils.save(newChannel)
         
-        self.manager.postObject(nil, path: path, parameters: params, success: { (mappingResult) in
-            print(mappingResult)
+        self.manager.postObject(newChannel, path: path, parameters: nil, success: { (mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
             let channel = mappingResult.firstObject as! Channel
-            channel.currentUserInChannel = true
-            channel.computeTeam()
-            channel.computeDispayNameIfNeeded()
-            
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                let realm = RealmUtils.realmForCurrentThread()
-                
-                try! realm.write({
-                    realm.add(channel, update: true)
-                })
-                DispatchQueue.main.sync { completion(nil) }
+            try! realm.write({
+                channel.currentUserInChannel = true
+                channel.computeTeam()
+                channel.computeDispayNameIfNeeded()
+                realm.add(channel)
             })
-            completion(nil)
+            completion(channel ,nil)
         }) { (error) in
-            completion(error)
+            completion(nil, error)
         }
     }
 

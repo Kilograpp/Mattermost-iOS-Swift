@@ -31,11 +31,6 @@ class CreateChannelViewController: UIViewController {
 
         initialSetup()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 }
 
 
@@ -130,6 +125,11 @@ extension CreateChannelViewController: Navigation {
     func returnToChannel() {
         _ = self.navigationController?.popViewController(animated: true)
     }
+    
+    func returnToNew(channel: Channel) {
+        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(channel)
+        _ = self.navigationController?.popViewController(animated: true)
+    }
 }
 
 
@@ -139,12 +139,15 @@ extension CreateChannelViewController: Request {
         let name = self.nameTextField.text
         let header = self.headerTextField.text
         let purpose = self.purposeTextView.text
-        Api.sharedInstance.createChannel(self.privateType, name: name!, header: header!, purpose: purpose!) { (error) in
+        
+        Api.sharedInstance.createChannel(self.privateType, name: name!, header: header!, purpose: purpose!) { (channel, error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                 return
             }
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
             AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was successfully created", viewController: self)
+            self.returnToNew(channel: channel!)
         }
     }
 }

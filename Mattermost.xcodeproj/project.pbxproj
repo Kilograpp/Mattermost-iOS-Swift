@@ -71,6 +71,7 @@
 		8B3CB37E1DD26BD00078DE25 /* FeedCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB37D1DD26BD00078DE25 /* FeedCellBuilder.swift */; };
 		8B3CB3801DD28DD20078DE25 /* CreateChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */; };
 		8B3CB3831DD392350078DE25 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */; };
+		8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */; };
 		8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */; };
 		8B77B5DE1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */; };
 		8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */; };
@@ -313,6 +314,7 @@
 		8B3CB37D1DD26BD00078DE25 /* FeedCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCellBuilder.swift; sourceTree = "<group>"; };
 		8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChannelViewController.swift; sourceTree = "<group>"; };
 		8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/ChannelRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
 		8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteNewMemberTableViewController.swift; sourceTree = "<group>"; };
 		8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessInviteNewMembreViewController.swift; sourceTree = "<group>"; };
@@ -766,6 +768,7 @@
 				CDB4BC661D80678000662231 /* BaseRequestDescriptorsContainer.swift */,
 				CDB4BC641D8062B600662231 /* PostRequestDescriptorsContainer.swift */,
 				8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */,
+				8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */,
 			);
 			name = RestKitRequestDescriptors;
 			sourceTree = "<group>";
@@ -1506,6 +1509,7 @@
 				CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
+				8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */,
 				CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */,
 				8B3CB35C1DD267EB0078DE25 /* UserStatus.swift in Sources */,
 				8B3CB3541DD267EB0078DE25 /* ActionsNotification.swift in Sources */,

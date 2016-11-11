@@ -165,6 +165,11 @@ extension SocketManager: Notifications {
         // if user is not author
         if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.pendingId!) {
             RealmUtils.save(post)
+            
+            try! RealmUtils.realmForCurrentThread().write({
+                post.channel.lastPostDate = post.createdAt
+            })
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }
     

@@ -136,7 +136,7 @@ extension LeftMenuViewController : Configure {
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
     }
     
-    fileprivate func configureResults () {
+    fileprivate func configureResults() {
         let publicTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PublicTypeChannel, DataManager.sharedInstance.currentTeam!)
         let privateTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PrivateTypeChannel, DataManager.sharedInstance.currentTeam!)
         let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)

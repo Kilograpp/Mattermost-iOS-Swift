@@ -9,6 +9,11 @@
 import Foundation
 import RestKit
 
+private protocol RequestMapping: class {
+    static func createRequestMapping() -> RKObjectMapping
+}
+
+
 private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
     static func attendantInfoMapping() -> RKObjectMapping
@@ -21,6 +26,23 @@ final class ChannelMappingsContainer: BaseMappingsContainer {
         return Channel.self
     }
 }
+
+
+//MARK: RequestMapping
+extension ChannelMappingsContainer: RequestMapping {
+    static func  createRequestMapping() -> RKObjectMapping {
+        let mapping = RKObjectMapping.request()
+        mapping?.addAttributeMappings(from: [
+            ChannelAttributes.name.rawValue        : "name",
+            ChannelAttributes.privateType.rawValue : "type",
+            ChannelAttributes.displayName.rawValue : "display_name",
+            ChannelAttributes.header.rawValue      : "header",
+            ChannelAttributes.purpose.rawValue     : "purpose"
+            ])
+        return mapping!
+    }
+}
+
 
 //MARK: - ResponseMappings
 extension ChannelMappingsContainer: ResponseMappings {
