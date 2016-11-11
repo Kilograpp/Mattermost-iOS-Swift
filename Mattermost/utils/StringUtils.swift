@@ -50,6 +50,15 @@ final class StringUtils {
         return ceilf(Float(frame.size.height))
     }
     
+    static func heightOfString(_ string: String, width: CGFloat, font: UIFont) -> Float {
+        //let width: CGFloat = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize;
+        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
+        let frame = string.boundingRect(with: constraintRect, options: options, attributes: [NSFontAttributeName: font], context: nil)
+        
+        return ceilf(Float(frame.size.height))
+    }
+    
     static func randomUUID() -> String {
         let newUniqueId = CFUUIDCreate(kCFAllocatorDefault)
         let uuidString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueId)

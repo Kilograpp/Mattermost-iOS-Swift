@@ -401,9 +401,9 @@ extension MoreChannelsViewController: UISearchBarDelegate {
         self.isSearchActive = (searchText.characters.count > 0)
         self.filteredResults = self.results.filter({
             if self.isPrivateChannel {
-                return (($0.object as! User).displayName?.hasPrefix(searchText))!
+                return (($0.object as! User).username?.hasPrefix(searchText.lowercased()))!
             } else {
-                return (($0.object as! Channel).displayName?.hasPrefix(searchText))!
+                return (($0.object as! Channel).name?.hasPrefix(searchText.lowercased()))!
             }
         })
         self.emptySearchLabel.isHidden = (self.filteredResults.count > 0)

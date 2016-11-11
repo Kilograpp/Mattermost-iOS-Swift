@@ -375,6 +375,8 @@ extension Api: UserApi {
             user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user
             RealmUtils.save([user, systemUser])
+            print(mappingResult)
+            print(notifyProps)
             RealmUtils.save(notifyProps!)
             
             let uu = DataManager.sharedInstance.currentUser

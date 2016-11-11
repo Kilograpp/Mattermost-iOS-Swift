@@ -231,6 +231,7 @@ extension LeftMenuViewController : UITableViewDelegate {
             break
         case 2:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))
+            view.hideMoreButton()
             break
         default:
             break

@@ -97,7 +97,9 @@ extension NotifyProps: Email {
 //MARK: MobilePush
 extension NotifyProps: MobilePush {
     func completeMobilePush() -> String{
+        print((self.push)!)
         let sendIndex = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.push)! }!
+        print((self.pushStatus)!)
         let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.pushStatus)! }!
         let send = Constants.NotifyProps.MobilePush.Send[sendIndex].description
         let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
