@@ -217,6 +217,7 @@ fileprivate protocol PostConfiguration: class {
     func clearUploadedAttachments()
 }
 
+
 //MARK: PostConfiguration
 extension PostUtils: PostConfiguration {
     func postToSend(channel: Channel, message: String, attachments: NSArray?) -> Post {

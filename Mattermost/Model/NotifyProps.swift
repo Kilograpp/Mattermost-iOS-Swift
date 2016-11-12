@@ -36,16 +36,16 @@ protocol Reply {
 
 
 final class NotifyProps: RealmObject {
-    dynamic var channel: String?
-    dynamic var comments: String?
-    dynamic var desktop: String?
-    dynamic var desktopDuration: String?
-    dynamic var desktopSound: String?
-    dynamic var email: String?
-    dynamic var firstName: String?
-    dynamic var mentionKeys: String?
-    dynamic var push: String?
-    dynamic var pushStatus: String?
+    dynamic var channel: String? = "true"
+    dynamic var comments: String? = "never"
+    dynamic var desktop: String? = "all"
+    dynamic var desktopDuration: String? = "3"
+    dynamic var desktopSound: String? = "true"
+    dynamic var email: String? = "true"
+    dynamic var firstName: String? = "true"
+    dynamic var mentionKeys: String? = ""
+    dynamic var push: String? = "all"
+    dynamic var pushStatus: String? = "online"
     dynamic var userId: String?
     dynamic var key: String! = "__notifyProps"
     dynamic var hasUpdated: Bool = false

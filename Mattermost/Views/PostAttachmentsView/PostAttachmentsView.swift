@@ -62,6 +62,7 @@ private protocol Public : class {
     func updateAppearance()
     func showAnimated()
     func hideAnimated()
+    func removeActivityAt(index: Int)
 }
 
 extension PostAttachmentsView : Private {
@@ -140,7 +141,11 @@ extension PostAttachmentsView : Public {
         UIView.animate(withDuration: 0.3, animations: {
             self.superview?.layoutIfNeeded()
         }) 
-
+    }
+    
+    func removeActivityAt(index: Int) {
+        guard let cellAtIndex = self.collectionView?.cellForItem(at: IndexPath(item:index, section: 0)) else { return }
+        (cellAtIndex  as! PostAttachmentsViewCell).viewWithTag(77)?.removeFromSuperview()
     }
 }
 

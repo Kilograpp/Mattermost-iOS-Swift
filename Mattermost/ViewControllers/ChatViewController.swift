@@ -531,6 +531,8 @@ extension ChatViewController: Request {
             self.resultsObserver.prepareResults()
             self.resultsObserver.subscribeNotifications()
             
+            guard post.channel.identifier == self.channel.identifier else { return }
+            
             let indexPath =  self.resultsObserver.indexPathForPost(post)
             self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         }

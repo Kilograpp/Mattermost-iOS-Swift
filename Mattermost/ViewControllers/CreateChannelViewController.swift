@@ -128,6 +128,7 @@ extension CreateChannelViewController: Navigation {
     
     func returnToNew(channel: Channel) {
         (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(channel)
+        ChannelObserver.sharedObserver.selectedChannel = channel
         _ = self.navigationController?.popViewController(animated: true)
     }
 }
