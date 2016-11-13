@@ -45,6 +45,10 @@ final class LeftMenuViewController: UIViewController {
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification),
                                                object: nil)
         NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadChannels),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
                                                selector: #selector(stopTimer),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
                                                object: nil)
@@ -72,6 +76,11 @@ final class LeftMenuViewController: UIViewController {
         configureResults()
         self.tableView.reloadData()
         configureInitialSelectedChannel()
+    }
+    
+    func reloadChannels() {
+        configureResults()
+        self.tableView.reloadData()
     }
     
     func updateSelectionFor(_ channel: Channel) {

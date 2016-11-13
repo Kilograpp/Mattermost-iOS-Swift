@@ -169,7 +169,8 @@ extension SocketManager: Notifications {
             try! RealmUtils.realmForCurrentThread().write({
                 post.channel.lastPostDate = post.createdAt
             })
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
         }
     }
     
