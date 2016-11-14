@@ -106,16 +106,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbC-qU-VS1">
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="12" id="7S9-lf-dk4"/>
-                                            <constraint firstAttribute="width" constant="12" id="nrG-B0-AdM"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Channel Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="y8W-ow-Mv8">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Channel Name *" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="y8W-ow-Mv8">
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="b2Q-zh-hbH"/>
                                         </constraints>
@@ -142,10 +133,8 @@
                                     <constraint firstAttribute="trailing" secondItem="y8W-ow-Mv8" secondAttribute="trailing" constant="12" id="I2M-pT-Jy5"/>
                                     <constraint firstItem="y8W-ow-Mv8" firstAttribute="centerY" secondItem="rf3-sS-yO8" secondAttribute="centerY" id="JST-iS-fof"/>
                                     <constraint firstAttribute="trailing" secondItem="sLw-LJ-g4S" secondAttribute="trailing" id="SEg-VC-GjH"/>
-                                    <constraint firstItem="lbC-qU-VS1" firstAttribute="leading" secondItem="rf3-sS-yO8" secondAttribute="trailing" constant="4" id="SNR-bw-lhb"/>
                                     <constraint firstItem="rf3-sS-yO8" firstAttribute="leading" secondItem="kDM-bj-Dld" secondAttribute="leading" constant="12" id="aLM-tx-Rpt"/>
                                     <constraint firstItem="sLw-LJ-g4S" firstAttribute="leading" secondItem="kDM-bj-Dld" secondAttribute="leading" id="jm9-fg-BZl"/>
-                                    <constraint firstItem="lbC-qU-VS1" firstAttribute="top" secondItem="kDM-bj-Dld" secondAttribute="top" constant="27" id="p8h-sc-oIR"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Header" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xrQ-9N-sr9">

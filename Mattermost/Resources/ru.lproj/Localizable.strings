@@ -7,7 +7,7 @@
 */
 //ServerUrlViewController
 "Mattermost" = "Mattermost";
-"e.g. https://mattermost.example.com" = "пример https://mattermost.example.com";
+"e.g. https://mattermost.example.com" = "example https://mattermost.example.com";
 "All your team communication in one place, searchable and accessable anywhere." = "All your team communication in one place, searchable and accessable anywhere.";
 "Your team URL" = "URL команды";
 "Next step" = "Далее";

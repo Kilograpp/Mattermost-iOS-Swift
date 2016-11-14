@@ -81,7 +81,7 @@ extension FilesPickingController: Pickers {
         self.documentPickingModule.pick()
     }
     fileprivate func presentPickerSelector() {
-        let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach?", preferredStyle: .actionSheet)
+        let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach", preferredStyle: .actionSheet)
         
         let imagePickAction = UIAlertAction(title: "Photo/Picture", style: .default) { _ in
             self.pickImage()
