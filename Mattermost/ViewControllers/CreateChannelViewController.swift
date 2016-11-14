@@ -16,11 +16,11 @@ class CreateChannelViewController: UIViewController {
 
 //MARK: Properties
     @IBOutlet weak var channelLabel: UILabel!
-    @IBOutlet weak var nameTextField: KGTextField!
-    @IBOutlet weak var headerTextField: KGTextField!
-    @IBOutlet weak var purposeTextField: KGTextField!
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var headerPlaceholderLabel: UILabel!
+    @IBOutlet weak var headerTextView: UITextView!
+    @IBOutlet weak var purposePlaceholderLabel: UILabel!
     @IBOutlet weak var purposeTextView: UITextView!
-    @IBOutlet weak var purposeBlockHeight: NSLayoutConstraint!
     
     fileprivate var createButton: UIBarButtonItem!
     fileprivate var privateType: String! = ""
@@ -45,9 +45,9 @@ extension CreateChannelViewController: CreateChannelViewControllerConfiguration 
 fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
-    func setupNameTextField()
-    func setupHeaderTextField()
-    func setupPurposeTextField()
+   // func setupNameTextField()
+   // func setupHeaderTextField()
+   // func setupPurposeTextField()
 }
 
 fileprivate protocol Action: class {
@@ -68,9 +68,9 @@ fileprivate protocol Request: class {
 extension CreateChannelViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
-        setupNameTextField()
-        setupHeaderTextField()
-        setupPurposeTextField()
+       // setupNameTextField()
+       // setupHeaderTextField()
+       // setupPurposeTextField()
     }
     
     func setupNavigationBar() {
@@ -84,7 +84,7 @@ extension CreateChannelViewController: Setup {
         self.navigationItem.rightBarButtonItem = self.createButton
     }
     
-    func setupNameTextField() {
+ /*   func setupNameTextField() {
         self.nameTextField.lineHeight = 0
         self.nameTextField.selectedLineHeight = 0
         self.nameTextField.delegate = self
@@ -104,7 +104,7 @@ extension CreateChannelViewController: Setup {
         self.purposeTextField.lineHeight = 0
         self.purposeTextField.selectedLineHeight = 0
         self.purposeTextField.tag = 2
-    }
+    }*/
 }
 
 
@@ -138,7 +138,7 @@ extension CreateChannelViewController: Navigation {
 extension CreateChannelViewController: Request {
     func createChannel() {
         let name = self.nameTextField.text
-        let header = self.headerTextField.text
+        let header = self.headerTextView.text
         let purpose = self.purposeTextView.text
         self.createButton.isEnabled = false
         Api.sharedInstance.createChannel(self.privateType, name: name!, header: header!, purpose: purpose!) { (channel, error) in
@@ -164,19 +164,6 @@ extension CreateChannelViewController {
         
         self.channelLabel.text = name?.capitalized[0]
     }
-    
-    func updatePurposeBlock() {
-        let text = self.purposeTextView.text
-        let visible = ((text?.characters.count)! > 0)
-        self.purposeTextField.setTitleVisible(visible, animated: true, animationCompletion: {
-            self.purposeTextField.text = visible ? " " : ""
-        })
-
-        let baseSize = CGSize(width: self.purposeTextView.frame.size.width, height: CGFloat(MAXFLOAT))
-        let blockHeight = 40 + self.purposeTextView.sizeThatFits(baseSize).height
-        self.purposeBlockHeight.constant = CGFloat(blockHeight)
-        self.purposeTextView.superview?.layoutIfNeeded()
-    }
 }
 
 
@@ -201,7 +188,12 @@ extension CreateChannelViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let newString: NSString = textView.text! as NSString
         textView.text = newString.replacingCharacters(in: range, with: text)
-        updatePurposeBlock()
+        if textView == self.headerTextView {
+            self.headerPlaceholderLabel.isHidden = (textView.text.characters.count > 0)
+        }
+        else {
+            self.purposePlaceholderLabel.isHidden = (textView.text.characters.count > 0)
+        }
         
         return false
     }
