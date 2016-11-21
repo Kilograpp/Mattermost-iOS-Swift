@@ -27,6 +27,7 @@ final class FileUtils {
             let result = Api.sharedInstance.baseURL().appendingPathComponent(path!.removingPercentEncoding!)
             return result
         }
+
     }
     
     static func thumbLinkForFile(_ file: File) -> URL? {
@@ -68,30 +69,21 @@ final class FileUtils {
     static func download(file: File,
                          completion: @escaping (_ error: Mattermost.Error?) -> Void,
                          progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
-        /*
-         https://mattermost.kilograpp.com/api/v3/teams/on95mnb5h7r73n373brm6eddrr/files/get/g453kw9oaifdtpawp456apa6ue/ieiutuie6jgk8g5bk6nb9rh47a/58guznqysp8ifpbi7tei61rrgr/SK%20Donbass-Sport.mp3.zip
-         */
-        
-        //let request: NSMutableURLRequest = NSMutableURLRequest(url: file.downloadURL()!)
-        let url = NSURL(string: "https://mattermost.kilograpp.com/api/v3/teams/on95mnb5h7r73n373brm6eddrr/files/get/g453kw9oaifdtpawp456apa6ue/ieiutuie6jgk8g5bk6nb9rh47a/58guznqysp8ifpbi7tei61rrgr/SK%20Donbass-Sport.mp3.zip")
-        let request: NSMutableURLRequest = NSMutableURLRequest(url: url as! URL)
+        let request: NSMutableURLRequest = NSMutableURLRequest(url: file.downloadURL()!)
         request.httpMethod = "GET"
         
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let fileName = /*file.downloadURL()?*/url?.lastPathComponent
-        let filePath = paths[0].appending("/SK%20Donbass-Sport.mp3.zip"/*file.name!*/)
+        let fileName = "/" + (file.downloadURL()?.lastPathComponent)!//"/SK%20Donbass-Sport.mp3.zip"//file.downloadURL()?.lastPathComponent///*file.downloadURL()?*/url?.lastPathComponent
+        let filePath = paths[0].appending(fileName/*"/SK%20Donbass-Sport.mp3.zip"*//*file.name!*/)
         
         let operation: AFRKHTTPRequestOperation = AFRKHTTPRequestOperation(request: request as URLRequest!)
-        let fullPath = paths[0].appending(/*fileName!*/"/SK%20Donbass-Sport.mp3.zip")
+        let fullPath = paths[0].appending(fileName/*"/SK%20Donbass-Sport.mp3.zip"*/)
         
         operation.outputStream = OutputStream(toFileAtPath: fullPath, append: false)
         
         operation.setDownloadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
-            print("bytesRead = ", written)
-            print("totalBytesRead = ", totalWritten)
-            print("totalBytesExpectedToRead = ", expectedToWrite)
-            print("progress = ", totalWritten/expectedToWrite * 100)
-            //progress(totalBytesRead/(float)totalBytesExpectedToRead * 100.f);
+            let result = Float(totalWritten) / Float(expectedToWrite)
+            progress("capId", result)
         }
         
         operation.setCompletionBlockWithSuccess({ (operation: AFRKHTTPRequestOperation?, responseObject: Any?) in

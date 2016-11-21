@@ -47,6 +47,7 @@ class AttachmentFileView: UIView {
     @objc fileprivate func tapAction() {
         self.iconImageView.image = UIImage(named: "chat_downloading_icon")
         showProgressView()
+        startDownloadingFile()
     }
     
     fileprivate func showProgressView() {
@@ -60,31 +61,22 @@ class AttachmentFileView: UIView {
         
         self.addSubview(self.progressView)
         self.progressView.setProgress(0.05, animated: true)
-        
-   /*     DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-            self.capWork()
-            DispatchQueue.main.sync(execute: {
-                    self.progressView.removeFromSuperview()
-                  })
-        }*/
-    }
-    
-    fileprivate func capWork() {
-        var progress: Float = 0
-        while progress < Float(1) {
-            progress += 0.01
-            DispatchQueue.main.sync(execute: {
-                self.progressView.progress = progress
-            })
-            usleep(50000);
-        }
     }
 }
 
 
 extension AttachmentFileView {
     fileprivate func startDownloadingFile() {
-    
+        FileUtils.download(file: self.file, completion: { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                return
+            }
+            }) { (identifier, progress) in
+           //     DispatchQueue.main.sync(execute: {
+                    self.progressView.progress = progress
+             //   })
+        }
     }
     
     fileprivate func stopDownloadingFile() {

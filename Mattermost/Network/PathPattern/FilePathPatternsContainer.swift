@@ -18,7 +18,7 @@ private protocol PathPatterns: class {
 
 final class FilePathPatternsContainer: PathPatterns {
     static func downloadPathPattern() -> String {
-        return "teams/:\(File.teamIdentifierPath())/files/get_info:\(FileAttributes.rawLink)"
+        return "teams/:\(File.teamIdentifierPath())/files/get:\(FileAttributes.rawLink)"
     }
     static func thumbPathPattern() -> String {
         return "teams/:\(File.teamIdentifierPath())/files/get:thumbPostfix\\.jpg"

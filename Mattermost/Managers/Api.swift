@@ -662,12 +662,12 @@ extension Api : FileApi {
             }) { (error) in
                 
         }
-        
-        /*self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            print(mappingResult)
-            }) { (error) in
-                print(error?.message)
-        }*/
+    }
+    
+    func download(file: File,
+                  completion: @escaping (_ identifier: String, _ error: Mattermost.Error?) -> Void,
+                  progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
+    
     }
 }
 
