@@ -12,7 +12,6 @@ import RealmSwift
 final class TeamViewController: UIViewController {
     
 //MARK: Properties
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -22,40 +21,7 @@ final class TeamViewController: UIViewController {
     fileprivate var results: Results<Team>! = nil
     fileprivate lazy var builder: TeamCellBuilder = TeamCellBuilder(tableView: self.tableView)
     
-}
-
-
-private protocol TeamViewControllerLifeCycle {
-    func viewDidLoad()
-}
-
-private protocol TeamViewControllerSetup {
-    func initialSetup()
-    func setupTitleLabel()
-    func setupTableView()
-    func setupNavigationView()
-}
-
-private protocol TeamViewControllerAction {
-    func backAction()
-}
-
-private protocol TeamViewControllerNavigation {
-    func returnToPrevious()
-}
-
-private protocol TeamViewControllerConfiguration {
-    func prepareResults()
-}
-
-private protocol TeamViewControllerRequest {
-    func reloadChat()
-}
-
-
-//MARK: TeamViewControllerLifeCycle
-
-extension TeamViewController: TeamViewControllerLifeCycle {
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -65,9 +31,32 @@ extension TeamViewController: TeamViewControllerLifeCycle {
 }
 
 
-//MARK: TeamViewControllerSetup
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupTitleLabel()
+    func setupTableView()
+    func setupNavigationView()
+}
 
-extension TeamViewController: TeamViewControllerSetup {
+fileprivate protocol Action {
+    func backAction()
+}
+
+fileprivate protocol Navigation {
+    func returnToPrevious()
+}
+
+fileprivate protocol Configuration {
+    func prepareResults()
+}
+
+fileprivate protocol Request {
+    func reloadChat()
+}
+
+
+//MARK: Setup
+extension TeamViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupTitleLabel()
@@ -104,27 +93,24 @@ extension TeamViewController: TeamViewControllerSetup {
 }
 
 
-//MARK: TeamViewControllerAction
-
-extension TeamViewController: TeamViewControllerAction {
+//MARK: Action
+extension TeamViewController: Action {
     func backAction() {
         returnToPrevious()
     }
 }
 
 
-//MARK: TeamViewControllerNavigation
-
-extension TeamViewController: TeamViewControllerNavigation {
+//MARK: Navigation
+extension TeamViewController: Navigation {
     func returnToPrevious() {
         self.dismiss(animated: true, completion: nil)
     }
 }
 
 
-//MARK: TeamViewControllerConfiguration
-
-extension  TeamViewController: TeamViewControllerConfiguration  {
+//MARK: Configuration
+extension TeamViewController: Configuration {
     func prepareResults() {
         let sortName = TeamAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Team.self).sorted(byProperty: sortName, ascending: true)
@@ -132,11 +118,9 @@ extension  TeamViewController: TeamViewControllerConfiguration  {
 }
 
 
-//MARK: TeamViewControllerRequest
-
-extension TeamViewController: TeamViewControllerRequest {
+//MARK: Request
+extension TeamViewController: Request {
     func reloadChat() {
-        //showLoaderView()
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStartNotification), object: nil))
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName), object: nil))
         
@@ -165,7 +149,6 @@ extension TeamViewController: TeamViewControllerRequest {
 
 
 //MARK: UITableViewDataSource
-
 extension TeamViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.results.count
@@ -179,7 +162,6 @@ extension TeamViewController: UITableViewDataSource {
 
 
 //MARK: UITableViewDelegate
-
 extension TeamViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.builder.cellHeight()
@@ -205,6 +187,7 @@ extension TeamViewController: UITableViewDelegate {
         }
     }
 }
+
 
 //MARK: LoaderView
 extension TeamViewController {

@@ -10,7 +10,7 @@ import RealmSwift
 
 final class LeftMenuViewController: UIViewController {
 
-//MARK: - Property
+//MARK: Property
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamNameLabel: UILabel!
@@ -26,7 +26,7 @@ final class LeftMenuViewController: UIViewController {
     //temp timer
     var statusesTimer: Timer?
 
-//MARK: - Override
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,6 +43,10 @@ final class LeftMenuViewController: UIViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateResults),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadChannels),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification),
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(stopTimer),
@@ -72,6 +76,11 @@ final class LeftMenuViewController: UIViewController {
         configureResults()
         self.tableView.reloadData()
         configureInitialSelectedChannel()
+    }
+    
+    func reloadChannels() {
+        configureResults()
+        self.tableView.reloadData()
     }
     
     func updateSelectionFor(_ channel: Channel) {
@@ -136,7 +145,7 @@ extension LeftMenuViewController : Configure {
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
     }
     
-    fileprivate func configureResults () {
+    fileprivate func configureResults() {
         let publicTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PublicTypeChannel, DataManager.sharedInstance.currentTeam!)
         let privateTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PrivateTypeChannel, DataManager.sharedInstance.currentTeam!)
         let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
@@ -223,14 +232,15 @@ extension LeftMenuViewController : UITableViewDelegate {
         switch section {
         case 0:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PublicTypeChannel))
-         //   view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
+            view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
             break
         case 1:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PrivateTypeChannel))
-         //   view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
+            view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
             break
         case 2:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))
+            view.hideMoreButton()
             break
         default:
             break

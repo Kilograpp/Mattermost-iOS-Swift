@@ -8,12 +8,14 @@
 
 import Foundation
 import SOCKit
+import RestKit
 
 private protocol Interface {
     static func downloadLinkForFile(_ file: File) -> URL?
     static func thumbLinkForFile(_ file: File) -> URL?
     static func fileIsImage(_ file: File) -> Bool
     static func thumbPostfixForInternalFile(_ file: File) -> String?
+    static func download(file: File, completion: @escaping (_ error: Mattermost.Error?) -> Void, progress: @escaping (_ identifier: String, _ value: Float) -> Void)
 }
 
 final class FileUtils {
@@ -23,7 +25,6 @@ final class FileUtils {
         } else {
             let path = SOCStringFromStringWithObject(FilePathPatternsContainer.downloadPathPattern(), file)
             let result = Api.sharedInstance.baseURL().appendingPathComponent(path!.removingPercentEncoding!)
-            
             return result
         }
 
@@ -63,5 +64,40 @@ final class FileUtils {
             return false
         }
 
+    }
+    
+    static func download(file: File,
+                         completion: @escaping (_ error: Mattermost.Error?) -> Void,
+                         progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
+        let request: NSMutableURLRequest = NSMutableURLRequest(url: file.downloadURL()!)
+        request.httpMethod = "GET"
+        
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let fileName = "/" + (file.downloadURL()?.lastPathComponent)!//"/SK%20Donbass-Sport.mp3.zip"//file.downloadURL()?.lastPathComponent///*file.downloadURL()?*/url?.lastPathComponent
+        let filePath = paths[0].appending(fileName/*"/SK%20Donbass-Sport.mp3.zip"*//*file.name!*/)
+        
+        let operation: AFRKHTTPRequestOperation = AFRKHTTPRequestOperation(request: request as URLRequest!)
+        let fullPath = paths[0].appending(fileName/*"/SK%20Donbass-Sport.mp3.zip"*/)
+        
+        operation.outputStream = OutputStream(toFileAtPath: fullPath, append: false)
+        
+        operation.setDownloadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
+            let result = Float(totalWritten) / Float(expectedToWrite)
+            progress("capId", result)
+        }
+        
+        operation.setCompletionBlockWithSuccess({ (operation: AFRKHTTPRequestOperation?, responseObject: Any?) in
+            let trimmedFilePath = (((filePath as NSString).deletingLastPathComponent) as NSString).deletingLastPathComponent
+            let filePathLastComponent = "/" + ((fileName as? NSString)?.lastPathComponent)!
+            let finalFilePath = trimmedFilePath + filePathLastComponent
+            
+            print(finalFilePath)
+            completion(nil)
+            }, failure: { (operation: AFRKHTTPRequestOperation?, error: Swift.Error?) -> Void in
+              print(error)
+                
+                //completion(error as! Error?)
+        })
+        operation.start()
     }
 }

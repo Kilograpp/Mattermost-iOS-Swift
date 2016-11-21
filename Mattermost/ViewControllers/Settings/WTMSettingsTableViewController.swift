@@ -124,13 +124,13 @@ extension WTMSettingsTableViewController: Request {
 //MARK: UITableViewDataSource
 extension WTMSettingsTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return self.builder.numberOfSections()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == 0) ? 4 : 1
+        return self.builder.numberOfRows(section: section)
     }
-    
+ 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return self.builder.cellFor(notifyProps: self.notifyProps!, indexPath: indexPath)
     }
@@ -144,6 +144,18 @@ extension WTMSettingsTableViewController {
         
         self.saveButton.isEnabled = true
         self.builder.switchCellState(indexPath: indexPath)
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return self.builder.cellHeight(section: indexPath.section)
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.builder.headerTitle(section: section)
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return self.builder.footerTitle(section: section)
     }
 }
 

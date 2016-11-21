@@ -15,9 +15,12 @@ protocol CreateChannelViewControllerConfiguration: class {
 class CreateChannelViewController: UIViewController {
 
 //MARK: Properties
-    @IBOutlet weak var nameTextField: KGTextField!
-    @IBOutlet weak var headerTextField: KGTextField!
-    @IBOutlet weak var porpuseTextField: KGTextField!
+    @IBOutlet weak var channelLabel: UILabel!
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var headerPlaceholderLabel: UILabel!
+    @IBOutlet weak var headerTextView: UITextView!
+    @IBOutlet weak var purposePlaceholderLabel: UILabel!
+    @IBOutlet weak var purposeTextView: UITextView!
     
     fileprivate var createButton: UIBarButtonItem!
     fileprivate var privateType: String! = ""
@@ -27,11 +30,6 @@ class CreateChannelViewController: UIViewController {
         super.viewDidLoad()
 
         initialSetup()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
@@ -47,9 +45,9 @@ extension CreateChannelViewController: CreateChannelViewControllerConfiguration 
 fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
-    func setupNameTextField()
-    func setupHeaderTextField()
-    func setupPorpuseTextField()
+   // func setupNameTextField()
+   // func setupHeaderTextField()
+   // func setupPurposeTextField()
 }
 
 fileprivate protocol Action: class {
@@ -70,7 +68,9 @@ fileprivate protocol Request: class {
 extension CreateChannelViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
-        setupNameTextField()
+       // setupNameTextField()
+       // setupHeaderTextField()
+       // setupPurposeTextField()
     }
     
     func setupNavigationBar() {
@@ -84,28 +84,38 @@ extension CreateChannelViewController: Setup {
         self.navigationItem.rightBarButtonItem = self.createButton
     }
     
-    func setupNameTextField() {
+ /*   func setupNameTextField() {
         self.nameTextField.lineHeight = 0
+        self.nameTextField.selectedLineHeight = 0
+        self.nameTextField.delegate = self
+        self.nameTextField.tag = 0
     }
     
     func setupHeaderTextField() {
-    
+        self.headerTextField.lineHeight = 0
+        self.headerTextField.selectedLineHeight = 0
+        self.headerTextField.delegate = self
+        self.headerTextField.tag = 1
     }
     
-    func setupPorpuseTextField() {
-    
-    }
+    func setupPurposeTextField() {
+        self.purposeTextField.delegate = self
+        self.purposeTextField.textColor = UIColor.clear
+        self.purposeTextField.lineHeight = 0
+        self.purposeTextField.selectedLineHeight = 0
+        self.purposeTextField.tag = 2
+    }*/
 }
 
 
 //MARK: Action
 extension CreateChannelViewController: Action {
     func backAction() {
-        self.returnToChannel()
+        returnToChannel()
     }
     
     func createAction() {
-     //   saveResults()
+        createChannel()
     }
 }
 
@@ -115,10 +125,76 @@ extension CreateChannelViewController: Navigation {
     func returnToChannel() {
         _ = self.navigationController?.popViewController(animated: true)
     }
+    
+    func returnToNew(channel: Channel) {
+        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(channel)
+        ChannelObserver.sharedObserver.selectedChannel = channel
+        _ = self.navigationController?.popViewController(animated: true)
+    }
 }
 
 
 //MARK: Request
 extension CreateChannelViewController: Request {
+    func createChannel() {
+        let name = self.nameTextField.text
+        let header = self.headerTextView.text
+        let purpose = self.purposeTextView.text
+        self.createButton.isEnabled = false
+        Api.sharedInstance.createChannel(self.privateType, name: name!, header: header!, purpose: purpose!) { (channel, error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                self.createButton.isEnabled = true
+                return
+            }
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was successfully created", viewController: self)
+            self.returnToNew(channel: channel!)
+        }
+    }
+}
 
+
+//MARK: Interface
+extension CreateChannelViewController {
+    func updateChannelLabel() {
+        let name = self.nameTextField.text
+        guard (name?.characters.count)! > 0 else { return }
+        
+        self.channelLabel.text = name?.capitalized[0]
+    }
+}
+
+
+//MARK: UITextFieldsDelegate
+extension CreateChannelViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let newString: NSString = textField.text! as NSString
+        guard newString.length <= 30 else { return false }
+        textField.text = newString.replacingCharacters(in: range, with: string)
+        if textField == self.nameTextField {
+            self.createButton.isEnabled = (newString.length > 0)
+            updateChannelLabel()
+        }
+        
+        return false
+    }
+}
+
+
+//MARK: UITextViewDelegate
+extension CreateChannelViewController: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newString: NSString = textView.text! as NSString
+        textView.text = newString.replacingCharacters(in: range, with: text)
+        if textView == self.headerTextView {
+            self.headerPlaceholderLabel.isHidden = (textView.text.characters.count > 0)
+        }
+        else {
+            self.purposePlaceholderLabel.isHidden = (textView.text.characters.count > 0)
+        }
+        
+        return false
+    }
 }

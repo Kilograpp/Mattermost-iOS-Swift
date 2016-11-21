@@ -90,7 +90,6 @@ private protocol Request {
 
 
 //MARK: LifeСycle
-
 extension ChatViewController {
     
     override func viewDidLoad() {
@@ -137,7 +136,6 @@ extension ChatViewController {
 =======
 >>>>>>> 4acfd2744fdb9e7f87e45e37a3d1f5c2ddd077ca
 //MARK: Setup
-
 extension ChatViewController: Setup {
     fileprivate func initialSetup() {
         setupInputBar()
@@ -276,9 +274,7 @@ extension ChatViewController: Setup {
 
 
 //MARK: Private
-
 extension ChatViewController : Private {
-
 //TopActivityIndicator
     func showTopActivityIndicator() {
         let activityIndicatorHeight = self.topActivityIndicatorView!.bounds.height
@@ -360,7 +356,6 @@ extension ChatViewController : Private {
 
 
 //MARK: Action
-
 extension ChatViewController: Action {
     @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
         let state = (self.menuContainerViewController.menuState == MFSideMenuStateLeftMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateLeftMenuOpen
@@ -428,7 +423,6 @@ extension ChatViewController: Action {
 
 
 //MARK: Navigation
-
 extension ChatViewController: Navigation {
     func proceedToSearchChat() {
         let transaction = CATransition()
@@ -454,7 +448,6 @@ extension ChatViewController: Navigation {
 
 
 //MARK: Requests
-
 extension ChatViewController: Request {
     func loadFirstPageAndReload() {
         self.isLoadingInProgress = true
@@ -491,6 +484,7 @@ extension ChatViewController: Request {
 
             self.isLoadingInProgress = false
             self.hasNextPage = true
+            Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in })
         })
     }
     
@@ -541,6 +535,8 @@ extension ChatViewController: Request {
             self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
             self.resultsObserver.subscribeNotifications()
+            
+            guard post.channel.identifier == self.channel.identifier else { return }
             
             let indexPath =  self.resultsObserver.indexPathForPost(post)
             self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
@@ -606,7 +602,6 @@ extension ChatViewController: Request {
 
 
 //MARK: UITableViewDataSource
-
 extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         if (tableView == self.tableView) {
@@ -705,11 +700,8 @@ extension ChatViewController {
 }
 
 
-
 //MARK: ChannelObserverDelegate
-
 extension ChatViewController: ChannelObserverDelegate {
-
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void {
         //old channel
         //unsubscribing from realm and channelActions

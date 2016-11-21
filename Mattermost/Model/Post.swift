@@ -285,7 +285,6 @@ extension Post: Computations {
     fileprivate func resetStatus() {
         self.status = .default
     }
-    
 
     func computeMissingFields() {
         computeAttributedString()

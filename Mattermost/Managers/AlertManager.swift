@@ -9,8 +9,6 @@
 import Foundation
 
 //refactor this. temp functions
-
-
 enum AlertType {
     case warning
     case error

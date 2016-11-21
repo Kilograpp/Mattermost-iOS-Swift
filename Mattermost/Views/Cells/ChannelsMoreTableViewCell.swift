@@ -16,7 +16,6 @@ protocol ChannelsMoreTableViewCellConfiguration {
     func configureWith(channel: Channel)
     func configureAvatarForPrivate(channel: Channel)
     func configureAvatarForPublic(channel: Channel)
-    
 }
 
 class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
@@ -25,8 +24,6 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
     let nameLabel = UILabel()
     let checkBoxButton = UIButton()
     let separatorView = UIView()
-    
-    var checkBoxHandler : (() -> Void)?
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -175,7 +172,7 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellSetup {
         self.checkBoxButton.layer.borderWidth = 1
         self.checkBoxButton.layer.masksToBounds = true
         self.checkBoxButton.setImage(UIImage(named: "check_blue"), for: .selected)
-        self.checkBoxButton.addTarget(self, action: #selector(checkBoxAction), for: .touchUpInside)
+        self.checkBoxButton.isUserInteractionEnabled = false
         self.addSubview(self.checkBoxButton)
     }
     
@@ -213,17 +210,5 @@ extension ChannelsMoreTableViewCell {
         
         self.avatarImageView.image = nil
         self.nameLabel.text = nil
-    }
-}
-
-
-//MARK: Action
-
-extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellAction {
-    func checkBoxAction() {
-        self.checkBoxButton.isSelected = !self.checkBoxButton.isSelected
-        if (self.checkBoxHandler != nil) {
-            self.checkBoxHandler!()
-        }
     }
 }

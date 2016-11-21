@@ -10,11 +10,12 @@ import WebImage
 import RealmSwift
 
 final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
-
+    
+//MARK: Properties
     fileprivate let tableView = UITableView()
     fileprivate var attachments : List<File>!
     
-
+//MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         

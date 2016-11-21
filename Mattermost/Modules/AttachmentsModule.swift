@@ -31,6 +31,7 @@ final class AttachmentsModule {
     fileprivate var items: [AssignedAttachmentViewItem] = []
     var fileUploadingInProgress: Bool = true {
         didSet {
+            //if self.fileUploadingInProgress { print("done"); self.dataSource.tableView(attachmentsModule: self).reloadData() }
             self.delegate.uploading(inProgress: self.fileUploadingInProgress)
         }
     }
@@ -43,8 +44,6 @@ final class AttachmentsModule {
         self.dataSource.postAttachmentsView(attachmentsModule: self).delegate = self
         self.dataSource.postAttachmentsView(attachmentsModule: self).dataSource = self
     }
-    
-    
 }
 
 fileprivate protocol AttachmentsViewControls {
@@ -70,7 +69,17 @@ extension AttachmentsModule: Interface {
         items.append(contentsOf: attachments)
         
         PostUtils.sharedInstance.upload(items: attachments, channel: self.dataSource.channel(attachmentsModule: self), completion: { (finished, error, item) in
-            defer { self.fileUploadingInProgress = finished }
+            defer {
+                
+                print("////////////////////")
+                print(item.identifier)
+                print(self.items.last?.identifier)
+                let index = self.items.index(of: item)
+                print("finish = ", index)
+                if index != nil { self.dataSource.postAttachmentsView(attachmentsModule: self).removeActivityAt(index: index!) }
+                print("////////////////////")
+                self.fileUploadingInProgress = finished
+            }
 
             guard let error = error else { return }
             self.show(error: error)
@@ -133,7 +142,7 @@ extension AttachmentsModule: AttachmentsViewControls {
 
 extension AttachmentsModule: UserInteraction {
     fileprivate func show(error: Error) {
-        AlertManager.sharedManager.showErrorWithMessage(message: error.message, viewController: self.viewController)
+        AlertManager.sharedManager.showErrorWithMessage(message: error.message!, viewController: self.viewController)
     }
 }
 

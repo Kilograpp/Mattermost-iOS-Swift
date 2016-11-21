@@ -10,46 +10,14 @@ import Foundation
 
 final class AboutViewController: UIViewController {
 
-//MARK: - Properties
-    
+//MARK: Properties
     @IBOutlet weak var iconImageView: UIImageView?
     @IBOutlet weak var mattermostTextView: UITextView?
     @IBOutlet weak var kilograppTextView: UITextView?
     
     var iconsResizeAnimationTimer: Timer?
-    
-}
 
-
-private protocol AboutViewControllerLifeCycle {
-    func viewDidLoad()
-    func viewWillAppear(_ animated: Bool)
-    func viewWillDisappear(_ animated: Bool)
-}
-
-private protocol AboutViewControllerSetup {
-    func initialSetup()
-    func setupNavigationBar()
-    func setupLinks()
-    func setupTimer()
-}
-
-private protocol AboutViewControllerAction {
-    func backAction()
-}
-
-private protocol AboutViewControllerNavigation {
-    func returnToChat()
-}
-
-private protocol AboutViewControllerHelper {
-    func iconResizeAnimation()
-}
-
-
-//MARK: AboutViewController
-
-extension AboutViewController: AboutViewControllerLifeCycle {
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -74,9 +42,28 @@ extension AboutViewController: AboutViewControllerLifeCycle {
 }
 
 
-//MARK: AboutViewControllerSetup
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupLinks()
+    func setupTimer()
+}
 
-extension AboutViewController: AboutViewControllerSetup {
+fileprivate protocol Action {
+    func backAction()
+}
+
+fileprivate protocol Navigation {
+    func returnToChat()
+}
+
+fileprivate protocol Helper {
+    func iconResizeAnimation()
+}
+
+
+//MARK: Setup
+extension AboutViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupLinks()
@@ -110,27 +97,24 @@ extension AboutViewController: AboutViewControllerSetup {
 }
 
 
-//MARK: AboutViewControllerAction
-
-extension AboutViewController: AboutViewControllerAction {
+//MARK: Action
+extension AboutViewController: Action {
     func backAction() {
         returnToChat()
     }
 }
 
 
-//MARK: AboutViewControllerNavigation
-
-extension AboutViewController: AboutViewControllerNavigation {
+//MARK: Navigation
+extension AboutViewController: Navigation {
     func returnToChat() {
        _ = self.navigationController?.popViewController(animated: true)
     }
 }
 
 
-//MARK: AboutViewControllerHelper
-
-extension AboutViewController: AboutViewControllerHelper {
+//MARK: Helper
+extension AboutViewController: Helper {
     func iconResizeAnimation() {
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDelegate(self)
