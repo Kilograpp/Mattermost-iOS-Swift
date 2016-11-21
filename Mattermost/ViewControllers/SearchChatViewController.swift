@@ -301,6 +301,11 @@ extension SearchChatViewController: UITableViewDelegate {
 //MARK: UITextFieldDelegate
 
 extension SearchChatViewController: UITextFieldDelegate {
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        self.configureForSearchStage(0)
+        return true
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
     }
