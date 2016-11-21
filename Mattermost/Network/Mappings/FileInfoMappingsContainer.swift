@@ -21,14 +21,21 @@ class FileInfoMappingsContainer: BaseMappingsContainer {
 //MARK: ResponseMappings
 extension FileInfoMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(with: FileInfo.self)
-        mapping?.addAttributeMappings(from: [
+        let mapping = super.mapping()
+        mapping.addAttributeMappings(from: [
+            "user_id"           : FileInfoAttributes.userId.rawValue,
+            "post_id"           : FileInfoAttributes.postId.rawValue,
+            "create_at"         : FileInfoAttributes.createAt.rawValue,
+            "update_at"         : FileInfoAttributes.updateAt.rawValue,
+            "delete_at"         : FileInfoAttributes.deleteAt.rawValue,
+            "name"              : FileInfoAttributes.name.rawValue,
             "extension"         : FileInfoAttributes.ext.rawValue,
-            "filename"          : FileInfoAttributes.name.rawValue,
-            "has_preview_image" : FileInfoAttributes.hasPreview.rawValue,
+            "size"              : FileInfoAttributes.size.rawValue,
             "mime_type"         : FileInfoAttributes.mimeType.rawValue,
-            "size"              : FileInfoAttributes.size.rawValue
+            "width"             : FileInfoAttributes.width.rawValue,
+            "height"            : FileInfoAttributes.height.rawValue,
+            "has_preview_image" : FileInfoAttributes.hasPreview.rawValue
             ])
-        return mapping!
+        return mapping
     }
 }

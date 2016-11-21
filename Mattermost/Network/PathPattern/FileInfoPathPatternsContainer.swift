@@ -14,6 +14,6 @@ private protocol PathPatterns: class {
 
 class FileInfoPathPatternsContainer: PathPatterns {
     static func getInfoPathPattern() -> String {
-        return "teams/:path/files/get_info/:path/:path/:path/:path"
+        return "files/:\(FileAttributes.identifier)/get_info"
     }
 }
