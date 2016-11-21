@@ -26,7 +26,6 @@ final class PreferenceMappingsContainer: BaseMappingsContainer {
 
 
 //MARK: RequestMapping
-
 extension PreferenceMappingsContainer: RequestMapping {
     static func preferenceRequestMapping() -> RKObjectMapping {
         let mapping = RKObjectMapping.request()
@@ -42,7 +41,6 @@ extension PreferenceMappingsContainer: RequestMapping {
 
 
 //MARK: ResponseMappings
-
 extension PreferenceMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()

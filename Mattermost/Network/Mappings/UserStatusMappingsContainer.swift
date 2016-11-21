@@ -10,7 +10,6 @@ import Foundation
 import RestKit
 
 final class UserStatusMappingsContainer: RKObjectMapping {
-    
     static func mapping() -> RKObjectMapping {
         let mapping = RKObjectMapping(for: UserStatus.self)
         mapping?.forceCollectionMapping = true

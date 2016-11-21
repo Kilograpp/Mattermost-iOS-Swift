@@ -25,6 +25,8 @@ final class ChannelResponseDescriptorsContainer: BaseResponseDescriptorsContaine
     
 }
 
+
+//MARK: ChannelResponseDescriptors
 extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
     static func channelsListResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),

@@ -73,4 +73,27 @@ final class StringUtils {
     static func commaTailedString(_ string: String) -> String {
      return (string.characters.count > 0) ? (string + ", ") : string
     }
+    
+    static func suffixedFor(size: Int) -> String {
+            var floatSize = Float(size)
+            var pow = 0
+            
+            while (floatSize / 1024 >= 1) {
+                floatSize = floatSize / 1024
+                pow += 1
+            }
+        
+            switch (pow) {
+            case 0:
+                return String(format: "%.1F B", floatSize)
+            case 1:
+                return String(format: "%.1F KB", floatSize)
+            case 2:
+                return String(format: "%.1F MB", floatSize)
+            case 3:
+                return String(format: "%.1F GB", floatSize)
+            default:
+                return ""
+        }
+    }
 }

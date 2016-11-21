@@ -20,9 +20,9 @@ final class UserMappingsContainer: BaseMappingsContainer {
     }
 }
 
-//MARK: - ResponseMappings
+
+//MARK: ResponseMappings
 extension UserMappingsContainer: ResponseMappings {
-    
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
@@ -55,5 +55,4 @@ extension UserMappingsContainer: ResponseMappings {
                                                          with: NotifyPropsMappingsContainer.mapping()))
         return mapping
     }
-    
 }

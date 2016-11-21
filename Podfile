@@ -8,4 +8,5 @@ target 'Mattermost' do
   pod 'Fabric'
   pod 'Crashlytics'
   pod 'RestKit'
+  pod 'MRProgress'
 end

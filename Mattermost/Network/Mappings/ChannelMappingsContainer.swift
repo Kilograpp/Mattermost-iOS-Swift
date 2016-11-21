@@ -13,7 +13,6 @@ private protocol RequestMapping: class {
     static func createRequestMapping() -> RKObjectMapping
 }
 
-
 private protocol ResponseMappings: class {
     static func mapping() -> RKObjectMapping
     static func attendantInfoMapping() -> RKObjectMapping
@@ -44,7 +43,7 @@ extension ChannelMappingsContainer: RequestMapping {
 }
 
 
-//MARK: - ResponseMappings
+//MARK: ResponseMappings
 extension ChannelMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()

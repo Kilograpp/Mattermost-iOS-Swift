@@ -15,10 +15,18 @@ struct Error {
     init(error: Swift.Error!) {
         code = (error as NSError).code
         message = error.localizedDescription
-        
+    }
+    
+    init(errorCode: Int, errorMessage: String) {
+        code = errorCode
+        message = errorMessage
     }
     
     internal static  func errorWithGenericError(_ error: Swift.Error!) -> Mattermost.Error {
         return Error(error: error)
+    }
+    
+    internal static func errorWith(code: Int, message: String) -> Mattermost.Error {
+        return Error(errorCode: code, errorMessage: message)
     }
 }

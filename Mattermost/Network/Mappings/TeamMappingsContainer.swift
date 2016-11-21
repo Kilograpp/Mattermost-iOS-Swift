@@ -21,7 +21,8 @@ final class TeamMappingsContainer: BaseMappingsContainer {
     }
 }
 
-//MARK: - ResponseMappings
+
+//MARK: ResponseMappings
 extension TeamMappingsContainer: ResponseMappings {
     override static func mapping() -> RKObjectMapping {
         let entityMapping = super.mapping()
