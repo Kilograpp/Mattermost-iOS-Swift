@@ -355,7 +355,7 @@ extension MoreChannelsViewController: Request {
 extension MoreChannelsViewController: CompletionMessages {
     func singleChannelMessage(name: String) {
         let action = (self.addedChannelCount > 0) ? "joined " : "left "
-        let  message = "You have " + action + name + " channel"
+        let  message = "You've " + action + name + " channel"
         AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
         
     }
@@ -363,12 +363,12 @@ extension MoreChannelsViewController: CompletionMessages {
     func multipleChannelsMessage() {
         var message = ""
         if (self.addedChannelCount > 0) {
-            message = "You have joined to " + String(self.addedChannelCount)
+            message = "You've joined to " + String(self.addedChannelCount)
             message += (self.deletedChannelCount > 0) ? " channels.\n" : " channels."
             
         }
         if (self.deletedChannelCount > 0) {
-            message += "You have left the " + String(self.deletedChannelCount) + " channels."
+            message += "You've left the " + String(self.deletedChannelCount) + " channels."
         }
         AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
     }
