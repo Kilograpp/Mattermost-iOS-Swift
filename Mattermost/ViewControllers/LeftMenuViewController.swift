@@ -36,6 +36,7 @@ final class LeftMenuViewController: UIViewController {
         configureInitialSelectedChannel()
         setupChannelsObserver()
         configureStartUpdating()
+        
     }
     
     //refactor later -> ObserverUtils
@@ -74,8 +75,12 @@ final class LeftMenuViewController: UIViewController {
     
     func updateResults() {
         configureResults()
-        self.tableView.reloadData()
         configureInitialSelectedChannel()
+        self.tableView.reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        configureResults()
     }
     
     func reloadChannels() {
@@ -158,6 +163,7 @@ extension LeftMenuViewController : Configure {
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsDirect =
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
+        
     }
 }
 
@@ -264,7 +270,6 @@ extension LeftMenuViewController : Navigation {
         default:
             print("unknown channel type")
         }
-        
         self.tableView.reloadData()
         toggleLeftSideMenu()
     }

@@ -30,6 +30,14 @@ final class RealmUtils {
         })
     }
     
+    static func create(_ dictionary: [String : AnyObject]) {
+        let realm = realmForCurrentThread()
+        
+        try! realm.write({
+            realm.create(Channel.self, value: dictionary, update: true)
+        })
+    }
+    
     static func save(_ object: RealmObject) {
         let realm = realmForCurrentThread()
         

@@ -79,9 +79,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
                     Preferences.sharedInstance.serverUrl = urlAddress
                     Api.sharedInstance.checkURL(with: { ( error) in
                         if (error != nil) {
-                            let alert = UIAlertView.init(title: NSLocalizedString("Error", comment: ""), message: nil, delegate: self,
-                                cancelButtonTitle: NSLocalizedString("Cancel", comment: ""))
-                            alert.show()
+                            AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
                         } else {
                             self.performSegue(withIdentifier: "showLogin", sender: nil)
                         }

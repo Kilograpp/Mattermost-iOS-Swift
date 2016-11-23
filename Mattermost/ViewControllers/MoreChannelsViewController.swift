@@ -355,7 +355,7 @@ extension MoreChannelsViewController: Request {
 extension MoreChannelsViewController: CompletionMessages {
     func singleChannelMessage(name: String) {
         let action = (self.addedChannelCount > 0) ? "joined " : "left "
-        let  message = "You have " + action + name + " channel"
+        let  message = "You've " + action + name + " channel"
         AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
         
     }
@@ -363,31 +363,31 @@ extension MoreChannelsViewController: CompletionMessages {
     func multipleChannelsMessage() {
         var message = ""
         if (self.addedChannelCount > 0) {
-            message = "You have joined to " + String(self.addedChannelCount)
+            message = "You've joined to " + String(self.addedChannelCount)
             message += (self.deletedChannelCount > 0) ? " channels.\n" : " channels."
             
         }
         if (self.deletedChannelCount > 0) {
-            message += "You have left the " + String(self.deletedChannelCount) + " channels."
+            message += "You've left the " + String(self.deletedChannelCount) + " channels."
         }
         AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
     }
     
     func singleUserMessage(name: String) {
-        let action = (self.addedChannelCount > 0) ? "added to " : "deleted from "
+        let action = (self.addedChannelCount > 0) ? "added." : "removed."
         
-        let message = "Chat with " + name + " was " + action + "your left menu"
+        let message = "Conversation with " + name + " has been " + action
         AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
     }
     
     func multipleUsersMessage() {
         var message = ""
         if (self.addedChannelCount > 0) {
-            message = String(self.addedChannelCount) + " persons were added to left"
-            message += (self.deletedChannelCount > 0) ? " menu.\n" : " menu."
+            message = String(self.addedChannelCount) + " conversations have been "
+            message += (self.deletedChannelCount > 0) ? "added.\n" : "added."
         }
         if (self.deletedChannelCount > 0) {
-            message += String(self.deletedChannelCount) + " persons were deleted from left menu"
+            message += String(self.deletedChannelCount) + " conversations have been removed."
         }
         AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
     }

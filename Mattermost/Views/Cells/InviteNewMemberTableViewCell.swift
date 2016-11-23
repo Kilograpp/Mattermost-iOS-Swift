@@ -62,6 +62,11 @@ extension InviteNewMemberTableViewCell: InviteNewMemberTableViewCellSetup {
     func initialSetup() {
         setupIconImageView()
         setupTextField()
+        setupSeparator()
+    }
+    
+    func setupSeparator() {
+        self.separatorInset = UIEdgeInsetsMake(0, 50, 0, 0)
     }
     
     func setupIconImageView() {
