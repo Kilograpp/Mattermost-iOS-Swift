@@ -166,8 +166,14 @@ extension SocketManager: Notifications {
         if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.pendingId!) {
             RealmUtils.save(post)
             
+            for file in post.files {
+                Api.sharedInstance.getInfo(fileId: file.identifier!)
+            }
+            
             try! RealmUtils.realmForCurrentThread().write({
-                post.channel.lastPostDate = post.createdAt
+                if post.channel != nil {
+                    post.channel.lastPostDate = post.createdAt
+                }
             })
             //NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
@@ -228,7 +234,9 @@ extension SocketManager: Notifications {
             Api.sharedInstance.loadChannels(with: { (error) in
                 guard error == nil else { return }
                 channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("%K == %@", "identifier", channelIdentifier).first
-                self.handleUserJoined(user: user!, channel: channel!)
+                if channel != nil {
+                    self.handleUserJoined(user: user!, channel: channel!)
+                }
             })
         } else {
             handleUserJoined(user: user!, channel: channel!)

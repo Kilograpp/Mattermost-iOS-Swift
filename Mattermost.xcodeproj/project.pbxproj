@@ -28,10 +28,6 @@
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
-		8B0429C81DE22F7F00B537F1 /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429C71DE22F7F00B537F1 /* FileInfo.swift */; };
-		8B0429CA1DE2302E00B537F1 /* FileInfoMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */; };
-		8B0429CC1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */; };
-		8B0429D01DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
 		8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */; };
@@ -98,6 +94,7 @@
 		8B9E27CB1DC0985D00543C6C /* NSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */; };
 		8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */; };
 		8BA11FDF1DCB380C0073051A /* CommonSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA11FDE1DCB380C0073051A /* CommonSettingsTableViewCell.swift */; };
+		8BA8180D1DE63B11007FD1A7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */; };
 		8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */; };
 		8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */; };
 		8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */; };
@@ -278,10 +275,6 @@
 		4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
-		8B0429C71DE22F7F00B537F1 /* FileInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileInfo.swift; sourceTree = "<group>"; };
-		8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoMappingsContainer.swift; path = Mappings/FileInfoMappingsContainer.swift; sourceTree = "<group>"; };
-		8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoPathPatternsContainer.swift; path = PathPattern/FileInfoPathPatternsContainer.swift; sourceTree = "<group>"; };
-		8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/FileInfoResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
 		8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyProps.swift; sourceTree = "<group>"; };
@@ -350,6 +343,7 @@
 		8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSettingsTableViewController.swift; sourceTree = "<group>"; };
 		8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BA11FDE1DCB380C0073051A /* CommonSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatViewController.swift; sourceTree = "<group>"; };
 		8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingInProcessView.swift; sourceTree = "<group>"; };
 		8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchingInProcessView.xib; sourceTree = "<group>"; };
@@ -712,7 +706,6 @@
 				8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */,
 				8B77B5E51DC78C0500DF0689 /* Preference.swift */,
 				8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */,
-				8B0429C71DE22F7F00B537F1 /* FileInfo.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -811,7 +804,6 @@
 		CDB6D3CA1D7F04BE00C3018C /* RestKitResponseDescriptors */ = {
 			isa = PBXGroup;
 			children = (
-				8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */,
 				CDB6D3CD1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift */,
 				CDB6D3CF1D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift */,
 				CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */,
@@ -842,7 +834,6 @@
 				8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */,
 				8B77B5E91DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift */,
 				8B618CC41DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift */,
-				8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */,
 			);
 			name = Mappings;
 			sourceTree = "<group>";
@@ -857,7 +848,6 @@
 				CDF07ED51D7F1DC900172D1E /* UserPathPatternsContainer.swift */,
 				8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift */,
 				8BEE0C801DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift */,
-				8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */,
 			);
 			name = PathPatterns;
 			sourceTree = "<group>";
@@ -1014,6 +1004,7 @@
 				D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */,
 				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
 				4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */,
+				8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1360,7 +1351,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		D84DA70F1D22C14900DCFF4B /* Copy Carthage Frameworks */ = {
@@ -1443,7 +1434,6 @@
 				CDF07ECE1D7F129100172D1E /* ChannelPathPatternsContainer.swift in Sources */,
 				4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
-				8B0429D01DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */,
 				4B7270821DABF4C000445586 /* AlertView.swift in Sources */,
@@ -1452,6 +1442,7 @@
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
 				8B3CB3791DD269C30078DE25 /* ObjectManager.swift in Sources */,
 				D8D601381D5E007700951F18 /* Day.swift in Sources */,
+				8BA8180D1DE63B11007FD1A7 /* PreviewView.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
@@ -1485,9 +1476,7 @@
 				8B77B5E21DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift in Sources */,
 				CDF07ED41D7F1DB500172D1E /* TeamPathPatternsContainer.swift in Sources */,
 				8B3CB3431DD2675F0078DE25 /* SearchCellBuilder.swift in Sources */,
-				8B0429CA1DE2302E00B537F1 /* FileInfoMappingsContainer.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
-				8B0429C81DE22F7F00B537F1 /* FileInfo.swift in Sources */,
 				CDB6D3BD1D78925B00C3018C /* String+Localized.swift in Sources */,
 				4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */,
 				8B882D6D1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift in Sources */,
@@ -1570,7 +1559,6 @@
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
 				8B3CB3641DD268390078DE25 /* ImagePickingModule.swift in Sources */,
-				8B0429CC1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
 				8B618CC51DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift in Sources */,
 				8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */,

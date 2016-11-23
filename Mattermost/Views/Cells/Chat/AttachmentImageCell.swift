@@ -35,6 +35,9 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
         self.addSubview(self.fileImageView)
         self.fileImageView.backgroundColor = UIColor.clear
         self.fileImageView.contentMode = .scaleAspectFit
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(openImage))
+        self.fileImageView.isUserInteractionEnabled = true
+        self.fileImageView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     fileprivate func setupLabel() {
@@ -103,6 +106,13 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
                                                                    progress: nil,
                                                                    completed: imageDownloadCompletionHandler)
         }
+    }
+    
+    @objc fileprivate func openImage() {
+        let fileId = self.file.identifier
+        let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
+                                        object: nil, userInfo: ["fileId" : fileId])
+        NotificationCenter.default.post(notification as Notification)
     }
     
     fileprivate func computeFileName() {

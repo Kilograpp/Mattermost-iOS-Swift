@@ -16,6 +16,7 @@ import MFSideMenu
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
 
 //MARK: Properties
+    fileprivate var documentInteractionController: UIDocumentInteractionController?
     var channel : Channel!
     fileprivate var resultsObserver: FeedNotificationsObserver! = nil
     fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
@@ -97,6 +98,10 @@ extension ChatViewController {
         
         ChannelObserver.sharedObserver.delegate = self
         initialSetup()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
+                                               object: nil)
 
     }
     
@@ -115,6 +120,9 @@ extension ChatViewController {
         super.viewWillDisappear(animated)
         
         removeSLKKeyboardObservers()
+        NotificationCenter.default.removeObserver(self,
+                                                  name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
+                                                  object: nil)
     }
     
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
@@ -861,5 +869,52 @@ extension ChatViewController {
         let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
         
         return cellHeight * CGFloat(smilesResult.count)
+    }
+}
+
+
+extension ChatViewController {
+    func presentDocumentInteractionController(notification: NSNotification) {
+        let fileId = notification.userInfo?["fileId"]
+        let file = RealmUtils.realmForCurrentThread().object(ofType: File.self, forPrimaryKey: fileId)
+        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file?.name)!
+        
+     /*   if (file?.isImage)! {
+            self.documentInteractionController = UIDocumentInteractionController(url: URL(string: filePath)!)
+            self.documentInteractionController?.presentPreview(animated: true)
+            //print(file?._downloadLink)
+            return
+        }*/
+        
+        
+        if FileManager.default.fileExists(atPath: filePath) {
+            self.documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
+            self.documentInteractionController?.delegate = self
+            if (file?.isImage)! {
+                self.documentInteractionController?.presentPreview(animated: true)
+            } else {
+                let frame = CGRect(x: 0, y: 0, width: 10, height: 10)
+                self.documentInteractionController?.presentOpenInMenu(from: frame, in: self.view, animated: true)
+            }
+        }
+    }
+}
+
+extension ChatViewController: UIDocumentInteractionControllerDelegate {
+    func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
+        
+    }
+    func documentInteractionController(_ controller: UIDocumentInteractionController, didEndSendingToApplication application: String?) {
+        
+    }
+    func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
+        
+    }
+    func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
+        
+    }
+    
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
     }
 }

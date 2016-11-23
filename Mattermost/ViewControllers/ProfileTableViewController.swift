@@ -45,12 +45,6 @@ class ProfileViewController: UIViewController {
         super.viewWillAppear(animated)
         
         self.menuContainerViewController.panMode = .init(0)
-        
-        FileUtils.download(file: File(), completion: { (error) in
-            
-        }) { (iden, progr) in
-            
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

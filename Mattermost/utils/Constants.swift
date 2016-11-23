@@ -46,6 +46,7 @@ struct Constants {
         static let ChatLoadingStartNotification = "ChatLoadingStartNotification"
         static let ChatLoadingStopNotification  = "ChatLoadingStopNotification"
         static let ReloadLeftMenuNotification   = "ReloadLeftMenuNotification"
+        static let DocumentInteractionNotification = "DocumentInteractionNotification"
     }
     
     struct UI {

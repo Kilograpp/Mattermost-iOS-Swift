@@ -64,7 +64,7 @@ private protocol PostApi: class {
 private protocol FileApi : class {
     func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,channel: Channel, completion:  @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void, progress:  @escaping(_ identifier: String, _ value: Float) -> Void)
     func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
-    func getInfo(file: File)
+    func getInfo(fileId: String)
 }
 
 final class Api {
@@ -72,6 +72,7 @@ final class Api {
 //MARK: Properties
     static let sharedInstance = Api()
     fileprivate var _managerCache: ObjectManager?
+    fileprivate var downloadOperationsArray = Array<AFRKHTTPRequestOperation>()
     fileprivate var manager: ObjectManager  {
         if _managerCache == nil {
             _managerCache = ObjectManager(baseURL: self.computeAndReturnApiRootUrl())
@@ -160,8 +161,6 @@ extension Api: NotifyPropsApi {
                 notifyProps?.push = object.push
                 notifyProps?.pushStatus = notifyProps?.pushStatus
             }
-            
-            print(notifyProps)
             completion(nil)
             }, failure: { (error) in
                 completion(error)
@@ -270,7 +269,6 @@ extension Api: ChannelApi {
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! RealmUtils.realmForCurrentThread().write({
                 channels.forEach {$0.computeTeam()
-                print($0.displayName)
                 }
                 RealmUtils.realmForCurrentThread().add(channels, update: true)
             })
@@ -376,13 +374,10 @@ extension Api: UserApi {
             user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user
             RealmUtils.save([user, systemUser])
-            print(mappingResult)
-            print(notifyProps)
             RealmUtils.save(notifyProps!)
             
-            let uu = DataManager.sharedInstance.currentUser
-            print(uu)
-            
+            _ = DataManager.sharedInstance.currentUser
+
             SocketManager.sharedInstance.setNeedsConnect()
             completion(nil)
             }, failure: completion)
@@ -433,8 +428,16 @@ extension Api: PostApi {
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             guard !skipMapping else { completion(nil); return }
             DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
-                DispatchQueue.main.sync { completion(nil) }
+                let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                RealmUtils.save(posts)                
+                for post in posts {
+                    for file in post.files {
+                        self.getInfo(fileId: file.identifier!)
+                    }
+                }
+                DispatchQueue.main.sync {
+                    completion(nil)
+                }
             })
         }) { (error) in
             completion(error)
@@ -614,8 +617,7 @@ extension Api : FileApi {
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
         let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
         let params = ["channel_id" : channel.identifier!,
-                      "client_ids"  :item.identifier]
-        
+                      "client_ids" : item.identifier]
         
         if item.isFile {
             self.manager.postFileWith(url: item.url, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
@@ -648,26 +650,82 @@ extension Api : FileApi {
         }
     }
     
-    func getInfo(file: File) {
-        let path = file._downloadLink?.replacingOccurrences(of: "(null)", with: (DataManager.sharedInstance.currentTeam?.identifier)!)
+    func getInfo(fileId: String) {
+        var file = RealmUtils.realmForCurrentThread().object(ofType: File.self, forPrimaryKey: fileId)
+        let path = "teams/" + (DataManager.sharedInstance.currentTeam?.identifier)! + "/files/get_info" + file!.rawLink!
         
-        self.manager.getFileInfo(path: path!, success: { (fileInfo) in
+        self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
+            file = realm.object(ofType: File.self, forPrimaryKey: fileId)
+            let result = mappingResult.firstObject as! File
             try! realm.write {
-                file.size = fileInfo.size
-                file.ext = fileInfo.ext
-                file.mimeType = fileInfo.mimeType
-                file.hasPreview = fileInfo.hasPreview
+                file?.ext = result.ext
+                file?.size = result.size
+                file?.hasPreview = result.hasPreview
+                file?.mimeType = result.mimeType
             }
-            }) { (error) in
-                
+        }) { (error) in
+            print(error?.message! ?? "getInfo_error")
         }
     }
     
-    func download(file: File,
-                  completion: @escaping (_ identifier: String, _ error: Mattermost.Error?) -> Void,
-                  progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
+    func download(fileId: String,
+                         completion: @escaping (_ error: Mattermost.Error?) -> Void,
+                         progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
+        for operation in self.downloadOperationsArray {
+            if (operation.userInfo["identifier"] as! String) == fileId {
+                return
+            }
+        }
+        
+        var file = File.objectById(fileId)
+        let request: NSMutableURLRequest = NSMutableURLRequest(url: file!.downloadURL()!)
+        request.httpMethod = "GET"
+        
+        let filePath = FileUtils.localLinkFor(file: file!)
+        let operation: AFRKHTTPRequestOperation = AFRKHTTPRequestOperation(request: request as URLRequest!)
+        operation.outputStream = OutputStream(toFileAtPath: filePath, append: false)
+        operation.userInfo = ["identifier" : fileId]
+        
+        operation.setDownloadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
+            let result = Float(totalWritten) / Float(expectedToWrite)
+            print("downloading progress = ", result)
+            progress(fileId, result)
+        }
+        
+        operation.setCompletionBlockWithSuccess({ (operation: AFRKHTTPRequestOperation?, responseObject: Any?) in
+            let realm = RealmUtils.realmForCurrentThread()
+            file = realm.object(ofType: File.self, forPrimaryKey: fileId)
+            try! realm.write {
+                file?.downoloadedSize = (file?.size)!
+                file?.localLink = filePath
+            }
+            print("downloading finished")
+            self.downloadOperationsArray.removeObject(operation!)
+            completion(nil)
+        }, failure: { (operation: AFRKHTTPRequestOperation?, error: Swift.Error?) -> Void in
+            self.downloadOperationsArray.removeObject(operation!)
+            let realm = RealmUtils.realmForCurrentThread()
+            file = realm.object(ofType: File.self, forPrimaryKey: fileId)
+            try! realm.write {
+                file?.downoloadedSize = 0
+                file?.localLink = nil
+            }
+            guard (error as! NSError).code != -999 else { return }
+            completion(Error.errorWithGenericError(error))
+        })
+        operation.start()
+        self.downloadOperationsArray.append(operation)
+    }
     
+    func cancelDownloading(fileId: String) {
+        for operation in self.downloadOperationsArray {
+            if (operation.userInfo["identifier"] as! String) == fileId {
+                operation.cancel()
+                self.downloadOperationsArray.removeObject(operation)
+                break
+            }
+        }
     }
 }
 
