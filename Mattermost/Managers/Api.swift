@@ -35,6 +35,7 @@ private protocol ChannelApi: class {
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -62,12 +63,12 @@ private protocol PostApi: class {
 private protocol FileApi : class {
     func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,channel: Channel, completion:  @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void, progress:  @escaping(_ identifier: String, _ value: Float) -> Void)
     func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
+    func getInfo(file: File)
 }
 
 final class Api {
     
 //MARK: Properties
-    
     static let sharedInstance = Api()
     fileprivate var _managerCache: ObjectManager?
     fileprivate var manager: ObjectManager  {
@@ -102,12 +103,11 @@ final class Api {
 
 
 //MARK: PreferencesApi
-
 extension Api: PreferencesApi {
     func savePreferencesWith(_ params: Dictionary<String, String>, complection: @escaping (_ error: Mattermost.Error?) -> Void) {
        let path = PreferencesPathPatternsContainer.savePathPattern()
         
-        self.manager.savePreferences(with: path, parameters: [params], success: { (success) in
+        self.manager.savePreferencesAt(path: path, parameters: [params], success: { (success) in
             complection(nil)
         }) { (error) in
             complection(error)
@@ -119,7 +119,7 @@ extension Api: PreferencesApi {
         preference.category = "direct_channel_show"
         let path = SOCStringFromStringWithObject(PreferencesPathPatternsContainer.listUsersPreferencesPathPatterns(), preference)!
         
-        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             let preferences = MappingUtils.fetchAllPreferences(mappingResult)
             for preference in preferences {
                 let user = User.objectById(preference.name!)
@@ -133,7 +133,6 @@ extension Api: PreferencesApi {
             completion(nil)
             }, failure: { (error) in
                 completion(error)
-        
         })
     }
 }
@@ -144,7 +143,7 @@ extension Api: NotifyPropsApi {
     func updateNotifyProps(_ notifyProps: NotifyProps, completion: @escaping(_ error: Mattermost.Error?) -> Void) {
         let path = NotifyPropsPathPatternsContainer.updatePathPattern()
         
-        self.manager.postObject(notifyProps, path: path, parameters: nil, success: { (mappingResult) in
+        self.manager.post(object: notifyProps, path: path, parameters: nil, success: { (mappingResult) in
             let object = mappingResult.dictionary()["notify_props"] as! NotifyProps
             let notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
 //Will replace after connection problems solved
@@ -172,11 +171,10 @@ extension Api: NotifyPropsApi {
 
 //MARK: TeamApi
 extension Api: TeamApi {
-    
     func loadTeams(with completion:@escaping (_ userShouldSelectTeam: Bool, _ error: Mattermost.Error?) -> Void) {
         let path = TeamPathPatternsContainer.initialLoadPathPattern()
         
-        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             let teams = MappingUtils.fetchAllTeams(mappingResult)
             let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
             users.forEach{ $0.computeDisplayName()}
@@ -198,7 +196,7 @@ extension Api: TeamApi {
         let path = TeamPathPatternsContainer.initialLoadPathPattern()
         self._managerCache = nil
         
-        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
             completion(nil)
         }) { (error) in
@@ -210,7 +208,7 @@ extension Api: TeamApi {
         let path = SOCStringFromStringWithObject(TeamPathPatternsContainer.teamInviteMembers(), DataManager.sharedInstance.currentTeam)
         let params: Dictionary = ["invites" : invites]
         
-        self.manager.postObject(nil, path: path, parameters: params, success: { (mappingResult) in
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             completion(nil)
         }) { (error) in
             completion(error)
@@ -220,13 +218,11 @@ extension Api: TeamApi {
 
 
 //MARK: ChannelApi
-
 extension Api: ChannelApi {
-    
     func loadChannels(with completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.listPathPattern(), DataManager.sharedInstance.currentTeam)
         
-        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
@@ -261,7 +257,7 @@ extension Api: ChannelApi {
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updateLastViewDatePathPattern(), channel)
         
-        self.manager.postObject(path: path, success: { (mappingResult) in
+        self.manager.post(path: path, success: { (mappingResult) in
             try! RealmUtils.realmForCurrentThread().write({
                 channel.lastViewDate = Date()
             })
@@ -272,7 +268,7 @@ extension Api: ChannelApi {
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.moreListPathPattern(), DataManager.sharedInstance.currentTeam)
         
-        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! RealmUtils.realmForCurrentThread().write({
                 channels.forEach {$0.computeTeam()
@@ -288,16 +284,43 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.addUserPathPattern(), channel)
         let params = [ "user_id" : user.identifier ]
         
-        self.manager.postObject(nil, path: path, parameters: params, success: { (mappingResult) in
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             completion(nil)
             }, failure: completion)
     }
     
+    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createChannelPathPattern(), DataManager.sharedInstance.currentTeam)
+      
+        let newChannel = Channel()
+        newChannel.privateType = type
+        newChannel.name = name
+        newChannel.displayName = name
+        newChannel.header = header
+        newChannel.purpose = purpose
+        
+        RealmUtils.save(newChannel)
+        
+        self.manager.post(object: newChannel, path: path, parameters: nil, success: { (mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let channel = mappingResult.firstObject as! Channel
+            try! realm.write({
+                channel.currentUserInChannel = true
+                channel.computeTeam()
+                channel.computeDispayNameIfNeeded()
+                realm.add(channel)
+            })
+            completion(channel ,nil)
+        }) { (error) in
+            completion(nil, error)
+        }
+    }
+
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createDirrectChannelPathPattern(), DataManager.sharedInstance.currentTeam)
         let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
         
-        self.manager.postObject(nil, path: path, parameters: params, success: { (mappingResult) in
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             let realm = RealmUtils.realmForCurrentThread()
             let channel = mappingResult.firstObject as! Channel
             try! realm.write({
@@ -315,7 +338,7 @@ extension Api: ChannelApi {
     func leaveChannel(_ channel: Channel, completion: @escaping (Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.leaveChannelPathPattern(), channel)
         
-        self.manager.postObject(nil, path: path, parameters: nil, success: { (mappingResult) in
+        self.manager.post(object: nil, path: path, parameters: nil, success: { (mappingResult) in
             let channelId = (mappingResult.firstObject as! Channel).identifier
             
             try! RealmUtils.realmForCurrentThread().write {
@@ -332,7 +355,7 @@ extension Api: ChannelApi {
     func joinChannel(_ channel: Channel, completion: @escaping (Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.joinChannelPathPattern(), channel)
         
-        self.manager.postObject(nil, path: path, parameters: nil, success: { (mappingResult) in
+        self.manager.post(object: nil, path: path, parameters: nil, success: { (mappingResult) in
             let channelId = (mappingResult.firstObject as! Channel).identifier
             
             try! RealmUtils.realmForCurrentThread().write {
@@ -345,13 +368,12 @@ extension Api: ChannelApi {
 
 
 //MARK: UserApi
-
 extension Api: UserApi {
     func login(_ email: String, password: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = UserPathPatternsContainer.loginPathPattern()
         let parameters = ["login_id" : email, "password": password, "token" : ""]
         
-        self.manager.postObject(path: path, parameters: parameters as [AnyHashable: Any]?, success: { (mappingResult) in
+        self.manager.post(path: path, parameters: parameters as [AnyHashable: Any]?, success: { (mappingResult) in
             let user = mappingResult.firstObject as! User
             let notifyProps = user.notifyProps
             notifyProps?.userId = user.identifier
@@ -360,6 +382,8 @@ extension Api: UserApi {
             user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user
             RealmUtils.save([user, systemUser])
+            print(mappingResult)
+            print(notifyProps)
             RealmUtils.save(notifyProps!)
             
             let uu = DataManager.sharedInstance.currentUser
@@ -374,7 +398,7 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.logoutPathPattern()
         let parameters = ["user_id" : Preferences.sharedInstance.currentUserId!]
         
-        self.manager.postObject(path: path, parameters: parameters, success: { (mappingResult) in
+        self.manager.post(path: path, parameters: parameters, success: { (mappingResult) in
             completion(nil)
             }, failure: completion)
     }
@@ -382,7 +406,7 @@ extension Api: UserApi {
     func loadCurrentUser(completion: @escaping (Error?) -> Void) {
         let path = UserPathPatternsContainer.loadCurrentUser()
         
-        self.manager.getObject(path: path, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             let user = mappingResult.firstObject as! User
             let systemUser = DataManager.sharedInstance.instantiateSystemUser()
             user.computeDisplayName()
@@ -396,7 +420,7 @@ extension Api: UserApi {
     func loadCompleteUsersList(_ completion:@escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.completeListPathPattern(), DataManager.sharedInstance.currentTeam)
         
-        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let users = MappingUtils.fetchUsersFromCompleteList(mappingResult)
             users.forEach {$0.computeDisplayName()}
             RealmUtils.save(users)
@@ -407,13 +431,12 @@ extension Api: UserApi {
 
 
 //MARK: PostApi
-
 extension Api: PostApi {
     func loadFirstPage(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let wrapper = PageWrapper(channel: channel)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.firstPagePathPattern(), wrapper)
         
-        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             guard !skipMapping else { completion(nil); return }
             DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
                 RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
@@ -441,7 +464,7 @@ extension Api: PostApi {
         let wrapper = PageWrapper(channel: channel, lastPostId: postIdentifier)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.nextPagePathPattern(), wrapper)
         
-        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             guard !skipMapping else {
                 completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 return
@@ -463,7 +486,7 @@ extension Api: PostApi {
         let wrapper = PageWrapper(size: size, channel: post.channel, lastPostId: post.identifier)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.beforePostPathPattern(), wrapper)
         
-        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             guard !skipMapping else {
                 completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 return
@@ -485,7 +508,7 @@ extension Api: PostApi {
         let wrapper = PageWrapper(size: size, channel: post.channel, lastPostId: post.identifier)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.afterPostPathPattern(), wrapper)
         
-        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             guard !skipMapping else {
                 completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 return
@@ -504,10 +527,10 @@ extension Api: PostApi {
     
     func sendPost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
-        self.manager.postObject(post, path: path, success: { (mappingResult) in
+        self.manager.post(object: post, path: path, success: { (mappingResult) in
             let resultPost = mappingResult.firstObject as! Post
             try! RealmUtils.realmForCurrentThread().write {
-                //не достающие параметры
+                //addition parameters
                 post.status = .default
                 post.identifier = resultPost.identifier
             }
@@ -519,7 +542,7 @@ extension Api: PostApi {
         var path = "teams/" + (channel.team?.identifier)!
             path += "/channels/" + channel.identifier!
             path += "/posts/" + identifier + "/get"
-        self.manager.getObject(path: path, success: { (mappingResult, canSkipMapping) in
+        self.manager.get(path: path, success: { (mappingResult, canSkipMapping) in
             let resultPost = mappingResult.firstObject as! Post
             resultPost.computeMissingFields()
             RealmUtils.save(resultPost)
@@ -531,7 +554,7 @@ extension Api: PostApi {
     
     func updateSinglePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)
-        self.manager.postObject(post, path: path, success: { (mappingResult) in
+        self.manager.post(object: post, path: path, success: { (mappingResult) in
             RealmUtils.save(mappingResult.firstObject as! Post)
             completion(nil)
             }, failure: completion)
@@ -543,9 +566,7 @@ extension Api: PostApi {
                       "channel_id" : post.channelId!,
                       "post_id"    : post.identifier!]
         
-        
-        
-        self.manager.deletePost(with: path, parameters: params, success: { (mappingResult) in
+        self.manager.deletePostAt(path: path, parameters: params, success: { (mappingResult) in
             completion(nil)
         }) { (error) in
             completion(error)
@@ -556,7 +577,7 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.searchingPathPattern(), channel)
         let params = ["team_id" : Preferences.sharedInstance.currentTeamId!]
         
-        self.manager.searchPosts(with: terms, path: path, parameters: params, success: { (mappingResult) in
+        self.manager.searchPostsWith(terms: terms, path: path, parameters: params, success: { (mappingResult) in
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
             completion(posts, nil)
         }) { (error) in
@@ -566,7 +587,8 @@ extension Api: PostApi {
     
     func updatePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatePathPattern(), post)
-        self.manager.getObject(post, path: path!, success: { (mappingResult, skipMapping) in
+                
+        self.manager.get(object: post, path: path!, success: { (mappingResult, skipMapping) in
             RealmUtils.save(MappingUtils.fetchPostFromUpdate(mappingResult))
             completion(nil)
         }, failure: completion)
@@ -575,7 +597,6 @@ extension Api: PostApi {
 
 
 //MARK: FileApi
-
 extension Api : FileApi {
     func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,
                                   channel: Channel,
@@ -585,7 +606,7 @@ extension Api : FileApi {
         let params = ["channel_id" : channel.identifier!,
                       "client_ids"  : StringUtils.randomUUID()]
         
-        self.manager.postImage(with: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
+        self.manager.post(image: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
             let file = File()
             let dictionary = mappingResult.firstObject as! [String:String]
             let rawLink = dictionary[FileAttributes.rawLink.rawValue]
@@ -614,7 +635,7 @@ extension Api : FileApi {
         
         
         if item.isFile {
-            self.manager.postFile(with: item.url, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
+            self.manager.postFileWith(url: item.url, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
                 let file = File()
                 let dictionary = mappingResult.firstObject as! [String:String]
                 let rawLink = dictionary[FileAttributes.rawLink.rawValue]
@@ -628,7 +649,7 @@ extension Api : FileApi {
                 progress(item.identifier, value)
             }
         } else {
-            self.manager.postImage(with: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
+            self.manager.post(image: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
                 let file = File()
                 let dictionary = mappingResult.firstObject as! [String:String]
                 let rawLink = dictionary[FileAttributes.rawLink.rawValue]
@@ -643,11 +664,32 @@ extension Api : FileApi {
             }
         }
     }
+    
+    func getInfo(file: File) {
+        let path = file._downloadLink?.replacingOccurrences(of: "(null)", with: (DataManager.sharedInstance.currentTeam?.identifier)!)
+        
+        self.manager.getFileInfo(path: path!, success: { (fileInfo) in
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write {
+                file.size = fileInfo.size
+                file.ext = fileInfo.ext
+                file.mimeType = fileInfo.mimeType
+                file.hasPreview = fileInfo.hasPreview
+            }
+            }) { (error) in
+                
+        }
+    }
+    
+    func download(file: File,
+                  completion: @escaping (_ identifier: String, _ error: Mattermost.Error?) -> Void,
+                  progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
+    
+    }
 }
 
 
 //MARK: Interface
-
 extension Api: Interface {
     func baseURL() -> URL! {
         return self.manager.httpClient.baseURL

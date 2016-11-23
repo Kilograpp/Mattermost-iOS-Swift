@@ -183,7 +183,7 @@ extension MoreChannelsTableViewCell : Configure {
     
     fileprivate func configureLastPostLabelTextForPublicChannel(_ channel:Channel){
         //self.lastPostLabel.text = channel.posts.last?.message
-        let lastPost = try! Realm().objects(Post).filter("channelId = %@", channel.identifier!).last
+        let lastPost = try! Realm().objects(Post.self).filter("channelId = %@", channel.identifier!).last
         if lastPost == nil {
             self.avatarUsersLastPostImageView.isHidden = true
             self.lastPostLabel.text = ""

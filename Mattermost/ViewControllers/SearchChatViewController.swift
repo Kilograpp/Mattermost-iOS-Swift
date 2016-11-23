@@ -59,11 +59,13 @@ class SearchChatViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        var frame = self.searchTextField.superview?.frame
-        let delta = (frame?.origin.x)! - 8
-        frame?.origin.x = 8
-        frame?.size.width = 245 + delta
-        self.searchTextField.superview?.frame = frame!
+        let width = UIScreen.screenWidth() - 75
+        
+        //var frame = self.searchTextField.superview?.frame
+        //let delta = (frame?.origin.x)! - 8
+        //frame?.origin.x = 8
+        //frame?.size.width = 245 + delta
+        self.searchTextField.superview?.frame = CGRect(x: 8, y: 20, width: width, height: 44)
     }
 }
 
@@ -73,7 +75,6 @@ extension SearchChatViewController: SearchChatViewControllerConfiguration {
     func configureWithChannel(channel: Channel) {
         self.channel = channel
     }
-
 }
 
 
@@ -129,7 +130,7 @@ extension SearchChatViewController: Setup {
         self.searchingInProcessView?.translatesAutoresizingMaskIntoConstraints = true
         self.view.addSubview(self.searchingInProcessView!)
         
-        self.searchingInProcessView!.center = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY + 64)
+        self.searchingInProcessView?.frame = CGRect(x: 0, y: 64, width: UIScreen.screenWidth(), height: UIScreen.screenHeight())
         self.searchingInProcessView!.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
     }
 }
@@ -300,6 +301,11 @@ extension SearchChatViewController: UITableViewDelegate {
 //MARK: UITextFieldDelegate
 
 extension SearchChatViewController: UITextFieldDelegate {
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        self.configureForSearchStage(0)
+        return true
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
     }

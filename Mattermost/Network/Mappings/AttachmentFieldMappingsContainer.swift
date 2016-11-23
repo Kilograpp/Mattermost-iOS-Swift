@@ -19,7 +19,7 @@ final class AttachmentFieldMappingsContainer: BaseMappingsContainer {
     }
 }
 
-//MARK: - ResponseMappings
+//MARK: ResponseMappings
 extension AttachmentFieldMappingsContainer: ResponseMappings {
     override static func mapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()

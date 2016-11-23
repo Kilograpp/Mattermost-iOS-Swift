@@ -18,8 +18,6 @@ private protocol ResponseMappings: class {
 
 private protocol RequestMapping: class {
     static func postRequestMapping() -> RKObjectMapping
-   // static func creationRequestMapping() -> RKObjectMapping
-   // static func updatingRequestMapping() -> RKObjectMapping
 }
 
 
@@ -29,7 +27,8 @@ final class PostMappingsContainer: BaseMappingsContainer {
     }
 }
 
-//MARK: - ResponseMappings
+
+//MARK: ResponseMappings
 extension PostMappingsContainer: ResponseMappings {
     class func creationMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
@@ -99,7 +98,7 @@ extension PostMappingsContainer: ResponseMappings {
     }
 }
 
-// MARK: - RequestMapping
+// MARK: RequestMapping
 extension PostMappingsContainer: RequestMapping {
     static func postRequestMapping() -> RKObjectMapping {
         let mapping = RKObjectMapping.request()

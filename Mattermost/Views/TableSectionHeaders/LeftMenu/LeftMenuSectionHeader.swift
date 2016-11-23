@@ -40,6 +40,11 @@ final class LeftMenuSectionHeader: UITableViewHeaderFooterView {
 extension LeftMenuSectionHeader: LeftMenuSectionHeaderConfiguration {
     func configureWithChannelType(_ channelType: String!) {
         self.titleLabel.text = channelType.uppercased()
+        self.moreButton.isHidden = false
+    }
+    
+    func hideMoreButton() {
+        self.moreButton.isHidden = true
     }
 }
 

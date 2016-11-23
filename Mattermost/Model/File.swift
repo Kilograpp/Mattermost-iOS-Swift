@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 
+
 private protocol Interface: class {
     func downloadURL() -> URL?
     func thumbURL() -> URL?
@@ -16,40 +17,42 @@ private protocol Interface: class {
 
 final class File: RealmObject {
     dynamic var name: String?
+    dynamic var ext: String?
+    dynamic var hasPreview: Bool = false
+    dynamic var mimeType: String?
+    dynamic var size: Int = 0
+    
     dynamic var identifier: String?
     dynamic var isImage: Bool = false
-    var _downloadLink: String? {
-        return FileUtils.downloadLinkForFile(self)?.absoluteString
-    }
-    var _thumbLink: String? {
-        return FileUtils.thumbLinkForFile(self)?.absoluteString
-    }
+    var _downloadLink: String? { return FileUtils.downloadLinkForFile(self)?.absoluteString }
+    var _thumbLink: String? { return FileUtils.thumbLinkForFile(self)?.absoluteString }
     dynamic var rawLink: String? {
         didSet {
             computeName()
             computeIsImage()
             computeIdentifierIfNeeded()
+       //     Api.sharedInstance.getInfo(file: self)
         }
     }
+    dynamic var localLink: String?
+    dynamic var downoloadedSize: Int = 0
     fileprivate let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.files.rawValue)
-    var post: Post?  {
-        return self.posts.first
-    }
+    var post: Post?  { return self.posts.first }
     
-    override class func primaryKey() -> String {
-        return FileAttributes.identifier.rawValue
-    }
-    
-    override class func indexedProperties() -> [String] {
-        return [FileAttributes.identifier.rawValue]
-    }
+    override class func primaryKey() -> String { return FileAttributes.identifier.rawValue }
+    override class func indexedProperties() -> [String] { return [FileAttributes.identifier.rawValue] }
 }
 
 enum FileAttributes: String {
-    case isImage = "isImage"
-    case rawLink = "rawLink"
-    case name = "name"
+    case name       = "name"
+    case ext        = "ext"
+    case hasPreview = "hasPreview"
+    case mimeType   = "mimeType"
+    case size       = "size"
+    
     case identifier = "identifier"
+    case isImage    = "isImage"
+    case rawLink    = "rawLink"
 }
 
 enum FileRelationships: String {
@@ -58,12 +61,9 @@ enum FileRelationships: String {
 
 private protocol Computations: class {
     func computeName()
-//    func computeDownloadLink()
-//    func computeThumbLink()
     func computeIsImage()
     func computeIdentifierIfNeeded()
 }
-
 
 private protocol Support: class {
     func thumbPostfix() -> String?
@@ -84,14 +84,6 @@ extension File: Computations {
             self.name = rawLink
         }
     }
-//    
-//    private func computeDownloadLink() {
-//        self._downloadLink = FileUtils.downloadLinkForFile(self)?.absoluteString
-//    }
-//    
-//    private func computeThumbLink() {
-//        self._thumbLink = FileUtils.thumbLinkForFile(self)?.absoluteString
-//    }
     
     fileprivate func computeIsImage() {
         self.isImage = FileUtils.fileIsImage(self)
@@ -102,10 +94,8 @@ extension File: Computations {
             let components = rawLink.components(separatedBy: "/")
             if components.count >= 2 {
                 let fileName = components.last!.removingPercentEncoding
-                print(fileName)
                 return fileName!
             } else {
-                print(rawLink)
                 return rawLink
             }
     }

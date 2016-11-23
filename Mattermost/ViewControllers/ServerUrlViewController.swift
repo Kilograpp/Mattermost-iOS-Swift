@@ -9,7 +9,8 @@
 import Foundation
 
 final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
-    
+
+//MARK: Properties
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var textField: KGTextField!
@@ -21,7 +22,8 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     let subtitleName = NSLocalizedString("All your team communication in one place, searchable and accessable anywhere.", comment: "")
     let placeholder = NSLocalizedString("Your team URL", comment: "")
     let buttonText = NSLocalizedString("Next step", comment: "")
-    
+
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -171,10 +173,6 @@ extension ServerUrlViewController: Actions {
     }
     
     func textFieldAction() {
-        if self.textField.text == "" {
-            self.nextButton.isEnabled = false
-        } else {
-            self.nextButton.isEnabled = true
-        }
+        self.nextButton.isEnabled = (self.textField.text != "")
     }
 }

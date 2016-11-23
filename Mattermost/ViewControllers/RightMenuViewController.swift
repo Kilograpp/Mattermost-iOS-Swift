@@ -11,7 +11,6 @@ import Foundation
 class RightMenuViewController: UIViewController {
 
 //MARK: Properties
-    
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var usernameLabel: UILabel!
@@ -19,25 +18,27 @@ class RightMenuViewController: UIViewController {
     
     fileprivate lazy var builder: RightMenuCellBuilder = RightMenuCellBuilder(tableView: self.tableView)
     
-  
+//MARK: LifeCycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        initialSetup()
+    }
 }
 
 
-private protocol RightMenuViewControllerLifeCycle {
-    func viewDidLoad()
-}
-
-private protocol RightMenuViewControllerSetup {
-    func  initialSetup()
+fileprivate protocol Setup {
+    func initialSetup()
     func setupTableView()
     func setupHeaderView()
+    func toggleRightSideMenu()
 }
 
-private protocol RightMenuViewControllerAction {
+fileprivate protocol Action {
     func headerTapAction()
 }
 
-private protocol RightMenuViewControllerNavigation {
+fileprivate protocol Navigation {
     func proceedToProfile()
     func proceedToTeams()
     func proceedToFiles()
@@ -49,25 +50,9 @@ private protocol RightMenuViewControllerNavigation {
     func logOut()
 }
 
-private protocol RightMenuViewControllerPrivate {
-    func toggleRightSideMenu()
-}
 
-
-//MARK: RightMenuViewControllerLifeCycle
-
-extension RightMenuViewController: RightMenuViewControllerLifeCycle {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        initialSetup()
-    }
-}
-
-
-//MARK: RightMenuViewControllerSetup
-
-extension RightMenuViewController: RightMenuViewControllerSetup {
+//MARK: Setup
+extension RightMenuViewController: Setup {
     func  initialSetup() {
         setupTableView()
         setupHeaderView()
@@ -106,12 +91,15 @@ extension RightMenuViewController: RightMenuViewControllerSetup {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerTapAction))
         self.headerView.addGestureRecognizer(tapGestureRecognizer)
     }
+    
+    func toggleRightSideMenu() {
+        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
+    }
 }
 
 
-//MARK: RightMenuViewControllerAction
-
-extension RightMenuViewController: RightMenuViewControllerAction {
+//MARK: Action
+extension RightMenuViewController: Action {
     func headerTapAction() {
         toggleRightSideMenu()
         proceedToProfile()
@@ -119,9 +107,8 @@ extension RightMenuViewController: RightMenuViewControllerAction {
 }
 
 
-//MARK: RightMenuViewControllerNavigation
-
-extension RightMenuViewController: RightMenuViewControllerNavigation {
+//MARK: Navigation
+extension RightMenuViewController: Navigation {
     func proceedToProfile() {
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
@@ -180,17 +167,7 @@ extension RightMenuViewController: RightMenuViewControllerNavigation {
 }
 
 
-//MARK: RightMenuViewControllerPrivate
-
-extension RightMenuViewController: RightMenuViewControllerPrivate {
-    func toggleRightSideMenu() {
-        self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
-    }
-}
-
-
 //MARK: UITableViewDataSource
-
 extension RightMenuViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 8
@@ -203,7 +180,6 @@ extension RightMenuViewController : UITableViewDataSource {
 
 
 //MARK: UITableViewDelegate
-
 extension RightMenuViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.builder.cellHeight()

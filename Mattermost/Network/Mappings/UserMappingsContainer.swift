@@ -20,9 +20,9 @@ final class UserMappingsContainer: BaseMappingsContainer {
     }
 }
 
-//MARK: - ResponseMappings
+
+//MARK: ResponseMappings
 extension UserMappingsContainer: ResponseMappings {
-    
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
@@ -50,7 +50,9 @@ extension UserMappingsContainer: ResponseMappings {
             "(\(UserAttributes.identifier)).nickname" : UserAttributes.nickname.rawValue,
             "(\(UserAttributes.identifier)).email" : UserAttributes.email.rawValue
             ])
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "notify_props",
+                                                         toKeyPath: UserAttributes.notifyProps.rawValue,
+                                                         with: NotifyPropsMappingsContainer.mapping()))
         return mapping
     }
-    
 }

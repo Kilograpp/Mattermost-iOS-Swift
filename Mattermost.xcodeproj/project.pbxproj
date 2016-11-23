@@ -50,6 +50,10 @@
 		868FD8E81DD5DD2700EE20B2 /* MemberInAdditingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 868FD8E71DD5DD2700EE20B2 /* MemberInAdditingCell.xib */; };
 		868FD8EA1DD5DFC700EE20B2 /* MemberInAdditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868FD8E91DD5DFC700EE20B2 /* MemberInAdditingCell.swift */; };
 		868FD8EE1DD5F58000EE20B2 /* AllMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868FD8ED1DD5F58000EE20B2 /* AllMembersViewController.swift */; };
+		8B0429C81DE22F7F00B537F1 /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429C71DE22F7F00B537F1 /* FileInfo.swift */; };
+		8B0429CA1DE2302E00B537F1 /* FileInfoMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */; };
+		8B0429CC1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */; };
+		8B0429D01DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
 		8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */; };
@@ -92,6 +96,12 @@
 		8B3CB37C1DD269C30078DE25 /* UserStatusManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3731DD269C30078DE25 /* UserStatusManager.swift */; };
 		8B3CB37E1DD26BD00078DE25 /* FeedCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB37D1DD26BD00078DE25 /* FeedCellBuilder.swift */; };
 		8B3CB3801DD28DD20078DE25 /* CreateChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */; };
+		8B3CB3831DD392350078DE25 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */; };
+		8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */; };
+		8B618CC11DDC4A2500AC6CDD /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B618CC01DDC4A2500AC6CDD /* Error.swift */; };
+		8B618CC31DDCDE8300AC6CDD /* MattermostError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */; };
+		8B618CC51DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B618CC41DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift */; };
+		8B618CC71DDCDEF300AC6CDD /* MattermostErrorResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B618CC61DDCDEF300AC6CDD /* MattermostErrorResponseDescriptorsContainer.swift */; };
 		8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */; };
 		8B77B5DE1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */; };
 		8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */; };
@@ -120,7 +130,6 @@
 		8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */; };
 		8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */; };
 		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
-		8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */; };
 		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
 		8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */; };
 		8BE969B51D7615EE0010A524 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BE969B41D7615EE0010A524 /* HEXColor.framework */; };
@@ -255,7 +264,6 @@
 		D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */; };
 		D8D601381D5E007700951F18 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601371D5E007700951F18 /* Day.swift */; };
 		D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */; };
-		D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6BD041D22FB49000AC690 /* Error.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -314,6 +322,10 @@
 		868FD8E71DD5DD2700EE20B2 /* MemberInAdditingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberInAdditingCell.xib; sourceTree = "<group>"; };
 		868FD8E91DD5DFC700EE20B2 /* MemberInAdditingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberInAdditingCell.swift; sourceTree = "<group>"; };
 		868FD8ED1DD5F58000EE20B2 /* AllMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllMembersViewController.swift; sourceTree = "<group>"; };
+		8B0429C71DE22F7F00B537F1 /* FileInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileInfo.swift; sourceTree = "<group>"; };
+		8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoMappingsContainer.swift; path = Mappings/FileInfoMappingsContainer.swift; sourceTree = "<group>"; };
+		8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoPathPatternsContainer.swift; path = PathPattern/FileInfoPathPatternsContainer.swift; sourceTree = "<group>"; };
+		8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/FileInfoResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
 		8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyProps.swift; sourceTree = "<group>"; };
@@ -356,6 +368,13 @@
 		8B3CB3731DD269C30078DE25 /* UserStatusManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatusManager.swift; sourceTree = "<group>"; };
 		8B3CB37D1DD26BD00078DE25 /* FeedCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCellBuilder.swift; sourceTree = "<group>"; };
 		8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChannelViewController.swift; sourceTree = "<group>"; };
+		8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/ChannelRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
+		8B618CC01DDC4A2500AC6CDD /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostError.swift; sourceTree = "<group>"; };
+		8B618CC41DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostErrorMappingsContainer.swift; sourceTree = "<group>"; };
+		8B618CC61DDCDEF300AC6CDD /* MattermostErrorResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostErrorResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
+		8B618CC81DDF19B700AC6CDD /* MRProgress.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MRProgress.framework; path = "Pods/../build/Debug-iphoneos/MRProgress/MRProgress.framework"; sourceTree = "<group>"; };
 		8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteNewMemberTableViewController.swift; sourceTree = "<group>"; };
 		8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessInviteNewMembreViewController.swift; sourceTree = "<group>"; };
@@ -385,7 +404,6 @@
 		8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NVActivityIndicatorView.framework; path = Carthage/Build/iOS/NVActivityIndicatorView.framework; sourceTree = "<group>"; };
 		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
-		8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
 		8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+PreparedColor.swift"; sourceTree = "<group>"; };
 		8BE969B41D7615EE0010A524 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
@@ -531,7 +549,6 @@
 		D8D601371D5E007700951F18 /* Day.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
 		D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Json.swift"; sourceTree = "<group>"; };
 		D8F6BD001D22E909000AC690 /* Mattermost-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mattermost-Bridging-Header.h"; sourceTree = "<group>"; };
-		D8F6BD041D22FB49000AC690 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -648,6 +665,7 @@
 		8B9E27C51DC0971700543C6C /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */,
 				8B9E27C81DC0984300543C6C /* MPNSettingsTableViewController.swift */,
 				8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */,
 				8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */,
@@ -721,7 +739,7 @@
 		9B822ACBDE33A13DD8E74AB9 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				D8F6BD041D22FB49000AC690 /* Error.swift */,
+				8B618CC01DDC4A2500AC6CDD /* Error.swift */,
 				CDF07EC51D7F115900172D1E /* Mappings */,
 				CDF07EC61D7F119800172D1E /* PathPatterns */,
 				CDB4BC631D805EDD00662231 /* RestKitRequestDescriptors */,
@@ -768,6 +786,8 @@
 				4B7DB5A41DA5500F000908FB /* Member.swift */,
 				8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */,
 				8B77B5E51DC78C0500DF0689 /* Preference.swift */,
+				8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */,
+				8B0429C71DE22F7F00B537F1 /* FileInfo.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -840,6 +860,7 @@
 				CDB4BC661D80678000662231 /* BaseRequestDescriptorsContainer.swift */,
 				CDB4BC641D8062B600662231 /* PostRequestDescriptorsContainer.swift */,
 				8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */,
+				8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */,
 			);
 			name = RestKitRequestDescriptors;
 			sourceTree = "<group>";
@@ -865,6 +886,7 @@
 		CDB6D3CA1D7F04BE00C3018C /* RestKitResponseDescriptors */ = {
 			isa = PBXGroup;
 			children = (
+				8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */,
 				CDB6D3CD1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift */,
 				CDB6D3CF1D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift */,
 				CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */,
@@ -874,6 +896,7 @@
 				CDB4BC611D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift */,
 				8B77B5EB1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift */,
 				8BEE0C841DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift */,
+				8B618CC61DDCDEF300AC6CDD /* MattermostErrorResponseDescriptorsContainer.swift */,
 			);
 			name = RestKitResponseDescriptors;
 			sourceTree = "<group>";
@@ -893,6 +916,8 @@
 				4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */,
 				8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */,
 				8B77B5E91DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift */,
+				8B618CC41DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift */,
+				8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */,
 			);
 			name = Mappings;
 			sourceTree = "<group>";
@@ -907,6 +932,7 @@
 				CDF07ED51D7F1DC900172D1E /* UserPathPatternsContainer.swift */,
 				8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift */,
 				8BEE0C801DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift */,
+				8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */,
 			);
 			name = PathPatterns;
 			sourceTree = "<group>";
@@ -920,7 +946,6 @@
 				4BEA108B1D79B551006BB298 /* TeamViewController.swift */,
 				CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */,
 				8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */,
-				8BE969A91D75D1890010A524 /* SettingsTableViewController.swift */,
 				8BE969A41D74C73B0010A524 /* AboutViewController.swift */,
 				D61962101D62230600C2E259 /* RightMenuViewController.swift */,
 				D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */,
@@ -1193,6 +1218,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8B618CC81DDF19B700AC6CDD /* MRProgress.framework */,
 				4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */,
 				8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */,
 				4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */,
@@ -1242,13 +1268,13 @@
 			buildConfigurationList = 9B82200F26897BF577153F76 /* Build configuration list for PBXNativeTarget "Mattermost" */;
 			buildPhases = (
 				BE5F6F50DF894BE52BFD4C06 /* [CP] Check Pods Manifest.lock */,
-				4B5FBDC61DA641ED00EF7AC8 /* Tags Highlight */,
 				9B822E8644EB6D1CAB6E3D29 /* Sources */,
 				9B8226327E3FF187CFC613FA /* Frameworks */,
 				9B8225917DC3A9EF0EB8303D /* Resources */,
 				4421F39ED493A29E806B1222 /* [CP] Embed Pods Frameworks */,
 				743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */,
 				D84DA70F1D22C14900DCFF4B /* Copy Carthage Frameworks */,
+				4B5FBDC61DA641ED00EF7AC8 /* Tags Highlight */,
 				8B3CB3811DD326230078DE25 /* Fabric */,
 			);
 			buildRules = (
@@ -1382,7 +1408,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "TAGS=\"TODO:|FIXME:|CODEREVIEW:\"\nERRORTAG=\"ERROR:\"\nfind \"${SRCROOT}/Mattermost\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"";
+			shellScript = "#TAGS=\"TODO:|FIXME:|CODEREVIEW:\"\n#ERRORTAG=\"ERROR:\"\n#find \"${SRCROOT}/Mattermost\" ( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" ) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*$|($ERRORTAG).*$\" | perl -p -e \"s/($TAGS)/ warning: $1/\" | perl -p -e \"s/($ERRORTAG)/ error: $1/\"";
 		};
 		743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1494,6 +1520,7 @@
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				8B3CB3751DD269C30078DE25 /* Api.swift in Sources */,
 				D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */,
+				8B618CC31DDCDE8300AC6CDD /* MattermostError.swift in Sources */,
 				CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */,
 				4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */,
 				8B882D6F1DA6575F0028F13D /* FeedSearchTableViewCell.swift in Sources */,
@@ -1510,6 +1537,7 @@
 				CDF07ECE1D7F129100172D1E /* ChannelPathPatternsContainer.swift in Sources */,
 				4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
+				8B0429D01DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */,
 				4B7270821DABF4C000445586 /* AlertView.swift in Sources */,
@@ -1541,6 +1569,7 @@
 				D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */,
 				8B3C3ED81DC28487005FCAFE /* CheckSettingsTableViewCell.swift in Sources */,
 				CDB4BC691D806C7000662231 /* FileMappingsContainer.swift in Sources */,
+				8B618CC11DDC4A2500AC6CDD /* Error.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				8BA11FDF1DCB380C0073051A /* CommonSettingsTableViewCell.swift in Sources */,
 				CDB6D3D01D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift in Sources */,
@@ -1557,10 +1586,13 @@
 				8B77B5E21DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift in Sources */,
 				CDF07ED41D7F1DB500172D1E /* TeamPathPatternsContainer.swift in Sources */,
 				8B3CB3431DD2675F0078DE25 /* SearchCellBuilder.swift in Sources */,
+				8B0429CA1DE2302E00B537F1 /* FileInfoMappingsContainer.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
+				8B0429C81DE22F7F00B537F1 /* FileInfo.swift in Sources */,
 				CDB6D3BD1D78925B00C3018C /* String+Localized.swift in Sources */,
 				4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */,
 				8B882D6D1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift in Sources */,
+				8B618CC71DDCDEF300AC6CDD /* MattermostErrorResponseDescriptorsContainer.swift in Sources */,
 				8B3CB35B1DD267EB0078DE25 /* ProfileDataSource.swift in Sources */,
 				8BE969BE1D7730760010A524 /* ProfileTableViewController.swift in Sources */,
 				8B3CB3421DD2675F0078DE25 /* RightMenuCellBuilder.swift in Sources */,
@@ -1599,6 +1631,7 @@
 				CDB6D3CE1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift in Sources */,
 				CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
+				8B3CB3831DD392350078DE25 /* SettingsTableViewController.swift in Sources */,
 				8B3CB3631DD268390078DE25 /* FilesPickingModuleBase.swift in Sources */,
 				8B3CB3551DD267EB0078DE25 /* AssignedFileItem.swift in Sources */,
 				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,
@@ -1609,6 +1642,7 @@
 				CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
+				8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */,
 				CDB4BC5E1D80340900662231 /* TeamResponseDescriptorsContainer.swift in Sources */,
 				8B3CB35C1DD267EB0078DE25 /* UserStatus.swift in Sources */,
 				8B3CB3541DD267EB0078DE25 /* ActionsNotification.swift in Sources */,
@@ -1642,7 +1676,9 @@
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
 				8B3CB3641DD268390078DE25 /* ImagePickingModule.swift in Sources */,
+				8B0429CC1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
+				8B618CC51DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift in Sources */,
 				8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */,
 				8BEE0C871DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift in Sources */,
 				CDF07ED01D7F1D8900172D1E /* FilePathPatternsContainer.swift in Sources */,
@@ -1728,10 +1764,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/MRProgress",
 				);
 				INFOPLIST_FILE = Mattermost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "f93249bb-910c-4804-bf49-2cc8ff645729";
@@ -1769,6 +1807,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/MRProgress",
 				);
 				INFOPLIST_FILE = Mattermost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
