@@ -10,7 +10,7 @@
 import Foundation
 
 
-protocol ChannelObserverDelegate {
+protocol ChannelObserverDelegate : class {
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void
 }
 
@@ -21,7 +21,7 @@ class ChannelObserver {
             self.handleSelectedChannel()
         }
     }
-    var delegate : ChannelObserverDelegate? {
+    weak var delegate : ChannelObserverDelegate? {
         didSet {
             self.delegate?.didSelectChannelWithIdentifier(self.selectedChannel?.identifier)
         }

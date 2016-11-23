@@ -9,7 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="informationChannelSettingsCell" rowHeight="50" id="HAi-aH-wXJ" customClass="InformationChannelSettingsCell" customModule="Mattermost" customModuleProvider="target">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="informationChannelSettingsCell" rowHeight="50" id="HAi-aH-wXJ" customClass="InformationChannelSettingsCell" customModule="Mattermost" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HAi-aH-wXJ" id="whX-dq-y0l">
@@ -21,16 +21,24 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detail &gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mnL-yQ-lp2">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mnL-yQ-lp2">
                         <accessibility key="accessibilityConfiguration" identifier="informationChannelSettingsCell"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text=" &gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="duw-gj-JLK">
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="FCf-OF-hgu" firstAttribute="leading" secondItem="whX-dq-y0l" secondAttribute="leadingMargin" constant="15" id="2tq-7s-UmX"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="mnL-yQ-lp2" secondAttribute="trailing" constant="15" id="ul5-SH-tjf"/>
+                    <constraint firstItem="duw-gj-JLK" firstAttribute="leading" secondItem="mnL-yQ-lp2" secondAttribute="trailing" id="BuI-kL-qVA"/>
+                    <constraint firstItem="duw-gj-JLK" firstAttribute="centerY" secondItem="whX-dq-y0l" secondAttribute="centerY" id="F6f-oc-mYa"/>
+                    <constraint firstAttribute="trailing" secondItem="duw-gj-JLK" secondAttribute="trailing" constant="15" id="JeM-iY-vb2"/>
+                    <constraint firstItem="mnL-yQ-lp2" firstAttribute="leading" secondItem="FCf-OF-hgu" secondAttribute="trailing" constant="15" id="uRH-e3-hwx"/>
                 </constraints>
             </tableViewCellContentView>
             <constraints>
@@ -40,6 +48,7 @@
             <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="infoDetail" destination="mnL-yQ-lp2" id="fFe-45-fmx"/>
+                <outlet property="infoName" destination="FCf-OF-hgu" id="m4G-c9-fUo"/>
             </connections>
         </tableViewCell>
     </objects>

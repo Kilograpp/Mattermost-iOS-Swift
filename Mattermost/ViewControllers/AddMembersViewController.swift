@@ -8,10 +8,10 @@
 
 import UIKit
 
-class AddMembersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class AddMembersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating  {
 
     @IBOutlet weak var tableView: UITableView!
-
+    var searchController: UISearchController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +19,7 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.dataSource = self
         tableView.delegate = self
         setupNavigationBar()
+        setupSearchBar()
         
         let nib = UINib(nibName: "MemberInAdditingCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "memberInAdditingCell")
@@ -59,12 +60,36 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func setupNavigationBar() {
         self.title = "Add Members".localized
+    }
+
+    func setupSearchBar(){
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.searchBarStyle = .prominent
+        searchController.searchBar.backgroundColor = .white
+        searchController.searchBar.barTintColor = .white
+        let view: UIView = searchController.searchBar.subviews[0] as UIView
+        for subView: UIView in view.subviews {
+            if let textView = subView as? UITextField {
+                textView.backgroundColor = UIColor(red:     239.0/255.0,
+                                                   green:   239.0/255.0,
+                                                   blue:    244.0/255.0,
+                                                   alpha:   1.0)
+            }
+        }
         
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
+        self.definesPresentationContext = true
+        self.extendedLayoutIncludesOpaqueBars = true
+        self.edgesForExtendedLayout = .all
+        searchController.searchBar.isTranslucent = false
+        tableView.tableHeaderView = searchController.searchBar
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+    }
+
+    
+    //Search updating
+    func updateSearchResults(for searchController: UISearchController) {
+
     }
     
-    func backAction(){
-        _=self.navigationController?.popViewController(animated: true)
-    }
 }

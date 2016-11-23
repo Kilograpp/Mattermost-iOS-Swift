@@ -79,6 +79,7 @@ private protocol Action {
 private protocol Navigation {
     func proceedToSearchChat()
     func proceedToProfileFor(user: User)
+    func proceedToChannelSettings(channel: Channel)
 }
 
 private protocol Request {
@@ -377,7 +378,7 @@ extension ChatViewController: Action {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
         }
         else {
-            
+            proceedToChannelSettings(channel: self.channel)
         }
     }
     
@@ -439,11 +440,32 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToProfileFor(user: User) {
+        Api.sharedInstance.loadChannels(with: { (error) in
+            guard (error == nil) else { return }
+        })
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         (profile as! ProfileViewController).configureFor(user: user)
         let navigation = self.menuContainerViewController.centerViewController
         (navigation! as AnyObject).pushViewController(profile!, animated:true)
+    }
+    
+    func proceedToChannelSettings(channel: Channel) {
+        Api.sharedInstance.loadChannels(with: { (error) in
+            guard (error == nil) else { return }
+            Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
+                guard (error == nil) else {
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                    return
+                }
+                let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
+                let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
+                ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+                
+                //(channelSettings as! ProfileViewController).configureFor(user: user)
+                self.navigationController?.present(channelSettings, animated: true, completion: nil)
+            })
+        })
     }
 }
 
@@ -545,9 +567,13 @@ extension ChatViewController: Request {
     func sendPost() {
         PostUtils.sharedInstance.sendPost(channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+                var message = (error?.message!)!
+                if error?.code == -1011{
+                    message = "You left this channel".localized
+                }
+                AlertManager.sharedManager.showErrorWithMessage(message: message, viewController: self)
             }
-          //  self.emptyDialogueLabel.isHidden = true
+            //self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
         }
         self.dismissKeyboard(true)

@@ -7,29 +7,25 @@
 //
 
 import UIKit
+import WebImage
 
-class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
 
     @IBOutlet weak var tableView: UITableView!
+    var searchController: UISearchController!
+    var channel: Channel!
+    
+    //temp timer
+    var statusesTimer: Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = self
         tableView.delegate = self
-        
-        let nib1 = UINib(nibName: "HeaderChannelSettingsCell", bundle: nil)
-        tableView.register(nib1, forCellReuseIdentifier: "headerChannelSettingsCell")
-        let nib2 = UINib(nibName: "InformationChannelSettingsCell", bundle: nil)
-        tableView.register(nib2, forCellReuseIdentifier: "informationChannelSettingsCell")
-        let nib3 = UINib(nibName: "MemberChannelSettingsCell", bundle: nil)
-        tableView.register(nib3, forCellReuseIdentifier: "memberChannelSettingsCell")
-        let nib4 = UINib(nibName: "AddMembersChannelSettingsCell", bundle: nil)
-        tableView.register(nib4, forCellReuseIdentifier: "addMembersChannelSettingsCell")
-        let nib5 = UINib(nibName: "LabelChannelSettingsCell", bundle: nil)
-        tableView.register(nib5, forCellReuseIdentifier: "labelChannelSettingsCell")
-        
         setupNavigationBar()
-        // Do any additional setup after loading the view.
+        setupChannelsObserver()
+        setupNibs()
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,9 +35,9 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if (section == 2){
-            return "9999"+" members"
+            return String(channel.members.count)+" members"
         }
-        return ""
+        return nil
     }
     
     
@@ -57,7 +53,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         case 1:
             return 4
         case 2:
-            return 7
+            return (channel.members.count < 5) ? (channel.members.count+2) : 7
         case 3:
             return 1
         default:
@@ -70,22 +66,46 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         switch indexPath.section{
         case 0:
             cell = tableView.dequeueReusableCell(withIdentifier: "headerChannelSettingsCell") as! HeaderChannelSettingsCell
+            (cell as! HeaderChannelSettingsCell).channelName.text = channel.displayName!
+            (cell as! HeaderChannelSettingsCell).channelFirstSymbol.text = String(channel.displayName![0])
         case 1:
-            cell = tableView.dequeueReusableCell(withIdentifier: "informationChannelSettingsCell") as! InformationChannelSettingsCell
+            let cell0 = tableView.dequeueReusableCell(withIdentifier: "informationChannelSettingsCell") as! InformationChannelSettingsCell
+            switch (indexPath.row){
+            case 0:
+                cell0.infoName.text = "Header".localized
+                cell0.infoDetail.text = channel.header
+            case 1:
+                cell0.infoName.text = "Purpose".localized
+                cell0.infoDetail.text = channel.purpose!
+            case 2:
+                //FIXME: WRONG URL!!! (API URL, NEED CHANNEL URL)
+                cell0.infoName.text = "URL".localized
+                cell0.infoDetail.text = Api.sharedInstance.baseURL().relativeString
+            case 3:
+                cell0.infoName.text = "ID".localized
+                cell0.infoDetail.text = channel.identifier!
+            default:
+                break
+            }
+            cell = cell0
         case 2:
+            let membersRowCount = (channel.members.count < 5) ? channel.members.count : 5
             if (indexPath.row==0){
                 cell = tableView.dequeueReusableCell(withIdentifier: "addMembersChannelSettingsCell") as! AddMembersChannelSettingsCell
-            } else if (indexPath.row==7-1) {
+            } else if (indexPath.row == membersRowCount + 1) {
                 let cell1 = tableView.dequeueReusableCell(withIdentifier: "labelChannelSettingsCell") as! LabelChannelSettingsCell
                 cell1.cellText.text = "See all members"
                 cell = cell1
             } else {
-                cell = tableView.dequeueReusableCell(withIdentifier: "memberChannelSettingsCell") as! MemberChannelSettingsCell
-                if (indexPath.row==5){
-                    cell.separatorInset = UIEdgeInsets.zero
+                let cell3 = tableView.dequeueReusableCell(withIdentifier: "memberChannelSettingsCell") as! MemberChannelSettingsCell
+                cell3.configureWithUser(user: channel.members[indexPath.row-1])
+                if (indexPath.row == membersRowCount){
+                    cell3.separatorInset = UIEdgeInsets.zero
+                    cell = cell3
                     break
                 }
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 70, bottom: 0, right: 0)
+                cell3.separatorInset = UIEdgeInsets(top: 0, left: 70, bottom: 0, right: 0)
+                cell = cell3
             }
         case 3:
             let cell2 = tableView.dequeueReusableCell(withIdentifier: "labelChannelSettingsCell") as! LabelChannelSettingsCell
@@ -129,29 +149,89 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     func setupNavigationBar() {
         self.title = "Channel Info".localized
         
-        self.navigationItem.setLeftBarButton(UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: nil), animated: true)
+        self.navigationItem.setLeftBarButton(UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backAction)), animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let backItem = UIBarButtonItem()
+        backItem.title = ""
+        navigationItem.backBarButtonItem = backItem
+        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "navbar_back_icon")
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navbar_back_icon")
+        
         if segue.identifier == "showMembersAdditing"{
-            /*if let indexPath = countryTableView.indexPathForSelectedRow{
-             let destinationController = segue.destination as! CitiesViewController
-             let countryName = (countryTableView.cellForRow(at: indexPath) as! CountyTableViewCell).countryName.text!
-             destinationController.cityList = WorkWithRealm.getAllCities(countryName: countryName)
-             destinationController.countryName = countryName
-             }*/
+
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let membersRowCount = (channel.members.count < 5) ? channel.members.count : 5
         if (indexPath==IndexPath(row: 0, section: 2)){
             performSegue(withIdentifier: "showMembersAdditing", sender: nil)
         }
-        if (indexPath==IndexPath(row: 6, section: 2)){
+        if (indexPath==IndexPath(row: membersRowCount+1, section: 2)){
             performSegue(withIdentifier: "showAllMembers", sender: nil)
         }
         if (indexPath==IndexPath(row: 0, section: 1) || indexPath==IndexPath(row: 1, section: 1)){
             performSegue(withIdentifier: "showChannelInfo", sender: nil)
+        }
+        if (indexPath==IndexPath(row: 0, section: 3) || indexPath==IndexPath(row: 1, section: 1)){
+            Api.sharedInstance.leaveChannel(channel, completion: { (error) in
+                guard (error == nil) else { return }
+                self.dismiss(animated: true, completion: {_ in
+                    Api.sharedInstance.loadChannels(with: { (error) in
+                        guard (error == nil) else { return }
+                    })
+            })
+            })
+        }
+    }
+    
+    func backAction(){
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
+        selectedCell.contentView.backgroundColor = UIColor.white
+    }
+    
+    //refactor later -> ObserverUtils
+    func setupChannelsObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(stopTimer),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
+                                               object: nil)
+    }
+    
+    fileprivate func setupNibs(){
+        let nib1 = UINib(nibName: "HeaderChannelSettingsCell", bundle: nil)
+        tableView.register(nib1, forCellReuseIdentifier: "headerChannelSettingsCell")
+        let nib2 = UINib(nibName: "InformationChannelSettingsCell", bundle: nil)
+        tableView.register(nib2, forCellReuseIdentifier: "informationChannelSettingsCell")
+        let nib3 = UINib(nibName: "MemberChannelSettingsCell", bundle: nil)
+        tableView.register(nib3, forCellReuseIdentifier: "memberChannelSettingsCell")
+        let nib4 = UINib(nibName: "AddMembersChannelSettingsCell", bundle: nil)
+        tableView.register(nib4, forCellReuseIdentifier: "addMembersChannelSettingsCell")
+        let nib5 = UINib(nibName: "LabelChannelSettingsCell", bundle: nil)
+        tableView.register(nib5, forCellReuseIdentifier: "labelChannelSettingsCell")
+    }
+
+    //TEMP TODO:  update statuses
+    fileprivate func configureStartUpdating() {
+        //Костыль (для инициализации UserStatusObserver)
+        UserStatusObserver.sharedObserver
+        self.statusesTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(updateStatuses), userInfo: nil, repeats: true)
+    }
+    
+    func updateStatuses() {
+        SocketManager.sharedInstance.publishBackendNotificationFetchStatuses()
+    }
+    
+    func stopTimer() {
+        if (self.statusesTimer != nil) {
+            self.statusesTimer?.invalidate()
+            self.statusesTimer = nil
         }
     }
 }

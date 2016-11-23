@@ -12,6 +12,7 @@ class HeaderChannelSettingsCell: UITableViewCell {
 
     @IBOutlet weak var channelImage: UIImageView!
     @IBOutlet weak var channelName: UILabel!
+    @IBOutlet weak var channelFirstSymbol: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,7 +23,7 @@ class HeaderChannelSettingsCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        self.contentView.backgroundColor = .white
         // Configure the view for the selected state
     }
 

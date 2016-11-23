@@ -1,4 +1,3 @@
-
 //
 // Created by Maxim Gubin on 28/06/16.
 // Copyright (c) 2016 Kilograpp. All rights reserved.
@@ -248,10 +247,13 @@ extension Api: ChannelApi {
         let newChannel = Channel()
         newChannel.identifier = channelId
         newChannel.team = RealmUtils.realmForCurrentThread().object(ofType: Team.self, forPrimaryKey: teamId)
-        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.loadOnePathPattern(), newChannel)
+        let path =  SOCStringFromStringWithObject(ChannelPathPatternsContainer.loadOnePathPattern(), newChannel)
         
         self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
-            RealmUtils.save(mappingResult.firstObject as! Channel)
+            let channelDictionary = Reflection.fetchNotNullValues(object: mappingResult.firstObject as! Channel)
+            print(channelDictionary)
+            RealmUtils.create(channelDictionary)
+            
             completion(nil)
             }, failure: completion)
     }
@@ -319,6 +321,10 @@ extension Api: ChannelApi {
             try! RealmUtils.realmForCurrentThread().write {
                 Channel.objectById(channelId!)?.currentUserInChannel = false
             }
+            
+            let notificationName = Constants.NotificationsNames.UserJoinNotification
+            NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: channel)
+            
             completion(nil)
             }, failure: completion)
     }
@@ -414,6 +420,17 @@ extension Api: PostApi {
                 DispatchQueue.main.sync { completion(nil) }
             })
         }) { (error) in
+            
+            //If joined current user -> reload left menu
+            if let error = error {
+                if (error.code == -1011) {
+                    let notificationName = Constants.NotificationsNames.UserJoinNotification
+                    try! RealmUtils.realmForCurrentThread().write {
+                    channel.currentUserInChannel = false
+                    }
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: channel)
+                }
+            }
             completion(error)
         }
     }

@@ -18,7 +18,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
         tableView.dataSource = self
         tableView.delegate = self
         setupNavigationBar()
-        
+              
         let nib = UINib(nibName: "ChannelInfoCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "channelInfoCell")
     }
@@ -59,14 +59,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     func setupNavigationBar() {
         self.title = "Channel info".localized
         
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
-        
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: nil)
         self.navigationItem.rightBarButtonItem = saveButton
-    }
-    
-    func backAction(){
-        _=self.navigationController?.popViewController(animated: true)
     }
 }
