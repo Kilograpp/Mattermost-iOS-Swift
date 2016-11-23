@@ -43,6 +43,7 @@
 		862CCFA81DD4715700BE5A38 /* InformationChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCFA71DD4715700BE5A38 /* InformationChannelSettingsCell.swift */; };
 		862CCFAA1DD4717400BE5A38 /* AddMembersChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCFA91DD4717400BE5A38 /* AddMembersChannelSettingsCell.swift */; };
 		862CCFAC1DD4718F00BE5A38 /* MemberChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCFAB1DD4718F00BE5A38 /* MemberChannelSettingsCell.swift */; };
+		864641D91DE58E7600DEC028 /* Reflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864641D81DE58E7600DEC028 /* Reflection.swift */; };
 		868FD8E11DD4C07100EE20B2 /* LabelChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868FD8DF1DD4C07100EE20B2 /* LabelChannelSettingsCell.swift */; };
 		868FD8E21DD4C07100EE20B2 /* LabelChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 868FD8E01DD4C07100EE20B2 /* LabelChannelSettingsCell.xib */; };
 		868FD8E41DD5D9B100EE20B2 /* AddMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868FD8E31DD5D9B100EE20B2 /* AddMembersViewController.swift */; };
@@ -306,6 +307,7 @@
 		862CCFA71DD4715700BE5A38 /* InformationChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationChannelSettingsCell.swift; sourceTree = "<group>"; };
 		862CCFA91DD4717400BE5A38 /* AddMembersChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMembersChannelSettingsCell.swift; sourceTree = "<group>"; };
 		862CCFAB1DD4718F00BE5A38 /* MemberChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberChannelSettingsCell.swift; sourceTree = "<group>"; };
+		864641D81DE58E7600DEC028 /* Reflection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reflection.swift; sourceTree = "<group>"; };
 		868FD8DF1DD4C07100EE20B2 /* LabelChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelChannelSettingsCell.swift; sourceTree = "<group>"; };
 		868FD8E01DD4C07100EE20B2 /* LabelChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LabelChannelSettingsCell.xib; sourceTree = "<group>"; };
 		868FD8E31DD5D9B100EE20B2 /* AddMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMembersViewController.swift; sourceTree = "<group>"; };
@@ -1142,6 +1144,7 @@
 				8B3CB3501DD267EB0078DE25 /* MessageLabel.swift */,
 				8B3CB3511DD267EB0078DE25 /* PageWrapper.swift */,
 				8B3CB3521DD267EB0078DE25 /* ProfileDataSource.swift */,
+				864641D81DE58E7600DEC028 /* Reflection.swift */,
 				8B3CB3531DD267EB0078DE25 /* UserStatus.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
 			);
@@ -1470,6 +1473,7 @@
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */,
+				864641D91DE58E7600DEC028 /* Reflection.swift in Sources */,
 				8B3CB3621DD268390078DE25 /* DocumentPickingModule.swift in Sources */,
 				4B7DB5A51DA5500F000908FB /* Member.swift in Sources */,
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
