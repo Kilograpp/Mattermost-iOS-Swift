@@ -24,6 +24,7 @@ private protocol GetRequests: class {
                    success: ((_ mappingResult: RKMappingResult) -> Void)?,
                    failure: ((_ error: Mattermost.Error) -> Void)?)
     */
+    
     func get(object: AnyObject?, path: String, parameters: [AnyHashable: Any]?, success: ((_ mappingResult: RKMappingResult, _ canSkipMapping: Bool) -> Void)?, failure: ((_ error: Mattermost.Error?) -> Void)?)
     func get(object: AnyObject, path: String!, success: ((_ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?)
     func getObjectsAt(path: String, parameters: [AnyHashable: Any]?, success: ((_ operation: RKObjectRequestOperation, _ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?)

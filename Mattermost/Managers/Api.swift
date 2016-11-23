@@ -245,7 +245,7 @@ extension Api: ChannelApi {
         newChannel.team = RealmUtils.realmForCurrentThread().object(ofType: Team.self, forPrimaryKey: teamId)
         let path =  SOCStringFromStringWithObject(ChannelPathPatternsContainer.loadOnePathPattern(), newChannel)
         
-        self.manager.getObject(path: path!, success: { (mappingResult, skipMapping) in
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let channelDictionary = Reflection.fetchNotNullValues(object: mappingResult.firstObject as! Channel)
             print(channelDictionary)
             RealmUtils.create(channelDictionary)
