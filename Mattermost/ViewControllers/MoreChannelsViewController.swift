@@ -384,7 +384,7 @@ extension MoreChannelsViewController: CompletionMessages {
         var message = ""
         if (self.addedChannelCount > 0) {
             message = String(self.addedChannelCount) + " conversations have been "
-            message += (self.deletedChannelCount > 0) ? " added.\n" : " added."
+            message += (self.deletedChannelCount > 0) ? "added.\n" : "added."
         }
         if (self.deletedChannelCount > 0) {
             message += String(self.deletedChannelCount) + " conversations have been removed."
