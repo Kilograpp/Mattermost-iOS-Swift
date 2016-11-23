@@ -374,20 +374,20 @@ extension MoreChannelsViewController: CompletionMessages {
     }
     
     func singleUserMessage(name: String) {
-        let action = (self.addedChannelCount > 0) ? "added to " : "deleted from "
+        let action = (self.addedChannelCount > 0) ? "added." : "removed."
         
-        let message = "Chat with " + name + " was " + action + "your left menu"
+        let message = "Conversation with " + name + " has been " + action
         AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
     }
     
     func multipleUsersMessage() {
         var message = ""
         if (self.addedChannelCount > 0) {
-            message = String(self.addedChannelCount) + " persons were added to left"
-            message += (self.deletedChannelCount > 0) ? " menu.\n" : " menu."
+            message = String(self.addedChannelCount) + " conversations have been "
+            message += (self.deletedChannelCount > 0) ? " added.\n" : " added."
         }
         if (self.deletedChannelCount > 0) {
-            message += String(self.deletedChannelCount) + " persons were deleted from left menu"
+            message += String(self.deletedChannelCount) + " conversations have been removed."
         }
         AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
     }
