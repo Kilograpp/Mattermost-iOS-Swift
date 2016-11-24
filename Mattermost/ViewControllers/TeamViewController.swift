@@ -183,7 +183,7 @@ extension TeamViewController: UITableViewDelegate {
             self.reloadChat()
         }
         else {
-        self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
 }
