@@ -105,6 +105,18 @@
 		8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */; };
 		8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */; };
 		8BCDDC6E1DE6E0A6006D83BC /* Reflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC6D1DE6E0A6006D83BC /* Reflection.swift */; };
+		8BCDDC701DE6E5C5006D83BC /* ChannelSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC6F1DE6E5C5006D83BC /* ChannelSettingsViewController.swift */; };
+		8BCDDC731DE6E678006D83BC /* HeaderChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC711DE6E678006D83BC /* HeaderChannelSettingsCell.swift */; };
+		8BCDDC741DE6E678006D83BC /* HeaderChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC721DE6E678006D83BC /* HeaderChannelSettingsCell.xib */; };
+		8BCDDC7F1DE6E701006D83BC /* AddMembersChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC751DE6E701006D83BC /* AddMembersChannelSettingsCell.swift */; };
+		8BCDDC801DE6E701006D83BC /* AddMembersChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC761DE6E701006D83BC /* AddMembersChannelSettingsCell.xib */; };
+		8BCDDC821DE6E701006D83BC /* HeaderChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC781DE6E701006D83BC /* HeaderChannelSettingsCell.xib */; };
+		8BCDDC831DE6E701006D83BC /* InformationChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC791DE6E701006D83BC /* InformationChannelSettingsCell.swift */; };
+		8BCDDC841DE6E701006D83BC /* InformationChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7A1DE6E701006D83BC /* InformationChannelSettingsCell.xib */; };
+		8BCDDC851DE6E701006D83BC /* LabelChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7B1DE6E701006D83BC /* LabelChannelSettingsCell.swift */; };
+		8BCDDC861DE6E701006D83BC /* LabelChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7C1DE6E701006D83BC /* LabelChannelSettingsCell.xib */; };
+		8BCDDC871DE6E701006D83BC /* MemberChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7D1DE6E701006D83BC /* MemberChannelSettingsCell.swift */; };
+		8BCDDC881DE6E701006D83BC /* MemberChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7E1DE6E701006D83BC /* MemberChannelSettingsCell.xib */; };
 		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
 		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
 		8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */; };
@@ -355,6 +367,18 @@
 		8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NVActivityIndicatorView.framework; path = Carthage/Build/iOS/NVActivityIndicatorView.framework; sourceTree = "<group>"; };
 		8BCDDC6D1DE6E0A6006D83BC /* Reflection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reflection.swift; sourceTree = "<group>"; };
+		8BCDDC6F1DE6E5C5006D83BC /* ChannelSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSettingsViewController.swift; sourceTree = "<group>"; };
+		8BCDDC711DE6E678006D83BC /* HeaderChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC721DE6E678006D83BC /* HeaderChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC751DE6E701006D83BC /* AddMembersChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMembersChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC761DE6E701006D83BC /* AddMembersChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddMembersChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC781DE6E701006D83BC /* HeaderChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC791DE6E701006D83BC /* InformationChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC7A1DE6E701006D83BC /* InformationChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InformationChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC7B1DE6E701006D83BC /* LabelChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC7C1DE6E701006D83BC /* LabelChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LabelChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC7D1DE6E701006D83BC /* MemberChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC7E1DE6E701006D83BC /* MemberChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberChannelSettingsCell.xib; sourceTree = "<group>"; };
 		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
 		8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+PreparedColor.swift"; sourceTree = "<group>"; };
@@ -859,6 +883,7 @@
 			children = (
 				8B9E27C51DC0971700543C6C /* Settings */,
 				8B77B5DC1DC31CCE00DF0689 /* InviteNewMember */,
+				8BCDDC6F1DE6E5C5006D83BC /* ChannelSettingsViewController.swift */,
 				4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */,
 				4BEA108B1D79B551006BB298 /* TeamViewController.swift */,
 				CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */,
@@ -985,6 +1010,17 @@
 				CDB6D3B11D771CBC00C3018C /* MoreChannel */,
 				D62FEB8F1D4F2AC500390EBC /* LeftMenu */,
 				D6E165851D47C0960014C831 /* Chat */,
+				8BCDDC711DE6E678006D83BC /* HeaderChannelSettingsCell.swift */,
+				8BCDDC751DE6E701006D83BC /* AddMembersChannelSettingsCell.swift */,
+				8BCDDC761DE6E701006D83BC /* AddMembersChannelSettingsCell.xib */,
+				8BCDDC781DE6E701006D83BC /* HeaderChannelSettingsCell.xib */,
+				8BCDDC791DE6E701006D83BC /* InformationChannelSettingsCell.swift */,
+				8BCDDC7A1DE6E701006D83BC /* InformationChannelSettingsCell.xib */,
+				8BCDDC7B1DE6E701006D83BC /* LabelChannelSettingsCell.swift */,
+				8BCDDC7C1DE6E701006D83BC /* LabelChannelSettingsCell.xib */,
+				8BCDDC7D1DE6E701006D83BC /* MemberChannelSettingsCell.swift */,
+				8BCDDC7E1DE6E701006D83BC /* MemberChannelSettingsCell.xib */,
+				8BCDDC721DE6E678006D83BC /* HeaderChannelSettingsCell.xib */,
 				D6E165861D47C1200014C831 /* Reusable.swift */,
 				8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */,
 				8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */,
@@ -1256,9 +1292,12 @@
 				D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */,
 				8B3CB3491DD267C40078DE25 /* Profile.storyboard in Resources */,
 				8BBA7DC61D874F7B003A5B99 /* monkey.gif in Resources */,
+				8BCDDC861DE6E701006D83BC /* LabelChannelSettingsCell.xib in Resources */,
 				D6330AB81D494BF9006D84F4 /* SF-UI-Text-Semibold.otf in Resources */,
 				D6330AB51D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf in Resources */,
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
+				8BCDDC801DE6E701006D83BC /* AddMembersChannelSettingsCell.xib in Resources */,
+				8BCDDC881DE6E701006D83BC /* MemberChannelSettingsCell.xib in Resources */,
 				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
 				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
 				8B3CB34A1DD267C40078DE25 /* RightMenu.storyboard in Resources */,
@@ -1270,7 +1309,10 @@
 				D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */,
 				413B76221D58C6CD00F297BE /* en.lproj in Resources */,
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
+				8BCDDC741DE6E678006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
 				8B3CB3461DD267B80078DE25 /* More.storyboard in Resources */,
+				8BCDDC821DE6E701006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
+				8BCDDC841DE6E701006D83BC /* InformationChannelSettingsCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1404,6 +1446,7 @@
 				4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */,
 				8B3CB3621DD268390078DE25 /* DocumentPickingModule.swift in Sources */,
 				4B7DB5A51DA5500F000908FB /* Member.swift in Sources */,
+				8BCDDC7F1DE6E701006D83BC /* AddMembersChannelSettingsCell.swift in Sources */,
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
@@ -1416,6 +1459,7 @@
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				8B882D711DA6F8A10028F13D /* EmojiTableViewCell.swift in Sources */,
+				8BCDDC851DE6E701006D83BC /* LabelChannelSettingsCell.swift in Sources */,
 				8B3CB3411DD2675F0078DE25 /* ProfileCellBuilder.swift in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				8B3CB3751DD269C30078DE25 /* Api.swift in Sources */,
@@ -1438,6 +1482,7 @@
 				4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
+				8BCDDC831DE6E701006D83BC /* InformationChannelSettingsCell.swift in Sources */,
 				8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */,
 				4B7270821DABF4C000445586 /* AlertView.swift in Sources */,
 				8B3C3ED61DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift in Sources */,
@@ -1527,6 +1572,7 @@
 				8B3CB3801DD28DD20078DE25 /* CreateChannelViewController.swift in Sources */,
 				8B3CB3761DD269C30078DE25 /* ApplicationStateManager.swift in Sources */,
 				CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */,
+				8BCDDC701DE6E5C5006D83BC /* ChannelSettingsViewController.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
 				8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */,
@@ -1541,6 +1587,7 @@
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
 				8B3C3EDA1DC29080005FCAFE /* TextSettingsTableViewCell.swift in Sources */,
 				8B9E1C131DB7454900C05B36 /* DirectChannelTableViewCell.swift in Sources */,
+				8BCDDC871DE6E701006D83BC /* MemberChannelSettingsCell.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */,
 				D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */,
@@ -1589,6 +1636,7 @@
 				8B77B5E61DC78C0500DF0689 /* Preference.swift in Sources */,
 				D8117D261DB4E7AE0058F003 /* EmptyDialogueLabel.swift in Sources */,
 				D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */,
+				8BCDDC731DE6E678006D83BC /* HeaderChannelSettingsCell.swift in Sources */,
 				4B9DD4BD1DB1445200AB4D2D /* UIImage+Orientation.swift in Sources */,
 				8B9E27C91DC0984300543C6C /* MPNSettingsTableViewController.swift in Sources */,
 			);
