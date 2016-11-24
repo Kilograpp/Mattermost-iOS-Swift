@@ -13,3 +13,5 @@ security import .travis/dist.cer -k ~/Library/Keychains/$KEYCHAIN -T /usr/bin/co
 security import .travis/dev.cer -k ~/Library/Keychains/$KEYCHAIN -T /usr/bin/codesign
 security import .travis/dist.p12 -k ~/Library/Keychains/$KEYCHAIN -P $MATCH_PASSWORD -T /usr/bin/codesign
 security import .travis/dev.p12 -k ~/Library/Keychains/$KEYCHAIN -P $MATCH_PASSWORD -T /usr/bin/codesign
+
+security find-identity -v -p codesigning
