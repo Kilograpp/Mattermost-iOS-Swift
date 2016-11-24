@@ -365,7 +365,6 @@ extension MoreChannelsViewController: CompletionMessages {
         if (self.addedChannelCount > 0) {
             message = "You've joined to " + String(self.addedChannelCount)
             message += (self.deletedChannelCount > 0) ? " channels.\n" : " channels."
-            
         }
         if (self.deletedChannelCount > 0) {
             message += "You've left the " + String(self.deletedChannelCount) + " channels."
