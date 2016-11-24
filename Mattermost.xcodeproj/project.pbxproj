@@ -104,6 +104,7 @@
 		8BBCA01A1DD237ED0059ABED /* NSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBCA0191DD237ED0059ABED /* NSettingsCellBuilder.swift */; };
 		8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */; };
 		8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */; };
+		8BCDDC6E1DE6E0A6006D83BC /* Reflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC6D1DE6E0A6006D83BC /* Reflection.swift */; };
 		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
 		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
 		8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */; };
@@ -353,6 +354,7 @@
 		8BBCA0191DD237ED0059ABED /* NSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NVActivityIndicatorView.framework; path = Carthage/Build/iOS/NVActivityIndicatorView.framework; sourceTree = "<group>"; };
+		8BCDDC6D1DE6E0A6006D83BC /* Reflection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reflection.swift; sourceTree = "<group>"; };
 		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
 		8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+PreparedColor.swift"; sourceTree = "<group>"; };
@@ -1071,6 +1073,7 @@
 		D8812AE81D43931700436B5C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				8BCDDC6D1DE6E0A6006D83BC /* Reflection.swift */,
 				8B3CB3691DD2692E0078DE25 /* FilesPickingController.swift */,
 				8B3CB34B1DD267EB0078DE25 /* ActionsNotification.swift */,
 				8B3CB34C1DD267EB0078DE25 /* AssignedFileItem.swift */,
@@ -1574,6 +1577,7 @@
 				D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */,
 				8B3CB3781DD269C30078DE25 /* DataManager.swift in Sources */,
 				CDB4BC621D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift in Sources */,
+				8BCDDC6E1DE6E0A6006D83BC /* Reflection.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				8B77B5EC1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift in Sources */,
 				4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */,
