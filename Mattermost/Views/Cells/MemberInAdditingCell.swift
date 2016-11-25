@@ -15,6 +15,8 @@ class MemberInAdditingCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        memberIcon.layer.cornerRadius = 20.0
+        memberIcon.clipsToBounds = true
         // Initialization code
     }
 
@@ -24,4 +26,14 @@ class MemberInAdditingCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+}
+
+extension MemberInAdditingCell {
+    func configureWithUser(user: User) {
+        memberName.text = user.displayName
+        memberIcon.image = UIImage.sharedAvatarPlaceholder
+        ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
+            self?.memberIcon.image = image
+        }
+    }
 }

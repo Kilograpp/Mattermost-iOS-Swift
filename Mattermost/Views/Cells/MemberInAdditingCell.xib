@@ -16,7 +16,7 @@
                 <frame key="frameInset" width="375" height="49"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about_kg_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Aue-Nn-mJ1">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Aue-Nn-mJ1">
                         <constraints>
                             <constraint firstAttribute="width" constant="40" id="gsr-i5-3Ty"/>
                             <constraint firstAttribute="height" constant="40" id="oIM-EC-m4q"/>
@@ -48,7 +48,4 @@
             <point key="canvasLocation" x="42" y="18"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="about_kg_icon" width="144" height="144"/>
-    </resources>
 </document>

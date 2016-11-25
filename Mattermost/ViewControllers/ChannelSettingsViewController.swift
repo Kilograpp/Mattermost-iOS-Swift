@@ -8,6 +8,7 @@
 
 import UIKit
 import WebImage
+import RealmSwift
 
 class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
 
@@ -160,17 +161,59 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navbar_back_icon")
         
         if segue.identifier == "showMembersAdditing"{
-
+            let allMembersViewController = segue.destination as! AddMembersViewController
+            allMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+        }
+        
+        if segue.identifier == "showAllMembers"{
+                let allMembersViewController = segue.destination as! AllMembersViewController
+                allMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let membersRowCount = (channel.members.count < 5) ? channel.members.count : 5
         if (indexPath==IndexPath(row: 0, section: 2)){
-            performSegue(withIdentifier: "showMembersAdditing", sender: nil)
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard (error == nil) else { return }
+                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    guard (error == nil) else {
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                        return
+                    }
+                    self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
+                })
+            })
+        }
+        if (indexPath.section==2 && indexPath.row >= 1 && indexPath.row <= membersRowCount){
+            let member = channel.members[indexPath.row-1]
+            
+            if member.identifier == Preferences.sharedInstance.currentUserId!{
+                return
+            }
+            
+            if member.directChannel() == nil{
+                Api.sharedInstance.createDirectChannelWith(member, completion: {_ in
+                    ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
+                    self.dismiss(animated: true, completion: nil)
+                })
+            } else {
+                ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
+                self.dismiss(animated: true, completion: nil)
+            }
+
         }
         if (indexPath==IndexPath(row: membersRowCount+1, section: 2)){
-            performSegue(withIdentifier: "showAllMembers", sender: nil)
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard (error == nil) else { return }
+                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    guard (error == nil) else {
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                        return
+                    }
+                    self.performSegue(withIdentifier: "showAllMembers", sender: nil)
+                })
+            })
         }
         if (indexPath==IndexPath(row: 0, section: 1) || indexPath==IndexPath(row: 1, section: 1)){
             performSegue(withIdentifier: "showChannelInfo", sender: nil)

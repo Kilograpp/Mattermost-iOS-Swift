@@ -12,16 +12,19 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
-
+    var channel: Channel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.tableFooterView = UIView.init(frame: CGRect.zero)
         tableView.dataSource = self
         tableView.delegate = self
         setupNavigationBar()
         setupSearchBar()
 
-        let nib = UINib(nibName: "AllMembersCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: "allMembersCell")
+        let nib = UINib(nibName: "MemberChannelSettingsCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: "memberChannelSettingsCell")
     }
     
     override func didReceiveMemoryWarning() {
@@ -40,12 +43,14 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 20
+        return channel.members.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell!
-        cell = tableView.dequeueReusableCell(withIdentifier: "allMembersCell") as! AllMembersCell
+        let memberCell = tableView.dequeueReusableCell(withIdentifier: "memberChannelSettingsCell") as! MemberChannelSettingsCell
+        memberCell.configureWithUser(user: channel.members[indexPath.row])
+        cell = memberCell
         return cell
     }
     
@@ -96,7 +101,19 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let member = channel.members[indexPath.row]
+        
+        if member.directChannel() == nil{
+            Api.sharedInstance.createDirectChannelWith(member, completion: {_ in
+                ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
+                self.dismiss(animated: true, completion: nil)
+            })
+        } else {
+            ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
     //Search updating
     func updateSearchResults(for searchController: UISearchController) {
         
