@@ -724,7 +724,7 @@ extension Api : FileApi {
             self.downloadOperationsArray.removeObject(operation!)
             let realm = RealmUtils.realmForCurrentThread()
             file = realm.object(ofType: File.self, forPrimaryKey: fileId)
-            FileUtils.removeLocalCopyOf(file: self.file)
+            FileUtils.removeLocalCopyOf(file: file!)
             try! realm.write {
                 file?.downoloadedSize = 0
                 file?.localLink = nil
