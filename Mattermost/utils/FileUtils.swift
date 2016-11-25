@@ -15,7 +15,7 @@ private protocol Interface {
     static func thumbLinkForFile(_ file: File) -> URL?
     static func fileIsImage(_ file: File) -> Bool
     static func thumbPostfixForInternalFile(_ file: File) -> String?
-    static func download(fileId: String, completion: @escaping (_ error: Mattermost.Error?) -> Void, progress: @escaping (_ identifier: String, _ value: Float) -> Void)
+    static func removeLocalCopyOf(file: File)
 }
 
 final class FileUtils {
@@ -67,43 +67,11 @@ final class FileUtils {
         }
     }
     
-    static func download(fileId: String,
-                         completion: @escaping (_ error: Mattermost.Error?) -> Void,
-                         progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
-        var file = File.objectById(fileId)
-        let request: NSMutableURLRequest = NSMutableURLRequest(url: file!.downloadURL()!)
-        request.httpMethod = "GET"
+    static func removeLocalCopyOf(file: File) {
+        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file.name)!
         
-        let filePath = self.localLinkFor(file: file!)
-        let operation: AFRKHTTPRequestOperation = AFRKHTTPRequestOperation(request: request as URLRequest!)
-        operation.outputStream = OutputStream(toFileAtPath: filePath, append: false)
-        operation.userInfo = ["identifier" : fileId]
-        
-        
-        operation.setDownloadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
-            let result = Float(totalWritten) / Float(expectedToWrite)
-            print("downloading progress = ", result)
-            progress(fileId, result)
+        if FileManager.default.fileExists(atPath: filePath) {
+           try! FileManager.default.removeItem(atPath: filePath)
         }
-        
-        operation.setCompletionBlockWithSuccess({ (operation: AFRKHTTPRequestOperation?, responseObject: Any?) in
-            let realm = RealmUtils.realmForCurrentThread()
-            file = realm.object(ofType: File.self, forPrimaryKey: fileId)
-            try! realm.write {
-                file?.downoloadedSize = (file?.size)!
-                file?.localLink = filePath
-            }
-            print("downloading finished")
-            completion(nil)
-            }, failure: { (operation: AFRKHTTPRequestOperation?, error: Swift.Error?) -> Void in
-                completion(error as! Error?)
-        })
-        operation.start()
-    }
-    
-    static func cancelDownloading(fileId: String) {
-        let file = File.objectById(fileId)
-        let filePath = self.localLinkFor(file: file!)
-        
     }
 }

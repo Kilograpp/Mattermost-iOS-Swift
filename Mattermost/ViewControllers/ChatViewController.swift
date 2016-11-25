@@ -905,15 +905,7 @@ extension ChatViewController {
         let fileId = notification.userInfo?["fileId"]
         let file = RealmUtils.realmForCurrentThread().object(ofType: File.self, forPrimaryKey: fileId)
         let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file?.name)!
-        
-     /*   if (file?.isImage)! {
-            self.documentInteractionController = UIDocumentInteractionController(url: URL(string: filePath)!)
-            self.documentInteractionController?.presentPreview(animated: true)
-            //print(file?._downloadLink)
-            return
-        }*/
-        
-        
+
         if FileManager.default.fileExists(atPath: filePath) {
             self.documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
             self.documentInteractionController?.delegate = self

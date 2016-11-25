@@ -94,7 +94,6 @@
 		8B9E27CB1DC0985D00543C6C /* NSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */; };
 		8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */; };
 		8BA11FDF1DCB380C0073051A /* CommonSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA11FDE1DCB380C0073051A /* CommonSettingsTableViewCell.swift */; };
-		8BA8180D1DE63B11007FD1A7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */; };
 		8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */; };
 		8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */; };
 		8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */; };
@@ -356,7 +355,6 @@
 		8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSettingsTableViewController.swift; sourceTree = "<group>"; };
 		8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BA11FDE1DCB380C0073051A /* CommonSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonSettingsTableViewCell.swift; sourceTree = "<group>"; };
-		8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatViewController.swift; sourceTree = "<group>"; };
 		8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingInProcessView.swift; sourceTree = "<group>"; };
 		8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchingInProcessView.xib; sourceTree = "<group>"; };
@@ -1042,7 +1040,6 @@
 				D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */,
 				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
 				4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */,
-				8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1490,7 +1487,6 @@
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
 				8B3CB3791DD269C30078DE25 /* ObjectManager.swift in Sources */,
 				D8D601381D5E007700951F18 /* Day.swift in Sources */,
-				8BA8180D1DE63B11007FD1A7 /* PreviewView.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
