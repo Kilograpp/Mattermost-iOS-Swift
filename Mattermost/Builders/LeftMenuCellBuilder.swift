@@ -13,10 +13,13 @@ private protocol LeftMenuCellBuilderInteface: class {
     func cellFor(channel: Channel, indexPath: IndexPath) -> UITableViewCell
 }
 
+
 final class LeftMenuCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -26,6 +29,8 @@ final class LeftMenuCellBuilder {
     }
 }
 
+
+//MARK: LeftMenuCellBuilderInteface
 extension LeftMenuCellBuilder: LeftMenuCellBuilderInteface {
     func cellHeight() -> CGFloat {
         return 42

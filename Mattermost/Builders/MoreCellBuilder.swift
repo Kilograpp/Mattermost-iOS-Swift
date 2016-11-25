@@ -13,15 +13,20 @@ private protocol Inteface: class {
     func cell(resultTuple: ResultTuple) -> UITableViewCell
 }
 
+
 final class MoreCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
 }
 
+
+//MARK: Interface
 extension MoreCellBuilder: Inteface {
     internal func cellFor(channel: Channel) -> UITableViewCell {
         return UITableViewCell()

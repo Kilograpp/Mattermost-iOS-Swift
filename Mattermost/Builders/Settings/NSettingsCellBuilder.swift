@@ -22,7 +22,6 @@ final class NSettingsCellBuilder {
 //MARK: Properties
     fileprivate let tableView: UITableView
     
-
 //MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView

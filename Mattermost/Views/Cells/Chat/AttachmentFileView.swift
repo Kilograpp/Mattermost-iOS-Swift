@@ -60,7 +60,7 @@ fileprivate protocol Setup: class {
     func drawSize(text: String)
 }
 
-fileprivate protocol Configuration: class {
+fileprivate protocol AttachmentFileViewConfiguration: class {
     func updateIconForCurrentState()
 }
 
@@ -131,8 +131,8 @@ extension AttachmentFileView: Setup {
 }
 
 
-//MARK: Configuration
-extension AttachmentFileView: Configuration {
+//MARK: AttachmentFileViewConfiguration
+extension AttachmentFileView: AttachmentFileViewConfiguration {
     fileprivate func updateIconForCurrentState() {
         switch self.downloadingState {
         case DownloadingState.NotDownloaded:

@@ -8,14 +8,17 @@
 
 import Foundation
 
-private protocol Inteface: class {
+fileprivate protocol Inteface: class {
     func cellFor(user: User, indexPath: IndexPath) -> UITableViewCell
 }
 
+
 final class ProfileCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -27,7 +30,6 @@ final class ProfileCellBuilder {
 
 
 //MARK: Interface
-
 extension ProfileCellBuilder: Inteface {
     func cellFor(user: User, indexPath: IndexPath) -> UITableViewCell {
         var cell = self.tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.reuseIdentifier) as! ProfileTableViewCell
@@ -58,7 +60,6 @@ extension ProfileCellBuilder: Inteface {
         
         return cell
     }
-    
     
     func cellForPost(post: Post, searchingText: String) -> UITableViewCell {
         let reuseIdentifier = post.hasAttachments() ?  FeedSearchAttachmentTableViewCell.reuseIdentifier : FeedSearchTableViewCell.reuseIdentifier

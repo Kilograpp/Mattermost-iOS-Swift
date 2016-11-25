@@ -10,6 +10,7 @@
 		413B76221D58C6CD00F297BE /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B76211D58C6CD00F297BE /* en.lproj */; };
 		413B762C1D58CF4100F297BE /* ru.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B762B1D58CF4100F297BE /* ru.lproj */; };
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
+		442137B51DE7D47700B18BD3 /* DNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */; };
 		4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */; };
 		4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B404A791D92914A002F9F6D /* ObserverUtils.swift */; };
 		4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4497F31D93ECA9009939A9 /* PostStatusView.swift */; };
@@ -267,6 +268,7 @@
 		413B76211D58C6CD00F297BE /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en.lproj; path = Settings.bundle/en.lproj; sourceTree = "<group>"; };
 		413B762B1D58CF4100F297BE /* ru.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ru.lproj; sourceTree = "<group>"; };
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
+		442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSettingsTableViewController.swift; sourceTree = "<group>"; };
 		4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostFileViewCell.swift; path = PostAttachmentsViewCell/PostFileViewCell.swift; sourceTree = "<group>"; };
 		4B404A791D92914A002F9F6D /* ObserverUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverUtils.swift; sourceTree = "<group>"; };
 		4B4497F31D93ECA9009939A9 /* PostStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostStatusView.swift; sourceTree = "<group>"; };
@@ -612,6 +614,7 @@
 				8B9E27C81DC0984300543C6C /* MPNSettingsTableViewController.swift */,
 				8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */,
 				8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */,
+				442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1476,6 +1479,7 @@
 				D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */,
 				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,
 				CDF07ECE1D7F129100172D1E /* ChannelPathPatternsContainer.swift in Sources */,
+				442137B51DE7D47700B18BD3 /* DNSettingsTableViewController.swift in Sources */,
 				4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,

@@ -13,10 +13,13 @@ private protocol RightMenuCellBuilderInteface: class {
     func cellFor(indexPath: IndexPath) -> UITableViewCell
 }
 
+
 final class RightMenuCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK:LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -26,6 +29,8 @@ final class RightMenuCellBuilder {
     }
 }
 
+
+//MARK: RightMenuCellBuilderInteface
 extension RightMenuCellBuilder: RightMenuCellBuilderInteface {
     func cellHeight() -> CGFloat {
         return 60
@@ -98,6 +103,5 @@ extension RightMenuCellBuilder: RightMenuCellBuilderInteface {
         default:
             return
         }
-        
     }
 }

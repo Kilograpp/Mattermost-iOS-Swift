@@ -17,7 +17,7 @@ fileprivate struct DownloadingState {
 }
 
 protocol AttachmentImageCellConfiguration: class {
-    
+    func configureWithFile(_ file: File)
 }
 
 final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
@@ -86,7 +86,7 @@ fileprivate protocol Setup: class {
     func setupProgressView()
 }
 
-fileprivate protocol Configuration: class {
+fileprivate protocol Updating: class {
     func configureLabel()
     func configureImageView()
     func updateIconForCurrentState()
@@ -152,7 +152,7 @@ extension AttachmentImageCell: Setup {
 
 
 //MARK: Configuration
-extension AttachmentImageCell: Configuration {
+extension AttachmentImageCell: Updating {
     fileprivate func configureDownloadingState() {
         self.downloadIconImageView.isHidden = false
         if file.downoloadedSize == file.size {

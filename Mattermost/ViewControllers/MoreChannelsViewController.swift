@@ -64,7 +64,7 @@ fileprivate protocol Setup {
     func setupTableView()
 }
 
-fileprivate protocol Configuration : class {
+fileprivate protocol Configuration {
     var isPrivateChannel : Bool {get set}
     func prepareResults()
 }
