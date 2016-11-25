@@ -49,7 +49,6 @@ extension NSettingsCellBuilder: Inteface {
         switch indexPath.section {
         case 0:
             cell.descriptionLabel?.text = notifyProps.completeDesctop()
-            cell.descriptionLabel?.textColor = UIColor.lightGray
         case 1:
             cell.descriptionLabel?.text = notifyProps.completeEmail()
             cell.descriptionLabel?.textColor = UIColor.lightGray

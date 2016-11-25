@@ -85,6 +85,12 @@ extension NSettingsTableViewController: Navigation {
         _ = self.navigationController?.popViewController(animated: true)
     }
     
+    func proceedToDNSettings() {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let mPNSettrings = storyboard.instantiateViewController(withIdentifier: "DNSettingsTableViewController")
+        self.navigationController?.pushViewController(mPNSettrings, animated: true)
+    }
+    
     func proceedToMPNSettings() {
         let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
         let mPNSettrings = storyboard.instantiateViewController(withIdentifier: "MPNSettingsTableViewController")
@@ -120,7 +126,7 @@ extension NSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            print("")
+            proceedToDNSettings()
         case 1:
             print("")
         case 2:
