@@ -118,7 +118,8 @@ extension WTMSettingsTableViewController: Request {
             let message = "User notification properties were successfully updated"
             AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
         }
-    }}
+    }
+}
 
 
 //MARK: UITableViewDataSource

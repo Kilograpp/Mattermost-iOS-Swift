@@ -45,6 +45,8 @@ private protocol UserApi: class {
     func login(_ email: String, password: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadCompleteUsersList(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadCurrentUser(completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func update(firstName: String?, lastName: String?, userName: String?, nickName: String?, email: String?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func update(currentPassword: String, newPassword: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol PostApi: class {
@@ -421,6 +423,46 @@ extension Api: UserApi {
             RealmUtils.save(users)
             completion(nil)
         }, failure: completion)
+    }
+    
+    func update(firstName: String? = nil,
+                lastName: String? = nil,
+                userName: String? = nil,
+                nickName: String? = nil,
+                email: String? = nil,
+                completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = UserPathPatternsContainer.userUpdatePathPattern()
+        let user = DataManager.sharedInstance.currentUser
+        
+        var params: [String : Any] = ["id" : user?.identifier! as Any,
+                                      "create_at" : (user?.createAt?.timeIntervalSince1970)! * 1000]
+        params["first_name"] = firstName ?? user?.firstName
+        params["last_name"] = lastName ?? user?.lastName
+        params["nickname"] = nickName ?? user?.nickname
+        params["username"] = userName ?? user?.username
+        params["email"] = email ?? user?.email
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            
+            completion(nil)
+        }) { (error) in
+            completion(error)
+        }
+    }
+    
+    func update(currentPassword: String, newPassword: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = UserPathPatternsContainer.userUpdatePasswordPathPattern()
+        
+        let params = ["user_id" : DataManager.sharedInstance.currentUser?.identifier as Any,
+                      "current_password" : currentPassword,
+                      "new_password" : newPassword] as [String : Any]
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            
+            completion(nil)
+        }) { (error) in
+            completion(error)
+        }
     }
 }
 

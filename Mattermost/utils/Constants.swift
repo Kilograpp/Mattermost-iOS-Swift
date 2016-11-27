@@ -113,6 +113,13 @@ struct Constants {
             static let ChannelWide = "\"@channel\", \"@all\""
             static let None = "No words configured"
         }
-        
+    }
+    
+    struct UserFieldType {
+        static let FullName: Int = 0
+        static let UserName: Int = 1
+        static let NickName: Int = 2
+        static let Email: Int = 3
+        static let Password: Int = 4
     }
 }
