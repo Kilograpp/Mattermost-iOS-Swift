@@ -19,7 +19,7 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.delegate = self
         setupNavigationBar()
         setupSearchBar()
-
+        //
         let nib = UINib(nibName: "AllMembersCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "allMembersCell")
     }
