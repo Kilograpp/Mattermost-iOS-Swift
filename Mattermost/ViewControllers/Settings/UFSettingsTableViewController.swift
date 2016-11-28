@@ -79,7 +79,7 @@ extension UFSettingsTableViewController: Setup {
     }
     
     func setupTableView() {
-        self.tableView.backgroundColor = ColorBucket.whiteColor
+        self.tableView?.backgroundColor = UIColor.kg_lightLightGrayColor()
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
     }
 }

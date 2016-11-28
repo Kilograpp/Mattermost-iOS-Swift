@@ -31,7 +31,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    fileprivate lazy var cellBuilder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView, displayOnly: self.isDisplayOnly!)
+    fileprivate lazy var builder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView, displayOnly: self.isDisplayOnly!)
     var user: User?
     fileprivate var isDisplayOnly: Bool?
  
@@ -81,6 +81,8 @@ fileprivate protocol Action {
 
 fileprivate protocol Navigation {
     func returnToChat()
+    func proceedToUFSettingsWith(type: Int)
+    func proccedToNSettings()
 }
 
 
@@ -151,6 +153,13 @@ extension ProfileViewController: Navigation {
         let navigation = self.menuContainerViewController.centerViewController
         (navigation! as AnyObject).pushViewController(uFSettings, animated: true)
     }
+    
+    func proccedToNSettings() {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let nSettings = storyboard.instantiateViewController(withIdentifier: "NSettingsTableViewController")
+        let navigation = self.menuContainerViewController.centerViewController
+        (navigation! as AnyObject).pushViewController(nSettings, animated: true)
+    }
 }
 
 
@@ -161,11 +170,11 @@ extension ProfileViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == 0) ? Constants.Profile.FirsSectionDataSource.count : Constants.Profile.SecondSecionDataSource.count
+        return self.builder.numberOfRowsFor(section: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return self.cellBuilder.cellFor(user: self.user!, indexPath: indexPath)
+        return self.builder.cellFor(user: self.user!, indexPath: indexPath)
     }
 }
 
@@ -196,6 +205,8 @@ extension ProfileViewController: UITableViewDelegate {
                 proceedToUFSettingsWith(type: Constants.UserFieldType.Email)
             case 1:
                 proceedToUFSettingsWith(type: Constants.UserFieldType.Password)
+            case 2:
+                proccedToNSettings()
             default:
                 break
             }

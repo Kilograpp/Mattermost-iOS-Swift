@@ -19,20 +19,7 @@ class NSettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //initialSetup()
-
-        Api.sharedInstance.update(currentPassword: "123456b", newPassword: "123456a") { (error) in
-        
-        }
-        
-      /*  Api.sharedInstance.update(firstName: "test") { (error) in
-        }*/
-        
-       // Api.sharedInstance.update(user: currentUser!) { (error) in
-        
-       // }
-        
-        
+        initialSetup()
     }
     
     override func viewWillAppear(_ animated: Bool) {

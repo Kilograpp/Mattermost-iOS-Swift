@@ -35,7 +35,7 @@ final class ProfileCellBuilder {
 //MARK: Interface
 extension ProfileCellBuilder: Inteface {
     func numberOfRowsFor(section: Int) -> Int {
-        if isDisplayOnly {
+        if self.isDisplayOnly {
             return (section == 0) ? 3 : 1
         } else {
             return (section == 0) ? 4 : 3
