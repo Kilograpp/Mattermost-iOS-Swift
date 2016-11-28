@@ -8,88 +8,210 @@
 
 import UIKit
 
+private protocol Configuration: class {
+    func configureWith(userFieldType: Int)
+}
+
 class UFSettingsTableViewController: UITableViewController {
 
+//MARK: Property
+    fileprivate var saveButton: UIBarButtonItem!
+    fileprivate lazy var builder: UFSettingsCellBuilder = UFSettingsCellBuilder(tableView: self.tableView, userFieldType: self.userFieldType)
+    fileprivate var userFieldType: Int!
+    
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        initialSetup()
     }
+}
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+
+//MARK: Configuration
+extension UFSettingsTableViewController: Configuration {
+    func configureWith(userFieldType: Int) {
+        self.userFieldType = userFieldType
     }
+}
 
-    // MARK: - Table view data source
 
+fileprivate protocol Setup: class {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupTableView()
+}
+
+fileprivate protocol Action: class {
+    func backAction()
+    func saveAction()
+}
+
+fileprivate protocol Navigation: class {
+    func returtToSettings()
+}
+
+fileprivate protocol Request: class {
+    func updateFullName()
+    func updateUserName()
+    func updateNickName()
+    func updateEmail()
+    func updatePassword()
+}
+
+
+//MARK: Setup
+extension UFSettingsTableViewController: Setup {
+    func initialSetup() {
+        setupNavigationBar()
+        setupTableView()
+    }
+    
+    func setupNavigationBar() {
+        self.title = "Edit"
+        
+        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
+        self.navigationItem.leftBarButtonItem = backButton
+        
+        self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
+        self.saveButton.isEnabled = false
+        self.navigationItem.rightBarButtonItem = self.saveButton
+    }
+    
+    func setupTableView() {
+        self.tableView.backgroundColor = ColorBucket.whiteColor
+        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+    }
+}
+
+
+//MARK: Action
+extension UFSettingsTableViewController: Action {
+    func backAction() {
+        returtToSettings()
+    }
+    
+    func saveAction() {
+        switch Int(self.userFieldType) {
+        case Constants.UserFieldType.FullName:
+            updateFullName()
+        case Constants.UserFieldType.UserName:
+            updateUserName()
+        case Constants.UserFieldType.NickName:
+            updateNickName()
+        case Constants.UserFieldType.Email:
+            updateEmail()
+        case Constants.UserFieldType.Password:
+            updatePassword()
+        default:
+            return
+        }
+    }
+}
+
+
+//MARK: Navigation
+extension UFSettingsTableViewController: Navigation {
+    func returtToSettings() {
+        _ = self.navigationController?.popViewController(animated: true)
+    }
+}
+
+//MARK: Request
+extension UFSettingsTableViewController: Request {
+    internal func updateFullName() {
+        let firstName = self.builder.infoFor(section: 0)
+        let lastName = self.builder.infoFor(section: 1)
+        
+        Api.sharedInstance.update(firstName: firstName, lastName: lastName) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                return
+            }
+                                    
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Display name was successfully updated", viewController: UIViewController())
+        }
+    }
+    
+    func updateUserName() {
+        let userName = self.builder.infoFor(section: 0)
+        Api.sharedInstance.update(userName: userName) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                return
+            }
+            
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Username was successfully updated", viewController: UIViewController())
+        }
+    }
+    
+    internal func updateNickName() {
+        let nickName = self.builder.infoFor(section: 0)
+        Api.sharedInstance.update(nickName: nickName) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                return
+            }
+            
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Nickname was successfully updated", viewController: UIViewController())
+        }
+    }
+    
+    internal func updateEmail() {
+        let email = self.builder.infoFor(section: 0)
+        Api.sharedInstance.update(email: email) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                return
+            }
+            
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Email was successfully updated", viewController: UIViewController())
+        }
+    }
+    
+    internal func updatePassword() {
+        let oldPassword = self.builder.infoFor(section: 0)
+        let newPassword = self.builder.infoFor(section: 1)
+        Api.sharedInstance.update(currentPassword: oldPassword, newPassword: newPassword) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                return
+            }
+            
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Password was successfully updated", viewController: UIViewController())
+        }
+    }
+}
+
+
+//MARK: UITableViewDataSource
+extension UFSettingsTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return self.builder.numberOfSections()
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return self.builder.numberOfRows()
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+        return self.builder.cellFor(indexPath: indexPath)
     }
-    */
+}
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
+
+//MARK: UITableViewDelegate
+extension UFSettingsTableViewController {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.builder.title(section: section)
+    }
+}
+
+
+//MARK: UITextFieldDelegate
+extension UFSettingsTableViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        self.saveButton.isEnabled = true
         return true
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

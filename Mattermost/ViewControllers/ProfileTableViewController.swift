@@ -17,7 +17,7 @@ import QuartzCore
 }
 
 protocol ProfileViewControllerConfiguration {
-    func configureForCurrentUser()
+    func configureForCurrentUser(displayOnly: Bool)
     func configureFor(user: User)
 }
 
@@ -31,8 +31,9 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    fileprivate lazy var cellBuilder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView)
+    fileprivate lazy var cellBuilder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView, displayOnly: self.isDisplayOnly!)
     var user: User?
+    fileprivate var isDisplayOnly: Bool?
  
 //MARK: LifeCycle
     override func viewDidLoad() {
@@ -56,8 +57,9 @@ class ProfileViewController: UIViewController {
 
 
 extension ProfileViewController: ProfileViewControllerConfiguration {
-    func configureForCurrentUser() {
+    func configureForCurrentUser(displayOnly: Bool) {
         self.user = DataManager.sharedInstance.currentUser!
+        self.isDisplayOnly = displayOnly
     }
     
     func configureFor(user: User) {
@@ -123,6 +125,7 @@ extension ProfileViewController: Setup {
     func setupTable() {
         self.tableView?.backgroundColor = UIColor.kg_lightLightGrayColor()
         self.tableView?.register(ProfileTableViewCell.nib, forCellReuseIdentifier: ProfileTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.isScrollEnabled = !self.isDisplayOnly!
     }
 }
 
@@ -139,6 +142,14 @@ extension ProfileViewController: Action {
 extension ProfileViewController: Navigation {
     func returnToChat() {
        _ = self.navigationController?.popViewController(animated: true)
+    }
+    
+    func proceedToUFSettingsWith(type: Int) {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let uFSettings = storyboard.instantiateViewController(withIdentifier: "UFSettingsTableViewController") as! UFSettingsTableViewController
+        uFSettings.configureWith(userFieldType: type)
+        let navigation = self.menuContainerViewController.centerViewController
+        (navigation! as AnyObject).pushViewController(uFSettings, animated: true)
     }
 }
 
@@ -163,6 +174,32 @@ extension ProfileViewController: UITableViewDataSource {
 extension ProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 15
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !self.isDisplayOnly! else { return }
+        
+        if indexPath.section == 0 {
+            switch indexPath.row {
+            case 0:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.FullName)
+            case 1:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.UserName)
+            case 2:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.NickName)
+            default:
+                break
+            }
+        } else {
+            switch indexPath.row {
+            case 0:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.Email)
+            case 1:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.Password)
+            default:
+                break
+            }
+        }
     }
 }
 

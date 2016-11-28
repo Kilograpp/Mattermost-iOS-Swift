@@ -10,6 +10,7 @@ import Foundation
 
 fileprivate protocol Inteface: class {
     func cellFor(user: User, indexPath: IndexPath) -> UITableViewCell
+    func numberOfRowsFor(section: Int) -> Int
 }
 
 
@@ -17,10 +18,12 @@ final class ProfileCellBuilder {
 
 //MARK: Properties
     fileprivate let tableView: UITableView
+    fileprivate let isDisplayOnly: Bool
     
 //MARK: LifeCycle
-    init(tableView: UITableView) {
+    init(tableView: UITableView, displayOnly: Bool) {
         self.tableView = tableView
+        self.isDisplayOnly = displayOnly
     }
     
     private init?() {
@@ -31,6 +34,14 @@ final class ProfileCellBuilder {
 
 //MARK: Interface
 extension ProfileCellBuilder: Inteface {
+    func numberOfRowsFor(section: Int) -> Int {
+        if isDisplayOnly {
+            return (section == 0) ? 3 : 1
+        } else {
+            return (section == 0) ? 4 : 3
+        }
+    }
+    
     func cellFor(user: User, indexPath: IndexPath) -> UITableViewCell {
         var cell = self.tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.reuseIdentifier) as! ProfileTableViewCell
         if (cell == nil) {
@@ -57,6 +68,7 @@ extension ProfileCellBuilder: Inteface {
         }
         
         cell.configureWith(title: title, info: info, icon: icon)
+        cell.arrowButton?.isHidden = self.isDisplayOnly
         
         return cell
     }

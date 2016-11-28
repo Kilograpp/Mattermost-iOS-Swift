@@ -8,12 +8,20 @@
 
 import UIKit
 
-class UFSettingsTableViewCell: UITableViewCell {
+class UFSettingsTableViewCell: UITableViewCell, Reusable {
 
 //MARK: Properties
     @IBOutlet weak var infoTextField: UITextField?
     
 //MARK: LifeCycle
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

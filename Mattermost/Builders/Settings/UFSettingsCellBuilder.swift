@@ -18,8 +18,9 @@ fileprivate let passwordSectionHeaderTitles: Array = [ "PASSWORD OLD", "PASSWORD
 private protocol Inteface: class {
     func numberOfSections() -> Int
     func numberOfRows() -> Int
-    func cellFor(notifyProps: NotifyProps, indexPath: IndexPath) -> UITableViewCell
+    func cellFor(indexPath: IndexPath) -> UITableViewCell
     func title(section: Int) -> String
+    func infoFor(section: Int) -> String
 }
 
 final class UFSettingsCellBuilder {
@@ -57,7 +58,7 @@ extension UFSettingsCellBuilder: Inteface {
         return 1
     }
     
-    func cellFor(notifyProps: NotifyProps, indexPath: IndexPath) -> UITableViewCell {
+    func cellFor(indexPath: IndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "UFSettingsTableViewCell", for: indexPath) as! UFSettingsTableViewCell
         let user = DataManager.sharedInstance.currentUser
         
@@ -100,5 +101,11 @@ extension UFSettingsCellBuilder: Inteface {
         default:
             return ""
         }
+    }
+    
+    func infoFor(section: Int) -> String {
+        let indexPath = IndexPath(row: 0, section: section)
+        let cell = self.tableView.cellForRow(at: indexPath) as! UFSettingsTableViewCell
+        return (cell.infoTextField?.text)!
     }
 }
