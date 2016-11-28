@@ -43,34 +43,52 @@ extension ProfileCellBuilder: Inteface {
     }
     
     func cellFor(user: User, indexPath: IndexPath) -> UITableViewCell {
-        var cell = self.tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.reuseIdentifier) as! ProfileTableViewCell
-        if (cell == nil) {
-            cell = UITableViewCell(style: .default, reuseIdentifier:ProfileTableViewCell.reuseIdentifier) as! ProfileTableViewCell
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.reuseIdentifier) as! ProfileTableViewCell
+        
+        if indexPath.section == 0 {
+            configureFirstSection(cell: cell, row: indexPath.row, user: user)
+        } else {
+            configureSecondSection(cell: cell, row: indexPath.row, user: user)
         }
-        
-        let dateSource = (indexPath.section == 0) ? Constants.Profile.FirsSectionDataSource : Constants.Profile.SecondSecionDataSource
-        let title = dateSource[indexPath.row].title
-        let icon = dateSource[indexPath.row].icon
-        
-        var info: String? = nil
-        switch indexPath.row {
-        case 0:
-            info = (indexPath.section == 0) ? user.firstName : user.email
-            break
-        case 1:
-            info = (indexPath.section == 0) ? user.nickname : nil
-            break
-        case 2:
-            info = (indexPath.section == 0) ? user.username : "On"
-            break
-        default:
-            info = nil
-        }
-        
-        cell.configureWith(title: title, info: info, icon: icon)
         cell.arrowButton?.isHidden = self.isDisplayOnly
         
         return cell
+    }
+    
+    func configureFirstSection(cell: ProfileTableViewCell, row: Int, user: User) {
+        let dateSource = Constants.Profile.FirsSectionDataSource
+        let title = dateSource[row].title
+        let icon = dateSource[row].icon
+        
+        switch row {
+        case 0:
+            cell.configureWith(title: title, info: user.firstName, icon: icon)
+        case 1:
+            cell.configureWith(title: title, info: user.nickname, icon: icon)
+        case 2:
+            cell.configureWith(title: title, info: user.username, icon: icon)
+        case 3:
+            cell.configureWith(title: title, info: "", icon: icon)
+        default:
+            break
+        }
+    }
+    
+    func configureSecondSection(cell: ProfileTableViewCell, row: Int, user: User) {
+        let dateSource = Constants.Profile.SecondSecionDataSource
+        let title = dateSource[row].title
+        let icon = dateSource[row].icon
+        
+        switch row {
+        case 0:
+            cell.configureWith(title: title, info: user.email, icon: icon)
+        case 1:
+            cell.configureWith(title: title, info: StringUtils.emptyString(), icon: icon)
+        case 2:
+            cell.configureWith(title: title, info: "On", icon: icon)
+        default:
+            break
+        }
     }
     
     func cellForPost(post: Post, searchingText: String) -> UITableViewCell {

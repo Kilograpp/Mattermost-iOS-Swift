@@ -37,10 +37,10 @@ extension RightMenuCellBuilder: RightMenuCellBuilderInteface {
     }
     
     func cellFor(indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
-        if cell == nil {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
+       /* if cell == nil {
             cell = UITableViewCell(style: .default, reuseIdentifier:"Cell")
-        }
+        }*/
         
         self.configureCellAtIndexPath(cell!, indexPath: indexPath)
         cell?.backgroundColor = ColorBucket.sideMenuBackgroundColor

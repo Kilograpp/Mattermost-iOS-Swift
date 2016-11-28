@@ -16,6 +16,8 @@ fileprivate struct DownloadingState {
     static let Downloaded: Int  = 2
 }
 
+fileprivate let NullString = "(null)"
+
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
 }
@@ -175,9 +177,14 @@ extension AttachmentImageCell: Updating {
         var downloadUrl = self.file.thumbURL()!
         
         //MARK: addition for search attachment cell
+        /*
         if (downloadUrl.absoluteString.contains("(null)")) {
             let fixedPath = downloadUrl.absoluteString.replacingOccurrences(of: "(null)", with: Preferences.sharedInstance.currentTeamId!)
-            print("loading path = ", fixedPath)
+            downloadUrl = NSURL(string: fixedPath)! as URL
+        }*/
+        
+        if (downloadUrl.absoluteString.contains(NullString)) {
+            let fixedPath = downloadUrl.absoluteString.replacingOccurrences(of: NullString, with: Preferences.sharedInstance.currentTeamId!)
             downloadUrl = NSURL(string: fixedPath)! as URL
         }
         
