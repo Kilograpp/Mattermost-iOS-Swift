@@ -17,7 +17,7 @@ class DNSettingsTableViewController: UITableViewController {
     fileprivate let user = DataManager.sharedInstance.currentUser
     
     var selectedSendOption: Int = 0
-    var selectedSoundOption: Int = 0
+    var selectedSoundOption: Bool = false
     var selectedDurationOption: Int = 0
     
     
@@ -49,6 +49,7 @@ fileprivate protocol Setup {
 
 fileprivate protocol Action {
     func backAction()
+    func soundSwitchAction(stateSwitch: UISwitch)
     func saveAction()
 }
 
@@ -90,6 +91,11 @@ extension DNSettingsTableViewController: Setup {
 extension DNSettingsTableViewController: Action {
     func backAction() {
         returtToNSettings()
+    }
+    
+    @IBAction func soundSwitchAction(stateSwitch: UISwitch) {
+        self.saveButton.isEnabled = true
+        self.selectedSoundOption = stateSwitch.isOn
     }
     
     func saveAction() {
@@ -135,7 +141,8 @@ extension DNSettingsTableViewController {
         case 0:
             cell.accessoryType = (self.selectedSendOption == indexPath.row) ? .checkmark : .none
         case 1:
-            cell.accessoryType = (self.selectedSoundOption == indexPath.row) ? .checkmark : .none
+            //cell.accessoryType = (self.selectedSoundOption == indexPath.row) ? .checkmark : .none
+            break
         case 2:
             cell.accessoryType = (self.selectedDurationOption == indexPath.row) ? .checkmark : .none
         default:
@@ -150,12 +157,12 @@ extension DNSettingsTableViewController {
 //MARK: UITableViewDelegate
 extension DNSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section != 1 else { return }
+        
         var selectedRow = 0
         switch indexPath.section {
         case 0:
            selectedRow = self.selectedSendOption
-        case 1:
-            selectedRow = self.selectedSoundOption
         case 2:
             selectedRow = self.selectedDurationOption
         default:
@@ -168,8 +175,6 @@ extension DNSettingsTableViewController {
         switch indexPath.section {
         case 0:
             self.selectedSendOption = indexPath.row
-        case 1:
-            self.selectedSoundOption = indexPath.row
         case 2:
             self.selectedDurationOption = indexPath.row
         default:

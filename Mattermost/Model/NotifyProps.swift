@@ -83,6 +83,18 @@ extension NotifyProps: Desktop {
     func completeDesctop() -> String {
         return "For all activity, with sound, shown for 5 sec"
     }
+    
+    func sendDesctopState() -> String {
+        return ""
+    }
+    
+    func isDesktopSoundOn() -> Bool {
+        return (self.desktopSound == "true")
+    }
+    
+    func desktopDurationState() -> String {
+        return self.desktopDuration! + " seconds"
+    }
 }
 
 
@@ -98,10 +110,10 @@ extension NotifyProps: Email {
 extension NotifyProps: MobilePush {
     func completeMobilePush() -> String{
         print((self.push)!)
-        let sendIndex = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.push)! }!
+        let sendIndex = Constants.NotifyProps.Send.index { return $0.state == (self.push)! }!
         print((self.pushStatus)!)
         let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.pushStatus)! }!
-        let send = Constants.NotifyProps.MobilePush.Send[sendIndex].description
+        let send = Constants.NotifyProps.Send[sendIndex].description
         let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
         return send + " when " + trigger
     }

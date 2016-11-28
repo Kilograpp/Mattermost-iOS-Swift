@@ -59,7 +59,7 @@ extension UFSettingsCellBuilder: Inteface {
     }
     
     func cellFor(indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: "UFSettingsTableViewCell", for: indexPath) as! UFSettingsTableViewCell
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: "TextFieldSettingsTableViewCell", for: indexPath) as! TextFieldSettingsTableViewCell
         let user = DataManager.sharedInstance.currentUser
         
         switch self.userFieldType {
@@ -105,7 +105,7 @@ extension UFSettingsCellBuilder: Inteface {
     
     func infoFor(section: Int) -> String {
         let indexPath = IndexPath(row: 0, section: section)
-        let cell = self.tableView.cellForRow(at: indexPath) as! UFSettingsTableViewCell
+        let cell = self.tableView.cellForRow(at: indexPath) as! TextFieldSettingsTableViewCell
         return (cell.infoTextField?.text)!
     }
 }

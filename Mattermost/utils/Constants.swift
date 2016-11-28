@@ -106,8 +106,8 @@ struct Constants {
     }
     
     struct NotifyProps {
+        static let Send = [ (state: "all", description: "For all activity"), (state: "mention", description: "For mentions and direct messages"), (state: "none", description: "Never") ]
         struct MobilePush {
-            static let Send = [ (state: "all", description: "For all activity"), (state: "mention", description: "For mentions and direct messages"), (state: "none", description: "Never") ]
             static let Trigger = [ (state: "online", description: "Online, away or offline"), (state: "away", description: "Away or offline"), (state: "offline", description: "Offline")]
         }
         struct Words {

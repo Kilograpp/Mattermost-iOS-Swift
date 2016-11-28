@@ -1,17 +1,17 @@
 //
-//  UFSettingsTableViewCell.swift
+//  SwitchSettingsTableViewCell.swift
 //  Mattermost
 //
-//  Created by Екатерина on 27.11.16.
+//  Created by Екатерина on 28.11.16.
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
 import UIKit
 
-class UFSettingsTableViewCell: UITableViewCell, Reusable {
+class SwitchSettingsTableViewCell: UITableViewCell, Reusable {
 
 //MARK: Properties
-    @IBOutlet weak var infoTextField: UITextField?
+    @IBOutlet weak var stateSwitch: UISwitch?
     
 //MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -32,4 +32,5 @@ class UFSettingsTableViewCell: UITableViewCell, Reusable {
 
         // Configure the view for the selected state
     }
+
 }
