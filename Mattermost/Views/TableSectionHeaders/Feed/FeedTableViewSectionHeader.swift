@@ -8,7 +8,7 @@
 
 class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     var titleLabel: UILabel?
-    var barView: UIView?
+    var barView = UIView()//: UIView?
     fileprivate var title : String?
     
     static func reuseIdentifier() -> String {
@@ -43,9 +43,9 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     }
     
     func setupBarView() -> Void {
-        self.barView = UIView.init()
-        self.barView?.backgroundColor = ColorBucket.grayColor
-        self.addSubview(self.barView!)
+        //self.barView = UIView.init()
+        self.barView.backgroundColor = ColorBucket.grayColor
+        self.addSubview(self.barView)
     }
     
     func configureWithTitle(_ title: String) {
@@ -60,15 +60,11 @@ class FeedTableViewSectionHeader: UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        //temp, s3 refactor
-        if (self.title == nil) {
-            self.title = "SWIFT3"
-        }
-        let width = CGFloat(StringUtils.widthOfString(self.title as NSString!, font: FontBucket.postAuthorNameFont))// as CGFloat
+        let width = CGFloat(StringUtils.widthOfString(self.title as NSString!, font: FontBucket.postAuthorNameFont))
         self.titleLabel!.frame = CGRect(x: UIScreen.screenWidth() - 10 - ceil(width), y: 5, width: ceil(width), height: 18);
-        if ((self.barView) != nil) {
-            self.barView!.frame = CGRect(x: 0, y: 12, width: self.titleLabel!.frame.minX - 10, height: 1);
-        }
+      //  if ((self.barView) != nil) {
+            self.barView.frame = CGRect(x: 0, y: 12, width: self.titleLabel!.frame.minX - 10, height: 1);
+       // }
     }
     
     override func prepareForReuse() {

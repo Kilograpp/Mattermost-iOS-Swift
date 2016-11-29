@@ -19,7 +19,22 @@ class AlertManager {
     
     static let sharedManager: AlertManager = AlertManager()
     
-    func showSuccesWithMessage(message:String, viewController: UIViewController) {
+    func showSuccesWithMessage(message:String) {
+        let alertView = AlertView(type: .success, message: message)
+        alertView.showAlertView(animated: true)
+    }
+    
+    func showErrorWithMessage(message:String) {
+        let alertView = AlertView(type: .error, message: message)
+        alertView.showAlertView(animated: true)
+    }
+    
+    func showWarningWithMessage(message:String) {
+        let alertView = AlertView(type: .warning, message: message)
+        alertView.showAlertView(animated: true)
+    }
+    
+ /*   func showSuccesWithMessage(message:String, viewController: UIViewController) {
         let alertView = AlertView(type: .success, message: message)
         alertView.presentingViewController = viewController//.navigationController
         alertView.showAlertView(animated: true)
@@ -35,5 +50,5 @@ class AlertManager {
         let alertView = AlertView(type: .warning, message: message)
         alertView.presentingViewController = viewController.navigationController
         alertView.showAlertView(animated: true)
-    }
+    }*/
 }

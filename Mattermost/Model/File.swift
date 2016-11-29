@@ -31,7 +31,7 @@ final class File: RealmObject {
             computeName()
             computeIsImage()
             computeIdentifierIfNeeded()
-       //     Api.sharedInstance.getInfo(file: self)
+           // Api.sharedInstance.getInfo(fileId: self.identifier!)
         }
     }
     dynamic var localLink: String?

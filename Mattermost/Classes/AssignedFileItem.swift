@@ -24,8 +24,7 @@ final class AssignedFileItem {
 
 extension AssignedFileItem: Equatable {}
 
-// MARK: Equatable
-
+//MARK: Equatable
 func ==(lhs: AssignedFileItem, rhs: AssignedFileItem) -> Bool {
     return lhs.identifier == rhs.identifier
 }

@@ -22,7 +22,6 @@ final class NSettingsCellBuilder {
 //MARK: Properties
     fileprivate let tableView: UITableView
     
-
 //MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -49,11 +48,9 @@ extension NSettingsCellBuilder: Inteface {
         
         switch indexPath.section {
         case 0:
-            cell.descriptionLabel?.text = notifyProps.completeDesctop()
-            cell.descriptionLabel?.textColor = UIColor.lightGray
+            cell.descriptionLabel?.text = notifyProps.completeDesktop()
         case 1:
             cell.descriptionLabel?.text = notifyProps.completeEmail()
-            cell.descriptionLabel?.textColor = UIColor.lightGray
         case 2:
             cell.descriptionLabel?.text = notifyProps.completeMobilePush()
         case 3:

@@ -8,10 +8,13 @@
 
 import Foundation
 
-
 final class ChannelInfoCellBuilder {
+    
+//MARK: Properties
     let tableView: UITableView?
     let channel: Channel?
+    
+//MARK: LifeCycle
     init(tableView:UITableView, channel:Channel) {
         self.tableView = tableView
         self.channel = channel

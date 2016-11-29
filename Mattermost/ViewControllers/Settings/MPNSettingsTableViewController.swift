@@ -80,7 +80,7 @@ extension MPNSettingsTableViewController: Setup {
     }
     
     func setupForCurrentNotifyProps() {
-        self.selectedSendOption = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.notifyProps?.push)! }!
+        self.selectedSendOption = Constants.NotifyProps.Send.index { return $0.state == (self.notifyProps?.push)! }!
         self.selectedTriggerOption = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.notifyProps?.pushStatus)! }!
     }
     
@@ -116,18 +116,18 @@ extension MPNSettingsTableViewController: Navigation {
 extension MPNSettingsTableViewController: Request {
     func updateSettings() {
         try! RealmUtils.realmForCurrentThread().write {
-            self.notifyProps?.push = Constants.NotifyProps.MobilePush.Send[self.selectedSendOption].state
+            self.notifyProps?.push = Constants.NotifyProps.Send[self.selectedSendOption].state
             self.notifyProps?.pushStatus = Constants.NotifyProps.MobilePush.Trigger[self.selectedTriggerOption].state
         }
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!/*, viewController: self*/)
                 return
             }
             self.saveButton.isEnabled = false
             let message = "User notification properties were successfully updated"
-            AlertManager.sharedManager.showSuccesWithMessage(message: message, viewController: self)
+            AlertManager.sharedManager.showSuccesWithMessage(message: message/*, viewController: self*/)
         }
     }
 }

@@ -16,6 +16,7 @@ import MFSideMenu
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
 
 //MARK: Properties
+    fileprivate var documentInteractionController: UIDocumentInteractionController?
     var channel : Channel!
     fileprivate var resultsObserver: FeedNotificationsObserver! = nil
     fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
@@ -79,6 +80,7 @@ private protocol Action {
 private protocol Navigation {
     func proceedToSearchChat()
     func proceedToProfileFor(user: User)
+    func proceedToChannelSettings(channel: Channel)
 }
 
 private protocol Request {
@@ -97,6 +99,10 @@ extension ChatViewController {
         
         ChannelObserver.sharedObserver.delegate = self
         initialSetup()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
+                                               object: nil)
 
     }
     
@@ -115,6 +121,9 @@ extension ChatViewController {
         super.viewWillDisappear(animated)
         
         removeSLKKeyboardObservers()
+        NotificationCenter.default.removeObserver(self,
+                                                  name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
+                                                  object: nil)
     }
     
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
@@ -131,10 +140,6 @@ extension ChatViewController {
     }
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 4acfd2744fdb9e7f87e45e37a3d1f5c2ddd077ca
 //MARK: Setup
 extension ChatViewController: Setup {
     fileprivate func initialSetup() {
@@ -377,14 +382,14 @@ extension ChatViewController: Action {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
         }
         else {
-            
+            proceedToChannelSettings(channel: self.channel)
         }
     }
     
     func sendPostAction() {
         guard self.filesAttachmentsModule.fileUploadingInProgress else {
             let message = "Please, wait until download finishes"
-            AlertManager.sharedManager.showWarningWithMessage(message: message, viewController: self)
+            AlertManager.sharedManager.showWarningWithMessage(message: message)//, viewController: self)
             return
         }
         
@@ -438,11 +443,32 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToProfileFor(user: User) {
+        Api.sharedInstance.loadChannels(with: { (error) in
+            guard (error == nil) else { return }
+        })
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         (profile as! ProfileViewController).configureFor(user: user)
         let navigation = self.menuContainerViewController.centerViewController
         (navigation! as AnyObject).pushViewController(profile!, animated:true)
+    }
+    
+    func proceedToChannelSettings(channel: Channel) {
+        Api.sharedInstance.loadChannels(with: { (error) in
+            guard (error == nil) else { return }
+            Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
+                guard (error == nil) else {
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)//, viewController: self)
+                    return
+                }
+                let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
+                let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
+                ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+                
+                //(channelSettings as! ProfileViewController).configureFor(user: user)
+                self.navigationController?.present(channelSettings, animated: true, completion: nil)
+            })
+        })
     }
 }
 
@@ -546,9 +572,13 @@ extension ChatViewController: Request {
     func sendPost() {
         PostUtils.sharedInstance.sendPost(channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+                var message = (error?.message!)!
+                if error?.code == -1011{
+                    message = "You left this channel".localized
+                }
+                AlertManager.sharedManager.showErrorWithMessage(message: message)//, viewController: self)
             }
-          //  self.emptyDialogueLabel.isHidden = true
+            //self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
         }
         self.dismissKeyboard(true)
@@ -561,7 +591,7 @@ extension ChatViewController: Request {
         
         PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)//, viewController: self)
             }
             self.selectedPost = nil
         }
@@ -866,5 +896,44 @@ extension ChatViewController {
         let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
         
         return cellHeight * CGFloat(smilesResult.count)
+    }
+}
+
+
+extension ChatViewController {
+    func presentDocumentInteractionController(notification: NSNotification) {
+        let fileId = notification.userInfo?["fileId"]
+        let file = RealmUtils.realmForCurrentThread().object(ofType: File.self, forPrimaryKey: fileId)
+        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file?.name)!
+
+        if FileManager.default.fileExists(atPath: filePath) {
+            self.documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
+            self.documentInteractionController?.delegate = self
+            if (file?.isImage)! {
+                self.documentInteractionController?.presentPreview(animated: true)
+            } else {
+                let frame = CGRect(x: 0, y: 0, width: 10, height: 10)
+                self.documentInteractionController?.presentOpenInMenu(from: frame, in: self.view, animated: true)
+            }
+        }
+    }
+}
+
+extension ChatViewController: UIDocumentInteractionControllerDelegate {
+    func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
+        
+    }
+    func documentInteractionController(_ controller: UIDocumentInteractionController, didEndSendingToApplication application: String?) {
+        
+    }
+    func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
+        
+    }
+    func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
+        
+    }
+    
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
     }
 }

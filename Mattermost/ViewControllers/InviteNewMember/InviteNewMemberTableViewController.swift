@@ -139,7 +139,7 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
         var invites: [Dictionary<String, String>] = []
         for memberTouple in self.memberTuplesArray {
             guard (memberTouple.email.characters.count > 0) else {
-                AlertManager.sharedManager.showWarningWithMessage(message: "One or more empty emails!", viewController: self)
+                AlertManager.sharedManager.showWarningWithMessage(message: "One or more empty emails!"/*, viewController: self*/)
                 return
             }
             
@@ -147,7 +147,7 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
         }
         Api.sharedInstance.sendInvites(invites) { (error) in
             guard (error == nil) else {
-                AlertManager.sharedManager.showWarningWithMessage(message: (error?.message)!, viewController: self);
+                AlertManager.sharedManager.showWarningWithMessage(message: (error?.message)!/*, viewController: self*/);
                 return
             }
             

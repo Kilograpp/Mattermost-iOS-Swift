@@ -31,7 +31,9 @@ final class User: RealmObject {
     dynamic var displayName: String? {
         didSet { computeDisplayNameWidth() }
     }
-
+    dynamic var createAt: Date?
+    dynamic var updateAt: Date?
+    
     let channels = LinkingObjects(fromType: Channel.self, property: ChannelRelationships.members.rawValue)
     //let notifyProps = NotifyProps()
     dynamic var notifyProps: NotifyProps?
@@ -55,15 +57,17 @@ final class User: RealmObject {
 
 enum UserAttributes: String {
     case privateStatus = "privateStatus"
-    case email = "email"
-    case firstName = "firstName"
-    case lastName = "lastName"
-    case identifier = "identifier"
-    case nickname = "nickname"
-    case status = "status"
-    case username = "username"
-    case avatarLink = "avatarLink"
-    case notifyProps = "notifyProps"
+    case email         = "email"
+    case firstName     = "firstName"
+    case lastName      = "lastName"
+    case identifier    = "identifier"
+    case nickname      = "nickname"
+    case status        = "status"
+    case username      = "username"
+    case avatarLink    = "avatarLink"
+    case notifyProps   = "notifyProps"
+    case createAt      = "createAt"
+    case updateAt      = "updateAt"
 }
 
 enum UserRelationships: String {
