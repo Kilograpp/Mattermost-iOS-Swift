@@ -11,22 +11,10 @@ import UIKit
 class TextSettingsTableViewCell: UITableViewCell {
 
 //MARK: Properties
-    
     @IBOutlet weak var wordsTextView: UITextView?
     @IBOutlet weak var placeholderLabel: UILabel?
     
-}
-
-
-private protocol TextSettingsTableViewCellLifeCycle {
-    func awakeFromNib()
-    func setSelected(_ selected: Bool, animated: Bool)
-}
-
-
-//MARK: TextSettingsTableViewCellLifeCycle
-
-extension TextSettingsTableViewCell: TextSettingsTableViewCellLifeCycle {
+//MARK: LifeCycle
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

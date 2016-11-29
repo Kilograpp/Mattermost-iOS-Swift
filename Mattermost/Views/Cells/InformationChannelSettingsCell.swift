@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+//Нужен ли ксиб?
 class InformationChannelSettingsCell: UITableViewCell {
 
     @IBOutlet weak var infoName: UILabel!

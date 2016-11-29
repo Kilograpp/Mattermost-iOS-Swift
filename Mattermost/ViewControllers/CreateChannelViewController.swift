@@ -68,6 +68,7 @@ fileprivate protocol Request: class {
 extension CreateChannelViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
+        setupSwipeRight()
        // setupNameTextField()
        // setupHeaderTextField()
        // setupPurposeTextField()
@@ -82,6 +83,12 @@ extension CreateChannelViewController: Setup {
         self.createButton = UIBarButtonItem.init(title: "Create", style: .done, target: self, action: #selector(createAction))
         self.createButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = self.createButton
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
     
  /*   func setupNameTextField() {
@@ -143,13 +150,13 @@ extension CreateChannelViewController: Request {
         self.createButton.isEnabled = false
         Api.sharedInstance.createChannel(self.privateType, name: name!, header: header!, purpose: purpose!) { (channel, error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
                 self.createButton.isEnabled = true
                 return
             }
             
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was successfully created", viewController: self)
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was successfully created")//, viewController: self)
             self.returnToNew(channel: channel!)
         }
     }

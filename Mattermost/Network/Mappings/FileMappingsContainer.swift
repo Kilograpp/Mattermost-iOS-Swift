@@ -12,7 +12,7 @@ import RestKit
 private protocol ResponseMappings: class {
     static func simplifiedMapping() -> RKObjectMapping
     static func uploadMapping() -> RKObjectMapping
-    static func fileInfoMapping() -> RKObjectMapping
+    static func getInfoMapping() -> RKObjectMapping
 }
 
 
@@ -35,9 +35,15 @@ extension FileMappingsContainer: ResponseMappings {
         mapping?.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
         return mapping!
     }
-    static func fileInfoMapping() -> RKObjectMapping {
-        let mapping = RKObjectMapping(with: NSMutableDictionary.self)
-        mapping?.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
-        return mapping!
+    static func getInfoMapping() -> RKObjectMapping {
+        let mapping = super.emptyMapping()
+        mapping.addAttributeMappings(from: [
+            "filename"          : FileAttributes.name.rawValue,
+            "extension"         : FileAttributes.ext.rawValue,
+            "size"              : FileAttributes.size.rawValue,
+            "mime_type"         : FileAttributes.mimeType.rawValue,
+            "has_preview_image" : FileAttributes.hasPreview.rawValue
+            ])
+         return mapping
     }
 }

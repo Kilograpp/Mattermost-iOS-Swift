@@ -8,19 +8,24 @@
 
 import Foundation
 
+fileprivate protocol Configuration: class {
+    func configureTitleViewWithCannel(_ channel: Channel, loadingInProgress: Bool)
+}
+
+
 class ChatNavigationController: UINavigationController, UINavigationControllerDelegate {
-    
+
+//MARK: Properties
     var titleLabel : UILabel!
     var titleView : UIView!
     var actitvityIndicatorView : UIView?
     var chatNavigationDelegate : ChatNavigationDelegate?
-    
+
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()
-        setupTitleView()
-        setupTitleLabel()
-        setupGestureRecognizer()
+        
+        initialSetup()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -28,10 +33,46 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
         _ = UIStatusBarStyle.default
     }
     
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait
+    }
+}
+
+
+extension ChatNavigationController: Configuration {
+    func configureTitleViewWithCannel(_ channel: Channel, loadingInProgress: Bool) {
+        self.titleLabel.text = channel.displayName
+        self.titleLabel.sizeToFit()
+        self.titleView.layoutSubviews()
+    }
+}
+
+
+fileprivate protocol Setup: class {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupTitleLabel()
+    func setupTitleView()
+    func setupGestureRecognizer()
+}
+
+fileprivate protocol Action: class {
+    func tapOnTitleAction()
+}
+
+
+//MARK: Setup
+extension ChatNavigationController: Setup {
+    func initialSetup() {
+        setupNavigationBar()
+        setupTitleView()
+        setupTitleLabel()
+        setupGestureRecognizer()
+    }
+    
     func setupNavigationBar()  {
         self.navigationBar.isTranslucent = false
         self.navigationBar.barTintColor = ColorBucket.whiteColor
-  
     }
     
     func setupTitleLabel() {
@@ -53,33 +94,22 @@ class ChatNavigationController: UINavigationController, UINavigationControllerDe
         titleView.clipsToBounds = true
     }
     
-    
-    
     func setupGestureRecognizer() {
         self.titleLabel.isUserInteractionEnabled = true
         self.titleLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapOnTitleAction)))
     }
-    
+}
+
+
+//MARK: Action
+extension ChatNavigationController: Action {
     func tapOnTitleAction() {
         self.chatNavigationDelegate?.didSelectTitle()
     }
-    
-    func configureTitleViewWithCannel(_ channel: Channel, loadingInProgress: Bool) {
-       // temp
-        self.titleLabel.text = channel.displayName
-        titleLabel.sizeToFit()
-        titleView.layoutSubviews()
-    }
-    
- //UINavigationControllerDelegate
-    
-    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.portrait
-    }
-    
 }
 
-//MARK: - ChatNavigationDelegate
+
+//MARK: ChatNavigationDelegate
 protocol ChatNavigationDelegate {
     func didSelectTitle()
 }

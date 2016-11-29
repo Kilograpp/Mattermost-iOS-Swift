@@ -213,7 +213,7 @@ extension SearchChatViewController: Requests {
             }
             else {
                 if (error?.code != -999) {
-                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!/*, viewController: self*/)
                 }
             }
         }
@@ -272,11 +272,11 @@ extension SearchChatViewController: UITableViewDataSource {
 //MARK: UITableViewDelegate
 extension SearchChatViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
-        if view == nil {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
+      /*  if view == nil {
             view = FeedTableViewSectionHeader(reuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
-        }
-        let titleString = (section < self.dates.count) ? (self.dates[section] as Date).feedSectionDateFormat() : ""
+        }*/
+        let titleString = (section < self.dates.count) ? (self.dates[section] as Date).feedSectionDateFormat() : StringUtils.emptyString()
         view!.configureWithTitle(titleString)
         view!.transform = tableView.transform
         

@@ -47,6 +47,8 @@ fileprivate protocol Action {
 
 fileprivate protocol Navigation {
     func returnToChat()
+    func proceedToDNSettings()
+    func proccedToENSettings()
     func proceedToMPNSettings()
     func proceedToWTMSettings()
 }
@@ -60,6 +62,7 @@ fileprivate protocol Request {
 extension NSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
+        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -67,6 +70,12 @@ extension NSettingsTableViewController: Setup {
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 
@@ -83,6 +92,18 @@ extension NSettingsTableViewController: Action {
 extension NSettingsTableViewController: Navigation {
     func returnToChat() {
         _ = self.navigationController?.popViewController(animated: true)
+    }
+    
+    func proceedToDNSettings() {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let dNSettrings = storyboard.instantiateViewController(withIdentifier: "DNSettingsTableViewController")
+        self.navigationController?.pushViewController(dNSettrings, animated: true)
+    }
+    
+    func proccedToENSettings() {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let eNSettrings = storyboard.instantiateViewController(withIdentifier: "ENSettingsTableViewController")
+        self.navigationController?.pushViewController(eNSettrings, animated: true)
     }
     
     func proceedToMPNSettings() {
@@ -120,9 +141,9 @@ extension NSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            print("")
+            proceedToDNSettings()
         case 1:
-            print("")
+            proccedToENSettings()
         case 2:
             proceedToMPNSettings()
         case 3:

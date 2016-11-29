@@ -16,10 +16,13 @@ class LoginNavigationController: UINavigationController, UINavigationControllerD
     }
 }
 
+
 private protocol Setup {
     func setupNavigationBar()
 }
 
+
+//MARK: Setup
 extension LoginNavigationController: Setup {
     func setupNavigationBar() {
         let navBar = self.navigationBar
@@ -29,5 +32,8 @@ extension LoginNavigationController: Setup {
         navBar.tintColor = ColorBucket.blackColor
         navBar.backgroundColor = UIColor.clear
         navBar.topItem?.title = ""
+    }
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
 }

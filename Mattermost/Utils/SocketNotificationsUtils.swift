@@ -117,6 +117,7 @@ final class SocketNotificationUtils {
             let file = File()
             file.rawLink = fileName
             RealmUtils.save(file)
+            //Api.sharedInstance.getInfo(file: file)
             post.files.append(file)
         }
  

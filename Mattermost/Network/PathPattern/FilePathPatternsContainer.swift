@@ -12,7 +12,6 @@ private protocol PathPatterns: class {
     static func uploadPathPattern() -> String
     static func downloadPathPattern() -> String
     static func thumbPathPattern() -> String
-    static func updateCommonPathPattern() -> String
     static func getInfoPathPattern() -> String
 }
 
@@ -23,13 +22,10 @@ final class FilePathPatternsContainer: PathPatterns {
     static func thumbPathPattern() -> String {
         return "teams/:\(File.teamIdentifierPath())/files/get:thumbPostfix\\.jpg"
     }
-    static func updateCommonPathPattern() -> String {
-        return "teams/:path/files/get_info/:path/:path/:path/:path"
-    }
     static func uploadPathPattern() -> String {
         return "teams/:identifier/files/upload"
     }
     static func getInfoPathPattern() -> String {
-        return "teams/:path/files/get_info/:path/:path/:path/:path/"
+        return "teams/:path/files/get_info/:path/:path/:path/:path"
     }
 }

@@ -22,7 +22,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        // Вынести setup в extension
         tableView.dataSource = self
         tableView.delegate = self
         setupNavigationBar()
@@ -34,7 +34,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+// Разнести методы по extension
+// Сделать билдер
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if (section == 2){
             return String(channel.members.count)+" members"
@@ -257,7 +258,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             })
         }
     }
-    
+    //Вынести действия в отдельный extension
     func backAction(){
         self.dismiss(animated: true, completion: nil)
     }

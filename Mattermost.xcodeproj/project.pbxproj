@@ -10,6 +10,13 @@
 		413B76221D58C6CD00F297BE /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B76211D58C6CD00F297BE /* en.lproj */; };
 		413B762C1D58CF4100F297BE /* ru.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B762B1D58CF4100F297BE /* ru.lproj */; };
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
+		4410CFA21DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4410CFA11DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift */; };
+		4410CFA41DEABC08003C365F /* UFSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */; };
+		442137B51DE7D47700B18BD3 /* DNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */; };
+		44385CB71DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */; };
+		449663371DED099B0007A954 /* ENSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449663361DED099B0007A954 /* ENSettingsTableViewController.swift */; };
+		44E3A94D1DE8D9E2001CD849 /* UFSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */; };
+		44E3A94F1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */; };
 		4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */; };
 		4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B404A791D92914A002F9F6D /* ObserverUtils.swift */; };
 		4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4497F31D93ECA9009939A9 /* PostStatusView.swift */; };
@@ -28,32 +35,6 @@
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
-		8602A8391DD5F6C200A6D21C /* AllMembersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8602A8381DD5F6C200A6D21C /* AllMembersCell.swift */; };
-		8602A83B1DD5F6E600A6D21C /* AllMembersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8602A83A1DD5F6E600A6D21C /* AllMembersCell.xib */; };
-		8602A83D1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8602A83C1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift */; };
-		8602A8401DD60EC300A6D21C /* ChannelInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8602A83E1DD60EC300A6D21C /* ChannelInfoCell.swift */; };
-		8602A8411DD60EC300A6D21C /* ChannelInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8602A83F1DD60EC300A6D21C /* ChannelInfoCell.xib */; };
-		862CCF981DD4508500BE5A38 /* ChannelSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCF971DD4508500BE5A38 /* ChannelSettingsViewController.swift */; };
-		862CCF9A1DD4512D00BE5A38 /* ChannelSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 862CCF991DD4512D00BE5A38 /* ChannelSettings.storyboard */; };
-		862CCF9E1DD4539D00BE5A38 /* HeaderChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 862CCF9D1DD4539D00BE5A38 /* HeaderChannelSettingsCell.xib */; };
-		862CCFA01DD457F600BE5A38 /* InformationChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 862CCF9F1DD457F600BE5A38 /* InformationChannelSettingsCell.xib */; };
-		862CCFA21DD45A2700BE5A38 /* AddMembersChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 862CCFA11DD45A2700BE5A38 /* AddMembersChannelSettingsCell.xib */; };
-		862CCFA41DD45EE400BE5A38 /* MemberChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 862CCFA31DD45EE400BE5A38 /* MemberChannelSettingsCell.xib */; };
-		862CCFA61DD4713500BE5A38 /* HeaderChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCFA51DD4713500BE5A38 /* HeaderChannelSettingsCell.swift */; };
-		862CCFA81DD4715700BE5A38 /* InformationChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCFA71DD4715700BE5A38 /* InformationChannelSettingsCell.swift */; };
-		862CCFAA1DD4717400BE5A38 /* AddMembersChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCFA91DD4717400BE5A38 /* AddMembersChannelSettingsCell.swift */; };
-		862CCFAC1DD4718F00BE5A38 /* MemberChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CCFAB1DD4718F00BE5A38 /* MemberChannelSettingsCell.swift */; };
-		864641D91DE58E7600DEC028 /* Reflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864641D81DE58E7600DEC028 /* Reflection.swift */; };
-		868FD8E11DD4C07100EE20B2 /* LabelChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868FD8DF1DD4C07100EE20B2 /* LabelChannelSettingsCell.swift */; };
-		868FD8E21DD4C07100EE20B2 /* LabelChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 868FD8E01DD4C07100EE20B2 /* LabelChannelSettingsCell.xib */; };
-		868FD8E41DD5D9B100EE20B2 /* AddMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868FD8E31DD5D9B100EE20B2 /* AddMembersViewController.swift */; };
-		868FD8E81DD5DD2700EE20B2 /* MemberInAdditingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 868FD8E71DD5DD2700EE20B2 /* MemberInAdditingCell.xib */; };
-		868FD8EA1DD5DFC700EE20B2 /* MemberInAdditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868FD8E91DD5DFC700EE20B2 /* MemberInAdditingCell.swift */; };
-		868FD8EE1DD5F58000EE20B2 /* AllMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868FD8ED1DD5F58000EE20B2 /* AllMembersViewController.swift */; };
-		8B0429C81DE22F7F00B537F1 /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429C71DE22F7F00B537F1 /* FileInfo.swift */; };
-		8B0429CA1DE2302E00B537F1 /* FileInfoMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */; };
-		8B0429CC1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */; };
-		8B0429D01DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
 		8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */; };
@@ -129,6 +110,19 @@
 		8BBCA01A1DD237ED0059ABED /* NSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBCA0191DD237ED0059ABED /* NSettingsCellBuilder.swift */; };
 		8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */; };
 		8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */; };
+		8BCDDC6E1DE6E0A6006D83BC /* Reflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC6D1DE6E0A6006D83BC /* Reflection.swift */; };
+		8BCDDC701DE6E5C5006D83BC /* ChannelSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC6F1DE6E5C5006D83BC /* ChannelSettingsViewController.swift */; };
+		8BCDDC731DE6E678006D83BC /* HeaderChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC711DE6E678006D83BC /* HeaderChannelSettingsCell.swift */; };
+		8BCDDC741DE6E678006D83BC /* HeaderChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC721DE6E678006D83BC /* HeaderChannelSettingsCell.xib */; };
+		8BCDDC7F1DE6E701006D83BC /* AddMembersChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC751DE6E701006D83BC /* AddMembersChannelSettingsCell.swift */; };
+		8BCDDC801DE6E701006D83BC /* AddMembersChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC761DE6E701006D83BC /* AddMembersChannelSettingsCell.xib */; };
+		8BCDDC821DE6E701006D83BC /* HeaderChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC781DE6E701006D83BC /* HeaderChannelSettingsCell.xib */; };
+		8BCDDC831DE6E701006D83BC /* InformationChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC791DE6E701006D83BC /* InformationChannelSettingsCell.swift */; };
+		8BCDDC841DE6E701006D83BC /* InformationChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7A1DE6E701006D83BC /* InformationChannelSettingsCell.xib */; };
+		8BCDDC851DE6E701006D83BC /* LabelChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7B1DE6E701006D83BC /* LabelChannelSettingsCell.swift */; };
+		8BCDDC861DE6E701006D83BC /* LabelChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7C1DE6E701006D83BC /* LabelChannelSettingsCell.xib */; };
+		8BCDDC871DE6E701006D83BC /* MemberChannelSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7D1DE6E701006D83BC /* MemberChannelSettingsCell.swift */; };
+		8BCDDC881DE6E701006D83BC /* MemberChannelSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BCDDC7E1DE6E701006D83BC /* MemberChannelSettingsCell.xib */; };
 		8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969A41D74C73B0010A524 /* AboutViewController.swift */; };
 		8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */; };
 		8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */; };
@@ -280,6 +274,13 @@
 		413B76211D58C6CD00F297BE /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en.lproj; path = Settings.bundle/en.lproj; sourceTree = "<group>"; };
 		413B762B1D58CF4100F297BE /* ru.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ru.lproj; sourceTree = "<group>"; };
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
+		4410CFA11DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsCellBuilder.swift; sourceTree = "<group>"; };
+		442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSettingsTableViewController.swift; sourceTree = "<group>"; };
+		44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		449663361DED099B0007A954 /* ENSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSettingsTableViewController.swift; sourceTree = "<group>"; };
+		44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsTableViewController.swift; sourceTree = "<group>"; };
+		44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/UserRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
 		4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostFileViewCell.swift; path = PostAttachmentsViewCell/PostFileViewCell.swift; sourceTree = "<group>"; };
 		4B404A791D92914A002F9F6D /* ObserverUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverUtils.swift; sourceTree = "<group>"; };
 		4B4497F31D93ECA9009939A9 /* PostStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostStatusView.swift; sourceTree = "<group>"; };
@@ -300,32 +301,6 @@
 		4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
-		8602A8381DD5F6C200A6D21C /* AllMembersCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllMembersCell.swift; sourceTree = "<group>"; };
-		8602A83A1DD5F6E600A6D21C /* AllMembersCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AllMembersCell.xib; sourceTree = "<group>"; };
-		8602A83C1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelHeaderAndDescriptionViewController.swift; sourceTree = "<group>"; };
-		8602A83E1DD60EC300A6D21C /* ChannelInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelInfoCell.swift; sourceTree = "<group>"; };
-		8602A83F1DD60EC300A6D21C /* ChannelInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChannelInfoCell.xib; sourceTree = "<group>"; };
-		862CCF971DD4508500BE5A38 /* ChannelSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSettingsViewController.swift; sourceTree = "<group>"; };
-		862CCF991DD4512D00BE5A38 /* ChannelSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ChannelSettings.storyboard; sourceTree = "<group>"; };
-		862CCF9D1DD4539D00BE5A38 /* HeaderChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderChannelSettingsCell.xib; sourceTree = "<group>"; };
-		862CCF9F1DD457F600BE5A38 /* InformationChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InformationChannelSettingsCell.xib; sourceTree = "<group>"; };
-		862CCFA11DD45A2700BE5A38 /* AddMembersChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddMembersChannelSettingsCell.xib; sourceTree = "<group>"; };
-		862CCFA31DD45EE400BE5A38 /* MemberChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberChannelSettingsCell.xib; sourceTree = "<group>"; };
-		862CCFA51DD4713500BE5A38 /* HeaderChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderChannelSettingsCell.swift; sourceTree = "<group>"; };
-		862CCFA71DD4715700BE5A38 /* InformationChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationChannelSettingsCell.swift; sourceTree = "<group>"; };
-		862CCFA91DD4717400BE5A38 /* AddMembersChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMembersChannelSettingsCell.swift; sourceTree = "<group>"; };
-		862CCFAB1DD4718F00BE5A38 /* MemberChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberChannelSettingsCell.swift; sourceTree = "<group>"; };
-		864641D81DE58E7600DEC028 /* Reflection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reflection.swift; sourceTree = "<group>"; };
-		868FD8DF1DD4C07100EE20B2 /* LabelChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelChannelSettingsCell.swift; sourceTree = "<group>"; };
-		868FD8E01DD4C07100EE20B2 /* LabelChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LabelChannelSettingsCell.xib; sourceTree = "<group>"; };
-		868FD8E31DD5D9B100EE20B2 /* AddMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMembersViewController.swift; sourceTree = "<group>"; };
-		868FD8E71DD5DD2700EE20B2 /* MemberInAdditingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberInAdditingCell.xib; sourceTree = "<group>"; };
-		868FD8E91DD5DFC700EE20B2 /* MemberInAdditingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberInAdditingCell.swift; sourceTree = "<group>"; };
-		868FD8ED1DD5F58000EE20B2 /* AllMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllMembersViewController.swift; sourceTree = "<group>"; };
-		8B0429C71DE22F7F00B537F1 /* FileInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileInfo.swift; sourceTree = "<group>"; };
-		8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoMappingsContainer.swift; path = Mappings/FileInfoMappingsContainer.swift; sourceTree = "<group>"; };
-		8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoPathPatternsContainer.swift; path = PathPattern/FileInfoPathPatternsContainer.swift; sourceTree = "<group>"; };
-		8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileInfoResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/FileInfoResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
 		8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyProps.swift; sourceTree = "<group>"; };
@@ -403,6 +378,19 @@
 		8BBCA0191DD237ED0059ABED /* NSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NVActivityIndicatorView.framework; path = Carthage/Build/iOS/NVActivityIndicatorView.framework; sourceTree = "<group>"; };
+		8BCDDC6D1DE6E0A6006D83BC /* Reflection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reflection.swift; sourceTree = "<group>"; };
+		8BCDDC6F1DE6E5C5006D83BC /* ChannelSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSettingsViewController.swift; sourceTree = "<group>"; };
+		8BCDDC711DE6E678006D83BC /* HeaderChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC721DE6E678006D83BC /* HeaderChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC751DE6E701006D83BC /* AddMembersChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMembersChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC761DE6E701006D83BC /* AddMembersChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddMembersChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC781DE6E701006D83BC /* HeaderChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC791DE6E701006D83BC /* InformationChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC7A1DE6E701006D83BC /* InformationChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InformationChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC7B1DE6E701006D83BC /* LabelChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC7C1DE6E701006D83BC /* LabelChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LabelChannelSettingsCell.xib; sourceTree = "<group>"; };
+		8BCDDC7D1DE6E701006D83BC /* MemberChannelSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberChannelSettingsCell.swift; sourceTree = "<group>"; };
+		8BCDDC7E1DE6E701006D83BC /* MemberChannelSettingsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberChannelSettingsCell.xib; sourceTree = "<group>"; };
 		8BE969A41D74C73B0010A524 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		8BE969B01D75E4BE0010A524 /* UIFont+PreparedFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+PreparedFont.swift"; path = "Mattermost/extensions/UIFont+PreparedFont.swift"; sourceTree = SOURCE_ROOT; };
 		8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+PreparedColor.swift"; sourceTree = "<group>"; };
@@ -603,43 +591,14 @@
 			name = Teams;
 			sourceTree = "<group>";
 		};
-		862CCF9B1DD4533000BE5A38 /* ChannelSettings */ = {
-			isa = PBXGroup;
-			children = (
-				862CCF9C1DD4534100BE5A38 /* Xibs */,
-				862CCFA51DD4713500BE5A38 /* HeaderChannelSettingsCell.swift */,
-				862CCFA71DD4715700BE5A38 /* InformationChannelSettingsCell.swift */,
-				862CCFA91DD4717400BE5A38 /* AddMembersChannelSettingsCell.swift */,
-				862CCFAB1DD4718F00BE5A38 /* MemberChannelSettingsCell.swift */,
-				868FD8DF1DD4C07100EE20B2 /* LabelChannelSettingsCell.swift */,
-				868FD8E91DD5DFC700EE20B2 /* MemberInAdditingCell.swift */,
-				8602A8381DD5F6C200A6D21C /* AllMembersCell.swift */,
-				8602A83E1DD60EC300A6D21C /* ChannelInfoCell.swift */,
-			);
-			name = ChannelSettings;
-			sourceTree = "<group>";
-		};
-		862CCF9C1DD4534100BE5A38 /* Xibs */ = {
-			isa = PBXGroup;
-			children = (
-				862CCF9D1DD4539D00BE5A38 /* HeaderChannelSettingsCell.xib */,
-				862CCF9F1DD457F600BE5A38 /* InformationChannelSettingsCell.xib */,
-				862CCFA11DD45A2700BE5A38 /* AddMembersChannelSettingsCell.xib */,
-				862CCFA31DD45EE400BE5A38 /* MemberChannelSettingsCell.xib */,
-				868FD8E01DD4C07100EE20B2 /* LabelChannelSettingsCell.xib */,
-				868FD8E71DD5DD2700EE20B2 /* MemberInAdditingCell.xib */,
-				8602A83A1DD5F6E600A6D21C /* AllMembersCell.xib */,
-				8602A83F1DD60EC300A6D21C /* ChannelInfoCell.xib */,
-			);
-			name = Xibs;
-			sourceTree = "<group>";
-		};
 		8B3C3ED21DC1F8AB005FCAFE /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				8BA11FDE1DCB380C0073051A /* CommonSettingsTableViewCell.swift */,
 				8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */,
 				8B3C3ED91DC29080005FCAFE /* TextSettingsTableViewCell.swift */,
+				4410CFA11DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift */,
+				44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -669,6 +628,9 @@
 				8B9E27C81DC0984300543C6C /* MPNSettingsTableViewController.swift */,
 				8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */,
 				8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */,
+				442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */,
+				44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */,
+				449663361DED099B0007A954 /* ENSettingsTableViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -686,6 +648,7 @@
 			children = (
 				8BBCA0191DD237ED0059ABED /* NSettingsCellBuilder.swift */,
 				8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */,
+				4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */,
 			);
 			name = Settings;
 			path = Builders/Settings;
@@ -787,7 +750,6 @@
 				8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */,
 				8B77B5E51DC78C0500DF0689 /* Preference.swift */,
 				8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */,
-				8B0429C71DE22F7F00B537F1 /* FileInfo.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -861,6 +823,7 @@
 				CDB4BC641D8062B600662231 /* PostRequestDescriptorsContainer.swift */,
 				8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */,
 				8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */,
+				44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */,
 			);
 			name = RestKitRequestDescriptors;
 			sourceTree = "<group>";
@@ -886,7 +849,6 @@
 		CDB6D3CA1D7F04BE00C3018C /* RestKitResponseDescriptors */ = {
 			isa = PBXGroup;
 			children = (
-				8B0429CF1DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift */,
 				CDB6D3CD1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift */,
 				CDB6D3CF1D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift */,
 				CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */,
@@ -917,7 +879,6 @@
 				8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */,
 				8B77B5E91DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift */,
 				8B618CC41DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift */,
-				8B0429C91DE2302E00B537F1 /* FileInfoMappingsContainer.swift */,
 			);
 			name = Mappings;
 			sourceTree = "<group>";
@@ -932,7 +893,6 @@
 				CDF07ED51D7F1DC900172D1E /* UserPathPatternsContainer.swift */,
 				8B77B5E11DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift */,
 				8BEE0C801DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift */,
-				8B0429CB1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift */,
 			);
 			name = PathPatterns;
 			sourceTree = "<group>";
@@ -942,6 +902,7 @@
 			children = (
 				8B9E27C51DC0971700543C6C /* Settings */,
 				8B77B5DC1DC31CCE00DF0689 /* InviteNewMember */,
+				8BCDDC6F1DE6E5C5006D83BC /* ChannelSettingsViewController.swift */,
 				4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */,
 				4BEA108B1D79B551006BB298 /* TeamViewController.swift */,
 				CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */,
@@ -953,10 +914,6 @@
 				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
 				8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */,
 				8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */,
-				862CCF971DD4508500BE5A38 /* ChannelSettingsViewController.swift */,
-				868FD8E31DD5D9B100EE20B2 /* AddMembersViewController.swift */,
-				868FD8ED1DD5F58000EE20B2 /* AllMembersViewController.swift */,
-				8602A83C1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -982,7 +939,6 @@
 				8BE969B61D7638060010A524 /* Settings.storyboard */,
 				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
 				D62FEB971D4F2B3400390EBC /* Login.storyboard */,
-				862CCF991DD4512D00BE5A38 /* ChannelSettings.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -1066,7 +1022,6 @@
 		D6E165841D47C08F0014C831 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				862CCF9B1DD4533000BE5A38 /* ChannelSettings */,
 				8B3C3ED21DC1F8AB005FCAFE /* Settings */,
 				4B4FE7911D800E0C0088ABEC /* Teams */,
 				D67A42F71D7486F7003E2466 /* PostAttachmentsViewCell */,
@@ -1074,6 +1029,17 @@
 				CDB6D3B11D771CBC00C3018C /* MoreChannel */,
 				D62FEB8F1D4F2AC500390EBC /* LeftMenu */,
 				D6E165851D47C0960014C831 /* Chat */,
+				8BCDDC711DE6E678006D83BC /* HeaderChannelSettingsCell.swift */,
+				8BCDDC751DE6E701006D83BC /* AddMembersChannelSettingsCell.swift */,
+				8BCDDC761DE6E701006D83BC /* AddMembersChannelSettingsCell.xib */,
+				8BCDDC781DE6E701006D83BC /* HeaderChannelSettingsCell.xib */,
+				8BCDDC791DE6E701006D83BC /* InformationChannelSettingsCell.swift */,
+				8BCDDC7A1DE6E701006D83BC /* InformationChannelSettingsCell.xib */,
+				8BCDDC7B1DE6E701006D83BC /* LabelChannelSettingsCell.swift */,
+				8BCDDC7C1DE6E701006D83BC /* LabelChannelSettingsCell.xib */,
+				8BCDDC7D1DE6E701006D83BC /* MemberChannelSettingsCell.swift */,
+				8BCDDC7E1DE6E701006D83BC /* MemberChannelSettingsCell.xib */,
+				8BCDDC721DE6E678006D83BC /* HeaderChannelSettingsCell.xib */,
 				D6E165861D47C1200014C831 /* Reusable.swift */,
 				8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */,
 				8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */,
@@ -1161,6 +1127,7 @@
 		D8812AE81D43931700436B5C /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				8BCDDC6D1DE6E0A6006D83BC /* Reflection.swift */,
 				8B3CB3691DD2692E0078DE25 /* FilesPickingController.swift */,
 				8B3CB34B1DD267EB0078DE25 /* ActionsNotification.swift */,
 				8B3CB34C1DD267EB0078DE25 /* AssignedFileItem.swift */,
@@ -1169,7 +1136,6 @@
 				8B3CB3501DD267EB0078DE25 /* MessageLabel.swift */,
 				8B3CB3511DD267EB0078DE25 /* PageWrapper.swift */,
 				8B3CB3521DD267EB0078DE25 /* ProfileDataSource.swift */,
-				864641D81DE58E7600DEC028 /* Reflection.swift */,
 				8B3CB3531DD267EB0078DE25 /* UserStatus.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
 			);
@@ -1341,23 +1307,18 @@
 				8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */,
 				8B882D661DA5A21F0028F13D /* Localizable.strings in Resources */,
 				9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */,
-				868FD8E81DD5DD2700EE20B2 /* MemberInAdditingCell.xib in Resources */,
 				D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */,
 				8B3CB3491DD267C40078DE25 /* Profile.storyboard in Resources */,
-				8602A8411DD60EC300A6D21C /* ChannelInfoCell.xib in Resources */,
 				8BBA7DC61D874F7B003A5B99 /* monkey.gif in Resources */,
-				862CCFA41DD45EE400BE5A38 /* MemberChannelSettingsCell.xib in Resources */,
-				862CCFA21DD45A2700BE5A38 /* AddMembersChannelSettingsCell.xib in Resources */,
+				8BCDDC861DE6E701006D83BC /* LabelChannelSettingsCell.xib in Resources */,
 				D6330AB81D494BF9006D84F4 /* SF-UI-Text-Semibold.otf in Resources */,
 				D6330AB51D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf in Resources */,
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
+				8BCDDC801DE6E701006D83BC /* AddMembersChannelSettingsCell.xib in Resources */,
+				8BCDDC881DE6E701006D83BC /* MemberChannelSettingsCell.xib in Resources */,
 				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
-				862CCF9E1DD4539D00BE5A38 /* HeaderChannelSettingsCell.xib in Resources */,
 				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
-				862CCF9A1DD4512D00BE5A38 /* ChannelSettings.storyboard in Resources */,
-				8602A83B1DD5F6E600A6D21C /* AllMembersCell.xib in Resources */,
 				8B3CB34A1DD267C40078DE25 /* RightMenu.storyboard in Resources */,
-				862CCFA01DD457F600BE5A38 /* InformationChannelSettingsCell.xib in Resources */,
 				CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */,
 				D62FEB981D4F2B3400390EBC /* Login.storyboard in Resources */,
 				D6330AB61D494BF9006D84F4 /* SF-UI-Text-Medium.otf in Resources */,
@@ -1366,8 +1327,10 @@
 				D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */,
 				413B76221D58C6CD00F297BE /* en.lproj in Resources */,
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
+				8BCDDC741DE6E678006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
 				8B3CB3461DD267B80078DE25 /* More.storyboard in Resources */,
-				868FD8E21DD4C07100EE20B2 /* LabelChannelSettingsCell.xib in Resources */,
+				8BCDDC821DE6E701006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
+				8BCDDC841DE6E701006D83BC /* InformationChannelSettingsCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1499,23 +1462,22 @@
 			files = (
 				D8087ADF1D413DB7001918E8 /* Team.swift in Sources */,
 				4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */,
-				864641D91DE58E7600DEC028 /* Reflection.swift in Sources */,
 				8B3CB3621DD268390078DE25 /* DocumentPickingModule.swift in Sources */,
 				4B7DB5A51DA5500F000908FB /* Member.swift in Sources */,
+				8BCDDC7F1DE6E701006D83BC /* AddMembersChannelSettingsCell.swift in Sources */,
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
 				8B3CB3671DD268690078DE25 /* ChannelObserver.swift in Sources */,
 				8B3CB3441DD2675F0078DE25 /* TeamCellBuilder.swift in Sources */,
 				4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */,
-				8602A8401DD60EC300A6D21C /* ChannelInfoCell.swift in Sources */,
 				8B3CB37E1DD26BD00078DE25 /* FeedCellBuilder.swift in Sources */,
-				862CCFA81DD4715700BE5A38 /* InformationChannelSettingsCell.swift in Sources */,
 				8B3CB37B1DD269C30078DE25 /* SocketManager.swift in Sources */,
 				8B3CB3571DD267EB0078DE25 /* AttributedLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				8B882D711DA6F8A10028F13D /* EmojiTableViewCell.swift in Sources */,
+				8BCDDC851DE6E701006D83BC /* LabelChannelSettingsCell.swift in Sources */,
 				8B3CB3411DD2675F0078DE25 /* ProfileCellBuilder.swift in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				8B3CB3751DD269C30078DE25 /* Api.swift in Sources */,
@@ -1524,6 +1486,7 @@
 				CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */,
 				4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */,
 				8B882D6F1DA6575F0028F13D /* FeedSearchTableViewCell.swift in Sources */,
+				44E3A94F1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift in Sources */,
 				8B3CB3401DD2675F0078DE25 /* MoreCellBuilder.swift in Sources */,
 				D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */,
 				4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */,
@@ -1535,10 +1498,11 @@
 				D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */,
 				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,
 				CDF07ECE1D7F129100172D1E /* ChannelPathPatternsContainer.swift in Sources */,
+				442137B51DE7D47700B18BD3 /* DNSettingsTableViewController.swift in Sources */,
 				4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
-				8B0429D01DE23ACE00B537F1 /* FileInfoResponseDescriptorsContainer.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
+				8BCDDC831DE6E701006D83BC /* InformationChannelSettingsCell.swift in Sources */,
 				8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */,
 				4B7270821DABF4C000445586 /* AlertView.swift in Sources */,
 				8B3C3ED61DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift in Sources */,
@@ -1549,9 +1513,6 @@
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
-				8602A8391DD5F6C200A6D21C /* AllMembersCell.swift in Sources */,
-				8BE969AA1D75D1890010A524 /* SettingsTableViewController.swift in Sources */,
-				8602A83D1DD60DDD00A6D21C /* ChannelHeaderAndDescriptionViewController.swift in Sources */,
 				8B3CB3681DD268690078DE25 /* FeedNotificationsObserver.swift in Sources */,
 				8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */,
 				CDB4BC671D80678000662231 /* BaseRequestDescriptorsContainer.swift in Sources */,
@@ -1561,20 +1522,18 @@
 				8B3C3EDE1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift in Sources */,
 				8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */,
 				8BEE0C811DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift in Sources */,
-				862CCFAC1DD4718F00BE5A38 /* MemberChannelSettingsCell.swift in Sources */,
 				8B3CB35A1DD267EB0078DE25 /* PageWrapper.swift in Sources */,
 				CDF07ED21D7F1DA300172D1E /* PostPathPatternsContainer.swift in Sources */,
-				D8F6BD051D22FB4A000AC690 /* Error.swift in Sources */,
-				868FD8E11DD4C07100EE20B2 /* LabelChannelSettingsCell.swift in Sources */,
 				D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */,
 				8B3C3ED81DC28487005FCAFE /* CheckSettingsTableViewCell.swift in Sources */,
+				44E3A94D1DE8D9E2001CD849 /* UFSettingsTableViewController.swift in Sources */,
 				CDB4BC691D806C7000662231 /* FileMappingsContainer.swift in Sources */,
 				8B618CC11DDC4A2500AC6CDD /* Error.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				8BA11FDF1DCB380C0073051A /* CommonSettingsTableViewCell.swift in Sources */,
+				4410CFA21DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift in Sources */,
 				CDB6D3D01D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
-				862CCF981DD4508500BE5A38 /* ChannelSettingsViewController.swift in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
 				8BBA7DC81D87DD06003A5B99 /* UIImage+Gif.swift in Sources */,
 				D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */,
@@ -1586,9 +1545,7 @@
 				8B77B5E21DC69F9C00DF0689 /* PreferencesPathPatternsContainer.swift in Sources */,
 				CDF07ED41D7F1DB500172D1E /* TeamPathPatternsContainer.swift in Sources */,
 				8B3CB3431DD2675F0078DE25 /* SearchCellBuilder.swift in Sources */,
-				8B0429CA1DE2302E00B537F1 /* FileInfoMappingsContainer.swift in Sources */,
 				D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */,
-				8B0429C81DE22F7F00B537F1 /* FileInfo.swift in Sources */,
 				CDB6D3BD1D78925B00C3018C /* String+Localized.swift in Sources */,
 				4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */,
 				8B882D6D1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift in Sources */,
@@ -1605,9 +1562,11 @@
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
 				CDB4BC751D8074E800662231 /* AttachmentFieldMappingsContainer.swift in Sources */,
 				CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */,
+				4410CFA41DEABC08003C365F /* UFSettingsCellBuilder.swift in Sources */,
 				D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */,
+				44385CB71DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift in Sources */,
 				8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */,
-				862CCFA61DD4713500BE5A38 /* HeaderChannelSettingsCell.swift in Sources */,
+				449663371DED099B0007A954 /* ENSettingsTableViewController.swift in Sources */,
 				D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */,
 				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
@@ -1621,10 +1580,8 @@
 				8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */,
 				D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */,
 				D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */,
-				868FD8EE1DD5F58000EE20B2 /* AllMembersViewController.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */,
-				862CCFAA1DD4717400BE5A38 /* AddMembersChannelSettingsCell.swift in Sources */,
 				8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */,
@@ -1636,10 +1593,10 @@
 				8B3CB3551DD267EB0078DE25 /* AssignedFileItem.swift in Sources */,
 				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,
 				D62FEB931D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift in Sources */,
-				868FD8EA1DD5DFC700EE20B2 /* MemberInAdditingCell.swift in Sources */,
 				8B3CB3801DD28DD20078DE25 /* CreateChannelViewController.swift in Sources */,
 				8B3CB3761DD269C30078DE25 /* ApplicationStateManager.swift in Sources */,
 				CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */,
+				8BCDDC701DE6E5C5006D83BC /* ChannelSettingsViewController.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
 				8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */,
@@ -1651,10 +1608,10 @@
 				8B9E27CB1DC0985D00543C6C /* NSettingsTableViewController.swift in Sources */,
 				8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */,
 				4B9DD4BB1DB0C94800AB4D2D /* AttachmentFileView.swift in Sources */,
-				868FD8E41DD5D9B100EE20B2 /* AddMembersViewController.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
 				8B3C3EDA1DC29080005FCAFE /* TextSettingsTableViewCell.swift in Sources */,
 				8B9E1C131DB7454900C05B36 /* DirectChannelTableViewCell.swift in Sources */,
+				8BCDDC871DE6E701006D83BC /* MemberChannelSettingsCell.swift in Sources */,
 				D8812AEC1D44141100436B5C /* File.swift in Sources */,
 				D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */,
 				D60EB7CF1D78384600D21D7D /* Array+RemoveObject.swift in Sources */,
@@ -1676,7 +1633,6 @@
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
 				8B3CB3641DD268390078DE25 /* ImagePickingModule.swift in Sources */,
-				8B0429CC1DE234BA00B537F1 /* FileInfoPathPatternsContainer.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
 				8B618CC51DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift in Sources */,
 				8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */,
@@ -1692,6 +1648,7 @@
 				D8D601321D5D192300951F18 /* ImageDownloader.swift in Sources */,
 				8B3CB3781DD269C30078DE25 /* DataManager.swift in Sources */,
 				CDB4BC621D805B2B00662231 /* UserStatusResponseDescriptorsContainer.swift in Sources */,
+				8BCDDC6E1DE6E0A6006D83BC /* Reflection.swift in Sources */,
 				D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */,
 				8B77B5EC1DC7A85100DF0689 /* PreferenceResponseDescriptorContainer.swift in Sources */,
 				4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */,
@@ -1703,6 +1660,7 @@
 				8B77B5E61DC78C0500DF0689 /* Preference.swift in Sources */,
 				D8117D261DB4E7AE0058F003 /* EmptyDialogueLabel.swift in Sources */,
 				D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */,
+				8BCDDC731DE6E678006D83BC /* HeaderChannelSettingsCell.swift in Sources */,
 				4B9DD4BD1DB1445200AB4D2D /* UIImage+Orientation.swift in Sources */,
 				8B9E27C91DC0984300543C6C /* MPNSettingsTableViewController.swift in Sources */,
 			);
@@ -1769,7 +1727,7 @@
 				INFOPLIST_FILE = Mattermost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DDEBUG";
+				OTHER_SWIFT_FLAGS = "-DDEBUG -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "f93249bb-910c-4804-bf49-2cc8ff645729";
@@ -1812,6 +1770,7 @@
 				INFOPLIST_FILE = Mattermost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "11a5e7d4-4584-4ac6-92f8-f248a545214c";

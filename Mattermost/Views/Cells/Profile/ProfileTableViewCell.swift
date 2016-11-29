@@ -16,11 +16,10 @@ protocol ProfileTableViewCellConfiguration {
 class ProfileTableViewCell: UITableViewCell, Reusable {
 
 //MARK: Properties
-    
     @IBOutlet weak var iconImageView: UIImageView?
     @IBOutlet weak var titleLabel: UILabel?
     @IBOutlet weak var infoLabel: UILabel?
- 
+    @IBOutlet weak var arrowButton: UIButton?
 }
 
 

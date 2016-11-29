@@ -7,7 +7,8 @@
 //
 
 import UIKit
-
+// Зачем ксиб для этого?
+// Точно нужен отдельный класс?
 class LabelChannelSettingsCell: UITableViewCell {
 
     @IBOutlet weak var cellText: UILabel!

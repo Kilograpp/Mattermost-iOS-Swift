@@ -28,7 +28,7 @@ final class ChannelPathPatternsContainer: PathPatterns {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/"
     }
     static func loadOnePathPattern() -> String {
-        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)"+"/extra_info"
+        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)"
     }
     static func addUserPathPattern() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/add"

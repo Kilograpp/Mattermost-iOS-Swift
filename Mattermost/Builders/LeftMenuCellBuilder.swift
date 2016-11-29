@@ -13,10 +13,13 @@ private protocol LeftMenuCellBuilderInteface: class {
     func cellFor(channel: Channel, indexPath: IndexPath) -> UITableViewCell
 }
 
+
 final class LeftMenuCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -26,6 +29,8 @@ final class LeftMenuCellBuilder {
     }
 }
 
+
+//MARK: LeftMenuCellBuilderInteface
 extension LeftMenuCellBuilder: LeftMenuCellBuilderInteface {
     func cellHeight() -> CGFloat {
         return 42
@@ -36,13 +41,10 @@ extension LeftMenuCellBuilder: LeftMenuCellBuilderInteface {
         switch indexPath.section {
         case 0:
             reuseIdentifier = PublicChannelTableViewCell.reuseIdentifier
-            break
         case 1:
             reuseIdentifier = PrivateChannelTableViewCell.reuseIdentifier
-            break
         case 2:
             reuseIdentifier = DirectChannelTableViewCell.reuseIdentifier
-            break
         default:
             break
         }

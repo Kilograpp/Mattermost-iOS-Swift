@@ -9,7 +9,7 @@
 import UIKit
 
 class MemberChannelSettingsCell: UITableViewCell {
-
+//CODEREVIEW: Точно нужен для этой простой ячейки ксиб
     @IBOutlet weak var memberImage: UIImageView!
     @IBOutlet weak var memberName: UILabel!
     @IBOutlet weak var memberStatus: UILabel!
@@ -68,7 +68,7 @@ extension MemberChannelSettingsCell {
         case "away":
             self.memberStatus.textColor = UIColor.lightGray
             self.memberStatus.text = backendStatus
-            break
+            break // Зачем тут break?
         default:
             break
         }

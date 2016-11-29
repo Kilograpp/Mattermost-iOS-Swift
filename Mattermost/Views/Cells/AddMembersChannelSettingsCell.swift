@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+//Нужен ли ксиб?
 class AddMembersChannelSettingsCell: UITableViewCell {
 
     override func awakeFromNib() {

@@ -22,7 +22,7 @@ class MattermostErrorMappingsContainer: /*BaseMappingsContainer*/RKObjectMapping
 //MARK: ResponseMappings
 extension MattermostErrorMappingsContainer: ResponseMappings {
      class func mapping() -> RKObjectMapping {
-        let mapping =  RKObjectMapping(for: MattermostError.self)
+        let mapping = RKObjectMapping(for: MattermostError.self)
         mapping?.addAttributeMappings(from: [
             "identifier"     : MattermostErrorAttributes.identifier.rawValue,
             "message"        : MattermostErrorAttributes.message.rawValue,

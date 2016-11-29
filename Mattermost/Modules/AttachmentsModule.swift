@@ -70,14 +70,8 @@ extension AttachmentsModule: Interface {
         
         PostUtils.sharedInstance.upload(items: attachments, channel: self.dataSource.channel(attachmentsModule: self), completion: { (finished, error, item) in
             defer {
-                
-                print("////////////////////")
-                print(item.identifier)
-                print(self.items.last?.identifier)
                 let index = self.items.index(of: item)
-                print("finish = ", index)
                 if index != nil { self.dataSource.postAttachmentsView(attachmentsModule: self).removeActivityAt(index: index!) }
-                print("////////////////////")
                 self.fileUploadingInProgress = finished
             }
 
@@ -96,7 +90,6 @@ extension AttachmentsModule: Interface {
             self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index, value: value)
         }
     }
-
 }
 
 extension AttachmentsModule: PostAttachmentViewDelegate {
@@ -142,7 +135,7 @@ extension AttachmentsModule: AttachmentsViewControls {
 
 extension AttachmentsModule: UserInteraction {
     fileprivate func show(error: Error) {
-        AlertManager.sharedManager.showErrorWithMessage(message: error.message!, viewController: self.viewController)
+        AlertManager.sharedManager.showErrorWithMessage(message: error.message!)//, viewController: self.viewController)
     }
 }
 

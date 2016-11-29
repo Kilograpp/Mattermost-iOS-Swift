@@ -17,6 +17,8 @@ private protocol PathPatterns: class {
     static func completeListPathPattern() -> String
     static func usersStatusPathPattern() -> String
     static func usersUpdateNotifyPathPattern() -> String
+    static func userUpdatePathPattern() -> String
+    static func userUpdatePasswordPathPattern() -> String
 }
 
 final class UserPathPatternsContainer: PathPatterns {
@@ -46,5 +48,11 @@ final class UserPathPatternsContainer: PathPatterns {
     }
     static func usersUpdateNotifyPathPattern() -> String {
         return "users/update_notify"
+    }
+    static func userUpdatePathPattern() -> String {
+        return "users/update"
+    }
+    static func userUpdatePasswordPathPattern() -> String {
+        return "users/newpassword"
     }
 }
