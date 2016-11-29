@@ -41,13 +41,10 @@ extension LeftMenuCellBuilder: LeftMenuCellBuilderInteface {
         switch indexPath.section {
         case 0:
             reuseIdentifier = PublicChannelTableViewCell.reuseIdentifier
-            break
         case 1:
             reuseIdentifier = PrivateChannelTableViewCell.reuseIdentifier
-            break
         case 2:
             reuseIdentifier = DirectChannelTableViewCell.reuseIdentifier
-            break
         default:
             break
         }

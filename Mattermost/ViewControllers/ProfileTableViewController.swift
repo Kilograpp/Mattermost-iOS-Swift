@@ -222,7 +222,7 @@ extension ProfileViewController {
         guard self.user?.identifier == Preferences.sharedInstance.currentUserId else { return }
         return
         
-        let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
+    /*    let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
             self.presentImagePickerControllerWithType(.camera)
         }
@@ -234,7 +234,7 @@ extension ProfileViewController {
         alertController.addAction(openGalleryAction)
         alertController.addAction(cancelAction)
         
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)*/
     }
     
     func presentImagePickerControllerWithType(_ type: UIImagePickerControllerSourceType) {

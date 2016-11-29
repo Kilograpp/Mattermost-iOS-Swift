@@ -32,7 +32,8 @@ class EmojiTableViewCell: UITableViewCell, Reusable {
     }
     
     func configureWith(index: Int!) {
-        let attributedString = TSMarkdownParser.sharedInstance.attributedString(fromMarkdown: Constants.EmojiArrays.apple[index])
+        let markdown = Constants.EmojiArrays.apple[index]
+        let attributedString = TSMarkdownParser.sharedInstance.attributedString(fromMarkdown: markdown)
         self.thumbnailLabel.textStorage = NSTextStorage(attributedString: attributedString)
         self.nameLabel.text = Constants.EmojiArrays.mattermost[index]
     }

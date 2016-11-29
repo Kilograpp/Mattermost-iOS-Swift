@@ -87,17 +87,8 @@ extension ObjectManager: PostRequests {
               success: ((_ mappingResult: RKMappingResult) -> Void)?,
               failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            print(operation?.httpRequestOperation.responseString)
             success?(mappingResult!)
         }) { (operation, error) in
-            
-            
-            
-            operation?.httpRequestOperation.request.httpBody
-            print(operation?.httpRequestOperation.request.httpBody)
-            print(operation?.httpRequestOperation.responseString)
-            
-            
             //TODO: Will remove, after mapping fixation
             let responseString = operation?.httpRequestOperation.responseString
             let dict = responseString?.toDictionary()
@@ -106,7 +97,6 @@ extension ObjectManager: PostRequests {
                 let message = dict?["message"]
                 failure?(Error(errorCode: statusCode, errorMessage: message as! String))
             } else {
-                print(operation?.httpRequestOperation.responseString)
                 failure?(self.handleOperation(operation!, withError: error!))
             }
         }
@@ -248,9 +238,7 @@ extension ObjectManager: PostRequests {
     
     func update(user: User, success: ((_ mappingResult: RKMappingResult) -> Void)?,
                 failure: ((_ error: Mattermost.Error) -> Void)?) {
-        let path = UserPathPatternsContainer.userUpdatePathPattern()
-        
-        
+        _ = UserPathPatternsContainer.userUpdatePathPattern()
     }
 }
 

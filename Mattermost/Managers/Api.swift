@@ -118,7 +118,7 @@ extension Api: PreferencesApi {
     }
     
     func listUsersPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        var preference = Preference()
+        let preference = Preference()
         preference.category = "direct_channel_show"
         let path = SOCStringFromStringWithObject(PreferencesPathPatternsContainer.listUsersPreferencesPathPatterns(), preference)!
         

@@ -43,6 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func launchApplicationStateManager() {
-        ApplicationStateManager.sharedInstance
+        _ = ApplicationStateManager.sharedInstance
     }
 }
