@@ -14,6 +14,7 @@
 		4410CFA41DEABC08003C365F /* UFSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */; };
 		442137B51DE7D47700B18BD3 /* DNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */; };
 		44385CB71DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */; };
+		445DE0961DEDA1C600D2124D /* RNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445DE0951DEDA1C600D2124D /* RNSettingsTableViewController.swift */; };
 		449663371DED099B0007A954 /* ENSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449663361DED099B0007A954 /* ENSettingsTableViewController.swift */; };
 		44E3A94D1DE8D9E2001CD849 /* UFSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */; };
 		44E3A94F1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */; };
@@ -278,6 +279,7 @@
 		4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSettingsTableViewController.swift; sourceTree = "<group>"; };
 		44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		445DE0951DEDA1C600D2124D /* RNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSettingsTableViewController.swift; sourceTree = "<group>"; };
 		449663361DED099B0007A954 /* ENSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSettingsTableViewController.swift; sourceTree = "<group>"; };
 		44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsTableViewController.swift; sourceTree = "<group>"; };
 		44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/UserRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
@@ -631,6 +633,7 @@
 				442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */,
 				44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */,
 				449663361DED099B0007A954 /* ENSettingsTableViewController.swift */,
+				445DE0951DEDA1C600D2124D /* RNSettingsTableViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1494,6 +1497,7 @@
 				8B77B5EA1DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift in Sources */,
 				D8812C331D476DD400436B5C /* NSURL+Scheme.swift in Sources */,
 				D8087AF51D429393001918E8 /* UIScreen+Size.swift in Sources */,
+				445DE0961DEDA1C600D2124D /* RNSettingsTableViewController.swift in Sources */,
 				CDB4BC5C1D8033F700662231 /* PostResponseDescriptorsContainer.swift in Sources */,
 				D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */,
 				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,

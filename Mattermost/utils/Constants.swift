@@ -117,6 +117,9 @@ struct Constants {
             static let ChannelWide = "\"@channel\", \"@all\""
             static let None = "No words configured"
         }
+        struct Reply {
+            static let Trigger = [ (state: "any", description: "Trigger notifications on messages in reply threads that I start or participate in"), (state: "root", description: "Trigger notifications on messages in threads that I start"), (state: "never", description: "Do not trigger notifications on messages in reply threads unless I'm mentioned") ]
+        }
     }
     
     struct UserFieldType {

@@ -1,5 +1,5 @@
 //
-//  ENSettingsTableViewController.swift
+//  RNSettingsTableViewController.swift
 //  Mattermost
 //
 //  Created by Екатерина on 29.11.16.
@@ -8,16 +8,16 @@
 
 import UIKit
 
-class ENSettingsTableViewController: UITableViewController {
+class RNSettingsTableViewController: UITableViewController {
 
 //MARK: Properties
     fileprivate var saveButton: UIBarButtonItem!
     fileprivate var notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
     fileprivate let user = DataManager.sharedInstance.currentUser
     
-    var selectedEmailOption: Int = 0
-    
-    //MARK: LifeCycle
+    var selectedReplyOption: Int = 0
+
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -59,14 +59,14 @@ fileprivate protocol Request {
 
 
 //MARK: Setup
-extension ENSettingsTableViewController: Setup {
+extension RNSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
     }
     
     func setupNavigationBar() {
-        self.title = "Email notifications"
+        self.title = "Reply notifications"
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
@@ -77,13 +77,13 @@ extension ENSettingsTableViewController: Setup {
     }
     
     func setupForCurrentNotifyProps() {
-        self.selectedEmailOption = (self.notifyProps?.email == /*"true"*/Constants.CommonStrings.True) ? 0 : 1
+        self.selectedReplyOption = Constants.NotifyProps.Reply.Trigger.index { return $0.state == (self.notifyProps?.comments)! }!
     }
 }
 
 
 //MARK: Action
-extension ENSettingsTableViewController: Action {
+extension RNSettingsTableViewController: Action {
     func backAction() {
         returtToNSettings()
     }
@@ -95,7 +95,7 @@ extension ENSettingsTableViewController: Action {
 
 
 //MARK: Navigation
-extension ENSettingsTableViewController: Navigation {
+extension RNSettingsTableViewController: Navigation {
     func returtToNSettings() {
         _ = self.navigationController?.popViewController(animated: true)
     }
@@ -103,15 +103,15 @@ extension ENSettingsTableViewController: Navigation {
 
 
 //MARK: Request
-extension ENSettingsTableViewController: Request {
+extension RNSettingsTableViewController: Request {
     func updateSettings() {
         try! RealmUtils.realmForCurrentThread().write {
-            self.notifyProps?.email = (self.selectedEmailOption == 0) ? /*"true"*/Constants.CommonStrings.True : Constants.CommonStrings.False//"false"
+            self.notifyProps?.comments = Constants.NotifyProps.Reply.Trigger[self.selectedReplyOption].state
         }
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
             self.saveButton.isEnabled = false
@@ -123,10 +123,10 @@ extension ENSettingsTableViewController: Request {
 
 
 //MARK: UITableViewDataSource
-extension ENSettingsTableViewController {
+extension RNSettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        cell.accessoryType = (self.selectedEmailOption == indexPath.row) ? .checkmark : .none
+        cell.accessoryType = (self.selectedReplyOption == indexPath.row) ? .checkmark : .none
         
         return cell
     }
@@ -134,14 +134,14 @@ extension ENSettingsTableViewController {
 
 
 //MARK: UITableViewDelegate
-extension ENSettingsTableViewController {
+extension RNSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.row != self.selectedEmailOption else { return }
+        guard indexPath.row != self.selectedReplyOption else { return }
         
         self.saveButton?.isEnabled = true
-        tableView.cellForRow(at: IndexPath(row: self.selectedEmailOption, section: indexPath.section))?.accessoryType = .none
+        tableView.cellForRow(at: IndexPath(row: self.selectedReplyOption, section: indexPath.section))?.accessoryType = .none
         
-        self.selectedEmailOption = indexPath.row
+        self.selectedReplyOption = indexPath.row
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }
 }
