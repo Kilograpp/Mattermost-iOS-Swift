@@ -22,7 +22,7 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.delegate = self
         setupNavigationBar()
         setupSearchBar()
-
+        
         let nib = UINib(nibName: "MemberChannelSettingsCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "memberChannelSettingsCell")
     }
@@ -65,8 +65,8 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     func setupNavigationBar() {
         self.title = "All Members".localized
         /*
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton*/
+         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
+         self.navigationItem.leftBarButtonItem = backButton*/
         self.navigationItem.backBarButtonItem?.title = ""
     }
     

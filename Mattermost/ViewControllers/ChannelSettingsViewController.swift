@@ -11,7 +11,7 @@ import WebImage
 import RealmSwift
 
 class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-
+    
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
     var channel: Channel!
@@ -22,20 +22,19 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Вынести setup в extension
+        
         tableView.dataSource = self
         tableView.delegate = self
         setupNavigationBar()
         setupChannelsObserver()
         setupNibs()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-// Разнести методы по extension
-// Сделать билдер
+    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if (section == 2){
             return String(channel.members.count)+" members"
@@ -168,8 +167,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         if segue.identifier == "showAllMembers"{
-                let allMembersViewController = segue.destination as! AllMembersViewController
-                allMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+            let allMembersViewController = segue.destination as! AllMembersViewController
+            allMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
         }
         if segue.identifier == "showChannelInfo"{
             let channelHeaderAndDescriptionViewController = segue.destination as! ChannelHeaderAndDescriptionViewController
@@ -209,7 +208,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
                 self.dismiss(animated: true, completion: nil)
             }
-
+            
         }
         if (indexPath==IndexPath(row: membersRowCount+1, section: 2)){
             Api.sharedInstance.loadChannels(with: { (error) in
@@ -254,11 +253,11 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                     Api.sharedInstance.loadChannels(with: { (error) in
                         guard (error == nil) else { return }
                     })
-            })
+                })
             })
         }
     }
-    //Вынести действия в отдельный extension
+    
     func backAction(){
         self.dismiss(animated: true, completion: nil)
     }
@@ -288,7 +287,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         let nib5 = UINib(nibName: "LabelChannelSettingsCell", bundle: nil)
         tableView.register(nib5, forCellReuseIdentifier: "labelChannelSettingsCell")
     }
-
+    
     //TEMP TODO:  update statuses
     fileprivate func configureStartUpdating() {
         //Костыль (для инициализации UserStatusObserver)

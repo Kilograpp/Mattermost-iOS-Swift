@@ -15,7 +15,7 @@ enum InfoType{
 }
 
 class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, HeightForTextView  {
-
+    
     @IBOutlet weak var tableView: UITableView!
     var channel: Channel!
     var textViewHeight = CGFloat(40.0)
@@ -58,14 +58,14 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
         cell = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
         cell.infoText.text = channel.header
         cell.delgate = self
-
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         /*if textViewHeight <= 30.0{
-            (tableView.cellForRow(at: indexPath) as! ChannelInfoCell).cancelButton
-        }*/
+         (tableView.cellForRow(at: indexPath) as! ChannelInfoCell).cancelButton
+         }*/
         return textViewHeight + 10
     }
     
@@ -94,79 +94,3 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
         textViewHeight = ChannelInfoCell.heightWithObject(channel.header!)
     }
 }
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//

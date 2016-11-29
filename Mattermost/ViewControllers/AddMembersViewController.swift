@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 
 class AddMembersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating  {
-
+    
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
     var channel: Channel!
@@ -35,12 +35,12 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         let nib = UINib(nibName: "MemberInAdditingCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "memberInAdditingCell")
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return nil
     }
@@ -66,17 +66,17 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 50
+        return 50
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-            return 1.0
+        return 1.0
     }
     
     func setupNavigationBar() {
         self.title = "Add Members".localized
     }
-
+    
     func setupSearchBar(){
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.searchBarStyle = .prominent
@@ -100,7 +100,7 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let member = users[indexPath.row]
         Api.sharedInstance.addUserToChannel(member, channel: channel, completion: { (error) in
@@ -119,7 +119,7 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     //Search updating
     func updateSearchResults(for searchController: UISearchController) {
-
+        
     }
     
 }

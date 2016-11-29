@@ -40,39 +40,10 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     static func heightWithObject(_ text: String) -> CGFloat{
         let maxSize = CGSize(width: UIScreen.main.bounds.width - 59, height: CGFloat.greatestFiniteMagnitude)
         let size = text.boundingRect(with: maxSize,
-                                        options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                        attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14.0)],
-                                        context: nil).size
+                                     options: NSStringDrawingOptions.usesLineFragmentOrigin,
+                                     attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14.0)],
+                                     context: nil).size
         return size.height+30.0
     }
 }
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-///
-
-////
-////
-////
-////
-//
-//
-//
-//
-//
-//
-//
-//
-///
 
