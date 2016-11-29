@@ -108,10 +108,10 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
             
             Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                     return
                 }
-                AlertManager.sharedManager.showSuccesWithMessage(message: member.nickname!+" was added in channel", viewController: self)
+                AlertManager.sharedManager.showSuccesWithMessage(message: member.nickname!+" was added in channel")
                 tableView.reloadData()
             })
         })

@@ -186,7 +186,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 guard (error == nil) else { return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     guard (error == nil) else {
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
                     }
                     self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
@@ -216,7 +216,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 guard (error == nil) else { return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     guard (error == nil) else {
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
                     }
                     self.performSegue(withIdentifier: "showAllMembers", sender: nil)
@@ -240,7 +240,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 guard (error == nil) else { return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     guard (error == nil) else {
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
                     }
                     self.performSegue(withIdentifier: "showChannelInfo", sender: nil)
