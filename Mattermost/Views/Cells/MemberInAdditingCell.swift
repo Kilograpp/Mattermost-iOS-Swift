@@ -37,13 +37,3 @@ extension MemberInAdditingCell {
         }
     }
 }
-
-extension MemberInAdditingCell {
-    func configureWithUser(user: User) {
-        memberName.text = user.displayName
-        memberIcon.image = UIImage.sharedAvatarPlaceholder
-        ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
-            self?.memberIcon.image = image
-        }
-    }
-}
