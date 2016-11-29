@@ -72,7 +72,7 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
             self.fileImageView.image = image
         } else {
-            self.fileImageView.image = nil
+            self.fileImageView.image = UIImage(named: "image_back")
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
                 DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
