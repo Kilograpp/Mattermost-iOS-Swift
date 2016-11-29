@@ -101,6 +101,7 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let member = channel.members[indexPath.row]
         
@@ -114,6 +115,7 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
             self.dismiss(animated: true, completion: nil)
         }
     }
+    
     //Search updating
     func updateSearchResults(for searchController: UISearchController) {
         

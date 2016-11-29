@@ -67,4 +67,11 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
+    static func addUserInChannelResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: UserMappingsContainer.mapping(),
+                                    method: .POST,
+                                    pathPattern: ChannelPathPatternsContainer.addUserPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
 }

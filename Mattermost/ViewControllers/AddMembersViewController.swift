@@ -101,6 +101,21 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         searchController.dimsBackgroundDuringPresentation = false
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let member = users[indexPath.row]
+        Api.sharedInstance.addUserToChannel(member, channel: channel, completion: { (error) in
+            guard (error == nil) else { return }
+            
+            Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                guard (error == nil) else {
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                    return
+                }
+                AlertManager.sharedManager.showSuccesWithMessage(message: member.nickname!+" was added in channel", viewController: self)
+                tableView.reloadData()
+            })
+        })
+    }
     
     //Search updating
     func updateSearchResults(for searchController: UISearchController) {

@@ -15,6 +15,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
     var channel: Channel!
+    var selectedInfoType: InfoType!
     
     //temp timer
     var statusesTimer: Timer?
@@ -161,13 +162,19 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navbar_back_icon")
         
         if segue.identifier == "showMembersAdditing"{
-            let allMembersViewController = segue.destination as! AddMembersViewController
-            allMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+            let addMembersViewController = segue.destination as! AddMembersViewController
+            addMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
         }
         
         if segue.identifier == "showAllMembers"{
                 let allMembersViewController = segue.destination as! AllMembersViewController
                 allMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+        }
+        if segue.identifier == "showChannelInfo"{
+            let channelHeaderAndDescriptionViewController = segue.destination as! ChannelHeaderAndDescriptionViewController
+            channelHeaderAndDescriptionViewController.channel = try!
+                Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+            channelHeaderAndDescriptionViewController.type = selectedInfoType
         }
     }
     
@@ -215,10 +222,31 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 })
             })
         }
-        if (indexPath==IndexPath(row: 0, section: 1) || indexPath==IndexPath(row: 1, section: 1)){
-            performSegue(withIdentifier: "showChannelInfo", sender: nil)
+        if (indexPath==IndexPath(row: 0, section: 1) ||
+            indexPath==IndexPath(row: 1, section: 1) ||
+            indexPath==IndexPath(row: 0, section: 0)){
+            switch indexPath {
+            case IndexPath(row: 0, section: 1):
+                selectedInfoType = InfoType.header
+            case IndexPath(row: 1, section: 1):
+                selectedInfoType = InfoType.purpose
+            case IndexPath(row: 0, section: 0):
+                selectedInfoType = InfoType.name
+            default:
+                break
+            }
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard (error == nil) else { return }
+                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    guard (error == nil) else {
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized, viewController: self)
+                        return
+                    }
+                    self.performSegue(withIdentifier: "showChannelInfo", sender: nil)
+                })
+            })
         }
-        if (indexPath==IndexPath(row: 0, section: 3) || indexPath==IndexPath(row: 1, section: 1)){
+        if (indexPath==IndexPath(row: 0, section: 3)){
             Api.sharedInstance.leaveChannel(channel, completion: { (error) in
                 guard (error == nil) else { return }
                 self.dismiss(animated: true, completion: {_ in
