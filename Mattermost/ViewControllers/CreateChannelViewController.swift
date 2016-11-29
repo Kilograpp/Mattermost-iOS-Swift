@@ -68,6 +68,7 @@ fileprivate protocol Request: class {
 extension CreateChannelViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
+        setupSwipeRight()
        // setupNameTextField()
        // setupHeaderTextField()
        // setupPurposeTextField()
@@ -82,6 +83,12 @@ extension CreateChannelViewController: Setup {
         self.createButton = UIBarButtonItem.init(title: "Create", style: .done, target: self, action: #selector(createAction))
         self.createButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = self.createButton
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
     
  /*   func setupNameTextField() {

@@ -65,6 +65,7 @@ extension MPNSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
+        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -81,6 +82,12 @@ extension MPNSettingsTableViewController: Setup {
     func setupForCurrentNotifyProps() {
         self.selectedSendOption = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.notifyProps?.push)! }!
         self.selectedTriggerOption = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.notifyProps?.pushStatus)! }!
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 
