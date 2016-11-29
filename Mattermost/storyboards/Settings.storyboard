@@ -168,6 +168,7 @@
                     <connections>
                         <segue destination="whn-7X-t1I" kind="show" id="Z5A-tg-9UW"/>
                         <segue destination="RRt-pT-TFo" kind="show" id="14a-sn-8Sd"/>
+                        <segue destination="miN-R2-aQg" kind="show" id="PKk-aR-ZqV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pPA-fW-CBK" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -321,7 +322,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hhD-an-jGE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3638" y="-288"/>
+            <point key="canvasLocation" x="-3636" y="-1003"/>
         </scene>
         <!--WTMSettings-->
         <scene sceneID="V3l-8l-DiJ">
@@ -491,7 +492,7 @@
                             </tableViewSection>
                             <tableViewSection footerTitle="Notification sounds are available on IE11, Edge, Safari and Chrome." id="fWe-ma-qkB">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="45" id="Tta-34-pSc">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="45" id="Tta-34-pSc" customClass="SwitchSettingsTableViewCell" customModule="Mattermost" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="255" width="375" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tta-34-pSc" id="DYp-9N-uRb">
@@ -501,12 +502,11 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IgI-ho-LtB">
                                                     <rect key="frame" x="311" y="7" width="51" height="31"/>
                                                     <connections>
-                                                        <action selector="shouldCompressValueChanged:" destination="Xf1-h5-dIb" eventType="valueChanged" id="mUz-Tv-i0h"/>
-                                                        <action selector="soundSwitchActionWithSwitch:" destination="miN-R2-aQg" eventType="valueChanged" id="GU5-bQ-1Qz"/>
+                                                        <action selector="soundSwitchActionWithStateSwitch:" destination="miN-R2-aQg" eventType="valueChanged" id="mty-Mv-3hq"/>
                                                     </connections>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notification sound" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t5L-vm-X2D">
-                                                    <rect key="frame" x="15" y="13" width="139" height="20"/>
+                                                    <rect key="frame" x="15" y="12" width="139" height="20"/>
                                                     <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -519,6 +519,9 @@
                                                 <constraint firstItem="t5L-vm-X2D" firstAttribute="centerY" secondItem="DYp-9N-uRb" secondAttribute="centerY" id="mES-Tu-ZWw"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="stateSwitch" destination="IgI-ho-LtB" id="pMa-S0-MlI"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -617,6 +620,72 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fPE-9u-rSX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3638" y="-288"/>
+        </scene>
+        <!--MPNSettings-->
+        <scene sceneID="876-HF-XDD">
+            <objects>
+                <tableViewController storyboardIdentifier="ENSettingsTableViewController" title="MPNSettings" id="sm8-1E-UDL" customClass="ENSettingsTableViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="pUg-jt-WgF">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <sections>
+                            <tableViewSection headerTitle="Send email notifications" id="C8Z-QC-3xV">
+                                <string key="footerTitle">Email notifications are sent for mentions and direct messages when you are offline or away from Kilograpp for more than 5 minutes.</string>
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" rowHeight="45" id="VJm-Lv-1O7">
+                                        <rect key="frame" x="0.0" y="56" width="375" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VJm-Lv-1O7" id="on6-tR-khP">
+                                            <rect key="frame" x="0.0" y="0.0" width="336" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Immediately" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kO5-wA-d4X">
+                                                    <rect key="frame" x="15" y="14" width="80" height="17"/>
+                                                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="14"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="kO5-wA-d4X" firstAttribute="leading" secondItem="on6-tR-khP" secondAttribute="leading" constant="15" id="03g-1J-aKz"/>
+                                                <constraint firstItem="kO5-wA-d4X" firstAttribute="centerY" secondItem="on6-tR-khP" secondAttribute="centerY" id="FIn-yX-zEA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="45" id="Kan-Pr-ITY">
+                                        <rect key="frame" x="0.0" y="101" width="375" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Kan-Pr-ITY" id="7Pq-NM-IOg">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Never" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAj-IV-Sw2">
+                                                    <rect key="frame" x="15" y="14" width="39" height="17"/>
+                                                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="14"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="YAj-IV-Sw2" firstAttribute="centerY" secondItem="7Pq-NM-IOg" secondAttribute="centerY" id="5qY-37-Cjc"/>
+                                                <constraint firstItem="YAj-IV-Sw2" firstAttribute="leading" secondItem="7Pq-NM-IOg" secondAttribute="leading" constant="15" id="G1O-HI-5p3"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="sm8-1E-UDL" id="MSZ-cH-Dor"/>
+                            <outlet property="delegate" destination="sm8-1E-UDL" id="cNj-gD-Y2O"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Settings" id="7Z9-bx-Evi"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RJR-eM-wvm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3639" y="-1755"/>
         </scene>
     </scenes>
     <resources>

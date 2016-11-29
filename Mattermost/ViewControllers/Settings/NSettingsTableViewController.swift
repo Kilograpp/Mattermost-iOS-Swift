@@ -47,6 +47,8 @@ fileprivate protocol Action {
 
 fileprivate protocol Navigation {
     func returnToChat()
+    func proceedToDNSettings()
+    func proccedToENSettings()
     func proceedToMPNSettings()
     func proceedToWTMSettings()
 }
@@ -87,8 +89,14 @@ extension NSettingsTableViewController: Navigation {
     
     func proceedToDNSettings() {
         let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
-        let mPNSettrings = storyboard.instantiateViewController(withIdentifier: "DNSettingsTableViewController")
-        self.navigationController?.pushViewController(mPNSettrings, animated: true)
+        let dNSettrings = storyboard.instantiateViewController(withIdentifier: "DNSettingsTableViewController")
+        self.navigationController?.pushViewController(dNSettrings, animated: true)
+    }
+    
+    func proccedToENSettings() {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let eNSettrings = storyboard.instantiateViewController(withIdentifier: "ENSettingsTableViewController")
+        self.navigationController?.pushViewController(eNSettrings, animated: true)
     }
     
     func proceedToMPNSettings() {
@@ -128,7 +136,7 @@ extension NSettingsTableViewController {
         case 0:
             proceedToDNSettings()
         case 1:
-            print("")
+            proccedToENSettings()
         case 2:
             proceedToMPNSettings()
         case 3:

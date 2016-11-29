@@ -19,6 +19,11 @@ class AlertManager {
     
     static let sharedManager: AlertManager = AlertManager()
     
+    func showSuccesWithMessage(message:String) {
+        let alertView = AlertView(type: .success, message: message)
+        alertView.showAlertView(animated: true)
+    }
+    
     func showSuccesWithMessage(message:String, viewController: UIViewController) {
         let alertView = AlertView(type: .success, message: message)
         alertView.presentingViewController = viewController//.navigationController

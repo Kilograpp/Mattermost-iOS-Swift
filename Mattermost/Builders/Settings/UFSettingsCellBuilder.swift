@@ -64,7 +64,7 @@ extension UFSettingsCellBuilder: Inteface {
         
         switch self.userFieldType {
         case Constants.UserFieldType.FullName:
-            cell.infoTextField?.text = (indexPath.row == 0) ? user?.firstName : user?.lastName
+            cell.infoTextField?.text = (indexPath.section == 0) ? user?.firstName : user?.lastName
             cell.infoTextField?.keyboardType = .default
         case Constants.UserFieldType.UserName:
             cell.infoTextField?.text = user?.username

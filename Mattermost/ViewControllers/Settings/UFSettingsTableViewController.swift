@@ -128,8 +128,8 @@ extension UFSettingsTableViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
                 return
             }
-                                    
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Display name was successfully updated", viewController: UIViewController())
+            self.tableView.reloadData()
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Display name was successfully updated")
         }
     }
     
@@ -140,8 +140,7 @@ extension UFSettingsTableViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
                 return
             }
-            
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Username was successfully updated", viewController: UIViewController())
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Username was successfully updated")
         }
     }
     
@@ -152,8 +151,7 @@ extension UFSettingsTableViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
                 return
             }
-            
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Nickname was successfully updated", viewController: UIViewController())
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Nickname was successfully updated")
         }
     }
     
@@ -164,8 +162,7 @@ extension UFSettingsTableViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
                 return
             }
-            
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Email was successfully updated", viewController: UIViewController())
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Email was successfully updated")
         }
     }
     
@@ -177,8 +174,7 @@ extension UFSettingsTableViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
                 return
             }
-            
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Password was successfully updated", viewController: UIViewController())
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Password was successfully updated")
         }
     }
 }

@@ -10,7 +10,10 @@ import Foundation
 import RealmSwift
 
 protocol Desktop {
-    func completeDesctop() -> String
+    func completeDesktop() -> String
+    func sendDesktopState() -> String
+    func isDesktopSoundOn() -> Bool
+    func desktopDurationState() -> String
 }
 
 protocol Email {
@@ -80,12 +83,18 @@ enum NotifyPropsAttributes: String {
 
 //MARK: Desktop
 extension NotifyProps: Desktop {
-    func completeDesctop() -> String {
-        return "For all activity, with sound, shown for 5 sec"
+    func completeDesktop() -> String {
+        let desktop = sendDesktopState()
+        let sound = isDesktopSoundOn() ? "with" : "without" + " sound"
+        let duration = "shown " + desktopDurationState()
+        
+        return desktop + ", " + sound + ", " + duration
     }
     
-    func sendDesctopState() -> String {
-        return ""
+    func sendDesktopState() -> String {
+        let desktopIndex = Constants.NotifyProps.Send.index{ return $0.state == (self.desktop)! }!
+        let desktopDescription = Constants.NotifyProps.Send[desktopIndex].description
+        return desktopDescription
     }
     
     func isDesktopSoundOn() -> Bool {
@@ -93,7 +102,9 @@ extension NotifyProps: Desktop {
     }
     
     func desktopDurationState() -> String {
-        return self.desktopDuration! + " seconds"
+        let durationIndex = Constants.NotifyProps.DesktopPush.Duration.index { return $0.state == (self.desktopDuration)! }!
+        let duration = Constants.NotifyProps.DesktopPush.Duration[durationIndex].description
+        return duration
     }
 }
 
@@ -101,7 +112,7 @@ extension NotifyProps: Desktop {
 //MARK: Email
 extension NotifyProps: Email {
     func completeEmail() -> String {
-        return "Immediately"
+        return (self.email == "true") ? "Immediately" : "Never"
     }
 }
 

@@ -443,7 +443,14 @@ extension Api: UserApi {
         params["email"] = email ?? user?.email
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
-            
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write {
+                user?.firstName = firstName ?? user?.firstName
+                user?.lastName = lastName ?? user?.lastName
+                user?.nickname = nickName ?? user?.nickname
+                user?.username = userName ?? user?.username
+                user?.email = email ?? user?.email
+            }
             completion(nil)
         }) { (error) in
             completion(error)

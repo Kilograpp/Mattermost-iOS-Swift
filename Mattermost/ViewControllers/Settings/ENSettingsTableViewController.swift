@@ -1,14 +1,14 @@
 //
-//  DNSettingsTableViewController.swift
+//  ENSettingsTableViewController.swift
 //  Mattermost
 //
-//  Created by Екатерина on 25.11.16.
+//  Created by Екатерина on 29.11.16.
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
 import UIKit
 
-class DNSettingsTableViewController: UITableViewController {
+class ENSettingsTableViewController: UITableViewController {
 
 //MARK: Properties
     fileprivate var saveButton: UIBarButtonItem!
@@ -16,17 +16,15 @@ class DNSettingsTableViewController: UITableViewController {
     fileprivate var notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
     fileprivate let user = DataManager.sharedInstance.currentUser
     
-    var selectedSendOption: Int = 0
-    var selectedSoundOption: Bool = false
-    var selectedDurationOption: Int = 0
+    var selectedEmailOption: Int = 0
     
-//MARK: LifeCycle
+    //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         initialSetup()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -38,13 +36,8 @@ class DNSettingsTableViewController: UITableViewController {
         
         super.viewWillDisappear(animated)
     }
-    
-//MARK: IBAction
-    @IBAction func soundSwitchAction(stateSwitch: UISwitch) {
-        self.saveButton.isEnabled = true
-        self.selectedSoundOption = stateSwitch.isOn
-    }
 }
+
 
 fileprivate protocol Setup {
     func initialSetup()
@@ -67,14 +60,14 @@ fileprivate protocol Request {
 
 
 //MARK: Setup
-extension DNSettingsTableViewController: Setup {
+extension ENSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
     }
     
     func setupNavigationBar() {
-        self.title = "Desktop notifications"
+        self.title = "Email notifications"
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
@@ -85,15 +78,13 @@ extension DNSettingsTableViewController: Setup {
     }
     
     func setupForCurrentNotifyProps() {
-        self.selectedSendOption = Constants.NotifyProps.Send.index { return $0.state == (self.notifyProps?.push)! }!
-        self.selectedSoundOption = (self.notifyProps?.isDesktopSoundOn())!
-        self.selectedDurationOption = Constants.NotifyProps.DesktopPush.Duration.index{ return $0.state == (self.notifyProps?.desktopDuration)! }!
+        self.selectedEmailOption = (self.notifyProps?.email == "true") ? 0 : 1
     }
 }
 
 
 //MARK: Action
-extension DNSettingsTableViewController: Action {
+extension ENSettingsTableViewController: Action {
     func backAction() {
         returtToNSettings()
     }
@@ -105,7 +96,7 @@ extension DNSettingsTableViewController: Action {
 
 
 //MARK: Navigation
-extension DNSettingsTableViewController: Navigation {
+extension ENSettingsTableViewController: Navigation {
     func returtToNSettings() {
         _ = self.navigationController?.popViewController(animated: true)
     }
@@ -113,12 +104,10 @@ extension DNSettingsTableViewController: Navigation {
 
 
 //MARK: Request
-extension DNSettingsTableViewController: Request {
+extension ENSettingsTableViewController: Request {
     func updateSettings() {
         try! RealmUtils.realmForCurrentThread().write {
-            self.notifyProps?.desktop = Constants.NotifyProps.Send[self.selectedSendOption].state
-            self.notifyProps?.desktopSound = (self.selectedSoundOption) ? "true" : "false"
-            self.notifyProps?.desktopDuration = Constants.NotifyProps.DesktopPush.Duration[self.selectedDurationOption].state
+            self.notifyProps?.email = (self.selectedEmailOption == 0) ? "true" : "false"
         }
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
@@ -135,52 +124,25 @@ extension DNSettingsTableViewController: Request {
 
 
 //MARK: UITableViewDataSource
-extension DNSettingsTableViewController {
+extension ENSettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        switch indexPath.section {
-        case 0:
-            cell.accessoryType = (self.selectedSendOption == indexPath.row) ? .checkmark : .none
-        case 1:
-            (cell as! SwitchSettingsTableViewCell).stateSwitch?.isOn = self.selectedSoundOption
-            break
-        case 2:
-            cell.accessoryType = (self.selectedDurationOption == indexPath.row) ? .checkmark : .none
-        default:
-            break
-        }
-
+        cell.accessoryType = (self.selectedEmailOption == indexPath.row) ? .checkmark : .none
+        
         return cell
     }
 }
 
 
 //MARK: UITableViewDelegate
-extension DNSettingsTableViewController {
+extension ENSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.section != 1 else { return }
-        
-        var selectedRow = 0
-        switch indexPath.section {
-        case 0:
-           selectedRow = self.selectedSendOption
-        case 2:
-            selectedRow = self.selectedDurationOption
-        default:
-            break
-        }
-        guard indexPath.row != selectedRow else { return }
+        guard indexPath.row != self.selectedEmailOption else { return }
         
         self.saveButton?.isEnabled = true
-        tableView.cellForRow(at: IndexPath(row: selectedRow, section: indexPath.section))?.accessoryType = .none
-        switch indexPath.section {
-        case 0:
-            self.selectedSendOption = indexPath.row
-        case 2:
-            self.selectedDurationOption = indexPath.row
-        default:
-            break
-        }
+        tableView.cellForRow(at: IndexPath(row: self.selectedEmailOption, section: indexPath.section))?.accessoryType = .none
+        
+        self.selectedEmailOption = indexPath.row
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }
 }

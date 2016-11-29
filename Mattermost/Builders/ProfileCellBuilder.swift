@@ -64,9 +64,9 @@ extension ProfileCellBuilder: Inteface {
         case 0:
             cell.configureWith(title: title, info: user.firstName, icon: icon)
         case 1:
-            cell.configureWith(title: title, info: user.nickname, icon: icon)
-        case 2:
             cell.configureWith(title: title, info: user.username, icon: icon)
+        case 2:
+            cell.configureWith(title: title, info: user.nickname, icon: icon)
         case 3:
             cell.configureWith(title: title, info: "", icon: icon)
         default:
