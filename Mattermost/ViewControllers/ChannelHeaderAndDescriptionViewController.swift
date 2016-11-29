@@ -63,9 +63,9 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if textViewHeight <= 30.0{
+        /*if textViewHeight <= 30.0{
             (tableView.cellForRow(at: indexPath) as! ChannelInfoCell).cancelButton
-        }
+        }*/
         return textViewHeight + 10
     }
     
