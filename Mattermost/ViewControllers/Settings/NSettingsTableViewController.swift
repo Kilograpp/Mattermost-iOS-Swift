@@ -63,6 +63,7 @@ fileprivate protocol Request {
 extension NSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
+        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -70,6 +71,12 @@ extension NSettingsTableViewController: Setup {
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 

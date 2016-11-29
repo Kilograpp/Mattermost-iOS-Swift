@@ -62,9 +62,10 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
         if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
             Api.sharedInstance.checkURL(with: { ( error) in
                 if (error != nil) {
-                    Api.sharedInstance.checkURL(with: { ( error) in
-                        AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)
-                    })
+                    let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: nil, preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+                    alert.addAction(okAction)
+                    self.present(alert, animated: true, completion: nil)
                 } else {
                     self.performSegue(withIdentifier: "showLogin", sender: nil)
                 }
@@ -79,7 +80,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
                     Preferences.sharedInstance.serverUrl = urlAddress
                     Api.sharedInstance.checkURL(with: { ( error) in
                         if (error != nil) {
-                            AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)
+                            AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
                         } else {
                             self.performSegue(withIdentifier: "showLogin", sender: nil)
                         }

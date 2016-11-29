@@ -62,6 +62,7 @@ extension TeamViewController: Setup {
         setupTitleLabel()
         setupTableView()
         setupNavigationView()
+        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -74,6 +75,7 @@ extension TeamViewController: Setup {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.backgroundColor = ColorBucket.whiteColor
+        self.tableView.separatorStyle = .none
         self.tableView.register(TeamTableViewCell.classForCoder(), forCellReuseIdentifier: TeamTableViewCell.reuseIdentifier)
     }
     
@@ -89,6 +91,12 @@ extension TeamViewController: Setup {
         bgLayer.animateLayerInfinitely(bgLayer)
         self.navigationView.layer.insertSublayer(bgLayer, at: 0)
         self.navigationView.bringSubview(toFront: self.titleLabel)
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 

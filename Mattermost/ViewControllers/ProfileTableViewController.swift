@@ -93,6 +93,7 @@ extension ProfileViewController: Setup {
         setupNavigationBar()
         setupHeader()
         setupTable()
+        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -129,6 +130,12 @@ extension ProfileViewController: Setup {
         self.tableView?.backgroundColor = UIColor.kg_lightLightGrayColor()
         self.tableView?.register(ProfileTableViewCell.nib, forCellReuseIdentifier: ProfileTableViewCell.reuseIdentifier, cacheSize: 10)
         self.tableView.isScrollEnabled = !self.isDisplayOnly!
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 
