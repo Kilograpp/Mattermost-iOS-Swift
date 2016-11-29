@@ -78,7 +78,7 @@ extension ENSettingsTableViewController: Setup {
     }
     
     func setupForCurrentNotifyProps() {
-        self.selectedEmailOption = (self.notifyProps?.email == "true") ? 0 : 1
+        self.selectedEmailOption = (self.notifyProps?.email == /*"true"*/Constants.CommonStrings.True) ? 0 : 1
     }
 }
 
@@ -107,12 +107,12 @@ extension ENSettingsTableViewController: Navigation {
 extension ENSettingsTableViewController: Request {
     func updateSettings() {
         try! RealmUtils.realmForCurrentThread().write {
-            self.notifyProps?.email = (self.selectedEmailOption == 0) ? "true" : "false"
+            self.notifyProps?.email = (self.selectedEmailOption == 0) ? /*"true"*/Constants.CommonStrings.True : Constants.CommonStrings.False//"false"
         }
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
                 return
             }
             self.saveButton.isEnabled = false

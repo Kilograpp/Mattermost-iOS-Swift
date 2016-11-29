@@ -129,7 +129,7 @@ extension Api: PreferencesApi {
                 if (user?.hasChannel())! {
                     let channel = user?.directChannel()
                     try! RealmUtils.realmForCurrentThread().write {
-                        channel?.currentUserInChannel = (preference as Preference).value == "true"
+                        channel?.currentUserInChannel = (preference as Preference).value == Constants.CommonStrings.True//"true"
                     }
                 }
             }

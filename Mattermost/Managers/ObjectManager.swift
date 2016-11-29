@@ -128,7 +128,7 @@ extension ObjectManager: PostRequests {
             success?(true)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
-            guard (operation?.httpRequestOperation.responseString != "true") else { success!(true); return }
+            guard (operation?.httpRequestOperation.responseString != /*"true"*/Constants.CommonStrings.True) else { success!(true); return }
             failure?(self.handleOperation(operation!, withError: error!))
         }
         

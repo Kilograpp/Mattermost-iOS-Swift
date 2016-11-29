@@ -80,7 +80,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
                     Preferences.sharedInstance.serverUrl = urlAddress
                     Api.sharedInstance.checkURL(with: { ( error) in
                         if (error != nil) {
-                            AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                            AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
                         } else {
                             self.performSegue(withIdentifier: "showLogin", sender: nil)
                         }

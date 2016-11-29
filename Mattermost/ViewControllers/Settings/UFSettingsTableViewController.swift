@@ -125,7 +125,7 @@ extension UFSettingsTableViewController: Request {
         
         Api.sharedInstance.update(firstName: firstName, lastName: lastName) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
                 return
             }
             self.tableView.reloadData()
@@ -137,7 +137,7 @@ extension UFSettingsTableViewController: Request {
         let userName = self.builder.infoFor(section: 0)
         Api.sharedInstance.update(userName: userName) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
                 return
             }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Username was successfully updated")
@@ -148,7 +148,7 @@ extension UFSettingsTableViewController: Request {
         let nickName = self.builder.infoFor(section: 0)
         Api.sharedInstance.update(nickName: nickName) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
                 return
             }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Nickname was successfully updated")
@@ -159,7 +159,7 @@ extension UFSettingsTableViewController: Request {
         let email = self.builder.infoFor(section: 0)
         Api.sharedInstance.update(email: email) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
                 return
             }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Email was successfully updated")
@@ -171,7 +171,7 @@ extension UFSettingsTableViewController: Request {
         let newPassword = self.builder.infoFor(section: 1)
         Api.sharedInstance.update(currentPassword: oldPassword, newPassword: newPassword) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
                 return
             }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Password was successfully updated")

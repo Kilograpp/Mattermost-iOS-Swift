@@ -98,7 +98,7 @@ extension NotifyProps: Desktop {
     }
     
     func isDesktopSoundOn() -> Bool {
-        return (self.desktopSound == "true")
+        return (self.desktopSound == /*"true"*/Constants.CommonStrings.True)
     }
     
     func desktopDurationState() -> String {
@@ -112,7 +112,7 @@ extension NotifyProps: Desktop {
 //MARK: Email
 extension NotifyProps: Email {
     func completeEmail() -> String {
-        return (self.email == "true") ? "Immediately" : "Never"
+        return (self.email == /*"true"*/Constants.CommonStrings.True) ? "Immediately" : "Never"
     }
 }
 
@@ -134,7 +134,7 @@ extension NotifyProps: MobilePush {
 //MARK: TriggerWords
 extension NotifyProps: TriggerWords {
     func isSensitiveFirstName() -> Bool {
-        return self.firstName == "true"
+        return self.firstName == Constants.CommonStrings.True//"true"
     }
     
     func isNonCaseSensitiveUsername() -> Bool {
@@ -153,7 +153,7 @@ extension NotifyProps: TriggerWords {
     }
     
     func isChannelWide() -> Bool {
-        return self.channel == "true"
+        return self.channel == Constants.CommonStrings.True//"true"
     }
     
     func otherNonCaseSensitive() -> String {

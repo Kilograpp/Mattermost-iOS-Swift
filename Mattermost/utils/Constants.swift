@@ -126,8 +126,13 @@ struct Constants {
         static let Email: Int    = 3
         static let Password: Int = 4
     }
-    
+        
     struct CommonKeyPaths {
         static let Teams = "teams"
+    }
+    
+    struct CommonStrings {
+        static let True = "true"
+        static let False = "false"
     }
 }

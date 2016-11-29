@@ -117,13 +117,13 @@ extension DNSettingsTableViewController: Request {
     func updateSettings() {
         try! RealmUtils.realmForCurrentThread().write {
             self.notifyProps?.desktop = Constants.NotifyProps.Send[self.selectedSendOption].state
-            self.notifyProps?.desktopSound = (self.selectedSoundOption) ? "true" : "false"
+            self.notifyProps?.desktopSound = (self.selectedSoundOption) ? /*"true"*/Constants.CommonStrings.True : Constants.CommonStrings.False//"false"
             self.notifyProps?.desktopDuration = Constants.NotifyProps.DesktopPush.Duration[self.selectedDurationOption].state
         }
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
                 return
             }
             self.saveButton.isEnabled = false
