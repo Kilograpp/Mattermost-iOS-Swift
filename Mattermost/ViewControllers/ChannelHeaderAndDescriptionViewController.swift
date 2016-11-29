@@ -8,9 +8,18 @@
 
 import UIKit
 
-class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
+enum InfoType{
+    case header
+    case purpose
+    case name
+}
 
+class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, HeightForTextView  {
+    
     @IBOutlet weak var tableView: UITableView!
+    var channel: Channel!
+    var textViewHeight = CGFloat(40.0)
+    var type: InfoType!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +27,9 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
         tableView.dataSource = self
         tableView.delegate = self
         setupNavigationBar()
-              
+        tableView.estimatedRowHeight = 70.0
+        tableView.rowHeight = UITableViewAutomaticDimension
+        
         let nib = UINib(nibName: "ChannelInfoCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "channelInfoCell")
     }
@@ -43,13 +54,19 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell!
+        var cell: ChannelInfoCell!
         cell = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
+        cell.infoText.text = channel.header
+        cell.delgate = self
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return ChannelInfoCell.heightWithObject(text: "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.")
+        /*if textViewHeight <= 30.0{
+         (tableView.cellForRow(at: indexPath) as! ChannelInfoCell).cancelButton
+         }*/
+        return textViewHeight + 10
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -61,5 +78,19 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
         
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: nil)
         self.navigationItem.rightBarButtonItem = saveButton
+    }
+    
+    func heightOfTextView(height: CGFloat) {
+        
+        textViewHeight = height
+        if height < CGFloat(20.0){
+            textViewHeight = CGFloat(20.0)
+        }
+        self.tableView.beginUpdates()
+        self.tableView.endUpdates()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        textViewHeight = ChannelInfoCell.heightWithObject(channel.header!)
     }
 }
