@@ -17,6 +17,8 @@ fileprivate struct DownloadingState {
 }
 
 class AttachmentFileView: UIView {
+    
+//MARK: Properties
     let iconImageView = UIImageView()
     let progressView = MRCircularProgressView()
     var file: File!
@@ -26,14 +28,12 @@ class AttachmentFileView: UIView {
     var downloadingState: Int = DownloadingState.NotDownloaded {
         didSet { updateIconForCurrentState() }
     }
-    
+
+//MARK: LifeCycle
     init(file: File, frame: CGRect) {
         self.file = file
         super.init(frame: frame)
-        self.backgroundColor = UIColor.clear
-        self.setupIcon()
-        self.setupProgressView()
-        self.setupDownloadingState()
+        initialSetup()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -48,17 +48,48 @@ class AttachmentFileView: UIView {
         self.isUserInteractionEnabled = true
         self.addGestureRecognizer(tapGestureRecognizer)
     }
+}
+
+
+fileprivate protocol Setup: class {
+    func initialSetup()
+    func setupDownloadingState()
+    func setupProgressView()
+    func setupIcon()
+    func drawTitle(text: String)
+    func drawSize(text: String)
+}
+
+fileprivate protocol AttachmentFileViewConfiguration: class {
+    func updateIconForCurrentState()
+}
+
+fileprivate protocol Action: class {
+    func tapAction()
+}
+
+fileprivate protocol Downloading: class {
+    func startDownloadingFile()
+    func stopDownloadingFile()
+    func openDownloadedFile()
+}
+
+
+//MARK: Setup
+extension AttachmentFileView: Setup {
+    func initialSetup() {
+        self.backgroundColor = UIColor.clear
+        self.setupIcon()
+        self.setupProgressView()
+        self.setupDownloadingState()
+    }
     
-    @objc fileprivate func tapAction() {
-        switch self.downloadingState {
-        case DownloadingState.NotDownloaded:
-            startDownloadingFile()
-        case DownloadingState.Downloading:
-            stopDownloadingFile()
-        case DownloadingState.Downloaded:
-            openDownloadedFile()
-        default:
-            break
+    fileprivate func setupDownloadingState() {
+        if file.downoloadedSize == file.size {
+            self.downloadingState = DownloadingState.Downloaded
+        } else {
+            self.downloadingState = (file.downoloadedSize == 0) ? DownloadingState.NotDownloaded
+                : DownloadingState.Downloading
         }
     }
     
@@ -74,6 +105,34 @@ class AttachmentFileView: UIView {
         self.addSubview(self.progressView)
     }
     
+    fileprivate func setupIcon() {
+        self.iconImageView.backgroundColor = UIColor.clear
+        self.iconImageView.frame = CGRect(x: 5, y: 5, width: 44, height: 44).offsetBy(dx: frame.origin.x, dy: frame.origin.y)
+        self.addSubview(self.iconImageView)
+    }
+    
+    fileprivate func drawTitle(text: String) {
+        let textColor = ColorBucket.blueColor
+        let textFont =  UIFont.systemFont(ofSize: 13)
+        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
+        let height = CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
+        let nameFrame = CGRect(x: 54, y: 8, width: frame.width - 64, height: height).offsetBy(dx: 0, dy: frame.origin.y)
+        (self.file.name! as NSString).draw(in: nameFrame, withAttributes: attributes)
+    }
+    
+    fileprivate func drawSize(text: String) {
+        let textColor = ColorBucket.rightMenuSeparatorColor
+        let textFont = FontBucket.messageFont
+        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
+        let y = 20 + CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
+        let textFrame = CGRect(x: 54, y: y, width: frame.width - 64, height: 20).offsetBy(dx: 0, dy: frame.origin.y)
+        (text as NSString).draw(in: textFrame, withAttributes: attributes)
+    }
+}
+
+
+//MARK: AttachmentFileViewConfiguration
+extension AttachmentFileView: AttachmentFileViewConfiguration {
     fileprivate func updateIconForCurrentState() {
         switch self.downloadingState {
         case DownloadingState.NotDownloaded:
@@ -89,7 +148,25 @@ class AttachmentFileView: UIView {
 }
 
 
-extension AttachmentFileView {
+//MARK: Action
+extension AttachmentFileView: Action {
+    @objc fileprivate func tapAction() {
+        switch self.downloadingState {
+        case DownloadingState.NotDownloaded:
+            startDownloadingFile()
+        case DownloadingState.Downloading:
+            stopDownloadingFile()
+        case DownloadingState.Downloaded:
+            openDownloadedFile()
+        default:
+            break
+        }
+    }
+}
+
+
+//MARK: Downloading
+extension AttachmentFileView: Downloading {
     fileprivate func startDownloadingFile() {
         self.progressView.isHidden = false
         self.downloadingState = DownloadingState.Downloading
@@ -98,12 +175,12 @@ extension AttachmentFileView {
             Api.sharedInstance.download(fileId: fileId!, completion: { (error) in
                 self.progressView.isHidden = true
                 guard error == nil else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!, viewController: UIViewController())
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
                     return
                 }
                 self.downloadingState = DownloadingState.Downloaded
                 
-                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded" , viewController: UIViewController())
+                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded")//, viewController: UIViewController())
                 
                 let notification = UILocalNotification()
                 notification.alertBody = "File was successfully downloaded"
@@ -131,41 +208,5 @@ extension AttachmentFileView {
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
                                           object: nil, userInfo: ["fileId" : fileId])
         NotificationCenter.default.post(notification as Notification)
-    }
-}
-
-
-extension AttachmentFileView {
-    fileprivate func setupDownloadingState() {
-        if file.downoloadedSize == file.size {
-            self.downloadingState = DownloadingState.Downloaded
-        } else {
-            self.downloadingState = (file.downoloadedSize == 0) ? DownloadingState.NotDownloaded
-                                                                : DownloadingState.Downloading
-        }
-    }
-    
-    fileprivate func setupIcon() {
-        self.iconImageView.backgroundColor = UIColor.clear
-        self.iconImageView.frame = CGRect(x: 5, y: 5, width: 44, height: 44).offsetBy(dx: frame.origin.x, dy: frame.origin.y)
-        self.addSubview(self.iconImageView)
-    }
-    
-    fileprivate func drawTitle(text: String) {
-        let textColor = ColorBucket.blueColor
-        let textFont =  UIFont.systemFont(ofSize: 13)
-        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
-        let height = CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
-        let nameFrame = CGRect(x: 54, y: 8, width: frame.width - 64, height: height).offsetBy(dx: 0, dy: frame.origin.y)
-        (self.file.name! as NSString).draw(in: nameFrame, withAttributes: attributes)
-    }
-    
-    fileprivate func drawSize(text: String) {
-        let textColor = ColorBucket.rightMenuSeparatorColor
-        let textFont = FontBucket.messageFont
-        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
-        let y = 20 + CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
-        let textFrame = CGRect(x: 54, y: y, width: frame.width - 64, height: 20).offsetBy(dx: 0, dy: frame.origin.y)
-        (text as NSString).draw(in: textFrame, withAttributes: attributes)
     }
 }

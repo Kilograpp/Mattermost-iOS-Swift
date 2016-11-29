@@ -89,8 +89,9 @@ struct Constants {
     struct Profile {
         static let SectionsCount = 2
         static let FirsSectionDataSource = [ (title: "Name", icon: "profile_name_icon"), (title: "Username", icon: "profile_usename_icon"),
-                                             (title: "Nickname", icon: "profile_nick_icon"), ]
-        static let SecondSecionDataSource = [ (title: "Email", icon: "profile_email_icon") ]
+                                             (title: "Nickname", icon: "profile_nick_icon"), (title: "Profile photo", icon: "profile_photo_icon") ]
+        static let SecondSecionDataSource = [ (title: "Email", icon: "profile_email_icon"), (title: "Change password", icon: "profile_pass_icon"),
+                                              (title: "Notification", icon: "profile_notification_icon")]
     }
     
     struct RightMenuRows {
@@ -105,14 +106,33 @@ struct Constants {
     }
     
     struct NotifyProps {
+        static let Send = [ (state: "all", description: "For all activity"), (state: "mention", description: "For mentions and direct messages"), (state: "none", description: "Never") ]
+        struct DesktopPush {
+            static let Duration = [ (state: "3", description: "3 seconds"), (state: "5", description: "5 seconds"), (state: "10", description: "10 seconds"), (state: "0", description: "Unlimited") ]
+        }
         struct MobilePush {
-            static let Send = [ (state: "all", description: "For all activity"), (state: "mention", description: "For mentions and direct messages"), (state: "none", description: "Never") ]
-            static let Trigger = [ (state: "online", description: "Online, away or offline"), (state: "away", description: "Away or offline"), (state: "offline", description: "Offline")]
+            static let Trigger = [ (state: "online", description: "Online, away or offline"), (state: "away", description: "Away or offline"), (state: "offline", description: "Offline") ]
         }
         struct Words {
             static let ChannelWide = "\"@channel\", \"@all\""
             static let None = "No words configured"
         }
+    }
+    
+    struct UserFieldType {
+        static let FullName: Int = 0
+        static let UserName: Int = 1
+        static let NickName: Int = 2
+        static let Email: Int    = 3
+        static let Password: Int = 4
+    }
         
+    struct CommonKeyPaths {
+        static let Teams = "teams"
+    }
+    
+    struct CommonStrings {
+        static let True = "true"
+        static let False = "false"
     }
 }

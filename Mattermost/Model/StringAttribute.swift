@@ -135,7 +135,6 @@ final class StringAttribute: Object {
             break
             
             default:
-                "❤️"
             break
             
         }

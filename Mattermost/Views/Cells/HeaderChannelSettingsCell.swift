@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+//Нужен ли ксиб?
 class HeaderChannelSettingsCell: UITableViewCell {
 
     @IBOutlet weak var channelImage: UIImageView!

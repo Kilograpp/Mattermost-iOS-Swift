@@ -14,9 +14,11 @@ private protocol TeamCellBuilderInteface: class {
 }
 
 final class TeamCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -26,6 +28,8 @@ final class TeamCellBuilder {
     }
 }
 
+
+//MARK: TeamCellBuilderInteface
 extension TeamCellBuilder: TeamCellBuilderInteface {
     func cellHeight() -> CGFloat {
         return 60

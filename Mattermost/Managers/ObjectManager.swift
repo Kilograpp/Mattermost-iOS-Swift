@@ -128,7 +128,7 @@ extension ObjectManager: PostRequests {
             success?(true)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
-            guard (operation?.httpRequestOperation.responseString != "true") else { success!(true); return }
+            guard (operation?.httpRequestOperation.responseString != /*"true"*/Constants.CommonStrings.True) else { success!(true); return }
             failure?(self.handleOperation(operation!, withError: error!))
         }
         
@@ -234,6 +234,11 @@ extension ObjectManager: PostRequests {
             progress?(value)
         }
         self.enqueue(operation)
+    }
+    
+    func update(user: User, success: ((_ mappingResult: RKMappingResult) -> Void)?,
+                failure: ((_ error: Mattermost.Error) -> Void)?) {
+        _ = UserPathPatternsContainer.userUpdatePathPattern()
     }
 }
 

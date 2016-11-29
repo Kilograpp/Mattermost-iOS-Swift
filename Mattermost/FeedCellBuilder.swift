@@ -15,9 +15,11 @@ private protocol FeedCellBuilderInterface: class {
 
 
 final class FeedCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -27,27 +29,14 @@ final class FeedCellBuilder {
     }
     
     static func typeForPost(_ post: Post, previous: Post?) -> CellType {
-        
-        if post.hasAttachments() {
-            return .attachment
-        }
-//        if let _ = previous where post.hasSameAuthor(previous)  {
-//            
-//            if previous?.day!.date!.compare(post.day!.date!) == .OrderedSame {
-//               return .FollowUp
-//            }
-//            
-//        }
-        return .common
+        return post.hasAttachments() ? .attachment : .common
     }
 }
 
 
 //MARK: FeedCellBuilderInterface
-
 extension FeedCellBuilder: FeedCellBuilderInterface {
     func cellForPost(_ post: Post, errorHandler: @escaping (_ post:Post) -> Void) -> UITableViewCell {
-        
         var reuseIdentifier: String
     
         switch post.cellType {

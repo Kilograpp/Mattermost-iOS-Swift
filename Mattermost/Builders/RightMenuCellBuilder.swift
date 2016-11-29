@@ -13,10 +13,13 @@ private protocol RightMenuCellBuilderInteface: class {
     func cellFor(indexPath: IndexPath) -> UITableViewCell
 }
 
+
 final class RightMenuCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK:LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -26,16 +29,18 @@ final class RightMenuCellBuilder {
     }
 }
 
+
+//MARK: RightMenuCellBuilderInteface
 extension RightMenuCellBuilder: RightMenuCellBuilderInteface {
     func cellHeight() -> CGFloat {
         return 60
     }
     
     func cellFor(indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
-        if cell == nil {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
+       /* if cell == nil {
             cell = UITableViewCell(style: .default, reuseIdentifier:"Cell")
-        }
+        }*/
         
         self.configureCellAtIndexPath(cell!, indexPath: indexPath)
         cell?.backgroundColor = ColorBucket.sideMenuBackgroundColor
@@ -98,6 +103,5 @@ extension RightMenuCellBuilder: RightMenuCellBuilderInteface {
         default:
             return
         }
-        
     }
 }

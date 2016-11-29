@@ -16,10 +16,13 @@ class LoginNavigationController: UINavigationController, UINavigationControllerD
     }
 }
 
+
 private protocol Setup {
     func setupNavigationBar()
 }
 
+
+//MARK: Setup
 extension LoginNavigationController: Setup {
     func setupNavigationBar() {
         let navBar = self.navigationBar

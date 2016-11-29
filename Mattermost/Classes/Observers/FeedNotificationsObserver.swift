@@ -58,15 +58,12 @@ final class FeedNotificationsObserver {
                         }
                         self.tableView.beginUpdates()
                         if (insertions.count > 0) {
-                        
-                            
                             if self.days?.first?.posts.count == 1 {
                                 self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
                             }
                             insertions.forEach({ (index:Int) in
                                 self.tableView.insertRows(at: [NSIndexPath(row: 0, section: 0) as IndexPath], with: .automatic)
                             })
-                        
                         }
                     
                         if modifications.count > 0 {
@@ -76,7 +73,7 @@ final class FeedNotificationsObserver {
                             rowsForReload.append(self.indexPathForPost(post))
                             //self.tableView.reloadRows(at: [self.indexPathForPost(post)], with: .automatic)
                             if let postIdentifier = post.identifier {
-                                let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("parentId == %@", postIdentifier)
+                                let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("\(PostAttributes.parentId) == %@", postIdentifier)
                                 for comment in comments {
                                     rowsForReload.append(self.indexPathForPost(comment))
                                 }

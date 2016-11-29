@@ -10,6 +10,13 @@
 		413B76221D58C6CD00F297BE /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B76211D58C6CD00F297BE /* en.lproj */; };
 		413B762C1D58CF4100F297BE /* ru.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B762B1D58CF4100F297BE /* ru.lproj */; };
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
+		4410CFA21DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4410CFA11DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift */; };
+		4410CFA41DEABC08003C365F /* UFSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */; };
+		442137B51DE7D47700B18BD3 /* DNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */; };
+		44385CB71DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */; };
+		449663371DED099B0007A954 /* ENSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449663361DED099B0007A954 /* ENSettingsTableViewController.swift */; };
+		44E3A94D1DE8D9E2001CD849 /* UFSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */; };
+		44E3A94F1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */; };
 		4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */; };
 		4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B404A791D92914A002F9F6D /* ObserverUtils.swift */; };
 		4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4497F31D93ECA9009939A9 /* PostStatusView.swift */; };
@@ -94,7 +101,6 @@
 		8B9E27CB1DC0985D00543C6C /* NSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */; };
 		8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */; };
 		8BA11FDF1DCB380C0073051A /* CommonSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA11FDE1DCB380C0073051A /* CommonSettingsTableViewCell.swift */; };
-		8BA8180D1DE63B11007FD1A7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */; };
 		8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */; };
 		8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */; };
 		8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */; };
@@ -268,6 +274,13 @@
 		413B76211D58C6CD00F297BE /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en.lproj; path = Settings.bundle/en.lproj; sourceTree = "<group>"; };
 		413B762B1D58CF4100F297BE /* ru.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ru.lproj; sourceTree = "<group>"; };
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
+		4410CFA11DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsCellBuilder.swift; sourceTree = "<group>"; };
+		442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSettingsTableViewController.swift; sourceTree = "<group>"; };
+		44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		449663361DED099B0007A954 /* ENSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSettingsTableViewController.swift; sourceTree = "<group>"; };
+		44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsTableViewController.swift; sourceTree = "<group>"; };
+		44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/UserRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
 		4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostFileViewCell.swift; path = PostAttachmentsViewCell/PostFileViewCell.swift; sourceTree = "<group>"; };
 		4B404A791D92914A002F9F6D /* ObserverUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverUtils.swift; sourceTree = "<group>"; };
 		4B4497F31D93ECA9009939A9 /* PostStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostStatusView.swift; sourceTree = "<group>"; };
@@ -356,7 +369,6 @@
 		8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSettingsTableViewController.swift; sourceTree = "<group>"; };
 		8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WTMSettingsTableViewController.swift; sourceTree = "<group>"; };
 		8BA11FDE1DCB380C0073051A /* CommonSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonSettingsTableViewCell.swift; sourceTree = "<group>"; };
-		8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchChatViewController.swift; sourceTree = "<group>"; };
 		8BBA7DC01D874EB5003A5B99 /* SearchingInProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingInProcessView.swift; sourceTree = "<group>"; };
 		8BBA7DC31D874F1C003A5B99 /* SearchingInProcessView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchingInProcessView.xib; sourceTree = "<group>"; };
@@ -585,6 +597,8 @@
 				8BA11FDE1DCB380C0073051A /* CommonSettingsTableViewCell.swift */,
 				8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */,
 				8B3C3ED91DC29080005FCAFE /* TextSettingsTableViewCell.swift */,
+				4410CFA11DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift */,
+				44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -614,6 +628,9 @@
 				8B9E27C81DC0984300543C6C /* MPNSettingsTableViewController.swift */,
 				8B9E27CA1DC0985D00543C6C /* NSettingsTableViewController.swift */,
 				8B9E27CC1DC0989000543C6C /* WTMSettingsTableViewController.swift */,
+				442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */,
+				44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */,
+				449663361DED099B0007A954 /* ENSettingsTableViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -631,6 +648,7 @@
 			children = (
 				8BBCA0191DD237ED0059ABED /* NSettingsCellBuilder.swift */,
 				8BBCA01D1DD252A40059ABED /* WTMSettingsCellBuilder.swift */,
+				4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */,
 			);
 			name = Settings;
 			path = Builders/Settings;
@@ -805,6 +823,7 @@
 				CDB4BC641D8062B600662231 /* PostRequestDescriptorsContainer.swift */,
 				8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */,
 				8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */,
+				44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */,
 			);
 			name = RestKitRequestDescriptors;
 			sourceTree = "<group>";
@@ -1042,7 +1061,6 @@
 				D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */,
 				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
 				4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */,
-				8BA8180C1DE63B11007FD1A7 /* PreviewView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1468,6 +1486,7 @@
 				CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */,
 				4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */,
 				8B882D6F1DA6575F0028F13D /* FeedSearchTableViewCell.swift in Sources */,
+				44E3A94F1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift in Sources */,
 				8B3CB3401DD2675F0078DE25 /* MoreCellBuilder.swift in Sources */,
 				D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */,
 				4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */,
@@ -1479,6 +1498,7 @@
 				D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */,
 				D8812C371D47D69B00436B5C /* WebSocket+Cookies.swift in Sources */,
 				CDF07ECE1D7F129100172D1E /* ChannelPathPatternsContainer.swift in Sources */,
+				442137B51DE7D47700B18BD3 /* DNSettingsTableViewController.swift in Sources */,
 				4B4497F41D93ECA9009939A9 /* PostStatusView.swift in Sources */,
 				D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */,
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
@@ -1490,7 +1510,6 @@
 				D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */,
 				8B3CB3791DD269C30078DE25 /* ObjectManager.swift in Sources */,
 				D8D601381D5E007700951F18 /* Day.swift in Sources */,
-				8BA8180D1DE63B11007FD1A7 /* PreviewView.swift in Sources */,
 				D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */,
 				CDF07ED61D7F1DC900172D1E /* UserPathPatternsContainer.swift in Sources */,
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
@@ -1507,10 +1526,12 @@
 				CDF07ED21D7F1DA300172D1E /* PostPathPatternsContainer.swift in Sources */,
 				D8BFE6071D5F4F6A00DCA0C1 /* Attachable.swift in Sources */,
 				8B3C3ED81DC28487005FCAFE /* CheckSettingsTableViewCell.swift in Sources */,
+				44E3A94D1DE8D9E2001CD849 /* UFSettingsTableViewController.swift in Sources */,
 				CDB4BC691D806C7000662231 /* FileMappingsContainer.swift in Sources */,
 				8B618CC11DDC4A2500AC6CDD /* Error.swift in Sources */,
 				D8087AF11D428FF1001918E8 /* StringUtils.swift in Sources */,
 				8BA11FDF1DCB380C0073051A /* CommonSettingsTableViewCell.swift in Sources */,
+				4410CFA21DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift in Sources */,
 				CDB6D3D01D7F0AE400C3018C /* ChannelResponseDescriptorsContainer.swift in Sources */,
 				D8436E711D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.m in Sources */,
 				D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */,
@@ -1541,8 +1562,11 @@
 				D8812C2D1D46CE8900436B5C /* NSDateFormatter+Singleton.swift in Sources */,
 				CDB4BC751D8074E800662231 /* AttachmentFieldMappingsContainer.swift in Sources */,
 				CDB4BC601D80341800662231 /* UserResponseDescriptorsContainer.swift in Sources */,
+				4410CFA41DEABC08003C365F /* UFSettingsCellBuilder.swift in Sources */,
 				D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */,
+				44385CB71DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift in Sources */,
 				8BBA7DBF1D8747B8003A5B99 /* SearchChatViewController.swift in Sources */,
+				449663371DED099B0007A954 /* ENSettingsTableViewController.swift in Sources */,
 				D83305F81D5637B800E92CD6 /* AttachmentField.swift in Sources */,
 				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
@@ -1703,7 +1727,7 @@
 				INFOPLIST_FILE = Mattermost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DDEBUG";
+				OTHER_SWIFT_FLAGS = "-DDEBUG -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "f93249bb-910c-4804-bf49-2cc8ff645729";
@@ -1746,6 +1770,7 @@
 				INFOPLIST_FILE = Mattermost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "11a5e7d4-4584-4ac6-92f8-f248a545214c";

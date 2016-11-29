@@ -62,6 +62,7 @@ extension TeamViewController: Setup {
         setupTitleLabel()
         setupTableView()
         setupNavigationView()
+        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -89,6 +90,12 @@ extension TeamViewController: Setup {
         bgLayer.animateLayerInfinitely(bgLayer)
         self.navigationView.layer.insertSublayer(bgLayer, at: 0)
         self.navigationView.bringSubview(toFront: self.titleLabel)
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 
@@ -127,8 +134,6 @@ extension TeamViewController: Request {
         showLoaderView()
         
         RealmUtils.refresh()
-        print("new team = ", Preferences.sharedInstance.currentTeamId)
-        print("data = ", DataManager.sharedInstance.currentTeam?.identifier)
         Api.sharedInstance.loadTeams { (userShouldSelectTeam, error) in
             Api.sharedInstance.loadCurrentUser { (error) in
                 Api.sharedInstance.loadChannels(with: { (error) in

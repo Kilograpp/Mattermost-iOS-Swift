@@ -13,10 +13,13 @@ private protocol Inteface: class {
     func cellForPost(post: Post, searchingText: String) -> UITableViewCell
 }
 
+
 final class SearchCellBuilder {
-    
+
+//MARK: Properties
     fileprivate let tableView: UITableView
     
+//MARK: LifeCycle
     init(tableView: UITableView) {
         self.tableView = tableView
     }
@@ -26,6 +29,7 @@ final class SearchCellBuilder {
     }
 }
 
+//MARK: Interface
 extension SearchCellBuilder: Inteface {
     func cellForPost(post: Post, searchingText: String) -> UITableViewCell {
         let reuseIdentifier = post.hasAttachments() ?  FeedSearchAttachmentTableViewCell.reuseIdentifier : FeedSearchTableViewCell.reuseIdentifier

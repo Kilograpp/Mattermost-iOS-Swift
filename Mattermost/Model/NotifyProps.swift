@@ -10,7 +10,10 @@ import Foundation
 import RealmSwift
 
 protocol Desktop {
-    func completeDesctop() -> String
+    func completeDesktop() -> String
+    func sendDesktopState() -> String
+    func isDesktopSoundOn() -> Bool
+    func desktopDurationState() -> String
 }
 
 protocol Email {
@@ -80,8 +83,28 @@ enum NotifyPropsAttributes: String {
 
 //MARK: Desktop
 extension NotifyProps: Desktop {
-    func completeDesctop() -> String {
-        return "For all activity, with sound, shown for 5 sec"
+    func completeDesktop() -> String {
+        let desktop = sendDesktopState()
+        let sound = isDesktopSoundOn() ? "with" : "without" + " sound"
+        let duration = "shown " + desktopDurationState()
+        
+        return desktop + ", " + sound + ", " + duration
+    }
+    
+    func sendDesktopState() -> String {
+        let desktopIndex = Constants.NotifyProps.Send.index{ return $0.state == (self.desktop)! }!
+        let desktopDescription = Constants.NotifyProps.Send[desktopIndex].description
+        return desktopDescription
+    }
+    
+    func isDesktopSoundOn() -> Bool {
+        return (self.desktopSound == /*"true"*/Constants.CommonStrings.True)
+    }
+    
+    func desktopDurationState() -> String {
+        let durationIndex = Constants.NotifyProps.DesktopPush.Duration.index { return $0.state == (self.desktopDuration)! }!
+        let duration = Constants.NotifyProps.DesktopPush.Duration[durationIndex].description
+        return duration
     }
 }
 
@@ -89,7 +112,7 @@ extension NotifyProps: Desktop {
 //MARK: Email
 extension NotifyProps: Email {
     func completeEmail() -> String {
-        return "Immediately"
+        return (self.email == /*"true"*/Constants.CommonStrings.True) ? "Immediately" : "Never"
     }
 }
 
@@ -98,10 +121,10 @@ extension NotifyProps: Email {
 extension NotifyProps: MobilePush {
     func completeMobilePush() -> String{
         print((self.push)!)
-        let sendIndex = Constants.NotifyProps.MobilePush.Send.index { return $0.state == (self.push)! }!
+        let sendIndex = Constants.NotifyProps.Send.index { return $0.state == (self.push)! }!
         print((self.pushStatus)!)
         let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.pushStatus)! }!
-        let send = Constants.NotifyProps.MobilePush.Send[sendIndex].description
+        let send = Constants.NotifyProps.Send[sendIndex].description
         let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
         return send + " when " + trigger
     }
@@ -111,7 +134,7 @@ extension NotifyProps: MobilePush {
 //MARK: TriggerWords
 extension NotifyProps: TriggerWords {
     func isSensitiveFirstName() -> Bool {
-        return self.firstName == "true"
+        return self.firstName == Constants.CommonStrings.True//"true"
     }
     
     func isNonCaseSensitiveUsername() -> Bool {
@@ -130,7 +153,7 @@ extension NotifyProps: TriggerWords {
     }
     
     func isChannelWide() -> Bool {
-        return self.channel == "true"
+        return self.channel == Constants.CommonStrings.True//"true"
     }
     
     func otherNonCaseSensitive() -> String {

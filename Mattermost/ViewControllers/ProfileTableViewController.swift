@@ -17,7 +17,7 @@ import QuartzCore
 }
 
 protocol ProfileViewControllerConfiguration {
-    func configureForCurrentUser()
+    func configureForCurrentUser(displayOnly: Bool)
     func configureFor(user: User)
 }
 
@@ -31,8 +31,9 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    fileprivate lazy var cellBuilder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView)
+    fileprivate lazy var builder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView, displayOnly: self.isDisplayOnly!)
     var user: User?
+    fileprivate var isDisplayOnly: Bool?
  
 //MARK: LifeCycle
     override func viewDidLoad() {
@@ -44,6 +45,7 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.tableView.reloadData()
         self.menuContainerViewController.panMode = .init(0)
     }
     
@@ -56,8 +58,9 @@ class ProfileViewController: UIViewController {
 
 
 extension ProfileViewController: ProfileViewControllerConfiguration {
-    func configureForCurrentUser() {
+    func configureForCurrentUser(displayOnly: Bool) {
         self.user = DataManager.sharedInstance.currentUser!
+        self.isDisplayOnly = displayOnly
     }
     
     func configureFor(user: User) {
@@ -79,6 +82,8 @@ fileprivate protocol Action {
 
 fileprivate protocol Navigation {
     func returnToChat()
+    func proceedToUFSettingsWith(type: Int)
+    func proccedToNSettings()
 }
 
 
@@ -88,6 +93,7 @@ extension ProfileViewController: Setup {
         setupNavigationBar()
         setupHeader()
         setupTable()
+        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -123,6 +129,13 @@ extension ProfileViewController: Setup {
     func setupTable() {
         self.tableView?.backgroundColor = UIColor.kg_lightLightGrayColor()
         self.tableView?.register(ProfileTableViewCell.nib, forCellReuseIdentifier: ProfileTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.isScrollEnabled = !self.isDisplayOnly!
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 
@@ -140,6 +153,21 @@ extension ProfileViewController: Navigation {
     func returnToChat() {
        _ = self.navigationController?.popViewController(animated: true)
     }
+    
+    func proceedToUFSettingsWith(type: Int) {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let uFSettings = storyboard.instantiateViewController(withIdentifier: "UFSettingsTableViewController") as! UFSettingsTableViewController
+        uFSettings.configureWith(userFieldType: type)
+        let navigation = self.menuContainerViewController.centerViewController
+        (navigation! as AnyObject).pushViewController(uFSettings, animated: true)
+    }
+    
+    func proccedToNSettings() {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let nSettings = storyboard.instantiateViewController(withIdentifier: "NSettingsTableViewController")
+        let navigation = self.menuContainerViewController.centerViewController
+        (navigation! as AnyObject).pushViewController(nSettings, animated: true)
+    }
 }
 
 
@@ -150,11 +178,11 @@ extension ProfileViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == 0) ? Constants.Profile.FirsSectionDataSource.count : Constants.Profile.SecondSecionDataSource.count
+        return self.builder.numberOfRowsFor(section: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return self.cellBuilder.cellFor(user: self.user!, indexPath: indexPath)
+        return self.builder.cellFor(user: self.user!, indexPath: indexPath)
     }
 }
 
@@ -163,6 +191,34 @@ extension ProfileViewController: UITableViewDataSource {
 extension ProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 15
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !self.isDisplayOnly! else { return }
+        
+        if indexPath.section == 0 {
+            switch indexPath.row {
+            case 0:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.FullName)
+            case 1:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.UserName)
+            case 2:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.NickName)
+            default:
+                break
+            }
+        } else {
+            switch indexPath.row {
+            case 0:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.Email)
+            case 1:
+                proceedToUFSettingsWith(type: Constants.UserFieldType.Password)
+            case 2:
+                proccedToNSettings()
+            default:
+                break
+            }
+        }
     }
 }
 
@@ -173,7 +229,7 @@ extension ProfileViewController {
         guard self.user?.identifier == Preferences.sharedInstance.currentUserId else { return }
         return
         
-        let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
+    /*    let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
             self.presentImagePickerControllerWithType(.camera)
         }
@@ -185,7 +241,7 @@ extension ProfileViewController {
         alertController.addAction(openGalleryAction)
         alertController.addAction(cancelAction)
         
-        self.present(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)*/
     }
     
     func presentImagePickerControllerWithType(_ type: UIImagePickerControllerSourceType) {

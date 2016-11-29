@@ -99,7 +99,6 @@ extension SocketManager: MessageHandling {
         let dictionary = text.toDictionary()!
         let userId = dictionary[NotificationKeys.UserIdentifier] as? String
         let channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
-        let teamId = dictionary[NotificationKeys.TeamIdentifier] as? String
         switch(SocketNotificationUtils.typeForNotification(dictionary)) {
             case .error:
                 print("ERROR "+text)
