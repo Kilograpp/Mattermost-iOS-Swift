@@ -89,6 +89,11 @@ extension ObjectManager: PostRequests {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
             success?(mappingResult!)
         }) { (operation, error) in
+            guard error != nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.localizedDescription)!)
+                return
+            }
+            
             //TODO: Will remove, after mapping fixation
             let responseString = operation?.httpRequestOperation.responseString
             let dict = responseString?.toDictionary()
@@ -214,7 +219,6 @@ extension ObjectManager: PostRequests {
                   success: ((_ mappingResult: RKMappingResult) -> Void)?,
                   failure: ((_ error: Mattermost.Error) -> Void)?,
                   progress: ((_ progressValue: Float) -> Void)?) {
-        
         let constructingBodyWithBlock = {(formData: AFRKMultipartFormData?) -> Void in
             try! formData?.appendPart(withFileURL: url, name: name)
         }
