@@ -37,28 +37,12 @@ class ProfileViewController: UIViewController {
     
     fileprivate lazy var builder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView, displayOnly: self.isDisplayOnly!)
     var user: User?
-    fileprivate var isDisplayOnly: Bool?
+    fileprivate var isDisplayOnly: Bool? = true
  
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-    /*    let image = UIImage(named: "judo_2.jpg")
-        
-         Api.sharedInstance.update(profileImage: image!, completion: { (error) in
-            SDImageCache.shared().removeImage(forKey: self.user?.smallAvatarCacheKey())
-            SDImageCache.shared().removeImage(forKey: self.user?.avatarLink)
-            
-            ImageDownloader.downloadFeedAvatarForUser(self.user!) { [weak self] (image, error) in
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadRightMenuNotification), object: nil)
-            }
-            ImageDownloader.downloadFullAvatarForUser(self.user!) { _,_ in }
-            
-        }, progress: { (progress) in
-        })*/
-        
-        
+                
         initialSetup()
     }
     

@@ -91,7 +91,7 @@ extension ObjectManager: PostRequests {
             success?(mappingResult!)
         }) { (operation, error) in
             print("FAIL")
-            guard error != nil else {
+            guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.localizedDescription)!)
                 return
             }
