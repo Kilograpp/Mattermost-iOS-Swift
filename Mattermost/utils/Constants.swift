@@ -48,6 +48,7 @@ struct Constants {
         static let ReloadLeftMenuNotification      = "ReloadLeftMenuNotification"
         static let ReloadRightMenuNotification     = "ReloadRightMenuNotification"
         static let DocumentInteractionNotification = "DocumentInteractionNotification"
+        static let ReloadFileSizeNotification      = "ReloadFileSizeNotification"
     }
     
     struct UI {

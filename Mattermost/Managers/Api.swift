@@ -748,6 +748,10 @@ extension Api : FileApi {
                 file?.hasPreview = result.hasPreview
                 file?.mimeType = result.mimeType
             }
+            let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.ReloadFileSizeNotification),
+                                            object: nil, userInfo: ["fileId" : fileId, "fileSize" : result.size])
+            NotificationCenter.default.post(notification as Notification)
+            
         }) { (error) in
             print(error?.message! ?? "getInfo_error")
         }

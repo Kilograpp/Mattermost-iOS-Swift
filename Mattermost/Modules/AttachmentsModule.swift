@@ -135,7 +135,7 @@ extension AttachmentsModule: AttachmentsViewControls {
 
 extension AttachmentsModule: UserInteraction {
     fileprivate func show(error: Error) {
-        AlertManager.sharedManager.showErrorWithMessage(message: error.message!)//, viewController: self.viewController)
+        AlertManager.sharedManager.showErrorWithMessage(message: error.message!)
     }
 }
 

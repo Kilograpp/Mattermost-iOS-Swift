@@ -42,7 +42,10 @@ class AttachmentFileView: UIView {
     
     override func draw(_ rect: CGRect) {
         drawTitle(text: file.name!)
-        drawSize(text: StringUtils.suffixedFor(size: file.size))
+        if file.size > 0 {
+            //activity indicator will added later
+            drawSize(text: StringUtils.suffixedFor(size: file.size))
+        }
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
         self.isUserInteractionEnabled = true
@@ -82,6 +85,10 @@ extension AttachmentFileView: Setup {
         self.setupIcon()
         self.setupProgressView()
         self.setupDownloadingState()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFileSize),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadFileSizeNotification),
+                                               object: nil)
     }
     
     fileprivate func setupDownloadingState() {
@@ -123,8 +130,9 @@ extension AttachmentFileView: Setup {
     fileprivate func drawSize(text: String) {
         let textColor = ColorBucket.rightMenuSeparatorColor
         let textFont = FontBucket.messageFont
-        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
-        let y = 20 + CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
+        let backgroundColor = self.backgroundColor
+        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor, NSBackgroundColorAttributeName: backgroundColor]
+        let y = 25 + CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
         let textFrame = CGRect(x: 54, y: y, width: frame.width - 64, height: 20).offsetBy(dx: 0, dy: frame.origin.y)
         (text as NSString).draw(in: textFrame, withAttributes: attributes)
     }
@@ -208,5 +216,12 @@ extension AttachmentFileView: Downloading {
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
                                           object: nil, userInfo: ["fileId" : fileId])
         NotificationCenter.default.post(notification as Notification)
+    }
+    
+    @objc fileprivate func updateFileSize(notification: NSNotification) {
+        let fileId = notification.userInfo?["fileId"] as! String
+        guard fileId == self.file.identifier else { return }
+
+        setNeedsDisplay()
     }
 }
