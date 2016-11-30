@@ -33,6 +33,9 @@ private protocol ChannelApi: class {
     func loadChannels(with completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadExtraInfoForChannel(_ channelId: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func updateHeader(_ header: String, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func updatePurpose(_ purpose: String, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    //func update(_ channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
@@ -282,12 +285,54 @@ extension Api: ChannelApi {
     
     func addUserToChannel(_ user:User, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.addUserPathPattern(), channel)
-        let params = [ "user_id" : user.identifier ]
+        let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             completion(nil)
             }, failure: completion)
     }
+    
+    func updateHeader(_ header:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updateHeader(), channel)
+        let params: Dictionary<String, String> = [ "channel_header" : header, "channel_id" : channel.identifier! ]
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(nil)
+            }, failure: completion)
+    }
+    
+    func updatePurpose(_ purpose:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updatePurpose(), channel)
+        let params: Dictionary<String, String> = [ "channel_purpose" : purpose, "channel_id" : channel.identifier! ]
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(nil)
+            }, failure: completion)
+    }
+    
+    /*func update(_ channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updatePurpose(), channel)
+        let params: Dictionary<String, String> = [
+        "create_at" : channel.createdAt
+        creator_id : "bgmegzkgtifgbcmtwx6ikmqbro"
+        delete_at : 0
+        display_name : "картошечка"
+        extra_update_at : 1480485900358
+        header : "adekvatno"
+        id : "js56hfkgcind3gkg41fuwkka6e"
+        last_post_at : 1480485900626
+        name : "kartowe4kaw"
+        purpose : ""
+        team_id : "aew18rpaybbhiy64sfoq59d1hh"
+        total_msg_count : 26
+        type : "O"
+        update_at : 1480494082886]
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(nil)
+            }, failure: completion)
+    }*/
+    
     
     func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createChannelPathPattern(), DataManager.sharedInstance.currentTeam)

@@ -104,7 +104,9 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let member = channel.members[indexPath.row]
-        
+        if member.identifier == Preferences.sharedInstance.currentUserId!{
+            return
+        }
         if member.directChannel() == nil{
             Api.sharedInstance.createDirectChannelWith(member, completion: {_ in
                 ChannelObserver.sharedObserver.selectedChannel = member.directChannel()

@@ -111,7 +111,11 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             }
         case 3:
             let cell2 = tableView.dequeueReusableCell(withIdentifier: "labelChannelSettingsCell") as! LabelChannelSettingsCell
-            cell2.cellText.text = "Leave Channel"
+            if channel.privateType == "P"{
+                cell2.cellText.text = "Leave Group"
+            } else  {
+                cell2.cellText.text = "Leave Channel"
+            }
             cell = cell2
         default: break
         }
@@ -149,7 +153,11 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func setupNavigationBar() {
-        self.title = "Channel Info".localized
+        if channel.privateType == "P"{
+            self.title = "Group Info".localized
+        } else  {
+            self.title = "Channel Info".localized
+        }
         
         self.navigationItem.setLeftBarButton(UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backAction)), animated: true)
     }
@@ -176,6 +184,11 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
             channelHeaderAndDescriptionViewController.type = selectedInfoType
         }
+        if segue.identifier == "showNameAndHandle"{
+            let channelNameAndHandleViewController = segue.destination as! ChannelNameAndHandleViewController
+            channelNameAndHandleViewController.channel = try!
+                Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -188,7 +201,13 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                         AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
                     }
-                    self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
+                    let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
+                    Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
+                        guard (error == nil) else {
+                            return
+                        }
+                        self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
+                    })
                 })
             })
         }
@@ -223,15 +242,12 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             })
         }
         if (indexPath==IndexPath(row: 0, section: 1) ||
-            indexPath==IndexPath(row: 1, section: 1) ||
-            indexPath==IndexPath(row: 0, section: 0)){
+            indexPath==IndexPath(row: 1, section: 1)){
             switch indexPath {
             case IndexPath(row: 0, section: 1):
                 selectedInfoType = InfoType.header
             case IndexPath(row: 1, section: 1):
                 selectedInfoType = InfoType.purpose
-            case IndexPath(row: 0, section: 0):
-                selectedInfoType = InfoType.name
             default:
                 break
             }
@@ -253,6 +269,18 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                     Api.sharedInstance.loadChannels(with: { (error) in
                         guard (error == nil) else { return }
                     })
+                })
+            })
+        }
+        if (indexPath==IndexPath(row: 0, section: 0)){
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard (error == nil) else { return }
+                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    guard (error == nil) else {
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                        return
+                    }
+                    self.performSegue(withIdentifier: "showNameAndHandle", sender: nil)
                 })
             })
         }

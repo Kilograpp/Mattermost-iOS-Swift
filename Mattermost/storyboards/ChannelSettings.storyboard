@@ -10,7 +10,7 @@
         <scene sceneID="bIw-Ig-KJF">
             <objects>
                 <navigationController storyboardIdentifier="ChannelSettingsViewController" id="51X-pT-5Ad" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="eci-XC-IH0">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="eci-XC-IH0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -52,6 +52,7 @@
                         <segue destination="Isq-Mm-oxO" kind="show" identifier="showMembersAdditing" id="UkZ-2t-24m"/>
                         <segue destination="EN6-ZU-d02" kind="show" identifier="showAllMembers" id="Tbj-Oh-nsg"/>
                         <segue destination="bQt-aE-ekG" kind="show" identifier="showChannelInfo" id="tvG-xm-JGD"/>
+                        <segue destination="IRh-GB-tVp" kind="show" identifier="showNameAndHandle" id="Gqs-x9-RSB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gPY-OX-TOF" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -70,7 +71,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Sz0-uF-h4r">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Sz0-uF-h4r">
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -153,6 +154,37 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cme-rY-h5d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="544.79999999999995" y="765.96701649175418"/>
+        </scene>
+        <!--Channel Name And Handle View Controller-->
+        <scene sceneID="KFe-G4-kDE">
+            <objects>
+                <viewController id="IRh-GB-tVp" customClass="ChannelNameAndHandleViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aBQ-1W-gZh"/>
+                        <viewControllerLayoutGuide type="bottom" id="SVj-k7-JnS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="6Nc-kj-B7Z">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="q9E-1R-bgA">
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="q9E-1R-bgA" firstAttribute="top" secondItem="6Nc-kj-B7Z" secondAttribute="top" id="2UK-Dj-j0d"/>
+                            <constraint firstAttribute="trailing" secondItem="q9E-1R-bgA" secondAttribute="trailing" id="caI-Pq-RKW"/>
+                            <constraint firstItem="q9E-1R-bgA" firstAttribute="leading" secondItem="6Nc-kj-B7Z" secondAttribute="leading" id="dXc-T2-GX4"/>
+                            <constraint firstItem="SVj-k7-JnS" firstAttribute="top" secondItem="q9E-1R-bgA" secondAttribute="bottom" id="gRM-yX-1pS"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="q9E-1R-bgA" id="STo-Oa-rg9"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Yuh-DQ-h2t" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-370" y="-774"/>
         </scene>
     </scenes>
 </document>

@@ -35,9 +35,12 @@
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
+		860755A81DEDDE5C00438B09 /* ChannelInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860755A71DEDDE5C00438B09 /* ChannelInfoCell.swift */; };
+		860755AA1DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860755A91DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift */; };
+		860755B01DEE817C00438B09 /* ChannelNameAndHandleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860755AF1DEE817C00438B09 /* ChannelNameAndHandleCell.xib */; };
+		860755B21DEE82E200438B09 /* ChannelNameAndHandleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860755B11DEE82E200438B09 /* ChannelNameAndHandleCell.swift */; };
 		8644A4761DED8658009280EB /* AddMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A4751DED8658009280EB /* AddMembersViewController.swift */; };
 		8644A47A1DED867A009280EB /* ChannelHeaderAndDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A4791DED867A009280EB /* ChannelHeaderAndDescriptionViewController.swift */; };
-		8644A47F1DED86C4009280EB /* ChannelInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A47D1DED86C4009280EB /* ChannelInfoCell.swift */; };
 		8644A4801DED86C4009280EB /* ChannelInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644A47E1DED86C4009280EB /* ChannelInfoCell.xib */; };
 		8644A4831DED86D1009280EB /* MemberInAdditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A4811DED86D1009280EB /* MemberInAdditingCell.swift */; };
 		8644A4841DED86D1009280EB /* MemberInAdditingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */; };
@@ -309,9 +312,12 @@
 		4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
+		860755A71DEDDE5C00438B09 /* ChannelInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelInfoCell.swift; sourceTree = "<group>"; };
+		860755A91DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelNameAndHandleViewController.swift; sourceTree = "<group>"; };
+		860755AF1DEE817C00438B09 /* ChannelNameAndHandleCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChannelNameAndHandleCell.xib; sourceTree = "<group>"; };
+		860755B11DEE82E200438B09 /* ChannelNameAndHandleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelNameAndHandleCell.swift; sourceTree = "<group>"; };
 		8644A4751DED8658009280EB /* AddMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMembersViewController.swift; sourceTree = "<group>"; };
 		8644A4791DED867A009280EB /* ChannelHeaderAndDescriptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelHeaderAndDescriptionViewController.swift; sourceTree = "<group>"; };
-		8644A47D1DED86C4009280EB /* ChannelInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelInfoCell.swift; sourceTree = "<group>"; };
 		8644A47E1DED86C4009280EB /* ChannelInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChannelInfoCell.xib; sourceTree = "<group>"; };
 		8644A4811DED86D1009280EB /* MemberInAdditingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberInAdditingCell.swift; sourceTree = "<group>"; };
 		8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberInAdditingCell.xib; sourceTree = "<group>"; };
@@ -927,6 +933,7 @@
 				8BE969A41D74C73B0010A524 /* AboutViewController.swift */,
 				D61962101D62230600C2E259 /* RightMenuViewController.swift */,
 				8644A4791DED867A009280EB /* ChannelHeaderAndDescriptionViewController.swift */,
+				860755A91DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift */,
 				D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */,
 				D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */,
 				8644A4751DED8658009280EB /* AddMembersViewController.swift */,
@@ -1061,12 +1068,14 @@
 				8BCDDC7E1DE6E701006D83BC /* MemberChannelSettingsCell.xib */,
 				8644A4811DED86D1009280EB /* MemberInAdditingCell.swift */,
 				8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */,
-				8644A47D1DED86C4009280EB /* ChannelInfoCell.swift */,
+				860755A71DEDDE5C00438B09 /* ChannelInfoCell.swift */,
 				8644A47E1DED86C4009280EB /* ChannelInfoCell.xib */,
+				860755AF1DEE817C00438B09 /* ChannelNameAndHandleCell.xib */,
 				8BCDDC721DE6E678006D83BC /* HeaderChannelSettingsCell.xib */,
 				D6E165861D47C1200014C831 /* Reusable.swift */,
 				8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */,
 				8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */,
+				860755B11DEE82E200438B09 /* ChannelNameAndHandleCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1353,6 +1362,7 @@
 				D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */,
 				413B76221D58C6CD00F297BE /* en.lproj in Resources */,
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
+				860755B01DEE817C00438B09 /* ChannelNameAndHandleCell.xib in Resources */,
 				8BCDDC741DE6E678006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
 				8B3CB3461DD267B80078DE25 /* More.storyboard in Resources */,
 				8BCDDC821DE6E701006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
@@ -1617,10 +1627,10 @@
 				CDB6D3CE1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift in Sources */,
 				CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
+				860755B21DEE82E200438B09 /* ChannelNameAndHandleCell.swift in Sources */,
 				8B3CB3831DD392350078DE25 /* SettingsTableViewController.swift in Sources */,
 				8B3CB3631DD268390078DE25 /* FilesPickingModuleBase.swift in Sources */,
 				8B3CB3551DD267EB0078DE25 /* AssignedFileItem.swift in Sources */,
-				8644A47F1DED86C4009280EB /* ChannelInfoCell.swift in Sources */,
 				D62FEB8E1D4F2AA400390EBC /* LoginViewController.swift in Sources */,
 				D62FEB931D4F2AD700390EBC /* LeftMenuTableViewCellProtocol.swift in Sources */,
 				8644A4831DED86D1009280EB /* MemberInAdditingCell.swift in Sources */,
@@ -1653,6 +1663,7 @@
 				8B3CB36A1DD2692E0078DE25 /* FilesPickingController.swift in Sources */,
 				D615A3071D4F90E3000DA2D6 /* FeedAttachmentView.swift in Sources */,
 				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
+				860755A81DEDDE5C00438B09 /* ChannelInfoCell.swift in Sources */,
 				8BEE0C851DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift in Sources */,
 				CDB4BC651D8062B600662231 /* PostRequestDescriptorsContainer.swift in Sources */,
 				D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */,
@@ -1664,6 +1675,7 @@
 				8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
+				860755AA1DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift in Sources */,
 				8B3CB3641DD268390078DE25 /* ImagePickingModule.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
 				8B618CC51DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift in Sources */,

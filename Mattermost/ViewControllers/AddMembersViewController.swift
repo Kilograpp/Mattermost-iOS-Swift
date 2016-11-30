@@ -23,14 +23,7 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.delegate = self
         setupNavigationBar()
         setupSearchBar()
-        
-        
-        let sortName = UserAttributes.username.rawValue
-        let identifiers = Array(channel.members.map{$0.identifier!})
-        
-        let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@ AND NOT identifier IN %@", Constants.Realm.SystemUserIdentifier,
-                                     Preferences.sharedInstance.currentUserId!, identifiers)
-        users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+        setupUsers()
         
         let nib = UINib(nibName: "MemberInAdditingCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "memberInAdditingCell")
@@ -111,10 +104,26 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
                     AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                     return
                 }
-                AlertManager.sharedManager.showSuccesWithMessage(message: member.nickname!+" was added in channel")
-                tableView.reloadData()
+                AlertManager.sharedManager.showSuccesWithMessage(message: member.displayName!+" was added in channel")
+                self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+                self.setupUsers()
+                self.tableView.reloadData()
             })
         })
+        
+    }
+    
+    func setupUsers(){
+        let sortName = UserAttributes.username.rawValue
+        let identifiers = Array(channel.members.map{$0.identifier!})
+        let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
+        
+        let townSquareIdentifiers = Array(townSquare!.members.map{$0.identifier!})
+        
+        
+        let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@ AND NOT identifier IN %@ AND identifier IN %@", Constants.Realm.SystemUserIdentifier,
+                                     Preferences.sharedInstance.currentUserId!, identifiers, townSquareIdentifiers)
+        users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
     }
     
     //Search updating
