@@ -75,7 +75,7 @@ extension CreateChannelViewController: Setup {
     }
     
     func setupNavigationBar() {
-        self.title = "New Channel"
+        self.title = "New group"
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton

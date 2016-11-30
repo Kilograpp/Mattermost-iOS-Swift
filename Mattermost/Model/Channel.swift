@@ -45,7 +45,7 @@ final class Channel: RealmObject {
         case Constants.ChannelType.PublicTypeChannel:
             return "Public channel"
         case Constants.ChannelType.PrivateTypeChannel:
-            return "Private message"
+            return "Private groups"
         case Constants.ChannelType.DirectTypeChannel:
             return "Direct message"
         default:
