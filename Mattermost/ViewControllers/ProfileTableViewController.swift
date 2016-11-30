@@ -123,9 +123,9 @@ extension ProfileViewController: Setup {
     
     func setupNavigationBar() {
         self.title = "Profile"
-
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
+        
         if !self.isDisplayOnly! {
             self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
             self.saveButton.isEnabled = false
