@@ -183,6 +183,13 @@ extension ObjectManager: PostRequests {
             print("upOk"); success?(mappingResult!)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
+            //MARK: Cap with fixed later
+            guard operation?.httpRequestOperation.responseString != Constants.CommonStrings.True else {
+                success!(RKMappingResult())
+                return
+            }
+            print(operation?.httpRequestOperation.responseString ?? "")
+            
             print("upFail"); failure?(self.handleOperation(operation!, withError: error!))
         }
         
