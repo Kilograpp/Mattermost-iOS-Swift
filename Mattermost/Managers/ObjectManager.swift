@@ -91,12 +91,12 @@ extension ObjectManager: PostRequests {
             success?(mappingResult!)
         }) { (operation, error) in
             print("FAIL")
-            guard error == nil else {
+            let responseString = operation?.httpRequestOperation.responseString
+            guard responseString != nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.localizedDescription)!)
                 return
             }
-            //TODO: Will remove, after mapping fixation
-            let responseString = operation?.httpRequestOperation.responseString
+            
             let dict = responseString?.toDictionary()
             if (Int((dict?["status_code"])! as! NSNumber) == 500) {
                 let statusCode = Int((dict?["status_code"])! as! NSNumber)
