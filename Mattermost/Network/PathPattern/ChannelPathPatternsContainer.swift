@@ -16,6 +16,7 @@ private protocol PathPatterns: class {
     static func updateLastViewDatePathPattern() -> String
     static func updateHeader() -> String
     static func updatePurpose() -> String
+    static func update() -> String
     static func createChannelPathPattern() -> String
     static func createDirrectChannelPathPattern() -> String
     static func leaveChannelPathPattern() -> String
@@ -43,6 +44,9 @@ final class ChannelPathPatternsContainer: PathPatterns {
     }
     static func updatePurpose() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/update_purpose"
+    }
+    static func update() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/update"
     }
     static func createChannelPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/create"

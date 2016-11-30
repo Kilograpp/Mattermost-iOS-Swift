@@ -35,7 +35,7 @@ private protocol ChannelApi: class {
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateHeader(_ header: String, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updatePurpose(_ purpose: String, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    //func update(_ channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void)
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
@@ -310,28 +310,28 @@ extension Api: ChannelApi {
             }, failure: completion)
     }
     
-    /*func update(_ channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
-        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updatePurpose(), channel)
-        let params: Dictionary<String, String> = [
-        "create_at" : channel.createdAt
-        creator_id : "bgmegzkgtifgbcmtwx6ikmqbro"
-        delete_at : 0
-        display_name : "картошечка"
-        extra_update_at : 1480485900358
-        header : "adekvatno"
-        id : "js56hfkgcind3gkg41fuwkka6e"
-        last_post_at : 1480485900626
-        name : "kartowe4kaw"
-        purpose : ""
-        team_id : "aew18rpaybbhiy64sfoq59d1hh"
-        total_msg_count : 26
-        type : "O"
-        update_at : 1480494082886]
+    func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.update(), channel)
+        let params: Dictionary<String, Any> = [
+        "create_at" : Int(channel.createdAt!.timeIntervalSince1970),
+        "creator_id" : String(Preferences.sharedInstance.currentUserId!)!,
+        "delete_at" : 0,
+        "display_name" : newDisplayName,
+        "extra_update_at" : Int(NSDate().timeIntervalSince1970),
+        "header" : channel.header!,
+        "id" : channel.identifier!,
+        "last_post_at" : Int(channel.lastPostDate!.timeIntervalSince1970),
+        "name" : newName,
+        "purpose" : channel.purpose!,
+        "team_id" : channel.team!.identifier!,
+        "total_msg_count" : Int(channel.messagesCount!)!,
+        "type" : channel.privateType!,
+        "update_at" : Int(NSDate().timeIntervalSince1970)]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             completion(nil)
             }, failure: completion)
-    }*/
+    }
     
     
     func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void) {

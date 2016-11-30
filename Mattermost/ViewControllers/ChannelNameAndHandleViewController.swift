@@ -36,7 +36,7 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section{
         case 0:
-            return "Header"
+            return "Name"
         case 1:
             return "Handle"
         default:
@@ -85,10 +85,16 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
         
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveButtonAction))
         self.navigationItem.rightBarButtonItem = saveButton
-        navigationItem.rightBarButtonItem?.isEnabled = false
+        //navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
     func saveButtonAction(){
-        navigationItem.rightBarButtonItem?.isEnabled = false
+        let newDisplayName = (tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelNameAndHandleCell).textField.text
+        let newName = (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelNameAndHandleCell).textField.text
+        
+        Api.sharedInstance.update(newDisplayName: newDisplayName!, newName: newName!, channel: channel!, completion: { (error) in
+            guard (error == nil) else { return }
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was updated".localized)
+        })
     }
 }

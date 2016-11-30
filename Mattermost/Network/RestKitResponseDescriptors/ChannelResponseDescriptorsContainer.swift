@@ -22,6 +22,7 @@ private protocol ChannelResponseDescriptors: class {
     static func addUserResponseDescriptor() -> RKResponseDescriptor
     static func updateHeaderResponseDescriptor() -> RKResponseDescriptor
     static func updatePurposeResponseDescriptor() -> RKResponseDescriptor
+    static func updateResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class ChannelResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -112,6 +113,13 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
         return RKResponseDescriptor(mapping: ChannelMappingsContainer.emptyResponseMapping(),
                                     method: .POST,
                                     pathPattern: ChannelPathPatternsContainer.updatePurpose(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func updateResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.emptyResponseMapping(),
+                                    method: .POST,
+                                    pathPattern: ChannelPathPatternsContainer.update(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
