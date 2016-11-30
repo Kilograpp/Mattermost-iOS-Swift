@@ -25,6 +25,18 @@ class UFSettingsTableViewController: UITableViewController {
         
         initialSetup()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.menuContainerViewController.panMode = .init(0)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.menuContainerViewController.panMode = .init(3)
+        
+        super.viewWillDisappear(animated)
+    }
 }
 
 
@@ -40,6 +52,7 @@ fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
     func setupTableView()
+    func setupGestureRecognizers()
 }
 
 fileprivate protocol Action: class {
@@ -65,6 +78,7 @@ extension UFSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupTableView()
+        setupGestureRecognizers()
     }
     
     func setupNavigationBar() {
@@ -81,6 +95,12 @@ extension UFSettingsTableViewController: Setup {
     func setupTableView() {
         self.tableView?.backgroundColor = UIColor.kg_lightLightGrayColor()
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+    }
+    
+    func setupGestureRecognizers() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 
