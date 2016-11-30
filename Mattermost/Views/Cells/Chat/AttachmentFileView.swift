@@ -131,7 +131,7 @@ extension AttachmentFileView: Setup {
         let textColor = ColorBucket.rightMenuSeparatorColor
         let textFont = FontBucket.messageFont
         let backgroundColor = self.backgroundColor
-        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor, NSBackgroundColorAttributeName: backgroundColor]
+        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor, NSBackgroundColorAttributeName: backgroundColor] as [String : Any]
         let y = 25 + CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
         let textFrame = CGRect(x: 54, y: y, width: frame.width - 64, height: 20).offsetBy(dx: 0, dy: frame.origin.y)
         (text as NSString).draw(in: textFrame, withAttributes: attributes)
