@@ -8,8 +8,7 @@
 
 import UIKit
 
-// CODEREVIEW: Финализировать не забываем
-class SettingsTableViewController: UITableViewController {
+final class SettingsTableViewController: UITableViewController {
 
 // CODEREVIEW: Лишняя марка. Они должны оглавлять только extensions
 //MARK: - Properties

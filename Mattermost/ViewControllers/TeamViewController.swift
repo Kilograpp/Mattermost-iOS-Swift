@@ -75,6 +75,7 @@ extension TeamViewController: Setup {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.backgroundColor = ColorBucket.whiteColor
+        self.tableView.separatorStyle = .none
         self.tableView.register(TeamTableViewCell.classForCoder(), forCellReuseIdentifier: TeamTableViewCell.reuseIdentifier)
     }
     

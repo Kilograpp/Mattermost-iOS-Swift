@@ -50,6 +50,7 @@ private protocol UserApi: class {
     func loadCurrentUser(completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(firstName: String?, lastName: String?, userName: String?, nickName: String?, email: String?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(currentPassword: String, newPassword: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func update(profileImage: UIImage, completion: @escaping (_ error: Mattermost.Error?) -> Void, progress: @escaping (_ value: Float) -> Void)
 }
 
 private protocol PostApi: class {
@@ -516,6 +517,23 @@ extension Api: UserApi {
             completion(error)
         }
     }
+    
+    func update(profileImage: UIImage,
+                completion: @escaping (_ error: Mattermost.Error?) -> Void,
+                progress: @escaping (_ value: Float) -> Void) {
+        let path = UserPathPatternsContainer.userUpdateImagePathPattern()
+    
+        self.manager.post(image: profileImage, identifier: "image_id", name: "image", path: path, parameters: nil, success: { (mappingResult) in
+            print(mappingResult)
+            completion(nil)
+            
+        }, failure: { (error) in
+            completion(error)
+        }) { (value) in
+            print("ava loading = ", value)
+            progress(value)
+        }
+    }
 }
 
 
@@ -775,6 +793,10 @@ extension Api : FileApi {
                 file?.hasPreview = result.hasPreview
                 file?.mimeType = result.mimeType
             }
+            let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.ReloadFileSizeNotification),
+                                            object: nil, userInfo: ["fileId" : fileId, "fileSize" : result.size])
+            NotificationCenter.default.post(notification as Notification)
+            
         }) { (error) in
             print(error?.message! ?? "getInfo_error")
         }

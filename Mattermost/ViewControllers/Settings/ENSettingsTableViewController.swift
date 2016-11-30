@@ -12,7 +12,6 @@ class ENSettingsTableViewController: UITableViewController {
 
 //MARK: Properties
     fileprivate var saveButton: UIBarButtonItem!
-    
     fileprivate var notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
     fileprivate let user = DataManager.sharedInstance.currentUser
     

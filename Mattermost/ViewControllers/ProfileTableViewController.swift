@@ -8,6 +8,8 @@
 
 import UIKit
 import QuartzCore
+import WebImage
+import MBProgressHUD
 
 @objc private enum InfoSections : Int {
     case base
@@ -31,6 +33,8 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
+    fileprivate var saveButton: UIBarButtonItem!
+    
     fileprivate lazy var builder: ProfileCellBuilder = ProfileCellBuilder(tableView: self.tableView, displayOnly: self.isDisplayOnly!)
     var user: User?
     fileprivate var isDisplayOnly: Bool?
@@ -38,6 +42,22 @@ class ProfileViewController: UIViewController {
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+    /*    let image = UIImage(named: "judo_2.jpg")
+        
+         Api.sharedInstance.update(profileImage: image!, completion: { (error) in
+            SDImageCache.shared().removeImage(forKey: self.user?.smallAvatarCacheKey())
+            SDImageCache.shared().removeImage(forKey: self.user?.avatarLink)
+            
+            ImageDownloader.downloadFeedAvatarForUser(self.user!) { [weak self] (image, error) in
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadRightMenuNotification), object: nil)
+            }
+            ImageDownloader.downloadFullAvatarForUser(self.user!) { _,_ in }
+            
+        }, progress: { (progress) in
+        })*/
+        
         
         initialSetup()
     }
@@ -78,12 +98,17 @@ fileprivate protocol Setup {
 
 fileprivate protocol Action {
     func backAction()
+    func saveAction()
 }
 
 fileprivate protocol Navigation {
     func returnToChat()
     func proceedToUFSettingsWith(type: Int)
     func proccedToNSettings()
+}
+
+fileprivate protocol Request {
+    func updateImage()
 }
 
 
@@ -98,9 +123,14 @@ extension ProfileViewController: Setup {
     
     func setupNavigationBar() {
         self.title = "Profile"
-
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
+        
+        if !self.isDisplayOnly! {
+            self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
+            self.saveButton.isEnabled = false
+            self.navigationItem.rightBarButtonItem = self.saveButton
+        }
     }
     
     func setupHeader() {
@@ -145,6 +175,10 @@ extension ProfileViewController: Action {
     func backAction() {
         returnToChat()
     }
+    
+    func saveAction() {
+        updateImage()
+    }
 }
 
 
@@ -170,6 +204,29 @@ extension ProfileViewController: Navigation {
     }
 }
 
+//MARK: Request
+extension ProfileViewController: Request {
+    internal func updateImage() {
+        let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+        progressHUD.mode = .annularDeterminate
+        progressHUD.label.text = "Uploading..."
+        
+        let image = self.avatarImageView.image
+        Api.sharedInstance.update(profileImage: image!, completion: { (error) in
+            SDImageCache.shared().removeImage(forKey: self.user?.smallAvatarCacheKey())
+            SDImageCache.shared().removeImage(forKey: self.user?.avatarLink)
+            
+            ImageDownloader.downloadFeedAvatarForUser(self.user!) { [weak self] (image, error) in
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadRightMenuNotification), object: nil)
+            }
+            ImageDownloader.downloadFullAvatarForUser(self.user!) { _,_ in }
+            MBProgressHUD.hide(for: self.view, animated: true)
+            self.saveButton.isEnabled = false
+        }, progress: { (progress) in
+            progressHUD.progress = progress
+        })
+    }
+}
 
 //MARK: UITableViewDataSource
 extension ProfileViewController: UITableViewDataSource {
@@ -204,6 +261,8 @@ extension ProfileViewController: UITableViewDelegate {
                 proceedToUFSettingsWith(type: Constants.UserFieldType.UserName)
             case 2:
                 proceedToUFSettingsWith(type: Constants.UserFieldType.NickName)
+            case 3:
+                changeProfilePhoto()
             default:
                 break
             }
@@ -227,9 +286,8 @@ extension ProfileViewController: UITableViewDelegate {
 extension ProfileViewController {
     func changeProfilePhoto() {
         guard self.user?.identifier == Preferences.sharedInstance.currentUserId else { return }
-        return
         
-    /*    let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
             self.presentImagePickerControllerWithType(.camera)
         }
@@ -241,7 +299,7 @@ extension ProfileViewController {
         alertController.addAction(openGalleryAction)
         alertController.addAction(cancelAction)
         
-        self.present(alertController, animated: true, completion: nil)*/
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func presentImagePickerControllerWithType(_ type: UIImagePickerControllerSourceType) {
@@ -260,6 +318,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         picker.dismiss(animated: true, completion: nil)
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.avatarImageView.image = image
+        self.saveButton.isEnabled = true
     }
 }
 

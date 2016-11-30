@@ -39,14 +39,16 @@ struct Constants {
     }
     
     struct NotificationsNames {
-        static let UserLogoutNotificationName   = "LogoutNotification"
-        static let StatusesSocketNotification   = "StatusesSocketNotification"
-        static let UserJoinNotification         = "UserJoinNotification"
-        static let UserTeamSelectNotification   = "UserTeamSelectNotification"
-        static let ChatLoadingStartNotification = "ChatLoadingStartNotification"
-        static let ChatLoadingStopNotification  = "ChatLoadingStopNotification"
-        static let ReloadLeftMenuNotification   = "ReloadLeftMenuNotification"
+        static let UserLogoutNotificationName      = "LogoutNotification"
+        static let StatusesSocketNotification      = "StatusesSocketNotification"
+        static let UserJoinNotification            = "UserJoinNotification"
+        static let UserTeamSelectNotification      = "UserTeamSelectNotification"
+        static let ChatLoadingStartNotification    = "ChatLoadingStartNotification"
+        static let ChatLoadingStopNotification     = "ChatLoadingStopNotification"
+        static let ReloadLeftMenuNotification      = "ReloadLeftMenuNotification"
+        static let ReloadRightMenuNotification     = "ReloadRightMenuNotification"
         static let DocumentInteractionNotification = "DocumentInteractionNotification"
+        static let ReloadFileSizeNotification      = "ReloadFileSizeNotification"
     }
     
     struct UI {
@@ -116,6 +118,9 @@ struct Constants {
         struct Words {
             static let ChannelWide = "\"@channel\", \"@all\""
             static let None = "No words configured"
+        }
+        struct Reply {
+            static let Trigger = [ (state: "any", description: "Trigger notifications on messages in reply threads that I start or participate in"), (state: "root", description: "Trigger notifications on messages in threads that I start"), (state: "never", description: "Do not trigger notifications on messages in reply threads unless I'm mentioned") ]
         }
     }
     

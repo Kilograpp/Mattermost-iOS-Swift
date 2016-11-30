@@ -32,6 +32,7 @@ fileprivate protocol Setup {
     func setupTableView()
     func setupHeaderView()
     func toggleRightSideMenu()
+    func setupNotificationsObserver()
 }
 
 fileprivate protocol Action {
@@ -56,6 +57,7 @@ extension RightMenuViewController: Setup {
     func  initialSetup() {
         setupTableView()
         setupHeaderView()
+        setupNotificationsObserver()
     }
     
     func setupTableView() {
@@ -94,6 +96,13 @@ extension RightMenuViewController: Setup {
     
     func toggleRightSideMenu() {
         self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
+    }
+    
+    func setupNotificationsObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(setupHeaderView),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadRightMenuNotification),
+                                               object: nil)
     }
 }
 
