@@ -101,7 +101,7 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
             
         Api.sharedInstance.update(newDisplayName: newDisplayName!, newName: newName!, channel: channel!, completion: { (error) in
             guard (error == nil) else {
-                AlertManager.sharedManager.showErrorWithMessage(message: "Incorrect handle)".localized)
+                AlertManager.sharedManager.showErrorWithMessage(message: "Incorrect handle".localized)
                 return
             }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was updated".localized)
