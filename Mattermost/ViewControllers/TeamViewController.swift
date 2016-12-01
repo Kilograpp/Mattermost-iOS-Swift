@@ -151,6 +151,30 @@ extension TeamViewController: Request {
             }
         }
     }
+    
+    func loadChannels() {
+        Api.sharedInstance.loadChannels(with: { (error) in
+            guard (error == nil) else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                self.dismiss(animated: true, completion: nil)
+                return
+            }
+            self.loadCompleteUsersList()
+        })
+    }
+    
+    func loadCompleteUsersList() {
+        Api.sharedInstance.loadCompleteUsersList({ (error) in
+            guard (error == nil) else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                self.dismiss(animated: true, completion: nil)
+                return
+            }
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification), object: nil)
+            self.dismiss(animated: true, completion: nil)
+        })
+    }
 }
 
 
@@ -178,8 +202,10 @@ extension TeamViewController: UITableViewDelegate {
         
         guard (Preferences.sharedInstance.currentTeamId != nil) else {
             Preferences.sharedInstance.currentTeamId = team.identifier
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification), object: nil)
-            self.dismiss(animated: true, completion: nil)
+           // NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification), object: nil)
+            showLoaderView()
+            loadChannels()
+            //self.dismiss(animated: true, completion: nil)
             
             return
         }
@@ -187,8 +213,7 @@ extension TeamViewController: UITableViewDelegate {
         if (Preferences.sharedInstance.currentTeamId != team.identifier) {
             Preferences.sharedInstance.currentTeamId = team.identifier
             self.reloadChat()
-        }
-        else {
+        } else {
             self.dismiss(animated: true, completion: nil)
         }
     }
