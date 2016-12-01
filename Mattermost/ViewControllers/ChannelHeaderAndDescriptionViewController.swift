@@ -65,7 +65,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     }
     
     func setupNavigationBar() {
-        self.title = "Channel info".localized
+        self.title = (self.channel.privateType == Constants.ChannelType.PublicTypeChannel) ? "Channel info" : "Group info"
         
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveButtonAction))
         self.navigationItem.rightBarButtonItem = saveButton

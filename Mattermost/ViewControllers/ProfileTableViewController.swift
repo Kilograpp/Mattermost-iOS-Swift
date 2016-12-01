@@ -50,6 +50,7 @@ class ProfileViewController: UIViewController {
         super.viewWillAppear(animated)
         
         self.tableView.reloadData()
+        setupHeader()
         self.menuContainerViewController.panMode = .init(0)
     }
     
