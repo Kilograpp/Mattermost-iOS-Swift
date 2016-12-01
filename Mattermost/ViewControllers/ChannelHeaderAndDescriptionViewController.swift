@@ -79,11 +79,23 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
             Api.sharedInstance.updateHeader((tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelInfoCell).infoText.text, channel: channel, completion: { (error) in
                 guard (error == nil) else { return }
                 AlertManager.sharedManager.showSuccesWithMessage(message: "Header was updated".localized)
+                Api.sharedInstance.loadChannels(with: { (error) in
+                    guard (error == nil) else { return }
+                    Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                        guard (error == nil) else { return }
+                    })
+                })
             })
         case .purpose:
             Api.sharedInstance.updatePurpose((tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelInfoCell).infoText.text, channel: channel, completion: { (error) in
                 guard (error == nil) else { return }
                 AlertManager.sharedManager.showSuccesWithMessage(message: "Purpose was updated".localized)
+                Api.sharedInstance.loadChannels(with: { (error) in
+                    guard (error == nil) else { return }
+                    Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                        guard (error == nil) else { return }
+                    })
+                })
             })
         }
     }

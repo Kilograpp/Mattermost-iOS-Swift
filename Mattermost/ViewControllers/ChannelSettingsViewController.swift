@@ -16,7 +16,6 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     var searchController: UISearchController!
     var channel: Channel!
     var selectedInfoType: InfoType!
-    
     //temp timer
     var statusesTimer: Timer?
     
@@ -287,7 +286,12 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func backAction(){
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {_ in
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard (error == nil) else { return }
+
+            })
+        })
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -332,5 +336,10 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             self.statusesTimer?.invalidate()
             self.statusesTimer = nil
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+        tableView.reloadData()
     }
 }

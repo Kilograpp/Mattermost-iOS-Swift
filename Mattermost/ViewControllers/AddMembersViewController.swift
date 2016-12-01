@@ -98,7 +98,6 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         let member = users[indexPath.row]
         Api.sharedInstance.addUserToChannel(member, channel: channel, completion: { (error) in
             guard (error == nil) else { return }
-            
             Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
                     AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)

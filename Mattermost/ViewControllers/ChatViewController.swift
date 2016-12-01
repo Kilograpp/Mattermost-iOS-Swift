@@ -107,9 +107,12 @@ extension ChatViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+        tableView.reloadData()
         super.viewWillAppear(animated)
         
         self.navigationController?.isNavigationBarHidden = false
+        setupInputViewButtons()
         addSLKKeyboardObservers()
         
         if (self.postFromSearch != nil) {
@@ -461,11 +464,10 @@ extension ChatViewController: Navigation {
                     AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)//, viewController: self)
                     return
                 }
+                
                 let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
                 let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
                 ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-                
-                //(channelSettings as! ProfileViewController).configureFor(user: user)
                 self.navigationController?.present(channelSettings, animated: true, completion: nil)
             })
         })

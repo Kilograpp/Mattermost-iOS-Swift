@@ -80,7 +80,7 @@ final class LeftMenuViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        configureResults()
+        reloadChannels()
     }
     
     func reloadChannels() {
@@ -310,5 +310,7 @@ extension LeftMenuViewController : Navigation {
     @IBAction func membersListAction(_ sender: AnyObject) {
         print("MEMBERS_LIST")
     }
+    
+    
 }
 

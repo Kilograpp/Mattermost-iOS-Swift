@@ -93,8 +93,17 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
         let newName = (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelNameAndHandleCell).textField.text
         
         Api.sharedInstance.update(newDisplayName: newDisplayName!, newName: newName!, channel: channel!, completion: { (error) in
-            guard (error == nil) else { return }
+            guard (error == nil) else {
+                AlertManager.sharedManager.showErrorWithMessage(message: "Error".localized)
+                return
+            }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was updated".localized)
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard (error == nil) else { return }
+                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    guard (error == nil) else { return }
+                })
+            })
         })
     }
 }
