@@ -42,6 +42,7 @@ private protocol ChannelApi: class {
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol UserApi: class {
@@ -422,6 +423,19 @@ extension Api: ChannelApi {
             }
             completion(nil)
             }, failure: completion)
+    }
+    
+    func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.deleteChannelPathPattern(), channel)
+        
+        self.manager.post(path: path, success: { (mappingResult) in
+            print(mappingResult)
+          //  let realm = RealmUtils.realmForCurrentThread()
+//            realm.delete(channel)
+            completion(nil)
+        }, failure: { (error) in
+            completion(error)
+        })
     }
 }
 

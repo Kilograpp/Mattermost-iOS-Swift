@@ -213,7 +213,7 @@ extension SearchChatViewController: Requests {
             }
             else {
                 if (error?.code != -999) {
-                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!/*, viewController: self*/)
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 }
             }
         }

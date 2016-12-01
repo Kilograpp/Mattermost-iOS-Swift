@@ -123,11 +123,10 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             }
         case 3:
             let cell2 = tableView.dequeueReusableCell(withIdentifier: "labelChannelSettingsCell") as! LabelChannelSettingsCell
-            if channel.privateType == "P"{
-                cell2.cellText.text = "Leave Group"
-            } else  {
-                cell2.cellText.text = "Leave Channel"
-            }
+            let action = (channel.members.count > 1) ? "Leave" : "Delete"
+            let type = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group" : "Channel"
+            cell2.cellText.text = action + " " + type
+            
             cell = cell2
         default: break
         }
@@ -288,6 +287,11 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             })
         }
         if (indexPath==IndexPath(row: 0, section: 3)){
+            if self.channel.members.count == 1 {
+                deleteChannel()
+                return
+            }
+            
             Api.sharedInstance.leaveChannel(channel, completion: { (error) in
                 guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 self.dismiss(animated: true, completion: {_ in
@@ -361,3 +365,33 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
 }
+
+
+fileprivate protocol Request: class {
+    func deleteChannel()
+}
+
+extension ChannelSettingsViewController: Request {
+    func deleteChannel() {
+        Api.sharedInstance.delete(channel: self.channel) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                return
+            }
+            
+            let deletedCannel = self.channel
+            let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
+            leftMenu.configureInitialSelectedChannel()
+            self.dismiss(animated: true, completion: {
+                let realm = RealmUtils.realmForCurrentThread()
+                try! realm.write {
+                    realm.delete(deletedCannel!)
+                }
+                leftMenu.reloadChannels()
+            })
+        }
+    }
+}
+
+
+

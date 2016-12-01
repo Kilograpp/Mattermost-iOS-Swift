@@ -122,12 +122,12 @@ extension MPNSettingsTableViewController: Request {
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!/*, viewController: self*/)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
             self.saveButton.isEnabled = false
             let message = "User notification properties were successfully updated"
-            AlertManager.sharedManager.showSuccesWithMessage(message: message/*, viewController: self*/)
+            AlertManager.sharedManager.showSuccesWithMessage(message: message)
         }
     }
 }

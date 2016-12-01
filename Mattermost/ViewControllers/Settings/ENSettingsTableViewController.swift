@@ -111,7 +111,7 @@ extension ENSettingsTableViewController: Request {
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
             self.saveButton.isEnabled = false

@@ -252,7 +252,7 @@ extension MoreChannelsViewController: Request {
     func joinTo(channel: Channel) {
         Api.sharedInstance.joinChannel(channel) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
             
@@ -274,7 +274,7 @@ extension MoreChannelsViewController: Request {
     func leave(channel: Channel) {
         Api.sharedInstance.leaveChannel(channel) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
             
@@ -298,7 +298,7 @@ extension MoreChannelsViewController: Request {
         
         Api.sharedInstance.createDirectChannelWith((result.object as! User)) { (channel, error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
             
@@ -335,7 +335,7 @@ extension MoreChannelsViewController: Request {
         
         Api.sharedInstance.savePreferencesWith(preferences) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
             self.addDoneButton.isEnabled = false
@@ -362,7 +362,7 @@ extension MoreChannelsViewController: CompletionMessages {
     func singleChannelMessage(name: String) {
         let action = (self.addedChannelCount > 0) ? "joined " : "left "
         let  message = "You've " + action + name + " channel"
-        AlertManager.sharedManager.showSuccesWithMessage(message: message)//, viewController: self)
+        AlertManager.sharedManager.showSuccesWithMessage(message: message)
         
     }
     
@@ -375,14 +375,14 @@ extension MoreChannelsViewController: CompletionMessages {
         if (self.deletedChannelCount > 0) {
             message += "You've left the " + String(self.deletedChannelCount) + " channels."
         }
-        AlertManager.sharedManager.showSuccesWithMessage(message: message)//, viewController: self)
+        AlertManager.sharedManager.showSuccesWithMessage(message: message)
     }
     
     func singleUserMessage(name: String) {
         let action = (self.addedChannelCount > 0) ? "added." : "removed."
         
         let message = "Conversation with " + name + " has been " + action
-        AlertManager.sharedManager.showSuccesWithMessage(message: message)//, viewController: self)
+        AlertManager.sharedManager.showSuccesWithMessage(message: message)
     }
     
     func multipleUsersMessage() {
@@ -394,7 +394,7 @@ extension MoreChannelsViewController: CompletionMessages {
         if (self.deletedChannelCount > 0) {
             message += String(self.deletedChannelCount) + " conversations have been removed."
         }
-        AlertManager.sharedManager.showSuccesWithMessage(message: message)//, viewController: self)
+        AlertManager.sharedManager.showSuccesWithMessage(message: message)
     }
 }
 

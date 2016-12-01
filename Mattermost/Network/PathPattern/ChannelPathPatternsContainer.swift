@@ -21,6 +21,7 @@ private protocol PathPatterns: class {
     static func createDirrectChannelPathPattern() -> String
     static func leaveChannelPathPattern() -> String
     static func joinChannelPathPattern() -> String
+    static func deleteChannelPathPattern() -> String
 }
 
 final class ChannelPathPatternsContainer: PathPatterns {
@@ -51,7 +52,6 @@ final class ChannelPathPatternsContainer: PathPatterns {
     static func createChannelPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/create"
     }
-    
     static func createDirrectChannelPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/create_direct"
     }
@@ -60,5 +60,8 @@ final class ChannelPathPatternsContainer: PathPatterns {
     }
     static func joinChannelPathPattern() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/join"
+    }
+    static func deleteChannelPathPattern() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/delete"
     }
 }

@@ -270,12 +270,12 @@ extension AttachmentImageCell: Downloading {
             Api.sharedInstance.download(fileId: fileId!, completion: { (error) in
                 self.progressView.isHidden = true
                 guard error == nil else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                     return
                 }
                 self.downloadingState = DownloadingState.Downloaded
                 
-                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded"/* , viewController: UIViewController()*/)
+                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded")
                 
                 let notification = UILocalNotification()
                 notification.alertBody = "File was successfully downloaded"

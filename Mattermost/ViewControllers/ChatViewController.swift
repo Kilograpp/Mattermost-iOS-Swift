@@ -400,7 +400,7 @@ extension ChatViewController: Action {
     func sendPostAction() {
         guard self.filesAttachmentsModule.fileUploadingInProgress else {
             let message = "Please, wait until download finishes"
-            AlertManager.sharedManager.showWarningWithMessage(message: message)//, viewController: self)
+            AlertManager.sharedManager.showWarningWithMessage(message: message)
             return
         }
         
@@ -469,7 +469,7 @@ extension ChatViewController: Navigation {
             guard (error == nil) else { return }
             Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)//, viewController: self)
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                     return
                 }
                 
@@ -586,7 +586,7 @@ extension ChatViewController: Request {
                 if error?.code == -1011{
                     message = "You left this channel".localized
                 }
-                AlertManager.sharedManager.showErrorWithMessage(message: message)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: message)
             }
             //self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
@@ -601,7 +601,7 @@ extension ChatViewController: Request {
         
         PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)
             }
             self.selectedPost = nil
         }

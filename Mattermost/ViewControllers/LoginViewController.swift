@@ -200,7 +200,7 @@ extension LoginViewController: Request {
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in
             guard (error == nil) else {
                 let message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
-                AlertManager.sharedManager.showErrorWithMessage(message: message)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: message)
                 return
             }
             
