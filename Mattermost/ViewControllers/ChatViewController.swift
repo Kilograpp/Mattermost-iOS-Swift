@@ -329,6 +329,16 @@ extension ChatViewController : Private {
         }
         actionSheetController.addAction(replyAction)
         
+        let copyAction = UIAlertAction(title: "Copy", style: .default) { action -> Void in
+            UIPasteboard.general.string = post.message
+        }
+        actionSheetController.addAction(copyAction)
+        
+        let permalinkAction = UIAlertAction(title: "Permalink", style: .default) { action -> Void in
+            UIPasteboard.general.string = post.permalink()
+        }
+        actionSheetController.addAction(permalinkAction)
+        
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
             self.selectedPost = nil
         }
