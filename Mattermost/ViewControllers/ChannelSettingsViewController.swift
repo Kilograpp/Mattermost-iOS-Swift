@@ -10,12 +10,17 @@ import UIKit
 import WebImage
 import RealmSwift
 
+//CODEREVIEW: Нужно разнести методы по разным блокам, добавить билдер для ячеек и переоформить методы настройки и тапая ячейки
+//CODEREVIEW: В didSelect совсем что-то жесткое. Там запросы, до перехода к целевому контроллеру, что и позволяет до перехода тапнуть на ячейку еще раз
 class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
     var channel: Channel!
     var selectedInfoType: InfoType!
+    
+    var lastSelectedIndexPath: IndexPath? = nil
+    
     //temp timer
     var statusesTimer: Timer?
     
@@ -27,6 +32,12 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         setupNavigationBar()
         setupChannelsObserver()
         setupNibs()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tableView.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -48,6 +59,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        //CODEREVIEW: А зачем такой свитч. Его можно оформить аккуратнее
         switch (section){
         case 0:
             return 1
@@ -62,6 +74,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    //В отдельный блок и добаить билдер
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell!
         switch indexPath.section{
@@ -161,6 +174,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         self.navigationItem.setLeftBarButton(UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backAction)), animated: true)
     }
     
+    //Имеет смысл передавать идентификатор, а не сам объект
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let backItem = UIBarButtonItem()
         backItem.title = ""
@@ -192,7 +206,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let membersRowCount = (channel.members.count < 5) ? channel.members.count : 5
-        if (indexPath==IndexPath(row: 0, section: 2)){
+        if (indexPath==IndexPath(row: 0, section: 2)) {
             Api.sharedInstance.loadChannels(with: { (error) in
                 guard (error == nil) else { return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
@@ -242,6 +256,10 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
         if (indexPath==IndexPath(row: 0, section: 1) ||
             indexPath==IndexPath(row: 1, section: 1)){
+            
+            guard self.lastSelectedIndexPath == nil else { return }
+            self.lastSelectedIndexPath = indexPath
+            
             switch indexPath {
             case IndexPath(row: 0, section: 1):
                 selectedInfoType = InfoType.header
@@ -251,8 +269,9 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 break
             }
             Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    self.lastSelectedIndexPath = nil
                     guard (error == nil) else {
                         AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
@@ -286,12 +305,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func backAction(){
-        self.dismiss(animated: true, completion: {_ in
-            Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { return }
-
-            })
-        })
+        self.dismiss(animated: true, completion: nil)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -336,10 +350,5 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             self.statusesTimer?.invalidate()
             self.statusesTimer = nil
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-        tableView.reloadData()
     }
 }

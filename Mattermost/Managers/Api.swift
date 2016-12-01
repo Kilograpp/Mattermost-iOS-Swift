@@ -295,24 +295,37 @@ extension Api: ChannelApi {
     
     func updateHeader(_ header:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updateHeader(), channel)
+        let channelId = channel.identifier
         let params: Dictionary<String, String> = [ "channel_header" : header, "channel_id" : channel.identifier! ]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId)
+            try! realm.write {
+                channel?.header = header
+            }
             completion(nil)
             }, failure: completion)
     }
     
     func updatePurpose(_ purpose:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updatePurpose(), channel)
+        let channelId = channel.identifier
         let params: Dictionary<String, String> = [ "channel_purpose" : purpose, "channel_id" : channel.identifier! ]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId)
+            try! realm.write {
+                channel?.purpose = purpose
+            }
             completion(nil)
             }, failure: completion)
     }
     
     func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.update(), channel)
+        
         let params: Dictionary<String, Any> = [
         "create_at" : Int(channel.createdAt!.timeIntervalSince1970),
         "creator_id" : String(Preferences.sharedInstance.currentUserId!)!,

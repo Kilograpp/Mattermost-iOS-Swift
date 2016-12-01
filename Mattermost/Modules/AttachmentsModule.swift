@@ -100,12 +100,12 @@ extension AttachmentsModule: PostAttachmentViewDelegate {
         guard self.items.count == 0 else { return }
         self.fileUploadingInProgress = false
         self.hideAttachmentsView()
-
     }
     
     func attachmentsViewWillAppear() {
         var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
-        oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
+        //oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
+        oldInset.top = PostAttachmentsView.attachmentsViewHeight
         self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
     }
     

@@ -114,7 +114,9 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
             })
         } else {
             ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+            })
         }
     }
     

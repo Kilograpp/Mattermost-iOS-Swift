@@ -99,11 +99,6 @@ extension ChatViewController {
         
         ChannelObserver.sharedObserver.delegate = self
         initialSetup()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
-                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
-                                               object: nil)
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -118,6 +113,9 @@ extension ChatViewController {
         if (self.postFromSearch != nil) {
             changeChannelForPostFromSearch()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
+                                               object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

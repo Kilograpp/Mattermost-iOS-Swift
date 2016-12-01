@@ -150,7 +150,7 @@ extension LoginViewController: Setup {
     }
     
     fileprivate func setupNotificationObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(loadChannels),
+        NotificationCenter.default.addObserver(self, selector: #selector(/*loadChannels*/proceedToChat),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification),
                                                object: nil)
     }
@@ -222,7 +222,7 @@ extension LoginViewController: Request {
     }
     
     func loadChannels() {
-        showLoaderView()
+       // showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
             guard (error == nil) else { return }
             
@@ -235,8 +235,12 @@ extension LoginViewController: Request {
             guard (error == nil) else { return }
             
             RouterUtils.loadInitialScreen()
-            self.hideLoaderView()
+           // self.hideLoaderView()
         })
+    }
+    
+    func proceedToChat() {
+        RouterUtils.loadInitialScreen()
     }
 }
 

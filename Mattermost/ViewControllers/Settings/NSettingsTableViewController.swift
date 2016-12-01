@@ -26,6 +26,7 @@ class NSettingsTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         self.menuContainerViewController.panMode = .init(0)
+        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
