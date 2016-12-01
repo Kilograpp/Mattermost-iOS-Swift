@@ -206,16 +206,22 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let membersRowCount = (channel.members.count < 5) ? channel.members.count : 5
+        
+        guard self.lastSelectedIndexPath == nil else { return }
+        self.lastSelectedIndexPath = indexPath
+        
         if (indexPath==IndexPath(row: 0, section: 2)) {
             Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     guard (error == nil) else {
                         AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                        self.lastSelectedIndexPath = nil
                         return
                     }
                     let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
                     Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
+                        self.lastSelectedIndexPath = nil
                         guard (error == nil) else {
                             return
                         }
@@ -228,24 +234,28 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             let member = channel.members[indexPath.row-1]
             
             if member.identifier == Preferences.sharedInstance.currentUserId!{
+                self.lastSelectedIndexPath = nil
                 return
             }
             
             if member.directChannel() == nil{
                 Api.sharedInstance.createDirectChannelWith(member, completion: {_ in
                     ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
+                    self.lastSelectedIndexPath = nil
                     self.dismiss(animated: true, completion: nil)
                 })
             } else {
                 ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
+                self.lastSelectedIndexPath = nil
                 self.dismiss(animated: true, completion: nil)
             }
             
         }
         if (indexPath==IndexPath(row: membersRowCount+1, section: 2)){
             Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    self.lastSelectedIndexPath = nil
                     guard (error == nil) else {
                         AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
@@ -256,9 +266,6 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
         if (indexPath==IndexPath(row: 0, section: 1) ||
             indexPath==IndexPath(row: 1, section: 1)){
-            
-            guard self.lastSelectedIndexPath == nil else { return }
-            self.lastSelectedIndexPath = indexPath
             
             switch indexPath {
             case IndexPath(row: 0, section: 1):
@@ -282,7 +289,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
         if (indexPath==IndexPath(row: 0, section: 3)){
             Api.sharedInstance.leaveChannel(channel, completion: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 self.dismiss(animated: true, completion: {_ in
                     Api.sharedInstance.loadChannels(with: { (error) in
                         guard (error == nil) else { return }
@@ -292,8 +299,9 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
         if (indexPath==IndexPath(row: 0, section: 0)){
             Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    self.lastSelectedIndexPath = nil
                     guard (error == nil) else {
                         AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
@@ -302,6 +310,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 })
             })
         }
+        
     }
     
     func backAction(){

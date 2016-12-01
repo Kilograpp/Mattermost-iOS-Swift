@@ -8,18 +8,27 @@
 
 import UIKit
 
+protocol SetupSaveButton {
+    func setupSaveButton(_ enable: Bool)
+}
+
 class ChannelNameAndHandleCell: UITableViewCell, UITextFieldDelegate {
 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var cancelButton: UIButton!
     let limitLength = 22
+    var delgate : SetupSaveButton?
 
     @IBAction func deleteTextAction(_ sender: AnyObject) {
         textField.text = ""
+        if let iuDelegate = self.delgate {
+            iuDelegate.setupSaveButton(false)
+        }
     }
     override func awakeFromNib() {
         super.awakeFromNib()
         textField.delegate = self
+        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
 
         // Initialization code
     }
@@ -33,5 +42,16 @@ class ChannelNameAndHandleCell: UITableViewCell, UITextFieldDelegate {
             guard let text = textField.text else { return true }
             let newLength = text.characters.count + string.characters.count - range.length
             return newLength <= limitLength
+    }
+    
+    func textFieldDidChange() {
+        guard let text = textField.text else { return }
+        if let iuDelegate = self.delgate {
+            if text != ""{
+                iuDelegate.setupSaveButton(true)
+            } else {
+                iuDelegate.setupSaveButton(false)
+            }
+        }
     }
 }

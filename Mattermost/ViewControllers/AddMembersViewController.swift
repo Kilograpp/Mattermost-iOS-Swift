@@ -15,7 +15,12 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     var searchController: UISearchController!
     var channel: Channel!
     var users: Results<User>!
+    var searchUsers: Results<User>!
+    var searchMembersList: Results<User>!
     
+    var lastSelectedIndexPath: IndexPath? = nil
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView.init(frame: CGRect.zero)
@@ -45,8 +50,11 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if users != nil{
+        if users != nil && !searchController.isActive{
             return users.count
+        }
+        if searchUsers != nil && searchController.isActive{
+            return searchUsers.count
         }
         return 0
     }
@@ -54,7 +62,7 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: MemberInAdditingCell!
         cell = tableView.dequeueReusableCell(withIdentifier: "memberInAdditingCell") as! MemberInAdditingCell!
-        cell.configureWithUser(user: users[indexPath.row])
+        searchController.isActive ? cell.configureWithUser(user: searchUsers[indexPath.row]) : cell.configureWithUser(user: users[indexPath.row])
         return cell
     }
     
@@ -95,18 +103,27 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let member = users[indexPath.row]
+        guard self.lastSelectedIndexPath == nil else { return }
+        self.lastSelectedIndexPath = indexPath
+        
+        let member = searchController.isActive ? searchUsers[indexPath.row] : users[indexPath.row]
+        
         Api.sharedInstance.addUserToChannel(member, channel: channel, completion: { (error) in
-            guard (error == nil) else { return }
+            guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
             Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
                     AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                    self.lastSelectedIndexPath = nil
                     return
                 }
                 AlertManager.sharedManager.showSuccesWithMessage(message: member.displayName!+" was added in channel")
                 self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
                 self.setupUsers()
                 self.tableView.reloadData()
+                if self.searchController.isActive {
+                    self.searchController.searchBar.text! += ""
+                }
+                self.lastSelectedIndexPath = nil
             })
         })
         
@@ -127,7 +144,24 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     //Search updating
     func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            filterContent(searchText: searchText)
+            tableView.reloadData()
+        }
+    }
+    
+    func filterContent(searchText: String){
         
+        let sortName = UserAttributes.username.rawValue
+        let identifiers = Array(channel.members.map{$0.identifier!})
+        let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
+        
+        let townSquareIdentifiers = Array(townSquare!.members.map{$0.identifier!})
+        
+        
+        let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@ AND NOT identifier IN %@ AND identifier IN %@ AND displayName CONTAINS[c] '\(searchText)'", Constants.Realm.SystemUserIdentifier,
+                                     Preferences.sharedInstance.currentUserId!, identifiers, townSquareIdentifiers)
+        searchUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
     }
     
 }

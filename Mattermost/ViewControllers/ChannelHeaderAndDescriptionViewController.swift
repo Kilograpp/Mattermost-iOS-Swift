@@ -8,9 +8,9 @@
 
 import UIKit
 
-enum InfoType{
-    case header
-    case purpose
+enum InfoType: String{
+    case header = "header"
+    case purpose = "purpose"
 }
 
 class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, HeightForTextView  {
@@ -65,7 +65,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     }
     
     func setupNavigationBar() {
-        self.title = (self.channel.privateType == Constants.ChannelType.PublicTypeChannel) ? "Channel info" : "Group info"
+        self.title = "Edit " + type.rawValue
         
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveButtonAction))
         self.navigationItem.rightBarButtonItem = saveButton

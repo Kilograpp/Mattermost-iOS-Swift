@@ -7,16 +7,21 @@
 //
 
 import UIKit
+import RealmSwift
 
 class AllMembersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating   {
     
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
     var channel: Channel!
+    var membersList: Results<User>!
+    var searchMembersList: Results<User>!
     
+    var lastSelectedIndexPath: IndexPath? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        membersList = channel.members.sorted(byProperty: UserAttributes.username.rawValue)
         tableView.tableFooterView = UIView.init(frame: CGRect.zero)
         tableView.dataSource = self
         tableView.delegate = self
@@ -43,13 +48,14 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return channel.members.count
+        return searchController.isActive ? searchMembersList.count : membersList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell!
         let memberCell = tableView.dequeueReusableCell(withIdentifier: "memberChannelSettingsCell") as! MemberChannelSettingsCell
-        memberCell.configureWithUser(user: channel.members[indexPath.row])
+        let member = searchController.isActive ? searchMembersList[indexPath.row] : membersList[indexPath.row]
+        memberCell.configureWithUser(user: member)
         cell = memberCell
         return cell
     }
@@ -103,18 +109,27 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let member = channel.members[indexPath.row]
+        guard self.lastSelectedIndexPath == nil else { return }
+        self.lastSelectedIndexPath = indexPath
+        
+        let member = searchController.isActive ? searchMembersList[indexPath.row] : membersList[indexPath.row]
+        self.searchController.isActive = false
+
         if member.identifier == Preferences.sharedInstance.currentUserId!{
+            self.lastSelectedIndexPath = nil
             return
         }
         if member.directChannel() == nil{
             Api.sharedInstance.createDirectChannelWith(member, completion: {_ in
                 ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
-                self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: {
+                    self.lastSelectedIndexPath = nil
+                })
             })
         } else {
             ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
             self.dismiss(animated: true, completion: {
+                self.lastSelectedIndexPath = nil
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
         }
@@ -122,6 +137,18 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     
     //Search updating
     func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            filterContent(searchText: searchText)
+            tableView.reloadData()
+        }
+    }
+    
+    func filterContent(searchText: String){
         
+        let membersIdentifiers = Array(membersList.map{$0.identifier!})
+        let sortName = UserAttributes.username.rawValue
+
+        let predicate =  NSPredicate(format: "displayName CONTAINS[c] '\(searchText)' AND identifier IN %@", membersIdentifiers)
+        searchMembersList = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName)
     }
 }

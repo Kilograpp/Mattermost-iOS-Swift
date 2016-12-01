@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
+class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SetupSaveButton  {
     
     @IBOutlet weak var tableView: UITableView!
     var channel: Channel!
@@ -69,6 +69,7 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
         default:
             break
         }
+        cell.delgate = self
         return cell
     }
     
@@ -81,9 +82,13 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
     }
     
     func setupNavigationBar() {
-        self.title = "Channel info".localized
-        
+        if channel.privateType! == "P"{
+            self.title = "Group info".localized
+        } else {
+            self.title = "Channel info".localized
+        }
         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveButtonAction))
+        saveButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = saveButton
         //navigationItem.rightBarButtonItem?.isEnabled = false
     }
@@ -92,9 +97,11 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
         let newDisplayName = (tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelNameAndHandleCell).textField.text
         let newName = (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelNameAndHandleCell).textField.text
         
+        setupSaveButton(false)
+            
         Api.sharedInstance.update(newDisplayName: newDisplayName!, newName: newName!, channel: channel!, completion: { (error) in
             guard (error == nil) else {
-                AlertManager.sharedManager.showErrorWithMessage(message: "Error".localized)
+                AlertManager.sharedManager.showErrorWithMessage(message: "Handle name is too short (2 characters minimum)".localized)
                 return
             }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was updated".localized)
@@ -105,5 +112,9 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
                 })
             })
         })
+    }
+    
+    func setupSaveButton(_ enable: Bool) {
+        self.navigationItem.rightBarButtonItem?.isEnabled = enable
     }
 }
