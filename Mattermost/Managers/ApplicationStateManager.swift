@@ -48,6 +48,36 @@ extension ApplicationStateManager: NotificationsSubscription {
     }
 }
 
+extension ApplicationStateManager {
+    func handleLaunchingWithOptionsNotification(notification: Notification) {
+        let remoteNotificationInfo = notification.userInfo?[UIApplicationLaunchOptionsKey.remoteNotification]
+        NotificationCenter.default.post(name: Notification.Name(rawValue: Constants.NotificationsNames.DidReceiveRemoteNotification), object: remoteNotificationInfo)
+    }
+    
+ /*   func handleRemoteNotificationOpeningWithPayload(notification: Notification) {
+        let payload = notification.object as Dictionary
+        
+    }
+    
+    
+    - (void)handleRemoteNotificationOpeningWithPayload:(NSNotification*)notification {
+    
+    NSDictionary *payload = notification.object;
+    
+    if (payload && [self isSignedIn]) {
+    NSString* message = payload[@"aps"][@"alert"];
+    NSString* channelName = [[[message split:@":"] firstObject] substringFromIndex:1];
+    
+    KGChannel *channel = [KGChannel MR_findFirstByAttribute:[KGChannelAttributes displayName] withValue:channelName];
+    
+    KGAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    KGSideMenuContainerViewController *menuContainerViewController = appDelegate.menuContainerViewController;
+    [(KGLeftMenuViewController*)menuContainerViewController.leftMenuViewController selectChannel:channel];
+    [[KGChannelsObserver sharedObserver] setSelectedChannel:channel];
+    }
+    }*/
+}
+
 //MARK: - Application Delegate
 extension ApplicationStateManager: ApplicationDelegate {
     @objc func applicationDidEnterBackground() {
