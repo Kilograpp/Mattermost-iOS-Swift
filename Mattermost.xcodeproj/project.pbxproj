@@ -10,10 +10,12 @@
 		413B76221D58C6CD00F297BE /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B76211D58C6CD00F297BE /* en.lproj */; };
 		413B762C1D58CF4100F297BE /* ru.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 413B762B1D58CF4100F297BE /* ru.lproj */; };
 		4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */; };
+		4409E4121DF15CD300E02A42 /* ImagesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4409E4111DF15CD300E02A42 /* ImagesPreviewViewController.swift */; };
 		4410CFA21DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4410CFA11DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift */; };
 		4410CFA41DEABC08003C365F /* UFSettingsCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */; };
 		442137B51DE7D47700B18BD3 /* DNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */; };
 		44385CB71DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */; };
+		444AB13A1DF24B08001160EB /* NotificationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444AB1391DF24B08001160EB /* NotificationsUtils.swift */; };
 		445DE0961DEDA1C600D2124D /* RNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445DE0951DEDA1C600D2124D /* RNSettingsTableViewController.swift */; };
 		449663371DED099B0007A954 /* ENSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449663361DED099B0007A954 /* ENSettingsTableViewController.swift */; };
 		44E3A94D1DE8D9E2001CD849 /* UFSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */; };
@@ -286,10 +288,12 @@
 		413B76211D58C6CD00F297BE /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en.lproj; path = Settings.bundle/en.lproj; sourceTree = "<group>"; };
 		413B762B1D58CF4100F297BE /* ru.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ru.lproj; sourceTree = "<group>"; };
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
+		4409E4111DF15CD300E02A42 /* ImagesPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesPreviewViewController.swift; sourceTree = "<group>"; };
 		4410CFA11DEABBCE003C365F /* TextFieldSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		4410CFA31DEABC08003C365F /* UFSettingsCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsCellBuilder.swift; sourceTree = "<group>"; };
 		442137B41DE7D47700B18BD3 /* DNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSettingsTableViewController.swift; sourceTree = "<group>"; };
 		44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		444AB1391DF24B08001160EB /* NotificationsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationsUtils.swift; path = Mattermost/utils/NotificationsUtils.swift; sourceTree = SOURCE_ROOT; };
 		445DE0951DEDA1C600D2124D /* RNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSettingsTableViewController.swift; sourceTree = "<group>"; };
 		449663361DED099B0007A954 /* ENSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSettingsTableViewController.swift; sourceTree = "<group>"; };
 		44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -755,6 +759,7 @@
 				D60C9B1B1D74DB76008BB5CF /* AssetsUtils.swift */,
 				4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */,
 				4B404A791D92914A002F9F6D /* ObserverUtils.swift */,
+				444AB1391DF24B08001160EB /* NotificationsUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -943,6 +948,7 @@
 				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
 				8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */,
 				8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */,
+				4409E4111DF15CD300E02A42 /* ImagesPreviewViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1521,6 +1527,7 @@
 				8B3CB3411DD2675F0078DE25 /* ProfileCellBuilder.swift in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				8B3CB3751DD269C30078DE25 /* Api.swift in Sources */,
+				4409E4121DF15CD300E02A42 /* ImagesPreviewViewController.swift in Sources */,
 				D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */,
 				8B618CC31DDCDE8300AC6CDD /* MattermostError.swift in Sources */,
 				CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */,
@@ -1689,6 +1696,7 @@
 				4195DCEA1D54A4BC00E8ED84 /* KGTextField.swift in Sources */,
 				CDB4BC5A1D8033DF00662231 /* FileResponseDescriptorsContainer.swift in Sources */,
 				8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */,
+				444AB13A1DF24B08001160EB /* NotificationsUtils.swift in Sources */,
 				D62FEB8C1D4F2A9C00390EBC /* LeftMenuViewController.swift in Sources */,
 				8B3CB33E1DD2675F0078DE25 /* ChannelInfoCellBuilder.swift in Sources */,
 				D8812C391D47DDDA00436B5C /* String+Json.swift in Sources */,

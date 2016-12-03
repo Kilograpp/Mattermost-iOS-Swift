@@ -203,7 +203,6 @@ extension LoginViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
                 return
             }
-            
             self.loadTeams()
         }
     }
