@@ -564,6 +564,7 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.attachDevicePathPattern()
         let deviceUUID = Preferences.sharedInstance.deviceUUID
         let params = ["device_id" : "apple:" + deviceUUID!]
+        print(params)
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             completion(nil)

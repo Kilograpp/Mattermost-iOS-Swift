@@ -29,8 +29,9 @@ final class NotificationsUtils: NSObject {
     }
     
     static func saveNotificationsToken(token: Data) {
-        var tokenString = token.description.trimmingCharacters(in: CharacterSet.init(charactersIn: "<>"))
+        var tokenString = (token as NSData).description.trimmingCharacters(in: CharacterSet.init(charactersIn: "<>"))
         tokenString = tokenString.replacingOccurrences(of: " ", with: "")
+        print(tokenString)
         Preferences.sharedInstance.deviceUUID = tokenString
     }
 }
