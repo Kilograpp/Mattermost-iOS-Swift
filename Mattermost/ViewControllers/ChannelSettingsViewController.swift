@@ -392,6 +392,3 @@ extension ChannelSettingsViewController: Request {
         }
     }
 }
-
-
-

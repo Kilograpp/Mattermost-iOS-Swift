@@ -374,6 +374,7 @@ extension ChatViewController : Private {
 //MARK: Action
 extension ChatViewController: Action {
     @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
+       // tempGallery()
         let state = (self.menuContainerViewController.menuState == MFSideMenuStateLeftMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateLeftMenuOpen
         self.menuContainerViewController.setMenuState(state, completion: nil)
         self.dismissKeyboard(true)
@@ -945,5 +946,19 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
     
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
+    }
+}
+
+extension ChatViewController {
+    func tempGallery() {
+        let gallery = ImagesPreviewViewController(delegate: self)
+        present(gallery, animated: true, completion: nil)
+    }
+}
+
+// MARK: SwiftPhotoGalleryDelegate
+extension ChatViewController: ImagesPreviewViewControllerDelegate {
+    func galleryDidTapToClose(gallery: ImagesPreviewViewController) {
+        dismiss(animated: true, completion: nil)
     }
 }
