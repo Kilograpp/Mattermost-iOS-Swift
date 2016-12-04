@@ -33,12 +33,16 @@ private protocol ChannelApi: class {
     func loadChannels(with completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadExtraInfoForChannel(_ channelId: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func updateHeader(_ header: String, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func updatePurpose(_ purpose: String, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void)
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol UserApi: class {
@@ -47,6 +51,8 @@ private protocol UserApi: class {
     func loadCurrentUser(completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(firstName: String?, lastName: String?, userName: String?, nickName: String?, email: String?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(currentPassword: String, newPassword: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func update(profileImage: UIImage, completion: @escaping (_ error: Mattermost.Error?) -> Void, progress: @escaping (_ value: Float) -> Void)
+    func subscribeToRemoteNotifications(completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol PostApi: class {
@@ -282,12 +288,67 @@ extension Api: ChannelApi {
     
     func addUserToChannel(_ user:User, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.addUserPathPattern(), channel)
-        let params = [ "user_id" : user.identifier ]
+        let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             completion(nil)
             }, failure: completion)
     }
+    
+    func updateHeader(_ header:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updateHeader(), channel)
+        let channelId = channel.identifier
+        let params: Dictionary<String, String> = [ "channel_header" : header, "channel_id" : channel.identifier! ]
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId)
+            try! realm.write {
+                channel?.header = header
+            }
+            completion(nil)
+            }, failure: completion)
+    }
+    
+    func updatePurpose(_ purpose:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updatePurpose(), channel)
+        let channelId = channel.identifier
+        let params: Dictionary<String, String> = [ "channel_purpose" : purpose, "channel_id" : channel.identifier! ]
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId)
+            try! realm.write {
+                channel?.purpose = purpose
+            }
+            completion(nil)
+            }, failure: completion)
+    }
+    
+    func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.update(), channel)
+        
+        let params: Dictionary<String, Any> = [
+        "create_at" : Int(channel.createdAt!.timeIntervalSince1970),
+        "creator_id" : String(Preferences.sharedInstance.currentUserId!)!,
+        "delete_at" : 0,
+        "display_name" : newDisplayName,
+        "extra_update_at" : Int(NSDate().timeIntervalSince1970),
+        "header" : channel.header!,
+        "id" : channel.identifier!,
+        "last_post_at" : Int(channel.lastPostDate!.timeIntervalSince1970),
+        "name" : newName,
+        "purpose" : channel.purpose!,
+        "team_id" : channel.team!.identifier!,
+        "total_msg_count" : Int(channel.messagesCount!)!,
+        "type" : channel.privateType!,
+        "update_at" : Int(NSDate().timeIntervalSince1970)]
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(nil)
+            }, failure: completion)
+    }
+    
     
     func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createChannelPathPattern(), DataManager.sharedInstance.currentTeam)
@@ -364,6 +425,16 @@ extension Api: ChannelApi {
             completion(nil)
             }, failure: completion)
     }
+    
+    func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.deleteChannelPathPattern(), channel)
+        
+        self.manager.post(path: path, success: { (mappingResult) in
+            completion(nil)
+        }, failure: { (error) in
+            completion(error)
+        })
+    }
 }
 
 
@@ -387,7 +458,8 @@ extension Api: UserApi {
             _ = DataManager.sharedInstance.currentUser
 
             SocketManager.sharedInstance.setNeedsConnect()
-            completion(nil)
+            //completion(nil)
+            NotificationsUtils.subscribeToRemoteNotificationsIfNeeded(completion: completion)
             }, failure: completion)
     }
     
@@ -470,6 +542,35 @@ extension Api: UserApi {
         }) { (error) in
             completion(error)
         }
+    }
+    
+    func update(profileImage: UIImage,
+                completion: @escaping (_ error: Mattermost.Error?) -> Void,
+                progress: @escaping (_ value: Float) -> Void) {
+        let path = UserPathPatternsContainer.userUpdateImagePathPattern()
+    
+        self.manager.post(image: profileImage, identifier: "image_id", name: "image", path: path, parameters: nil, success: { (mappingResult) in
+            print(mappingResult)
+            completion(nil)
+            
+        }, failure: { (error) in
+            completion(error)
+        }) { (value) in
+            progress(value)
+        }
+    }
+    
+    func subscribeToRemoteNotifications(completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = UserPathPatternsContainer.attachDevicePathPattern()
+        let deviceUUID = Preferences.sharedInstance.deviceUUID
+        let params = ["device_id" : "apple:" + deviceUUID!]
+        print(params)
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(nil)
+        }, failure: { (error) in
+            completion(error)
+        })
     }
 }
 
@@ -730,6 +831,10 @@ extension Api : FileApi {
                 file?.hasPreview = result.hasPreview
                 file?.mimeType = result.mimeType
             }
+            let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.ReloadFileSizeNotification),
+                                            object: nil, userInfo: ["fileId" : fileId, "fileSize" : result.size])
+            NotificationCenter.default.post(notification as Notification)
+            
         }) { (error) in
             print(error?.message! ?? "getInfo_error")
         }

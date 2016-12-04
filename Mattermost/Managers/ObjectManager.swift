@@ -87,10 +87,18 @@ extension ObjectManager: PostRequests {
               success: ((_ mappingResult: RKMappingResult) -> Void)?,
               failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
+            print("SUCCESS")
+            print(operation?.httpRequestOperation.responseString)
             success?(mappingResult!)
         }) { (operation, error) in
-            //TODO: Will remove, after mapping fixation
+            print("FAIL")
+            print(operation?.httpRequestOperation.responseString)
             let responseString = operation?.httpRequestOperation.responseString
+            guard responseString != nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.localizedDescription)!)
+                return
+            }
+            
             let dict = responseString?.toDictionary()
             if (Int((dict?["status_code"])! as! NSNumber) == 500) {
                 let statusCode = Int((dict?["status_code"])! as! NSNumber)
@@ -183,6 +191,13 @@ extension ObjectManager: PostRequests {
             print("upOk"); success?(mappingResult!)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
+            //MARK: Cap with fixed later
+            guard operation?.httpRequestOperation.responseString != Constants.CommonStrings.True else {
+                success!(RKMappingResult())
+                return
+            }
+            print(operation?.httpRequestOperation.responseString ?? "")
+            
             print("upFail"); failure?(self.handleOperation(operation!, withError: error!))
         }
         
@@ -207,7 +222,6 @@ extension ObjectManager: PostRequests {
                   success: ((_ mappingResult: RKMappingResult) -> Void)?,
                   failure: ((_ error: Mattermost.Error) -> Void)?,
                   progress: ((_ progressValue: Float) -> Void)?) {
-        
         let constructingBodyWithBlock = {(formData: AFRKMultipartFormData?) -> Void in
             try! formData?.appendPart(withFileURL: url, name: name)
         }

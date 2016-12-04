@@ -14,10 +14,14 @@ private protocol PathPatterns: class {
     static func loadOnePathPattern() -> String
     static func addUserPathPattern() -> String
     static func updateLastViewDatePathPattern() -> String
+    static func updateHeader() -> String
+    static func updatePurpose() -> String
+    static func update() -> String
     static func createChannelPathPattern() -> String
     static func createDirrectChannelPathPattern() -> String
     static func leaveChannelPathPattern() -> String
     static func joinChannelPathPattern() -> String
+    static func deleteChannelPathPattern() -> String
 }
 
 final class ChannelPathPatternsContainer: PathPatterns {
@@ -36,10 +40,18 @@ final class ChannelPathPatternsContainer: PathPatterns {
     static func updateLastViewDatePathPattern() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/update_last_viewed_at"
     }
+    static func updateHeader() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/update_header"
+    }
+    static func updatePurpose() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/update_purpose"
+    }
+    static func update() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/update"
+    }
     static func createChannelPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/create"
     }
-    
     static func createDirrectChannelPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier.rawValue)/channels/create_direct"
     }
@@ -48,5 +60,8 @@ final class ChannelPathPatternsContainer: PathPatterns {
     }
     static func joinChannelPathPattern() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/join"
+    }
+    static func deleteChannelPathPattern() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/delete"
     }
 }

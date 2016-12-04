@@ -99,22 +99,23 @@ extension ChatViewController {
         
         ChannelObserver.sharedObserver.delegate = self
         initialSetup()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
-                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
-                                               object: nil)
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+        tableView.reloadData()
         super.viewWillAppear(animated)
         
         self.navigationController?.isNavigationBarHidden = false
+        setupInputViewButtons()
         addSLKKeyboardObservers()
         
         if (self.postFromSearch != nil) {
             changeChannelForPostFromSearch()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
+                                               object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -328,6 +329,16 @@ extension ChatViewController : Private {
         }
         actionSheetController.addAction(replyAction)
         
+        let copyAction = UIAlertAction(title: "Copy", style: .default) { action -> Void in
+            UIPasteboard.general.string = post.message
+        }
+        actionSheetController.addAction(copyAction)
+        
+        let permalinkAction = UIAlertAction(title: "Permalink", style: .default) { action -> Void in
+            UIPasteboard.general.string = post.permalink()
+        }
+        actionSheetController.addAction(permalinkAction)
+        
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
             self.selectedPost = nil
         }
@@ -389,7 +400,7 @@ extension ChatViewController: Action {
     func sendPostAction() {
         guard self.filesAttachmentsModule.fileUploadingInProgress else {
             let message = "Please, wait until download finishes"
-            AlertManager.sharedManager.showWarningWithMessage(message: message)//, viewController: self)
+            AlertManager.sharedManager.showWarningWithMessage(message: message)
             return
         }
         
@@ -458,14 +469,13 @@ extension ChatViewController: Navigation {
             guard (error == nil) else { return }
             Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)//, viewController: self)
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                     return
                 }
+                
                 let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
                 let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
                 ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-                
-                //(channelSettings as! ProfileViewController).configureFor(user: user)
                 self.navigationController?.present(channelSettings, animated: true, completion: nil)
             })
         })
@@ -576,7 +586,7 @@ extension ChatViewController: Request {
                 if error?.code == -1011{
                     message = "You left this channel".localized
                 }
-                AlertManager.sharedManager.showErrorWithMessage(message: message)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: message)
             }
             //self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
@@ -591,7 +601,7 @@ extension ChatViewController: Request {
         
         PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)
             }
             self.selectedPost = nil
         }

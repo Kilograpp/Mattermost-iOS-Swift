@@ -1,24 +1,22 @@
 //
-//  MPNSettingsTableViewController.swift
+//  RNSettingsTableViewController.swift
 //  Mattermost
 //
-//  Created by TaHyKu on 26.10.16.
+//  Created by Екатерина on 29.11.16.
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
 import UIKit
 
-class MPNSettingsTableViewController: UITableViewController {
-    
+class RNSettingsTableViewController: UITableViewController {
+
 //MARK: Properties
     fileprivate var saveButton: UIBarButtonItem!
-    
     fileprivate var notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
     fileprivate let user = DataManager.sharedInstance.currentUser
     
-    var selectedSendOption: Int = 0
-    var selectedTriggerOption: Int = 0
-    
+    var selectedReplyOption: Int = 0
+
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,15 +59,14 @@ fileprivate protocol Request {
 
 
 //MARK: Setup
-extension MPNSettingsTableViewController: Setup {
+extension RNSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
-        setupSwipeRight()
     }
     
     func setupNavigationBar() {
-        self.title = "Mobile push notifications"
+        self.title = "Reply notifications"
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
@@ -80,20 +77,13 @@ extension MPNSettingsTableViewController: Setup {
     }
     
     func setupForCurrentNotifyProps() {
-        self.selectedSendOption = Constants.NotifyProps.Send.index { return $0.state == (self.notifyProps?.push)! }!
-        self.selectedTriggerOption = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.notifyProps?.pushStatus)! }!
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
+        self.selectedReplyOption = Constants.NotifyProps.Reply.Trigger.index { return $0.state == (self.notifyProps?.comments)! }!
     }
 }
 
 
 //MARK: Action
-extension MPNSettingsTableViewController: Action {
+extension RNSettingsTableViewController: Action {
     func backAction() {
         returtToNSettings()
     }
@@ -105,7 +95,7 @@ extension MPNSettingsTableViewController: Action {
 
 
 //MARK: Navigation
-extension MPNSettingsTableViewController: Navigation {
+extension RNSettingsTableViewController: Navigation {
     func returtToNSettings() {
         _ = self.navigationController?.popViewController(animated: true)
     }
@@ -113,11 +103,10 @@ extension MPNSettingsTableViewController: Navigation {
 
 
 //MARK: Request
-extension MPNSettingsTableViewController: Request {
+extension RNSettingsTableViewController: Request {
     func updateSettings() {
         try! RealmUtils.realmForCurrentThread().write {
-            self.notifyProps?.push = Constants.NotifyProps.Send[self.selectedSendOption].state
-            self.notifyProps?.pushStatus = Constants.NotifyProps.MobilePush.Trigger[self.selectedTriggerOption].state
+            self.notifyProps?.comments = Constants.NotifyProps.Reply.Trigger[self.selectedReplyOption].state
         }
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
@@ -134,32 +123,25 @@ extension MPNSettingsTableViewController: Request {
 
 
 //MARK: UITableViewDataSource
-extension MPNSettingsTableViewController {
+extension RNSettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if (indexPath.section == 0) {
-            cell.accessoryType = (self.selectedSendOption == indexPath.row) ? .checkmark : .none
-        } else {
-            cell.accessoryType = (self.selectedTriggerOption == indexPath.row) ? .checkmark : .none
-        }
+        cell.accessoryType = (self.selectedReplyOption == indexPath.row) ? .checkmark : .none
+        
         return cell
     }
 }
 
 
 //MARK: UITableViewDelegate
-extension MPNSettingsTableViewController {
+extension RNSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedRow = (indexPath.section == 0) ? self.selectedSendOption : self.selectedTriggerOption
-        guard indexPath.row != selectedRow else { return }
+        guard indexPath.row != self.selectedReplyOption else { return }
         
         self.saveButton?.isEnabled = true
-        tableView.cellForRow(at: IndexPath(row: selectedRow, section: indexPath.section))?.accessoryType = .none
-        if indexPath.section == 0 {
-            self.selectedSendOption = indexPath.row
-        } else {
-            self.selectedTriggerOption = indexPath.row
-        }
+        tableView.cellForRow(at: IndexPath(row: self.selectedReplyOption, section: indexPath.section))?.accessoryType = .none
+        
+        self.selectedReplyOption = indexPath.row
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }
 }

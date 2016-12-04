@@ -150,7 +150,7 @@ extension LoginViewController: Setup {
     }
     
     fileprivate func setupNotificationObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(loadChannels),
+        NotificationCenter.default.addObserver(self, selector: #selector(/*loadChannels*/proceedToChat),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification),
                                                object: nil)
     }
@@ -200,10 +200,9 @@ extension LoginViewController: Request {
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in
             guard (error == nil) else {
                 let message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
-                AlertManager.sharedManager.showErrorWithMessage(message: message)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: message)
                 return
             }
-            
             self.loadTeams()
         }
     }
@@ -222,7 +221,7 @@ extension LoginViewController: Request {
     }
     
     func loadChannels() {
-        showLoaderView()
+       // showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
             guard (error == nil) else { return }
             
@@ -235,8 +234,12 @@ extension LoginViewController: Request {
             guard (error == nil) else { return }
             
             RouterUtils.loadInitialScreen()
-            self.hideLoaderView()
+           // self.hideLoaderView()
         })
+    }
+    
+    func proceedToChat() {
+        RouterUtils.loadInitialScreen()
     }
 }
 

@@ -80,7 +80,7 @@ final class LeftMenuViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        configureResults()
+        reloadChannels()
     }
     
     func reloadChannels() {
@@ -144,7 +144,7 @@ extension LeftMenuViewController : Configure {
         self.tableView.register(LeftMenuSectionFooter.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionFooter.reuseIdentifier)
     }
     
-    fileprivate func configureInitialSelectedChannel() {
+    func configureInitialSelectedChannel() {
         let indexPathForFirstRow = IndexPath(row: 0, section: 0) as IndexPath
         let initialSelectedChannel = self.resultsPublic[indexPathForFirstRow.row]
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
@@ -310,5 +310,7 @@ extension LeftMenuViewController : Navigation {
     @IBAction func membersListAction(_ sender: AnyObject) {
         print("MEMBERS_LIST")
     }
+    
+    
 }
 

@@ -57,7 +57,6 @@ extension NSettingsCellBuilder: Inteface {
             cell.descriptionLabel?.text = notifyProps.completeTriggerWords()
         case 4:
             cell.descriptionLabel?.text = notifyProps.completeReply()
-            cell.descriptionLabel?.textColor = UIColor.lightGray
         default:
             break
         }

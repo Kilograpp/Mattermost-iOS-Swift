@@ -26,6 +26,7 @@ class NSettingsTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         self.menuContainerViewController.panMode = .init(0)
+        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -51,6 +52,7 @@ fileprivate protocol Navigation {
     func proccedToENSettings()
     func proceedToMPNSettings()
     func proceedToWTMSettings()
+    func proceedToRNSettings()
 }
 
 fileprivate protocol Request {
@@ -117,6 +119,12 @@ extension NSettingsTableViewController: Navigation {
         let wTMSettings = storyboard.instantiateViewController(withIdentifier: "WTMSettingsTableViewController")
         self.navigationController?.pushViewController(wTMSettings, animated: true)
     }
+    
+    func proceedToRNSettings() {
+        let storyboard = UIStoryboard.init(name: "Settings", bundle: nil)
+        let rNSettings = storyboard.instantiateViewController(withIdentifier: "RNSettingsTableViewController")
+        self.navigationController?.pushViewController(rNSettings, animated: true)
+    }
 }
 
 
@@ -149,7 +157,7 @@ extension NSettingsTableViewController {
         case 3:
             proceedToWTMSettings()
         case 4:
-            print("")
+            proceedToRNSettings()
         default:
             break
         }

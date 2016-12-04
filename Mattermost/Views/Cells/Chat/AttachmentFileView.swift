@@ -42,7 +42,10 @@ class AttachmentFileView: UIView {
     
     override func draw(_ rect: CGRect) {
         drawTitle(text: file.name!)
-        drawSize(text: StringUtils.suffixedFor(size: file.size))
+        if file.size > 0 {
+            //activity indicator will added later
+            drawSize(text: StringUtils.suffixedFor(size: file.size))
+        }
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
         self.isUserInteractionEnabled = true
@@ -82,10 +85,14 @@ extension AttachmentFileView: Setup {
         self.setupIcon()
         self.setupProgressView()
         self.setupDownloadingState()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFileSize),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadFileSizeNotification),
+                                               object: nil)
     }
     
     fileprivate func setupDownloadingState() {
-        if file.downoloadedSize == file.size {
+        if (file.downoloadedSize == file.size) && (file.size != 0) {
             self.downloadingState = DownloadingState.Downloaded
         } else {
             self.downloadingState = (file.downoloadedSize == 0) ? DownloadingState.NotDownloaded
@@ -112,19 +119,30 @@ extension AttachmentFileView: Setup {
     }
     
     fileprivate func drawTitle(text: String) {
+        var fileName = self.file.name! as NSString
         let textColor = ColorBucket.blueColor
         let textFont =  UIFont.systemFont(ofSize: 13)
         let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
-        let height = CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
+        var height = CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
+        if height > 36 {
+            height = 36
+            let range = NSMakeRange(38, fileName.length - 38)
+            fileName = fileName.replacingCharacters(in: range, with: "...") as NSString
+        }
         let nameFrame = CGRect(x: 54, y: 8, width: frame.width - 64, height: height).offsetBy(dx: 0, dy: frame.origin.y)
-        (self.file.name! as NSString).draw(in: nameFrame, withAttributes: attributes)
+        /*(self.file.name! as NSString)*/fileName.draw(in: nameFrame, withAttributes: attributes)
     }
     
     fileprivate func drawSize(text: String) {
         let textColor = ColorBucket.rightMenuSeparatorColor
         let textFont = FontBucket.messageFont
-        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
-        let y = 20 + CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
+        let backgroundColor = self.backgroundColor
+        let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor, NSBackgroundColorAttributeName: backgroundColor] as [String : Any]
+        var titleHeigth = CGFloat(StringUtils.heightOfString(file.name!, width: frame.width - 64, font: UIFont.systemFont(ofSize: 13)))
+        if titleHeigth > 28 {
+            titleHeigth = 28
+        }
+        let y = 12 + titleHeigth
         let textFrame = CGRect(x: 54, y: y, width: frame.width - 64, height: 20).offsetBy(dx: 0, dy: frame.origin.y)
         (text as NSString).draw(in: textFrame, withAttributes: attributes)
     }
@@ -175,12 +193,12 @@ extension AttachmentFileView: Downloading {
             Api.sharedInstance.download(fileId: fileId!, completion: { (error) in
                 self.progressView.isHidden = true
                 guard error == nil else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                     return
                 }
                 self.downloadingState = DownloadingState.Downloaded
                 
-                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded")//, viewController: UIViewController())
+                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded")
                 
                 let notification = UILocalNotification()
                 notification.alertBody = "File was successfully downloaded"
@@ -208,5 +226,12 @@ extension AttachmentFileView: Downloading {
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
                                           object: nil, userInfo: ["fileId" : fileId])
         NotificationCenter.default.post(notification as Notification)
+    }
+    
+    @objc fileprivate func updateFileSize(notification: NSNotification) {
+        let fileId = notification.userInfo?["fileId"] as! String
+        guard fileId == self.file.identifier else { return }
+
+        setNeedsDisplay()
     }
 }

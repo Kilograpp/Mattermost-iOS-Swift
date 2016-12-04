@@ -24,7 +24,7 @@ protocol Delete: class {
 }
 
 protocol Search: class {
-    func search(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void)
+    func search(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>?, _ error: Error?) -> Void)
 }
 
 protocol Upload: class {
@@ -134,13 +134,18 @@ extension PostUtils: Delete {
 
 //MARK: Search
 extension PostUtils: Search {
-    func search(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>, _ error: Error?) -> Void) {
+    func search(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>?, _ error: Error?) -> Void) {
         Api.sharedInstance.searchPostsWithTerms(terms: terms, channel: channel) { (posts, error) in
-            if error?.code == -999 {
-                completion(Array(), error)
-            } else {
-                completion(posts!, error)
+            guard error == nil else {
+                if error?.code == -999 {
+                    completion(Array(), error)
+                } else {
+                    completion(nil, error)
+                }
+                return
             }
+            
+            completion(posts!, error)
         }
     }
 }
@@ -195,7 +200,7 @@ extension PostUtils: Upload {
     
     func cancelUpload(item: AssignedAttachmentViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-        self.upload_images_group.leave()
+      //  self.upload_images_group.leave()
         let index = self.assignedFiles.index(where: {$0.identifier == item.identifier})
         
         if (index != nil) {

@@ -18,6 +18,12 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var infoText: UITextView!
     var delgate : HeightForTextView?
     
+    @IBAction func deleteTextAction(_ sender: AnyObject) {
+        infoText.text = ""
+        if let iuDelegate = self.delgate {
+            iuDelegate.heightOfTextView(height: ChannelInfoCell.heightWithObject(infoText.text))
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,18 +33,27 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
+        setupCancelButtonHidding()
         // Configure the view for the selected state
     }
     
     func textViewDidChange(_ textView: UITextView){
+        setupCancelButtonHidding()
         if let iuDelegate = self.delgate {
             iuDelegate.heightOfTextView(height: ChannelInfoCell.heightWithObject(infoText.text))
         }
     }
     
+    func setupCancelButtonHidding(){
+        if ChannelInfoCell.heightWithObject(infoText.text) > 48.0{
+            cancelButton.isHidden = true
+        } else {
+            cancelButton.isHidden = false
+        }
+    }
+    
     static func heightWithObject(_ text: String) -> CGFloat{
-        let maxSize = CGSize(width: UIScreen.main.bounds.width - 59, height: CGFloat.greatestFiniteMagnitude)
+        let maxSize = CGSize(width: UIScreen.main.bounds.width - 69.0, height: CGFloat.greatestFiniteMagnitude)
         let size = text.boundingRect(with: maxSize,
                                      options: NSStringDrawingOptions.usesLineFragmentOrigin,
                                      attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14.0)],

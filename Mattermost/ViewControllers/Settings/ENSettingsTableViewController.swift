@@ -12,7 +12,6 @@ class ENSettingsTableViewController: UITableViewController {
 
 //MARK: Properties
     fileprivate var saveButton: UIBarButtonItem!
-    
     fileprivate var notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
     fileprivate let user = DataManager.sharedInstance.currentUser
     
@@ -112,7 +111,7 @@ extension ENSettingsTableViewController: Request {
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
             self.saveButton.isEnabled = false

@@ -20,11 +20,11 @@ private protocol Private {
 
 class FeedSearchAttachmentTableViewCell: FeedSearchTableViewCell {
 
-    //MARK: Properties
-    
+//MARK: Properties
     fileprivate let tableView = UITableView()
     fileprivate var attachments : List<File>!
-    
+
+//MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
           setupTableView()
@@ -33,7 +33,6 @@ class FeedSearchAttachmentTableViewCell: FeedSearchTableViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
 }
 
 
@@ -95,7 +94,7 @@ class FeedSearchAttachmentTableViewCell: FeedSearchTableViewCell {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.attachments[indexPath.row].isImage {
             let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
-            let imageHeight = imageWidth * 0.56 - 5
+            let imageHeight = imageWidth * 0.56 - 10
             return imageHeight
         } else {
             return 56

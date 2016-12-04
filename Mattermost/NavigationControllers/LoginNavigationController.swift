@@ -33,7 +33,4 @@ extension LoginNavigationController: Setup {
         navBar.backgroundColor = UIColor.clear
         navBar.topItem?.title = ""
     }
-    override var preferredStatusBarStyle : UIStatusBarStyle {
-        return .lightContent
-    }
 }

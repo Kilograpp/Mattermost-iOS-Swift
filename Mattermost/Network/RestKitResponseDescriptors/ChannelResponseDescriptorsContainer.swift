@@ -19,6 +19,11 @@ private protocol ChannelResponseDescriptors: class {
     static func createDirectChannelResponseDescriptor() -> RKResponseDescriptor
     static func leaveChannelResponseDescriptor() -> RKResponseDescriptor
     static func joinChannelResponseDescriptor() -> RKResponseDescriptor
+    static func addUserResponseDescriptor() -> RKResponseDescriptor
+    static func updateHeaderResponseDescriptor() -> RKResponseDescriptor
+    static func updatePurposeResponseDescriptor() -> RKResponseDescriptor
+    static func updateResponseDescriptor() -> RKResponseDescriptor
+    static func deleteResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class ChannelResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -88,6 +93,41 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
         return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
                                     method: .POST,
                                     pathPattern: ChannelPathPatternsContainer.joinChannelPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func addUserResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.emptyResponseMapping(),
+                                    method: .POST,
+                                    pathPattern: ChannelPathPatternsContainer.addUserPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func updateHeaderResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.emptyResponseMapping(),
+                                    method: .POST,
+                                    pathPattern: ChannelPathPatternsContainer.updateHeader(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func updatePurposeResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.emptyResponseMapping(),
+                                    method: .POST,
+                                    pathPattern: ChannelPathPatternsContainer.updatePurpose(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func updateResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.emptyResponseMapping(),
+                                    method: .POST,
+                                    pathPattern: ChannelPathPatternsContainer.update(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func deleteResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.emptyResponseMapping(),
+                                    method: .POST,
+                                    pathPattern: ChannelPathPatternsContainer.deleteChannelPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

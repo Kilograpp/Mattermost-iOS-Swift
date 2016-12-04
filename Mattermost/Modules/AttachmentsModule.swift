@@ -100,12 +100,12 @@ extension AttachmentsModule: PostAttachmentViewDelegate {
         guard self.items.count == 0 else { return }
         self.fileUploadingInProgress = false
         self.hideAttachmentsView()
-
     }
     
     func attachmentsViewWillAppear() {
         var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
-        oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
+        //oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
+        oldInset.top = PostAttachmentsView.attachmentsViewHeight
         self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
     }
     
@@ -135,7 +135,7 @@ extension AttachmentsModule: AttachmentsViewControls {
 
 extension AttachmentsModule: UserInteraction {
     fileprivate func show(error: Error) {
-        AlertManager.sharedManager.showErrorWithMessage(message: error.message!)//, viewController: self.viewController)
+        AlertManager.sharedManager.showErrorWithMessage(message: error.message!)
     }
 }
 

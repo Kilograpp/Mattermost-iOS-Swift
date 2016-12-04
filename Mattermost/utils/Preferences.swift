@@ -15,18 +15,22 @@ private protocol Interface: class {
     func predefinedLogin() -> String?
     func predefinedPassword() -> String?
     func predefinedServerUrl() -> String?
-    
+    func predefinedDeviceUUID() -> String?
 }
 
 enum PreferencesAttributes: String {
-    case siteName      = "siteName"
-    case serverUrl     = "serverUrl"
-    case currentUserId = "currentUserId"
-    case currentTeamId = "currentTeamId"
+    case siteName             = "siteName"
+    case serverUrl            = "serverUrl"
+    case currentUserId        = "currentUserId"
+    case currentTeamId        = "currentTeamId"
     case shouldCompressImages = "shouldCompressImages"
+    case deviceUUID           = "deviceUUID"
 }
 
+
 final class Preferences: NSObject, NSCoding {
+    
+//MARK: Properties
     static let sharedInstance = Preferences.loadInstanceFromUserDefaults() ?? Preferences()
     
     dynamic var serverUrl: String?
@@ -34,7 +38,9 @@ final class Preferences: NSObject, NSCoding {
     dynamic var currentTeamId: String?
     dynamic var siteName: String?
     dynamic var shouldCompressImages: NSNumber?
+    dynamic var deviceUUID: String?
     
+//MARK: LifeCycle
     fileprivate override init() {
         super.init()
         
@@ -81,15 +87,17 @@ final class Preferences: NSObject, NSCoding {
             }
         }
     }
-    
-
 }
 
+
+//MARK: PersistenceClass
 private protocol Persistence: class {
     func save()
     static func loadInstanceFromUserDefaults() -> Preferences?
 }
 
+
+//MARK: Persistence
 extension Preferences : Persistence {
     fileprivate static func loadInstanceFromUserDefaults() -> Preferences? {
         let defaults = UserDefaults.standard
@@ -105,16 +113,19 @@ extension Preferences : Persistence {
         defaults.synchronize()
     }
 }
+
+//MARK: Interface
 extension Preferences: Interface {
     func predefinedServerUrl() -> String? {
         return ProcessInfo.processInfo.environment["MM_SERVER_URL"]
     }
-    
     func predefinedLogin() -> String? {
         return ProcessInfo.processInfo.environment["MM_LOGIN"]
     }
-    
     func predefinedPassword() -> String? {
         return ProcessInfo.processInfo.environment["MM_PASSWORD"]
+    }
+    func predefinedDeviceUUID() -> String? {
+        return ProcessInfo.processInfo.environment["MM_DEVICE_UUID"]
     }
 }

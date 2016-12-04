@@ -10,12 +10,16 @@ import UIKit
 import WebImage
 import RealmSwift
 
+//CODEREVIEW: Нужно разнести методы по разным блокам, добавить билдер для ячеек и переоформить методы настройки и тапая ячейки
+//CODEREVIEW: В didSelect совсем что-то жесткое. Там запросы, до перехода к целевому контроллеру, что и позволяет до перехода тапнуть на ячейку еще раз
 class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
     var channel: Channel!
     var selectedInfoType: InfoType!
+    
+    var lastSelectedIndexPath: IndexPath? = nil
     
     //temp timer
     var statusesTimer: Timer?
@@ -28,6 +32,12 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         setupNavigationBar()
         setupChannelsObserver()
         setupNibs()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tableView.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -49,6 +59,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        //CODEREVIEW: А зачем такой свитч. Его можно оформить аккуратнее
         switch (section){
         case 0:
             return 1
@@ -63,6 +74,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    //В отдельный блок и добаить билдер
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell!
         switch indexPath.section{
@@ -111,7 +123,10 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             }
         case 3:
             let cell2 = tableView.dequeueReusableCell(withIdentifier: "labelChannelSettingsCell") as! LabelChannelSettingsCell
-            cell2.cellText.text = "Leave Channel"
+            let action = (channel.members.count > 1) ? "Leave" : "Delete"
+            let type = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group" : "Channel"
+            cell2.cellText.text = action + " " + type
+            
             cell = cell2
         default: break
         }
@@ -149,11 +164,16 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func setupNavigationBar() {
-        self.title = "Channel Info".localized
+        if channel.privateType == "P"{
+            self.title = "Group Info".localized
+        } else  {
+            self.title = "Channel Info".localized
+        }
         
         self.navigationItem.setLeftBarButton(UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backAction)), animated: true)
     }
     
+    //Имеет смысл передавать идентификатор, а не сам объект
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let backItem = UIBarButtonItem()
         backItem.title = ""
@@ -176,19 +196,36 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
             channelHeaderAndDescriptionViewController.type = selectedInfoType
         }
+        if segue.identifier == "showNameAndHandle"{
+            let channelNameAndHandleViewController = segue.destination as! ChannelNameAndHandleViewController
+            channelNameAndHandleViewController.channel = try!
+                Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let membersRowCount = (channel.members.count < 5) ? channel.members.count : 5
-        if (indexPath==IndexPath(row: 0, section: 2)){
+        
+        guard self.lastSelectedIndexPath == nil else { return }
+        self.lastSelectedIndexPath = indexPath
+        
+        if (indexPath==IndexPath(row: 0, section: 2)) {
             Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     guard (error == nil) else {
                         AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                        self.lastSelectedIndexPath = nil
                         return
                     }
-                    self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
+                    let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
+                    Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
+                        self.lastSelectedIndexPath = nil
+                        guard (error == nil) else {
+                            return
+                        }
+                        self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
+                    })
                 })
             })
         }
@@ -196,24 +233,28 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             let member = channel.members[indexPath.row-1]
             
             if member.identifier == Preferences.sharedInstance.currentUserId!{
+                self.lastSelectedIndexPath = nil
                 return
             }
             
             if member.directChannel() == nil{
                 Api.sharedInstance.createDirectChannelWith(member, completion: {_ in
                     ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
+                    self.lastSelectedIndexPath = nil
                     self.dismiss(animated: true, completion: nil)
                 })
             } else {
                 ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
+                self.lastSelectedIndexPath = nil
                 self.dismiss(animated: true, completion: nil)
             }
             
         }
         if (indexPath==IndexPath(row: membersRowCount+1, section: 2)){
             Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    self.lastSelectedIndexPath = nil
                     guard (error == nil) else {
                         AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
@@ -223,21 +264,20 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             })
         }
         if (indexPath==IndexPath(row: 0, section: 1) ||
-            indexPath==IndexPath(row: 1, section: 1) ||
-            indexPath==IndexPath(row: 0, section: 0)){
+            indexPath==IndexPath(row: 1, section: 1)){
+            
             switch indexPath {
             case IndexPath(row: 0, section: 1):
                 selectedInfoType = InfoType.header
             case IndexPath(row: 1, section: 1):
                 selectedInfoType = InfoType.purpose
-            case IndexPath(row: 0, section: 0):
-                selectedInfoType = InfoType.name
             default:
                 break
             }
             Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    self.lastSelectedIndexPath = nil
                     guard (error == nil) else {
                         AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                         return
@@ -247,8 +287,13 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             })
         }
         if (indexPath==IndexPath(row: 0, section: 3)){
+            if self.channel.members.count == 1 {
+                deleteChannel()
+                return
+            }
+            
             Api.sharedInstance.leaveChannel(channel, completion: { (error) in
-                guard (error == nil) else { return }
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 self.dismiss(animated: true, completion: {_ in
                     Api.sharedInstance.loadChannels(with: { (error) in
                         guard (error == nil) else { return }
@@ -256,6 +301,20 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 })
             })
         }
+        if (indexPath==IndexPath(row: 0, section: 0)){
+            Api.sharedInstance.loadChannels(with: { (error) in
+                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
+                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    self.lastSelectedIndexPath = nil
+                    guard (error == nil) else {
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                        return
+                    }
+                    self.performSegue(withIdentifier: "showNameAndHandle", sender: nil)
+                })
+            })
+        }
+        
     }
     
     func backAction(){
@@ -306,3 +365,33 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
 }
+
+
+fileprivate protocol Request: class {
+    func deleteChannel()
+}
+
+extension ChannelSettingsViewController: Request {
+    func deleteChannel() {
+        Api.sharedInstance.delete(channel: self.channel) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                return
+            }
+            
+            let deletedCannel = self.channel
+            let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
+            leftMenu.configureInitialSelectedChannel()
+            self.dismiss(animated: true, completion: {
+                let realm = RealmUtils.realmForCurrentThread()
+                try! realm.write {
+                    realm.delete(deletedCannel!)
+                }
+                leftMenu.reloadChannels()
+            })
+        }
+    }
+}
+
+
+

@@ -8,10 +8,9 @@
 
 import UIKit
 
-enum InfoType{
-    case header
-    case purpose
-    case name
+enum InfoType: String{
+    case header = "header"
+    case purpose = "purpose"
 }
 
 class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, HeightForTextView  {
@@ -54,18 +53,10 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: ChannelInfoCell!
-        cell = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
-        cell.infoText.text = channel.header
-        cell.delgate = self
-        
-        return cell
+        return setupCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        /*if textViewHeight <= 30.0{
-         (tableView.cellForRow(at: indexPath) as! ChannelInfoCell).cancelButton
-         }*/
         return textViewHeight + 10
     }
     
@@ -74,10 +65,39 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     }
     
     func setupNavigationBar() {
-        self.title = "Channel info".localized
+        self.title = "Edit " + type.rawValue
         
-        let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: nil)
+        let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveButtonAction))
         self.navigationItem.rightBarButtonItem = saveButton
+        navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+    
+    func saveButtonAction(){
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        switch self.type!{
+        case .header:
+            Api.sharedInstance.updateHeader((tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelInfoCell).infoText.text, channel: channel, completion: { (error) in
+                guard (error == nil) else { return }
+                AlertManager.sharedManager.showSuccesWithMessage(message: "Header was updated".localized)
+                Api.sharedInstance.loadChannels(with: { (error) in
+                    guard (error == nil) else { return }
+                    Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                        guard (error == nil) else { return }
+                    })
+                })
+            })
+        case .purpose:
+            Api.sharedInstance.updatePurpose((tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelInfoCell).infoText.text, channel: channel, completion: { (error) in
+                guard (error == nil) else { return }
+                AlertManager.sharedManager.showSuccesWithMessage(message: "Purpose was updated".localized)
+                Api.sharedInstance.loadChannels(with: { (error) in
+                    guard (error == nil) else { return }
+                    Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                        guard (error == nil) else { return }
+                    })
+                })
+            })
+        }
     }
     
     func heightOfTextView(height: CGFloat) {
@@ -88,9 +108,36 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
         }
         self.tableView.beginUpdates()
         self.tableView.endUpdates()
+        navigationItem.rightBarButtonItem?.isEnabled = true
+    }
+    
+    func setupCell() -> UITableViewCell{
+        var cell: ChannelInfoCell!
+        cell = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
+        cell.delgate = self
+        switch self.type!{
+        case .header:
+            cell.infoText.text = channel.header
+        case .purpose:
+            if let purpose = channel.purpose{
+                cell.infoText.text = purpose
+            } else {
+                cell.infoText.text = ""
+            }
+        }
+        return cell
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        textViewHeight = ChannelInfoCell.heightWithObject(channel.header!)
+        switch self.type!{
+        case .header:
+            textViewHeight = ChannelInfoCell.heightWithObject(channel.header!)
+        case .purpose:
+            if let purpose = channel.purpose{
+                textViewHeight = ChannelInfoCell.heightWithObject(purpose)
+            } else {
+                textViewHeight = ChannelInfoCell.heightWithObject("")
+            }
+        }
     }
 }

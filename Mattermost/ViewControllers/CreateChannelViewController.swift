@@ -75,7 +75,7 @@ extension CreateChannelViewController: Setup {
     }
     
     func setupNavigationBar() {
-        self.title = "New Channel"
+        self.title = "New group"
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
@@ -150,13 +150,13 @@ extension CreateChannelViewController: Request {
         self.createButton.isEnabled = false
         Api.sharedInstance.createChannel(self.privateType, name: name!, header: header!, purpose: purpose!) { (channel, error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 self.createButton.isEnabled = true
                 return
             }
             
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was successfully created")//, viewController: self)
+            AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was successfully created")
             self.returnToNew(channel: channel!)
         }
     }
