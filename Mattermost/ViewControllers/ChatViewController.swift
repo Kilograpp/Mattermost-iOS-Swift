@@ -440,8 +440,8 @@ extension ChatViewController: Action {
     }
     
     func didTapImageAction(notification: NSNotification) {
-        let postId = notification.userInfo?["postId"] as! String
-        openPreviewWith(postId: postId)
+        let postLocalId = notification.userInfo?["postLocalId"] as! String
+        openPreviewWith(postLocalId: postLocalId)
     }
 }
 
@@ -959,8 +959,9 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
 
 //MARK: ImagesPreviewViewController
 extension ChatViewController {
-    func openPreviewWith(postId: String) {
+    func openPreviewWith(postLocalId: String) {
         let gallery = ImagesPreviewViewController(delegate: self)
+        gallery.configureWith(postLocalId: postLocalId)
         present(gallery, animated: true, completion: nil)
     }
 }
@@ -968,7 +969,7 @@ extension ChatViewController {
 
 // MARK: ImagesPreviewViewControllerDelegate
 extension ChatViewController: ImagesPreviewViewControllerDelegate {
-    func galleryDidTapToClose(gallery: ImagesPreviewViewController) {
+    func imagesPreviewDidSwipeDownToClose(imagesPreview: ImagesPreviewViewController) {
         dismiss(animated: true, completion: nil)
     }
 }

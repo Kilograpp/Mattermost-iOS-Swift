@@ -8,15 +8,15 @@
 
 import Foundation
 import UIKit
-
-
+import RealmSwift
+import WebImage
 
 @objc protocol ImagesPreviewViewControllerDelegate {
-    func galleryDidTapToClose(gallery: ImagesPreviewViewController)
+    func imagesPreviewDidSwipeDownToClose(imagesPreview: ImagesPreviewViewController)
 }
 
 private protocol Configuration: class {
-    func configureWith(post: Post)
+    func configureWith(postLocalId: String)
 }
 
 
@@ -28,6 +28,7 @@ final class ImagesPreviewViewController: UIViewController {
     fileprivate var flowLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
     
     fileprivate var post: Post? = nil
+    fileprivate var imageFiles: Results<File>?
     public weak var delegate: ImagesPreviewViewControllerDelegate?
     
 //MARK: LifeCycle
@@ -59,8 +60,10 @@ final class ImagesPreviewViewController: UIViewController {
 
 //MARK: Configuration
 extension ImagesPreviewViewController: Configuration {
-    func configureWith(post: Post) {
-        self.post = post
+    func configureWith(postLocalId: String) {
+        self.post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
+
+        self.imageFiles = self.post?.files.filter(NSPredicate(format: "isImage == true"))
     }
 }
 
@@ -71,7 +74,7 @@ fileprivate protocol Setup: class {
 }
 
 fileprivate protocol Action: class {
-    func singleTapAction(recognizer: UITapGestureRecognizer)
+    func swipeDownAction(recognizer: UITapGestureRecognizer)
 }
 
 fileprivate protocol ImageOperation: class {
@@ -95,7 +98,7 @@ extension ImagesPreviewViewController {
         self.titleLabel.frame = CGRect(x: 0, y: 0, width: 40, height: 30)
         self.titleLabel.backgroundColor = UIColor.clear
         self.titleLabel.textColor = ColorBucket.blackColor
-        self.titleLabel.font = FontBucket.normalTitleFont
+        self.titleLabel.font = FontBucket.highlighTedTitleFont
         self.titleLabel.text = "1/2"
         self.titleLabel.textAlignment = .center
         
@@ -115,6 +118,7 @@ extension ImagesPreviewViewController {
         
         // Set up collection view
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
+        collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ImagePreviewTableViewCell.self, forCellWithReuseIdentifier: "ImagePreviewTableViewCell")
         collectionView.dataSource = self
@@ -143,22 +147,21 @@ extension ImagesPreviewViewController {
     }
     
     func setupGestureRecognizer() {
-        let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapAction(recognizer:)))
-        singleTap.numberOfTapsRequired = 1
-        singleTap.delegate = self
-        imageCollectionView.addGestureRecognizer(singleTap)
+        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeDownAction(recognizer:)))
+        swipeGestureRecognizer.direction = .down
+        self.imageCollectionView.addGestureRecognizer(swipeGestureRecognizer)
     }
 }
 
 
 //MARK: Action
 extension ImagesPreviewViewController {
-    func singleTapAction(recognizer: UITapGestureRecognizer) {
-        delegate?.galleryDidTapToClose(gallery: self)
+    func swipeDownAction(recognizer: UITapGestureRecognizer) {
+        self.delegate?.imagesPreviewDidSwipeDownToClose(imagesPreview: self)
     }
     
     func backAction() {
-        delegate?.galleryDidTapToClose(gallery: self)
+        self.delegate?.imagesPreviewDidSwipeDownToClose(imagesPreview: self)
     }
 }
 
@@ -167,15 +170,15 @@ extension ImagesPreviewViewController {
 extension ImagesPreviewViewController {
     func reload(imageIndexes:Int...) {
         if imageIndexes.isEmpty {
-            imageCollectionView.reloadData()
+            self.imageCollectionView.reloadData()
         } else {
             let indexPaths: [IndexPath] = imageIndexes.map({IndexPath(item: $0, section: 0)})
-            imageCollectionView.reloadItems(at: indexPaths)
+            self.imageCollectionView.reloadItems(at: indexPaths)
         }
     }
     
     func scrollToImage(withIndex: Int, animated: Bool = false) {
-        imageCollectionView.scrollToItem(at: IndexPath(item: withIndex, section: 0), at: .centeredHorizontally, animated: animated)
+        self.imageCollectionView.scrollToItem(at: IndexPath(item: withIndex, section: 0), at: .centeredHorizontally, animated: animated)
     }
 }
 
@@ -187,13 +190,16 @@ extension ImagesPreviewViewController: UICollectionViewDataSource {
     }
 
     public func collectionView(_ imageCollectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        return (self.imageFiles?.count)!
     }
 
     public func collectionView(_ imageCollectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = imageCollectionView.dequeueReusableCell(withReuseIdentifier: "ImagePreviewTableViewCell", for: indexPath) as! ImagePreviewTableViewCell
-        let name: String = "judo_" + String(indexPath.row + 1) + ".jpg"
-        cell.image = UIImage(named: name)
+        let downloadUrl = self.imageFiles?[indexPath.row].thumbURL()  ///self.file.thumbURL()!
+        if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl?.absoluteString) {
+            cell.image = image
+        }
+        
         return cell
     }
 }
@@ -206,6 +212,8 @@ extension ImagesPreviewViewController: UICollectionViewDelegate {
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // If the scroll animation ended, update the page control to reflect the current page we are on
+        let currentPage = Int(scrollView.contentOffset.x / scrollView.frame.width + 1)
+        self.titleLabel.text = String(currentPage) + "/" + String((self.imageFiles?.count)!)
     }
 
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

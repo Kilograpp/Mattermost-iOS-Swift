@@ -247,9 +247,9 @@ extension AttachmentImageCell: Updating {
 extension AttachmentImageCell: Action {
     @objc fileprivate func tapAction() {
        // print(self.file.post?.identifier)
-        let postId = self.file.post?.identifier
+        let postLocalId = self.file.post?.localIdentifier
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.FileImageDidTapNotification),
-                                        object: nil, userInfo: ["postId" : postId])
+                                        object: nil, userInfo: ["postLocalId" : postLocalId])
         NotificationCenter.default.post(notification as Notification)
         
         /*switch self.downloadingState {

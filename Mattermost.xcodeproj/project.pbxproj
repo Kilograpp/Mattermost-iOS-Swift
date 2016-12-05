@@ -19,8 +19,6 @@
 		449663371DED099B0007A954 /* ENSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449663361DED099B0007A954 /* ENSettingsTableViewController.swift */; };
 		44B121601DF4B71F0094AF33 /* ImagesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B1215F1DF4B71F0094AF33 /* ImagesPreviewViewController.swift */; };
 		44B121621DF4B72F0094AF33 /* ImagePreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B121611DF4B72F0094AF33 /* ImagePreviewTableViewCell.swift */; };
-		44B121651DF4BE140094AF33 /* judo_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 44B121631DF4BE140094AF33 /* judo_1.jpg */; };
-		44B121661DF4BE140094AF33 /* judo_2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 44B121641DF4BE140094AF33 /* judo_2.jpg */; };
 		44E3A94D1DE8D9E2001CD849 /* UFSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */; };
 		44E3A94F1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */; };
 		4B0948241DA7ECBE001BC645 /* PostFileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */; };
@@ -300,8 +298,6 @@
 		449663361DED099B0007A954 /* ENSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSettingsTableViewController.swift; sourceTree = "<group>"; };
 		44B1215F1DF4B71F0094AF33 /* ImagesPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesPreviewViewController.swift; sourceTree = "<group>"; };
 		44B121611DF4B72F0094AF33 /* ImagePreviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePreviewTableViewCell.swift; sourceTree = "<group>"; };
-		44B121631DF4BE140094AF33 /* judo_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = judo_1.jpg; sourceTree = "<group>"; };
-		44B121641DF4BE140094AF33 /* judo_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = judo_2.jpg; sourceTree = "<group>"; };
 		44E3A94C1DE8D9E2001CD849 /* UFSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UFSettingsTableViewController.swift; sourceTree = "<group>"; };
 		44E3A94E1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/UserRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
 		4B0948231DA7ECBE001BC645 /* PostFileViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostFileViewCell.swift; path = PostAttachmentsViewCell/PostFileViewCell.swift; sourceTree = "<group>"; };
@@ -952,8 +948,6 @@
 				D62FEB8B1D4F2A9C00390EBC /* LeftMenuViewController.swift */,
 				D62FEB8D1D4F2AA400390EBC /* LoginViewController.swift */,
 				8644A4751DED8658009280EB /* AddMembersViewController.swift */,
-				44B121631DF4BE140094AF33 /* judo_1.jpg */,
-				44B121641DF4BE140094AF33 /* judo_2.jpg */,
 				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
 				8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */,
 				8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */,
@@ -1367,7 +1361,6 @@
 				8644A4801DED86C4009280EB /* ChannelInfoCell.xib in Resources */,
 				8BCDDC861DE6E701006D83BC /* LabelChannelSettingsCell.xib in Resources */,
 				D6330AB81D494BF9006D84F4 /* SF-UI-Text-Semibold.otf in Resources */,
-				44B121661DF4BE140094AF33 /* judo_2.jpg in Resources */,
 				D6330AB51D494BF9006D84F4 /* SF-UI-Text-LightItalic.otf in Resources */,
 				9B8227DFF08947EACC7C6882 /* LaunchScreen.storyboard in Resources */,
 				8644A4841DED86D1009280EB /* MemberInAdditingCell.xib in Resources */,
@@ -1386,7 +1379,6 @@
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
 				860755B01DEE817C00438B09 /* ChannelNameAndHandleCell.xib in Resources */,
 				8BCDDC741DE6E678006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
-				44B121651DF4BE140094AF33 /* judo_1.jpg in Resources */,
 				8B3CB3461DD267B80078DE25 /* More.storyboard in Resources */,
 				8BCDDC821DE6E701006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
 				8BCDDC841DE6E701006D83BC /* InformationChannelSettingsCell.xib in Resources */,

@@ -18,6 +18,7 @@ private protocol Inteface {
     func hasParentPost() -> Bool
     func parentPost() -> Post?
     func permalink() -> String
+    
 }
 
 private protocol Delegate {
