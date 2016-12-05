@@ -99,13 +99,16 @@ extension ImagesPreviewViewController {
         self.titleLabel.backgroundColor = UIColor.clear
         self.titleLabel.textColor = ColorBucket.blackColor
         self.titleLabel.font = FontBucket.highlighTedTitleFont
-        self.titleLabel.text = ""
+        self.titleLabel.text = "1/" + String((self.imageFiles?.count)!)
         self.titleLabel.textAlignment = .center
         
         let titleBar = UIBarButtonItem(customView: self.titleLabel)
         barItems.append(titleBar)
         
         barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+        
+        barItems.append(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveImageAction)))
+        
         toolbar.items = barItems
         
         self.view.addSubview(toolbar)
@@ -130,7 +133,7 @@ extension ImagesPreviewViewController {
         let leadingLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .leading, relatedBy: .equal,
                                                          toItem: self.view, attribute: .leading, multiplier: 1, constant: 0)
         let topLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .top, relatedBy: .equal,
-                                                     toItem: self.view, attribute: .top, multiplier: 1, constant: 0)
+                                                     toItem: self.view, attribute: .top, multiplier: 1, constant: 64)
         let trailingLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .trailing, relatedBy: .equal,
                                                           toItem: self.view, attribute: .trailing, multiplier: 1, constant: 0)
         let bottomLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .bottom, relatedBy: .equal,
@@ -163,6 +166,10 @@ extension ImagesPreviewViewController {
     func backAction() {
         self.delegate?.imagesPreviewDidSwipeDownToClose(imagesPreview: self)
     }
+    
+    func saveImageAction() {
+        saveDisplayedImage()
+    }
 }
 
 
@@ -179,6 +186,25 @@ extension ImagesPreviewViewController {
     
     func scrollToImage(withIndex: Int, animated: Bool = false) {
         self.imageCollectionView.scrollToItem(at: IndexPath(item: withIndex, section: 0), at: .centeredHorizontally, animated: animated)
+    }
+    
+    func saveDisplayedImage() {
+        let row = Int(self.imageCollectionView.contentOffset.x / self.imageCollectionView.frame.width)
+        let url = self.imageFiles?[row].downloadURL()
+        let image = SDImageCache.shared().imageFromMemoryCache(forKey: url?.absoluteString)
+        
+        UIImageWriteToSavedPhotosAlbum(image!, self,
+                                       #selector(image(_:didFinishSavingWithError:contextInfo:)),
+                                       nil);
+    }
+    
+    func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+        guard error == nil else {
+            AlertManager.sharedManager.showErrorWithMessage(message: (error?.description)!)
+            return
+        }
+        
+        AlertManager.sharedManager.showSuccesWithMessage(message: "Image was successfully saved to gallery")
     }
 }
 
@@ -199,6 +225,7 @@ extension ImagesPreviewViewController: UICollectionViewDataSource {
         let url = self.imageFiles?[indexPath.row].downloadURL()
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: url?.absoluteString) {
             cell.image = image
+            //cell.showActivityIndicator()
         } else {
             cell.showActivityIndicator()
             let thumbUrl = self.imageFiles?[indexPath.row].thumbURL()
@@ -222,42 +249,6 @@ extension ImagesPreviewViewController: UICollectionViewDataSource {
         return cell
     }
 }
-
-
-/*
- 
- self.fileImageView.image = UIImage(named: "image_back")
- let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
- [weak self] (image, error, cacheType, isFinished, imageUrl) in
- DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
- // Handle unpredictable errors
- guard image != nil else { return }
- 
- var finalImage: UIImage = image!
- if cacheType == .none {
- var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
- let imageHeight = imageWidth * 0.56 - 5
- imageWidth = imageHeight / (image?.size.height)! * (image?.size.width)!
- 
- finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: imageWidth, height: imageHeight), radius: 3)
- SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
- }
- 
- // Ensure the post is still the same
- guard self?.fileName == fileName else { return }
- 
- DispatchQueue.main.sync(execute: {
- self?.fileImageView.image = finalImage
- })
- }
- }
- 
- SDWebImageManager.shared().downloadImage(with: downloadUrl as URL!,
- options: [ .handleCookies, .retryFailed ] ,
- progress: nil,
- completed: imageDownloadCompletionHandler)
- 
- */
 
 
 //MARK: UICollectionViewDelegate
@@ -288,4 +279,3 @@ extension ImagesPreviewViewController: UIGestureRecognizerDelegate {
             gestureRecognizer.view == imageCollectionView
     }
 }
-
