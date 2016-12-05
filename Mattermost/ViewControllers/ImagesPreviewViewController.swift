@@ -99,7 +99,7 @@ extension ImagesPreviewViewController {
         self.titleLabel.backgroundColor = UIColor.clear
         self.titleLabel.textColor = ColorBucket.blackColor
         self.titleLabel.font = FontBucket.highlighTedTitleFont
-        self.titleLabel.text = "1/2"
+        self.titleLabel.text = ""
         self.titleLabel.textAlignment = .center
         
         let titleBar = UIBarButtonItem(customView: self.titleLabel)
@@ -195,14 +195,69 @@ extension ImagesPreviewViewController: UICollectionViewDataSource {
 
     public func collectionView(_ imageCollectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = imageCollectionView.dequeueReusableCell(withReuseIdentifier: "ImagePreviewTableViewCell", for: indexPath) as! ImagePreviewTableViewCell
-        let downloadUrl = self.imageFiles?[indexPath.row].thumbURL()  ///self.file.thumbURL()!
-        if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl?.absoluteString) {
+        
+        let url = self.imageFiles?[indexPath.row].downloadURL()
+        if let image = SDImageCache.shared().imageFromMemoryCache(forKey: url?.absoluteString) {
             cell.image = image
+        } else {
+            cell.showActivityIndicator()
+            let thumbUrl = self.imageFiles?[indexPath.row].thumbURL()
+            cell.image = SDImageCache.shared().imageFromMemoryCache(forKey: thumbUrl?.absoluteString)
+            
+            let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
+                (image, error, cacheType, isFinished, imageUrl) in
+                cell.hideActivityIndicator()
+                guard image != nil else { return }
+                
+                cell.image = image
+                SDImageCache.shared().store(image, forKey: url?.absoluteString)
+            }
+            
+            SDWebImageManager.shared().downloadImage(with: url as URL!,
+                                                     options: [ .handleCookies, .retryFailed ] ,
+                                                     progress: nil,
+                                                     completed: imageDownloadCompletionHandler)
         }
         
         return cell
     }
 }
+
+
+/*
+ 
+ self.fileImageView.image = UIImage(named: "image_back")
+ let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
+ [weak self] (image, error, cacheType, isFinished, imageUrl) in
+ DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+ // Handle unpredictable errors
+ guard image != nil else { return }
+ 
+ var finalImage: UIImage = image!
+ if cacheType == .none {
+ var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+ let imageHeight = imageWidth * 0.56 - 5
+ imageWidth = imageHeight / (image?.size.height)! * (image?.size.width)!
+ 
+ finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: imageWidth, height: imageHeight), radius: 3)
+ SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
+ }
+ 
+ // Ensure the post is still the same
+ guard self?.fileName == fileName else { return }
+ 
+ DispatchQueue.main.sync(execute: {
+ self?.fileImageView.image = finalImage
+ })
+ }
+ }
+ 
+ SDWebImageManager.shared().downloadImage(with: downloadUrl as URL!,
+ options: [ .handleCookies, .retryFailed ] ,
+ progress: nil,
+ completed: imageDownloadCompletionHandler)
+ 
+ */
 
 
 //MARK: UICollectionViewDelegate

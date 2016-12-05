@@ -10,14 +10,17 @@
 private protocol Configuration: class {
     func configureForNewImage()
     func configureZoomScale()
+    func showActivityIndicator()
+    func hideActivityIndicator()
 }
 
 
 public class ImagePreviewTableViewCell: UICollectionViewCell {
 
 //MARK: Properties
-    var scrollView: UIScrollView// = UIScrollView()
-    let imageView: UIImageView// = UIImageView()
+    var scrollView: UIScrollView
+    let imageView: UIImageView
+    var activityIndicatorView: UIActivityIndicatorView
     var image: UIImage? {
         didSet {
             configureForNewImage()
@@ -26,8 +29,9 @@ public class ImagePreviewTableViewCell: UICollectionViewCell {
 
 //MARK: LifeCycle
     override init(frame: CGRect) {
-        imageView = UIImageView()
-        scrollView = UIScrollView(frame: frame)
+        self.imageView = UIImageView()
+        self.scrollView = UIScrollView(frame: frame)
+        self.activityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 30, y: 70, width: 20, height: 20))
         
         super.init(frame: frame)
         
@@ -64,6 +68,16 @@ extension ImagePreviewTableViewCell: Configuration {
         self.scrollView.minimumZoomScale = min(widthScale, heightScale)
         self.scrollView.setZoomScale(self.scrollView.minimumZoomScale, animated: false)
     }
+    
+    func showActivityIndicator() {
+        self.activityIndicatorView.startAnimating()
+        self.activityIndicatorView.isHidden = false
+    }
+    
+    func hideActivityIndicator() {
+        self.activityIndicatorView.stopAnimating()
+        self.activityIndicatorView.isHidden = true
+    }
 }
 
 
@@ -85,6 +99,7 @@ extension ImagePreviewTableViewCell: Setup {
         setupImageView()
         scrollView.delegate = self
         setupGestureRecognizers()
+       // setupActivityIndicatorView()
     }
     
     func setupScrollView() {
@@ -122,6 +137,17 @@ extension ImagePreviewTableViewCell: Setup {
         
         self.scrollView.addSubview(self.imageView)
         self.scrollView.addConstraints(imageViewConstraints)
+    }
+    
+    func setupActivityIndicatorView() {
+        
+        
+        
+        self.activityIndicatorView.activityIndicatorViewStyle = .gray
+        self.activityIndicatorView.hidesWhenStopped = true
+        //self.activityIndicatorView.isHidden = true
+        self.activityIndicatorView.startAnimating()
+        self.contentView.addSubview(self.activityIndicatorView)
     }
     
     func setupGestureRecognizers() {
