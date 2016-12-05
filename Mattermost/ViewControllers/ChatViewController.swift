@@ -93,7 +93,6 @@ private protocol Request {
 
 //MARK: LifeСycle
 extension ChatViewController {
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -115,6 +114,9 @@ extension ChatViewController {
         }
         NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didTapImageAction),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification),
                                                object: nil)
     }
     
@@ -435,6 +437,11 @@ extension ChatViewController: Action {
     
     func resendAction(_ post:Post) {
         PostUtils.sharedInstance.resend(post: post) { _ in }
+    }
+    
+    func didTapImageAction(notification: NSNotification) {
+        let postId = notification.userInfo?["postId"] as! String
+        openPreviewWith(postId: postId)
     }
 }
 
@@ -949,14 +956,17 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
     }
 }
 
+
+//MARK: ImagesPreviewViewController
 extension ChatViewController {
-    func tempGallery() {
+    func openPreviewWith(postId: String) {
         let gallery = ImagesPreviewViewController(delegate: self)
         present(gallery, animated: true, completion: nil)
     }
 }
 
-// MARK: SwiftPhotoGalleryDelegate
+
+// MARK: ImagesPreviewViewControllerDelegate
 extension ChatViewController: ImagesPreviewViewControllerDelegate {
     func galleryDidTapToClose(gallery: ImagesPreviewViewController) {
         dismiss(animated: true, completion: nil)

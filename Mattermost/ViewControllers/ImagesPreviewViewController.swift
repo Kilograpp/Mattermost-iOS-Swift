@@ -23,6 +23,7 @@ private protocol Configuration: class {
 final class ImagesPreviewViewController: UIViewController {
     
 //MARK: Properties
+    fileprivate let titleLabel = UILabel()
     public lazy var imageCollectionView: UICollectionView = self.setupCollectionView()
     fileprivate var flowLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
     
@@ -49,7 +50,9 @@ final class ImagesPreviewViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = UIColor.black
+        setupToolbar()
+        
+        self.view.backgroundColor = ColorBucket.whiteColor
         setupGestureRecognizer()
     }
 }
@@ -79,6 +82,32 @@ fileprivate protocol ImageOperation: class {
 
 //MARK: Setup
 extension ImagesPreviewViewController {
+    func setupToolbar() {
+        let width = UIScreen.main.bounds.width
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: width, height: 64))
+        
+        var barItems = Array<UIBarButtonItem>()
+        
+        barItems.append(UIBarButtonItem(image: UIImage(named: "navbar_back_icon"), style: .done,
+                                              target: self, action: #selector(backAction)))
+        barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+        
+        self.titleLabel.frame = CGRect(x: 0, y: 0, width: 40, height: 30)
+        self.titleLabel.backgroundColor = UIColor.clear
+        self.titleLabel.textColor = ColorBucket.blackColor
+        self.titleLabel.font = FontBucket.normalTitleFont
+        self.titleLabel.text = "1/2"
+        self.titleLabel.textAlignment = .center
+        
+        let titleBar = UIBarButtonItem(customView: self.titleLabel)
+        barItems.append(titleBar)
+        
+        barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+        toolbar.items = barItems
+        
+        self.view.addSubview(toolbar)
+    }
+    
     func setupCollectionView() -> UICollectionView {
         flowLayout.scrollDirection = UICollectionViewScrollDirection.horizontal
         flowLayout.minimumInteritemSpacing = 0
@@ -125,6 +154,10 @@ extension ImagesPreviewViewController {
 //MARK: Action
 extension ImagesPreviewViewController {
     func singleTapAction(recognizer: UITapGestureRecognizer) {
+        delegate?.galleryDidTapToClose(gallery: self)
+    }
+    
+    func backAction() {
         delegate?.galleryDidTapToClose(gallery: self)
     }
 }

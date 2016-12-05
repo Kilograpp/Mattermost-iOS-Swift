@@ -50,6 +50,7 @@ struct Constants {
         static let DocumentInteractionNotification = "DocumentInteractionNotification"
         static let ReloadFileSizeNotification      = "ReloadFileSizeNotification"
         static let DidReceiveRemoteNotification    = "DidReceiveRemoteNotification"
+        static let FileImageDidTapNotification     = "FileImageDidTapNotification"
     }
     
     struct UI {
