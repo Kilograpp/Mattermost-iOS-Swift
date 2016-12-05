@@ -246,7 +246,13 @@ extension AttachmentImageCell: Updating {
 //MARK: Action
 extension AttachmentImageCell: Action {
     @objc fileprivate func tapAction() {
-        switch self.downloadingState {
+       // print(self.file.post?.identifier)
+        let postLocalId = self.file.post?.localIdentifier
+        let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.FileImageDidTapNotification),
+                                        object: nil, userInfo: ["postLocalId" : postLocalId])
+        NotificationCenter.default.post(notification as Notification)
+        
+        /*switch self.downloadingState {
         case DownloadingState.NotDownloaded:
             startDownloadingFile()
         case DownloadingState.Downloading:
@@ -255,7 +261,7 @@ extension AttachmentImageCell: Action {
             openDownloadedFile()
         default:
             break
-        }
+        }*/
     }
 }
 

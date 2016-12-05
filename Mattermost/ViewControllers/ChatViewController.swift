@@ -93,7 +93,6 @@ private protocol Request {
 
 //MARK: LifeСycle
 extension ChatViewController {
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -115,6 +114,9 @@ extension ChatViewController {
         }
         NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didTapImageAction),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification),
                                                object: nil)
     }
     
@@ -374,6 +376,7 @@ extension ChatViewController : Private {
 //MARK: Action
 extension ChatViewController: Action {
     @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
+       // tempGallery()
         let state = (self.menuContainerViewController.menuState == MFSideMenuStateLeftMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateLeftMenuOpen
         self.menuContainerViewController.setMenuState(state, completion: nil)
         self.dismissKeyboard(true)
@@ -434,6 +437,11 @@ extension ChatViewController: Action {
     
     func resendAction(_ post:Post) {
         PostUtils.sharedInstance.resend(post: post) { _ in }
+    }
+    
+    func didTapImageAction(notification: NSNotification) {
+        let postLocalId = notification.userInfo?["postLocalId"] as! String
+        openPreviewWith(postLocalId: postLocalId)
     }
 }
 
@@ -945,5 +953,23 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
     
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
+    }
+}
+
+
+//MARK: ImagesPreviewViewController
+extension ChatViewController {
+    func openPreviewWith(postLocalId: String) {
+        let gallery = ImagesPreviewViewController(delegate: self)
+        gallery.configureWith(postLocalId: postLocalId)
+        present(gallery, animated: true, completion: nil)
+    }
+}
+
+
+// MARK: ImagesPreviewViewControllerDelegate
+extension ChatViewController: ImagesPreviewViewControllerDelegate {
+    func imagesPreviewDidSwipeDownToClose(imagesPreview: ImagesPreviewViewController) {
+        dismiss(animated: true, completion: nil)
     }
 }
