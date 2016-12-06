@@ -20,6 +20,7 @@ fileprivate let NullString = "(null)"
 
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
+    func heightWith(file: File) -> CGFloat
 }
 
 final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
@@ -32,12 +33,12 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     fileprivate let fileImageView = UIImageView()
     fileprivate let fileNameLabel = UILabel()
     
-    fileprivate let downloadIconImageView = UIImageView()
-    fileprivate let progressView = MRCircularProgressView()
+    //fileprivate let downloadIconImageView = UIImageView()
+    //fileprivate let progressView = MRCircularProgressView()
     
-    var downloadingState: Int = DownloadingState.NotDownloaded {
+ /*   var downloadingState: Int = DownloadingState.NotDownloaded {
         didSet { updateIconForCurrentState() }
-    }
+    }*/
     
 //MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -59,7 +60,7 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
         let width = self.bounds.width
         
         self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.height, width: width, height: height)
-        self.downloadIconImageView.center = self.fileImageView.center
+       // self.downloadIconImageView.center = self.fileImageView.center
         super.layoutSubviews()
     }
     
@@ -75,7 +76,18 @@ extension AttachmentImageCell: AttachmentImageCellConfiguration {
         self.file = file
         configureImageView()
         configureLabel()
-        configureDownloadingState()
+    //    configureDownloadingState()
+    }
+    
+    func heightWith(file: File) -> CGFloat {
+        //if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
+            //return ima
+        //}
+        //let width = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+        //let scale = width / finalImage.size.width
+        //let height = finalImage.size.height * scale
+        
+        return 0
     }
 }
 
@@ -84,14 +96,14 @@ fileprivate protocol Setup: class {
     func initialSetup()
     func setupImageView()
     func setupLabel()
-    func setupDownloadIcon()
-    func setupProgressView()
+    //func setupDownloadIcon()
+    //func setupProgressView()
 }
 
 fileprivate protocol Updating: class {
     func configureLabel()
     func configureImageView()
-    func updateIconForCurrentState()
+    //func updateIconForCurrentState()
     func computeFileName()
 }
 
@@ -99,11 +111,11 @@ fileprivate protocol Action: class {
     func tapAction()
 }
 
-fileprivate protocol Downloading: class {
+/*fileprivate protocol Downloading: class {
     func startDownloadingFile()
     func stopDownloadingFile()
     func openDownloadedFile()
-}
+}*/
 
 
 //MARK: Setup
@@ -111,8 +123,8 @@ extension AttachmentImageCell: Setup {
     func initialSetup() {
         setupImageView()
         setupLabel()
-        setupDownloadIcon()
-        setupProgressView()
+//        setupDownloadIcon()
+//        setupProgressView()
     }
     
     fileprivate func setupImageView() {
@@ -132,14 +144,14 @@ extension AttachmentImageCell: Setup {
         self.addSubview(fileNameLabel)
     }
     
-    fileprivate func setupDownloadIcon() {
+  /*  fileprivate func setupDownloadIcon() {
         self.downloadIconImageView.backgroundColor = UIColor.clear
         self.downloadIconImageView.frame = CGRect(x: 0, y: 0, width: 44, height: 44).offsetBy(dx: frame.origin.x, dy: frame.origin.y)
         self.downloadIconImageView.isHidden = true
         self.addSubview(self.downloadIconImageView)
-    }
+    }*/
     
-    fileprivate func setupProgressView() {
+    /*fileprivate func setupProgressView() {
         self.progressView.frame = CGRect(x: 7, y: 7, width: 30, height: 30)
         
         self.progressView.backgroundColor = UIColor.clear
@@ -149,21 +161,21 @@ extension AttachmentImageCell: Setup {
         self.progressView.tintColor = ColorBucket.whiteColor
         self.progressView.isHidden = true
         self.downloadIconImageView.addSubview(self.progressView)
-    }
+    }*/
 }
 
 
 //MARK: Configuration
 extension AttachmentImageCell: Updating {
-    fileprivate func configureDownloadingState() {
-        self.downloadIconImageView.isHidden = false
+   /* fileprivate func configureDownloadingState() {
+    //    self.downloadIconImageView.isHidden = false
         if file.downoloadedSize == file.size {
             self.downloadingState = DownloadingState.Downloaded
         } else {
             self.downloadingState = (file.downoloadedSize == 0) ? DownloadingState.NotDownloaded
                 : DownloadingState.Downloading
         }
-    }
+    }*/
     
     fileprivate func configureLabel() {
         guard fileName != nil else { return }
@@ -190,6 +202,7 @@ extension AttachmentImageCell: Updating {
         
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
             self.fileImageView.image = image
+            print("sfsdfsdf ", image.size)
         } else {
             self.fileImageView.image = UIImage(named: "image_back")
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
@@ -200,12 +213,21 @@ extension AttachmentImageCell: Updating {
                     
                     var finalImage: UIImage = image!
                     if cacheType == .none {
-                        var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+                        let width = UIScreen.screenWidth() - Constants.UI.DoublePaddingSize
+                        let scale = width / finalImage.size.width
+                        let height = finalImage.size.height * scale
+                        
+                        print("width = ", width, "heigth = ", height)
+                        
+                        finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: width, height: height), radius: 3)
+                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
+                        
+                        /*var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
                         let imageHeight = imageWidth * 0.56 - 5
                         imageWidth = imageHeight / (image?.size.height)! * (image?.size.width)!
                         
                         finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: imageWidth, height: imageHeight), radius: 3)
-                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
+                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)*/
                     }
                     
                     // Ensure the post is still the same
@@ -213,6 +235,11 @@ extension AttachmentImageCell: Updating {
                     
                     DispatchQueue.main.sync(execute: {
                         self?.fileImageView.image = finalImage
+                        //NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationsNames.ReloadChatNotification), object: nil)
+                        let postLocalId = self?.file.post?.localIdentifier
+                        let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.ReloadChatNotification),
+                                                        object: nil, userInfo: ["postLocalId" : postLocalId])
+                        NotificationCenter.default.post(notification as Notification)
                     })
                 }
             }
@@ -224,7 +251,7 @@ extension AttachmentImageCell: Updating {
         }
     }
     
-    fileprivate func updateIconForCurrentState() {
+ /*   fileprivate func updateIconForCurrentState() {
         switch self.downloadingState {
         case DownloadingState.NotDownloaded:
             self.downloadIconImageView.image = UIImage(named: "chat_notdownloaded_icon")
@@ -235,7 +262,7 @@ extension AttachmentImageCell: Updating {
         default:
             break
         }
-    }
+    }*/
     
     fileprivate func computeFileName() {
         self.fileName = self.file?.name
@@ -246,7 +273,13 @@ extension AttachmentImageCell: Updating {
 //MARK: Action
 extension AttachmentImageCell: Action {
     @objc fileprivate func tapAction() {
-        switch self.downloadingState {
+       // print(self.file.post?.identifier)
+        let postLocalId = self.file.post?.localIdentifier
+        let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.FileImageDidTapNotification),
+                                        object: nil, userInfo: ["postLocalId" : postLocalId])
+        NotificationCenter.default.post(notification as Notification)
+        
+        /*switch self.downloadingState {
         case DownloadingState.NotDownloaded:
             startDownloadingFile()
         case DownloadingState.Downloading:
@@ -255,13 +288,13 @@ extension AttachmentImageCell: Action {
             openDownloadedFile()
         default:
             break
-        }
+        }*/
     }
 }
 
 
 
-extension AttachmentImageCell: Downloading {
+/*extension AttachmentImageCell: Downloading {
     fileprivate func startDownloadingFile() {
         self.progressView.isHidden = false
         self.downloadingState = DownloadingState.Downloading
@@ -270,12 +303,12 @@ extension AttachmentImageCell: Downloading {
             Api.sharedInstance.download(fileId: fileId!, completion: { (error) in
                 self.progressView.isHidden = true
                 guard error == nil else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)//, viewController: UIViewController())
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                     return
                 }
                 self.downloadingState = DownloadingState.Downloaded
                 
-                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded"/* , viewController: UIViewController()*/)
+                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded")
                 
                 let notification = UILocalNotification()
                 notification.alertBody = "File was successfully downloaded"
@@ -305,4 +338,4 @@ extension AttachmentImageCell: Downloading {
         NotificationCenter.default.post(notification as Notification)
     }
 }
-
+*/

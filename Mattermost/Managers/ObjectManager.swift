@@ -88,9 +88,11 @@ extension ObjectManager: PostRequests {
               failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
             print("SUCCESS")
+            print(operation?.httpRequestOperation.responseString)
             success?(mappingResult!)
         }) { (operation, error) in
             print("FAIL")
+            print(operation?.httpRequestOperation.responseString)
             let responseString = operation?.httpRequestOperation.responseString
             guard responseString != nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.localizedDescription)!)

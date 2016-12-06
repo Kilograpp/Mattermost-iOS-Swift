@@ -42,6 +42,7 @@ private protocol ChannelApi: class {
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol UserApi: class {
@@ -51,6 +52,7 @@ private protocol UserApi: class {
     func update(firstName: String?, lastName: String?, userName: String?, nickName: String?, email: String?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(currentPassword: String, newPassword: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(profileImage: UIImage, completion: @escaping (_ error: Mattermost.Error?) -> Void, progress: @escaping (_ value: Float) -> Void)
+    func subscribeToRemoteNotifications(completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol PostApi: class {
@@ -423,6 +425,16 @@ extension Api: ChannelApi {
             completion(nil)
             }, failure: completion)
     }
+    
+    func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.deleteChannelPathPattern(), channel)
+        
+        self.manager.post(path: path, success: { (mappingResult) in
+            completion(nil)
+        }, failure: { (error) in
+            completion(error)
+        })
+    }
 }
 
 
@@ -446,7 +458,8 @@ extension Api: UserApi {
             _ = DataManager.sharedInstance.currentUser
 
             SocketManager.sharedInstance.setNeedsConnect()
-            completion(nil)
+            //completion(nil)
+            NotificationsUtils.subscribeToRemoteNotificationsIfNeeded(completion: completion)
             }, failure: completion)
     }
     
@@ -543,9 +556,21 @@ extension Api: UserApi {
         }, failure: { (error) in
             completion(error)
         }) { (value) in
-            print("ava loading = ", value)
             progress(value)
         }
+    }
+    
+    func subscribeToRemoteNotifications(completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = UserPathPatternsContainer.attachDevicePathPattern()
+        let deviceUUID = Preferences.sharedInstance.deviceUUID
+        let params = ["device_id" : "apple:" + deviceUUID!]
+        print(params)
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(nil)
+        }, failure: { (error) in
+            completion(error)
+        })
     }
 }
 

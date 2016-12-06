@@ -17,6 +17,8 @@ private protocol Inteface {
     func timeIntervalSincePost(_ post: Post!) -> TimeInterval
     func hasParentPost() -> Bool
     func parentPost() -> Post?
+    func permalink() -> String
+    
 }
 
 private protocol Delegate {
@@ -212,6 +214,10 @@ extension Post: Inteface {
                 return parentPost
         }
         return self
+    }
+    
+    func permalink() -> String {
+        return Preferences.sharedInstance.serverUrl! + "/" + (DataManager.sharedInstance.currentTeam?.name!)! + "/pl/" + self.identifier!
     }
 }
 

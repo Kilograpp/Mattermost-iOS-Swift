@@ -112,7 +112,7 @@ extension FilesPickingController: Conditions {
 // MARK: - User Interaction
 extension FilesPickingController: UserInteraction {
     fileprivate func showMaximumAttachmentsLimitError() {
-        AlertManager.sharedManager.showWarningWithMessage(message: "Maximum of attachments reached")//, viewController: self.viewController())
+        AlertManager.sharedManager.showWarningWithMessage(message: "Maximum of attachments reached")
     }
 }
 

@@ -93,7 +93,6 @@ private protocol Request {
 
 //MARK: LifeСycle
 extension ChatViewController {
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -115,6 +114,13 @@ extension ChatViewController {
         }
         NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didTapImageAction),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification),
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadChat),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification),
                                                object: nil)
     }
     
@@ -329,6 +335,16 @@ extension ChatViewController : Private {
         }
         actionSheetController.addAction(replyAction)
         
+        let copyAction = UIAlertAction(title: "Copy", style: .default) { action -> Void in
+            UIPasteboard.general.string = post.message
+        }
+        actionSheetController.addAction(copyAction)
+        
+        let permalinkAction = UIAlertAction(title: "Permalink", style: .default) { action -> Void in
+            UIPasteboard.general.string = post.permalink()
+        }
+        actionSheetController.addAction(permalinkAction)
+        
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
             self.selectedPost = nil
         }
@@ -364,6 +380,7 @@ extension ChatViewController : Private {
 //MARK: Action
 extension ChatViewController: Action {
     @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
+       // tempGallery()
         let state = (self.menuContainerViewController.menuState == MFSideMenuStateLeftMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateLeftMenuOpen
         self.menuContainerViewController.setMenuState(state, completion: nil)
         self.dismissKeyboard(true)
@@ -390,7 +407,7 @@ extension ChatViewController: Action {
     func sendPostAction() {
         guard self.filesAttachmentsModule.fileUploadingInProgress else {
             let message = "Please, wait until download finishes"
-            AlertManager.sharedManager.showWarningWithMessage(message: message)//, viewController: self)
+            AlertManager.sharedManager.showWarningWithMessage(message: message)
             return
         }
         
@@ -424,6 +441,11 @@ extension ChatViewController: Action {
     
     func resendAction(_ post:Post) {
         PostUtils.sharedInstance.resend(post: post) { _ in }
+    }
+    
+    func didTapImageAction(notification: NSNotification) {
+        let postLocalId = notification.userInfo?["postLocalId"] as! String
+        openPreviewWith(postLocalId: postLocalId)
     }
 }
 
@@ -459,7 +481,7 @@ extension ChatViewController: Navigation {
             guard (error == nil) else { return }
             Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)//, viewController: self)
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
                     return
                 }
                 
@@ -576,7 +598,7 @@ extension ChatViewController: Request {
                 if error?.code == -1011{
                     message = "You left this channel".localized
                 }
-                AlertManager.sharedManager.showErrorWithMessage(message: message)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: message)
             }
             //self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
@@ -591,7 +613,7 @@ extension ChatViewController: Request {
         
         PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)//, viewController: self)
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)
             }
             self.selectedPost = nil
         }
@@ -811,6 +833,18 @@ extension ChatViewController {
             }))
         present(controller, animated: true) {}
     }
+    
+    func reloadChat(notification: NSNotification) {
+        let postLocalId = notification.userInfo?["postLocalId"] as! String
+        let post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
+        let indexPath = self.resultsObserver.indexPathForPost(post!)
+        
+        guard (self.tableView.indexPathsForVisibleRows?.contains(indexPath))! else { return }
+        
+        self.tableView.beginUpdates()
+        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        self.tableView.endUpdates()
+    }
 }
 
 
@@ -935,5 +969,23 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
     
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
+    }
+}
+
+
+//MARK: ImagesPreviewViewController
+extension ChatViewController {
+    func openPreviewWith(postLocalId: String) {
+        let gallery = ImagesPreviewViewController(delegate: self)
+        gallery.configureWith(postLocalId: postLocalId)
+        present(gallery, animated: true, completion: nil)
+    }
+}
+
+
+// MARK: ImagesPreviewViewControllerDelegate
+extension ChatViewController: ImagesPreviewViewControllerDelegate {
+    func imagesPreviewDidSwipeDownToClose(imagesPreview: ImagesPreviewViewController) {
+        dismiss(animated: true, completion: nil)
     }
 }

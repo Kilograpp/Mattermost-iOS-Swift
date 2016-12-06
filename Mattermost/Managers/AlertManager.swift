@@ -33,22 +33,4 @@ class AlertManager {
         let alertView = AlertView(type: .warning, message: message)
         alertView.showAlertView(animated: true)
     }
-    
- /*   func showSuccesWithMessage(message:String, viewController: UIViewController) {
-        let alertView = AlertView(type: .success, message: message)
-        alertView.presentingViewController = viewController//.navigationController
-        alertView.showAlertView(animated: true)
-    }
-    
-    func showErrorWithMessage(message:String, viewController: UIViewController) {
-        let alertView = AlertView(type: .error, message: message)
-        alertView.presentingViewController = viewController//.navigationController
-        alertView.showAlertView(animated: true)
-    }
-    
-    func showWarningWithMessage(message:String, viewController: UIViewController) {
-        let alertView = AlertView(type: .warning, message: message)
-        alertView.presentingViewController = viewController.navigationController
-        alertView.showAlertView(animated: true)
-    }*/
 }

@@ -47,8 +47,11 @@ struct Constants {
         static let ChatLoadingStopNotification     = "ChatLoadingStopNotification"
         static let ReloadLeftMenuNotification      = "ReloadLeftMenuNotification"
         static let ReloadRightMenuNotification     = "ReloadRightMenuNotification"
+        static let ReloadChatNotification          = "ReloadChatNotification"
         static let DocumentInteractionNotification = "DocumentInteractionNotification"
         static let ReloadFileSizeNotification      = "ReloadFileSizeNotification"
+        static let DidReceiveRemoteNotification    = "DidReceiveRemoteNotification"
+        static let FileImageDidTapNotification     = "FileImageDidTapNotification"
     }
     
     struct UI {
