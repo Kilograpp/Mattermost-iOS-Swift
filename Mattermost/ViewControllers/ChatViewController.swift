@@ -635,7 +635,15 @@ extension ChatViewController: Request {
     }
     
     func deletePost() {
-        guard (self.selectedPost != nil) else { return }
+        guard self.selectedPost != nil else { return }
+        
+        guard self.selectedPost.identifier != nil else {
+            self.selectedAction = Constants.PostActionType.SendNew
+            RealmUtils.deleteObject(self.selectedPost)
+            self.selectedPost = nil
+            
+            return
+        }
         
         let postIdentifier = self.selectedPost.identifier!
         PostUtils.sharedInstance.delete(post: self.selectedPost) { (error) in
