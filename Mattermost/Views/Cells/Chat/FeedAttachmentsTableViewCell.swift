@@ -62,25 +62,32 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     //MARK: Private
     
     fileprivate class func tableViewHeightWithPost(_ post: Post) -> CGFloat {
-        /*let height = post.files.reduce(0) {
-            (total, file) in
-            total + (file.isImage ? (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings)*0.56 - 5 : 56)
-        }
-        return height*/
+      //  let height = post.files.reduce(0) {
+       //     (total, file) in
+       //     total + (file.isImage ? (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings)*0.56 - 5 : 56)
+       // }
+       // return height
         
         var height: CGFloat = 0
         for file in post.files {
             var fileHeight: CGFloat = 56
             if file.isImage {
                 let thumbUrl = file.thumbURL()
-                if let image = SDImageCache.shared().imageFromMemoryCache(forKey: thumbUrl?.absoluteString) {
-                    fileHeight = image.size.height
+                let image = SDImageCache.shared().imageFromMemoryCache(forKey: thumbUrl?.absoluteString)
+                if image != nil {
+                    print("img_file____", image?.size)
+                    fileHeight = (image?.size.height)!
+                    let scale = (UIScreen.screenWidth() - 20) / (image?.size.width)!
+                    fileHeight = fileHeight * scale - 20
+                    
+                    print("sample ", fileHeight, (UIScreen.screenWidth() - 20))
                 } else {
                     fileHeight = (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings) * 0.56 - 5
                 }
             }
             height += fileHeight
         }
+        print("full_height = ", height)
         return height
     }
 
@@ -132,7 +139,11 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
             
             let thumbUrl = file.thumbURL()
             if let image = SDImageCache.shared().imageFromMemoryCache(forKey: thumbUrl?.absoluteString) {
-                return image.size.height
+                //return image.size.height
+                var fileHeight = (image.size.height)
+                let scale = (UIScreen.screenWidth() - 20) / (image.size.width)
+                fileHeight = fileHeight * scale - 20
+                return fileHeight
             }
             
             let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings

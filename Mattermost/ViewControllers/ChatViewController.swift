@@ -118,6 +118,10 @@ extension ChatViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didTapImageAction),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification),
                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadChat),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification),
+                                               object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -828,6 +832,18 @@ extension ChatViewController {
             print("Cancelled")
             }))
         present(controller, animated: true) {}
+    }
+    
+    func reloadChat(notification: NSNotification) {
+        let postLocalId = notification.userInfo?["postLocalId"] as! String
+        let post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
+        let indexPath = self.resultsObserver.indexPathForPost(post!)
+        
+        guard (self.tableView.indexPathsForVisibleRows?.contains(indexPath))! else { return }
+        
+        self.tableView.beginUpdates()
+        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        self.tableView.endUpdates()
     }
 }
 
