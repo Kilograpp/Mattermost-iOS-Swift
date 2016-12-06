@@ -609,7 +609,7 @@ extension ChatViewController: Request {
     
     func sendPostReply() {
         guard (self.selectedPost != nil) else { return }
-        
+        guard self.selectedPost.identifier != nil else { return }
         
         PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
@@ -623,8 +623,10 @@ extension ChatViewController: Request {
     }
     
     func updatePost() {
-        guard (self.selectedPost != nil) else { return }
+        guard self.selectedPost != nil else { return }
     
+        guard self.selectedPost.identifier != nil else { return }
+        
         PostUtils.sharedInstance.update(post: self.selectedPost, message: self.textView.text, attachments: nil) {_ in
             self.selectedPost = nil
         }
