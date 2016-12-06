@@ -42,11 +42,11 @@ fileprivate protocol Action {
 fileprivate protocol Navigation {
     func proceedToProfile()
     func proceedToTeams()
-    func proceedToFiles()
+//    func proceedToFiles()
     func proceedToSettings()
     func proceedToInvite()
-    func proceedToHelp()
-    func proceedToReport()
+//    func proceedToHelp()
+//    func proceedToReport()
     func proceedToAbout()
     func logOut()
 }
@@ -134,9 +134,9 @@ extension RightMenuViewController: Navigation {
         self.menuContainerViewController.toggleRightSideMenuCompletion(nil)
     }
     
-    func proceedToFiles() {
-    
-    }
+//    func proceedToFiles() {
+//    
+//    }
     
     func proceedToSettings() {
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
@@ -153,13 +153,13 @@ extension RightMenuViewController: Navigation {
         (navigation! as AnyObject).pushViewController(about, animated:true)
     }
     
-    func proceedToHelp() {
-    
-    }
-    
-    func proceedToReport() {
-    
-    }
+//    func proceedToHelp() {
+//    
+//    }
+//    
+//    func proceedToReport() {
+//    
+//    }
     
     func proceedToAbout() {
         let storyboard = UIStoryboard.init(name: "RightMenu", bundle: nil)
@@ -198,9 +198,9 @@ extension RightMenuViewController : UITableViewDelegate {
         switch (indexPath as NSIndexPath).row {
         case Constants.RightMenuRows.SwitchTeam:
             proceedToTeams()
-            
-        case Constants.RightMenuRows.Files:
-            print("Constants.RightMenuRows.Files")
+//            
+//        case Constants.RightMenuRows.Files:
+//            print("Constants.RightMenuRows.Files")
             
          case Constants.RightMenuRows.Settings:
             toggleRightSideMenu()
@@ -210,12 +210,12 @@ extension RightMenuViewController : UITableViewDelegate {
             toggleRightSideMenu()
             proceedToInvite()
             
-        case Constants.RightMenuRows.Help:
-            print("Constants.RightMenuRows.Help")
-            
-        case Constants.RightMenuRows.Report:
-            print("Constants.RightMenuRows.Report")
-        
+//        case Constants.RightMenuRows.Help:
+//            print("Constants.RightMenuRows.Help")
+//            
+//        case Constants.RightMenuRows.Report:
+//            print("Constants.RightMenuRows.Report")
+//        
         case Constants.RightMenuRows.About:
             toggleRightSideMenu()
             proceedToAbout()
