@@ -16,6 +16,7 @@
 		44385CB71DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */; };
 		444AB13A1DF24B08001160EB /* NotificationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444AB1391DF24B08001160EB /* NotificationsUtils.swift */; };
 		445DE0961DEDA1C600D2124D /* RNSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445DE0951DEDA1C600D2124D /* RNSettingsTableViewController.swift */; };
+		4483418D1DF6A83900C39824 /* SkyFloatingLabelTextField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4483418C1DF6A83900C39824 /* SkyFloatingLabelTextField.framework */; };
 		449663371DED099B0007A954 /* ENSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449663361DED099B0007A954 /* ENSettingsTableViewController.swift */; };
 		44B121601DF4B71F0094AF33 /* ImagesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B1215F1DF4B71F0094AF33 /* ImagesPreviewViewController.swift */; };
 		44B121621DF4B72F0094AF33 /* ImagePreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B121611DF4B72F0094AF33 /* ImagePreviewTableViewCell.swift */; };
@@ -35,7 +36,6 @@
 		4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */; };
 		4B9DD4BB1DB0C94800AB4D2D /* AttachmentFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */; };
 		4B9DD4BD1DB1445200AB4D2D /* UIImage+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9DD4BC1DB1445200AB4D2D /* UIImage+Orientation.swift */; };
-		4BD16B081DA4ED9000473279 /* SkyFloatingLabelTextField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */; };
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
@@ -295,6 +295,7 @@
 		44385CB61DEC2A6D00DCE57C /* SwitchSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		444AB1391DF24B08001160EB /* NotificationsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationsUtils.swift; path = Mattermost/utils/NotificationsUtils.swift; sourceTree = SOURCE_ROOT; };
 		445DE0951DEDA1C600D2124D /* RNSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSettingsTableViewController.swift; sourceTree = "<group>"; };
+		4483418C1DF6A83900C39824 /* SkyFloatingLabelTextField.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyFloatingLabelTextField.framework; path = Carthage/Build/iOS/SkyFloatingLabelTextField.framework; sourceTree = "<group>"; };
 		449663361DED099B0007A954 /* ENSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSettingsTableViewController.swift; sourceTree = "<group>"; };
 		44B1215F1DF4B71F0094AF33 /* ImagesPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesPreviewViewController.swift; sourceTree = "<group>"; };
 		44B121611DF4B72F0094AF33 /* ImagePreviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePreviewTableViewCell.swift; sourceTree = "<group>"; };
@@ -315,7 +316,6 @@
 		4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemberMappingsContainer.swift; path = Mappings/MemberMappingsContainer.swift; sourceTree = "<group>"; };
 		4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentFileView.swift; sourceTree = "<group>"; };
 		4B9DD4BC1DB1445200AB4D2D /* UIImage+Orientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Orientation.swift"; sourceTree = "<group>"; };
-		4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SkyFloatingLabelTextField.framework; path = Carthage/Build/iOS/SkyFloatingLabelTextField.framework; sourceTree = "<group>"; };
 		4BEA108B1D79B551006BB298 /* TeamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
@@ -577,7 +577,6 @@
 				4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */,
 				8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */,
 				4B7DB5A31DA52303000908FB /* SwiftyJSON.framework in Frameworks */,
-				4BD16B081DA4ED9000473279 /* SkyFloatingLabelTextField.framework in Frameworks */,
 				D624CE261D7B0AA7001754F3 /* UITableView_Cache.framework in Frameworks */,
 				D837F2791D76DCF700CA933F /* HEXColor.framework in Frameworks */,
 				8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */,
@@ -587,6 +586,7 @@
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
 				D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */,
 				D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */,
+				4483418D1DF6A83900C39824 /* SkyFloatingLabelTextField.framework in Frameworks */,
 				D8087AF81D42962E001918E8 /* TSMarkdownParser.framework in Frameworks */,
 				D85D92F01D400FB1002F8800 /* RealmSwift.framework in Frameworks */,
 				D85D92EF1D400F9E002F8800 /* Realm.framework in Frameworks */,
@@ -1229,11 +1229,11 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4483418C1DF6A83900C39824 /* SkyFloatingLabelTextField.framework */,
 				8B618CC81DDF19B700AC6CDD /* MRProgress.framework */,
 				4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */,
 				8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */,
 				4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */,
-				4BD16B071DA4ED9000473279 /* SkyFloatingLabelTextField.framework */,
 				8BCA40261D8AC078004D15F7 /* NVActivityIndicatorView.framework */,
 				D624CE251D7B0AA7001754F3 /* UITableView_Cache.framework */,
 				D837F2781D76DCF700CA933F /* HEXColor.framework */,
