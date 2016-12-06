@@ -20,6 +20,7 @@ fileprivate let NullString = "(null)"
 
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
+    func heightWith(file: File) -> CGFloat
 }
 
 final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
@@ -76,6 +77,17 @@ extension AttachmentImageCell: AttachmentImageCellConfiguration {
         configureImageView()
         configureLabel()
         configureDownloadingState()
+    }
+    
+    func heightWith(file: File) -> CGFloat {
+        //if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
+            //return ima
+        //}
+        //let width = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+        //let scale = width / finalImage.size.width
+        //let height = finalImage.size.height * scale
+        
+        return 0
     }
 }
 
@@ -200,12 +212,19 @@ extension AttachmentImageCell: Updating {
                     
                     var finalImage: UIImage = image!
                     if cacheType == .none {
-                        var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+                        let width = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
+                        let scale = width / finalImage.size.width
+                        let height = finalImage.size.height * scale
+                        
+                        finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: width, height: height), radius: 3)
+                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
+                        
+                        /*var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
                         let imageHeight = imageWidth * 0.56 - 5
                         imageWidth = imageHeight / (image?.size.height)! * (image?.size.width)!
                         
                         finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: imageWidth, height: imageHeight), radius: 3)
-                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
+                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)*/
                     }
                     
                     // Ensure the post is still the same
