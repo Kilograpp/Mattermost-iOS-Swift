@@ -210,7 +210,7 @@ extension PostUtils: Upload {
         
         guard item.uploaded else { return }
         guard self.assignedFiles.count > 0 else { return }
-        self.assignedFiles.remove(at: files.index(of: item)!)
+      //  self.assignedFiles.remove(at: files.index(of: item)!)
     }
 }
 

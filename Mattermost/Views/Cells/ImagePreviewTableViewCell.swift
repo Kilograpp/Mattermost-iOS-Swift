@@ -7,6 +7,8 @@
 //
 
 
+import MBProgressHUD
+
 private protocol Configuration: class {
     func configureForNewImage()
     func configureZoomScale()
@@ -31,7 +33,7 @@ public class ImagePreviewTableViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         self.imageView = UIImageView()
         self.scrollView = UIScrollView(frame: frame)
-        self.activityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 30, y: 70, width: 20, height: 20))
+        self.activityIndicatorView = UIActivityIndicatorView()
         
         super.init(frame: frame)
         
@@ -71,12 +73,10 @@ extension ImagePreviewTableViewCell: Configuration {
     
     func showActivityIndicator() {
         self.activityIndicatorView.startAnimating()
-        self.activityIndicatorView.isHidden = false
     }
     
     func hideActivityIndicator() {
         self.activityIndicatorView.stopAnimating()
-        self.activityIndicatorView.isHidden = true
     }
 }
 
@@ -99,7 +99,7 @@ extension ImagePreviewTableViewCell: Setup {
         setupImageView()
         scrollView.delegate = self
         setupGestureRecognizers()
-       // setupActivityIndicatorView()
+        setupActivityIndicatorView()
     }
     
     func setupScrollView() {
@@ -140,14 +140,14 @@ extension ImagePreviewTableViewCell: Setup {
     }
     
     func setupActivityIndicatorView() {
+        let size = Constants.UI.LongPaddingSize
+        let x = (self.contentView.frame.size.width - size) / 2
+        let y = (self.contentView.frame.size.height - size) / 2
         
-        
-        
+        self.activityIndicatorView.frame = CGRect(x: x, y: y, width: size, height: size)
+        self.contentView.addSubview(self.activityIndicatorView)
         self.activityIndicatorView.activityIndicatorViewStyle = .gray
         self.activityIndicatorView.hidesWhenStopped = true
-        //self.activityIndicatorView.isHidden = true
-        self.activityIndicatorView.startAnimating()
-        self.contentView.addSubview(self.activityIndicatorView)
     }
     
     func setupGestureRecognizers() {

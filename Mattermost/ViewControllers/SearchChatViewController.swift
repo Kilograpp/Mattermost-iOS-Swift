@@ -83,6 +83,7 @@ fileprivate protocol Setup {
     func setupNavigationBar()
     func setupTableView()
     func setupSearchView()
+    func setupSearchIconTextField()
 }
 
 fileprivate protocol Action {
@@ -110,6 +111,7 @@ extension SearchChatViewController: Setup {
         setupNavigationBar()
         setupTableView()
         setupSearchView()
+        setupSearchIconTextField()
     }
     
     func setupNavigationBar() {
@@ -132,6 +134,19 @@ extension SearchChatViewController: Setup {
         
         self.searchingInProcessView?.frame = CGRect(x: 0, y: 64, width: UIScreen.screenWidth(), height: UIScreen.screenHeight())
         self.searchingInProcessView!.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
+    }
+    
+    func setupSearchIconTextField() {
+        let leftImageView = UIImageView()
+        leftImageView.image = UIImage(named: "common_search_icon")
+        
+        let leftView = UIView()
+        leftView.addSubview(leftImageView)
+        
+        leftView.frame = CGRect(x: 0, y: 0, width: 16, height: 20)
+        leftImageView.frame = CGRect(x: 6, y: 2, width: 13, height: 14)
+        searchTextField.leftViewMode = UITextFieldViewMode.always
+        searchTextField.leftView = leftView
     }
 }
 

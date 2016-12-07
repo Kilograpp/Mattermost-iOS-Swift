@@ -102,6 +102,7 @@ extension ProfileViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupHeader()
+        setupAvatarImageView()
         setupTable()
         setupSwipeRight()
     }
@@ -126,13 +127,15 @@ extension ProfileViewController: Setup {
         self.fullnameLabel.font = UIFont.kg_semibold20Font()
         self.fullnameLabel.textColor = UIColor.kg_blackColor()
         self.fullnameLabel.text = (self.user?.firstName)! + " " + (self.user?.lastName)!
-        
+    }
+    
+    func setupAvatarImageView() {
         self.avatarImageView?.layer.drawsAsynchronously = true
         self.avatarImageView?.backgroundColor = UIColor.red
         self.avatarImageView?.setIndicatorStyle(UIActivityIndicatorViewStyle.gray)
         
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
-           ImageDownloader.downloadFullAvatarForUser(self.user!) { [weak self] (image, error) in
+        ImageDownloader.downloadFullAvatarForUser(self.user!) { [weak self] (image, error) in
             self?.avatarImageView.image = image
         }
         
