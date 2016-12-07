@@ -202,7 +202,7 @@ extension TeamViewController: UITableViewDelegate {
         
         guard (Preferences.sharedInstance.currentTeamId != nil) else {
             Preferences.sharedInstance.currentTeamId = team.identifier
-           // NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification), object: nil)
+            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification), object: nil)
             showLoaderView()
             loadChannels()
             //self.dismiss(animated: true, completion: nil)
@@ -216,19 +216,5 @@ extension TeamViewController: UITableViewDelegate {
         } else {
             self.dismiss(animated: true, completion: nil)
         }
-    }
-}
-
-
-//MARK: LoaderView
-extension TeamViewController {
-    func showLoaderView() {
-        (self.loaderView.subviews.first as! UIActivityIndicatorView).startAnimating()
-        self.loaderView.isHidden = false
-    }
-    
-    func hideLoaderView() {
-        (self.loaderView.subviews.first as! UIActivityIndicatorView).startAnimating()
-        self.loaderView.isHidden = false
     }
 }

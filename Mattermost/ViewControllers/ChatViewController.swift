@@ -109,8 +109,6 @@ extension ChatViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-     //   channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-     //   tableView.reloadData()
         super.viewWillAppear(animated)
         
         self.navigationController?.isNavigationBarHidden = false
@@ -500,7 +498,8 @@ extension ChatViewController: Navigation {
             guard (error == nil) else { return }
             Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                    let channelType = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
                     return
                 }
                 
@@ -613,8 +612,9 @@ extension ChatViewController: Request {
         PostUtils.sharedInstance.sendPost(channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
                 var message = (error?.message!)!
-                if error?.code == -1011 {
-                    message = "You left this channel".localized
+                if error?.code == -1011{
+                    let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                    message = "You left this " + channelType
                 }
                 if error?.code == -1009 {
                     self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows!, with: .none)
