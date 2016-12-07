@@ -94,6 +94,7 @@
 		8B3CB3801DD28DD20078DE25 /* CreateChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */; };
 		8B3CB3831DD392350078DE25 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */; };
 		8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */; };
+		8B5A54961DF75F1A003E9B0E /* PasswordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A54951DF75F1A003E9B0E /* PasswordRecoveryViewController.swift */; };
 		8B618CC11DDC4A2500AC6CDD /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B618CC01DDC4A2500AC6CDD /* Error.swift */; };
 		8B618CC31DDCDE8300AC6CDD /* MattermostError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */; };
 		8B618CC51DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B618CC41DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift */; };
@@ -375,6 +376,7 @@
 		8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChannelViewController.swift; sourceTree = "<group>"; };
 		8B3CB3821DD392350078DE25 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8B3CB3841DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/ChannelRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
+		8B5A54951DF75F1A003E9B0E /* PasswordRecoveryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryViewController.swift; sourceTree = "<group>"; };
 		8B618CC01DDC4A2500AC6CDD /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostError.swift; sourceTree = "<group>"; };
 		8B618CC41DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostErrorMappingsContainer.swift; sourceTree = "<group>"; };
@@ -951,6 +953,7 @@
 				D617E6A11D46AFB900283C0A /* ChatViewController.swift */,
 				8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */,
 				8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */,
+				8B5A54951DF75F1A003E9B0E /* PasswordRecoveryViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1635,6 +1638,7 @@
 				8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */,
 				D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */,
 				D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */,
+				8B5A54961DF75F1A003E9B0E /* PasswordRecoveryViewController.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */,
 				8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */,
