@@ -67,6 +67,7 @@ fileprivate protocol Action {
     func loginAction(_ sender: AnyObject)
     func changeLogin(_ sender: AnyObject)
     func changePassword(_ sender: AnyObject)
+    func recoveryPassword(_ sender: AnyObject)
 }
 
 fileprivate protocol Navigation {
@@ -181,6 +182,9 @@ extension LoginViewController: Action {
     @IBAction func changePassword(_ sender: AnyObject) {
         self.loginButton.isEnabled = ((loginTextField.text != "") && (passwordTextField.text != ""))
     }
+    @IBAction func recoveryPassword(_ sender: AnyObject) {
+        proceedToPasswordRecovery()
+    }
 }
 
 
@@ -190,6 +194,11 @@ extension LoginViewController: Navigation {
         let teamViewController = self.storyboard?.instantiateViewController(withIdentifier: "TeamViewController")
         let loginNavigationController = LoginNavigationController(rootViewController: teamViewController!)
         self.present(loginNavigationController, animated: true, completion: nil)
+    }
+    
+    func proceedToPasswordRecovery() {
+        let passwordRecoveryController = self.storyboard?.instantiateViewController(withIdentifier: "PasswordRecoveryViewController") as! PasswordRecoveryViewController
+        self.navigationController?.pushViewController(passwordRecoveryController, animated: true)
     }
 }
 
@@ -203,6 +212,10 @@ extension LoginViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
                 return
             }
+            
+            if self.loginTextField.isEditing { _ = self.loginTextField.resignFirstResponder() }
+            if self.passwordTextField.isEditing { _ = self.passwordTextField.resignFirstResponder() }
+            
             self.loadTeams()
         }
     }

@@ -53,6 +53,7 @@ private protocol UserApi: class {
     func update(currentPassword: String, newPassword: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(profileImage: UIImage, completion: @escaping (_ error: Mattermost.Error?) -> Void, progress: @escaping (_ value: Float) -> Void)
     func subscribeToRemoteNotifications(completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func passwordResetFor(email: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol PostApi: class {
@@ -572,6 +573,18 @@ extension Api: UserApi {
             completion(error)
         })
     }
+    
+    func passwordResetFor(email: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = UserPathPatternsContainer.passwordResetPathPattern()
+        let params = [ "email" : email ]
+        
+        self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            completion(nil)
+        }, failure: { (error) in
+            completion(error)
+        })
+        
+    }
 }
 
 
@@ -688,7 +701,9 @@ extension Api: PostApi {
                 post.identifier = resultPost.identifier
             }
             completion(nil)
-        }, failure: completion)
+        }, failure: { (error) in
+            completion(error)
+        })
     }
     
     func getPostWithId(_ identifier: String, channel: Channel, completion: @escaping ((_ post: Post?, _ error: Error?) -> Void)) {

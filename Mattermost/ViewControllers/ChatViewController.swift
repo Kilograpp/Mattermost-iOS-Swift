@@ -40,6 +40,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         }
     }
     
+    func removedFromUploading(identifier: String) {
+        let items = self.filesPickingController.attachmentItems.filter {
+            return ($0.identifier == identifier)
+        }
+        guard items.count > 0 else { return }
+        self.filesPickingController.attachmentItems.removeObject(items.first!)
+    }
+    
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
@@ -101,8 +109,8 @@ extension ChatViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-        tableView.reloadData()
+     //   channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+     //   tableView.reloadData()
         super.viewWillAppear(animated)
         
         self.navigationController?.isNavigationBarHidden = false
@@ -112,6 +120,8 @@ extension ChatViewController {
         if (self.postFromSearch != nil) {
             changeChannelForPostFromSearch()
         }
+        
+        self.textView.resignFirstResponder()
         NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
                                                object: nil)
@@ -124,6 +134,13 @@ extension ChatViewController {
                                                object: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+ //       UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+        
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -131,6 +148,8 @@ extension ChatViewController {
         NotificationCenter.default.removeObserver(self,
                                                   name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
                                                   object: nil)
+        
+        self.resignFirstResponder()
     }
     
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
@@ -532,6 +551,9 @@ extension ChatViewController: Request {
 
             self.isLoadingInProgress = false
             self.hasNextPage = true
+            
+            self.dismissKeyboard(true)
+            
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in })
         })
     }
@@ -546,10 +568,6 @@ extension ChatViewController: Request {
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
-        
-            self.resultsObserver.prepareResults()
-          //  self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
-
         }
     }
     
@@ -595,12 +613,14 @@ extension ChatViewController: Request {
         PostUtils.sharedInstance.sendPost(channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
                 var message = (error?.message!)!
-                if error?.code == -1011{
+                if error?.code == -1011 {
                     message = "You left this channel".localized
+                }
+                if error?.code == -1009 {
+                    self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows!, with: .none)
                 }
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
             }
-            //self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
         }
         self.dismissKeyboard(true)
@@ -609,7 +629,7 @@ extension ChatViewController: Request {
     
     func sendPostReply() {
         guard (self.selectedPost != nil) else { return }
-        
+        guard self.selectedPost.identifier != nil else { return }
         
         PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
@@ -623,8 +643,10 @@ extension ChatViewController: Request {
     }
     
     func updatePost() {
-        guard (self.selectedPost != nil) else { return }
+        guard self.selectedPost != nil else { return }
     
+        guard self.selectedPost.identifier != nil else { return }
+        
         PostUtils.sharedInstance.update(post: self.selectedPost, message: self.textView.text, attachments: nil) {_ in
             self.selectedPost = nil
         }
@@ -635,7 +657,15 @@ extension ChatViewController: Request {
     }
     
     func deletePost() {
-        guard (self.selectedPost != nil) else { return }
+        guard self.selectedPost != nil else { return }
+        
+        guard self.selectedPost.identifier != nil else {
+            self.selectedAction = Constants.PostActionType.SendNew
+            RealmUtils.deleteObject(self.selectedPost)
+            self.selectedPost = nil
+            
+            return
+        }
         
         let postIdentifier = self.selectedPost.identifier!
         PostUtils.sharedInstance.delete(post: self.selectedPost) { (error) in
@@ -743,7 +773,6 @@ extension ChatViewController {
             if (self.foundPrefix == ":") {
                 item += ":"
             }
-            
             item += " "
             
             self.acceptAutoCompletion(with: item, keepPrefix: true)
@@ -853,10 +882,17 @@ extension ChatViewController {
 extension ChatViewController {
     func addSLKKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillShowNotification), name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
     }
     
     func removeSLKKeyboardObservers() {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+    }
+    
+    func handleKeyboardWillShowNotification() {
+        //self.completePost.isHidden = true
+        
+        print("sfdsdfsd")
     }
     
     func handleKeyboardWillHideeNotification() {

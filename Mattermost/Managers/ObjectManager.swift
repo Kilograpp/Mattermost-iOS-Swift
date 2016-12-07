@@ -96,6 +96,7 @@ extension ObjectManager: PostRequests {
             let responseString = operation?.httpRequestOperation.responseString
             guard responseString != nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.localizedDescription)!)
+                failure?(self.handleOperation(operation!, withError: error!))
                 return
             }
             

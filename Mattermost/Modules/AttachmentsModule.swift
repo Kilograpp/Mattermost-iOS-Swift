@@ -15,6 +15,7 @@ fileprivate protocol Interface {
 
 protocol AttachmentsModuleDelegate: class {
     func uploading(inProgress: Bool)
+    func removedFromUploading(identifier: String)
 }
 
 protocol AttachmentsModuleDataSource {
@@ -94,8 +95,10 @@ extension AttachmentsModule: Interface {
 
 extension AttachmentsModule: PostAttachmentViewDelegate {
     func didRemove(item: AssignedAttachmentViewItem) {
+        let itemId = item.identifier
         PostUtils.sharedInstance.cancelUpload(item: item)
         self.items.removeObject(item)
+        self.delegate.removedFromUploading(identifier: itemId)
         
         guard self.items.count == 0 else { return }
         self.fileUploadingInProgress = false

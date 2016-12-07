@@ -67,12 +67,13 @@ extension PostUtils: Send {
     
     func send(post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         Api.sharedInstance.sendPost(post) { (error) in
-            completion(error)
+            //completion(error)
             if error != nil {
                 try! RealmUtils.realmForCurrentThread().write({
                     post.status = .error
                 })
             }
+            completion(error)
         }
     }
     
