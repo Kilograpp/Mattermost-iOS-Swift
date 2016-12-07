@@ -281,7 +281,8 @@ extension Post: Computations {
         //s3 refactor
 //        let dateString = createdAt!.dateFormatForPostKey()
 //         self.localIdentifier = channelId! + authorId! + dateString
-        self.localIdentifier = "\(StringUtils.randomUUID())-\(self.createdAt?.timeIntervalSince1970)"
+        //self.localIdentifier = "\(StringUtils.randomUUID())-\(self.createdAt?.timeIntervalSince1970)"
+        self.localIdentifier = "\(StringUtils.randomUUID())-\(self.createdAt!.timeIntervalSince1970)"
     }
 
     func setSystemAuthorIfNeeded() {

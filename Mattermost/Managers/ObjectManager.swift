@@ -45,6 +45,7 @@ extension ObjectManager: GetRequests {
             
             success?(mappingResult!, eTag == cachedETag)
         }) { (operation, error) in
+            print(operation?.httpRequestOperation.responseString)
             failure?(self.handleOperation(operation!, withError: error!))
         }
     }

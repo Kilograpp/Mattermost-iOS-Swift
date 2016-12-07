@@ -866,6 +866,11 @@ extension ChatViewController {
     func reloadChat(notification: NSNotification) {
         let postLocalId = notification.userInfo?["postLocalId"] as! String
         let post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
+        
+        guard post != nil else { return }
+        guard !(post?.isInvalidated)! else { return }
+        guard self.resultsObserver != nil else { return }
+        
         let indexPath = self.resultsObserver.indexPathForPost(post!)
         
         guard (self.tableView.indexPathsForVisibleRows?.contains(indexPath))! else { return }
@@ -878,7 +883,6 @@ extension ChatViewController {
 
 
 //MARK: UITextViewDelegate
-
 extension ChatViewController {
     func addSLKKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
