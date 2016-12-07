@@ -212,6 +212,10 @@ extension LoginViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
                 return
             }
+            
+            if self.loginTextField.isEditing { _ = self.loginTextField.resignFirstResponder() }
+            if self.passwordTextField.isEditing { _ = self.passwordTextField.resignFirstResponder() }
+            
             self.loadTeams()
         }
     }

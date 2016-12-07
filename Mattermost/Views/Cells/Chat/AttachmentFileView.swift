@@ -230,6 +230,8 @@ extension AttachmentFileView: Downloading {
     
     @objc fileprivate func updateFileSize(notification: NSNotification) {
         let fileId = notification.userInfo?["fileId"] as! String
+        
+        guard !self.file.isInvalidated else { return }
         guard fileId == self.file.identifier else { return }
 
         setNeedsDisplay()
