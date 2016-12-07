@@ -6,7 +6,6 @@
 //  Copyright © 2016 Kilograpp. All rights reserved.
 //
 
-
 final class LoginViewController: UIViewController {
 
 //MARK: Properties
@@ -16,7 +15,6 @@ final class LoginViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var recoveryButton: UIButton!
     @IBOutlet weak var loaderView: UIView!
-    
     let titleName =  NSLocalizedString("Sign In", comment: "")
     let email = NSLocalizedString("Email", comment: "")
     let password = NSLocalizedString("Password", comment: "")
@@ -197,10 +195,14 @@ extension LoginViewController: Navigation {
 //MARK: Request
 extension LoginViewController: Request {
     func login() {
+        showLoaderView()
+        passwordTextField.endEditing(false)
+        loginTextField.endEditing(false)
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in
             guard (error == nil) else {
                 let message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
+                self.hideLoaderView()
                 return
             }
             self.loadTeams()
@@ -209,9 +211,13 @@ extension LoginViewController: Request {
     
     func loadTeams() {
         Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-            guard (error == nil) else { return }
+            guard (error == nil) else {
+                self.hideLoaderView()
+                return
+            }
             
             if userShouldSelectTeam {
+                self.hideLoaderView()
                 self.proceedToTeams()
             }
             else {
@@ -223,7 +229,10 @@ extension LoginViewController: Request {
     func loadChannels() {
        // showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
-            guard (error == nil) else { return }
+            guard (error == nil) else {
+                self.hideLoaderView()
+                return
+            }
             
             self.loadCompleteUsersList()
         })
@@ -231,8 +240,11 @@ extension LoginViewController: Request {
     
     func loadCompleteUsersList() {
         Api.sharedInstance.loadCompleteUsersList({ (error) in
-            guard (error == nil) else { return }
-            
+            guard (error == nil) else {
+                self.hideLoaderView()
+                return
+            }
+            self.hideLoaderView()
             RouterUtils.loadInitialScreen()
            // self.hideLoaderView()
         })
@@ -255,19 +267,5 @@ extension LoginViewController: UITextFieldDelegate {
         }
         
         return true
-    }
-}
-
-
-//MARK: LoaderView
-extension LoginViewController {
-    func showLoaderView() {
-        (self.loaderView.subviews.first as! UIActivityIndicatorView).startAnimating()
-        self.loaderView.isHidden = false
-    }
-    
-    func hideLoaderView() {
-        (self.loaderView.subviews.first as! UIActivityIndicatorView).startAnimating()
-        self.loaderView.isHidden = false
     }
 }
