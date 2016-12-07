@@ -104,9 +104,7 @@ extension ImagesPreviewViewController {
         
         let titleBar = UIBarButtonItem(customView: self.titleLabel)
         barItems.append(titleBar)
-        
         barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
-        
         barItems.append(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveImageAction)))
         
         toolbar.items = barItems
@@ -119,7 +117,6 @@ extension ImagesPreviewViewController {
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 0
         
-        // Set up collection view
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -129,7 +126,6 @@ extension ImagesPreviewViewController {
         collectionView.isPagingEnabled = true
         collectionView.backgroundColor = UIColor.clear
         
-        // Set up collection view constraints
         let leadingLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .leading, relatedBy: .equal,
                                                          toItem: self.view, attribute: .leading, multiplier: 1, constant: 0)
         let topLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .top, relatedBy: .equal,
@@ -151,7 +147,7 @@ extension ImagesPreviewViewController {
     
     func setupGestureRecognizer() {
         let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeDownAction(recognizer:)))
-        swipeGestureRecognizer.direction = .down
+        swipeGestureRecognizer.direction = .up
         self.imageCollectionView.addGestureRecognizer(swipeGestureRecognizer)
     }
 }

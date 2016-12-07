@@ -20,6 +20,7 @@ private protocol ResponseDescriptors: class {
     static func updatePasswordResponseDescriptor() -> RKResponseDescriptor
     static func updateImageResponseDescriptor() -> RKResponseDescriptor
     static func attachDeviceResponseDescriptor() -> RKResponseDescriptor
+    static func passwordResetResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class UserResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -96,6 +97,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: UserMappingsContainer.emptyMapping(),
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.attachDevicePathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func passwordResetResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: UserMappingsContainer.emptyMapping(),
+                                    method: .POST,
+                                    pathPattern: UserPathPatternsContainer.passwordResetPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

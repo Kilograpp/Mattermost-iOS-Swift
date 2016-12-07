@@ -118,6 +118,10 @@ extension ChatViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didTapImageAction),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification),
                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadChat),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification),
+                                               object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -605,7 +609,7 @@ extension ChatViewController: Request {
     
     func sendPostReply() {
         guard (self.selectedPost != nil) else { return }
-        
+        guard self.selectedPost.identifier != nil else { return }
         
         PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
@@ -619,8 +623,10 @@ extension ChatViewController: Request {
     }
     
     func updatePost() {
-        guard (self.selectedPost != nil) else { return }
+        guard self.selectedPost != nil else { return }
     
+        guard self.selectedPost.identifier != nil else { return }
+        
         PostUtils.sharedInstance.update(post: self.selectedPost, message: self.textView.text, attachments: nil) {_ in
             self.selectedPost = nil
         }
@@ -631,7 +637,15 @@ extension ChatViewController: Request {
     }
     
     func deletePost() {
-        guard (self.selectedPost != nil) else { return }
+        guard self.selectedPost != nil else { return }
+        
+        guard self.selectedPost.identifier != nil else {
+            self.selectedAction = Constants.PostActionType.SendNew
+            RealmUtils.deleteObject(self.selectedPost)
+            self.selectedPost = nil
+            
+            return
+        }
         
         let postIdentifier = self.selectedPost.identifier!
         PostUtils.sharedInstance.delete(post: self.selectedPost) { (error) in
@@ -828,6 +842,18 @@ extension ChatViewController {
             print("Cancelled")
             }))
         present(controller, animated: true) {}
+    }
+    
+    func reloadChat(notification: NSNotification) {
+        let postLocalId = notification.userInfo?["postLocalId"] as! String
+        let post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
+        let indexPath = self.resultsObserver.indexPathForPost(post!)
+        
+        guard (self.tableView.indexPathsForVisibleRows?.contains(indexPath))! else { return }
+        
+        self.tableView.beginUpdates()
+        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        self.tableView.endUpdates()
     }
 }
 
