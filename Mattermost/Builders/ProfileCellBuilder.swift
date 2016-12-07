@@ -62,7 +62,7 @@ extension ProfileCellBuilder: Inteface {
         
         switch row {
         case 0:
-            cell.configureWith(title: title, info: user.firstName, icon: icon)
+            cell.configureWith(title: title, info: user.firstName! + " " + user.lastName!, icon: icon)
         case 1:
             cell.configureWith(title: title, info: user.username, icon: icon)
         case 2:
