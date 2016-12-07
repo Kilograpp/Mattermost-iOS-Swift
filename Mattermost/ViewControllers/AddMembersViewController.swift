@@ -92,8 +92,12 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
                                                    alpha:   1.0)
             }
         }
+        let rect = searchController.searchBar.frame
+        let lineView = UIView.init(frame: CGRect.init(x: 0, y: rect.size.height-2, width: rect.size.width, height: 2))
+        lineView.backgroundColor = UIColor.white
+        searchController.searchBar.addSubview(lineView)
         
-        self.definesPresentationContext = true
+        self.definesPresentationContext = false
         self.extendedLayoutIncludesOpaqueBars = true
         self.edgesForExtendedLayout = .all
         searchController.searchBar.isTranslucent = false
