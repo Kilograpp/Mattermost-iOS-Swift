@@ -12,7 +12,7 @@ fileprivate let fullNameSectionHeaderTitles: Array = [ "NAME", "SURNAME" ]
 fileprivate let userNameSectionHeaderTitle = "USERNAME"
 fileprivate let nickNameSectionHeaderTitle = "NICKNAME"
 fileprivate let emailSectionHeaderTitle = "EMAIL"
-fileprivate let passwordSectionHeaderTitles: Array = [ "PASSWORD OLD", "PASSWORD NEW", "PASSWORD NEW AGAIN" ]
+fileprivate let passwordSectionHeaderTitles: Array = [ "OLD PASSWORD", "NEW PASSWORD", "NEW PASSWORD AGAIN" ]
 
 
 private protocol Inteface: class {
