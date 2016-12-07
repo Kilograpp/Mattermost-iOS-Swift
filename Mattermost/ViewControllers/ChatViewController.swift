@@ -40,6 +40,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         }
     }
     
+    func removedFromUploading(identifier: String) {
+        let items = self.filesPickingController.attachmentItems.filter {
+            return ($0.identifier == identifier)
+        }
+        guard items.count > 0 else { return }
+        self.filesPickingController.attachmentItems.removeObject(items.first!)
+    }
+    
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
@@ -140,6 +148,8 @@ extension ChatViewController {
         NotificationCenter.default.removeObserver(self,
                                                   name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
                                                   object: nil)
+        
+        self.resignFirstResponder()
     }
     
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
@@ -603,8 +613,11 @@ extension ChatViewController: Request {
         PostUtils.sharedInstance.sendPost(channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
             if (error != nil) {
                 var message = (error?.message!)!
-                if error?.code == -1011{
+                if error?.code == -1011 {
                     message = "You left this channel".localized
+                }
+                if error?.code == -1009 {
+                    self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows!, with: .none)
                 }
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
             }
