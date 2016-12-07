@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "attach_fill_icon.pdf",
+      "filename" : "chat_scroll_icon.pdf",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "chat_scroll_icon-1.pdf",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "chat_scroll_icon-2.pdf",
       "scale" : "3x"
     }
   ],
