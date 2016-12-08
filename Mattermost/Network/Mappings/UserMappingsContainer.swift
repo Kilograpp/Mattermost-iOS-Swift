@@ -38,7 +38,8 @@ extension UserMappingsContainer: RequestMapping {
             UserAttributes.nickname.rawValue   : "nickname",
             UserAttributes.username.rawValue   : "username",
             UserAttributes.createAt.rawValue   : "create_at",
-            UserAttributes.updateAt.rawValue   : "update_at"
+            UserAttributes.updateAt.rawValue   : "update_at",
+            UserAttributes.deleteAt.rawValue   : "delete_at"
             ])
         return mapping
     }
@@ -55,7 +56,8 @@ extension UserMappingsContainer: ResponseMappings {
             "username"     : UserAttributes.username.rawValue,
             "nickname"     : UserAttributes.nickname.rawValue,
             "email"        : UserAttributes.email.rawValue,
-            "create_at"    : UserAttributes.createAt.rawValue
+            "create_at"    : UserAttributes.createAt.rawValue,
+            "delete_at"    : UserAttributes.deleteAt.rawValue
             ])
         
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "notify_props",
@@ -74,7 +76,8 @@ extension UserMappingsContainer: ResponseMappings {
             "(\(UserAttributes.identifier)).username"   : UserAttributes.username.rawValue,
             "(\(UserAttributes.identifier)).nickname"   : UserAttributes.nickname.rawValue,
             "(\(UserAttributes.identifier)).email"      : UserAttributes.email.rawValue,
-            "(\(UserAttributes.identifier)).create_at"  : UserAttributes.createAt.rawValue
+            "(\(UserAttributes.identifier)).create_at"  : UserAttributes.createAt.rawValue,
+            "(\(UserAttributes.identifier)).delete_at"  : UserAttributes.deleteAt.rawValue
             ])
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "notify_props",
                                                          toKeyPath: UserAttributes.notifyProps.rawValue,

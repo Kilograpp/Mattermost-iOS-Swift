@@ -858,6 +858,8 @@ extension ChatViewController {
     }
     
     func reloadChat(notification: NSNotification) {
+        print(notification.userInfo)
+        
         let postLocalId = notification.userInfo?["postLocalId"] as! String
         let post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
         

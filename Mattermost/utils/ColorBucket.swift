@@ -26,6 +26,7 @@ private protocol PostColors: class {
     static var parentMessageColor: UIColor {get}
     static var parentShadowColor: UIColor {get}
     static var editSeparatorColor: UIColor {get}
+    static var searchAutocompleteTextColor: UIColor {get}
 }
 
 private protocol CommonColors: class {
@@ -102,6 +103,7 @@ extension ColorBucket : PostColors {
     static let editSeparatorColor = ColorBucket.brightBlue()
     static let searchTextColor = ColorBucket.brightBlue()
     static let searchTextBackgroundColor = ColorBucket.transparentOrange()
+    static let searchAutocompleteTextColor = ColorBucket.middleBlack()
 }
 
 extension ColorBucket : CommonColors {
@@ -245,6 +247,10 @@ extension ColorBucket {
     
     fileprivate class func onlineStatus() -> UIColor {
         return try! UIColor(rgba_throws: "#81C784")
+    }
+    
+    fileprivate class func middleBlack() -> UIColor {
+        return try! UIColor(rgba_throws: "#262626")
     }
     
     fileprivate class func randomBrightColor() -> UIColor {

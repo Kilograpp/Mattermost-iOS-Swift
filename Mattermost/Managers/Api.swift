@@ -238,6 +238,7 @@ extension Api: ChannelApi {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
+                    $0.computeIsDeletedDirectIfNeeded()
                 }
                 realm.add(channels, update: true)
             })
@@ -370,6 +371,7 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
+                channel.computeIsDeletedDirectIfNeeded()
                 realm.add(channel)
             })
             completion(channel ,nil)
@@ -389,6 +391,7 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
+                channel.computeIsDeletedDirectIfNeeded()
                 realm.add(channel)
             })
             completion(nil ,nil)
