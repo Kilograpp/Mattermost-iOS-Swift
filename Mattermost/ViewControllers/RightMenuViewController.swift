@@ -65,7 +65,8 @@ extension RightMenuViewController: Setup {
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+        //self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+        self.tableView.separatorStyle = .none
         self.tableView.isScrollEnabled = false
     }
     
