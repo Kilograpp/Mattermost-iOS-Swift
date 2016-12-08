@@ -132,13 +132,6 @@ extension ChatViewController {
                                                object: nil)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
- //       UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
-        
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -686,6 +679,7 @@ extension ChatViewController: Request {
 //MARK: UITableViewDataSource
 extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
+        guard self.resultsObserver != nil else { return 0 }
         if (tableView == self.tableView) {
             self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
             return self.resultsObserver?.numberOfSections() ?? 1
@@ -802,14 +796,14 @@ extension ChatViewController: ChannelObserverDelegate {
         self.typingIndicatorView?.dismissIndicator()
         
         //new channel
-        self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", identifier).first!
+        guard identifier != nil else { return }
+        self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         self.title = self.channel?.displayName
         
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
         }
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
-        
         self.textView.resignFirstResponder()
         
         if (self.postFromSearch == nil) {
@@ -866,6 +860,11 @@ extension ChatViewController {
     func reloadChat(notification: NSNotification) {
         let postLocalId = notification.userInfo?["postLocalId"] as! String
         let post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
+        
+        guard post != nil else { return }
+        guard !(post?.isInvalidated)! else { return }
+        guard self.resultsObserver != nil else { return }
+        
         let indexPath = self.resultsObserver.indexPathForPost(post!)
         
         guard (self.tableView.indexPathsForVisibleRows?.contains(indexPath))! else { return }
@@ -878,7 +877,6 @@ extension ChatViewController {
 
 
 //MARK: UITextViewDelegate
-
 extension ChatViewController {
     func addSLKKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)

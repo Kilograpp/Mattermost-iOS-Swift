@@ -36,7 +36,7 @@ final class LeftMenuViewController: UIViewController {
         configureInitialSelectedChannel()
         setupChannelsObserver()
         configureStartUpdating()
-        
+        //reloadChannels()
     }
     
     //refactor later -> ObserverUtils
@@ -146,6 +146,7 @@ extension LeftMenuViewController : Configure {
     
     func configureInitialSelectedChannel() {
         let indexPathForFirstRow = IndexPath(row: 0, section: 0) as IndexPath
+        guard self.resultsPublic.count > 0 else { return }
         let initialSelectedChannel = self.resultsPublic[indexPathForFirstRow.row]
         ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
     }
@@ -163,7 +164,6 @@ extension LeftMenuViewController : Configure {
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsDirect =
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
-        
     }
 }
 
