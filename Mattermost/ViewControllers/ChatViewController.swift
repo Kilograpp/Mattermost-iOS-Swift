@@ -12,7 +12,6 @@ import ImagePickerSheetController
 import UITableView_Cache
 import MFSideMenu
 
-
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
 
 //MARK: Properties
@@ -29,6 +28,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
     var loadingView: UIView?
+    var scrollButton: UIButton?
+    var indexPathScroll: NSIndexPath?
     
     var hasNextPage: Bool = true
     var postFromSearch: Post! = nil
@@ -122,6 +123,13 @@ extension ChatViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadChat),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification),
                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -151,6 +159,7 @@ extension ChatViewController {
 extension ChatViewController: Setup {
     fileprivate func initialSetup() {
         setupInputBar()
+        setupScrollButton()
         setupTableView()
         setupRefreshControl()
         setupPostAttachmentsView()
@@ -274,6 +283,17 @@ extension ChatViewController: Setup {
         
         let height = NSLayoutConstraint(item: self.completePost, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height)
         view.addConstraint(height)
+    }
+    
+    fileprivate func setupScrollButton() {
+        self.scrollButton = UIButton.init(type: UIButtonType.system)
+        self.scrollButton?.frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100, width: 50, height: 50)
+        self.scrollButton?.setBackgroundImage(UIImage(named:"chat_scroll_icon")!, for: UIControlState.normal)
+        self.scrollButton?.layer.cornerRadius = (self.scrollButton?.frame.size.width)! / 2
+        self.scrollButton?.addTarget(self, action: #selector(scrollToBottom), for: .touchUpInside)
+        self.view.addSubview(self.scrollButton!)
+        self.view.bringSubview(toFront: self.scrollButton!)
+        self.scrollButton?.isHidden = true;
     }
     
     override func textWillUpdate() {
@@ -447,6 +467,19 @@ extension ChatViewController: Action {
         let postLocalId = notification.userInfo?["postLocalId"] as! String
         openPreviewWith(postLocalId: postLocalId)
     }
+    
+    func scrollToBottom() {
+        self.tableView.setContentOffset(CGPoint(x:0, y:0), animated: true)
+        self.scrollButton?.isHidden = true
+    }
+    
+    func scrollBottomUp(keyboardHeight: CGFloat) {
+        self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100 - keyboardHeight;
+    }
+    
+    func scrollBottomDown(keyboardHeight: CGFloat) {
+        self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100
+    }
 }
 
 
@@ -619,7 +652,6 @@ extension ChatViewController: Request {
         }
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
-        self.dismissKeyboard(true)
     }
     
     func updatePost() {
@@ -758,6 +790,33 @@ extension ChatViewController {
             
             self.acceptAutoCompletion(with: item, keepPrefix: true)
         }
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let actualPosition = scrollView.contentOffset.y
+        if actualPosition > UIScreen.screenHeight() {
+            self.scrollButton?.isHidden = false
+        }
+        if actualPosition < 50 {
+            self.scrollButton?.isHidden = true
+        }
+    }
+    
+    func keyboardWillShow(_ notification:NSNotification) {
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        self.scrollBottomUp(keyboardHeight: keyboardHeight)
+    }
+    
+    func keyboardWillHide(_ notification:NSNotification) {
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        self.scrollBottomDown(keyboardHeight: keyboardHeight)
+        
     }
 }
 
