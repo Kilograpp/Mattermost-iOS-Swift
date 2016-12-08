@@ -31,7 +31,6 @@
 		4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */; };
 		4B7270821DABF4C000445586 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7270811DABF4C000445586 /* AlertView.swift */; };
 		4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */; };
-		4B7DB5A31DA52303000908FB /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */; };
 		4B7DB5A51DA5500F000908FB /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A41DA5500F000908FB /* Member.swift */; };
 		4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */; };
 		4B9DD4BB1DB0C94800AB4D2D /* AttachmentFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */; };
@@ -580,7 +579,6 @@
 			files = (
 				4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */,
 				8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */,
-				4B7DB5A31DA52303000908FB /* SwiftyJSON.framework in Frameworks */,
 				D624CE261D7B0AA7001754F3 /* UITableView_Cache.framework in Frameworks */,
 				D837F2791D76DCF700CA933F /* HEXColor.framework in Frameworks */,
 				8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */,
