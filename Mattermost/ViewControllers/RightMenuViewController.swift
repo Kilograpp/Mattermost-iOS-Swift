@@ -65,8 +65,7 @@ extension RightMenuViewController: Setup {
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        //self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
-        self.tableView.separatorStyle = .none
+        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
         self.tableView.isScrollEnabled = false
     }
     
@@ -179,7 +178,7 @@ extension RightMenuViewController: Navigation {
 //MARK: UITableViewDataSource
 extension RightMenuViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        return 5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
