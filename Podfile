@@ -10,6 +10,7 @@ target 'Mattermost' do
   pod 'RestKit'
   pod 'MRProgress'
   pod 'SwiftyJSON'
+  pod 'SnapKit', '~> 3.0.2'
 end
 
 post_install do |installer|
