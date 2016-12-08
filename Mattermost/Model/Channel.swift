@@ -103,6 +103,10 @@ private protocol Support: class {
     func hasNewMessages() -> Bool
 }
 
+private protocol URLBuilder: class {
+    func buildURL() -> String
+}
+
 //  MARK: - Support
 extension Channel: Support {
     static func teamIdentifierPath() -> String {
@@ -136,5 +140,12 @@ extension Channel: Support {
 extension Channel: Computatations {
     func computeDisplayNameWidth() {
         self.displayNameWidth = StringUtils.widthOfString(self.displayName! as NSString!, font: FontBucket.postAuthorNameFont)
+    }
+}
+
+extension Channel: URLBuilder {
+    func buildURL() -> String {
+        let baseUrlArr: [String] = Api.sharedInstance.baseURL().relativeString.components(separatedBy: "/")
+        return baseUrlArr[0]+"//"+baseUrlArr[2]+"/"+self.team!.name!+"/channels/"+self.name!
     }
 }

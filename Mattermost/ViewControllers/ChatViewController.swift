@@ -41,6 +41,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         }
     }
     
+    func removedFromUploading(identifier: String) {
+        let items = self.filesPickingController.attachmentItems.filter {
+            return ($0.identifier == identifier)
+        }
+        guard items.count > 0 else { return }
+        self.filesPickingController.attachmentItems.removeObject(items.first!)
+    }
+    
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
@@ -102,8 +110,6 @@ extension ChatViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-        tableView.reloadData()
         super.viewWillAppear(animated)
         
         self.navigationController?.isNavigationBarHidden = false
@@ -113,6 +119,8 @@ extension ChatViewController {
         if (self.postFromSearch != nil) {
             changeChannelForPostFromSearch()
         }
+        
+        self.textView.resignFirstResponder()
         NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
                                                object: nil)
@@ -139,6 +147,8 @@ extension ChatViewController {
         NotificationCenter.default.removeObserver(self,
                                                   name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
                                                   object: nil)
+        
+        self.resignFirstResponder()
     }
     
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
@@ -514,7 +524,8 @@ extension ChatViewController: Navigation {
             guard (error == nil) else { return }
             Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                    let channelType = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
                     return
                 }
                 
@@ -565,6 +576,9 @@ extension ChatViewController: Request {
 
             self.isLoadingInProgress = false
             self.hasNextPage = true
+            
+            self.dismissKeyboard(true)
+            
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in })
         })
     }
@@ -579,10 +593,6 @@ extension ChatViewController: Request {
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
-        
-            self.resultsObserver.prepareResults()
-          //  self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
-
         }
     }
     
@@ -629,11 +639,14 @@ extension ChatViewController: Request {
             if (error != nil) {
                 var message = (error?.message!)!
                 if error?.code == -1011{
-                    message = "You left this channel".localized
+                    let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                    message = "You left this " + channelType
+                }
+                if error?.code == -1009 {
+                    self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows!, with: .none)
                 }
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
             }
-            //self.emptyDialogueLabel.isHidden = true
             self.hideTopActivityIndicator()
         }
         self.dismissKeyboard(true)
@@ -698,6 +711,7 @@ extension ChatViewController: Request {
 //MARK: UITableViewDataSource
 extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
+        guard self.resultsObserver != nil else { return 0 }
         if (tableView == self.tableView) {
             self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
             return self.resultsObserver?.numberOfSections() ?? 1
@@ -785,7 +799,6 @@ extension ChatViewController {
             if (self.foundPrefix == ":") {
                 item += ":"
             }
-            
             item += " "
             
             self.acceptAutoCompletion(with: item, keepPrefix: true)
@@ -842,14 +855,14 @@ extension ChatViewController: ChannelObserverDelegate {
         self.typingIndicatorView?.dismissIndicator()
         
         //new channel
-        self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", identifier).first!
+        guard identifier != nil else { return }
+        self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         self.title = self.channel?.displayName
         
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
         }
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
-        
         self.textView.resignFirstResponder()
         
         if (self.postFromSearch == nil) {
@@ -906,6 +919,11 @@ extension ChatViewController {
     func reloadChat(notification: NSNotification) {
         let postLocalId = notification.userInfo?["postLocalId"] as! String
         let post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
+        
+        guard post != nil else { return }
+        guard !(post?.isInvalidated)! else { return }
+        guard self.resultsObserver != nil else { return }
+        
         let indexPath = self.resultsObserver.indexPathForPost(post!)
         
         guard (self.tableView.indexPathsForVisibleRows?.contains(indexPath))! else { return }
@@ -918,14 +936,20 @@ extension ChatViewController {
 
 
 //MARK: UITextViewDelegate
-
 extension ChatViewController {
     func addSLKKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillShowNotification), name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
     }
     
     func removeSLKKeyboardObservers() {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+    }
+    
+    func handleKeyboardWillShowNotification() {
+        //self.completePost.isHidden = true
+        
+        print("sfdsdfsd")
     }
     
     func handleKeyboardWillHideeNotification() {

@@ -94,7 +94,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             case 2:
                 //FIXME: WRONG URL!!! (API URL, NEED CHANNEL URL)
                 cell0.infoName.text = "URL".localized
-                cell0.infoDetail.text = Api.sharedInstance.baseURL().relativeString
+                cell0.infoDetail.text = channel.buildURL()
             case 3:
                 cell0.infoName.text = "ID".localized
                 cell0.infoDetail.text = channel.identifier!
@@ -214,7 +214,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     guard (error == nil) else {
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                        let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
                         self.lastSelectedIndexPath = nil
                         return
                     }
@@ -256,7 +257,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     self.lastSelectedIndexPath = nil
                     guard (error == nil) else {
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                        let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
                         return
                     }
                     self.performSegue(withIdentifier: "showAllMembers", sender: nil)
@@ -279,7 +281,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     self.lastSelectedIndexPath = nil
                     guard (error == nil) else {
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                        let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
                         return
                     }
                     self.performSegue(withIdentifier: "showChannelInfo", sender: nil)
@@ -297,6 +300,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 self.dismiss(animated: true, completion: {_ in
                     Api.sharedInstance.loadChannels(with: { (error) in
                         guard (error == nil) else { return }
+                        AlertManager.sharedManager.showSuccesWithMessage(message: "You left ".localized + self.channel.displayName!)
                     })
                 })
             })
@@ -307,7 +311,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                     self.lastSelectedIndexPath = nil
                     guard (error == nil) else {
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                        let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
                         return
                     }
                     self.performSegue(withIdentifier: "showNameAndHandle", sender: nil)

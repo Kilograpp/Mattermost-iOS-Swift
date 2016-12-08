@@ -159,6 +159,7 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellAction {
 
 extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
     override func layoutSubviews() {
+        guard !self.post.isInvalidated else { return }
         guard self.post.author != nil else { return }
         
         let nameWidth = CGFloat(self.post.author.displayNameWidth)

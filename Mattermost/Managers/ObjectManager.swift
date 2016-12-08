@@ -45,6 +45,7 @@ extension ObjectManager: GetRequests {
             
             success?(mappingResult!, eTag == cachedETag)
         }) { (operation, error) in
+            print(operation?.httpRequestOperation.responseString)
             failure?(self.handleOperation(operation!, withError: error!))
         }
     }
@@ -96,6 +97,7 @@ extension ObjectManager: PostRequests {
             let responseString = operation?.httpRequestOperation.responseString
             guard responseString != nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.localizedDescription)!)
+                failure?(self.handleOperation(operation!, withError: error!))
                 return
             }
             
