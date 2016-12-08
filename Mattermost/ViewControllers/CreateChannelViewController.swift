@@ -69,13 +69,18 @@ extension CreateChannelViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupSwipeRight()
-       // setupNameTextField()
+        setupNameTextField()
        // setupHeaderTextField()
        // setupPurposeTextField()
     }
     
     func setupNavigationBar() {
-        self.title = "New group"
+        if self.privateType == "P"{
+            self.title = "New private group"
+        }else{
+            self.title = "New channel"
+        }
+        
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton
@@ -91,14 +96,15 @@ extension CreateChannelViewController: Setup {
         view.addGestureRecognizer(swipeRight)
     }
     
- /*   func setupNameTextField() {
-        self.nameTextField.lineHeight = 0
-        self.nameTextField.selectedLineHeight = 0
-        self.nameTextField.delegate = self
-        self.nameTextField.tag = 0
+    func setupNameTextField() {
+        if self.privateType == "P"{
+            self.nameTextField.placeholder = "Group Name"
+        }else{
+            self.nameTextField.placeholder = "Channel Name"
+        }
     }
     
-    func setupHeaderTextField() {
+ /*   func setupHeaderTextField() {
         self.headerTextField.lineHeight = 0
         self.headerTextField.selectedLineHeight = 0
         self.headerTextField.delegate = self

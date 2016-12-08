@@ -8,7 +8,7 @@
 
 import Foundation
 
-fileprivate let sectionTitles: Array = [ "DESCTOP NOTIFICATIONS", "EMAIL NOTIFICATIONS", "MOBILE PUSH NOTIFICATIONS", "WORDS THAT TRIGGER MENTIONES", "REPLY NOTIFICATIONS" ]
+fileprivate let sectionTitles: Array = [ "DESKTOP NOTIFICATIONS", "EMAIL NOTIFICATIONS", "MOBILE PUSH NOTIFICATIONS", "WORDS THAT TRIGGER MENTIONES", "REPLY NOTIFICATIONS" ]
 
 private protocol Inteface: class {
     func numberOfSections() -> Int

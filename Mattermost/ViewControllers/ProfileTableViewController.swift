@@ -139,10 +139,11 @@ extension ProfileViewController: Setup {
         ImageDownloader.downloadFullAvatarForUser(self.user!) { [weak self] (image, error) in
             self?.avatarImageView.image = image
         }
-        
+
+        guard self.isDisplayOnly == false else { return }
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(changeProfilePhoto))
-        self.avatarImageView?.isUserInteractionEnabled = true
         self.avatarImageView.addGestureRecognizer(tapGestureRecognizer);
+        self.avatarImageView?.isUserInteractionEnabled = true
     }
     
     func setupTable() {

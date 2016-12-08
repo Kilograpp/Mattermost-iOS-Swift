@@ -101,13 +101,10 @@ struct Constants {
     
     struct RightMenuRows {
         static let SwitchTeam: Int       = 0
-        static let Files: Int            = 1
-        static let Settings: Int         = 2
-        static let InviteNewMembers: Int = 3
-        static let Help: Int             = 4
-        static let Report: Int           = 5
-        static let About: Int            = 6
-        static let Logout: Int           = 7
+        static let Settings: Int         = 1
+        static let InviteNewMembers: Int = 2
+        static let About: Int            = 3
+        static let Logout: Int           = 4
     }
     
     struct NotifyProps {

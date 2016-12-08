@@ -52,6 +52,7 @@ PODS:
   - RestKit/Support (0.27.0):
     - TransitionKit (~> 2.2)
   - RKValueTransformers (1.1.3)
+  - SnapKit (3.0.2)
   - SOCKit (1.1)
   - SwiftyJSON (3.1.3)
   - TransitionKit (2.2.1)
@@ -62,6 +63,7 @@ DEPENDENCIES:
   - Fabric
   - MRProgress
   - RestKit
+  - SnapKit (~> 3.0.2)
   - SwiftyJSON
 
 SPEC CHECKSUMS:
@@ -72,10 +74,11 @@ SPEC CHECKSUMS:
   MRProgress: 16de7cc9f347e8846797a770db102a323fe7ef09
   RestKit: a0244db34e14ed9cf059fcee2be6733cc162c34a
   RKValueTransformers: e5ed67e3811229b616fe01bddeeafe3bb337b1b9
+  SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
   SOCKit: c7376ac262bea9115b8f749358f762522a47d392
   SwiftyJSON: 38a8ea2006779c0fc4c310cb2ee8195327740faf
   TransitionKit: 9ceccda4cd0cdc0a05ef85eb235e5a3292c3c250
 
-PODFILE CHECKSUM: 8d181d786b298241f86970e51323091fbc437bd1
+PODFILE CHECKSUM: 7e44c17779ca6279ad5fc27a057b62b8f168c153
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1

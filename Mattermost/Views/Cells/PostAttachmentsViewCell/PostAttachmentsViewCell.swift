@@ -65,7 +65,7 @@ public protocol PublicPostAttachmentsViewCell : class {
 extension PostAttachmentsViewCell : PrivatePostAttachmentsViewCell {
     func setupBackgroundImage() {
         self.backgroundImageView = UIImageView()
-//        self.backgroundImageView?.backgroundColor = ColorBucket.blueColor
+        //self.backgroundImageView?.backgroundColor = ColorBucket.blueColor
         self.backgroundImageView?.layer.cornerRadius = 3
         self.backgroundImageView?.clipsToBounds = true
         self.backgroundImageView?.contentMode = .scaleAspectFill
@@ -82,11 +82,11 @@ extension PostAttachmentsViewCell : PrivatePostAttachmentsViewCell {
         self.removeButton = UIButton()
         self.addSubview(self.removeButton!)
         self.removeButton?.translatesAutoresizingMaskIntoConstraints = false
-        self.removeButton?.setBackgroundImage(UIImage(named: "close"), for: UIControlState())
+        self.removeButton?.setBackgroundImage(UIImage(named: "attach_delete_icon"), for: UIControlState())
         let left = NSLayoutConstraint(item: self.removeButton!, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0)
         let right = NSLayoutConstraint(item: self.removeButton!, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
-        let height = NSLayoutConstraint(item: self.removeButton!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 25)
-        let bottom = NSLayoutConstraint(item: self.removeButton!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 25)
+        let height = NSLayoutConstraint(item: self.removeButton!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 23)
+        let bottom = NSLayoutConstraint(item: self.removeButton!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 23)
         self.addConstraints([left, right, height, bottom])
         
         self.removeButton?.addTarget(self, action: #selector(removeButtonAction), for: .touchUpInside)
