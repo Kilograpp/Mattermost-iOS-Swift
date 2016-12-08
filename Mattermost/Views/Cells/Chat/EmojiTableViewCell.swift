@@ -67,9 +67,6 @@ extension EmojiTableViewCell: EmojiTableViewCellSetup {
     func setup() {
         setupThumbnailLabel()
         setupNameLabel()
-        //self.setupBasics()
-        //self.setupMessageLabel()
-        //setupPostStatusView()
     }
     
     func setupThumbnailLabel() {

@@ -31,7 +31,6 @@
 		4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */; };
 		4B7270821DABF4C000445586 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7270811DABF4C000445586 /* AlertView.swift */; };
 		4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */; };
-		4B7DB5A31DA52303000908FB /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */; };
 		4B7DB5A51DA5500F000908FB /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A41DA5500F000908FB /* Member.swift */; };
 		4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */; };
 		4B9DD4BB1DB0C94800AB4D2D /* AttachmentFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */; };
@@ -50,6 +49,8 @@
 		8644A4841DED86D1009280EB /* MemberInAdditingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */; };
 		8644A4881DED8A80009280EB /* AllMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A4871DED8A80009280EB /* AllMembersViewController.swift */; };
 		8644A48A1DED908F009280EB /* ChannelSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8644A4891DED908F009280EB /* ChannelSettings.storyboard */; };
+		864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */; };
+		8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
 		8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */; };
@@ -332,6 +333,8 @@
 		8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberInAdditingCell.xib; sourceTree = "<group>"; };
 		8644A4871DED8A80009280EB /* AllMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllMembersViewController.swift; sourceTree = "<group>"; };
 		8644A4891DED908F009280EB /* ChannelSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = ChannelSettings.storyboard; path = storyboards/ChannelSettings.storyboard; sourceTree = "<group>"; };
+		864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+LoaderView.swift"; sourceTree = "<group>"; };
+		8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
 		8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyProps.swift; sourceTree = "<group>"; };
@@ -578,7 +581,6 @@
 			files = (
 				4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */,
 				8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */,
-				4B7DB5A31DA52303000908FB /* SwiftyJSON.framework in Frameworks */,
 				D624CE261D7B0AA7001754F3 /* UITableView_Cache.framework in Frameworks */,
 				D837F2791D76DCF700CA933F /* HEXColor.framework in Frameworks */,
 				8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */,
@@ -784,6 +786,7 @@
 				8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */,
 				8B77B5E51DC78C0500DF0689 /* Preference.swift */,
 				8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */,
+				8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -818,6 +821,7 @@
 				CDB6D3BC1D78925B00C3018C /* String+Localized.swift */,
 				4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */,
 				4B9DD4BC1DB1445200AB4D2D /* UIImage+Orientation.swift */,
+				864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1543,6 +1547,7 @@
 				44E3A94F1DE8DED9001CD849 /* UserRequestDescriptorsContainer.swift in Sources */,
 				8B3CB3401DD2675F0078DE25 /* MoreCellBuilder.swift in Sources */,
 				D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */,
+				864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */,
 				4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				8B77B5EA1DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift in Sources */,
@@ -1647,6 +1652,7 @@
 				CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
 				860755B21DEE82E200438B09 /* ChannelNameAndHandleCell.swift in Sources */,
+				8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */,
 				8B3CB3831DD392350078DE25 /* SettingsTableViewController.swift in Sources */,
 				8B3CB3631DD268390078DE25 /* FilesPickingModuleBase.swift in Sources */,
 				8B3CB3551DD267EB0078DE25 /* AssignedFileItem.swift in Sources */,

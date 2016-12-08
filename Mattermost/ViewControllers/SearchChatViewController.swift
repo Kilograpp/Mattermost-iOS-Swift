@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 struct SearchStage {
     static let SearchNotStarted: Int       = 0
@@ -29,6 +30,7 @@ class SearchChatViewController: UIViewController {
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var noResultView: UIView!
     @IBOutlet weak var loadingEmozziView: UIView!
+    @IBOutlet weak var autocompleteTableView: UITableView!
     
     fileprivate var searchingInProcessView: SearchingInProcessView?
     fileprivate lazy var builder: SearchCellBuilder = SearchCellBuilder(tableView: self.tableView)
@@ -36,6 +38,7 @@ class SearchChatViewController: UIViewController {
     
     fileprivate var posts: Array<Post>! = Array()
     fileprivate var dates: Array<NSDate>! = Array()
+    fileprivate var searchRequestResults: Results<SearchRequest>? = nil
     
 //MARK: LifeCycle
     override func viewDidLoad() {
@@ -60,11 +63,6 @@ class SearchChatViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         let width = UIScreen.screenWidth() - 75
-        
-        //var frame = self.searchTextField.superview?.frame
-        //let delta = (frame?.origin.x)! - 8
-        //frame?.origin.x = 8
-        //frame?.size.width = 245 + delta
         self.searchTextField.superview?.frame = CGRect(x: 8, y: 20, width: width, height: 44)
     }
 }
@@ -84,6 +82,7 @@ fileprivate protocol Setup {
     func setupTableView()
     func setupSearchView()
     func setupSearchIconTextField()
+    func setupAutocompleteTableView()
 }
 
 fileprivate protocol Action {
@@ -112,6 +111,7 @@ extension SearchChatViewController: Setup {
         setupTableView()
         setupSearchView()
         setupSearchIconTextField()
+        setupAutocompleteTableView()
     }
     
     func setupNavigationBar() {
@@ -147,6 +147,9 @@ extension SearchChatViewController: Setup {
         leftImageView.frame = CGRect(x: 6, y: 2, width: 13, height: 14)
         searchTextField.leftViewMode = UITextFieldViewMode.always
         searchTextField.leftView = leftView
+    }
+    
+    func setupAutocompleteTableView() {
     }
 }
 
@@ -258,6 +261,12 @@ extension SearchChatViewController: Private {
         
         return filteredPosts
     }
+    
+    func prepareSearchRequestResults() {
+        let realm = RealmUtils.realmForCurrentThread()
+        self.searchRequestResults = realm.objects(SearchRequest.self).filter(NSPredicate(format: "text BEGINSWITH[c] %@", self.searchTextField.text!))
+        self.autocompleteTableView.reloadData()
+    }
 }
 
 
@@ -265,14 +274,18 @@ extension SearchChatViewController: Private {
 
 extension SearchChatViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
+        guard tableView != self.autocompleteTableView else { return 1 }
         return (self.dates.count != 0) ? self.dates.count : 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard tableView != self.autocompleteTableView else { return 0 }
         return (section < self.dates.count) ? postsForDate(date: self.dates[section]).count : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard tableView != self.autocompleteTableView else { return UITableViewCell() }
+        
         let post = postsForDate(date: self.dates[indexPath.section])[indexPath.row]
         let cell = self.builder.cellForPost(post: post, searchingText: self.searchTextField.text!)
         (cell as! FeedSearchTableViewCell).disclosureTapHandler = {
@@ -287,10 +300,9 @@ extension SearchChatViewController: UITableViewDataSource {
 //MARK: UITableViewDelegate
 extension SearchChatViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard tableView != self.autocompleteTableView else { return nil }
+        
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: FeedTableViewSectionHeader.reuseIdentifier()) as? FeedTableViewSectionHeader
-      /*  if view == nil {
-            view = FeedTableViewSectionHeader(reuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
-        }*/
         let titleString = (section < self.dates.count) ? (self.dates[section] as Date).feedSectionDateFormat() : StringUtils.emptyString()
         view!.configureWithTitle(titleString)
         view!.transform = tableView.transform
@@ -299,14 +311,17 @@ extension SearchChatViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        guard tableView != self.autocompleteTableView else { return 0 }
         return CGFloat.leastNormalMagnitude
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard tableView != self.autocompleteTableView else { return 0 }
         return FeedTableViewSectionHeader.height()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard tableView != self.autocompleteTableView else { return 25 }
         let post = postsForDate(date: self.dates[indexPath.section])[indexPath.row]
         return self.builder.heightForPost(post: post)
     }
@@ -329,6 +344,7 @@ extension SearchChatViewController: UITextFieldDelegate {
         let newString: NSString = textField.text! as NSString
         textField.text = newString.replacingCharacters(in: range, with: string)
         prepareSearchResults()
+        prepareSearchRequestResults()
         
         return false
     }

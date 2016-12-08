@@ -701,7 +701,9 @@ extension Api: PostApi {
                 post.identifier = resultPost.identifier
             }
             completion(nil)
-        }, failure: completion)
+        }, failure: { (error) in
+            completion(error)
+        })
     }
     
     func getPostWithId(_ identifier: String, channel: Channel, completion: @escaping ((_ post: Post?, _ error: Error?) -> Void)) {

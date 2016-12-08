@@ -9,11 +9,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="informationChannelSettingsCell" rowHeight="50" id="HAi-aH-wXJ" customClass="InformationChannelSettingsCell" customModule="Mattermost" customModuleProvider="target">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="informationChannelSettingsCell" rowHeight="50" id="HAi-aH-wXJ" customClass="InformationChannelSettingsCell" customModule="Mattermost" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HAi-aH-wXJ" id="whX-dq-y0l">
-                <frame key="frameInset" width="375" height="49"/>
+                <frame key="frameInset" width="342" height="49"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FCf-OF-hgu">
@@ -27,17 +27,10 @@
                         <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text=" &gt;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="duw-gj-JLK">
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="FCf-OF-hgu" firstAttribute="leading" secondItem="whX-dq-y0l" secondAttribute="leadingMargin" constant="15" id="2tq-7s-UmX"/>
-                    <constraint firstItem="duw-gj-JLK" firstAttribute="leading" secondItem="mnL-yQ-lp2" secondAttribute="trailing" id="BuI-kL-qVA"/>
-                    <constraint firstItem="duw-gj-JLK" firstAttribute="centerY" secondItem="whX-dq-y0l" secondAttribute="centerY" id="F6f-oc-mYa"/>
-                    <constraint firstAttribute="trailing" secondItem="duw-gj-JLK" secondAttribute="trailing" constant="15" id="JeM-iY-vb2"/>
+                    <constraint firstAttribute="trailing" secondItem="mnL-yQ-lp2" secondAttribute="trailing" id="JnE-yB-Exr"/>
                     <constraint firstItem="mnL-yQ-lp2" firstAttribute="leading" secondItem="FCf-OF-hgu" secondAttribute="trailing" constant="15" id="uRH-e3-hwx"/>
                 </constraints>
             </tableViewCellContentView>
