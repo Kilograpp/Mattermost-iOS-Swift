@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -140,6 +140,13 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o7f-cx-Bo4">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                                    <color key="backgroundColor" red="0.78823529411764703" green="0.82352941176470584" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="1" id="q8d-37-WBE"/>
+                                    </constraints>
+                                </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="93q-28-ucI">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                                     <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
@@ -148,12 +155,26 @@
                                         <action selector="addAnoterAction:" destination="mAG-HC-mWD" eventType="touchUpInside" id="PG0-r8-jgo"/>
                                     </connections>
                                 </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1xX-h0-D8f">
+                                    <rect key="frame" x="0.0" y="45" width="320" height="1"/>
+                                    <color key="backgroundColor" red="0.78823529410000004" green="0.82352941180000006" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="1" id="0dv-f3-9vh"/>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="cY5-Fb-PL3"/>
+                                    </constraints>
+                                </view>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="93q-28-ucI" firstAttribute="leading" secondItem="Onn-vV-7rN" secondAttribute="leading" id="1Y6-ga-ckF"/>
                                 <constraint firstAttribute="bottom" secondItem="93q-28-ucI" secondAttribute="bottom" id="6cp-HM-HEy"/>
+                                <constraint firstAttribute="bottom" secondItem="1xX-h0-D8f" secondAttribute="bottom" id="CKV-Wx-hqF"/>
+                                <constraint firstItem="o7f-cx-Bo4" firstAttribute="top" secondItem="Onn-vV-7rN" secondAttribute="top" id="HZi-E8-fFJ"/>
+                                <constraint firstItem="1xX-h0-D8f" firstAttribute="leading" secondItem="Onn-vV-7rN" secondAttribute="leading" id="Y4P-ot-MIM"/>
+                                <constraint firstAttribute="trailing" secondItem="1xX-h0-D8f" secondAttribute="trailing" id="chN-ZJ-01k"/>
+                                <constraint firstItem="o7f-cx-Bo4" firstAttribute="leading" secondItem="Onn-vV-7rN" secondAttribute="leading" id="kil-Ak-yj8"/>
                                 <constraint firstItem="93q-28-ucI" firstAttribute="top" secondItem="Onn-vV-7rN" secondAttribute="top" id="pF5-jD-0bM"/>
+                                <constraint firstAttribute="trailing" secondItem="o7f-cx-Bo4" secondAttribute="trailing" id="ycm-cK-KCn"/>
                                 <constraint firstAttribute="trailing" secondItem="93q-28-ucI" secondAttribute="trailing" id="zAF-aA-T6f"/>
                             </constraints>
                         </view>
@@ -185,13 +206,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Success invite!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QVy-3n-ti9">
-                                <rect key="frame" x="82.5" y="149.5" width="155.5" height="29"/>
+                                <rect key="frame" x="80" y="150" width="161" height="28"/>
                                 <fontDescription key="fontDescription" name="SFUIDisplay-Regular" family="SF UI Display" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8f3-Zi-2ps">
-                                <rect key="frame" x="31" y="188.5" width="258" height="20.5"/>
+                                <rect key="frame" x="31" y="188" width="258" height="20"/>
                                 <fontDescription key="fontDescription" name="SFUIDisplay-Regular" family="SF UI Display" pointSize="17"/>
                                 <color key="textColor" red="0.20000000000000001" green="0.27450980392156865" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
