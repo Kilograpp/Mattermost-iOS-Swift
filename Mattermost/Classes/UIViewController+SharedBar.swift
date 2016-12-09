@@ -16,6 +16,6 @@ extension UIViewController: SharedBar {
     func replaceStatusBar() {
         guard let navigationController = self.navigationController else { return }
         //UIStatusBar.shared().reset()
-        UIStatusBar.shared().attach(to: navigationController.view)
+        //UIStatusBar.shared().attach(to: navigationController.view)
     }
 }
