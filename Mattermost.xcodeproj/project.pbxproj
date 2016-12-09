@@ -154,6 +154,8 @@
 		9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */; };
 		9B822D4F5FE09663955B4184 /* MattermostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822FEE7A890495F4436A4C /* MattermostTests.swift */; };
 		9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B8220F2E4D1D8538A51229B /* Assets.xcassets */; };
+		A5D385C11DFAFE9B001505C2 /* UIStatusBar+SharedBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D385C01DFAFE98001505C2 /* UIStatusBar+SharedBar.m */; };
+		A5D385C31DFAFF00001505C2 /* UIViewController+SharedBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */; };
 		CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */; };
 		CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */; };
 		CDB4BC5A1D8033DF00662231 /* FileResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */; };
@@ -444,6 +446,9 @@
 		9B82277B4990BE0D7CE06FE9 /* MattermostTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MattermostTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B82299925DAB67819BE3C95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B822FEE7A890495F4436A4C /* MattermostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MattermostTests.swift; sourceTree = "<group>"; };
+		A5D385BF1DFAFE98001505C2 /* UIStatusBar+SharedBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIStatusBar+SharedBar.h"; path = "../../../Desktop/UIStatusBar+SharedBar.h"; sourceTree = "<group>"; };
+		A5D385C01DFAFE98001505C2 /* UIStatusBar+SharedBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIStatusBar+SharedBar.m"; path = "../../../Desktop/UIStatusBar+SharedBar.m"; sourceTree = "<group>"; };
+		A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+SharedBar.swift"; sourceTree = "<group>"; };
 		C16480FE9907B36335721461 /* Pods_Mattermost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mattermost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationController.swift; path = NavigationControllers/ChatNavigationController/ChatNavigationController.swift; sourceTree = "<group>"; };
 		CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreChannelsViewController.swift; sourceTree = "<group>"; };
@@ -1155,6 +1160,8 @@
 		D8436E6E1D26DDED00DEF464 /* Objective-C Runtime */ = {
 			isa = PBXGroup;
 			children = (
+				A5D385BF1DFAFE98001505C2 /* UIStatusBar+SharedBar.h */,
+				A5D385C01DFAFE98001505C2 /* UIStatusBar+SharedBar.m */,
 				D8B846B21D4A38D500AEE19A /* NSObject+EnumerateProperties.h */,
 				D8B846B31D4A38D500AEE19A /* NSObject+EnumerateProperties.m */,
 				D8436E6F1D26DDFC00DEF464 /* NSObject+RuntimeMethodsValues.h */,
@@ -1189,6 +1196,7 @@
 				8B3CB3511DD267EB0078DE25 /* PageWrapper.swift */,
 				8B3CB3521DD267EB0078DE25 /* ProfileDataSource.swift */,
 				8B3CB3531DD267EB0078DE25 /* UserStatus.swift */,
+				A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
 			);
 			path = Classes;
@@ -1473,7 +1481,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		D84DA70F1D22C14900DCFF4B /* Copy Carthage Frameworks */ = {
@@ -1691,6 +1699,7 @@
 				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
 				860755A81DEDDE5C00438B09 /* ChannelInfoCell.swift in Sources */,
 				8BEE0C851DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift in Sources */,
+				A5D385C31DFAFF00001505C2 /* UIViewController+SharedBar.swift in Sources */,
 				CDB4BC651D8062B600662231 /* PostRequestDescriptorsContainer.swift in Sources */,
 				D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */,
 				D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */,
@@ -1700,6 +1709,7 @@
 				D8935BAC1D5B79E80037E7ED /* NSIndexPath+PreviousPath.swift in Sources */,
 				CDB4BC711D806ED000662231 /* PostMappingsContainer.swift in Sources */,
 				8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */,
+				A5D385C11DFAFE9B001505C2 /* UIStatusBar+SharedBar.m in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
 				860755AA1DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift in Sources */,
