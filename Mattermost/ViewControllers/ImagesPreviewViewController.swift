@@ -91,8 +91,8 @@ extension ImagesPreviewViewController {
         
         var barItems = Array<UIBarButtonItem>()
         
-        barItems.append(UIBarButtonItem(image: UIImage(named: "navbar_back_icon"), style: .done,
-                                              target: self, action: #selector(backAction)))
+        barItems.append(UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil))
+        barItems.append(UIBarButtonItem(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction)))
         barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
         
         self.titleLabel.frame = CGRect(x: 0, y: 0, width: 40, height: 30)
@@ -105,7 +105,9 @@ extension ImagesPreviewViewController {
         let titleBar = UIBarButtonItem(customView: self.titleLabel)
         barItems.append(titleBar)
         barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
-        barItems.append(UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveImageAction)))
+        
+        barItems.append(UIBarButtonItem(image: UIImage(named: "save_button_title"), style: .done, target: self, action: #selector(saveImageAction)))
+        barItems.append(UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil))
         
         toolbar.items = barItems
         

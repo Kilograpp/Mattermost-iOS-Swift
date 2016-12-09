@@ -57,14 +57,15 @@ private protocol MarkdownFonts: class {
 }
 
 private protocol MoreChannelsFonts: class {
-    static var titleChannelFont : UIFont { get }
-    static var subtitleChannelFont : UIFont { get }
-    static var dateChannelFont : UIFont { get }
-    static var letterChannelFont : UIFont { get }
+    static var titleChannelFont: UIFont { get }
+    static var subtitleChannelFont: UIFont { get }
+    static var dateChannelFont: UIFont { get }
+    static var letterChannelFont: UIFont { get }
 }
 
 private protocol TeamsFonts: class {
-    static var titleURLFont : UIFont { get }
+    static var teamNameFont: UIFont {get}
+    static var titleURLFont: UIFont { get }
 }
 
 private protocol CommonFonts: class {
@@ -123,6 +124,7 @@ extension FontBucket: MoreChannelsFonts {
 }
 
 extension FontBucket: TeamsFonts {
+    static let teamNameFont = FontBucket.regularFontOfSize(16)
     static let titleURLFont = FontBucket.boldFontOfSize(28)
 }
 

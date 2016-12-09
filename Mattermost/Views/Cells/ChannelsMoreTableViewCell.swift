@@ -9,7 +9,7 @@
 import UIKit
 import WebImage
 
-protocol ChannelsMoreTableViewCellConfiguration {
+private protocol Configuration {
     func configureWith(resultTuple: ResultTuple)
     func cellHeigth() -> CGFloat
     func configureWith(user: User)
@@ -19,12 +19,15 @@ protocol ChannelsMoreTableViewCellConfiguration {
 }
 
 class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
-    let avatarImageView = UIImageView()
-    let channelLetterLabel = UILabel()
-    let nameLabel = UILabel()
-    let checkBoxButton = UIButton()
-    let separatorView = UIView()
     
+//MARK: Properties
+    fileprivate let avatarImageView = UIImageView()
+    fileprivate let channelLetterLabel = UILabel()
+    fileprivate let nameLabel = UILabel()
+    let checkBoxButton = UIButton()
+    fileprivate let separatorView = UIView()
+    
+//MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -34,17 +37,41 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
+    override func layoutSubviews() {
+        self.avatarImageView.frame = CGRect(x: Constants.UI.StandardPaddingSize, y: Constants.UI.LongPaddingSize, width: 40, height: 40)
+        
+        let width = UIScreen.screenWidth() - self.avatarImageView.frame.maxX - 4 * Constants.UI.StandardPaddingSize - Constants.UI.DoublePaddingSize
+        self.nameLabel.frame = CGRect(x: self.avatarImageView.frame.maxX + Constants.UI.StandardPaddingSize,
+                                      y: Constants.UI.DoublePaddingSize,
+                                      width: width,
+                                      height: Constants.UI.DoublePaddingSize)
+        
+        self.checkBoxButton.frame = CGRect(x: self.nameLabel.frame.maxX + Constants.UI.DoublePaddingSize,
+                                           y: Constants.UI.DoublePaddingSize,
+                                           width: Constants.UI.DoublePaddingSize,
+                                           height: Constants.UI.DoublePaddingSize)
+        
+        self.separatorView.frame = CGRect(x: 70, y: 59, width: UIScreen.screenWidth() - 70, height: 1)
+        
+        super.layoutSubviews()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.avatarImageView.image = nil
+        self.nameLabel.text = nil
+    }
 }
 
 
 //MARK: Configuration
-
-extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
+extension ChannelsMoreTableViewCell: Configuration {
     func configureWith(resultTuple: ResultTuple) {
         if (resultTuple.object.isKind(of: Channel.self)) {
             configureWith(channel: (resultTuple.object as! Channel))
-        }
-        else {
+        } else {
             configureWith(user: (resultTuple.object as! User))
         }
         self.checkBoxButton.isSelected = resultTuple.checked
@@ -106,21 +133,21 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellConfiguration {
 }
 
 
-private protocol ChannelsMoreTableViewCellSetup {
+fileprivate protocol Setup {
     func initialSetup()
     func setupAvatarImageView()
     func setupChannelLetterLabel()
     func setupNameLabel()
     func setupCheckBoxButton()
 }
-
+/*
 private protocol ChannelsMoreTableViewCellAction {
     func checkBoxAction()
-}
+}*/
+
 
 //MARK: Setup
-
-extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellSetup {
+extension ChannelsMoreTableViewCell: Setup {
     func initialSetup() {
         self.selectionStyle = .none
         setupAvatarImageView()
@@ -179,36 +206,5 @@ extension ChannelsMoreTableViewCell: ChannelsMoreTableViewCellSetup {
     func setupSeparatorView() {
         self.separatorView.backgroundColor = ColorBucket.separatorViewBackgroundColor
         self.addSubview(self.separatorView)
-    }
-}
-
-
-//MARK: LifeCycle
-
-extension ChannelsMoreTableViewCell {
-    override func layoutSubviews() {
-        self.avatarImageView.frame = CGRect(x: Constants.UI.StandardPaddingSize, y: Constants.UI.LongPaddingSize, width: 40, height: 40)
-        
-        let width = UIScreen.screenWidth() - self.avatarImageView.frame.maxX - 4 * Constants.UI.StandardPaddingSize - Constants.UI.DoublePaddingSize
-        self.nameLabel.frame = CGRect(x: self.avatarImageView.frame.maxX + Constants.UI.StandardPaddingSize,
-                                      y: Constants.UI.DoublePaddingSize,
-                                      width: width,
-                                      height: Constants.UI.DoublePaddingSize)
-        
-        self.checkBoxButton.frame = CGRect(x: self.nameLabel.frame.maxX + Constants.UI.DoublePaddingSize,
-                                           y: Constants.UI.DoublePaddingSize,
-                                           width: Constants.UI.DoublePaddingSize,
-                                           height: Constants.UI.DoublePaddingSize)
-        
-        self.separatorView.frame = CGRect(x: 70, y: 59, width: UIScreen.screenWidth() - 70, height: 1)
- 
-        super.layoutSubviews()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        self.avatarImageView.image = nil
-        self.nameLabel.text = nil
     }
 }
