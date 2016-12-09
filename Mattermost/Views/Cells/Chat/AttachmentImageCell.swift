@@ -237,6 +237,9 @@ extension AttachmentImageCell: Updating {
                         self?.fileImageView.image = finalImage
                         //NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationsNames.ReloadChatNotification), object: nil)
                         let postLocalId = self?.file.post?.localIdentifier
+                        
+                        guard postLocalId != nil else { return }
+                        
                         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.ReloadChatNotification),
                                                         object: nil, userInfo: ["postLocalId" : postLocalId])
                         NotificationCenter.default.post(notification as Notification)
