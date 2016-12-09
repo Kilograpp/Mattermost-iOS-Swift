@@ -42,6 +42,8 @@
 		860755AA1DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860755A91DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift */; };
 		860755B01DEE817C00438B09 /* ChannelNameAndHandleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860755AF1DEE817C00438B09 /* ChannelNameAndHandleCell.xib */; };
 		860755B21DEE82E200438B09 /* ChannelNameAndHandleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860755B11DEE82E200438B09 /* ChannelNameAndHandleCell.swift */; };
+		86408A751DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86408A731DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.swift */; };
+		86408A761DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86408A741DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.xib */; };
 		8644A4761DED8658009280EB /* AddMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A4751DED8658009280EB /* AddMembersViewController.swift */; };
 		8644A47A1DED867A009280EB /* ChannelHeaderAndDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A4791DED867A009280EB /* ChannelHeaderAndDescriptionViewController.swift */; };
 		8644A4801DED86C4009280EB /* ChannelInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644A47E1DED86C4009280EB /* ChannelInfoCell.xib */; };
@@ -328,6 +330,8 @@
 		860755A91DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelNameAndHandleViewController.swift; sourceTree = "<group>"; };
 		860755AF1DEE817C00438B09 /* ChannelNameAndHandleCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChannelNameAndHandleCell.xib; sourceTree = "<group>"; };
 		860755B11DEE82E200438B09 /* ChannelNameAndHandleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelNameAndHandleCell.swift; sourceTree = "<group>"; };
+		86408A731DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberLinkTableViewCell.swift; sourceTree = "<group>"; };
+		86408A741DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberLinkTableViewCell.xib; sourceTree = "<group>"; };
 		8644A4751DED8658009280EB /* AddMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMembersViewController.swift; sourceTree = "<group>"; };
 		8644A4791DED867A009280EB /* ChannelHeaderAndDescriptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelHeaderAndDescriptionViewController.swift; sourceTree = "<group>"; };
 		8644A47E1DED86C4009280EB /* ChannelInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChannelInfoCell.xib; sourceTree = "<group>"; };
@@ -1118,6 +1122,8 @@
 				D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */,
 				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
 				4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */,
+				86408A731DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.swift */,
+				86408A741DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.xib */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1394,6 +1400,7 @@
 				9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */,
 				860755B01DEE817C00438B09 /* ChannelNameAndHandleCell.xib in Resources */,
 				8BCDDC741DE6E678006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
+				86408A761DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.xib in Resources */,
 				8B3CB3461DD267B80078DE25 /* More.storyboard in Resources */,
 				8BCDDC821DE6E701006D83BC /* HeaderChannelSettingsCell.xib in Resources */,
 				8BCDDC841DE6E701006D83BC /* InformationChannelSettingsCell.xib in Resources */,
@@ -1541,6 +1548,7 @@
 				8B3CB37B1DD269C30078DE25 /* SocketManager.swift in Sources */,
 				8B3CB3571DD267EB0078DE25 /* AttributedLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
+				86408A751DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.swift in Sources */,
 				D8B846B41D4A38D500AEE19A /* NSObject+EnumerateProperties.m in Sources */,
 				8B882D711DA6F8A10028F13D /* EmojiTableViewCell.swift in Sources */,
 				8BCDDC851DE6E701006D83BC /* LabelChannelSettingsCell.swift in Sources */,

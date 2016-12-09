@@ -18,7 +18,7 @@ class InviteNewMemberTableViewCell: UITableViewCell, Reusable {
     
     fileprivate let iconImageView = UIImageView()
     let textField = UITextField()
-   
+
     
 //MARK: LifeCycle
     
