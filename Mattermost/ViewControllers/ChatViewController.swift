@@ -51,7 +51,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
-
+    fileprivate var membersResult: Results<User>?
 }
 
 fileprivate protocol Setup {
@@ -169,6 +169,16 @@ extension ChatViewController: Setup {
         setupCompactPost()
         setupEmptyDialogueLabel()
         setupModules()
+        setupActualTownSquare()
+    }
+    
+    fileprivate func setupActualTownSquare() {
+        let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
+        Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
+            guard (error == nil) else {
+                return
+            }
+        })
     }
     
     fileprivate func setupModules() {
@@ -185,7 +195,10 @@ extension ChatViewController: Setup {
         self.tableView.register(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier, cacheSize: 18)
         self.tableView.register(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
         self.autoCompletionView.register(EmojiTableViewCell.classForCoder(), forCellReuseIdentifier: EmojiTableViewCell.reuseIdentifier)
-        self.registerPrefixes(forAutoCompletion: [":"])
+        let nib = UINib(nibName: "MemberLinkTableViewCell", bundle: nil)
+        self.autoCompletionView.register(nib, forCellReuseIdentifier: "memberLinkTableViewCell")
+        self.registerPrefixes(forAutoCompletion: ["@", ":"])
+        
     }
     
     fileprivate func setupInputBar() {
@@ -693,7 +706,7 @@ extension ChatViewController {
             return self.resultsObserver?.numberOfRows(section) ?? 0
         }
         
-        return (self.emojiResult != nil) ? (self.emojiResult?.count)! : 0
+        return (self.emojiResult != nil) ? (self.emojiResult?.count)! : (self.membersResult != nil) ? (self.membersResult?.count)! : 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -718,7 +731,11 @@ extension ChatViewController {
             return cell
         }
         else {
-            return autoCompletionCellForRowAtIndexPath(indexPath)
+            if emojiResult != nil {
+                return autoCompletionEmojiCellForRowAtIndexPath(indexPath)
+            } else {
+                return autoCompletionMembersCellForRowAtIndexPath(indexPath)
+            }
         }
     }
 }
@@ -762,7 +779,12 @@ extension ChatViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (tableView == self.autoCompletionView) {
-            guard let emojiResult = self.emojiResult else { return }
+            guard let emojiResult = self.emojiResult else {
+                guard let membersResult = self.membersResult else { return }
+                var item = membersResult[indexPath.row].displayName! + " "
+                self.acceptAutoCompletion(with: item, keepPrefix: true)
+                return
+            }
             var item = emojiResult[indexPath.row]
             if (self.foundPrefix == ":") {
                 item += ":"
@@ -923,7 +945,7 @@ extension ChatViewController: AttachmentsModuleDataSource {
 //MARK: AutoCompletionView
 
 extension ChatViewController {
-    func autoCompletionCellForRowAtIndexPath(_ indexPath: IndexPath) -> EmojiTableViewCell {
+    func autoCompletionEmojiCellForRowAtIndexPath(_ indexPath: IndexPath) -> EmojiTableViewCell {
         let cell = self.autoCompletionView.dequeueReusableCell(withIdentifier: EmojiTableViewCell.reuseIdentifier) as! EmojiTableViewCell
         cell.selectionStyle = .default
         
@@ -937,6 +959,19 @@ extension ChatViewController {
         return cell
     }
     
+    func autoCompletionMembersCellForRowAtIndexPath(_ indexPath: IndexPath) -> MemberLinkTableViewCell {
+        let cell = self.autoCompletionView.dequeueReusableCell(withIdentifier: "memberLinkTableViewCell") as! MemberLinkTableViewCell
+        cell.selectionStyle = .default
+        
+        guard let memberResult = self.membersResult else { return cell }
+        guard let prefix = self.foundPrefix else { return cell }
+        
+        let member = memberResult[indexPath.row]
+        cell.configureWithUser(user: member)
+        
+        return cell
+    }
+    
     override func shouldProcessText(forAutoCompletion text: String) -> Bool {
         return true
     }
@@ -944,9 +979,21 @@ extension ChatViewController {
     override func didChangeAutoCompletionPrefix(_ prefix: String, andWord word: String) {
         var array:Array<String> = []
         self.emojiResult = nil
+        self.membersResult = nil
+
         
         if (prefix == ":") && word.characters.count > 0 {
             array = Constants.EmojiArrays.mattermost.filter { NSPredicate(format: "self BEGINSWITH[c] %@", word).evaluate(with: $0) };
+        }
+        
+        if (prefix == "@") {
+            let sortName = UserAttributes.username.rawValue
+            if let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first {
+                let townSquareIdentifiers = Array(townSquare.members.map{$0.identifier!})
+                
+                let predicate =  NSPredicate(format: "identifier IN %@ AND displayName BEGINSWITH[c] '\(word)'", townSquareIdentifiers)
+                self.membersResult = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+            }
         }
         
         var show = false
@@ -954,13 +1001,22 @@ extension ChatViewController {
             let sortedArray = array.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
             self.emojiResult = sortedArray
             show = sortedArray.count > 0
+        } else {
+            show = self.membersResult != nil
         }
         
         self.showAutoCompletionView(show)
     }
     
     override func heightForAutoCompletionView() -> CGFloat {
-        guard let smilesResult = self.emojiResult else { return 0 }
+        guard let smilesResult = self.emojiResult else {
+            guard let membersResult = self.membersResult else {
+                return 0
+            }
+            let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
+            
+            return cellHeight * CGFloat(membersResult.count)
+        }
         let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
         
         return cellHeight * CGFloat(smilesResult.count)
