@@ -157,18 +157,13 @@ extension NotifyProps: TriggerWords {
     }
     
     func otherNonCaseSensitive() -> String {
-        var mention = self.mentionKeys
+        var mention = self.mentionKeys?.replacingOccurrences(of: " ", with: "")
         let username = DataManager.sharedInstance.currentUser?.username
-        mention = mention?.replacingOccurrences(of: ("@" + username!), with: "")
-        mention = mention?.replacingOccurrences(of: (username!), with: "")
-        mention = mention?.replacingOccurrences(of: ",,", with: ",")
-        if (mention?.hasPrefix(","))! {
-            mention?.remove(at: (mention?.startIndex)!)
-        }
         
-        if (mention?.hasSuffix(","))! {
-            mention?.remove(at: (mention?.endIndex)!)
-        }
+        var words = mention?.components(separatedBy: ",")
+        words?.removeObject("@" + username!)
+        words?.removeObject(username!)
+        mention = (words?.joined(separator: ","))!
         
         return mention!
     }
@@ -177,20 +172,21 @@ extension NotifyProps: TriggerWords {
         let user = DataManager.sharedInstance.currentUser
         var words = self.isSensitiveFirstName() ? StringUtils.quotedString(user?.firstName) : ""
         if self.isNonCaseSensitiveUsername() {
-            words += StringUtils.commaTailedString(words)
+            words = StringUtils.commaTailedString(words)
             words += StringUtils.quotedString(user?.username!)
         }
         if self.isUsernameMentioned() {
-            words += StringUtils.commaTailedString(words)
+            words = StringUtils.commaTailedString(words)
             words += StringUtils.quotedString("@" + (user?.username!)!)
         }
         if self.isChannelWide() {
-            words += StringUtils.commaTailedString(words)
+            words = StringUtils.commaTailedString(words)
             words += Constants.NotifyProps.Words.ChannelWide
         }
-        let otherWords = self.otherNonCaseSensitive()
+        var otherWords = self.otherNonCaseSensitive()
+        otherWords = "\"" + otherWords.replacingOccurrences(of: ",", with: "\",\"") + "\""
         if (otherWords.characters.count > 0) {
-            words += StringUtils.commaTailedString(words)
+            words = StringUtils.commaTailedString(words)
             words += otherWords
         }
         

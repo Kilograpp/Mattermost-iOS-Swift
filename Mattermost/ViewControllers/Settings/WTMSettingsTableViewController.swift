@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WTMSettingsTableViewController: UITableViewController {
+final class WTMSettingsTableViewController: UITableViewController {
  
 //MARK: Properties
     fileprivate var saveButton: UIBarButtonItem!
@@ -140,7 +140,9 @@ extension WTMSettingsTableViewController {
     }
  
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return self.builder.cellFor(notifyProps: self.notifyProps!, indexPath: indexPath)
+        let cell = self.builder.cellFor(notifyProps: self.notifyProps!, indexPath: indexPath)
+        if indexPath.section == 1 { (cell as! TextSettingsTableViewCell).wordsTextView?.delegate = self }
+        return cell
     }
 }
 

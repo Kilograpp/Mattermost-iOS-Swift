@@ -133,7 +133,7 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func setupUsers(){
+    func setupUsers() {
         let sortName = UserAttributes.username.rawValue
         let identifiers = Array(channel.members.map{$0.identifier!})
         let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
