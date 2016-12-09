@@ -82,6 +82,7 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
         self.navigationItem.leftBarButtonItem = backButton
         
         let inviteButton = UIBarButtonItem.init(title: "Invite", style: .done, target: self, action: #selector(inviteAction))
+        inviteButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = inviteButton
     }
     
@@ -96,7 +97,6 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
     }
 }
 
-
 //MARK: InviteNewMemberTableViewControllerAction
 
 extension InviteNewMemberTableViewController: InviteNewMemberTableViewControllerAction {
@@ -109,6 +109,8 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
     }
     
     @IBAction func addAnoterAction(_ sender: AnyObject) {
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+
         self.memberTuplesArray.append((email: "", firstName: "", lastName: ""))
         self.tableView.reloadData()
     }
@@ -150,7 +152,6 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
                 AlertManager.sharedManager.showWarningWithMessage(message: (error?.message)!);
                 return
             }
-            
              self.proceedToSuccessInviteNewMember()
         }
     }
@@ -173,7 +174,7 @@ extension InviteNewMemberTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! InviteNewMemberTableViewCell
         cell.textField.tag = indexPath.section * 10 + indexPath.row
         cell.textField.delegate = self
-        
+
         switch indexPath.row {
         case 0:
             cell.configureWithIcon(UIImage(named: "profile_email_icon")!,
@@ -196,7 +197,6 @@ extension InviteNewMemberTableViewController {
         return cell
     }
 }
-
 
 //MARK: UITableViewDelegate
 
@@ -231,6 +231,16 @@ extension InviteNewMemberTableViewController: UITextFieldDelegate {
         default:
             break
         }
+        
+        var inviteFlag = true
+        for memberTouple in self.memberTuplesArray {
+            guard (memberTouple.email.characters.count > 0) else {
+                inviteFlag = false
+                break
+            }
+        }
+        self.navigationItem.rightBarButtonItem?.isEnabled = inviteFlag
+        
         return false
     }
 }
