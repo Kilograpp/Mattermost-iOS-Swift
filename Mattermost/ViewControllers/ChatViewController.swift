@@ -1134,16 +1134,27 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
 //MARK: ImagesPreviewViewController
 extension ChatViewController {
     func openPreviewWith(postLocalId: String) {
+        print("sdsdfsdfsdfsdfsdfsdf")
         let gallery = ImagesPreviewViewController(delegate: self)
         gallery.configureWith(postLocalId: postLocalId)
-        present(gallery, animated: true, completion: nil)
+        //present(gallery, animated: true, completion: nil)
+        let transaction = CATransition()
+        transaction.duration = 0.3
+        transaction.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transaction.type = kCATransitionMoveIn
+        transaction.subtype = kCATransitionFromBottom
+        self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
+        //let identifier = String(describing: SearchChatViewController.self)
+        //let searchChat = self.storyboard?.instantiateViewController(withIdentifier: identifier) as! SearchChatViewController
+        //searchChat.configureWithChannel(channel: self.channel!)
+        self.navigationController?.pushViewController(gallery, animated: false)
     }
 }
 
 
 // MARK: ImagesPreviewViewControllerDelegate
 extension ChatViewController: ImagesPreviewViewControllerDelegate {
-    func imagesPreviewDidSwipeDownToClose(imagesPreview: ImagesPreviewViewController) {
+    func imagesPreviewDidSwipeToClose(imagesPreview: ImagesPreviewViewController, direction: UISwipeGestureRecognizerDirection) {
         dismiss(animated: true, completion: nil)
     }
 }

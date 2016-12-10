@@ -12,7 +12,7 @@ import RealmSwift
 import WebImage
 
 @objc protocol ImagesPreviewViewControllerDelegate {
-    func imagesPreviewDidSwipeDownToClose(imagesPreview: ImagesPreviewViewController)
+    func imagesPreviewDidSwipeToClose(imagesPreview: ImagesPreviewViewController, direction: UISwipeGestureRecognizerDirection)
 }
 
 private protocol Configuration: class {
@@ -23,7 +23,7 @@ private protocol Configuration: class {
 final class ImagesPreviewViewController: UIViewController {
     
 //MARK: Properties
-    fileprivate let titleLabel = UILabel()
+    //fileprivate let titleLabel = UILabel()
     public lazy var imageCollectionView: UICollectionView = self.setupCollectionView()
     fileprivate var flowLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
     
@@ -51,10 +51,12 @@ final class ImagesPreviewViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupToolbar()
+       // setupToolbar()
+        
+        setupNavigationBar()
         
         self.view.backgroundColor = ColorBucket.whiteColor
-        setupGestureRecognizer()
+        setupGestureRecognizers()
     }
 }
 
@@ -70,11 +72,17 @@ extension ImagesPreviewViewController: Configuration {
 
 fileprivate protocol Setup: class {
     func setupCollectionView() -> UICollectionView
-    func setupGestureRecognizer()
+    func setupGestureRecognizers()
 }
 
 fileprivate protocol Action: class {
-    func swipeDownAction(recognizer: UITapGestureRecognizer)
+    func swipeAction(recognizer: UISwipeGestureRecognizer)
+    func backAction()
+    func saveAction()
+}
+
+fileprivate protocol Navigation: class {
+    func returnToChatWith(direction: UISwipeGestureRecognizerDirection)
 }
 
 fileprivate protocol ImageOperation: class {
@@ -85,6 +93,12 @@ fileprivate protocol ImageOperation: class {
 
 //MARK: Setup
 extension ImagesPreviewViewController {
+    func setupNavigationBar() {
+        self.title = "1/" + String((self.imageFiles?.count)!)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navbar_back_icon"),
+                                                                style: .done, target: self, action: #selector(backAction))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveAction))
+    }
     func setupToolbar() {
         let width = UIScreen.main.bounds.width
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: width, height: 64))
@@ -95,18 +109,18 @@ extension ImagesPreviewViewController {
         barItems.append(UIBarButtonItem(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction)))
         barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
         
-        self.titleLabel.frame = CGRect(x: 0, y: 0, width: 40, height: 30)
-        self.titleLabel.backgroundColor = UIColor.clear
-        self.titleLabel.textColor = ColorBucket.blackColor
-        self.titleLabel.font = FontBucket.highlighTedTitleFont
-        self.titleLabel.text = "1/" + String((self.imageFiles?.count)!)
-        self.titleLabel.textAlignment = .center
+    //    self.titleLabel.frame = CGRect(x: 0, y: 0, width: 40, height: 30)
+//        self.titleLabel.backgroundColor = UIColor.clear
+//        self.titleLabel.textColor = ColorBucket.blackColor
+//        self.titleLabel.font = FontBucket.highlighTedTitleFont
+//        self.titleLabel.text = "1/" + String((self.imageFiles?.count)!)
+//        self.titleLabel.textAlignment = .center
         
-        let titleBar = UIBarButtonItem(customView: self.titleLabel)
-        barItems.append(titleBar)
+  //      let titleBar = UIBarButtonItem(customView: self.titleLabel)
+    //    barItems.append(titleBar)
         barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
         
-        barItems.append(UIBarButtonItem(image: UIImage(named: "save_button_title"), style: .done, target: self, action: #selector(saveImageAction)))
+        barItems.append(UIBarButtonItem(image: UIImage(named: "save_button_title"), style: .done, target: self, action: #selector(saveAction)))
         barItems.append(UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil))
         
         toolbar.items = barItems
@@ -131,7 +145,7 @@ extension ImagesPreviewViewController {
         let leadingLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .leading, relatedBy: .equal,
                                                          toItem: self.view, attribute: .leading, multiplier: 1, constant: 0)
         let topLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .top, relatedBy: .equal,
-                                                     toItem: self.view, attribute: .top, multiplier: 1, constant: 64)
+                                                     toItem: self.view, attribute: .top, multiplier: 1, constant: 0)
         let trailingLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .trailing, relatedBy: .equal,
                                                           toItem: self.view, attribute: .trailing, multiplier: 1, constant: 0)
         let bottomLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: .bottom, relatedBy: .equal,
@@ -147,26 +161,55 @@ extension ImagesPreviewViewController {
         return collectionView
     }
     
-    func setupGestureRecognizer() {
-        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeDownAction(recognizer:)))
-        swipeGestureRecognizer.direction = .up
-        self.imageCollectionView.addGestureRecognizer(swipeGestureRecognizer)
+    func setupGestureRecognizers() {
+        let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(recognizer:)))
+        swipeUpGestureRecognizer.direction = .up
+        self.imageCollectionView.addGestureRecognizer(swipeUpGestureRecognizer)
+        
+        let swipeDownGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(recognizer:)))
+        swipeDownGestureRecognizer.direction = .down
+        self.imageCollectionView.addGestureRecognizer(swipeDownGestureRecognizer)
     }
 }
 
 
 //MARK: Action
 extension ImagesPreviewViewController {
-    func swipeDownAction(recognizer: UITapGestureRecognizer) {
-        self.delegate?.imagesPreviewDidSwipeDownToClose(imagesPreview: self)
+    func swipeAction(recognizer: UISwipeGestureRecognizer) {
+        //self.delegate?.imagesPreviewDidSwipeToClose(imagesPreview: self, direction: recognizer.direction)
+    /*    let transition = CATransition()
+        transition.duration = 0.3
+        transition.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transition.type = kCATransitionReveal
+        transition.subtype = (recognizer.direction == .up) ? kCATransitionFromTop : kCATransitionFromBottom
+        
+        self.navigationController?.view.layer.add(transition, forKey: kCATransition)
+        _ = self.navigationController?.popViewController(animated: false)*/
+        returnToChatWith(direction: recognizer.direction)
     }
     
     func backAction() {
-        self.delegate?.imagesPreviewDidSwipeDownToClose(imagesPreview: self)
+        //self.delegate?.imagesPreviewDidSwipeToClose(imagesPreview: self, direction: .down)
+        returnToChatWith(direction: .up)
     }
     
-    func saveImageAction() {
+    func saveAction() {
         saveDisplayedImage()
+    }
+}
+
+
+//MARK: Navigation
+extension ImagesPreviewViewController: Navigation {
+    func returnToChatWith(direction: UISwipeGestureRecognizerDirection) {
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transition.type = kCATransitionReveal
+        transition.subtype = (direction == .up) ? kCATransitionFromTop : kCATransitionFromBottom
+        
+        self.navigationController?.view.layer.add(transition, forKey: kCATransition)
+        _ = self.navigationController?.popViewController(animated: false)
     }
 }
 
@@ -262,7 +305,7 @@ extension ImagesPreviewViewController: UICollectionViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // If the scroll animation ended, update the page control to reflect the current page we are on
         let currentPage = Int(scrollView.contentOffset.x / scrollView.frame.width + 1)
-        self.titleLabel.text = String(currentPage) + "/" + String((self.imageFiles?.count)!)
+        self.title = String(currentPage) + "/" + String((self.imageFiles?.count)!)
     }
 
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
