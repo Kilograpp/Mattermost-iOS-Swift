@@ -14,7 +14,11 @@ struct Error {
     
     init(error: Swift.Error!) {
         code = (error as NSError).code
-        message = error.localizedDescription
+        if let errorIndex = Constants.ErrorMessages.code.index(of: code) {
+            message = Constants.ErrorMessages.message[errorIndex]
+        } else {
+            message = (error as NSError).localizedDescription
+        }
     }
     
     init(errorCode: Int, errorMessage: String) {

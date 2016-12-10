@@ -18,33 +18,33 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9NQ-5i-oeZ">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="about_kg_icon" translatesAutoresizingMaskIntoConstraints="NO" id="9NQ-5i-oeZ">
                         <rect key="frame" x="15" y="11" width="20" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="3aA-Ze-7rY"/>
                             <constraint firstAttribute="width" constant="20" id="Vsz-nK-oaA"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNp-M1-Hqr">
-                        <rect key="frame" x="50" y="13" width="146" height="18"/>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="blblblblbllblblblb" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XTV-gH-E9f">
+                        <rect key="frame" x="50" y="13" width="116" height="17"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="blblblblbllblblblb" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XTV-gH-E9f">
-                        <rect key="frame" x="211" y="14" width="94" height="15"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <nil key="textColor"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNp-M1-Hqr">
+                        <rect key="frame" x="181" y="15" width="124" height="14"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="11"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="sNp-M1-Hqr" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="2g4-yI-pYB"/>
                     <constraint firstItem="9NQ-5i-oeZ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="9aJ-lD-ktq"/>
-                    <constraint firstItem="XTV-gH-E9f" firstAttribute="leading" secondItem="sNp-M1-Hqr" secondAttribute="trailing" constant="15" id="L9o-a1-3Z8"/>
-                    <constraint firstAttribute="trailing" secondItem="XTV-gH-E9f" secondAttribute="trailing" constant="15" id="XmP-uj-dQz"/>
+                    <constraint firstAttribute="trailing" secondItem="sNp-M1-Hqr" secondAttribute="trailing" constant="15" id="MQE-Sw-hxg"/>
+                    <constraint firstItem="sNp-M1-Hqr" firstAttribute="leading" secondItem="XTV-gH-E9f" secondAttribute="trailing" constant="15" id="RPh-Rq-zHI"/>
+                    <constraint firstItem="XTV-gH-E9f" firstAttribute="leading" secondItem="9NQ-5i-oeZ" secondAttribute="trailing" constant="15" id="oO3-C7-WbC"/>
                     <constraint firstItem="XTV-gH-E9f" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="rM0-ft-XLP"/>
-                    <constraint firstItem="sNp-M1-Hqr" firstAttribute="leading" secondItem="9NQ-5i-oeZ" secondAttribute="trailing" constant="15" id="uQA-KV-fxF"/>
                     <constraint firstItem="9NQ-5i-oeZ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="zlI-Se-Wh1"/>
                 </constraints>
             </tableViewCellContentView>
@@ -55,4 +55,7 @@
             </connections>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="about_kg_icon" width="144" height="144"/>
+    </resources>
 </document>

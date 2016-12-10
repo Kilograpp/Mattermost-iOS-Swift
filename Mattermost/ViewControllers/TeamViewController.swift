@@ -28,6 +28,10 @@ final class TeamViewController: UIViewController {
         initialSetup()
         prepareResults()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        setupNavigationView()
+    }
 }
 
 
@@ -61,7 +65,6 @@ extension TeamViewController: Setup {
         setupNavigationBar()
         setupTitleLabel()
         setupTableView()
-        setupNavigationView()
         setupSwipeRight()
     }
     

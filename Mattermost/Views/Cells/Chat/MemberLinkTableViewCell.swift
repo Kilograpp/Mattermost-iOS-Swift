@@ -33,4 +33,10 @@ class MemberLinkTableViewCell: UITableViewCell {
         }
         memberFullName.text = user.firstName!+" "+user.lastName!
     }
+    
+    func configureWithIndex(index: Int) {
+        memberNickname.text = "@"+Constants.LinkCommands.name[index]
+        memberFullName.text = Constants.LinkCommands.description[index]
+        memberImage.image = UIImage(named: "about_kg_icon")
+    }
 }
