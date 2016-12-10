@@ -54,6 +54,13 @@ struct Constants {
         static let FileImageDidTapNotification     = "FileImageDidTapNotification"
     }
     
+    struct LinkCommands {
+        static let name: Array = ["all", "channel", "here"]
+        static let description: Array = ["Notifies everyone in the channel, use in Town Square to notify the whole team"
+            ,"Notifies everyone in the channel"
+            ,"Notifies everyone in the channel and online"]
+    }
+    
     struct UI {
         static let FeedCellMessageLabelPaddings: CGFloat = 61
         static let FeedCellIndicatorPadding: CGFloat     = 22
@@ -131,7 +138,12 @@ struct Constants {
         static let Email: Int    = 3
         static let Password: Int = 4
     }
-        
+    
+    struct ErrorMessages {
+        static let code: Array = [-1009, -1003]
+        static let message: Array = ["No Internet connectivity detected", "Can't find server with this host name"]
+    }
+    
     struct CommonKeyPaths {
         static let Teams = "teams"
     }

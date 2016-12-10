@@ -112,15 +112,22 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         
         let member = searchController.isActive ? searchUsers[indexPath.row] : users[indexPath.row]
         
+        self.showLoaderView()
+        
         Api.sharedInstance.addUserToChannel(member, channel: channel, completion: { (error) in
-            guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
+            guard (error == nil) else {
+                self.hideLoaderView()
+                self.lastSelectedIndexPath = nil; return
+            }
             Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
                     AlertManager.sharedManager.showErrorWithMessage(message: "You left this channel".localized)
+                    self.hideLoaderView()
                     self.lastSelectedIndexPath = nil
                     return
                 }
                 AlertManager.sharedManager.showSuccesWithMessage(message: member.displayName!+" was added in channel")
+                self.hideLoaderView()
                 self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
                 self.setupUsers()
                 self.tableView.reloadData()

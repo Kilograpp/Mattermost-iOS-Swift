@@ -35,6 +35,7 @@ class SearchChatViewController: UIViewController {
     
     fileprivate var searchingInProcessView: SearchingInProcessView?
     fileprivate lazy var builder: SearchCellBuilder = SearchCellBuilder(tableView: self.tableView)
+    @IBOutlet weak var searchView: UIView!
     fileprivate var channel: Channel?
     
     fileprivate var posts: Array<Post>! = Array()
@@ -65,8 +66,8 @@ class SearchChatViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let width = UIScreen.screenWidth() - 75
-        self.searchTextField.superview?.frame = CGRect(x: 8, y: 20, width: width, height: 44)
+        //let width = UIScreen.screenWidth() - 75
+        //self.searchTextField.superview?.frame = CGRect(x: 8, y: 20, width: width, height: 44)
     }
 }
 
