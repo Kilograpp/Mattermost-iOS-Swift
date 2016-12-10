@@ -13,8 +13,8 @@ import UITableView_Cache
 import MFSideMenu
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
-
-//MARK: Properties
+    
+    //MARK: Properties
     fileprivate var documentInteractionController: UIDocumentInteractionController?
     var channel : Channel!
     fileprivate var resultsObserver: FeedNotificationsObserver! = nil
@@ -139,10 +139,6 @@ extension ChatViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillHide),
                                                name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        self.replaceStatusBar()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -335,7 +331,7 @@ extension ChatViewController: Setup {
 
 //MARK: Private
 extension ChatViewController : Private {
-//TopActivityIndicator
+    //TopActivityIndicator
     func showTopActivityIndicator() {
         let activityIndicatorHeight = self.topActivityIndicatorView!.bounds.height
         let tableFooterView = UIView(frame:CGRect(x: 0, y: 0, width: self.tableView.bounds.width, height: activityIndicatorHeight * 2))
@@ -353,11 +349,11 @@ extension ChatViewController : Private {
         self.topActivityIndicatorView!.stopAnimating()
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
- 
+    
     
     func endRefreshing() {
-     //   self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
-//        self.refreshControl?.endRefreshing()
+        //   self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+        //        self.refreshControl?.endRefreshing()
     }
     
     func clearTextView() {
@@ -365,8 +361,8 @@ extension ChatViewController : Private {
     }
     
     func configureRightButtonWithTitle(_ title: String, action: String) {
-            self.rightButton.setTitle(title, for: UIControlState())
-            self.selectedAction = action
+        self.rightButton.setTitle(title, for: UIControlState())
+        self.selectedAction = action
     }
     
     func showActionSheetControllerForPost(_ post: Post) {
@@ -418,7 +414,7 @@ extension ChatViewController : Private {
         
         self.present(actionSheetController, animated: true, completion: nil)
     }
-
+    
     fileprivate func showCompletePost(_ post: Post, action: String) {
         
     }
@@ -428,7 +424,7 @@ extension ChatViewController : Private {
 //MARK: Action
 extension ChatViewController: Action {
     @IBAction func leftMenuButtonAction(_ sender: AnyObject) {
-       // tempGallery()
+        // tempGallery()
         let state = (self.menuContainerViewController.menuState == MFSideMenuStateLeftMenuOpen) ? MFSideMenuStateClosed : MFSideMenuStateLeftMenuOpen
         self.menuContainerViewController.setMenuState(state, completion: nil)
         self.dismissKeyboard(true)
@@ -476,7 +472,7 @@ extension ChatViewController: Action {
     func refreshControlValueChanged() {
         self.loadFirstPageOfData(isInitial: false)
         //self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
-       // self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+        // self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
         
         self.refreshControl?.endRefreshing()
     }
@@ -586,12 +582,12 @@ extension ChatViewController: Request {
         }
         
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-        
+            
             if self.loadingView != nil {
                 self.loadingView?.removeFromSuperview()
                 self.loadingView = nil
             }
-
+            
             self.isLoadingInProgress = false
             self.hasNextPage = true
             
@@ -687,7 +683,7 @@ extension ChatViewController: Request {
     
     func updatePost() {
         guard self.selectedPost != nil else { return }
-    
+        
         guard self.selectedPost.identifier != nil else { return }
         
         PostUtils.sharedInstance.update(post: self.selectedPost, message: self.textView.text, attachments: nil) {_ in
@@ -718,7 +714,7 @@ extension ChatViewController: Request {
             guard comments.count > 0 else { return }
             
             RealmUtils.deletePostObjects(comments)
-           
+            
             RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
         }
@@ -752,7 +748,7 @@ extension ChatViewController {
             if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
                 self.loadNextPageOfData()
             }
-        
+            
             let errorHandler = { (post:Post) in
                 self.errorAction(post)
             }
@@ -822,7 +818,7 @@ extension ChatViewController {
                     item = self.commandsResult[indexPath.row]
                 } else {
                     item = self.membersResult[indexPath.row - self.commandsResult.count].displayName!
-
+                    
                 }
                 item  += " "
                 self.acceptAutoCompletion(with: item, keepPrefix: true)
@@ -881,8 +877,8 @@ extension ChatViewController: ChannelObserverDelegate {
             //remove action observer from old channel
             //after relogin
             NotificationCenter.default.removeObserver(self,
-                                                    name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
-                                                    object: nil)
+                                                      name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
+                                                      object: nil)
         }
         
         self.typingIndicatorView?.dismissIndicator()
@@ -906,11 +902,11 @@ extension ChatViewController: ChannelObserverDelegate {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleChannelNotification),
-                                                         name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
-                                                         object: nil)
+                                               name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
+                                               object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleLogoutNotification),
-                                                         name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
-                                                         object: nil)
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
+                                               object: nil)
     }
 }
 
@@ -945,7 +941,7 @@ extension ChatViewController {
         }))
         controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             print("Cancelled")
-            }))
+        }))
         present(controller, animated: true) {}
     }
     
@@ -1111,7 +1107,7 @@ extension ChatViewController {
         let fileId = notification.userInfo?["fileId"]
         let file = RealmUtils.realmForCurrentThread().object(ofType: File.self, forPrimaryKey: fileId)
         let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file?.name)!
-
+        
         if FileManager.default.fileExists(atPath: filePath) {
             self.documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
             self.documentInteractionController?.delegate = self
