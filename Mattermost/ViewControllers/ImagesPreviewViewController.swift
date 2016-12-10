@@ -16,20 +16,21 @@ import WebImage
 }
 
 private protocol Configuration: class {
-    func configureWith(postLocalId: String)
+    func configureWith(postLocalId: String, initalFileId: String)
 }
 
 
 final class ImagesPreviewViewController: UIViewController {
     
 //MARK: Properties
-    //fileprivate let titleLabel = UILabel()
-    public lazy var imageCollectionView: UICollectionView = self.setupCollectionView()
+    fileprivate var imageCollectionView: UICollectionView?// = self.setupCollectionView()
     fileprivate var flowLayout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
     
     fileprivate var post: Post? = nil
     fileprivate var imageFiles: Results<File>?
     public weak var delegate: ImagesPreviewViewControllerDelegate?
+    
+    fileprivate var initialImageIndex: Int = 0
     
 //MARK: LifeCycle
     public init(delegate: ImagesPreviewViewControllerDelegate) {
@@ -42,30 +43,39 @@ final class ImagesPreviewViewController: UIViewController {
         super.init(coder: aDecoder)
     }
 
-    public override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        
-        flowLayout.itemSize = view.bounds.size
-    }
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-       // setupToolbar()
-        
         setupNavigationBar()
+        setupCollectionView()
         
         self.view.backgroundColor = ColorBucket.whiteColor
         setupGestureRecognizers()
     }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let offsetX = (self.imageCollectionView?.frame.width)! * CGFloat(self.initialImageIndex)
+        self.imageCollectionView?.contentOffset = CGPoint(x: offsetX, y: 0)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        flowLayout.itemSize = view.bounds.size
+    }
 }
+
 
 //MARK: Configuration
 extension ImagesPreviewViewController: Configuration {
-    func configureWith(postLocalId: String) {
+    func configureWith(postLocalId: String, initalFileId: String) {
         self.post = RealmUtils.realmForCurrentThread().object(ofType: Post.self, forPrimaryKey: postLocalId)
 
         self.imageFiles = self.post?.files.filter(NSPredicate(format: "isImage == true"))
+        self.initialImageIndex = (self.imageFiles?.index(matching: NSPredicate(format: "identifier == %@", initalFileId)))!
     }
 }
 
@@ -94,41 +104,13 @@ fileprivate protocol ImageOperation: class {
 //MARK: Setup
 extension ImagesPreviewViewController {
     func setupNavigationBar() {
-        self.title = "1/" + String((self.imageFiles?.count)!)
+        self.title = String(self.initialImageIndex + 1) + "/" + String(describing: (self.imageFiles?.count)!)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navbar_back_icon"),
                                                                 style: .done, target: self, action: #selector(backAction))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveAction))
     }
-    func setupToolbar() {
-        let width = UIScreen.main.bounds.width
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: width, height: 64))
-        
-        var barItems = Array<UIBarButtonItem>()
-        
-        barItems.append(UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil))
-        barItems.append(UIBarButtonItem(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction)))
-        barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
-        
-    //    self.titleLabel.frame = CGRect(x: 0, y: 0, width: 40, height: 30)
-//        self.titleLabel.backgroundColor = UIColor.clear
-//        self.titleLabel.textColor = ColorBucket.blackColor
-//        self.titleLabel.font = FontBucket.highlighTedTitleFont
-//        self.titleLabel.text = "1/" + String((self.imageFiles?.count)!)
-//        self.titleLabel.textAlignment = .center
-        
-  //      let titleBar = UIBarButtonItem(customView: self.titleLabel)
-    //    barItems.append(titleBar)
-        barItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
-        
-        barItems.append(UIBarButtonItem(image: UIImage(named: "save_button_title"), style: .done, target: self, action: #selector(saveAction)))
-        barItems.append(UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil))
-        
-        toolbar.items = barItems
-        
-        self.view.addSubview(toolbar)
-    }
     
-    func setupCollectionView() -> UICollectionView {
+    func setupCollectionView() {
         flowLayout.scrollDirection = UICollectionViewScrollDirection.horizontal
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 0
@@ -156,19 +138,20 @@ extension ImagesPreviewViewController {
         view.addSubview(collectionView)
         view.addConstraints(imageCollectionViewConstraints)
         
-        collectionView.contentSize = CGSize(width: 1000.0, height: 1.0)
+        let width = UIScreen.main.bounds.size.width * CGFloat((self.imageFiles?.count)!)
+        collectionView.contentSize = CGSize(width: width, height: 1.0)
         
-        return collectionView
+        self.imageCollectionView = collectionView
     }
     
     func setupGestureRecognizers() {
         let swipeUpGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(recognizer:)))
         swipeUpGestureRecognizer.direction = .up
-        self.imageCollectionView.addGestureRecognizer(swipeUpGestureRecognizer)
+        self.imageCollectionView?.addGestureRecognizer(swipeUpGestureRecognizer)
         
         let swipeDownGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(recognizer:)))
         swipeDownGestureRecognizer.direction = .down
-        self.imageCollectionView.addGestureRecognizer(swipeDownGestureRecognizer)
+        self.imageCollectionView?.addGestureRecognizer(swipeDownGestureRecognizer)
     }
 }
 
@@ -176,20 +159,10 @@ extension ImagesPreviewViewController {
 //MARK: Action
 extension ImagesPreviewViewController {
     func swipeAction(recognizer: UISwipeGestureRecognizer) {
-        //self.delegate?.imagesPreviewDidSwipeToClose(imagesPreview: self, direction: recognizer.direction)
-    /*    let transition = CATransition()
-        transition.duration = 0.3
-        transition.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transition.type = kCATransitionReveal
-        transition.subtype = (recognizer.direction == .up) ? kCATransitionFromTop : kCATransitionFromBottom
-        
-        self.navigationController?.view.layer.add(transition, forKey: kCATransition)
-        _ = self.navigationController?.popViewController(animated: false)*/
         returnToChatWith(direction: recognizer.direction)
     }
     
     func backAction() {
-        //self.delegate?.imagesPreviewDidSwipeToClose(imagesPreview: self, direction: .down)
         returnToChatWith(direction: .up)
     }
     
@@ -203,7 +176,7 @@ extension ImagesPreviewViewController {
 extension ImagesPreviewViewController: Navigation {
     func returnToChatWith(direction: UISwipeGestureRecognizerDirection) {
         let transition = CATransition()
-        transition.duration = 0.3
+        transition.duration = 0.5
         transition.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
         transition.type = kCATransitionReveal
         transition.subtype = (direction == .up) ? kCATransitionFromTop : kCATransitionFromBottom
@@ -218,19 +191,19 @@ extension ImagesPreviewViewController: Navigation {
 extension ImagesPreviewViewController {
     func reload(imageIndexes:Int...) {
         if imageIndexes.isEmpty {
-            self.imageCollectionView.reloadData()
+            self.imageCollectionView?.reloadData()
         } else {
             let indexPaths: [IndexPath] = imageIndexes.map({IndexPath(item: $0, section: 0)})
-            self.imageCollectionView.reloadItems(at: indexPaths)
+            self.imageCollectionView?.reloadItems(at: indexPaths)
         }
     }
     
     func scrollToImage(withIndex: Int, animated: Bool = false) {
-        self.imageCollectionView.scrollToItem(at: IndexPath(item: withIndex, section: 0), at: .centeredHorizontally, animated: animated)
+        self.imageCollectionView?.scrollToItem(at: IndexPath(item: withIndex, section: 0), at: .centeredHorizontally, animated: animated)
     }
     
     func saveDisplayedImage() {
-        let row = Int(self.imageCollectionView.contentOffset.x / self.imageCollectionView.frame.width)
+        let row = Int((self.imageCollectionView?.contentOffset.x)! / (self.imageCollectionView?.frame.width)!)
         let url = self.imageFiles?[row].downloadURL()
         let image = SDImageCache.shared().imageFromMemoryCache(forKey: url?.absoluteString)
         
@@ -271,7 +244,6 @@ extension ImagesPreviewViewController: UICollectionViewDataSource {
         let url = self.imageFiles?[indexPath.row].downloadURL()
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: url?.absoluteString) {
             cell.image = image
-            //cell.showActivityIndicator()
         } else {
             cell.showActivityIndicator()
             let thumbUrl = self.imageFiles?[indexPath.row].thumbURL()
@@ -303,7 +275,6 @@ extension ImagesPreviewViewController: UICollectionViewDelegate {
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        // If the scroll animation ended, update the page control to reflect the current page we are on
         let currentPage = Int(scrollView.contentOffset.x / scrollView.frame.width + 1)
         self.title = String(currentPage) + "/" + String((self.imageFiles?.count)!)
     }

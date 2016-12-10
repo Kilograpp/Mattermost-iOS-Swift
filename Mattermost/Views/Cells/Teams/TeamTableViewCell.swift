@@ -85,6 +85,7 @@ fileprivate protocol Setup: class {
 //MARK: Setup
 extension TeamTableViewCell: Setup {
     func initialSetup() {
+        self.selectionStyle = .none
         setupLetterContainerView()
         setupLetterLabel()
         setupNameLabel()

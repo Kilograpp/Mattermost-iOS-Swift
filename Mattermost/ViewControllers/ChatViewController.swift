@@ -489,7 +489,8 @@ extension ChatViewController: Action {
     
     func didTapImageAction(notification: NSNotification) {
         let postLocalId = notification.userInfo?["postLocalId"] as! String
-        openPreviewWith(postLocalId: postLocalId)
+        let fileId = notification.userInfo?["fileId"] as! String
+        openPreviewWith(postLocalId: postLocalId, fileId: fileId)
     }
     
     func scrollToBottom() {
@@ -946,9 +947,6 @@ extension ChatViewController {
     }
     
     func reloadChat(notification: NSNotification) {
-        print(notification.userInfo)
-        let userInfo = notification.userInfo
-        print(userInfo?["postLocalId"])
         guard notification.userInfo?["postLocalId"] != nil else { return }
         
         let postLocalId = notification.userInfo?["postLocalId"] as! String
@@ -981,9 +979,8 @@ extension ChatViewController {
     }
     
     func handleKeyboardWillShowNotification() {
-        //self.completePost.isHidden = true
         
-        print("sfdsdfsd")
+        print("handleKeyboardWillShowNotification")
     }
     
     func handleKeyboardWillHideeNotification() {
@@ -1143,20 +1140,15 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
 
 //MARK: ImagesPreviewViewController
 extension ChatViewController {
-    func openPreviewWith(postLocalId: String) {
-        print("sdsdfsdfsdfsdfsdfsdf")
+    func openPreviewWith(postLocalId: String, fileId: String) {
         let gallery = ImagesPreviewViewController(delegate: self)
-        gallery.configureWith(postLocalId: postLocalId)
-        //present(gallery, animated: true, completion: nil)
+        gallery.configureWith(postLocalId: postLocalId, initalFileId: fileId)
         let transaction = CATransition()
-        transaction.duration = 0.3
+        transaction.duration = 0.5
         transaction.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
         transaction.type = kCATransitionMoveIn
         transaction.subtype = kCATransitionFromBottom
         self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
-        //let identifier = String(describing: SearchChatViewController.self)
-        //let searchChat = self.storyboard?.instantiateViewController(withIdentifier: identifier) as! SearchChatViewController
-        //searchChat.configureWithChannel(channel: self.channel!)
         self.navigationController?.pushViewController(gallery, animated: false)
     }
 }
