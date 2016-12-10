@@ -10,9 +10,12 @@ import Foundation
 import SnapKit
 
 class PostFileViewCell: PostAttachmentsViewCell {
-    let nameLabel = UILabel()//(frame: CGRect(x: 5, y: 0, width: 65, height: 0))
-    let fileLabel = UILabel()//(frame: CGRect(x: 5, y: 0, width: 65, height: 0))
+
+//MARK: Properties
+    let nameLabel = UILabel()
+    let fileLabel = UILabel()
     
+//MARK: LifeCycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLabel()
@@ -20,10 +23,10 @@ class PostFileViewCell: PostAttachmentsViewCell {
     
     override func configureWithItem(_ item: AssignedAttachmentViewItem) {
         super.configureWithItem(item)
-        
         self.clipsToBounds = true
+        
+        guard item.isFile else { return }
         self.nameLabel.text = item.fileName
-       
         self.fileLabel.text = self.fileTypeString(fileNameString: item.fileName!)
     }
     

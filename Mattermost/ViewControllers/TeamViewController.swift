@@ -205,10 +205,8 @@ extension TeamViewController: UITableViewDelegate {
         
         guard (Preferences.sharedInstance.currentTeamId != nil) else {
             Preferences.sharedInstance.currentTeamId = team.identifier
-            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification), object: nil)
             showLoaderView()
             loadChannels()
-            //self.dismiss(animated: true, completion: nil)
             
             return
         }

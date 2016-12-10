@@ -238,7 +238,6 @@ extension Api: ChannelApi {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
-                    $0.computeIsDeletedDirectIfNeeded()
                 }
                 realm.add(channels, update: true)
             })
@@ -371,7 +370,6 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
-                channel.computeIsDeletedDirectIfNeeded()
                 realm.add(channel)
             })
             completion(channel ,nil)
@@ -391,7 +389,6 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
-                channel.computeIsDeletedDirectIfNeeded()
                 realm.add(channel)
             })
             completion(nil ,nil)
@@ -497,6 +494,21 @@ extension Api: UserApi {
             let users = MappingUtils.fetchUsersFromCompleteList(mappingResult)
             users.forEach {$0.computeDisplayName()}
             RealmUtils.save(users)
+            
+        /*    let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
+            let members = townSquare?.members
+            for member in members! {
+                print(member.displayName, " -- ", member.identifier)
+            }
+            print(members?.count)
+            users.forEach {
+                let identifier = $0.identifier
+                let predicate = NSPredicate(format: "identifier == %@", identifier!)
+                
+                let state = ((members?.filter(predicate).count)! > 0)
+                print($0.displayName, " -- ", state)
+            }*/
+            
             completion(nil)
         }, failure: completion)
     }

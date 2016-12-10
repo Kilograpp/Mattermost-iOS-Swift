@@ -130,16 +130,7 @@ extension Channel: Support {
             }
         }
     }
-    
-    func computeIsDeletedDirectIfNeeded() {
-        if self.privateType == "D" {
-            let user = self.interlocuterFromPrivateChannel()
-            print(user)
-            let isDeleted = (user.deleteAt?.timeIntervalSince1970)! > 0
-            print("is deleted = ", isDeleted)
-        }
-    }
-    
+        
     func hasNewMessages() -> Bool {
         guard lastViewDate != nil else { return false }
         return ((self.lastViewDate as NSDate?)?.isEarlierThan(self.lastPostDate))!

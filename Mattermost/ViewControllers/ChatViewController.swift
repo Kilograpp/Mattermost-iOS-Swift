@@ -141,6 +141,10 @@ extension ChatViewController {
                                                name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        self.replaceStatusBar()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         

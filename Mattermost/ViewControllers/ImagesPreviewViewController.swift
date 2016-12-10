@@ -191,6 +191,11 @@ extension ImagesPreviewViewController {
         let url = self.imageFiles?[row].downloadURL()
         let image = SDImageCache.shared().imageFromMemoryCache(forKey: url?.absoluteString)
         
+        guard image != nil  else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Wait download high-quality image, please.")
+            return
+        }
+        
         UIImageWriteToSavedPhotosAlbum(image!, self,
                                        #selector(image(_:didFinishSavingWithError:contextInfo:)),
                                        nil);
