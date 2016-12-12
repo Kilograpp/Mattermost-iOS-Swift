@@ -889,6 +889,11 @@ extension ChatViewController: ChannelObserverDelegate {
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         self.title = self.channel?.displayName
         
+        self.textInputbar.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.leftButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.rightButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.textView.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
         }
@@ -1011,7 +1016,6 @@ extension ChatViewController: AttachmentsModuleDataSource {
 }
 
 //MARK: AutoCompletionView
-
 extension ChatViewController {
     func autoCompletionEmojiCellForRowAtIndexPath(_ indexPath: IndexPath) -> EmojiTableViewCell {
         let cell = self.autoCompletionView.dequeueReusableCell(withIdentifier: EmojiTableViewCell.reuseIdentifier) as! EmojiTableViewCell

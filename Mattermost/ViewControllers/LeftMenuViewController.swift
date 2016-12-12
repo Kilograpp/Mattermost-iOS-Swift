@@ -22,7 +22,7 @@ final class LeftMenuViewController: UIViewController {
     fileprivate var resultsPublic: Results<Channel>! = nil
     fileprivate var resultsPrivate: Results<Channel>! = nil
     fileprivate var resultsDirect: Results<Channel>! = nil
-    fileprivate var resultDirectDeleted: Results<Channel>? = nil
+    fileprivate var resultsOutsideDirect: Results<Channel>! = nil
     
     //temp timer
     var statusesTimer: Timer?
@@ -155,7 +155,9 @@ extension LeftMenuViewController : Configure {
     fileprivate func configureResults() {
         let publicTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PublicTypeChannel, DataManager.sharedInstance.currentTeam!)
         let privateTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PrivateTypeChannel, DataManager.sharedInstance.currentTeam!)
-        let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
+        let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@ AND isDirectChannelInterlocutorInTeam == true", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
+        let directOutsideTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@ AND isDirectChannelInterlocutorInTeam == false AND messagesCount != %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!, "0")
+        
         
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let sortName = ChannelAttributes.displayName.rawValue
@@ -165,14 +167,15 @@ extension LeftMenuViewController : Configure {
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsDirect =
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
-        
+        self.resultsOutsideDirect =
+            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directOutsideTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
     }
 }
 
 //MARK: UITableViewDataSource
 extension LeftMenuViewController : UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -183,6 +186,8 @@ extension LeftMenuViewController : UITableViewDataSource {
             return resultsPrivate.count
         case 2:
             return resultsDirect.count
+        case 3:
+            return resultsOutsideDirect.count
         default:
             return 0
         }
@@ -200,6 +205,8 @@ extension LeftMenuViewController : UITableViewDataSource {
         case 2:
             channel = self.resultsDirect[indexPath.row]
             break
+        case 3:
+            channel = self.resultsOutsideDirect[indexPath.row]
         default:
             break
         }
@@ -223,11 +230,11 @@ extension LeftMenuViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return (section == 1) ? CGFloat(0.00001) : 30
+        return (section != 1) || (section != 3) ? CGFloat(0.00001) : 30
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard (section != 1) else { return nil }
+        guard (section != 1) && (section != 3) else { return nil }
         
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
         view.moreTapHandler = { self.navigateToMoreChannel(section) }
@@ -250,6 +257,9 @@ extension LeftMenuViewController : UITableViewDelegate {
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))
             view.hideMoreButton()
             break
+        case 3:
+            view.configureWithChannelType(Channel.privateTypeDisplayName("out"))
+            view.hideMoreButton()
         default:
             break
         }
@@ -269,6 +279,8 @@ extension LeftMenuViewController : Navigation {
             ChannelObserver.sharedObserver.selectedChannel = self.resultsPrivate[indexPath.row]
         case 2:
             ChannelObserver.sharedObserver.selectedChannel = self.resultsDirect[indexPath.row]
+        case 3:
+            ChannelObserver.sharedObserver.selectedChannel = self.resultsOutsideDirect[indexPath.row]
         default:
             print("unknown channel type")
         }
