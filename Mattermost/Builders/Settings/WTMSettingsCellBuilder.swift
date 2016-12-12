@@ -92,12 +92,12 @@ extension WTMSettingsCellBuilder: Inteface {
         var mentionKeys: String = ((self.tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! ? (user?.username)! : ""
         indexPath = IndexPath(row: 2, section: 0)
         if ((self.tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! {
-            mentionKeys += StringUtils.commaTailedString(mentionKeys) + "@" + (user?.username)!
+            mentionKeys = StringUtils.commaTailedString(mentionKeys) + "@" + (user?.username)!
         }
         indexPath = IndexPath(row: 0, section: 1)
         let otherWords = (self.tableView.cellForRow(at: indexPath) as! TextSettingsTableViewCell).wordsTextView?.text
         if (otherWords?.characters.count)! > 0 {
-            mentionKeys += StringUtils.commaTailedString(mentionKeys) + otherWords!
+            mentionKeys = StringUtils.commaTailedString(mentionKeys) + otherWords!
         }
         
         return mentionKeys

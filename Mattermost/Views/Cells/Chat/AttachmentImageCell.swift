@@ -20,7 +20,7 @@ fileprivate let NullString = "(null)"
 
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
-    func heightWith(file: File) -> CGFloat
+   // func heightWith(file: File) -> CGFloat
 }
 
 final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
@@ -32,13 +32,6 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     fileprivate var fileName: String?
     fileprivate let fileImageView = UIImageView()
     fileprivate let fileNameLabel = UILabel()
-    
-    //fileprivate let downloadIconImageView = UIImageView()
-    //fileprivate let progressView = MRCircularProgressView()
-    
- /*   var downloadingState: Int = DownloadingState.NotDownloaded {
-        didSet { updateIconForCurrentState() }
-    }*/
     
 //MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -60,7 +53,6 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
         let width = self.bounds.width
         
         self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.height, width: width, height: height)
-       // self.downloadIconImageView.center = self.fileImageView.center
         super.layoutSubviews()
     }
     
@@ -76,7 +68,6 @@ extension AttachmentImageCell: AttachmentImageCellConfiguration {
         self.file = file
         configureImageView()
         configureLabel()
-    //    configureDownloadingState()
     }
     
     func heightWith(file: File) -> CGFloat {
@@ -96,14 +87,11 @@ fileprivate protocol Setup: class {
     func initialSetup()
     func setupImageView()
     func setupLabel()
-    //func setupDownloadIcon()
-    //func setupProgressView()
 }
 
 fileprivate protocol Updating: class {
     func configureLabel()
     func configureImageView()
-    //func updateIconForCurrentState()
     func computeFileName()
 }
 
@@ -111,20 +99,12 @@ fileprivate protocol Action: class {
     func tapAction()
 }
 
-/*fileprivate protocol Downloading: class {
-    func startDownloadingFile()
-    func stopDownloadingFile()
-    func openDownloadedFile()
-}*/
-
 
 //MARK: Setup
 extension AttachmentImageCell: Setup {
     func initialSetup() {
         setupImageView()
         setupLabel()
-//        setupDownloadIcon()
-//        setupProgressView()
     }
     
     fileprivate func setupImageView() {
@@ -143,40 +123,11 @@ extension AttachmentImageCell: Setup {
         fileNameLabel.numberOfLines = 1
         self.addSubview(fileNameLabel)
     }
-    
-  /*  fileprivate func setupDownloadIcon() {
-        self.downloadIconImageView.backgroundColor = UIColor.clear
-        self.downloadIconImageView.frame = CGRect(x: 0, y: 0, width: 44, height: 44).offsetBy(dx: frame.origin.x, dy: frame.origin.y)
-        self.downloadIconImageView.isHidden = true
-        self.addSubview(self.downloadIconImageView)
-    }*/
-    
-    /*fileprivate func setupProgressView() {
-        self.progressView.frame = CGRect(x: 7, y: 7, width: 30, height: 30)
-        
-        self.progressView.backgroundColor = UIColor.clear
-        self.progressView.valueLabel.isHidden = true
-        self.progressView.borderWidth = 0
-        self.progressView.lineWidth = 2
-        self.progressView.tintColor = ColorBucket.whiteColor
-        self.progressView.isHidden = true
-        self.downloadIconImageView.addSubview(self.progressView)
-    }*/
 }
 
 
 //MARK: Configuration
 extension AttachmentImageCell: Updating {
-   /* fileprivate func configureDownloadingState() {
-    //    self.downloadIconImageView.isHidden = false
-        if file.downoloadedSize == file.size {
-            self.downloadingState = DownloadingState.Downloaded
-        } else {
-            self.downloadingState = (file.downoloadedSize == 0) ? DownloadingState.NotDownloaded
-                : DownloadingState.Downloading
-        }
-    }*/
-    
     fileprivate func configureLabel() {
         guard fileName != nil else { return }
         fileNameLabel.text = fileName
@@ -187,13 +138,6 @@ extension AttachmentImageCell: Updating {
     fileprivate func configureImageView() {
         let fileName = self.fileName
         var downloadUrl = self.file.thumbURL()!
-        
-        //MARK: addition for search attachment cell
-        /*
-        if (downloadUrl.absoluteString.contains("(null)")) {
-            let fixedPath = downloadUrl.absoluteString.replacingOccurrences(of: "(null)", with: Preferences.sharedInstance.currentTeamId!)
-            downloadUrl = NSURL(string: fixedPath)! as URL
-        }*/
         
         if (downloadUrl.absoluteString.contains(NullString)) {
             let fixedPath = downloadUrl.absoluteString.replacingOccurrences(of: NullString, with: Preferences.sharedInstance.currentTeamId!)
@@ -221,13 +165,6 @@ extension AttachmentImageCell: Updating {
                         
                         finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: width, height: height), radius: 3)
                         SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
-                        
-                        /*var imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
-                        let imageHeight = imageWidth * 0.56 - 5
-                        imageWidth = imageHeight / (image?.size.height)! * (image?.size.width)!
-                        
-                        finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: imageWidth, height: imageHeight), radius: 3)
-                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)*/
                     }
                     
                     // Ensure the post is still the same
@@ -235,8 +172,10 @@ extension AttachmentImageCell: Updating {
                     
                     DispatchQueue.main.sync(execute: {
                         self?.fileImageView.image = finalImage
-                        //NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationsNames.ReloadChatNotification), object: nil)
                         let postLocalId = self?.file.post?.localIdentifier
+                        
+                        guard postLocalId != nil else { return }
+                        
                         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.ReloadChatNotification),
                                                         object: nil, userInfo: ["postLocalId" : postLocalId])
                         NotificationCenter.default.post(notification as Notification)
@@ -251,19 +190,6 @@ extension AttachmentImageCell: Updating {
         }
     }
     
- /*   fileprivate func updateIconForCurrentState() {
-        switch self.downloadingState {
-        case DownloadingState.NotDownloaded:
-            self.downloadIconImageView.image = UIImage(named: "chat_notdownloaded_icon")
-        case DownloadingState.Downloading:
-            self.downloadIconImageView.image = UIImage(named: "chat_downloading_icon")
-        case DownloadingState.Downloaded:
-            self.downloadIconImageView.image = UIImage(named: "chat_downloaded_icon")
-        default:
-            break
-        }
-    }*/
-    
     fileprivate func computeFileName() {
         self.fileName = self.file?.name
     }
@@ -273,69 +199,10 @@ extension AttachmentImageCell: Updating {
 //MARK: Action
 extension AttachmentImageCell: Action {
     @objc fileprivate func tapAction() {
-       // print(self.file.post?.identifier)
         let postLocalId = self.file.post?.localIdentifier
+        let fileId = self.file.identifier
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.FileImageDidTapNotification),
-                                        object: nil, userInfo: ["postLocalId" : postLocalId])
-        NotificationCenter.default.post(notification as Notification)
-        
-        /*switch self.downloadingState {
-        case DownloadingState.NotDownloaded:
-            startDownloadingFile()
-        case DownloadingState.Downloading:
-            stopDownloadingFile()
-        case DownloadingState.Downloaded:
-            openDownloadedFile()
-        default:
-            break
-        }*/
-    }
-}
-
-
-
-/*extension AttachmentImageCell: Downloading {
-    fileprivate func startDownloadingFile() {
-        self.progressView.isHidden = false
-        self.downloadingState = DownloadingState.Downloading
-        let fileId = self.file.identifier
-        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-            Api.sharedInstance.download(fileId: fileId!, completion: { (error) in
-                self.progressView.isHidden = true
-                guard error == nil else {
-                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
-                    return
-                }
-                self.downloadingState = DownloadingState.Downloaded
-                
-                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded")
-                
-                let notification = UILocalNotification()
-                notification.alertBody = "File was successfully downloaded"
-                notification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-                UIApplication.shared.scheduleLocalNotification(notification)
-                
-            }) { (identifier, progress) in
-                print("progressTotal = ", progress)
-                if fileId == identifier {
-                    print("progress = ", progress)
-                    self.progressView.progress = progress
-                }
-            }
-        })
-    }
-    
-    fileprivate func stopDownloadingFile() {
-        self.downloadingState = DownloadingState.NotDownloaded
-        self.progressView.isHidden = true
-        Api.sharedInstance.cancelDownloading(fileId: self.file.identifier!)
-    }
-    
-    fileprivate func openDownloadedFile() {
-        let fileId = self.file.identifier
-        let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
-                                        object: nil, userInfo: ["fileId" : fileId!])
+                                        object: nil, userInfo: ["postLocalId" : postLocalId, "fileId" : fileId])
         NotificationCenter.default.post(notification as Notification)
     }
 }
-*/

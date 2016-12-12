@@ -43,7 +43,7 @@ final class Channel: RealmObject {
     class func privateTypeDisplayName(_ privateTypeString: String) -> String {
         switch privateTypeString {
         case Constants.ChannelType.PublicTypeChannel:
-            return "Public channel"
+            return "Public channels"
         case Constants.ChannelType.PrivateTypeChannel:
             return "Private groups"
         case Constants.ChannelType.DirectTypeChannel:
@@ -130,7 +130,7 @@ extension Channel: Support {
             }
         }
     }
-    
+        
     func hasNewMessages() -> Bool {
         guard lastViewDate != nil else { return false }
         return ((self.lastViewDate as NSDate?)?.isEarlierThan(self.lastPostDate))!

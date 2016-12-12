@@ -31,9 +31,11 @@ class SearchChatViewController: UIViewController {
     @IBOutlet weak var noResultView: UIView!
     @IBOutlet weak var loadingEmozziView: UIView!
     @IBOutlet weak var autocompleteTableView: UITableView!
+    @IBOutlet weak var autocompleteTableViewFooter: UIView!
     
     fileprivate var searchingInProcessView: SearchingInProcessView?
     fileprivate lazy var builder: SearchCellBuilder = SearchCellBuilder(tableView: self.tableView)
+    @IBOutlet weak var searchView: UIView!
     fileprivate var channel: Channel?
     
     fileprivate var posts: Array<Post>! = Array()
@@ -50,6 +52,8 @@ class SearchChatViewController: UIViewController {
         super.viewWillAppear(animated)
         
         configureForSearchStage(SearchStage.SearchNotStarted)
+        prepareSearchRequestResults()
+        self.autocompleteTableView.isHidden = true
         self.menuContainerViewController.panMode = .init(0)
     }
     
@@ -62,8 +66,8 @@ class SearchChatViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let width = UIScreen.screenWidth() - 75
-        self.searchTextField.superview?.frame = CGRect(x: 8, y: 20, width: width, height: 44)
+        //let width = UIScreen.screenWidth() - 75
+        //self.searchTextField.superview?.frame = CGRect(x: 8, y: 20, width: width, height: 44)
     }
 }
 
@@ -150,6 +154,9 @@ extension SearchChatViewController: Setup {
     }
     
     func setupAutocompleteTableView() {
+        self.autocompleteTableView.isHidden = true
+        let tapGestreRecognizer = UITapGestureRecognizer(target: self, action: #selector(removeSearchHistoryAction))
+        self.autocompleteTableViewFooter.addGestureRecognizer(tapGestreRecognizer)
     }
 }
 
@@ -158,6 +165,16 @@ extension SearchChatViewController: Setup {
 extension SearchChatViewController {
     @IBAction func cancelBarButtonAction(_ sender: AnyObject) {
         returnToChat()
+    }
+    
+    func removeSearchHistoryAction() {
+        self.autocompleteTableView.isHidden = true
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write {
+            realm.delete(self.searchRequestResults!)
+        }
+        
+        prepareSearchRequestResults()
     }
 }
 
@@ -207,6 +224,7 @@ extension SearchChatViewController {
 //MARK: Requests
 extension SearchChatViewController: Requests {
     func searchWithTerms(terms: String) {
+        addSearchRequestIfNeeded(terms: terms)
         PostUtils.sharedInstance.search(terms: terms, channel: self.channel!) { (posts, error) in
             if (error == nil) {
                 self.posts = posts?.reversed()
@@ -263,15 +281,35 @@ extension SearchChatViewController: Private {
     }
     
     func prepareSearchRequestResults() {
+        let terms = self.searchTextField.text!
         let realm = RealmUtils.realmForCurrentThread()
-        self.searchRequestResults = realm.objects(SearchRequest.self).filter(NSPredicate(format: "text BEGINSWITH[c] %@", self.searchTextField.text!))
+        self.searchRequestResults = realm.objects(SearchRequest.self).filter(NSPredicate(format: "text BEGINSWITH[c] %@", terms))
         self.autocompleteTableView.reloadData()
+        
+        let searchRequestsCount = (self.searchRequestResults?.count)!
+        guard searchRequestsCount > 0 else {
+            self.autocompleteTableView.isHidden = true
+            return
+        }
+        
+         self.autocompleteTableView.isHidden = (searchRequestsCount == 1) && (self.searchRequestResults?[0].text == terms)
+    }
+    
+    func addSearchRequestIfNeeded(terms: String) {
+        let predicate = NSPredicate(format: "text == %@", terms)
+        guard RealmUtils.realmForCurrentThread().objects(SearchRequest.self).filter(predicate).count == 0 else { return }
+        
+        let searchRequest = SearchRequest()
+        searchRequest.identifier = SearchRequest.generateNewId()
+        searchRequest.text = terms
+        
+        RealmUtils.save(searchRequest)
+        self.autocompleteTableView.isHidden = true
     }
 }
 
 
 //MARK: UITableViewDataSource
-
 extension SearchChatViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         guard tableView != self.autocompleteTableView else { return 1 }
@@ -279,12 +317,18 @@ extension SearchChatViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard tableView != self.autocompleteTableView else { return 0 }
+        guard tableView != self.autocompleteTableView else { return (self.searchRequestResults?.count)! }
         return (section < self.dates.count) ? postsForDate(date: self.dates[section]).count : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard tableView != self.autocompleteTableView else { return UITableViewCell() }
+        guard tableView != self.autocompleteTableView else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "AutocompleteTableViewCell", for: indexPath)
+            cell.textLabel?.font = FontBucket.loginTextFieldFont
+            cell.textLabel?.textColor = ColorBucket.searchAutocompleteTextColor
+            cell.textLabel?.text = self.searchRequestResults?[indexPath.row].text
+            return cell
+        }
         
         let post = postsForDate(date: self.dates[indexPath.section])[indexPath.row]
         let cell = self.builder.cellForPost(post: post, searchingText: self.searchTextField.text!)
@@ -299,6 +343,14 @@ extension SearchChatViewController: UITableViewDataSource {
 
 //MARK: UITableViewDelegate
 extension SearchChatViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard tableView == self.autocompleteTableView else { return }
+        
+        self.searchTextField.text = self.searchRequestResults?[indexPath.row].text
+        prepareSearchResults()
+        self.autocompleteTableView.isHidden = true
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard tableView != self.autocompleteTableView else { return nil }
         
@@ -321,7 +373,7 @@ extension SearchChatViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard tableView != self.autocompleteTableView else { return 25 }
+        guard tableView != self.autocompleteTableView else { return 44 }
         let post = postsForDate(date: self.dates[indexPath.section])[indexPath.row]
         return self.builder.heightForPost(post: post)
     }
@@ -329,7 +381,6 @@ extension SearchChatViewController: UITableViewDelegate {
 
 
 //MARK: UITextFieldDelegate
-
 extension SearchChatViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         self.configureForSearchStage(0)
@@ -337,14 +388,21 @@ extension SearchChatViewController: UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        
+        self.autocompleteTableView.isHidden = (self.searchRequestResults?.count == 0)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        self.autocompleteTableView.isHidden = true
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newString: NSString = textField.text! as NSString
         textField.text = newString.replacingCharacters(in: range, with: string)
-        prepareSearchResults()
+        
         prepareSearchRequestResults()
+        if self.autocompleteTableView.isHidden {
+            prepareSearchResults()
+        }
         
         return false
     }

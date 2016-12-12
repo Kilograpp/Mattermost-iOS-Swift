@@ -22,6 +22,7 @@ final class LeftMenuViewController: UIViewController {
     fileprivate var resultsPublic: Results<Channel>! = nil
     fileprivate var resultsPrivate: Results<Channel>! = nil
     fileprivate var resultsDirect: Results<Channel>! = nil
+    fileprivate var resultDirectDeleted: Results<Channel>? = nil
     
     //temp timer
     var statusesTimer: Timer?
@@ -164,6 +165,7 @@ extension LeftMenuViewController : Configure {
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsDirect =
             RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
+        
     }
 }
 

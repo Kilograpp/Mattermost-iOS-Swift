@@ -240,7 +240,6 @@ extension LoginViewController: Request {
     }
     
     func loadChannels() {
-       // showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
             guard (error == nil) else {
                 self.hideLoaderView()
@@ -259,7 +258,6 @@ extension LoginViewController: Request {
             }
             self.hideLoaderView()
             RouterUtils.loadInitialScreen()
-           // self.hideLoaderView()
         })
     }
     

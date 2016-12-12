@@ -33,6 +33,7 @@ final class User: RealmObject {
     }
     dynamic var createAt: Date?
     dynamic var updateAt: Date?
+    dynamic var deleteAt: Date?
     
     let channels = LinkingObjects(fromType: Channel.self, property: ChannelRelationships.members.rawValue)
     //let notifyProps = NotifyProps()
@@ -68,6 +69,7 @@ enum UserAttributes: String {
     case notifyProps   = "notifyProps"
     case createAt      = "createAt"
     case updateAt      = "updateAt"
+    case deleteAt      = "deleteAt"
 }
 
 enum UserRelationships: String {
