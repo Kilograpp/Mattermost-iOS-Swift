@@ -10,21 +10,21 @@ import Foundation
 import RealmSwift
 
 enum ChannelAttributes: String {
-    case identifier = "identifier"
-    case createdAt = "createdAt"
+    case identifier    = "identifier"
+    case createdAt     = "createdAt"
     case privateTeamId = "privateTeamId"
-    case lastViewDate = "lastViewDate"
-    case name = "name"
-    case displayName = "displayName"
-    case purpose = "purpose"
-    case header = "header"
+    case lastViewDate  = "lastViewDate"
+    case name          = "name"
+    case displayName   = "displayName"
+    case purpose       = "purpose"
+    case header        = "header"
     case messagesCount = "messagesCount"
-    case lastPostDate = "lastPostDate"
-    case privateType = "privateType"
+    case lastPostDate  = "lastPostDate"
+    case privateType   = "privateType"
 }
 
 enum ChannelRelationships: String {
-    case team = "team"
+    case team    = "team"
     case members = "members"
 }
 
@@ -48,6 +48,8 @@ final class Channel: RealmObject {
             return "Private groups"
         case Constants.ChannelType.DirectTypeChannel:
             return "Direct message"
+        case "out":
+            return "Outside this team"
         default:
             return "UNKNOWN"
         }
@@ -72,6 +74,7 @@ final class Channel: RealmObject {
         didSet { computeDisplayNameWidth() }
     }
     dynamic var currentUserInChannel: Bool = false
+    dynamic var isDirectChannelInterlocutorInTeam: Bool = true
     
     dynamic var team: Team?
     
@@ -80,7 +83,6 @@ final class Channel: RealmObject {
     }
     
     let members = List<User>()
-   // let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.channel.rawValue)
     
     func interlocuterFromPrivateChannel() -> User {
         let ids = self.name?.components(separatedBy: "__")
@@ -96,6 +98,29 @@ final class Channel: RealmObject {
         return [ChannelAttributes.identifier.rawValue]
     }
     
+    static func townSquare() -> Channel? {
+        let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square")
+        return (channels.count > 0) ? channels.first : nil
+    }
+    
+    static func updateDirectTeamAffiliation() {
+        let realm = RealmUtils.realmForCurrentThread()
+        
+        let townSquareUsers = self.townSquare()?.members
+         let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
+        let directChannels = realm.objects(Channel.self).filter(directTypePredicate)
+        for channel in directChannels {
+            let user = channel.interlocuterFromPrivateChannel()
+            try! realm.write {
+                channel.isDirectChannelInterlocutorInTeam = (townSquareUsers?.contains(user))!
+            }
+        }
+        
+        for channel in directChannels {
+            print(channel.displayName! + " ---- ", channel.isDirectChannelInterlocutorInTeam)
+        }
+    }
+
 }
 
 private protocol Support: class {
