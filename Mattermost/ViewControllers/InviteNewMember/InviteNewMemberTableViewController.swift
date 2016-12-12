@@ -14,38 +14,8 @@ class InviteNewMemberTableViewController: UITableViewController {
     
 //MARK: Properties
     var memberTuplesArray: [MemberTuple] = [(email: "", firstName: "", lastName: "")]
-}
-
-
-private protocol InviteNewMemberTableViewControllerLifeCycle {
-    func viewDidLoad()
-}
-
-
-private protocol InviteNewMemberTableViewControllerSetup {
-    func initialSetup()
-    func setupNavigationBar()
-    func setupTableView()
-}
-
-private protocol InviteNewMemberTableViewControllerAction {
-    func backAction()
-    func inviteAction()
-    func addAnoterAction(_ sender: AnyObject)
-}
-
-private protocol InviteNewMemberTableViewControllerNavigation {
-    func returtToNSettings()
-}
-
-private protocol InviteNewMemberTableViewControllerRequest {
-    func invite()
-}
-
-
-//MARK: InviteNewMemberTableViewControllerLifeCycle
-
-extension InviteNewMemberTableViewController: InviteNewMemberTableViewControllerLifeCycle {
+    
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -66,9 +36,29 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
 }
 
 
-//MARK: InviteNewMemberTableViewControllerSetup
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupTableView()
+}
 
-extension InviteNewMemberTableViewController: InviteNewMemberTableViewControllerSetup {
+fileprivate protocol Action {
+    func backAction()
+    func inviteAction()
+    func addAnoterAction(_ sender: AnyObject)
+}
+
+fileprivate protocol Navigation {
+    func returtToNSettings()
+}
+
+fileprivate protocol InviteNewMemberTableViewControllerRequest {
+    func invite()
+}
+
+
+//MARK: Setup
+extension InviteNewMemberTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupTableView()
@@ -97,9 +87,8 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
 }
 
 
-//MARK: InviteNewMemberTableViewControllerAction
-
-extension InviteNewMemberTableViewController: InviteNewMemberTableViewControllerAction {
+//MARK: Action
+extension InviteNewMemberTableViewController: Action {
     func backAction() {
        returtToNSettings()
     }
@@ -115,25 +104,21 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
 }
 
 
-//MARK: InviteNewMemberTableViewControllerNavigation
-
-extension InviteNewMemberTableViewController: InviteNewMemberTableViewControllerNavigation {
+//MARK: Navigation
+extension InviteNewMemberTableViewController: Navigation {
     func returtToNSettings() {
         _ = self.navigationController?.popViewController(animated: true)
     }
     
     func proceedToSuccessInviteNewMember() {
-        let storyboard = UIStoryboard.init(name: "RightMenu", bundle: nil)
-        let successInviteNewMember = storyboard.instantiateViewController(withIdentifier: "SuccessInviteNewMemberTableViewController") as! SuccessInviteNewMembreViewController
+        let successInviteNewMember = self.storyboard?.instantiateViewController(withIdentifier: "SuccessInviteNewMemberTableViewController") as! SuccessInviteNewMembreViewController
         successInviteNewMember.configureWithInvitesCount(invitesCount: self.memberTuplesArray.count)
-        let navigation = self.menuContainerViewController.centerViewController
-        (navigation! as AnyObject).pushViewController(successInviteNewMember, animated:true)
+        self.navigationController?.pushViewController(successInviteNewMember, animated: true)
     }
 }
 
 
-//MARK: InviteNewMemberTableViewControllerRequest
-
+//MARK: Request
 extension InviteNewMemberTableViewController: InviteNewMemberTableViewControllerRequest {
     func invite() {
         var invites: [Dictionary<String, String>] = []
@@ -158,7 +143,6 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
 
 
 //MARK: UITableViewDataSource
-
 extension InviteNewMemberTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return self.memberTuplesArray.count
@@ -199,7 +183,6 @@ extension InviteNewMemberTableViewController {
 
 
 //MARK: UITableViewDelegate
-
 extension InviteNewMemberTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
@@ -212,7 +195,6 @@ extension InviteNewMemberTableViewController {
 
 
 //MARK: UITextFieldDelegate
-
 extension InviteNewMemberTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)

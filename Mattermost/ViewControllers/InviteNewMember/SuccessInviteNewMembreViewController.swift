@@ -8,62 +8,55 @@
 
 import UIKit
 
-class SuccessInviteNewMembreViewController: UIViewController {
+private protocol Configuration: class {
+    func configureWithInvitesCount(invitesCount: Int)
+}
+
+
+final class SuccessInviteNewMembreViewController: UIViewController {
 
 //MARK: Properties
     @IBOutlet weak var invitesCountLabel: UILabel?
     
     fileprivate var intitesCount: Int = 0
-    
-    func configureWithInvitesCount(invitesCount: Int) {
-        self.intitesCount = invitesCount
-    }
-    
-}
 
-
-private protocol SuccessInviteNewMembreViewControllerLifeCycle {
-    func viewDidLoad()
-}
-
-private protocol SuccessInviteNewMembreViewControllerSetup {
-    func initialSetup()
-    func setupNavigationBar()
-    func setupInvitesCountLabel()
-}
-
-private protocol SuccessInviteNewMembreViewControllerAction {
-    func initialSetup()
-    func setupNavigationBar()
-    func setupInvitesCountLabel()
-}
-
-private protocol SuccessInviteNewMembreViewControllerNavigation {
-    func returtToInviteNewMember()
-    func returnToChat()
-}
-
-
-//MARK: SuccessInviteNewMembreViewControllerLifeCycle
-
-extension SuccessInviteNewMembreViewController: SuccessInviteNewMembreViewControllerLifeCycle {
+//MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initialSetup()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        self.menuContainerViewController.panMode = .init(3)
-        
-        super.viewWillDisappear(animated)
+}
+
+
+//MARK: Configuration
+extension SuccessInviteNewMembreViewController: Configuration {
+    func configureWithInvitesCount(invitesCount: Int) {
+        self.intitesCount = invitesCount
     }
 }
 
-    
-//MARK: SuccessInviteNewMembreViewControllerSetup
 
-extension SuccessInviteNewMembreViewController: SuccessInviteNewMembreViewControllerSetup {
+private protocol Setup {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupInvitesCountLabel()
+}
+
+private protocol Action {
+    func initialSetup()
+    func setupNavigationBar()
+    func setupInvitesCountLabel()
+}
+
+private protocol Navigation {
+    func returtToInviteNewMember()
+    func returnToChat()
+}
+
+
+//MARK: Setup
+extension SuccessInviteNewMembreViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupInvitesCountLabel()
@@ -95,9 +88,8 @@ extension SuccessInviteNewMembreViewController: SuccessInviteNewMembreViewContro
 }
 
 
-//MARK: SuccessInviteNewMembreViewControllerAction
-
-extension SuccessInviteNewMembreViewController: SuccessInviteNewMembreViewControllerAction {
+//MARK: Action
+extension SuccessInviteNewMembreViewController: Action {
     func backAction() {
         returtToInviteNewMember()
     }
@@ -108,9 +100,8 @@ extension SuccessInviteNewMembreViewController: SuccessInviteNewMembreViewContro
 }
 
 
-//MARK: SuccessInviteNewMembreViewControllerNavigation
-
-extension SuccessInviteNewMembreViewController: SuccessInviteNewMembreViewControllerNavigation {
+//MARK: Navigation
+extension SuccessInviteNewMembreViewController: Navigation {
     func returtToInviteNewMember() {
         _ = self.navigationController?.popViewController(animated: true)
     }
