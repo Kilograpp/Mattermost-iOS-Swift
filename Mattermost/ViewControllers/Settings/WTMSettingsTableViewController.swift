@@ -106,15 +106,16 @@ extension WTMSettingsTableViewController: Navigation {
 //MARK: Request
 extension WTMSettingsTableViewController: Request {
     func updateSettings() {
-        let firstName = self.builder.firstNameState()
-        let channel = self.builder.channelState()
-        let mentionKeys = self.builder.mentionKeysState()
+      //  let firstName = self.builder.firstNameState()
+//        let channel = self.builder.channelState()
+  //      let mentionKeys = self.builder.mentionKeysState()
         
-        try! RealmUtils.realmForCurrentThread().write {
-            self.notifyProps?.firstName = firstName
-            self.notifyProps?.channel = channel
-            self.notifyProps?.mentionKeys = mentionKeys
-        }
+    //    try! RealmUtils.realmForCurrentThread().write {
+      //      self.notifyProps?.firstName = firstName
+        //    self.notifyProps?.channel = channel
+//            self.notifyProps?.mentionKeys = mentionKeys
+  //      }
+        self.notifyProps = self.builder.updatedNotifyProps()
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {

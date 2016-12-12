@@ -21,7 +21,9 @@ class DataManager {
       
 
     var currentTeam: Team? {
-        get {return Team.objectById(Preferences.sharedInstance.currentTeamId!)}
+        get {
+            print(Preferences.sharedInstance.currentTeamId)
+            return Team.objectById(Preferences.sharedInstance.currentTeamId!)}
         set {Preferences.sharedInstance.currentTeamId = newValue!.identifier}
     }
     

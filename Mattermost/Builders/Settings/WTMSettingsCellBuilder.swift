@@ -15,9 +15,8 @@ fileprivate let otherWordsSectionFooterTitle = "Separate by commas."
 private protocol Inteface: class {
     func cellFor(notifyProps: NotifyProps, indexPath: IndexPath) -> UITableViewCell
     func switchCellState(indexPath: IndexPath)
-    func firstNameState() -> String
-    func mentionKeysState() -> String
-    func channelState() -> String
+    
+    func updatedNotifyProps() -> NotifyProps
 }
 
 
@@ -25,7 +24,7 @@ final class WTMSettingsCellBuilder {
     
 //MARK: Properties
     fileprivate let tableView: UITableView
-    fileprivate let notifyProps: NotifyProps
+    fileprivate var notifyProps: NotifyProps?
     
     fileprivate var firstNameEnabled: Bool = false
     fileprivate var userNameEnabled: Bool = false
@@ -36,24 +35,40 @@ final class WTMSettingsCellBuilder {
     
     
 //MARK: LifeCycle
-    init(tableView: UITableView, notifyProps: NotifyProps) {
+    init(tableView: UITableView) {
         self.tableView = tableView
         
+        self.notifyProps = DataManager.sharedInstance.currentUser?.notificationProperies()
+        self.firstNameEnabled = (self.notifyProps?.isSensitiveFirstName())!
+        self.userNameEnabled = (self.notifyProps?.isNonCaseSensitiveUsername())!
+        self.mentionedUserNameEnabled = (self.notifyProps?.isUsernameMentioned())!
+        self.mentionedChannelNameEnabled = (self.notifyProps?.isChannelWide())!
         
+        self.sensetiveWordsString = (self.notifyProps?.otherNonCaseSensitive())!
     }
     
     private init?() {
         return nil
-    }
-    
-    private func updatedNotifyProps() -> NotifyProps {
-        return self.notifyProps
     }
 }
 
 
 //MARK: Interface
 extension WTMSettingsCellBuilder: Inteface {
+    func updatedNotifyProps() -> NotifyProps {
+        let firstName = self.firstNameEnabled ? Constants.CommonStrings.True : Constants.CommonStrings.False
+        let channel = self.mentionedChannelNameEnabled ? Constants.CommonStrings.True : Constants.CommonStrings.False
+        let mentionKeys = self.mentionKeysState()
+        
+        try! RealmUtils.realmForCurrentThread().write {
+            self.notifyProps?.firstName = firstName
+            self.notifyProps?.channel = channel
+            self.notifyProps?.mentionKeys = mentionKeys
+        }
+        
+        return self.notifyProps!
+    }
+    
     func numberOfSections() -> Int {
         return sectionHeaderTitles.count
     }
@@ -92,7 +107,22 @@ extension WTMSettingsCellBuilder: Inteface {
     
     func switchCellState(indexPath: IndexPath) {
         let cell = self.tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell
-        cell.checkBoxButton?.isSelected = !(cell.checkBoxButton?.isSelected)!
+        switch indexPath.row {
+        case 0:
+            self.firstNameEnabled = !self.firstNameEnabled
+            cell.checkBoxButton?.isSelected = self.firstNameEnabled
+        case 1:
+            self.userNameEnabled = !self.userNameEnabled
+            cell.checkBoxButton?.isSelected = self.userNameEnabled
+        case 2:
+            self.mentionedUserNameEnabled = !self.mentionedUserNameEnabled
+            cell.checkBoxButton?.isSelected = self.mentionedUserNameEnabled
+        case 3:
+            self.mentionedChannelNameEnabled = !self.mentionedChannelNameEnabled
+            cell.checkBoxButton?.isSelected = self.mentionedChannelNameEnabled
+        default:
+            break
+        }
     }
     
     func firstNameState() -> String {
@@ -103,16 +133,14 @@ extension WTMSettingsCellBuilder: Inteface {
     
     func mentionKeysState() -> String {
         let user = DataManager.sharedInstance.currentUser
-        var indexPath = IndexPath(row: 1, section: 0)
-        var mentionKeys: String = ((self.tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! ? (user?.username)! : ""
-        indexPath = IndexPath(row: 2, section: 0)
-        if ((self.tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! {
+        
+        var mentionKeys = self.userNameEnabled ? (user?.username)! : ""
+        if self.mentionedUserNameEnabled {
             mentionKeys = StringUtils.commaTailedString(mentionKeys) + "@" + (user?.username)!
         }
-        indexPath = IndexPath(row: 0, section: 1)
-        let otherWords = (self.tableView.cellForRow(at: indexPath) as! TextSettingsTableViewCell).wordsTextView?.text
-        if (otherWords?.characters.count)! > 0 {
-            mentionKeys = StringUtils.commaTailedString(mentionKeys) + otherWords!
+        
+        if self.sensetiveWordsString.characters.count > 0 {
+            mentionKeys = StringUtils.commaTailedString(mentionKeys) + self.sensetiveWordsString
         }
         
         return mentionKeys
@@ -134,32 +162,27 @@ fileprivate protocol Configuration: class {
 extension WTMSettingsCellBuilder: Configuration {
     func configure(cell:CheckSettingsTableViewCell, indexPath: IndexPath) {
         let user = DataManager.sharedInstance.currentUser
-        let notifyProps = user?.notificationProperies()
-        
         let base = standardWordsOptions[indexPath.row]
         switch indexPath.row {
         case 0:
             cell.descriptionLabel?.text = base + StringUtils.quotedString(user?.firstName)
-            cell.checkBoxButton?.isSelected = self.firstNameEnabled//(notifyProps?.isSensitiveFirstName())!
+            cell.checkBoxButton?.isSelected = self.firstNameEnabled
         case 1:
             cell.descriptionLabel?.text = base + StringUtils.quotedString(user?.username)
-            cell.checkBoxButton?.isSelected = self.userNameEnabled//(notifyProps?.isNonCaseSensitiveUsername())!
+            cell.checkBoxButton?.isSelected = self.userNameEnabled
         case 2:
             cell.descriptionLabel?.text = base + StringUtils.quotedString("@" + (user?.username)!)
-            cell.checkBoxButton?.isSelected = self.//(notifyProps?.isUsernameMentioned())!
+            cell.checkBoxButton?.isSelected = self.mentionedUserNameEnabled
         case 3:
             cell.descriptionLabel?.text = base
-            cell.checkBoxButton?.isSelected = (notifyProps?.isChannelWide())!
+            cell.checkBoxButton?.isSelected = self.mentionedChannelNameEnabled
         default:
             break
         }
     }
     
     func configure(cell: TextSettingsTableViewCell) {
-        let user = DataManager.sharedInstance.currentUser
-        let notifyProps = user?.notificationProperies()
-            
-        cell.wordsTextView?.text = notifyProps?.otherNonCaseSensitive()
+        cell.wordsTextView?.text = self.sensetiveWordsString
         cell.placeholderLabel?.isHidden = ((cell.wordsTextView?.text.characters.count)! > 0)
     }
 }
