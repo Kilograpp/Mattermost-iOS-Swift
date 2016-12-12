@@ -45,6 +45,8 @@ extension LeftMenuCellBuilder: LeftMenuCellBuilderInteface {
             reuseIdentifier = PrivateChannelTableViewCell.reuseIdentifier
         case 2:
             reuseIdentifier = DirectChannelTableViewCell.reuseIdentifier
+        case 3:
+            reuseIdentifier = DirectChannelTableViewCell.reuseIdentifier
         default:
             break
         }

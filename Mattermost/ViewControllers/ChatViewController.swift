@@ -489,7 +489,8 @@ extension ChatViewController: Action {
     
     func didTapImageAction(notification: NSNotification) {
         let postLocalId = notification.userInfo?["postLocalId"] as! String
-        openPreviewWith(postLocalId: postLocalId)
+        let fileId = notification.userInfo?["fileId"] as! String
+        openPreviewWith(postLocalId: postLocalId, fileId: fileId)
     }
     
     func scrollToBottom() {
@@ -888,6 +889,11 @@ extension ChatViewController: ChannelObserverDelegate {
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         self.title = self.channel?.displayName
         
+        self.textInputbar.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.leftButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.rightButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.textView.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
         }
@@ -946,9 +952,6 @@ extension ChatViewController {
     }
     
     func reloadChat(notification: NSNotification) {
-        print(notification.userInfo)
-        let userInfo = notification.userInfo
-        print(userInfo?["postLocalId"])
         guard notification.userInfo?["postLocalId"] != nil else { return }
         
         let postLocalId = notification.userInfo?["postLocalId"] as! String
@@ -981,9 +984,8 @@ extension ChatViewController {
     }
     
     func handleKeyboardWillShowNotification() {
-        //self.completePost.isHidden = true
         
-        print("sfdsdfsd")
+        print("handleKeyboardWillShowNotification")
     }
     
     func handleKeyboardWillHideeNotification() {
@@ -1014,7 +1016,6 @@ extension ChatViewController: AttachmentsModuleDataSource {
 }
 
 //MARK: AutoCompletionView
-
 extension ChatViewController {
     func autoCompletionEmojiCellForRowAtIndexPath(_ indexPath: IndexPath) -> EmojiTableViewCell {
         let cell = self.autoCompletionView.dequeueReusableCell(withIdentifier: EmojiTableViewCell.reuseIdentifier) as! EmojiTableViewCell
@@ -1143,17 +1144,23 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
 
 //MARK: ImagesPreviewViewController
 extension ChatViewController {
-    func openPreviewWith(postLocalId: String) {
+    func openPreviewWith(postLocalId: String, fileId: String) {
         let gallery = ImagesPreviewViewController(delegate: self)
-        gallery.configureWith(postLocalId: postLocalId)
-        present(gallery, animated: true, completion: nil)
+        gallery.configureWith(postLocalId: postLocalId, initalFileId: fileId)
+        let transaction = CATransition()
+        transaction.duration = 0.5
+        transaction.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transaction.type = kCATransitionMoveIn
+        transaction.subtype = kCATransitionFromBottom
+        self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
+        self.navigationController?.pushViewController(gallery, animated: false)
     }
 }
 
 
 // MARK: ImagesPreviewViewControllerDelegate
 extension ChatViewController: ImagesPreviewViewControllerDelegate {
-    func imagesPreviewDidSwipeDownToClose(imagesPreview: ImagesPreviewViewController) {
+    func imagesPreviewDidSwipeToClose(imagesPreview: ImagesPreviewViewController, direction: UISwipeGestureRecognizerDirection) {
         dismiss(animated: true, completion: nil)
     }
 }
