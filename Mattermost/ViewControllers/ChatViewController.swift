@@ -35,8 +35,16 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var postFromSearch: Post! = nil
     var isLoadingInProgress: Bool = false
     
-    func uploading(inProgress: Bool) {
+    func uploading(inProgress: Bool, countItems: Int) {
         DispatchQueue.main.async { [unowned self] in
+            guard (countItems > 0) else {
+                guard self.textView.text.characters.count > 0 else{
+                    self.rightButton.isEnabled = false
+                    return
+                }
+                self.rightButton.isEnabled = true
+                return
+            }
             self.rightButton.isEnabled = inProgress
         }
     }
@@ -116,6 +124,7 @@ extension ChatViewController {
         self.navigationController?.isNavigationBarHidden = false
         setupInputViewButtons()
         addSLKKeyboardObservers()
+        self.replaceStatusBar()
         
         if (self.postFromSearch != nil) {
             changeChannelForPostFromSearch()
@@ -139,6 +148,7 @@ extension ChatViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillHide),
                                                name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -444,6 +454,7 @@ extension ChatViewController: Action {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
         }
         else {
+            UIStatusBar.shared().attachToDefault()
             proceedToChannelSettings(channel: self.channel)
         }
     }
@@ -664,7 +675,7 @@ extension ChatViewController: Request {
             }
             self.hideTopActivityIndicator()
         }
-        self.dismissKeyboard(true)
+        //self.dismissKeyboard(true)
         self.clearTextView()
     }
     
@@ -680,6 +691,7 @@ extension ChatViewController: Request {
         }
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
+        self.completePost.isHidden = true
     }
     
     func updatePost() {
@@ -691,9 +703,10 @@ extension ChatViewController: Request {
             self.selectedPost = nil
         }
         self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
-        self.dismissKeyboard(true)
+       // self.dismissKeyboard(true)
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
+        self.completePost.isHidden = true
     }
     
     func deletePost() {
@@ -836,7 +849,7 @@ extension ChatViewController {
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let actualPosition = scrollView.contentOffset.y
+        let actualPosition = self.tableView.contentOffset.y
         if actualPosition > UIScreen.screenHeight() {
             self.scrollButton?.isHidden = false
         }

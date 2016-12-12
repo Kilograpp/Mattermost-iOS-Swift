@@ -115,6 +115,7 @@ extension PasswordRecoveryViewController: Action {
     
     @IBAction func recoveryAction() {
         recovery()
+        self.emailTextField.endEditing(false)
     }
 }
 

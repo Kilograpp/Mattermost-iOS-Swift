@@ -173,7 +173,10 @@ extension CreateChannelViewController: Request {
 extension CreateChannelViewController {
     func updateChannelLabel() {
         let name = self.nameTextField.text
-        guard (name?.characters.count)! > 0 else { return }
+        guard (name?.characters.count)! > 0 else {
+            self.channelLabel.text = ""
+            return
+        }
         
         self.channelLabel.text = name?.capitalized[0]
     }

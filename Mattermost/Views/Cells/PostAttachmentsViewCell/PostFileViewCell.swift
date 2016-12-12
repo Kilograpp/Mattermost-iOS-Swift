@@ -25,7 +25,11 @@ class PostFileViewCell: PostAttachmentsViewCell {
         super.configureWithItem(item)
         self.clipsToBounds = true
         
-        guard item.isFile else { return }
+        guard item.isFile else {
+            self.nameLabel.text = ""
+            self.fileLabel.text = ""
+            return
+        }
         self.nameLabel.text = item.fileName
         self.fileLabel.text = self.fileTypeString(fileNameString: item.fileName!)
     }

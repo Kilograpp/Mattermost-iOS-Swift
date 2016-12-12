@@ -297,10 +297,11 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             
             Api.sharedInstance.leaveChannel(channel, completion: { (error) in
                 guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
+                let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
                 self.dismiss(animated: true, completion: {_ in
                     Api.sharedInstance.loadChannels(with: { (error) in
                         guard (error == nil) else { return }
-                        AlertManager.sharedManager.showSuccesWithMessage(message: "You left ".localized + self.channel.displayName!)
+                        AlertManager.sharedManager.showSuccesWithMessage(message: "You left ".localized + self.channel.displayName! + " " + channelType)
                     })
                 })
             })
