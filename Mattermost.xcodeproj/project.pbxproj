@@ -1299,7 +1299,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9B82200F26897BF577153F76 /* Build configuration list for PBXNativeTarget "Mattermost" */;
 			buildPhases = (
-				BE5F6F50DF894BE52BFD4C06 /* [CP] Check Pods Manifest.lock */,
+				6DF72B0072BCEC853F86E63D /* [CP] Check Pods Manifest.lock */,
 				9B822E8644EB6D1CAB6E3D29 /* Sources */,
 				9B8226327E3FF187CFC613FA /* Frameworks */,
 				9B8225917DC3A9EF0EB8303D /* Resources */,
@@ -1420,7 +1420,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		4421F39ED493A29E806B1222 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1447,36 +1447,7 @@
 			shellPath = /bin/sh;
 			shellScript = "#TAGS=\"TODO:|FIXME:|CODEREVIEW:\"\n#ERRORTAG=\"ERROR:\"\n#find \"${SRCROOT}/Mattermost\" ( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" ) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*$|($ERRORTAG).*$\" | perl -p -e \"s/($TAGS)/ warning: $1/\" | perl -p -e \"s/($ERRORTAG)/ error: $1/\"";
 		};
-		743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8B3CB3811DD326230078DE25 /* Fabric */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = Fabric;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" 1373df4a388cbef38f2feb69c126b74abc82a69e 9f621d40452e483343b6d9c0150f1a7422c9b5619252363ae1be1a0ec37ad468";
-		};
-		BE5F6F50DF894BE52BFD4C06 /* [CP] Check Pods Manifest.lock */ = {
+		6DF72B0072BCEC853F86E63D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1491,9 +1462,38 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		D84DA70F1D22C14900DCFF4B /* Copy Carthage Frameworks */ = {
+		743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost-resources.sh\"\n";
+		};
+		8B3CB3811DD326230078DE25 /* Fabric */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Fabric;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" != \"Release\" ]; then\n    exit 0\nfi\n\n\"${PODS_ROOT}/Fabric/run\" 1373df4a388cbef38f2feb69c126b74abc82a69e 9f621d40452e483343b6d9c0150f1a7422c9b5619252363ae1be1a0ec37ad468";
+			showEnvVarsInLog = 0;
+		};
+		D84DA70F1D22C14900DCFF4B /* Copy Carthage Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1516,7 +1516,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "FILE=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Carthage-Installation-Flag\"\nif [ -f \"$FILE\" ]; then\n    exit 0\nfi\ntouch \"$FILE\"\n\n/usr/local/bin/carthage copy-frameworks";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1803,28 +1804,34 @@
 			baseConfigurationReference = 502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mattermost/Mattermost.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Maxim Gubin (26358JFF57)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Maxim Gubin (26358JFF57)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/MRProgress",
 				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Mattermost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DDEBUG -Xfrontend -debug-time-function-bodies";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "f93249bb-910c-4804-bf49-2cc8ff645729";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0.1;
+				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
+				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
+				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
@@ -1846,6 +1853,8 @@
 			baseConfigurationReference = 793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mattermost/Mattermost.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
@@ -1855,8 +1864,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/MRProgress",
 				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Mattermost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1867,6 +1876,9 @@
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_VERSION = 3.0.1;
+				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
+				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
+				USE_HEADERMAP = NO;
 			};
 			name = Release;
 		};
