@@ -257,6 +257,14 @@ extension Api: ChannelApi {
             let channelDictionary = Reflection.fetchNotNullValues(object: mappingResult.firstObject as! Channel)
             print(channelDictionary)
             RealmUtils.create(channelDictionary)
+            let updatedChannel = try! Realm().objects(Channel.self).filter("identifier = %@", (mappingResult.firstObject as! Channel).identifier!).first!
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write({
+                let updatedMembers = updatedChannel.members
+                for member in updatedMembers{
+                    member.computeDisplayNameWidth()
+                }
+            })
             completion(nil)
             }, failure: completion)
     }
