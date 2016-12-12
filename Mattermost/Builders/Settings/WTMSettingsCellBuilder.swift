@@ -25,14 +25,29 @@ final class WTMSettingsCellBuilder {
     
 //MARK: Properties
     fileprivate let tableView: UITableView
+    fileprivate let notifyProps: NotifyProps
+    
+    fileprivate var firstNameEnabled: Bool = false
+    fileprivate var userNameEnabled: Bool = false
+    fileprivate var mentionedUserNameEnabled: Bool = false
+    fileprivate var mentionedChannelNameEnabled: Bool = false
+    
+    fileprivate var sensetiveWordsString: String = ""
+    
     
 //MARK: LifeCycle
-    init(tableView: UITableView) {
+    init(tableView: UITableView, notifyProps: NotifyProps) {
         self.tableView = tableView
+        
+        
     }
     
     private init?() {
         return nil
+    }
+    
+    private func updatedNotifyProps() -> NotifyProps {
+        return self.notifyProps
     }
 }
 
@@ -125,13 +140,13 @@ extension WTMSettingsCellBuilder: Configuration {
         switch indexPath.row {
         case 0:
             cell.descriptionLabel?.text = base + StringUtils.quotedString(user?.firstName)
-            cell.checkBoxButton?.isSelected = (notifyProps?.isSensitiveFirstName())!
+            cell.checkBoxButton?.isSelected = self.firstNameEnabled//(notifyProps?.isSensitiveFirstName())!
         case 1:
             cell.descriptionLabel?.text = base + StringUtils.quotedString(user?.username)
-            cell.checkBoxButton?.isSelected = (notifyProps?.isNonCaseSensitiveUsername())!
+            cell.checkBoxButton?.isSelected = self.userNameEnabled//(notifyProps?.isNonCaseSensitiveUsername())!
         case 2:
             cell.descriptionLabel?.text = base + StringUtils.quotedString("@" + (user?.username)!)
-            cell.checkBoxButton?.isSelected = (notifyProps?.isUsernameMentioned())!
+            cell.checkBoxButton?.isSelected = self.//(notifyProps?.isUsernameMentioned())!
         case 3:
             cell.descriptionLabel?.text = base
             cell.checkBoxButton?.isSelected = (notifyProps?.isChannelWide())!
