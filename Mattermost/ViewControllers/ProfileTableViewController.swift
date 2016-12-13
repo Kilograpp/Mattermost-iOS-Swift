@@ -278,15 +278,6 @@ extension ProfileViewController {
     func changeProfilePhoto() {
         guard self.user?.identifier == Preferences.sharedInstance.currentUserId else { return }
         
-       /* print(UIImagePickerController.isSourceTypeAvailable(.camera))
-        print(UIImagePickerController.isSourceTypeAvailable(.photoLibrary))
-        print(UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum))
-        let status = PHPhotoLibrary.authorizationStatus()
-        print(status == .authorized)
-        print(status == .denied)
-        print(status == .notDetermined)
-        print(status == .restricted)*/
-        
         let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
             guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
