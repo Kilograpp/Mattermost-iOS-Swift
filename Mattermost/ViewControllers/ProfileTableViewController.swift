@@ -302,7 +302,6 @@ extension ProfileViewController {
                     return
             }
             
-            
             self.presentImagePickerControllerWithType(.photoLibrary)
         }
         let cancelAction = UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil)
