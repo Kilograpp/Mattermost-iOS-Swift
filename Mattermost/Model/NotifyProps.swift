@@ -134,7 +134,7 @@ extension NotifyProps: MobilePush {
 //MARK: TriggerWords
 extension NotifyProps: TriggerWords {
     func isSensitiveFirstName() -> Bool {
-        return self.firstName == Constants.CommonStrings.True//"true"
+        return (self.firstName == Constants.CommonStrings.True)
     }
     
     func isNonCaseSensitiveUsername() -> Bool {
@@ -170,6 +170,7 @@ extension NotifyProps: TriggerWords {
     
     func completeTriggerWords() -> String {
         let user = DataManager.sharedInstance.currentUser
+        print(self.isSensitiveFirstName())
         var words = self.isSensitiveFirstName() ? StringUtils.quotedString(user?.firstName) : ""
         if self.isNonCaseSensitiveUsername() {
             words = StringUtils.commaTailedString(words)
