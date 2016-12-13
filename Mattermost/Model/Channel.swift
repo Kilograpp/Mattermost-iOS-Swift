@@ -82,7 +82,7 @@ final class Channel: RealmObject {
         return self == ChannelObserver.sharedObserver.selectedChannel
     }
     
-    let members = List<User>()
+    var members = List<User>()
     
     func interlocuterFromPrivateChannel() -> User {
         let ids = self.name?.components(separatedBy: "__")

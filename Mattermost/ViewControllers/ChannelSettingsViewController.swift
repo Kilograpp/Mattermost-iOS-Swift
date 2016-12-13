@@ -95,9 +95,11 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 //FIXME: WRONG URL!!! (API URL, NEED CHANNEL URL)
                 cell0.infoName.text = "URL".localized
                 cell0.infoDetail.text = channel.buildURL()
+                cell0.accessoryView = UIView()
             case 3:
                 cell0.infoName.text = "ID".localized
                 cell0.infoDetail.text = channel.identifier!
+                cell0.accessoryView = UIView()
             default:
                 break
             }
@@ -210,25 +212,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         self.lastSelectedIndexPath = indexPath
         
         if (indexPath==IndexPath(row: 0, section: 2)) {
-            Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
-                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
-                    guard (error == nil) else {
-                        let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
-                        self.lastSelectedIndexPath = nil
-                        return
-                    }
-                    let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
-                    Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
-                        self.lastSelectedIndexPath = nil
-                        guard (error == nil) else {
-                            return
-                        }
-                        self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
-                    })
-                })
-            })
+            self.lastSelectedIndexPath = nil
+            self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
         }
         if (indexPath.section==2 && indexPath.row >= 1 && indexPath.row <= membersRowCount){
             let member = channel.members[indexPath.row-1]

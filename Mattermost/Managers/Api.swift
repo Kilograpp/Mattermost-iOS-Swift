@@ -238,8 +238,11 @@ extension Api: ChannelApi {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
+                    if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{
+                        $0.members = channel.members
+                    }
+                    realm.add($0, update: true)
                 }
-                realm.add(channels, update: true)
             })
             
             completion(nil)

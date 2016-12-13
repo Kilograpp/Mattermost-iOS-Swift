@@ -141,7 +141,7 @@ struct Constants {
     
     struct ErrorMessages {
         static let code: Array = [-1009, -1003]
-        static let message: Array = ["No Internet connectivity detected", "Can't find server with this host name"]
+        static let message: Array = ["No Internet connectivity detected", "Couldn't find existing team matching this URL"]
     }
     
     struct CommonKeyPaths {

@@ -546,18 +546,24 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToChannelSettings(channel: Channel) {
+        self.showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
-            guard (error == nil) else { return }
+            guard (error == nil) else {
+                self.hideLoaderView()
+                return
+            }
             Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
                     let channelType = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
                     AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
+                    self.hideLoaderView()
                     return
                 }
                 
                 let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
                 let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
                 ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+                self.hideLoaderView()
                 self.navigationController?.present(channelSettings, animated: true, completion: nil)
             })
         })
