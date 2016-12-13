@@ -10,6 +10,7 @@ import UIKit
 import QuartzCore
 import WebImage
 import MBProgressHUD
+import NVActivityIndicatorView
 
 @objc private enum InfoSections : Int {
     case base
@@ -195,11 +196,13 @@ extension ProfileViewController: Navigation {
 }
 
 //MARK: Request
+//КОММЕНТ АНДРЕЮ!!!!
 extension ProfileViewController: Request {
     internal func updateImage() {
-        let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
-        progressHUD.mode = .annularDeterminate
-        progressHUD.label.text = "Uploading..."
+        
+        //ПОКАЗАЛ ЛОУДЕР!
+        self.showLoaderViewForProfile()
+        
         
         let image = self.avatarImageView.image
         Api.sharedInstance.update(profileImage: image!, completion: { (error) in
@@ -212,8 +215,12 @@ extension ProfileViewController: Request {
             ImageDownloader.downloadFullAvatarForUser(self.user!) { _,_ in }
             MBProgressHUD.hide(for: self.view, animated: true)
             self.saveButton.isEnabled = false
+            
+            //УБРАЛ ЛОУДЕР!
+            self.hideLoaderViewForProfile()
+            
+            
         }, progress: { (progress) in
-            progressHUD.progress = progress
         })
     }
 }
@@ -311,3 +318,25 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         self.saveButton.isEnabled = true
     }
 }
+
+extension ProfileViewController{
+    func showLoaderViewForProfile(){
+        let screenSize = UIScreen.main.bounds
+        
+        let loader = UIView.init(frame: CGRect(x: 0, y: 0 - (self.navigationController?.navigationBar.frame.height)!, width: screenSize.width, height: screenSize.height))
+        loader.backgroundColor = UIColor.init(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.92)
+        
+        let frame = CGRect(x: (screenSize.width-screenSize.width/7)/2, y: (screenSize.height-screenSize.height/7)/2, width: screenSize.width/7, height: screenSize.height/7)
+        let color = UIColor.kg_blueColor()
+        let spinner = NVActivityIndicatorView(frame: frame, type: .ballPulse, color: color, padding: 0.0)
+        loader.addSubview(spinner)
+        spinner.startAnimating()
+        self.view.addSubview(loader)
+    }
+    
+    func hideLoaderViewForProfile(){
+        (self.view.subviews.last?.subviews.first as! NVActivityIndicatorView).stopAnimating()
+        self.view.subviews.last?.removeFromSuperview()
+    }
+}
+
