@@ -10,6 +10,7 @@ import UIKit
 import QuartzCore
 import WebImage
 import MBProgressHUD
+import Photos
 
 @objc private enum InfoSections : Int {
     case base
@@ -277,11 +278,31 @@ extension ProfileViewController {
     func changeProfilePhoto() {
         guard self.user?.identifier == Preferences.sharedInstance.currentUserId else { return }
         
+       /* print(UIImagePickerController.isSourceTypeAvailable(.camera))
+        print(UIImagePickerController.isSourceTypeAvailable(.photoLibrary))
+        print(UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum))
+        let status = PHPhotoLibrary.authorizationStatus()
+        print(status == .authorized)
+        print(status == .denied)
+        print(status == .notDetermined)
+        print(status == .restricted)*/
+        
         let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
+            guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Camera.")
+                return
+            }
+            
             self.presentImagePickerControllerWithType(.camera)
         }
         let openGalleryAction = UIAlertAction.init(title: "Take from library", style: .default) { (action) in
+            guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+                    AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
+                    return
+            }
+            
+            
             self.presentImagePickerControllerWithType(.photoLibrary)
         }
         let cancelAction = UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil)

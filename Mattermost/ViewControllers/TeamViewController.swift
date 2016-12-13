@@ -139,11 +139,16 @@ extension TeamViewController: Request {
         
         RealmUtils.refresh()
         Api.sharedInstance.loadTeams { (userShouldSelectTeam, error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             Api.sharedInstance.loadCurrentUser { (error) in
+                guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                 Api.sharedInstance.loadChannels(with: { (error) in
+                    guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                     Api.sharedInstance.loadCompleteUsersList({ (error) in
+                        guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                         if let townSquare = Channel.townSquare() {
                             Api.sharedInstance.loadExtraInfoForChannel(townSquare.identifier!, completion: { (error) in
+                                guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                                 Channel.updateDirectTeamAffiliation()
                                 
                                 RouterUtils.loadInitialScreen()
@@ -187,6 +192,14 @@ extension TeamViewController: Request {
 }
 
 
+//MARK: Handle
+extension TeamViewController {
+    func handleErrorWith(message: String) {
+        AlertManager.sharedManager.showErrorWithMessage(message: message)
+        self.hideLoaderView()
+    }
+}
+
 //MARK: UITableViewDataSource
 extension TeamViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -207,8 +220,9 @@ extension TeamViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let team = self.results[indexPath.row]
+        guard Api.sharedInstance.isNetworkReachable() else { handleErrorWith(message: "No Internet connectivity detected"); return }
         
+        let team = self.results[indexPath.row]
         guard (Preferences.sharedInstance.currentTeamId != nil) else {
             DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier

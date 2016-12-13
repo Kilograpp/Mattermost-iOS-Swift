@@ -32,7 +32,11 @@ extension UIViewController: LoaderView{
     }
     
     func hideLoaderView(){
-        (self.view.subviews.last?.subviews.first as! NVActivityIndicatorView).stopAnimating()
+        let activityIndicator = self.view.subviews.last?.subviews.first
+        guard activityIndicator != nil else { return }
+        guard (activityIndicator?.isKind(of: NVActivityIndicatorView.self))! else { return }
+        
+        (activityIndicator as! NVActivityIndicatorView).stopAnimating()
         self.view.subviews.last?.removeFromSuperview()
     }
 }

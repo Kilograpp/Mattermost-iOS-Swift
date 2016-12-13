@@ -76,5 +76,7 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Медиа</string>
 </dict>
 </plist>
