@@ -111,6 +111,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             } else if (indexPath.row == membersRowCount + 1) {
                 let cell1 = tableView.dequeueReusableCell(withIdentifier: "labelChannelSettingsCell") as! LabelChannelSettingsCell
                 cell1.cellText.text = "See all members"
+                cell1.cellText.textColor = UIColor.kg_blueColor()
                 cell = cell1
             } else {
                 let cell3 = tableView.dequeueReusableCell(withIdentifier: "memberChannelSettingsCell") as! MemberChannelSettingsCell
@@ -208,13 +209,13 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         let membersRowCount = (channel.members.count < 5) ? channel.members.count : 5
         
         guard self.lastSelectedIndexPath == nil else { return }
-        self.lastSelectedIndexPath = indexPath
         
         if (indexPath==IndexPath(row: 0, section: 2)) {
-            self.lastSelectedIndexPath = nil
             self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
         }
         if (indexPath.section==2 && indexPath.row >= 1 && indexPath.row <= membersRowCount){
+            self.lastSelectedIndexPath = indexPath
+            
             let member = channel.members[indexPath.row-1]
             
             if member.identifier == Preferences.sharedInstance.currentUserId!{
@@ -236,7 +237,6 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             
         }
         if (indexPath==IndexPath(row: membersRowCount+1, section: 2)){
-            self.lastSelectedIndexPath = nil
             self.performSegue(withIdentifier: "showAllMembers", sender: nil)
         }
         if (indexPath==IndexPath(row: 0, section: 1) ||
@@ -250,7 +250,6 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             default:
                 break
             }
-            self.lastSelectedIndexPath = nil
             self.performSegue(withIdentifier: "showChannelInfo", sender: nil)
         }
         if (indexPath==IndexPath(row: 0, section: 3)){
@@ -258,14 +257,15 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 deleteChannel()
                 return
             }
-            
+            self.lastSelectedIndexPath = indexPath
             Api.sharedInstance.leaveChannel(channel, completion: { (error) in
                 guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
                 let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                AlertManager.sharedManager.showSuccesWithMessage(message: "You left ".localized + self.channel.displayName! + " " + channelType)
                 self.dismiss(animated: true, completion: {_ in
                     Api.sharedInstance.loadChannels(with: { (error) in
-                        guard (error == nil) else { return }
-                        AlertManager.sharedManager.showSuccesWithMessage(message: "You left ".localized + self.channel.displayName! + " " + channelType)
+                        guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
+                        self.lastSelectedIndexPath = nil
                     })
                 })
             })

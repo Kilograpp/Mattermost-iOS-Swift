@@ -51,6 +51,8 @@
 		8644A4841DED86D1009280EB /* MemberInAdditingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */; };
 		8644A4881DED8A80009280EB /* AllMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A4871DED8A80009280EB /* AllMembersViewController.swift */; };
 		8644A48A1DED908F009280EB /* ChannelSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8644A4891DED908F009280EB /* ChannelSettings.storyboard */; };
+		864AF5BD1E0051730010F083 /* CreateChannelNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864AF5BB1E0051730010F083 /* CreateChannelNameCell.swift */; };
+		864AF5BE1E0051730010F083 /* CreateChannelNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */; };
 		864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */; };
 		8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
@@ -337,6 +339,8 @@
 		8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberInAdditingCell.xib; sourceTree = "<group>"; };
 		8644A4871DED8A80009280EB /* AllMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllMembersViewController.swift; sourceTree = "<group>"; };
 		8644A4891DED908F009280EB /* ChannelSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = ChannelSettings.storyboard; path = storyboards/ChannelSettings.storyboard; sourceTree = "<group>"; };
+		864AF5BB1E0051730010F083 /* CreateChannelNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChannelNameCell.swift; sourceTree = "<group>"; };
+		864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreateChannelNameCell.xib; sourceTree = "<group>"; };
 		864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+LoaderView.swift"; sourceTree = "<group>"; };
 		8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -1101,6 +1105,8 @@
 				8BBA7DCA1D87FECF003A5B99 /* SearchChatTableViewCell.swift */,
 				8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */,
 				860755B11DEE82E200438B09 /* ChannelNameAndHandleCell.swift */,
+				864AF5BB1E0051730010F083 /* CreateChannelNameCell.swift */,
+				864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1389,6 +1395,7 @@
 				8BCDDC881DE6E701006D83BC /* MemberChannelSettingsCell.xib in Resources */,
 				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
 				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
+				864AF5BE1E0051730010F083 /* CreateChannelNameCell.xib in Resources */,
 				8B3CB34A1DD267C40078DE25 /* RightMenu.storyboard in Resources */,
 				CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */,
 				D62FEB981D4F2B3400390EBC /* Login.storyboard in Resources */,
@@ -1680,6 +1687,7 @@
 				8B3CB3761DD269C30078DE25 /* ApplicationStateManager.swift in Sources */,
 				CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */,
 				8BCDDC701DE6E5C5006D83BC /* ChannelSettingsViewController.swift in Sources */,
+				864AF5BD1E0051730010F083 /* CreateChannelNameCell.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
 				8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */,

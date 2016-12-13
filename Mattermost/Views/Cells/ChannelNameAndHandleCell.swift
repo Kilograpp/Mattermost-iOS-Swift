@@ -29,7 +29,6 @@ class ChannelNameAndHandleCell: UITableViewCell, UITextFieldDelegate {
         super.awakeFromNib()
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-
         // Initialization code
     }
 
