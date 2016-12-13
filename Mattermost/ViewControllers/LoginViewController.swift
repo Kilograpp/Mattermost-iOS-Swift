@@ -143,8 +143,8 @@ extension LoginViewController: Setup {
         self.recoveryButton.layer.cornerRadius = 2
         self.recoveryButton.backgroundColor = ColorBucket.whiteColor
         self.recoveryButton.setTitle(self.forgotPassword, for:UIControlState())
-        self.recoveryButton.tintColor = UIColor.red
-        self.recoveryButton.setTitleColor(UIColor.red, for:UIControlState())
+        self.recoveryButton.tintColor = UIColor.kg_lightGrayTextColor()
+        self.recoveryButton.setTitleColor(UIColor.kg_lightGrayTextColor(), for:UIControlState())
         self.recoveryButton.titleLabel?.font = FontBucket.forgotPasswordButtonFont
     }
     
@@ -212,12 +212,14 @@ extension LoginViewController: Request {
                 let message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
                 self.hideLoaderView()
+                self.recoveryButton.tintColor = UIColor.red
+                self.recoveryButton.setTitleColor(UIColor.red, for:UIControlState())
                 return
             }
             
             if self.loginTextField.isEditing { _ = self.loginTextField.resignFirstResponder() }
             if self.passwordTextField.isEditing { _ = self.passwordTextField.resignFirstResponder() }
-            
+            //self.recoveryButton.tintColor = UIColor.kg_lightGrayTextColor()
             self.loadTeams()
         }
     }

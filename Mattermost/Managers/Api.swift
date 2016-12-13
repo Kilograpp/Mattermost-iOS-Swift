@@ -366,7 +366,9 @@ extension Api: ChannelApi {
       
         let newChannel = Channel()
         newChannel.privateType = type
-        newChannel.name = name
+        let theCFMutableString = NSMutableString(string: name) as CFMutableString
+        _ = CFStringTransform(theCFMutableString, nil, kCFStringTransformToLatin, false)
+        newChannel.name = (theCFMutableString as String).replacingOccurrences(of: " ", with: "", options: NSString.CompareOptions.literal, range:nil)
         newChannel.displayName = name
         newChannel.header = header
         newChannel.purpose = purpose

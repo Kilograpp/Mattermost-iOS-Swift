@@ -66,7 +66,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         case 1:
             return 4
         case 2:
-            return (channel.members.count < 5) ? (channel.members.count+2) : 7
+            return (channel.members.count <= 5) ? (channel.members.count+1) : 7
         case 3:
             return 1
         default:
@@ -128,6 +128,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             let action = (channel.members.count > 1) ? "Leave" : "Delete"
             let type = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group" : "Channel"
             cell2.cellText.text = action + " " + type
+            cell2.cellText.textColor = UIColor.red
             
             cell = cell2
         default: break
@@ -185,23 +186,21 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         
         if segue.identifier == "showMembersAdditing"{
             let addMembersViewController = segue.destination as! AddMembersViewController
-            addMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+            addMembersViewController.channel = self.channel
         }
         
         if segue.identifier == "showAllMembers"{
             let allMembersViewController = segue.destination as! AllMembersViewController
-            allMembersViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+            allMembersViewController.channel = self.channel
         }
         if segue.identifier == "showChannelInfo"{
             let channelHeaderAndDescriptionViewController = segue.destination as! ChannelHeaderAndDescriptionViewController
-            channelHeaderAndDescriptionViewController.channel = try!
-                Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+            channelHeaderAndDescriptionViewController.channel = self.channel
             channelHeaderAndDescriptionViewController.type = selectedInfoType
         }
         if segue.identifier == "showNameAndHandle"{
             let channelNameAndHandleViewController = segue.destination as! ChannelNameAndHandleViewController
-            channelNameAndHandleViewController.channel = try!
-                Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+            channelNameAndHandleViewController.channel = self.channel
         }
     }
     
@@ -237,18 +236,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             
         }
         if (indexPath==IndexPath(row: membersRowCount+1, section: 2)){
-            Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
-                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
-                    self.lastSelectedIndexPath = nil
-                    guard (error == nil) else {
-                        let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
-                        return
-                    }
-                    self.performSegue(withIdentifier: "showAllMembers", sender: nil)
-                })
-            })
+            self.lastSelectedIndexPath = nil
+            self.performSegue(withIdentifier: "showAllMembers", sender: nil)
         }
         if (indexPath==IndexPath(row: 0, section: 1) ||
             indexPath==IndexPath(row: 1, section: 1)){
@@ -261,18 +250,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             default:
                 break
             }
-            Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
-                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
-                    self.lastSelectedIndexPath = nil
-                    guard (error == nil) else {
-                        let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
-                        return
-                    }
-                    self.performSegue(withIdentifier: "showChannelInfo", sender: nil)
-                })
-            })
+            self.lastSelectedIndexPath = nil
+            self.performSegue(withIdentifier: "showChannelInfo", sender: nil)
         }
         if (indexPath==IndexPath(row: 0, section: 3)){
             if self.channel.members.count == 1 {
@@ -292,18 +271,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
             })
         }
         if (indexPath==IndexPath(row: 0, section: 0)){
-            Api.sharedInstance.loadChannels(with: { (error) in
-                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
-                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
-                    self.lastSelectedIndexPath = nil
-                    guard (error == nil) else {
-                        let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                        AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
-                        return
-                    }
-                    self.performSegue(withIdentifier: "showNameAndHandle", sender: nil)
-                })
-            })
+            self.lastSelectedIndexPath = nil
+            self.performSegue(withIdentifier: "showNameAndHandle", sender: nil)
         }
         
     }

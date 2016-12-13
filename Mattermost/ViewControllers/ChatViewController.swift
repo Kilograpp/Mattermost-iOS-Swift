@@ -546,6 +546,7 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToChannelSettings(channel: Channel) {
+        self.dismissKeyboard(true)
         self.showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
             guard (error == nil) else {

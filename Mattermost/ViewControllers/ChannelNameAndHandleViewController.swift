@@ -44,6 +44,15 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
         }
     }
     
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section{
+        case 1:
+            return "The name of the subdirectory used to navigate to a channel using the site URL appended with the handle name. Must use only valid URL inputs"
+        default:
+            return nil
+        }
+    }
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
