@@ -46,7 +46,8 @@ class FeedSearchAttachmentTableViewCell: FeedSearchTableViewCell {
         self.tableView.separatorStyle = .none
         self.tableView.bounces = false
         self.tableView.isScrollEnabled = false
- 
+        self.tableView.isUserInteractionEnabled = false
+        
         self.tableView.register(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier, cacheSize: 7)
         self.tableView.register(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier, cacheSize: 7)
         self.addSubview(self.tableView)

@@ -204,8 +204,11 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6TA-Z0-aay">
+                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6TA-Z0-aay">
                                         <rect key="frame" x="270" y="25" width="25" height="15"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="15" id="Pev-x1-r2k"/>
                                             <constraint firstAttribute="width" constant="25" id="zke-im-dRW"/>
@@ -488,7 +491,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ts1-GG-mjn" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="TSm-3E-2Y7">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="TSm-3E-2Y7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -638,7 +641,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="• If you're searching a partial phrase (ex. searching &quot;rea&quot;, looking for &quot;reach&quot; or &quot;reaction&quot;), append a * to your search term" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M6C-nC-eT7">
-                                        <rect key="frame" x="20" y="95" width="280" height="67"/>
+                                        <rect key="frame" x="20" y="95" width="280" height="49"/>
                                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" id="F1S-xQ-fPz"/>
@@ -648,7 +651,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="• Due to the volume of results, two letter searches and common words like &quot;this&quot;, &quot;a&quot; and &quot;is&quot; won't appear in search results" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0vV-Dx-m6j">
-                                        <rect key="frame" x="20" y="177" width="280" height="50.5"/>
+                                        <rect key="frame" x="20" y="159" width="280" height="49"/>
                                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" id="eH0-Na-KqX"/>
@@ -802,6 +805,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TiK-GG-U4E" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1316.25" y="1088.0281690140846"/>
+        </scene>
+        <!--Images Preview View Controller-->
+        <scene sceneID="Hbb-B7-MCP">
+            <objects>
+                <viewController storyboardIdentifier="ImagesPreviewViewController" id="JD7-5e-bnl" customClass="ImagesPreviewViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OAB-hC-vbj"/>
+                        <viewControllerLayoutGuide type="bottom" id="znc-7D-NxS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="6b9-qe-cns">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mZa-Ib-5Ex" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-630" y="1088"/>
         </scene>
     </scenes>
     <resources>

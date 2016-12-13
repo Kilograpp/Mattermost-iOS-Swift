@@ -63,6 +63,7 @@ extension ENSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
+        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -78,6 +79,12 @@ extension ENSettingsTableViewController: Setup {
     
     func setupForCurrentNotifyProps() {
         self.selectedEmailOption = (self.notifyProps?.email == /*"true"*/Constants.CommonStrings.True) ? 0 : 1
+    }
+    
+    func setupSwipeRight() {
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 

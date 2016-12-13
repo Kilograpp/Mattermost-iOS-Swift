@@ -35,8 +35,16 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var postFromSearch: Post! = nil
     var isLoadingInProgress: Bool = false
     
-    func uploading(inProgress: Bool) {
+    func uploading(inProgress: Bool, countItems: Int) {
         DispatchQueue.main.async { [unowned self] in
+            guard (countItems > 0) else {
+                guard self.textView.text.characters.count > 0 else{
+                    self.rightButton.isEnabled = false
+                    return
+                }
+                self.rightButton.isEnabled = true
+                return
+            }
             self.rightButton.isEnabled = inProgress
         }
     }
@@ -116,6 +124,7 @@ extension ChatViewController {
         self.navigationController?.isNavigationBarHidden = false
         setupInputViewButtons()
         addSLKKeyboardObservers()
+        self.replaceStatusBar()
         
         if (self.postFromSearch != nil) {
             changeChannelForPostFromSearch()
@@ -139,6 +148,7 @@ extension ChatViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillHide),
                                                name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -444,6 +454,7 @@ extension ChatViewController: Action {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
         }
         else {
+            UIStatusBar.shared().attachToDefault()
             proceedToChannelSettings(channel: self.channel)
         }
     }
@@ -535,18 +546,24 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToChannelSettings(channel: Channel) {
+        self.showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
-            guard (error == nil) else { return }
+            guard (error == nil) else {
+                self.hideLoaderView()
+                return
+            }
             Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
                 guard (error == nil) else {
                     let channelType = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
                     AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
+                    self.hideLoaderView()
                     return
                 }
                 
                 let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
                 let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
                 ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+                self.hideLoaderView()
                 self.navigationController?.present(channelSettings, animated: true, completion: nil)
             })
         })
@@ -664,7 +681,7 @@ extension ChatViewController: Request {
             }
             self.hideTopActivityIndicator()
         }
-        self.dismissKeyboard(true)
+        //self.dismissKeyboard(true)
         self.clearTextView()
     }
     
@@ -680,6 +697,7 @@ extension ChatViewController: Request {
         }
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
+        self.completePost.isHidden = true
     }
     
     func updatePost() {
@@ -691,9 +709,10 @@ extension ChatViewController: Request {
             self.selectedPost = nil
         }
         self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
-        self.dismissKeyboard(true)
+       // self.dismissKeyboard(true)
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
+        self.completePost.isHidden = true
     }
     
     func deletePost() {
@@ -836,7 +855,7 @@ extension ChatViewController {
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let actualPosition = scrollView.contentOffset.y
+        let actualPosition = self.tableView.contentOffset.y
         if actualPosition > UIScreen.screenHeight() {
             self.scrollButton?.isHidden = false
         }
@@ -888,6 +907,11 @@ extension ChatViewController: ChannelObserverDelegate {
         guard identifier != nil else { return }
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         self.title = self.channel?.displayName
+        
+        self.textInputbar.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.leftButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.rightButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+        self.textView.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
         
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
@@ -1011,7 +1035,6 @@ extension ChatViewController: AttachmentsModuleDataSource {
 }
 
 //MARK: AutoCompletionView
-
 extension ChatViewController {
     func autoCompletionEmojiCellForRowAtIndexPath(_ indexPath: IndexPath) -> EmojiTableViewCell {
         let cell = self.autoCompletionView.dequeueReusableCell(withIdentifier: EmojiTableViewCell.reuseIdentifier) as! EmojiTableViewCell
@@ -1141,7 +1164,15 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
 //MARK: ImagesPreviewViewController
 extension ChatViewController {
     func openPreviewWith(postLocalId: String, fileId: String) {
-        let gallery = ImagesPreviewViewController(delegate: self)
+        let last = self.navigationController?.viewControllers.last
+        guard last != nil else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Image unavailable now. Wait for thumbnail downloading end.")
+            return
+        }
+        guard !(last?.isKind(of: ImagesPreviewViewController.self))! else { return }
+        
+        let gallery = self.storyboard?.instantiateViewController(withIdentifier: "ImagesPreviewViewController") as! ImagesPreviewViewController
+
         gallery.configureWith(postLocalId: postLocalId, initalFileId: fileId)
         let transaction = CATransition()
         transaction.duration = 0.5
@@ -1150,13 +1181,5 @@ extension ChatViewController {
         transaction.subtype = kCATransitionFromBottom
         self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
         self.navigationController?.pushViewController(gallery, animated: false)
-    }
-}
-
-
-// MARK: ImagesPreviewViewControllerDelegate
-extension ChatViewController: ImagesPreviewViewControllerDelegate {
-    func imagesPreviewDidSwipeToClose(imagesPreview: ImagesPreviewViewController, direction: UISwipeGestureRecognizerDirection) {
-        dismiss(animated: true, completion: nil)
     }
 }

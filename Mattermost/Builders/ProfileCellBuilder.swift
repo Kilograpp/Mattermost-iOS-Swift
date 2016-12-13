@@ -72,6 +72,7 @@ extension ProfileCellBuilder: Inteface {
         default:
             break
         }
+        cell.isCopyEnabled = self.isDisplayOnly
     }
     
     func configureSecondSection(cell: ProfileTableViewCell, row: Int, user: User) {
@@ -89,6 +90,7 @@ extension ProfileCellBuilder: Inteface {
         default:
             break
         }
+        cell.isCopyEnabled = self.isDisplayOnly
     }
     
     func cellForPost(post: Post, searchingText: String) -> UITableViewCell {

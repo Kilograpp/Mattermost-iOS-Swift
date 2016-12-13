@@ -142,12 +142,18 @@ extension TeamViewController: Request {
             Api.sharedInstance.loadCurrentUser { (error) in
                 Api.sharedInstance.loadChannels(with: { (error) in
                     Api.sharedInstance.loadCompleteUsersList({ (error) in
-                        RouterUtils.loadInitialScreen()
-                        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
-                        
-                        DispatchQueue.main.async{
-                            self.dismiss(animated: true, completion:nil)
-                            self.hideLoaderView()
+                        if let townSquare = Channel.townSquare() {
+                            Api.sharedInstance.loadExtraInfoForChannel(townSquare.identifier!, completion: { (error) in
+                                Channel.updateDirectTeamAffiliation()
+                                
+                                RouterUtils.loadInitialScreen()
+                                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
+                                
+                                DispatchQueue.main.async{
+                                    self.dismiss(animated: true, completion:nil)
+                                    self.hideLoaderView()
+                                }
+                            })
                         }
                     })
                 })
@@ -204,7 +210,9 @@ extension TeamViewController: UITableViewDelegate {
         let team = self.results[indexPath.row]
         
         guard (Preferences.sharedInstance.currentTeamId != nil) else {
+            DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier
+            Preferences.sharedInstance.save()
             showLoaderView()
             loadChannels()
             
@@ -212,7 +220,9 @@ extension TeamViewController: UITableViewDelegate {
         }
         
         if (Preferences.sharedInstance.currentTeamId != team.identifier) {
+            DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier
+            Preferences.sharedInstance.save()
             self.reloadChat()
         } else {
             self.dismiss(animated: true, completion: nil)

@@ -20,6 +20,8 @@ class ProfileTableViewCell: UITableViewCell, Reusable {
     @IBOutlet weak var titleLabel: UILabel?
     @IBOutlet weak var infoLabel: UILabel?
     @IBOutlet weak var arrowButton: UIButton?
+    
+    var isCopyEnabled = false
 }
 
 
@@ -76,5 +78,23 @@ extension ProfileTableViewCell: ProfileTableViewCellSetup {
         self.infoLabel?.font = UIFont.kg_regular16Font()
         self.titleLabel?.textColor = UIColor.kg_blackColor()
         self.infoLabel?.textColor = UIColor.kg_lightGrayColor()
+        setupGestureRecognizers()
+    }
+    
+    func setupGestureRecognizers() {
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
+        self.isUserInteractionEnabled = true
+        self.addGestureRecognizer(longPress)
+    }
+}
+
+
+//MARK: Action
+extension ProfileTableViewCell {
+    func longPressAction() {
+        guard self.isCopyEnabled else { return }
+        
+        UIPasteboard.general.string = self.infoLabel?.text
+        AlertManager.sharedManager.showSuccesWithMessage(message: "User information was copied to clipboard")
     }
 }

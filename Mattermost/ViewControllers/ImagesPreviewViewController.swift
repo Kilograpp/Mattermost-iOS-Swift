@@ -11,14 +11,9 @@ import UIKit
 import RealmSwift
 import WebImage
 
-@objc protocol ImagesPreviewViewControllerDelegate {
-    func imagesPreviewDidSwipeToClose(imagesPreview: ImagesPreviewViewController, direction: UISwipeGestureRecognizerDirection)
-}
-
 private protocol Configuration: class {
     func configureWith(postLocalId: String, initalFileId: String)
 }
-
 
 final class ImagesPreviewViewController: UIViewController {
     
@@ -28,21 +23,11 @@ final class ImagesPreviewViewController: UIViewController {
     
     fileprivate var post: Post? = nil
     fileprivate var imageFiles: Results<File>?
-    public weak var delegate: ImagesPreviewViewControllerDelegate?
+   // public weak var delegate: ImagesPreviewViewControllerDelegate?
     
     fileprivate var initialImageIndex: Int = 0
     
 //MARK: LifeCycle
-    public init(delegate: ImagesPreviewViewControllerDelegate) {
-        super.init(nibName: nil, bundle: nil)
-
-        self.delegate = delegate
-    }
-
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
     public override func viewDidLoad() {
         super.viewDidLoad()
         

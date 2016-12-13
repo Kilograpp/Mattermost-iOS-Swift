@@ -106,15 +106,7 @@ extension WTMSettingsTableViewController: Navigation {
 //MARK: Request
 extension WTMSettingsTableViewController: Request {
     func updateSettings() {
-        let firstName = self.builder.firstNameState()
-        let channel = self.builder.channelState()
-        let mentionKeys = self.builder.mentionKeysState()
-        
-        try! RealmUtils.realmForCurrentThread().write {
-            self.notifyProps?.firstName = firstName
-            self.notifyProps?.channel = channel
-            self.notifyProps?.mentionKeys = mentionKeys
-        }
+        self.notifyProps = self.builder.updatedNotifyProps()
         
         Api.sharedInstance.updateNotifyProps(self.notifyProps!) { (error) in
             guard error == nil else {
@@ -178,6 +170,13 @@ extension WTMSettingsTableViewController: UITextViewDelegate {
         let cell = self.tableView.cellForRow(at: indexPath) as! TextSettingsTableViewCell
         
         cell.placeholderLabel?.isHidden = true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        textView.text = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        self.builder.sensetiveWordsString = textView.text
+        
+        return false
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {

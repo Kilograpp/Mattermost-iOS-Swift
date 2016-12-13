@@ -198,6 +198,8 @@ extension NotifyProps: TriggerWords {
 //MARK: Reply
 extension NotifyProps: Reply {
     func completeReply() -> String {
-        return "Do not trigger notifications on message"
+        let commentsIndex = Constants.NotifyProps.Reply.Trigger.index { return $0.state == (self.comments)! }!
+        let comments = Constants.NotifyProps.Reply.Trigger[commentsIndex].description
+        return comments
     }
 }

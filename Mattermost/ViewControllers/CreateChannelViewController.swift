@@ -162,7 +162,8 @@ extension CreateChannelViewController: Request {
             }
             
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was successfully created")
+            let typeName = (self.privateType == "O") ? "Channel" : "Group"
+            AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was successfully created")
             self.returnToNew(channel: channel!)
         }
     }
@@ -173,7 +174,10 @@ extension CreateChannelViewController: Request {
 extension CreateChannelViewController {
     func updateChannelLabel() {
         let name = self.nameTextField.text
-        guard (name?.characters.count)! > 0 else { return }
+        guard (name?.characters.count)! > 0 else {
+            self.channelLabel.text = ""
+            return
+        }
         
         self.channelLabel.text = name?.capitalized[0]
     }

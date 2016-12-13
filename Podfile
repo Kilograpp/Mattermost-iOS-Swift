@@ -13,7 +13,19 @@ target 'Mattermost' do
   pod 'SnapKit', '~> 3.0.2'
 end
 
+
 post_install do |installer|
+
+  Dir.glob(installer.sandbox.target_support_files_root + "Pods-*/*.sh").each do |script|
+    flag_name = File.basename(script, ".sh") + "-Installation-Flag"
+    folder = "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+    file = File.join(folder, flag_name)
+    content = File.read(script)
+    content.gsub!(/set -e/, "set -e\nKG_FILE=\"#{file}\"\nif [ -f \"$KG_FILE\" ]; then exit 0; fi\nmkdir -p \"#{folder}\"\ntouch \"$KG_FILE\"")
+    File.write(script, content)
+  end
+  
+  
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['SWIFT_VERSION'] = '3.0.1'

@@ -238,8 +238,11 @@ extension Api: ChannelApi {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
+                    if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{
+                        $0.members = channel.members
+                    }
+                    realm.add($0, update: true)
                 }
-                realm.add(channels, update: true)
             })
             
             completion(nil)
@@ -257,7 +260,14 @@ extension Api: ChannelApi {
             let channelDictionary = Reflection.fetchNotNullValues(object: mappingResult.firstObject as! Channel)
             print(channelDictionary)
             RealmUtils.create(channelDictionary)
-            
+            let updatedChannel = try! Realm().objects(Channel.self).filter("identifier = %@", (mappingResult.firstObject as! Channel).identifier!).first!
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write({
+                let updatedMembers = updatedChannel.members
+                for member in updatedMembers{
+                    member.computeDisplayNameWidth()
+                }
+            })
             completion(nil)
             }, failure: completion)
     }
@@ -494,21 +504,7 @@ extension Api: UserApi {
             let users = MappingUtils.fetchUsersFromCompleteList(mappingResult)
             users.forEach {$0.computeDisplayName()}
             RealmUtils.save(users)
-            
-        /*    let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
-            let members = townSquare?.members
-            for member in members! {
-                print(member.displayName, " -- ", member.identifier)
-            }
-            print(members?.count)
-            users.forEach {
-                let identifier = $0.identifier
-                let predicate = NSPredicate(format: "identifier == %@", identifier!)
-                
-                let state = ((members?.filter(predicate).count)! > 0)
-                print($0.displayName, " -- ", state)
-            }*/
-            
+                        
             completion(nil)
         }, failure: completion)
     }

@@ -311,4 +311,3 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         self.saveButton.isEnabled = true
     }
 }
-

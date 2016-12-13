@@ -11,83 +11,80 @@ import SwiftyJSON
 
 struct NotificationKeys {
     // General
-    static let ChannelIdentifier = "channel_id"
-    static let TeamIdentifier = "team_id"
-    static let UserIdentifier = "user_id"
-    static let Identifier = "id"
-    static let PendingPostIdentifier = "pending_post_id"
+    static let ChannelIdentifier        = "channel_id"
+    static let TeamIdentifier           = "team_id"
+    static let UserIdentifier           = "user_id"
+    static let Identifier               = "id"
+    static let PendingPostIdentifier    = "pending_post_id"
     // Sending
-    static let Action = "action"
-    static let Seq = "seq"
+    static let Action                   = "action"
+    static let Seq                      = "seq"
     // Receiving
-    static let Event = "event"
+    static let Event                    = "event"
     // Reply after sending
-    static let Status = "status"
-    static let SeqReply = "seq_reply"
+    static let Status                   = "status"
+    static let SeqReply                 = "seq_reply"
     // Data
-    static let Data = "data"
+    static let Data                     = "data"
     struct DataKeys {
-        static let ChannelName = "channel_display_name"
-        static let ChannelType = "channel_type"
-        static let SenderName = "sender_name"
-        static let Post = "post"
-        static let ParentIdentifier = "parent_id"
-        static let UserStatus = "status"
+        static let ChannelName          = "channel_display_name"
+        static let ChannelType          = "channel_type"
+        static let SenderName           = "sender_name"
+        static let Post                 = "post"
+        static let ParentIdentifier     = "parent_id"
+        static let UserStatus           = "status"
         struct PostKeys {
-            static let Create_at = "create_at"
-            static let Update_at = "update_at"
-            static let Delete_at = "delete_at"
-            static let RootIdentifier = "root_id"
+            static let Create_at        = "create_at"
+            static let Update_at        = "update_at"
+            static let Delete_at        = "delete_at"
+            static let RootIdentifier   = "root_id"
             static let ParentIdentifier = "parent_id"
-            static let Message = "message"
-            static let Files = "filenames"
+            static let Message          = "message"
+            static let Files            = "filenames"
             //Also : channelId, userId, pendingPostId, Id
             
             //Undefined in Post class as RealmObject
-            static let Props = "props"
-            static let PostType = "type"
-            static let Hashtags = "hashtags"
+            static let Props            = "props"
+            static let PostType         = "type"
+            static let Hashtags         = "hashtags"
             
         }
     }
 }
 
 enum NotificationType: Int {
-    case error = -1             //error
+    case error = -1               //error
     case `default` = 0            //OK
-    case receivingPost = 1      //receiving new post
-    case receivingUpdatedPost   //receiving new post
+    case receivingPost = 1        //receiving new post
+    case receivingUpdatedPost     //receiving new post
     case receivingDeletedPost
-    case receivingTyping        //receiving action
-    case receivingStatus    //receiving user status change
-    case receivingStatuses  //receiving all user statuses
-    case joinedUser         //user joined to channel
+    case receivingTyping          //receiving action
+    case receivingStatus          //receiving user status change
+    case receivingStatuses        //receiving all user statuses
+    case joinedUser               //user joined to channel
     case unknown
 }
 
 enum Event: String {
-    case Typing = "typing"
-    case ChannelView = "channel_viewed"
-    case Posted = "posted"
-    case Deleted = "post_deleted"
-    case Updated = "post_edited"
+    case Typing        = "typing"
+    case ChannelView   = "channel_viewed"
+    case Posted        = "posted"
+    case Deleted       = "post_deleted"
+    case Updated       = "post_edited"
     case StatusChanged = "status_change"
-    case UserAdded = "user_added"
+    case UserAdded     = "user_added"
     case Unknown
 }
 
 enum ChannelAction: String {
-    case Typing = "user_typing"
-    case Statuses = "get_statuses"
+    case Typing        = "user_typing"
+    case Statuses      = "get_statuses"
     case Unknown
 }
 
 
 final class SocketNotificationUtils {
-    
     static func dataForActionRequest(_ action:ChannelAction, seq:Int, channelId:String?) -> Data {
-        //Uncomment after adding SwiftyJSON
-
         var parameters = [String: JSON]()
         parameters[NotificationKeys.Action] = JSON(stringLiteral: action.rawValue)
         parameters[NotificationKeys.Seq] = JSON(integerLiteral: seq)
@@ -103,7 +100,6 @@ final class SocketNotificationUtils {
         return try! json.rawData()
     }
     
-
     static func postFromDictionary(_ dictionary:[String:AnyObject]) -> Post {
         let post = Post()
         post.message = dictionary[NotificationKeys.DataKeys.PostKeys.Message] as? String
@@ -162,6 +158,7 @@ final class SocketNotificationUtils {
     }
 }
 
+
 class SocketNotification {
     let userId: String
     var channelId: String?
@@ -170,9 +167,8 @@ class SocketNotification {
     init(userIdentifier: String) {
         self.userId = userIdentifier
     }
-    
-    
 }
+
 
 class StatusChangingSocketNotification: SocketNotification {
     let status: String!
@@ -187,4 +183,3 @@ class StatusChangingSocketNotification: SocketNotification {
         return "UserStatusUpdatingNotification"
     }
 }
-

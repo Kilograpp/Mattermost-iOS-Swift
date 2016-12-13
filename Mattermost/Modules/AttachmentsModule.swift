@@ -14,7 +14,7 @@ fileprivate protocol Interface {
 }
 
 protocol AttachmentsModuleDelegate: class {
-    func uploading(inProgress: Bool)
+    func uploading(inProgress: Bool, countItems: Int)
     func removedFromUploading(identifier: String)
 }
 
@@ -33,7 +33,7 @@ final class AttachmentsModule {
     var fileUploadingInProgress: Bool = true {
         didSet {
             //if self.fileUploadingInProgress { print("done"); self.dataSource.tableView(attachmentsModule: self).reloadData() }
-            self.delegate.uploading(inProgress: self.fileUploadingInProgress)
+            self.delegate.uploading(inProgress: self.fileUploadingInProgress, countItems: self.items.count)
         }
     }
 
@@ -73,7 +73,7 @@ extension AttachmentsModule: Interface {
             defer {
                 let index = self.items.index(of: item)
                 if index != nil { self.dataSource.postAttachmentsView(attachmentsModule: self).removeActivityAt(index: index!) }
-                self.fileUploadingInProgress = finished
+                self.fileUploadingInProgress = true
             }
 
             guard let error = error else { return }
@@ -101,7 +101,7 @@ extension AttachmentsModule: PostAttachmentViewDelegate {
         self.delegate.removedFromUploading(identifier: itemId)
         
         guard self.items.count == 0 else { return }
-        self.fileUploadingInProgress = false
+        self.fileUploadingInProgress = true
         self.hideAttachmentsView()
     }
     
