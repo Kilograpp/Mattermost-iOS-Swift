@@ -148,7 +148,8 @@ extension WTMSettingsCellBuilder: Inteface {
     
     func channelState() -> String {
         let indexPath = IndexPath(row: 3, section: 0)
-        return ((self.tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! ? /*"true"*/Constants.CommonStrings.True : Constants.CommonStrings.False//"false"
+        return ((self.tableView.cellForRow(at: indexPath) as! CheckSettingsTableViewCell).checkBoxButton?.isSelected)! ? Constants.CommonStrings.True
+                                                                                                                       : Constants.CommonStrings.False
     }
 }
 

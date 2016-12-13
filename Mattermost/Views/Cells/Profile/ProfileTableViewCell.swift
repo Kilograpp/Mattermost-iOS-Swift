@@ -53,6 +53,10 @@ private protocol ProfileTableViewCellSetup {
     func initialSetup()
 }
 
+fileprivate protocol Action: class {
+    func longPressAction(recognizer:UILongPressGestureRecognizer)
+}
+
 
 //MARK: ProfileTableViewCellLifeCycle
 
@@ -82,17 +86,17 @@ extension ProfileTableViewCell: ProfileTableViewCellSetup {
     }
     
     func setupGestureRecognizers() {
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(recognizer:)))
         self.isUserInteractionEnabled = true
         self.addGestureRecognizer(longPress)
     }
 }
 
-
 //MARK: Action
-extension ProfileTableViewCell {
-    func longPressAction() {
+extension ProfileTableViewCell: Action {
+    func longPressAction(recognizer:UILongPressGestureRecognizer) {
         guard self.isCopyEnabled else { return }
+        guard recognizer.state == .ended else { return }
         
         UIPasteboard.general.string = self.infoLabel?.text
         AlertManager.sharedManager.showSuccesWithMessage(message: "User information was copied to clipboard")
