@@ -19,17 +19,76 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.setupTableView()
+        initialSetup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let x = Constants.UI.MessagePaddingSize
+        let y = CGFloat(post.attributedMessageHeight) + (self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36)
+        let widht = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
+        let height = self.tableView.contentSize.height
+        
+        self.tableView.frame = CGRect(x: x, y: y, width: widht, height: height)
+    }
     
-    //MARK: Setup
+    override func prepareForReuse() {
+        super.prepareForReuse()
+    }
+}
+
+
+//MARK: Configuration
+extension FeedAttachmentsTableViewCell {
+    override func configureWithPost(_ post: Post) {
+        super.configureWithPost(post)
+        self.attachments = self.post.files
+        self.tableView.reloadData()
+    }
     
-    func setupTableView() -> Void {
+    override class func heightWithPost(_ post: Post) -> CGFloat {
+        let messageHeight = CGFloat(post.attributedMessageHeight) + 44 + 8
+        
+        var tableViewHeight: CGFloat = 0
+        for file in post.files {
+            var fileHeight: CGFloat = 56
+            if file.isImage {
+                let thumbUrl = file.thumbURL()
+                let image = SDImageCache.shared().imageFromMemoryCache(forKey: thumbUrl?.absoluteString)
+                if image != nil {
+                    fileHeight = (image?.size.height)!
+                    let scale = (UIScreen.screenWidth() - 20) / (image?.size.width)!
+                    fileHeight = fileHeight * scale - 20
+                } else {
+                    fileHeight = (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings) * 0.56 - 5
+                }
+            }
+            tableViewHeight += fileHeight
+        }
+        
+        return messageHeight + tableViewHeight
+    }
+}
+
+
+fileprivate protocol Setup: class {
+    func initialSetup()
+    func setupTableView()
+}
+
+
+//MARK: Setup
+extension FeedAttachmentsTableViewCell: Setup {
+    func initialSetup() {
+        setupTableView()
+    }
+    
+    func setupTableView() {
         self.tableView.scrollsToTop = false
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -41,70 +100,10 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         self.tableView.register(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier, cacheSize: 7)
         self.addSubview(self.tableView)
     }
-    
-    
-    //MARK: LifeCycle
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.tableView.frame = CGRect(x: 53,
-                                          y: self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36,
-                                          width: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize,
-                                          height: self.tableView.contentSize.height)
-//        super.layoutSubviews()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-    }
-    
-    
-    //MARK: Private
-    
-    fileprivate class func tableViewHeightWithPost(_ post: Post) -> CGFloat {
-      //  let height = post.files.reduce(0) {
-       //     (total, file) in
-       //     total + (file.isImage ? (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings)*0.56 - 5 : 56)
-       // }
-       // return height
-        
-        var height: CGFloat = 0
-        for file in post.files {
-            var fileHeight: CGFloat = 56
-            if file.isImage {
-                let thumbUrl = file.thumbURL()
-                let image = SDImageCache.shared().imageFromMemoryCache(forKey: thumbUrl?.absoluteString)
-                if image != nil {
-                    print("img_file____", image?.size)
-                    fileHeight = (image?.size.height)!
-                    let scale = (UIScreen.screenWidth() - 20) / (image?.size.width)!
-                    fileHeight = fileHeight * scale - 20
-                    
-                    print("sample ", fileHeight, (UIScreen.screenWidth() - 20))
-                } else {
-                    fileHeight = (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings) * 0.56 - 5
-                }
-            }
-            height += fileHeight
-        }
-        print("full_height = ", height)
-        return height
-    }
-
 }
 
-extension FeedAttachmentsTableViewCell {
-    override func configureWithPost(_ post: Post) {
-        super.configureWithPost(post)
-        self.attachments = self.post.files
-        self.tableView.reloadData()
-    }
-    
-    override class func heightWithPost(_ post: Post) -> CGFloat {
-        return CGFloat(post.attributedMessageHeight) + 44 + 8 + FeedAttachmentsTableViewCell.tableViewHeightWithPost(post)
-    }
-}
 
+//MARK: UITableViewDataSource
 extension FeedAttachmentsTableViewCell : UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.attachments != nil ? 1 : 0
@@ -115,7 +114,6 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //FIXME: CodeReview: Убрать инит
         let file = self.attachments[indexPath.row]
         if file.isImage {
             return self.tableView.dequeueReusableCell(withIdentifier: AttachmentImageCell.reuseIdentifier) as! AttachmentImageCell
@@ -123,23 +121,17 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
             return self.tableView.dequeueReusableCell(withIdentifier: AttachmentFileCell.reuseIdentifier) as! AttachmentFileCell
         }
     }
-    
 }
 
 
+//MARK: UITableViewDelegate
 extension FeedAttachmentsTableViewCell : UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
         let file = self.attachments[indexPath.row]
         
         if file.isImage {
-            //let imageWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
-            //let imageHeight = imageWidth * 0.56 - 5
-            //return imageHeight
-            
             let thumbUrl = file.thumbURL()
             if let image = SDImageCache.shared().imageFromMemoryCache(forKey: thumbUrl?.absoluteString) {
-                //return image.size.height
                 var fileHeight = (image.size.height)
                 let scale = (UIScreen.screenWidth() - 20) / (image.size.width)
                 fileHeight = fileHeight * scale - 20
@@ -152,8 +144,6 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
         } else {
             return 56
         }
-        
-
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -161,4 +151,3 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
         (cell as! Attachable).configureWithFile(file)
     }
 }
-
