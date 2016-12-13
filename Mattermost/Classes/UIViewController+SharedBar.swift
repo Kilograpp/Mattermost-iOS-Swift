@@ -15,7 +15,10 @@ protocol SharedBar {
 extension UIViewController: SharedBar {
     func replaceStatusBar() {
         guard let navigationController = self.navigationController else { return }
+        let statusBar = UIStatusBar.shared()
+        
+        guard statusBar != nil else { return }
         //UIStatusBar.shared().reset()
-        UIStatusBar.shared().attach(to: navigationController.view)
+        statusBar?.attach(to: navigationController.view)
     }
 }

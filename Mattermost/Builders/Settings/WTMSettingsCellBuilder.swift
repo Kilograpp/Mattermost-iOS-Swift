@@ -31,7 +31,7 @@ final class WTMSettingsCellBuilder {
     fileprivate var mentionedUserNameEnabled: Bool = false
     fileprivate var mentionedChannelNameEnabled: Bool = false
     
-    fileprivate var sensetiveWordsString: String = ""
+    var sensetiveWordsString: String = ""
     
     
 //MARK: LifeCycle
@@ -58,7 +58,7 @@ extension WTMSettingsCellBuilder: Inteface {
     func updatedNotifyProps() -> NotifyProps {
         let firstName = self.firstNameEnabled ? Constants.CommonStrings.True : Constants.CommonStrings.False
         let channel = self.mentionedChannelNameEnabled ? Constants.CommonStrings.True : Constants.CommonStrings.False
-        let mentionKeys = self.mentionKeysState()
+        let mentionKeys = self.sensetiveWordsString
         
         try! RealmUtils.realmForCurrentThread().write {
             self.notifyProps?.firstName = firstName

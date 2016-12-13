@@ -210,7 +210,9 @@ extension TeamViewController: UITableViewDelegate {
         let team = self.results[indexPath.row]
         
         guard (Preferences.sharedInstance.currentTeamId != nil) else {
+            DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier
+            Preferences.sharedInstance.save()
             showLoaderView()
             loadChannels()
             
@@ -218,7 +220,9 @@ extension TeamViewController: UITableViewDelegate {
         }
         
         if (Preferences.sharedInstance.currentTeamId != team.identifier) {
+            DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier
+            Preferences.sharedInstance.save()
             self.reloadChat()
         } else {
             self.dismiss(animated: true, completion: nil)

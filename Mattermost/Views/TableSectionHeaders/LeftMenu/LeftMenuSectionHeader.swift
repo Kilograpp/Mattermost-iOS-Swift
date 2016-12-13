@@ -72,8 +72,9 @@ extension LeftMenuSectionHeader: LeftMenuSectionHeaderLifeCycle {
         super.layoutSubviews()
         
         self.titleLabel.frame = CGRect(x: 15, y: 9, width: 150, height: 13)
-        let xPos = self.bounds.maxX - 35
-        self.moreButton.frame = CGRect(x: xPos, y: 7, width: 15, height: 15)
+        let xPos = self.bounds.maxX - 25
+        print(self.bounds)
+        self.moreButton.frame = CGRect(x: xPos, y: 0, width: 25, height: 25)
     }
 }
 
@@ -98,7 +99,7 @@ extension LeftMenuSectionHeader: LeftMenuSectionHeaderSetup {
     }
     
     func setupMoreButton() {
-        self.moreButton.setBackgroundImage(UIImage(named: "side_menu_more_icon"), for: UIControlState())
+        self.moreButton.setImage(UIImage(named: "side_menu_more_icon"), for: UIControlState())
         self.moreButton.addTarget(self, action: #selector(moreAction), for: .touchUpInside)
         self.addSubview(self.moreButton)
     }

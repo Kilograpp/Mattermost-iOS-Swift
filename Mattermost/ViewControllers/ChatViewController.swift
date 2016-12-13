@@ -1158,7 +1158,15 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
 //MARK: ImagesPreviewViewController
 extension ChatViewController {
     func openPreviewWith(postLocalId: String, fileId: String) {
-        let gallery = ImagesPreviewViewController(delegate: self)
+        let last = self.navigationController?.viewControllers.last
+        guard last != nil else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Image unavailable now. Wait for thumbnail downloading end.")
+            return
+        }
+        guard !(last?.isKind(of: ImagesPreviewViewController.self))! else { return }
+        
+        let gallery = self.storyboard?.instantiateViewController(withIdentifier: "ImagesPreviewViewController") as! ImagesPreviewViewController
+
         gallery.configureWith(postLocalId: postLocalId, initalFileId: fileId)
         let transaction = CATransition()
         transaction.duration = 0.5
@@ -1167,13 +1175,5 @@ extension ChatViewController {
         transaction.subtype = kCATransitionFromBottom
         self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
         self.navigationController?.pushViewController(gallery, animated: false)
-    }
-}
-
-
-// MARK: ImagesPreviewViewControllerDelegate
-extension ChatViewController: ImagesPreviewViewControllerDelegate {
-    func imagesPreviewDidSwipeToClose(imagesPreview: ImagesPreviewViewController, direction: UISwipeGestureRecognizerDirection) {
-        dismiss(animated: true, completion: nil)
     }
 }

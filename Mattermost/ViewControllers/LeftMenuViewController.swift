@@ -230,7 +230,7 @@ extension LeftMenuViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return (section != 1) || (section != 3) ? CGFloat(0.00001) : 30
+        return (section == 1) || (section == 3) ? CGFloat(0.00001) : 30
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

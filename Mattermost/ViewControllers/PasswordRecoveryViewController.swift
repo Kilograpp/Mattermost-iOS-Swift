@@ -37,6 +37,7 @@ fileprivate protocol Setup: class {
     func setupEmailTextField()
     func setupPromtLabel()
     func setupRecoveryButton()
+    func setupGestureRecognizers()
 }
 
 fileprivate protocol Action: class {
@@ -61,6 +62,7 @@ extension PasswordRecoveryViewController: Setup {
         setupEmailTextField()
         setupPromtLabel()
         setupRecoveryButton()
+        setupGestureRecognizers()
     }
     
     func setupNavigationBar() {
@@ -99,6 +101,12 @@ extension PasswordRecoveryViewController: Setup {
     func setupRecoveryButton() {
         self.recoveryButton.setTitle(self.titleName, for: UIControlState())
         self.recoveryButton.isEnabled = false
+    }
+    
+    func setupGestureRecognizers() {
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 }
 

@@ -146,7 +146,6 @@ extension AttachmentImageCell: Updating {
         
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
             self.fileImageView.image = image
-            print("sfsdfsdf ", image.size)
         } else {
             self.fileImageView.image = UIImage(named: "image_back")
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {

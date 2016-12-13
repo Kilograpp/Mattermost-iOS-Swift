@@ -86,7 +86,7 @@ extension DNSettingsTableViewController: Setup {
     }
     
     func setupForCurrentNotifyProps() {
-        self.selectedSendOption = Constants.NotifyProps.Send.index { return $0.state == (self.notifyProps?.push)! }!
+        self.selectedSendOption = Constants.NotifyProps.Send.index { return $0.state == (self.notifyProps?.desktop)! }!
         self.selectedSoundOption = (self.notifyProps?.isDesktopSoundOn())!
         self.selectedDurationOption = Constants.NotifyProps.DesktopPush.Duration.index{ return $0.state == (self.notifyProps?.desktopDuration)! }!
     }
