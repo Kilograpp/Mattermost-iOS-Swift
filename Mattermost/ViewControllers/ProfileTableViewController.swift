@@ -284,7 +284,6 @@ extension ProfileViewController {
                 AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Camera.")
                 return
             }
-            
             self.presentImagePickerControllerWithType(.camera)
         }
         let openGalleryAction = UIAlertAction.init(title: "Take from library", style: .default) { (action) in
@@ -292,7 +291,6 @@ extension ProfileViewController {
                     AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
                     return
             }
-            
             self.presentImagePickerControllerWithType(.photoLibrary)
         }
         let cancelAction = UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil)
@@ -317,8 +315,13 @@ extension ProfileViewController {
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
+        
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        self.avatarImageView.image = image
+        if picker.sourceType == .camera {
+            self.avatarImageView.image = image.fixedOrientation()//ImageOrientationUtils.fixImageOrientation(src: image)
+        } else {
+            self.avatarImageView.image = image
+        }
         self.saveButton.isEnabled = true
     }
 }

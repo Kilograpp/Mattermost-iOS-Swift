@@ -91,7 +91,7 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
     }
     
     func setupNavigationBar() {
-        if channel.privateType! == "P"{
+        if channel.privateType! == "P" {
             self.title = "Group info".localized
         } else {
             self.title = "Channel info".localized
@@ -113,7 +113,8 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
                 AlertManager.sharedManager.showErrorWithMessage(message: "Incorrect handle".localized)
                 return
             }
-            AlertManager.sharedManager.showSuccesWithMessage(message: "Channel was updated".localized)
+            let typeName = (self.channel.privateType! == "P") ? "Group" : "Channel"
+            AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was updated")
             Api.sharedInstance.loadChannels(with: { (error) in
                 guard (error == nil) else { return }
                 Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
