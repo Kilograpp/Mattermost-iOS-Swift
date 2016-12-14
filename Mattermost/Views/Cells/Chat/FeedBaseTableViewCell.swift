@@ -7,7 +7,6 @@
 //
 
 
-
 protocol TableViewPostDataSource: class {
     func configureWithPost(_ post: Post)
     static func heightWithPost(_ post: Post) -> CGFloat

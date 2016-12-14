@@ -14,23 +14,9 @@ protocol FeedSearchTableViewCellConfiguration {
     func configureAvatarImageView()
 }
 
-protocol FeedSearchTableViewCellSetup {
-    func initialSetup()
-    func setupChannelLabel()
-    func setupAvatarImageView()
-    func setupNameLabel()
-    func setupTimeLabel()
-    func setupArrowImageView()
-}
-
-protocol FeedSearchTableViewCellAction {
-    func disclosureTapAction()
-}
-
 class FeedSearchTableViewCell: FeedBaseTableViewCell {
     
 //MARK: Properties
-    
     fileprivate let channelLabel: UILabel = UILabel()
     fileprivate let avatarImageView: UIImageView = UIImageView()
     fileprivate let nameLabel: UILabel = UILabel()
@@ -39,6 +25,7 @@ class FeedSearchTableViewCell: FeedBaseTableViewCell {
     
     var disclosureTapHandler : (() -> Void)?
     
+//MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -48,35 +35,42 @@ class FeedSearchTableViewCell: FeedBaseTableViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-}
-
-
-//MARK: TableViewPostDataSource
-
-extension FeedSearchTableViewCell: TableViewPostDataSource {
-    override func configureWithPost(_ post: Post) {
-        super.configureWithPost(post)
-        configureAvatarImageView()
-        configureBasicLabels()
-    }
     
-    final func configureSelectionWithText(text: String) {
-        let notAllowedCharacters = CharacterSet.init(charactersIn: "!@#$%^&*()_+|,;.\"'")
-        let result = text.components(separatedBy: notAllowedCharacters).joined(separator: "")
-        let range = (self.messageLabel.textStorage!.string.lowercased() as NSString).range(of: result.lowercased())
+    override func layoutSubviews() {
+        let channelWidth = CGFloat(self.post.channel.displayNameWidth)
+        let nameWidth = CGFloat(self.post.author.displayNameWidth)
+        let timeWidth = CGFloat(self.post.createdAtStringWidth)
+        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
+        let textHeight = CGFloat(self.post.attributedMessageHeight)
         
-        self.messageLabel.textStorage?.addAttributes([NSBackgroundColorAttributeName : ColorBucket.searchTextBackgroundColor], range: range)
-        self.messageLabel.textStorage?.addAttributes([NSForegroundColorAttributeName : ColorBucket.searchTextColor], range: range)
+        self.channelLabel.frame = CGRect(x: Constants.UI.MiddlePaddingSize,
+                                         y: Constants.UI.MiddlePaddingSize, width: channelWidth, height: 14)
+        
+        self.nameLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize,
+                                      y: self.channelLabel.frame.maxY + Constants.UI.MiddlePaddingSize,
+                                      width: nameWidth, height: Constants.UI.DoublePaddingSize)
+        
+        self.timeLabel.frame = CGRect(x: self.nameLabel.frame.maxX + Constants.UI.ShortPaddingSize,
+                                      y: self.nameLabel.frame.origin.y,
+                                      width: timeWidth, height: Constants.UI.DoublePaddingSize)
+        
+        self.messageLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize,
+                                         y: self.nameLabel.frame.maxY + Constants.UI.ShortPaddingSize,
+                                         width: textWidth, height: textHeight)
+        
+        self.arrowImageView.center = CGPoint(x: self.messageLabel.frame.maxX + Constants.UI.StandardPaddingSize,
+                                             y: self.messageLabel.frame.maxY / 1.5)
+        
+        super.layoutSubviews()
     }
     
-    override class func heightWithPost(_ post: Post) -> CGFloat {
-        return CGFloat(post.attributedMessageHeight) + 64
+    override func prepareForReuse() {
+        super.prepareForReuse()
     }
 }
 
 
-//MARK: Configuration
-
+//MARK: FeedSearchTableViewCellConfiguration
 extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
     final func configureBasicLabels() {
         guard self.post.author != nil else { return }
@@ -101,8 +95,21 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
 }
 
 
-//MARK: Setup
+protocol FeedSearchTableViewCellSetup {
+    func initialSetup()
+    func setupChannelLabel()
+    func setupAvatarImageView()
+    func setupNameLabel()
+    func setupTimeLabel()
+    func setupArrowImageView()
+}
 
+protocol FeedSearchTableViewCellAction {
+    func disclosureTapAction()
+}
+
+
+//MARK: FeedSearchTableViewCellSetup
 extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
     func initialSetup() {
         setupChannelLabel()
@@ -155,47 +162,32 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
 }
 
 
-//MARK: LifeCycle
-
-extension FeedSearchTableViewCell {
-    override func layoutSubviews() {
-        let channelWidth = CGFloat(self.post.channel.displayNameWidth)
-        let nameWidth = CGFloat(self.post.author.displayNameWidth)
-        let timeWidth = CGFloat(self.post.createdAtStringWidth)
-        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
-        let textHeight = CGFloat(self.post.attributedMessageHeight)
-        
-        self.channelLabel.frame = CGRect(x: Constants.UI.MiddlePaddingSize,
-                                         y: Constants.UI.MiddlePaddingSize, width: channelWidth, height: 14)
-        
-        self.nameLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize,
-                                      y: self.channelLabel.frame.maxY + Constants.UI.MiddlePaddingSize,
-                                      width: nameWidth, height: Constants.UI.DoublePaddingSize)
-        
-        self.timeLabel.frame = CGRect(x: self.nameLabel.frame.maxX + Constants.UI.ShortPaddingSize,
-                                      y: self.nameLabel.frame.origin.y,
-                                      width: timeWidth, height: Constants.UI.DoublePaddingSize)
-        
-        self.messageLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize,
-                                         y: self.nameLabel.frame.maxY + Constants.UI.ShortPaddingSize,
-                                         width: textWidth, height: textHeight)
-        
-        self.arrowImageView.center = CGPoint(x: self.messageLabel.frame.maxX + Constants.UI.StandardPaddingSize,
-                                             y: self.messageLabel.frame.maxY / 1.5)
-        
-        super.layoutSubviews()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
+//MARK: FeedSearchTableViewCellAction
+extension FeedSearchTableViewCell: FeedSearchTableViewCellAction {
+    func disclosureTapAction() {
+        self.disclosureTapHandler!()
     }
 }
 
 
-//MARK: Action
-
-extension FeedSearchTableViewCell: FeedSearchTableViewCellAction {
-    func disclosureTapAction() {
-        self.disclosureTapHandler!()
+//MARK: TableViewPostDataSource
+extension FeedSearchTableViewCell: TableViewPostDataSource {
+    override func configureWithPost(_ post: Post) {
+        super.configureWithPost(post)
+        configureAvatarImageView()
+        configureBasicLabels()
+    }
+    
+    final func configureSelectionWithText(text: String) {
+        let notAllowedCharacters = CharacterSet.init(charactersIn: "!@#$%^&*()_+|,;.\"'")
+        let result = text.components(separatedBy: notAllowedCharacters).joined(separator: "")
+        let range = (self.messageLabel.textStorage!.string.lowercased() as NSString).range(of: result.lowercased())
+        
+        self.messageLabel.textStorage?.addAttributes([NSBackgroundColorAttributeName : ColorBucket.searchTextBackgroundColor], range: range)
+        self.messageLabel.textStorage?.addAttributes([NSForegroundColorAttributeName : ColorBucket.searchTextColor], range: range)
+    }
+    
+    override class func heightWithPost(_ post: Post) -> CGFloat {
+        return CGFloat(post.attributedMessageHeight) + 64
     }
 }

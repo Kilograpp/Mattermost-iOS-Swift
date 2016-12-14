@@ -13,6 +13,7 @@ private protocol Interface: class {
     func baseURL() -> URL!
     func avatarLinkForUser(_ user: User) -> String
     func cancelSearchRequestFor(channel: Channel)
+    func isNetworkReachable() -> Bool
 }
 
 private protocol PreferencesApi: class {
@@ -81,6 +82,7 @@ final class Api {
     static let sharedInstance = Api()
     fileprivate var _managerCache: ObjectManager?
     fileprivate var downloadOperationsArray = Array<AFRKHTTPRequestOperation>()
+    fileprivate var networkReachabilityManager = NetworkReachabilityManager.init()
     fileprivate var manager: ObjectManager  {
         if _managerCache == nil {
             _managerCache = ObjectManager(baseURL: self.computeAndReturnApiRootUrl())
@@ -945,5 +947,9 @@ extension Api: Interface {
     func cancelSearchRequestFor(channel: Channel) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.searchingPathPattern(), channel)
         self.manager.cancelAllObjectRequestOperations(with: .any, matchingPathPattern: path)
+    }
+    
+    func isNetworkReachable() -> Bool {
+        return (self.networkReachabilityManager?.isReachable)!
     }
 }

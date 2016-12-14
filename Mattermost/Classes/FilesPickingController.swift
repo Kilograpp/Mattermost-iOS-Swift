@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Photos
 
 fileprivate protocol Interface {
     func pick()
@@ -84,6 +85,11 @@ extension FilesPickingController: Pickers {
         let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach", preferredStyle: .actionSheet)
         
         let imagePickAction = UIAlertAction(title: "Photo/Picture", style: .default) { _ in
+            guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
+                return
+            }
+            
             self.pickImage()
         }
         let filePickAction = UIAlertAction(title: "File", style: .default) { _ in

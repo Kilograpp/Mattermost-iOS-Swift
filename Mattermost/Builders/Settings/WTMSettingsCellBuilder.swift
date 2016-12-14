@@ -58,7 +58,7 @@ extension WTMSettingsCellBuilder: Inteface {
     func updatedNotifyProps() -> NotifyProps {
         let firstName = self.firstNameEnabled ? Constants.CommonStrings.True : Constants.CommonStrings.False
         let channel = self.mentionedChannelNameEnabled ? Constants.CommonStrings.True : Constants.CommonStrings.False
-        let mentionKeys = self.sensetiveWordsString
+        let mentionKeys = self.mentionKeysState()
         
         try! RealmUtils.realmForCurrentThread().write {
             self.notifyProps?.firstName = firstName

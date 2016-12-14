@@ -196,6 +196,12 @@ extension UFSettingsTableViewController: Request {
     internal func updatePassword() {
         let oldPassword = self.builder.infoFor(section: 0)
         let newPassword = self.builder.infoFor(section: 1)
+        let retryNewPassword = self.builder.infoFor(section: 2)
+        guard newPassword == retryNewPassword else {
+            AlertManager.sharedManager.showErrorWithMessage(message: "New password in fields isn't same.")
+            return
+        }
+        
         Api.sharedInstance.update(currentPassword: oldPassword, newPassword: newPassword) { (error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)

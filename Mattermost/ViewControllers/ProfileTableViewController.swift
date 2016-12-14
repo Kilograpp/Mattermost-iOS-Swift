@@ -10,7 +10,7 @@ import UIKit
 import QuartzCore
 import WebImage
 import MBProgressHUD
-import NVActivityIndicatorView
+import Photos
 
 @objc private enum InfoSections : Int {
     case base
@@ -124,7 +124,7 @@ extension ProfileViewController: Setup {
     func setupHeader() {
         self.nicknameLabel?.font = UIFont.kg_semibold30Font()
         self.nicknameLabel?.textColor = UIColor.kg_blackColor()
-        self.nicknameLabel?.text = self.user?.displayName
+        self.nicknameLabel?.text = self.user?.username
         
         self.fullnameLabel.font = UIFont.kg_semibold20Font()
         self.fullnameLabel.textColor = UIColor.kg_blackColor()
@@ -168,7 +168,6 @@ extension ProfileViewController: Action {
     }
     
     func saveAction() {
-        self.showLoaderViewForProfile()
         updateImage()
     }
 }
@@ -197,9 +196,12 @@ extension ProfileViewController: Navigation {
 }
 
 //MARK: Request
-//КОММЕНТ АНДРЕЮ!!!!
 extension ProfileViewController: Request {
     internal func updateImage() {
+        let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+        progressHUD.mode = .annularDeterminate
+        progressHUD.label.text = "Uploading..."
+        
         let image = self.avatarImageView.image
         Api.sharedInstance.update(profileImage: image!, completion: { (error) in
             SDImageCache.shared().removeImage(forKey: self.user?.smallAvatarCacheKey())
@@ -211,12 +213,8 @@ extension ProfileViewController: Request {
             ImageDownloader.downloadFullAvatarForUser(self.user!) { _,_ in }
             MBProgressHUD.hide(for: self.view, animated: true)
             self.saveButton.isEnabled = false
-            
-            //УБРАЛ ЛОУДЕР!
-            self.hideLoaderViewForProfile()
-            
-            
         }, progress: { (progress) in
+            progressHUD.progress = progress
         })
     }
 }
@@ -282,9 +280,17 @@ extension ProfileViewController {
         
         let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
+            guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Camera.")
+                return
+            }
             self.presentImagePickerControllerWithType(.camera)
         }
         let openGalleryAction = UIAlertAction.init(title: "Take from library", style: .default) { (action) in
+            guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+                    AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
+                    return
+            }
             self.presentImagePickerControllerWithType(.photoLibrary)
         }
         let cancelAction = UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil)
@@ -309,30 +315,13 @@ extension ProfileViewController {
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
+        
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        self.avatarImageView.image = image
+        if picker.sourceType == .camera {
+            self.avatarImageView.image = image.fixedOrientation()//ImageOrientationUtils.fixImageOrientation(src: image)
+        } else {
+            self.avatarImageView.image = image
+        }
         self.saveButton.isEnabled = true
     }
 }
-
-extension ProfileViewController{
-    func showLoaderViewForProfile(){
-        let screenSize = UIScreen.main.bounds
-        
-        let loader = UIView.init(frame: CGRect(x: 0, y: 0 - (self.navigationController?.navigationBar.frame.height)!, width: screenSize.width, height: screenSize.height))
-        loader.backgroundColor = UIColor.init(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.92)
-        
-        let frame = CGRect(x: (screenSize.width-screenSize.width/7)/2, y: (screenSize.height-screenSize.height/7)/2, width: screenSize.width/7, height: screenSize.height/7)
-        let color = UIColor.kg_blueColor()
-        let spinner = NVActivityIndicatorView(frame: frame, type: .ballPulse, color: color, padding: 0.0)
-        loader.addSubview(spinner)
-        spinner.startAnimating()
-        self.view.addSubview(loader)
-    }
-    
-    func hideLoaderViewForProfile(){
-        (self.view.subviews.last?.subviews.first as! NVActivityIndicatorView).stopAnimating()
-        self.view.subviews.last?.removeFromSuperview()
-    }
-}
-

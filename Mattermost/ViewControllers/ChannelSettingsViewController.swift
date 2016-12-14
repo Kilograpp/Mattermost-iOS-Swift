@@ -37,7 +37,14 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        replaceStatusBar()
         self.tableView.reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        UIStatusBar.shared().reset()
     }
     
     override func didReceiveMemoryWarning() {
@@ -96,10 +103,12 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
                 cell0.infoName.text = "URL".localized
                 cell0.infoDetail.text = channel.buildURL()
                 cell0.accessoryView = UIView()
+                cell0.isCopyEnabled = true
             case 3:
                 cell0.infoName.text = "ID".localized
                 cell0.infoDetail.text = channel.identifier!
                 cell0.accessoryView = UIView()
+                cell0.isCopyEnabled = true
             default:
                 break
             }

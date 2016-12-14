@@ -8,11 +8,8 @@
 
 import Foundation
 
-
 extension UIImage {
-    
     func fixedOrientation() -> UIImage {
-        
         if imageOrientation == .up {
             return self
         }

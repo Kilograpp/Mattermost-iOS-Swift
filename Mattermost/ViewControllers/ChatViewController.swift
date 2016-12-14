@@ -14,7 +14,7 @@ import MFSideMenu
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
     
-    //MARK: Properties
+//MARK: Properties
     fileprivate var documentInteractionController: UIDocumentInteractionController?
     var channel : Channel!
     fileprivate var resultsObserver: FeedNotificationsObserver! = nil
@@ -124,7 +124,7 @@ extension ChatViewController {
         self.navigationController?.isNavigationBarHidden = false
         setupInputViewButtons()
         addSLKKeyboardObservers()
-        self.replaceStatusBar()
+        replaceStatusBar()
         
         if (self.postFromSearch != nil) {
             changeChannelForPostFromSearch()
@@ -154,6 +154,7 @@ extension ChatViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        UIStatusBar.shared().reset()
         removeSLKKeyboardObservers()
         NotificationCenter.default.removeObserver(self,
                                                   name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
@@ -195,9 +196,7 @@ extension ChatViewController: Setup {
     fileprivate func setupActualTownSquare() {
         let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
         Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
-            guard (error == nil) else {
-                return
-            }
+            guard (error == nil) else { return }
         })
     }
     
@@ -454,7 +453,7 @@ extension ChatViewController: Action {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
         }
         else {
-            UIStatusBar.shared().attachToDefault()
+            //UIStatusBar.shared().attachToDefault()
             proceedToChannelSettings(channel: self.channel)
         }
     }
@@ -910,10 +909,7 @@ extension ChatViewController: ChannelObserverDelegate {
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         self.title = self.channel?.displayName
         
-        self.textInputbar.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
-        self.leftButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
-        self.rightButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
-        self.textView.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+         self.isTextInputbarHidden = !self.channel.isDirectChannelInterlocutorInTeam
         
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
@@ -1005,7 +1001,6 @@ extension ChatViewController {
     }
     
     func handleKeyboardWillShowNotification() {
-        
         print("handleKeyboardWillShowNotification")
     }
     
@@ -1133,30 +1128,25 @@ extension ChatViewController {
         if FileManager.default.fileExists(atPath: filePath) {
             self.documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
             self.documentInteractionController?.delegate = self
-            if (file?.isImage)! {
+            //if (file?.isImage)! {
                 self.documentInteractionController?.presentPreview(animated: true)
-            } else {
-                let frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-                self.documentInteractionController?.presentOpenInMenu(from: frame, in: self.view, animated: true)
-            }
+            //} else {
+              //  let frame = CGRect(x: 0, y: 0, width: 10, height: 10)
+              //  self.documentInteractionController?.presentOpenInMenu(from: frame, in: self.view, animated: true)
+            //}
         }
     }
 }
 
 extension ChatViewController: UIDocumentInteractionControllerDelegate {
     func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
-        
     }
     func documentInteractionController(_ controller: UIDocumentInteractionController, didEndSendingToApplication application: String?) {
-        
     }
     func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
-        
     }
     func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
-        
     }
-    
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
     }
@@ -1167,10 +1157,7 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
 extension ChatViewController {
     func openPreviewWith(postLocalId: String, fileId: String) {
         let last = self.navigationController?.viewControllers.last
-        guard last != nil else {
-            AlertManager.sharedManager.showWarningWithMessage(message: "Image unavailable now. Wait for thumbnail downloading end.")
-            return
-        }
+        guard last != nil else { return }
         guard !(last?.isKind(of: ImagesPreviewViewController.self))! else { return }
         
         let gallery = self.storyboard?.instantiateViewController(withIdentifier: "ImagesPreviewViewController") as! ImagesPreviewViewController

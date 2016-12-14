@@ -11,11 +11,16 @@ import UIKit
 class InformationChannelSettingsCell: UITableViewCell {
 
     @IBOutlet weak var infoName: UILabel!
-    @IBOutlet weak var infoDetail: UILabel!
+    @IBOutlet weak var infoDetail: UILabel! {
+        didSet { isCopyEnabled = false }
+    }
+    
+    var isCopyEnabled = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        setupGestureRecognizers()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -25,3 +30,34 @@ class InformationChannelSettingsCell: UITableViewCell {
     }
 
 }
+
+fileprivate protocol Setup {
+    func setupGestureRecognizers()
+}
+
+fileprivate protocol Action: class {
+    func longPressAction(recognizer:UILongPressGestureRecognizer)
+}
+
+
+//MARK: Setup
+extension InformationChannelSettingsCell: Setup {
+    func setupGestureRecognizers() {
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(recognizer:)))
+        self.isUserInteractionEnabled = true
+        self.addGestureRecognizer(longPress)
+    }
+}
+
+
+//MARK: Action
+extension InformationChannelSettingsCell: Action {
+    func longPressAction(recognizer:UILongPressGestureRecognizer) {
+        guard self.isCopyEnabled else { return }
+        guard recognizer.state == .ended else { return }
+        
+        UIPasteboard.general.string = self.infoDetail?.text
+        AlertManager.sharedManager.showSuccesWithMessage(message: "Information was copied to clipboard")
+    }
+}
+

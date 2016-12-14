@@ -36,7 +36,16 @@ final class LoginViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        _ = self.loginTextField.becomeFirstResponder()
+        if !UserStatusManager.sharedInstance.isSignedIn() {
+            _ = self.loginTextField.becomeFirstResponder()
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        _ = self.loginTextField.resignFirstResponder()
+        _ = self.passwordTextField.resignFirstResponder()
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
