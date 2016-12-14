@@ -124,7 +124,7 @@ extension ChatViewController {
         self.navigationController?.isNavigationBarHidden = false
         setupInputViewButtons()
         addSLKKeyboardObservers()
-        self.replaceStatusBar()
+        replaceStatusBar()
         
         if (self.postFromSearch != nil) {
             changeChannelForPostFromSearch()
@@ -154,6 +154,7 @@ extension ChatViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        UIStatusBar.shared().reset()
         removeSLKKeyboardObservers()
         NotificationCenter.default.removeObserver(self,
                                                   name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
@@ -195,9 +196,7 @@ extension ChatViewController: Setup {
     fileprivate func setupActualTownSquare() {
         let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
         Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
-            guard (error == nil) else {
-                return
-            }
+            guard (error == nil) else { return }
         })
     }
     
@@ -454,7 +453,7 @@ extension ChatViewController: Action {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
         }
         else {
-            UIStatusBar.shared().attachToDefault()
+            //UIStatusBar.shared().attachToDefault()
             proceedToChannelSettings(channel: self.channel)
         }
     }

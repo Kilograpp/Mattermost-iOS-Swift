@@ -37,7 +37,14 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        replaceStatusBar()
         self.tableView.reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        UIStatusBar.shared().reset()
     }
     
     override func didReceiveMemoryWarning() {

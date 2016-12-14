@@ -7,7 +7,7 @@
 #import "UIStatusBar+SharedBar.h"
 
 static NSInteger kSnapshotViewTag = 1231230;
-static UIStatusBar* sharedStatusBar;
+static UIStatusBar *sharedStatusBar;
 
 @interface UIStatusBar (SharedBarProperties)
 @property (strong, nonatomic) NSMutableArray* previousViews;

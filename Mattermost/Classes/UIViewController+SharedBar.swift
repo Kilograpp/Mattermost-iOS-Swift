@@ -18,7 +18,6 @@ extension UIViewController: SharedBar {
         let statusBar = UIStatusBar.shared()
         
         guard statusBar != nil else { return }
-        //UIStatusBar.shared().reset()
         statusBar?.attach(to: navigationController.view)
     }
 }

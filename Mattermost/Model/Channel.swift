@@ -115,10 +115,6 @@ final class Channel: RealmObject {
                 channel.isDirectChannelInterlocutorInTeam = (townSquareUsers?.contains(user))!
             }
         }
-        
-        for channel in directChannels {
-            print(channel.displayName! + " ---- ", channel.isDirectChannelInterlocutorInTeam)
-        }
     }
 
 }

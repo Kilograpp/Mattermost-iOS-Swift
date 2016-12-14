@@ -29,8 +29,22 @@ final class TeamViewController: UIViewController {
         prepareResults()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        replaceStatusBar()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         setupNavigationView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        UIStatusBar.shared().reset()
     }
 }
 

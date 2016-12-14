@@ -51,6 +51,7 @@ class SearchChatViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        replaceStatusBar()
         configureForSearchStage(SearchStage.SearchNotStarted)
         prepareSearchRequestResults()
         self.autocompleteTableView.isHidden = true
@@ -66,6 +67,7 @@ class SearchChatViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        UIStatusBar.shared().reset()
         //let width = UIScreen.screenWidth() - 75
         //self.searchTextField.superview?.frame = CGRect(x: 8, y: 20, width: width, height: 44)
     }
