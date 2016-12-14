@@ -204,7 +204,7 @@ extension ImagesPreviewViewController {
     
     func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
         guard error == nil else {
-            AlertManager.sharedManager.showErrorWithMessage(message: (error?.description)!)
+            AlertManager.sharedManager.showErrorWithMessage(message: "Unable to save high-quality image. Check preferences.")
             return
         }
         
