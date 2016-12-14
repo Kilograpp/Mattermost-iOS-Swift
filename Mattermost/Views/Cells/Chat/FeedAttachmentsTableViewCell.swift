@@ -30,7 +30,8 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         super.layoutSubviews()
         
         let x = Constants.UI.MessagePaddingSize
-        let y = CGFloat(post.attributedMessageHeight) + (self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36)
+        var y = (self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36)
+        if (self.post.message?.characters.count)! > 0 { y += CGFloat(post.attributedMessageHeight) }
         let widht = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
         let height = self.tableView.contentSize.height
         
@@ -52,7 +53,7 @@ extension FeedAttachmentsTableViewCell {
     }
     
     override class func heightWithPost(_ post: Post) -> CGFloat {
-        let messageHeight = CGFloat(post.attributedMessageHeight) + 44 + 8
+        let messageHeight = CGFloat(post.attributedMessageHeight) + 24 + 8
         
         var tableViewHeight: CGFloat = 0
         for file in post.files {

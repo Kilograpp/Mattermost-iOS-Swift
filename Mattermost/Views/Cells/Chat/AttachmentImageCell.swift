@@ -46,13 +46,14 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     }
     
     override func layoutSubviews() {
-        self.fileNameLabel.sizeToFit()
-        self.fileNameLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.fileNameLabel.frame.height)
+        //self.fileNameLabel.sizeToFit()
+        let fileNameHeight: CGFloat = 20
+        self.fileNameLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: fileNameHeight/*self.fileNameLabel.frame.height*/)
         
-        let height = self.bounds.height - self.fileNameLabel.frame.height
+        let height = self.bounds.height - fileNameHeight//self.fileNameLabel.frame.height
         let width = self.bounds.width
         
-        self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.height, width: width, height: height)
+        self.fileImageView.frame = CGRect(x: 0, y: /*self.fileNameLabel.frame.height*/fileNameHeight, width: width, height: height)
         super.layoutSubviews()
     }
     
