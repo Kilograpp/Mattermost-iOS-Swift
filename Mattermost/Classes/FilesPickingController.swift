@@ -85,10 +85,18 @@ extension FilesPickingController: Pickers {
         let controller = UIAlertController(title: "Attachment", message: "Choose what you want to attach", preferredStyle: .actionSheet)
         
         let imagePickAction = UIAlertAction(title: "Photo/Picture", style: .default) { _ in
-            guard PHPhotoLibrary.authorizationStatus() == .authorized else {
-                AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
-                return
-            }
+            
+            PHPhotoLibrary.requestAuthorization({(status:PHAuthorizationStatus) in
+                switch status{
+                case .authorized:
+                    print("Authorized")
+                case .denied:
+                    AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
+                    return
+                default:
+                    print("Default")
+                }
+            })
             
             self.pickImage()
         }
@@ -104,7 +112,6 @@ extension FilesPickingController: Pickers {
         controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         viewController().present(controller, animated: true) {}
-
     }
 }
 

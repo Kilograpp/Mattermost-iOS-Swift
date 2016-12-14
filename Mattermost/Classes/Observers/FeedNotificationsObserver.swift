@@ -38,35 +38,37 @@ final class FeedNotificationsObserver {
     }
     
     func subscribeForRealmNotifications() {
-        let resultsNotificationHandler = {
-            (changes: RealmCollectionChange<Results<Post>> ) in
-            
+        let resultsNotificationHandler = { (changes: RealmCollectionChange<Results<Post>> ) in
             switch changes {
-                case .initial:
-                    self.tableView.reloadData()
-                    break
-                case .update(_, let deletions, let insertions, let modifications):
-                    
-                        if insertions.count > 1 || deletions.count > 1 || modifications.count > 1 {
-                            self.tableView.reloadData()
-                            break
-                        }
+            case .initial:
+                self.tableView.reloadData()
+                break
+            case .update(_, let deletions, let insertions, let modifications):
+                    if insertions.count > 1 || deletions.count > 1 || modifications.count > 1 {
+                        self.tableView.reloadData()
+                        break
+                    }
+                    self.tableView.beginUpdates()
+                    if deletions.count > 0 {
+                      /*  deletions.forEach({ (index: Int) in
+                            let post = self.results[index]
+                            var rowsForDelete = Array<IndexPath>
+                            
                         
-                        if deletions.count > 0 {
-                            //TEMP:
-                            self.tableView.reloadData()
+                        })*/
+                        self.tableView.reloadData()
+                    }
+//                    self.tableView.beginUpdates()
+                    if (insertions.count > 0) {
+                        if self.days?.first?.posts.count == 1 {
+                            self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
                         }
-                        self.tableView.beginUpdates()
-                        if (insertions.count > 0) {
-                            if self.days?.first?.posts.count == 1 {
-                                self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
-                            }
-                            insertions.forEach({ (index:Int) in
-                                self.tableView.insertRows(at: [NSIndexPath(row: 0, section: 0) as IndexPath], with: .automatic)
-                            })
-                        }
+                        insertions.forEach({ (index:Int) in
+                            self.tableView.insertRows(at: [NSIndexPath(row: 0, section: 0) as IndexPath], with: .automatic)
+                        })
+                    }
                     
-                        if modifications.count > 0 {
+                    if modifications.count > 0 {
                         modifications.forEach({ (index:Int) in
                             let post = self.results[index]
                             var rowsForReload = Array<IndexPath>()
@@ -80,13 +82,10 @@ final class FeedNotificationsObserver {
                                 self.tableView.reloadRows(at: rowsForReload, with: .automatic)
                             }
                         })
-                        }
-
-                    
+                    }
                     self.tableView.endUpdates()
                 
                 default: break
-                
             }
         }
         
@@ -97,13 +96,11 @@ final class FeedNotificationsObserver {
 
         if Thread.isMainThread {
             configurationBlock()
-            
         } else {
             DispatchQueue.main.sync {
                 configurationBlock()
             }
         }
-
     }
 }
 

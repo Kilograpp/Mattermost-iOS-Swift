@@ -119,15 +119,11 @@ extension PostUtils: Update {
 extension PostUtils: Delete {
     func delete(post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let day = post.day
-        guard post.identifier != nil else {
-            completion(nil)
-            return
-        }
+        guard post.identifier != nil else { completion(nil); return }
         Api.sharedInstance.deletePost(post) { (error) in
             completion(error)
             guard day?.posts.count == 0 else { return }
             RealmUtils.deleteObject(day!)
-            
         }
     }
 }

@@ -878,7 +878,6 @@ extension ChatViewController {
         let keyboardRectangle = keyboardFrame.cgRectValue
         let keyboardHeight = keyboardRectangle.height
         self.scrollBottomDown(keyboardHeight: keyboardHeight)
-        
     }
 }
 
