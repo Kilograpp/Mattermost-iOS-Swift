@@ -185,8 +185,8 @@ extension NotifyProps: TriggerWords {
             words += Constants.NotifyProps.Words.ChannelWide
         }
         var otherWords = self.otherNonCaseSensitive()
-        otherWords = "\"" + otherWords.replacingOccurrences(of: ",", with: "\",\"") + "\""
         if (otherWords.characters.count > 0) {
+            otherWords = "\"" + otherWords.replacingOccurrences(of: ",", with: "\",\"") + "\""
             words = StringUtils.commaTailedString(words)
             words += otherWords
         }
