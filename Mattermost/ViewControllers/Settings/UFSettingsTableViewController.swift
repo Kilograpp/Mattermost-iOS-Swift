@@ -195,6 +195,8 @@ extension UFSettingsTableViewController: Request {
     }
     
     internal func updatePassword() {
+        self.showLoaderView()
+        
         let oldPassword = self.builder.infoFor(section: 0)
         let newPassword = self.builder.infoFor(section: 1)
         let retryNewPassword = self.builder.infoFor(section: 2)
@@ -204,11 +206,15 @@ extension UFSettingsTableViewController: Request {
         }
         
         Api.sharedInstance.update(currentPassword: oldPassword, newPassword: newPassword) { (error) in
+            self.hideLoaderView()
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
+            
+            self.saveButton.isEnabled = false
             AlertManager.sharedManager.showSuccesWithMessage(message: "Password was successfully updated")
+            self.returtToSettings()
         }
     }
 }

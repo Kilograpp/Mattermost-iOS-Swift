@@ -19,8 +19,11 @@ extension UIViewController: LoaderView{
     func showLoaderView(){
         let screenSize = UIScreen.main.bounds
         
-        let loader = UIView.init(frame: CGRect(x: 0, y: UIApplication.shared.statusBarFrame.height
-, width: screenSize.width, height: screenSize.height))
+        let y = UserStatusManager.sharedInstance.isSignedIn() ? 0 : UIApplication.shared.statusBarFrame.height
+        let loader = UIView.init(frame: CGRect(x: 0,
+                                               y: y,
+                                               width: screenSize.width,
+                                               height: screenSize.height))
         loader.backgroundColor = UIColor.init(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.92)
         
         let frame = CGRect(x: (screenSize.width-screenSize.width/7)/2, y: (screenSize.height-screenSize.height/7)/2, width: screenSize.width/7, height: screenSize.height/7)
