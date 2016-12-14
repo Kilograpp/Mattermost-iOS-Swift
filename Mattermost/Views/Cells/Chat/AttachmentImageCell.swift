@@ -160,8 +160,6 @@ extension AttachmentImageCell: Updating {
                         let scale = width / finalImage.size.width
                         let height = finalImage.size.height * scale
                         
-                        print("width = ", width, "heigth = ", height)
-                        
                         finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: width, height: height), radius: 3)
                         SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
                     }
@@ -171,8 +169,8 @@ extension AttachmentImageCell: Updating {
                     
                     DispatchQueue.main.sync(execute: {
                         self?.fileImageView.image = finalImage
-                        let postLocalId = self?.file.post?.localIdentifier
                         
+                        let postLocalId = self?.file.post?.localIdentifier
                         guard postLocalId != nil else { return }
                         
                         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.ReloadChatNotification),

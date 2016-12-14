@@ -920,9 +920,13 @@ extension ChatViewController: ChannelObserverDelegate {
         
         if (self.postFromSearch == nil) {
             self.loadFirstPageOfData(isInitial: true)
-        }
-        else {
-            loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
+        } else {
+            if self.postFromSearch.channel.identifier != identifier {
+                self.postFromSearch = nil
+                self.loadFirstPageOfData(isInitial: true)
+            } else {
+                loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
+            }
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleChannelNotification),
