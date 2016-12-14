@@ -127,16 +127,14 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
                 AlertManager.sharedManager.showWarningWithMessage(message: "One or more empty emails!")
                 return
             }
-            
             invites.append(["email" : memberTouple.email, "firstName" : memberTouple.firstName, "lastName" : memberTouple.lastName!])
         }
         Api.sharedInstance.sendInvites(invites) { (error) in
             guard (error == nil) else {
-                AlertManager.sharedManager.showWarningWithMessage(message: (error?.message)!);
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!);
                 return
             }
-            
-             self.proceedToSuccessInviteNewMember()
+            self.proceedToSuccessInviteNewMember()
         }
     }
 }
