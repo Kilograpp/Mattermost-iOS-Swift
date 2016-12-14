@@ -1143,16 +1143,12 @@ extension ChatViewController {
 
 extension ChatViewController: UIDocumentInteractionControllerDelegate {
     func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
-        print(application)
     }
     func documentInteractionController(_ controller: UIDocumentInteractionController, didEndSendingToApplication application: String?) {
-        print(application)
     }
     func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
-        
     }
     func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
-        
     }
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
@@ -1164,10 +1160,7 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
 extension ChatViewController {
     func openPreviewWith(postLocalId: String, fileId: String) {
         let last = self.navigationController?.viewControllers.last
-        guard last != nil else {
-            AlertManager.sharedManager.showWarningWithMessage(message: "Image unavailable now. Wait for thumbnail downloading end.")
-            return
-        }
+        guard last != nil else { return }
         guard !(last?.isKind(of: ImagesPreviewViewController.self))! else { return }
         
         let gallery = self.storyboard?.instantiateViewController(withIdentifier: "ImagesPreviewViewController") as! ImagesPreviewViewController
