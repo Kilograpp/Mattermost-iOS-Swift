@@ -8,20 +8,20 @@
 
 import UIKit
 
-protocol HeightForTextView {
-    func heightOfTextView(height: CGFloat)
+protocol CellUpdated {
+    func cellUpdated(text: String)
 }
 
 class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var infoText: UITextView!
-    var delgate : HeightForTextView?
+    var delgate : CellUpdated?
     
     @IBAction func deleteTextAction(_ sender: AnyObject) {
         infoText.text = ""
         if let iuDelegate = self.delgate {
-            iuDelegate.heightOfTextView(height: ChannelInfoCell.heightWithObject(infoText.text))
+            iuDelegate.cellUpdated(text: infoText.text)
         }
     }
     
@@ -40,7 +40,7 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView){
         setupCancelButtonHidding()
         if let iuDelegate = self.delgate {
-            iuDelegate.heightOfTextView(height: ChannelInfoCell.heightWithObject(infoText.text))
+            iuDelegate.cellUpdated(text: infoText.text)
         }
     }
     

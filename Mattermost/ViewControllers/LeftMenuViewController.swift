@@ -305,7 +305,7 @@ extension LeftMenuViewController : Navigation {
         
         let moreStoryboard = UIStoryboard(name:  "More", bundle: Bundle.main)
         let createChannel = moreStoryboard.instantiateViewController(withIdentifier: "CreateChannelViewController") as! CreateChannelViewController
-        createChannel.configure(privateType: privateType)
+        //createChannel.configure(privateType: privateType)
         center.pushViewController(createChannel, animated: true)
         toggleLeftSideMenu()
     }

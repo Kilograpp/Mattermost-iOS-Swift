@@ -168,6 +168,7 @@ extension ProfileViewController: Action {
     }
     
     func saveAction() {
+        self.showLoaderViewForProfile()
         updateImage()
     }
 }
@@ -199,11 +200,6 @@ extension ProfileViewController: Navigation {
 //КОММЕНТ АНДРЕЮ!!!!
 extension ProfileViewController: Request {
     internal func updateImage() {
-        
-        //ПОКАЗАЛ ЛОУДЕР!
-        self.showLoaderViewForProfile()
-        
-        
         let image = self.avatarImageView.image
         Api.sharedInstance.update(profileImage: image!, completion: { (error) in
             SDImageCache.shared().removeImage(forKey: self.user?.smallAvatarCacheKey())
