@@ -14,7 +14,7 @@ import MFSideMenu
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
     
-    //MARK: Properties
+//MARK: Properties
     fileprivate var documentInteractionController: UIDocumentInteractionController?
     var channel : Channel!
     fileprivate var resultsObserver: FeedNotificationsObserver! = nil
@@ -908,10 +908,7 @@ extension ChatViewController: ChannelObserverDelegate {
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         self.title = self.channel?.displayName
         
-        self.textInputbar.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
-        self.leftButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
-        self.rightButton.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
-        self.textView.isHidden = !self.channel.isDirectChannelInterlocutorInTeam
+         self.isTextInputbarHidden = !self.channel.isDirectChannelInterlocutorInTeam
         
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
@@ -1003,7 +1000,6 @@ extension ChatViewController {
     }
     
     func handleKeyboardWillShowNotification() {
-        
         print("handleKeyboardWillShowNotification")
     }
     

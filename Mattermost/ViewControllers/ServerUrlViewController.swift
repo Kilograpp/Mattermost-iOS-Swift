@@ -41,6 +41,12 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
         _ = self.textField.becomeFirstResponder()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        _ = self.textField.resignFirstResponder()
+    }
+    
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return UIStatusBarStyle.default
     }
