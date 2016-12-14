@@ -287,11 +287,26 @@ extension ProfileViewController {
             self.presentImagePickerControllerWithType(.camera)
         }
         let openGalleryAction = UIAlertAction.init(title: "Take from library", style: .default) { (action) in
-            guard PHPhotoLibrary.authorizationStatus() == .authorized else {
-                    AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
-                    return
+            if PHPhotoLibrary.authorizationStatus() == .authorized {
+                self.presentImagePickerControllerWithType(.photoLibrary)
+                return
             }
-            self.presentImagePickerControllerWithType(.photoLibrary)
+            
+            PHPhotoLibrary.requestAuthorization({(status:PHAuthorizationStatus) in
+                switch status{
+                case .authorized:
+                    DispatchQueue.main.sync {
+                        self.presentImagePickerControllerWithType(.photoLibrary)
+                    }
+                case .denied:
+                    DispatchQueue.main.sync {
+                        AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
+                        return
+                    }
+                default:
+                    print("Default")
+                }
+            })
         }
         let cancelAction = UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(openCameraAction)
