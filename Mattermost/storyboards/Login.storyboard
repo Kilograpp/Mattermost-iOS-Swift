@@ -187,8 +187,8 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vvj-v6-Cnq">
-                                <rect key="frame" x="16" y="309" width="288" height="30"/>
-                                <state key="normal" title="Button"/>
+                                <rect key="frame" x="127" y="309" width="66" height="30"/>
+                                <state key="normal" title="Next step"/>
                                 <connections>
                                     <action selector="nextButtonAction:" destination="Erx-Nd-Gk4" eventType="touchUpInside" id="3bh-4l-UbF"/>
                                 </connections>
@@ -204,13 +204,12 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="Vvj-v6-Cnq" firstAttribute="centerX" secondItem="uya-RO-Kcm" secondAttribute="centerX" id="04f-JY-2bM"/>
                             <constraint firstItem="Kwd-O2-ddM" firstAttribute="centerY" secondItem="uya-RO-Kcm" secondAttribute="centerY" constant="-25" id="1SF-uS-NKE"/>
-                            <constraint firstItem="Vvj-v6-Cnq" firstAttribute="leading" secondItem="BqQ-iN-Eda" secondAttribute="leading" id="2n0-om-qxU"/>
                             <constraint firstItem="Kwd-O2-ddM" firstAttribute="width" secondItem="uya-RO-Kcm" secondAttribute="width" multiplier="0.9" id="49Y-J1-zdt"/>
                             <constraint firstItem="c37-lj-DJ2" firstAttribute="trailing" secondItem="Kwd-O2-ddM" secondAttribute="trailing" id="9HZ-RY-4A5"/>
                             <constraint firstItem="Vvj-v6-Cnq" firstAttribute="top" secondItem="Kwd-O2-ddM" secondAttribute="bottom" constant="30" id="ErK-Zp-LU1"/>
                             <constraint firstItem="Kwd-O2-ddM" firstAttribute="top" secondItem="BUP-v1-52e" secondAttribute="bottom" constant="150" id="Jv4-c3-Jcq"/>
-                            <constraint firstItem="Vvj-v6-Cnq" firstAttribute="trailing" secondItem="BqQ-iN-Eda" secondAttribute="trailing" id="LT4-OV-KJp"/>
                             <constraint firstItem="BqQ-iN-Eda" firstAttribute="top" secondItem="Kwd-O2-ddM" secondAttribute="bottom" constant="10" id="PGU-gh-hbc"/>
                             <constraint firstItem="BqQ-iN-Eda" firstAttribute="leading" secondItem="Kwd-O2-ddM" secondAttribute="leading" id="Qr2-dD-S0a"/>
                             <constraint firstItem="c37-lj-DJ2" firstAttribute="leading" secondItem="Kwd-O2-ddM" secondAttribute="leading" id="RLB-nF-YMo"/>
