@@ -124,7 +124,7 @@ extension ProfileViewController: Setup {
     func setupHeader() {
         self.nicknameLabel?.font = UIFont.kg_semibold30Font()
         self.nicknameLabel?.textColor = UIColor.kg_blackColor()
-        self.nicknameLabel?.text = self.user?.username
+        self.nicknameLabel?.text = self.user?.displayName
         
         self.fullnameLabel.font = UIFont.kg_semibold20Font()
         self.fullnameLabel.textColor = UIColor.kg_blackColor()

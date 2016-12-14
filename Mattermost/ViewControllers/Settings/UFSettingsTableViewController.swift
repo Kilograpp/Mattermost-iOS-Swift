@@ -167,6 +167,7 @@ extension UFSettingsTableViewController: Request {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadRightMenuNotification), object: nil)
             AlertManager.sharedManager.showSuccesWithMessage(message: "Username was successfully updated")
         }
     }

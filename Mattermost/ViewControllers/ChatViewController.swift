@@ -148,7 +148,7 @@ extension ChatViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillHide),
                                                name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
-        
+        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

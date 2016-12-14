@@ -537,6 +537,8 @@ extension Api: UserApi {
                 user?.lastName = lastName ?? user?.lastName
                 user?.nickname = nickName ?? user?.nickname
                 user?.username = userName ?? user?.username
+                user?.displayName = userName ?? user?.username
+                user?.computeDisplayNameWidth()
                 user?.email = email ?? user?.email
             }
             completion(nil)

@@ -8,7 +8,15 @@
 
 import WebImage
 
+protocol _FeedCommonTableViewCellConfiguration : class {
+    func configureAvatarImage()
+    func configureBasicLabels()
+    func configureParentView()
+}
+
 class FeedCommonTableViewCell: FeedBaseTableViewCell {
+    
+//MARK: Properties
     fileprivate let avatarImageView: UIImageView = UIImageView()
     fileprivate let nameLabel: UILabel = UILabel()
     fileprivate let dateLabel: UILabel = UILabel()
@@ -16,6 +24,7 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
 
     var avatarTapHandler : (() -> Void)?
     
+//MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -28,60 +37,33 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         super.init(coder: aDecoder)
     }
     
-}
-
-
-protocol _FeedCommonTableViewCellConfiguration : class {
-    func configureAvatarImage()
-    func configureBasicLabels()
-    func configureParentView()
-}
-
-protocol _FeedCommonTableViewCellSetup : class {
-    func setupAvatarImageView()
-    func setupNameLabel()
-    func setupDateLabel()
-}
-
-protocol _FeedCommonTableViewCellAction: class {
-    func avatarTapAction()
-}
-
-protocol _FeedCommonTableViewCellLifeCycle: class {
-    func prepareForReuse()
-    func layoutSubviews()
-}
-
-protocol ParentComment: class {
-    func setupParentCommentView()
-}
-
-
-extension FeedCommonTableViewCell : TableViewPostDataSource {
-    override func configureWithPost(_ post: Post) {
-        super.configureWithPost(post)
-        
+    override func layoutSubviews() {
+        guard !self.post.isInvalidated else { return }
         guard self.post.author != nil else { return }
         
-        self.configureAvatarImage()
-        self.configureBasicLabels()
-        configureParentView()
+        let nameWidth = CGFloat(self.post.author.displayNameWidth)
+        let dateWidth = CGFloat(self.post.createdAtStringWidth)
         
+        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
+        
+        let originY = self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36
+        self.messageLabel.frame = CGRect(x: 53, y: originY, width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
+        self.nameLabel.frame = CGRect(x: 53, y: 8, width: nameWidth, height: 20)
+        self.dateLabel.frame = CGRect(x: self.nameLabel.frame.maxX + 5, y: 8, width: dateWidth, height: 20)
+        
+        let size = self.parentView.requeredSize()
+        self.parentView.frame = CGRect(x: 53, y: 36, width: size.width, height: size.height)
+        
+        super.layoutSubviews()
     }
     
-    override class func heightWithPost(_ post: Post) -> CGFloat {
-        var height = CGFloat(post.attributedMessageHeight) + 44
-        if (post.hasParentPost()) {
-            height += 64 + Constants.UI.ShortPaddingSize
-        }
-        
-        return height
+    override func prepareForReuse() {
+        super.prepareForReuse()
     }
 }
 
 
 //MARK - Configuration
-
 extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
     final func configureAvatarImage() {
         let postIdentifier = self.post.identifier
@@ -107,14 +89,29 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         if (self.post.hasParentPost()) {
             self.parentView.configureWithCompletePost(self.post.parentPost()!)
             self.addSubview(self.parentView)
-        }
-        else {
+        } else {
             self.parentView.removeFromSuperview()
         }
     }
 }
 
-//MARK: - Setup
+
+protocol _FeedCommonTableViewCellSetup : class {
+    func setupAvatarImageView()
+    func setupNameLabel()
+    func setupDateLabel()
+}
+
+protocol _FeedCommonTableViewCellAction: class {
+    func avatarTapAction()
+}
+
+protocol ParentComment: class {
+    func setupParentCommentView()
+}
+
+
+//MARK: FeedCommonTableViewCellSetup
 extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
     final func setupAvatarImageView() {
         self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
@@ -149,6 +146,8 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
     }
 }
 
+
+//MARK: FeedCommonTableViewCellAction
 extension FeedCommonTableViewCell: _FeedCommonTableViewCellAction {
     func avatarTapAction() {
         if (self.avatarTapHandler != nil) {
@@ -157,29 +156,25 @@ extension FeedCommonTableViewCell: _FeedCommonTableViewCellAction {
     }
 }
 
-extension FeedCommonTableViewCell: _FeedCommonTableViewCellLifeCycle {
-    override func layoutSubviews() {
-        guard !self.post.isInvalidated else { return }
+
+//MARK: TableViewPostDataSource
+extension FeedCommonTableViewCell : TableViewPostDataSource {
+    override func configureWithPost(_ post: Post) {
+        super.configureWithPost(post)
+        
         guard self.post.author != nil else { return }
         
-        let nameWidth = CGFloat(self.post.author.displayNameWidth)
-        let dateWidth = CGFloat(self.post.createdAtStringWidth)
-        
-        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
-        
-        let originY = self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36
-        self.messageLabel.frame = CGRect(x: 53, y: originY, width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
-        self.nameLabel.frame = CGRect(x: 53, y: 8, width: nameWidth, height: 20)
-        self.dateLabel.frame = CGRect(x: self.nameLabel.frame.maxX + 5, y: 8, width: dateWidth, height: 20)
-        
-        let size = self.parentView.requeredSize()
-        self.parentView.frame = CGRect(x: 53, y: 36, width: size.width, height: size.height)
-        
-        super.layoutSubviews()
+        self.configureAvatarImage()
+        self.configureBasicLabels()
+        configureParentView()
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
+    override class func heightWithPost(_ post: Post) -> CGFloat {
+        var height = CGFloat(post.attributedMessageHeight) + 44
+        if (post.hasParentPost()) {
+            height += 64 + Constants.UI.ShortPaddingSize
+        }
+        
+        return height
     }
-    
 }
