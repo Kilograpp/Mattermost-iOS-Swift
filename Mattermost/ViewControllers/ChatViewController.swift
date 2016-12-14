@@ -449,11 +449,14 @@ extension ChatViewController: Action {
     }
     
     func titleTapAction() {
+        guard Api.sharedInstance.isNetworkReachable() else {
+            AlertManager.sharedManager.showErrorWithMessage(message: "No Internet connectivity detected")
+            return
+        }
+        
         if (self.channel.privateType == Constants.ChannelType.DirectTypeChannel) {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
-        }
-        else {
-            //UIStatusBar.shared().attachToDefault()
+        } else {
             proceedToChannelSettings(channel: self.channel)
         }
     }
