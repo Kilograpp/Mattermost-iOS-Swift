@@ -1131,22 +1131,22 @@ extension ChatViewController {
         if FileManager.default.fileExists(atPath: filePath) {
             self.documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
             self.documentInteractionController?.delegate = self
-            if (file?.isImage)! {
+            //if (file?.isImage)! {
                 self.documentInteractionController?.presentPreview(animated: true)
-            } else {
-                let frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-                self.documentInteractionController?.presentOpenInMenu(from: frame, in: self.view, animated: true)
-            }
+            //} else {
+              //  let frame = CGRect(x: 0, y: 0, width: 10, height: 10)
+              //  self.documentInteractionController?.presentOpenInMenu(from: frame, in: self.view, animated: true)
+            //}
         }
     }
 }
 
 extension ChatViewController: UIDocumentInteractionControllerDelegate {
     func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
-        
+        print(application)
     }
     func documentInteractionController(_ controller: UIDocumentInteractionController, didEndSendingToApplication application: String?) {
-        
+        print(application)
     }
     func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
         
@@ -1154,7 +1154,6 @@ extension ChatViewController: UIDocumentInteractionControllerDelegate {
     func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
         
     }
-    
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
     }
