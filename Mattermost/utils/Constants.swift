@@ -39,19 +39,20 @@ struct Constants {
     }
     
     struct NotificationsNames {
-        static let UserLogoutNotificationName      = "LogoutNotification"
-        static let StatusesSocketNotification      = "StatusesSocketNotification"
-        static let UserJoinNotification            = "UserJoinNotification"
-        static let UserTeamSelectNotification      = "UserTeamSelectNotification"
-        static let ChatLoadingStartNotification    = "ChatLoadingStartNotification"
-        static let ChatLoadingStopNotification     = "ChatLoadingStopNotification"
-        static let ReloadLeftMenuNotification      = "ReloadLeftMenuNotification"
-        static let ReloadRightMenuNotification     = "ReloadRightMenuNotification"
-        static let ReloadChatNotification          = "ReloadChatNotification"
-        static let DocumentInteractionNotification = "DocumentInteractionNotification"
-        static let ReloadFileSizeNotification      = "ReloadFileSizeNotification"
-        static let DidReceiveRemoteNotification    = "DidReceiveRemoteNotification"
-        static let FileImageDidTapNotification     = "FileImageDidTapNotification"
+        static let UserLogoutNotificationName       = "LogoutNotification"
+        static let StatusesSocketNotification       = "StatusesSocketNotification"
+        static let UserJoinNotification             = "UserJoinNotification"
+        static let UserTeamSelectNotification       = "UserTeamSelectNotification"
+        static let ChatLoadingStartNotification     = "ChatLoadingStartNotification"
+        static let ChatLoadingStopNotification      = "ChatLoadingStopNotification"
+        static let ReloadLeftMenuNotification       = "ReloadLeftMenuNotification"
+        static let ReloadRightMenuNotification      = "ReloadRightMenuNotification"
+        static let ReloadChatNotification           = "ReloadChatNotification"
+        static let DocumentInteractionNotification  = "DocumentInteractionNotification"
+        static let ReloadFileSizeNotification       = "ReloadFileSizeNotification"
+        static let DidReceiveRemoteNotification     = "DidReceiveRemoteNotification"
+        static let FileImageDidTapNotification      = "FileImageDidTapNotification"
+        static let ReloadChatFromSearchNotification = "ReloadChatFromSearchNotification"
     }
     
     struct LinkCommands {

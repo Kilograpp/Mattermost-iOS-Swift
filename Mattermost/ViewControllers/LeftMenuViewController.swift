@@ -100,8 +100,10 @@ final class LeftMenuViewController: UIViewController {
             let row = self.resultsPrivate.index(of: channel)
             indexPath = IndexPath(row: row!, section: 1)
         case Constants.ChannelType.DirectTypeChannel:
-            let row = self.resultsDirect.index(of: channel)
-            indexPath = IndexPath(row: row!, section: 2)
+            let row = channel.isDirectChannelInterlocutorInTeam ? self.resultsDirect.index(of: channel)
+                                                                : self.resultsOutsideDirect.index(of: channel)
+            let section = channel.isDirectChannelInterlocutorInTeam ? 2 : 3
+            indexPath = IndexPath(row: row!, section: section)
         default:
             return
         }
@@ -320,7 +322,6 @@ extension LeftMenuViewController : Navigation {
     fileprivate func toggleLeftSideMenu() {
         let navigation = self.menuContainerViewController.centerViewController as! UINavigationController
         if navigation.viewControllers.count == 2 {
-         //   navigation.popViewController(animated: false)
             let chat = navigation.viewControllers.first as! ChatViewController
             chat.postFromSearch = nil
         }

@@ -72,11 +72,13 @@ final class FeedNotificationsObserver {
                         modifications.forEach({ (index:Int) in
                             let post = self.results[index]
                             var rowsForReload = Array<IndexPath>()
+                            print("start 3")
                             rowsForReload.append(self.indexPathForPost(post))
                             //self.tableView.reloadRows(at: [self.indexPathForPost(post)], with: .automatic)
                             if let postIdentifier = post.identifier {
                                 let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("\(PostAttributes.parentId) == %@", postIdentifier)
                                 for comment in comments {
+                                    print("start 4")
                                     rowsForReload.append(self.indexPathForPost(comment))
                                 }
                                 self.tableView.reloadRows(at: rowsForReload, with: .automatic)
@@ -157,6 +159,7 @@ extension FeedNotificationsObserver {
     func indexPathForPost(_ post: Post) -> IndexPath {
         let day = post.day
         let daysPosts = day?.sortedPosts()
+        
         let indexOfDay = (self.days?.index(of: day!))!
         let indexOfPost = (day?.posts.count)! - 1 - (daysPosts?.index(of: post))!
         let indexPath = NSIndexPath(row: indexOfPost, section: indexOfDay) as IndexPath

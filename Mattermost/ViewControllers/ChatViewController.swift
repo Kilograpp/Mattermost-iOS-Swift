@@ -665,8 +665,10 @@ extension ChatViewController: Request {
             
             guard post.channel.identifier == self.channel.identifier else { return }
             
-            let indexPath =  self.resultsObserver.indexPathForPost(post)
-            self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+            print("start 1")
+            //let indexPath =  self.resultsObserver.indexPathForPost(post)
+            //self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+
         }
     }
     
@@ -983,7 +985,7 @@ extension ChatViewController {
         guard post != nil else { return }
         guard !(post?.isInvalidated)! else { return }
         guard self.resultsObserver != nil else { return }
-        
+        guard self.channel.identifier == post?.channel.identifier else { return }
         let indexPath = self.resultsObserver.indexPathForPost(post!)
         
         guard (self.tableView.indexPathsForVisibleRows?.contains(indexPath))! else { return }
