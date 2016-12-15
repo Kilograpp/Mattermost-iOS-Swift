@@ -15,7 +15,6 @@ private protocol RequestMapping: class {
 }
 
 private protocol ResponseMappings: class {
-    static func mapping() -> RKObjectMapping
     static func directProfileMapping() -> RKObjectMapping
 }
 
@@ -23,6 +22,24 @@ private protocol ResponseMappings: class {
 final class UserMappingsContainer: BaseMappingsContainer {
     override class var classForMapping: AnyClass! {
         return User.self
+    }
+    
+    override class func mapping() -> RKObjectMapping {
+        let mapping = super.mapping()
+        mapping.addAttributeMappings(from: [
+            "firstName"    : UserAttributes.firstName.rawValue,
+            "lastName"     : UserAttributes.lastName.rawValue,
+            "username"     : UserAttributes.username.rawValue,
+            "nickname"     : UserAttributes.nickname.rawValue,
+            "email"        : UserAttributes.email.rawValue,
+            "create_at"    : UserAttributes.createAt.rawValue,
+            "delete_at"    : UserAttributes.deleteAt.rawValue
+            ])
+        
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "notify_props",
+                                                         toKeyPath: UserAttributes.notifyProps.rawValue,
+                                                         with: NotifyPropsMappingsContainer.mapping()))
+        return mapping
     }
 }
 
@@ -48,24 +65,6 @@ extension UserMappingsContainer: RequestMapping {
 
 //MARK: ResponseMappings
 extension UserMappingsContainer: ResponseMappings {
-    override class func mapping() -> RKObjectMapping {
-        let mapping = super.mapping()
-        mapping.addAttributeMappings(from: [
-            "firstName"    : UserAttributes.firstName.rawValue,
-            "lastName"     : UserAttributes.lastName.rawValue,
-            "username"     : UserAttributes.username.rawValue,
-            "nickname"     : UserAttributes.nickname.rawValue,
-            "email"        : UserAttributes.email.rawValue,
-            "create_at"    : UserAttributes.createAt.rawValue,
-            "delete_at"    : UserAttributes.deleteAt.rawValue
-            ])
-        
-        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "notify_props",
-                                                         toKeyPath: UserAttributes.notifyProps.rawValue,
-                                                         with: NotifyPropsMappingsContainer.mapping()))
-        return mapping
-    }
-
     static func directProfileMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.forceCollectionMapping = true

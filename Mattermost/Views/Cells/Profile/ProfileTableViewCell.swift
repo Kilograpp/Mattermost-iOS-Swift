@@ -22,6 +22,16 @@ class ProfileTableViewCell: UITableViewCell, Reusable {
     @IBOutlet weak var arrowButton: UIButton?
     
     var isCopyEnabled = false
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        initialSetup()
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+    }
 }
 
 
@@ -42,34 +52,12 @@ extension ProfileTableViewCell: ProfileTableViewCellConfiguration {
     }
 }
 
-
-private protocol ProfileTableViewCellLifeCycle {
-    func awakeFromNib()
-    func setSelected(_ selected: Bool, animated: Bool)
-}
-
-
 private protocol ProfileTableViewCellSetup {
     func initialSetup()
 }
 
 fileprivate protocol Action: class {
     func longPressAction(recognizer:UILongPressGestureRecognizer)
-}
-
-
-//MARK: ProfileTableViewCellLifeCycle
-
-extension ProfileTableViewCell: ProfileTableViewCellLifeCycle {
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        initialSetup()
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
 }
 
 

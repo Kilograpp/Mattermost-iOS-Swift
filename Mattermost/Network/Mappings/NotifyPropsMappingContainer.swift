@@ -9,10 +9,6 @@
 import Foundation
 import RestKit
 
-private protocol ResponseMappings: class {
-    static func mapping() -> RKObjectMapping
-}
-
 private protocol RequestMapping: class {
     static func updateRequestMapping() -> RKObjectMapping
 }
@@ -20,6 +16,23 @@ private protocol RequestMapping: class {
 final class NotifyPropsMappingsContainer: BaseMappingsContainer {
     override class var classForMapping: AnyClass! {
         return NotifyProps.self
+    }
+    
+    override class func mapping() -> RKObjectMapping {
+        let mapping = super.mapping()
+        mapping.addAttributeMappings(from: [
+            "channel"           : NotifyPropsAttributes.channel.rawValue,
+            "comments"          : NotifyPropsAttributes.comments.rawValue,
+            "desktop"           : NotifyPropsAttributes.desktop.rawValue,
+            "desktop_duration"  : NotifyPropsAttributes.desktopDuration.rawValue,
+            "desktop_sound"     : NotifyPropsAttributes.desktopSound.rawValue,
+            "email"             : NotifyPropsAttributes.email.rawValue,
+            "first_name"        : NotifyPropsAttributes.firstName.rawValue,
+            "mention_keys"      : NotifyPropsAttributes.mentionKeys.rawValue,
+            "push"              : NotifyPropsAttributes.push.rawValue,
+            "push_status"       : NotifyPropsAttributes.pushStatus.rawValue
+            ])
+        return mapping
     }
 }
 
@@ -41,26 +54,5 @@ extension NotifyPropsMappingsContainer: RequestMapping {
             NotifyPropsAttributes.pushStatus.rawValue      : "push_status"
             ])
         return mapping!
-    }
-}
-
-
-//MARK: ResponseMappings
-extension NotifyPropsMappingsContainer: ResponseMappings {
-    override class func mapping() -> RKObjectMapping {
-        let mapping = super.mapping()
-        mapping.addAttributeMappings(from: [
-            "channel"           : NotifyPropsAttributes.channel.rawValue,
-            "comments"          : NotifyPropsAttributes.comments.rawValue,
-            "desktop"           : NotifyPropsAttributes.desktop.rawValue,
-            "desktop_duration"  : NotifyPropsAttributes.desktopDuration.rawValue,
-            "desktop_sound"     : NotifyPropsAttributes.desktopSound.rawValue,
-            "email"             : NotifyPropsAttributes.email.rawValue,
-            "first_name"        : NotifyPropsAttributes.firstName.rawValue,
-            "mention_keys"      : NotifyPropsAttributes.mentionKeys.rawValue,
-            "push"              : NotifyPropsAttributes.push.rawValue,
-            "push_status"       : NotifyPropsAttributes.pushStatus.rawValue
-            ])
-        return mapping
     }
 }

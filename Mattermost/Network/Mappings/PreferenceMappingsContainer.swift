@@ -13,14 +13,20 @@ private protocol RequestMapping: class {
     static func preferenceRequestMapping() -> RKObjectMapping
 }
 
-private protocol ResponseMappings: class {
-    static func mapping() -> RKObjectMapping
-}
-
-
 final class PreferenceMappingsContainer: BaseMappingsContainer {
     override class var classForMapping: AnyClass! {
         return Preference.self
+    }
+    
+    override class func mapping() -> RKObjectMapping {
+        let mapping = super.mapping()
+        mapping.addAttributeMappings(from: [
+            "user_id"  : PreferenceAttributes.userId.rawValue,
+            "category" : PreferenceAttributes.category.rawValue,
+            "name"     : PreferenceAttributes.name.rawValue,
+            "value"    : PreferenceAttributes.value.rawValue
+            ])
+        return mapping
     }
 }
 
@@ -36,20 +42,5 @@ extension PreferenceMappingsContainer: RequestMapping {
             PreferenceAttributes.value : "value"
             ])
         return mapping!
-    }
-}
-
-
-//MARK: ResponseMappings
-extension PreferenceMappingsContainer: ResponseMappings {
-    override class func mapping() -> RKObjectMapping {
-        let mapping = super.mapping()
-        mapping.addAttributeMappings(from: [
-            "user_id"  : PreferenceAttributes.userId.rawValue,
-            "category" : PreferenceAttributes.category.rawValue,
-            "name"     : PreferenceAttributes.name.rawValue,
-            "value"    : PreferenceAttributes.value.rawValue
-            ])
-        return mapping
     }
 }

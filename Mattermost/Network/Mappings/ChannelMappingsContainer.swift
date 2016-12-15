@@ -14,7 +14,6 @@ private protocol RequestMapping: class {
 }
 
 private protocol ResponseMappings: class {
-    static func mapping() -> RKObjectMapping
     static func attendantInfoMapping() -> RKObjectMapping
 }
 
@@ -40,11 +39,7 @@ extension ChannelMappingsContainer: RequestMapping {
             ])
         return mapping!
     }
-}
-
-
-//MARK: ResponseMappings
-extension ChannelMappingsContainer: ResponseMappings {
+    
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
@@ -63,7 +58,11 @@ extension ChannelMappingsContainer: ResponseMappings {
         mapping.addRelationshipMapping(withSourceKeyPath: ChannelRelationships.members.rawValue, mapping: UserMappingsContainer.mapping())
         return mapping;
     }
-    
+}
+
+
+//MARK: ResponseMappings
+extension ChannelMappingsContainer: ResponseMappings {
     static func attendantInfoMapping() -> RKObjectMapping {
         let mapping = super.emptyMapping()
         mapping.forceCollectionMapping = true

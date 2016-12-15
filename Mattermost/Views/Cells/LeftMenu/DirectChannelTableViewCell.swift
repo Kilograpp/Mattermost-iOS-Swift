@@ -22,33 +22,6 @@ final class DirectChannelTableViewCell: UITableViewCell {
     fileprivate var user : User!
     fileprivate var userBackendStatus: String!
     
-    func configureStatusViewWithNotification(_ notification: Notification) {
-        setupStatusViewWithBackendStatus(notification.object as! String)
-    }
-}
-
-
-private protocol DirectChannelTableViewCellLifeCycle {
-    func awakeFromNib()
-    func setHighlighted(_ highlighted: Bool, animated: Bool)
-    func prepareForReuse()
-}
-
-private protocol DirectChannelTableViewCellSetup {
-    func initialSetup()
-    func setupContentView()
-    func setupTitleLabel()
-    func setupStatusView()
-    func setupHighlightView()
-    func setupUserFormPrivateChannel()
-    func setupStatusViewWithBackendStatus(_ backendStatus: String)
-    func highlightViewBackgroundColor() -> UIColor
-}
-
-
-//MARK: LifeCycle
-
-extension DirectChannelTableViewCell: DirectChannelTableViewCellLifeCycle {
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -64,6 +37,21 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellLifeCycle {
         super.prepareForReuse()
         removeObservers()
     }
+    
+    func configureStatusViewWithNotification(_ notification: Notification) {
+        setupStatusViewWithBackendStatus(notification.object as! String)
+    }
+}
+
+private protocol DirectChannelTableViewCellSetup {
+    func initialSetup()
+    func setupContentView()
+    func setupTitleLabel()
+    func setupStatusView()
+    func setupHighlightView()
+    func setupUserFormPrivateChannel()
+    func setupStatusViewWithBackendStatus(_ backendStatus: String)
+    func highlightViewBackgroundColor() -> UIColor
 }
 
 

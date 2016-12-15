@@ -38,6 +38,14 @@ class RouterUtils {
         appDelegate.window?.rootViewController = sideMenuContainer
         appDelegate.window?.makeKeyAndVisible()
     }
+    
+    open var preferredStatusBarStyle : UIStatusBarStyle {
+        return .default
+    }
+    
+    open var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return .portrait
+    }
 }
 
 
@@ -57,15 +65,5 @@ extension RouterUtils {
         container.modalTransitionStyle = .crossDissolve
         
         return container
-    }
-}
-
-extension MFSideMenuContainerViewController {
-    open override var preferredStatusBarStyle : UIStatusBarStyle {
-        return .default
-    }
-    
-    open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
-        return .portrait
     }
 }

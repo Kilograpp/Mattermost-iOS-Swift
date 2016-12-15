@@ -16,27 +16,7 @@ class CheckSettingsTableViewCell: UITableViewCell {
     @IBOutlet weak var checkBoxButton: UIButton?
     
     var checkBoxHandler : (() -> Void)?
-}
-
-
-private protocol CheckSettingsTableViewCellLifeCycle {
-    func awakeFromNib()
-    func setSelected(_ selected: Bool, animated: Bool)
-}
-
-private protocol CheckSettingsTableViewCellSetup {
-    func initialSetup()
-    func setupCheckBoxButton()
-}
-
-private protocol CheckSettingsTableViewCellAction {
-    func checkBoxAction()
-}
-
-
-//MARK: CheckSettingsTableViewCellLifeCycle
-
-extension CheckSettingsTableViewCell: CheckSettingsTableViewCellLifeCycle {
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -49,6 +29,16 @@ extension CheckSettingsTableViewCell: CheckSettingsTableViewCellLifeCycle {
         
         // Configure the view for the selected state
     }
+}
+
+
+private protocol CheckSettingsTableViewCellSetup {
+    func initialSetup()
+    func setupCheckBoxButton()
+}
+
+private protocol CheckSettingsTableViewCellAction {
+    func checkBoxAction()
 }
 
 

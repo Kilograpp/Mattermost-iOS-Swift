@@ -18,29 +18,6 @@ final class PrivateChannelTableViewCell: UITableViewCell {
     var channel : Channel?
     var test : (() -> Void)?
     
-    func configureStatusViewWithNotification(_ notification: Notification) {
-        self.test?()
-    }
-}
-
-
-private protocol PrivateChannelTableViewCellLifeCycle {
-    func awakeFromNib()
-    func setHighlighted(_ highlighted: Bool, animated: Bool)
-}
-
-private protocol PrivateChannelTableViewCellSetup {
-    func initialSetup()
-    func setupContentView()
-    func setupTitleLabel()
-    func setupHighlightView()
-    func highlightViewBackgroundColor() -> UIColor
-}
-
-
-//MARK: PrivateChannelTableViewCellLifeCycle
-
-extension PrivateChannelTableViewCell: PrivateChannelTableViewCellLifeCycle {
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -51,8 +28,19 @@ extension PrivateChannelTableViewCell: PrivateChannelTableViewCellLifeCycle {
         super.setHighlighted(highlighted, animated: animated)
         self.highlightView.backgroundColor = highlighted ? ColorBucket.sideMenuCellHighlightedColor : self.highlightViewBackgroundColor()
     }
+    
+    func configureStatusViewWithNotification(_ notification: Notification) {
+        self.test?()
+    }
 }
 
+private protocol PrivateChannelTableViewCellSetup {
+    func initialSetup()
+    func setupContentView()
+    func setupTitleLabel()
+    func setupHighlightView()
+    func highlightViewBackgroundColor() -> UIColor
+}
 
 //MARK: PrivateChannelTableViewCellSetup
 
