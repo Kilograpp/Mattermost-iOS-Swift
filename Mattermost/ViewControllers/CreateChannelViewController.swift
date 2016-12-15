@@ -18,7 +18,7 @@ class CreateChannelViewController: UIViewController, UITableViewDataSource {
                                                     ChannelCreateField("Purpose header (optional)","purpose")]
     fileprivate var createButton: UIBarButtonItem!
     fileprivate var privateType: String!
-    
+    fileprivate var handleError: Bool = false
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -153,7 +153,13 @@ extension CreateChannelViewController: Request {
         let purpose     = self.fields[3].value
         Api.sharedInstance.createChannel(self.privateType, displayName: displayName, name: name, header: header, purpose: purpose) { (channel, error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                var message = (error?.message)!
+                if error?.code == 500 {
+                    self.handleError = true
+                    self.tableView.reloadData()
+                    message = "Incorrect Handle"
+                }
+                AlertManager.sharedManager.showErrorWithMessage(message: message)
                 self.createButton.isEnabled = true
                 return
             }
@@ -177,6 +183,13 @@ extension CreateChannelViewController: UITableViewDelegate {
         }
     }
     
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case 1: return "Please use only Latin letters, digits and symbol \"-\""
+        default:
+            return nil
+        }
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
@@ -199,6 +212,8 @@ extension CreateChannelViewController: UITableViewDelegate {
             let cell1 = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
             cell1.field = self.fields[indexPath.section]
             cell1.infoText.text = self.fields[indexPath.section].value
+            cell1.placeholder.textColor = handleError ? .red : UIColor.kg_lightGrayTextColor()
+            cell1.infoText.textColor = handleError ? .red : .black
             cell1.delegate = self
             cell1.limitLength = 48.0
             cell = cell1
@@ -226,6 +241,7 @@ extension CreateChannelViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 { return 1.0 }
+        if section == 2 { return 35.0 }
         return 15.0
     }
 }
@@ -235,6 +251,11 @@ extension CreateChannelViewController: CellUpdated {
         if let cell = tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) {
             (cell as! ChannelInfoCell).infoText.text = fields[1].value
             (cell as! ChannelInfoCell).placeholder.isHidden = fields[1].value != "" ? true : false
+            if self.fields[1].value != "" {
+                (cell as! ChannelInfoCell).placeholder.textColor = UIColor.kg_lightGrayTextColor()
+                (cell as! ChannelInfoCell).infoText.textColor = .black
+            }
+            handleError = false
         }
         tableView.beginUpdates()
         tableView.endUpdates()
