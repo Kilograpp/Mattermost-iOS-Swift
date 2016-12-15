@@ -39,7 +39,7 @@ private protocol ChannelApi: class {
     func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void)
     func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
+    func createChannel(_ type: String, displayName: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -363,15 +363,13 @@ extension Api: ChannelApi {
     }
     
     
-    func createChannel(_ type: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void) {
+    func createChannel(_ type: String, displayName: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createChannelPathPattern(), DataManager.sharedInstance.currentTeam)
       
         let newChannel = Channel()
         newChannel.privateType = type
-        let theCFMutableString = NSMutableString(string: name) as CFMutableString
-        _ = CFStringTransform(theCFMutableString, nil, kCFStringTransformToLatin, false)
-        newChannel.name = (theCFMutableString as String).replacingOccurrences(of: " ", with: "", options: NSString.CompareOptions.literal, range:nil)
-        newChannel.displayName = name
+        newChannel.name = name.lowercased()
+        newChannel.displayName = displayName
         newChannel.header = header
         newChannel.purpose = purpose
         

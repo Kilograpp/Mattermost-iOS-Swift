@@ -88,7 +88,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         case 0:
             cell = tableView.dequeueReusableCell(withIdentifier: "headerChannelSettingsCell") as! HeaderChannelSettingsCell
             (cell as! HeaderChannelSettingsCell).channelName.text = channel.displayName!
-            (cell as! HeaderChannelSettingsCell).channelFirstSymbol.text = String(channel.displayName![0])
+            (cell as! HeaderChannelSettingsCell).channelFirstSymbol.text = channel.displayName!.characters.count > 0 ? String(channel.displayName![0]) : " "
         case 1:
             let cell0 = tableView.dequeueReusableCell(withIdentifier: "informationChannelSettingsCell") as! InformationChannelSettingsCell
             switch (indexPath.row){

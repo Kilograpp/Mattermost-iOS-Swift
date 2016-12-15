@@ -15,4 +15,8 @@ class CreateChannelHandleCell: CreateChannelHeaderAndPurposeCell {
         let newLength = string.characters.count + text.characters.count - range.length
         return newLength <= limitLength
     }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
 }

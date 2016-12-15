@@ -10,4 +10,7 @@ import UIKit
 
 class CreateChannelHeaderAndPurposeCell: ChannelInfoCell {
     var field: ChannelCreateField!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
 }

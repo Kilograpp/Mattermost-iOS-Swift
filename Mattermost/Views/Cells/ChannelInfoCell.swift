@@ -14,13 +14,18 @@ protocol CellUpdated {
 
 class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     
+    @IBOutlet weak var placeholder: UILabel!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var infoText: UITextView!
-    var delgate : CellUpdated?
-    
+    var delegate : CellUpdated?
+    var field: ChannelCreateField!
+    var limitLength : CGFloat = 396.0
+
     @IBAction func deleteTextAction(_ sender: AnyObject) {
         infoText.text = ""
-        if let iuDelegate = self.delgate {
+        field.value = ""
+        placeholder.isHidden = false
+        if let iuDelegate = self.delegate {
             iuDelegate.cellUpdated(text: infoText.text)
         }
     }
@@ -33,13 +38,17 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
+        placeholder.text = field.placeholder
         setupCancelButtonHidding()
+        setupPlaceholder()
         // Configure the view for the selected state
     }
     
     func textViewDidChange(_ textView: UITextView){
         setupCancelButtonHidding()
-        if let iuDelegate = self.delgate {
+        setupPlaceholder()
+        field.value = infoText.text
+        if let iuDelegate = self.delegate {
             iuDelegate.cellUpdated(text: infoText.text)
         }
     }
@@ -52,6 +61,14 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
         }
     }
     
+    func setupPlaceholder() {
+        if infoText.text == "" {
+            placeholder.isHidden = false
+        } else {
+            placeholder.isHidden = true
+        }
+    }
+    
     static func heightWithObject(_ text: String) -> CGFloat{
         let maxSize = CGSize(width: UIScreen.main.bounds.width - 69.0, height: CGFloat.greatestFiniteMagnitude)
         let size = text.boundingRect(with: maxSize,
@@ -59,6 +76,10 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
                                      attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14.0)],
                                      context: nil).size
         return size.height+30.0
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return ChannelInfoCell.heightWithObject(infoText.text + text) <= limitLength
     }
 }
 

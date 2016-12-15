@@ -114,13 +114,15 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     func setupCell() -> UITableViewCell{
         var cell: ChannelInfoCell!
         cell = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
-        cell.delgate = self
+        cell.delegate = self
         switch self.type!{
         case .header:
             cell.infoText.text = channel.header
+            cell.field = ChannelCreateField.init("Enter header", "")
         case .purpose:
             if let purpose = channel.purpose{
                 cell.infoText.text = purpose
+                cell.field = ChannelCreateField.init("Enter purpose", "")
             } else {
                 cell.infoText.text = ""
             }
