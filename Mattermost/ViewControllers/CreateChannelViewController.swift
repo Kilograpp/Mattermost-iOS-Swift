@@ -18,7 +18,8 @@ class CreateChannelViewController: UIViewController, UITableViewDataSource {
                                                     ChannelCreateField("Purpose header (optional)","purpose")]
     fileprivate var createButton: UIBarButtonItem!
     fileprivate var privateType: String!
-    
+    fileprivate var handleError: Bool = false
+    fileprivate var channelNameError: Bool = false
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,9 +152,23 @@ extension CreateChannelViewController: Request {
         let name        = self.fields[1].value
         let header      = self.fields[2].value
         let purpose     = self.fields[3].value
+        
+        if self.fields[0].value.characters.count < 1 {
+            AlertManager.sharedManager.showErrorWithMessage(message: "Incorrect Channel Name")
+            channelNameError = true
+            self.tableView.reloadData()
+            return
+        }
+        
         Api.sharedInstance.createChannel(self.privateType, displayName: displayName, name: name, header: header, purpose: purpose) { (channel, error) in
             guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                var message = (error?.message)!
+                if error?.code == 500 {
+                    self.handleError = true
+                    self.tableView.reloadData()
+                    message = "Incorrect Handle"
+                }
+                AlertManager.sharedManager.showErrorWithMessage(message: message)
                 self.createButton.isEnabled = true
                 return
             }
@@ -177,6 +192,13 @@ extension CreateChannelViewController: UITableViewDelegate {
         }
     }
     
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case 1: return "Please use only Latin letters, digits and symbol \"-\""
+        default:
+            return nil
+        }
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
@@ -193,12 +215,15 @@ extension CreateChannelViewController: UITableViewDelegate {
             let cell0 = tableView.dequeueReusableCell(withIdentifier: "createChannelNameCell") as! CreateChannelNameCell
             cell0.field = self.fields[indexPath.section]
             cell0.handleField = self.fields[1]
+            cell0.placeholder.textColor = channelNameError ? .red : UIColor.kg_lightGrayTextColor()
             cell0.delegate = self
             cell = cell0
         case 1:
             let cell1 = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
             cell1.field = self.fields[indexPath.section]
-            cell1.infoText.text = self.fields[indexPath.section].value
+            cell1.infoText.text = self.fields[indexPath.section].value.lowercased()
+            cell1.placeholder.textColor = handleError ? .red : UIColor.kg_lightGrayTextColor()
+            cell1.infoText.textColor = handleError ? .red : .black
             cell1.delegate = self
             cell1.limitLength = 48.0
             cell = cell1
@@ -226,15 +251,30 @@ extension CreateChannelViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 { return 1.0 }
+        if section == 2 { return 35.0 }
         return 15.0
     }
 }
 
 extension CreateChannelViewController: CellUpdated {
     func cellUpdated(text: String) {
+        if let handleCell = tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) {
+            (handleCell as! ChannelInfoCell).infoText.text = fields[1].value.lowercased()
+            (handleCell as! ChannelInfoCell).placeholder.isHidden = fields[1].value != "" ? true : false
+            if self.fields[1].value != "" {
+                (handleCell as! ChannelInfoCell).placeholder.textColor = UIColor.kg_lightGrayTextColor()
+                (handleCell as! ChannelInfoCell).infoText.textColor = .black
+                handleError = false
+            }
+        }
+        if let channelNameCell = tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) {
+            if self.fields[0].value != "" {
+                (channelNameCell as! CreateChannelNameCell).placeholder.textColor = UIColor.kg_lightGrayTextColor()
+                channelNameError = false
+            }
+            
+        }
         tableView.beginUpdates()
-        (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelInfoCell).infoText.text = fields[1].value
-        (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelInfoCell).setupPlaceholder()
         tableView.endUpdates()
     }
 }
