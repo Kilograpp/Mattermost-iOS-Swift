@@ -11,6 +11,7 @@ import QuartzCore
 import WebImage
 import MBProgressHUD
 import Photos
+import NVActivityIndicatorView
 
 @objc private enum InfoSections : Int {
     case base
@@ -198,12 +199,12 @@ extension ProfileViewController: Navigation {
 //MARK: Request
 extension ProfileViewController: Request {
     internal func updateImage() {
-        let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
-        progressHUD.mode = .annularDeterminate
-        progressHUD.label.text = "Uploading..."
+        self.showLoaderProfileView()
         
         let image = self.avatarImageView.image
+        self.saveButton.isEnabled = false
         Api.sharedInstance.update(profileImage: image!, completion: { (error) in
+            guard error == nil else { self.saveButton.isEnabled = true; self.hideLoaderView(); return }
             SDImageCache.shared().removeImage(forKey: self.user?.smallAvatarCacheKey())
             SDImageCache.shared().removeImage(forKey: self.user?.avatarLink)
             
@@ -211,10 +212,9 @@ extension ProfileViewController: Request {
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadRightMenuNotification), object: nil)
             }
             ImageDownloader.downloadFullAvatarForUser(self.user!) { _,_ in }
-            MBProgressHUD.hide(for: self.view, animated: true)
             self.saveButton.isEnabled = false
+            self.hideLoaderView()
         }, progress: { (progress) in
-            progressHUD.progress = progress
         })
     }
 }
@@ -338,5 +338,25 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
             self.avatarImageView.image = image
         }
         self.saveButton.isEnabled = true
+    }
+}
+
+extension ProfileViewController {
+    func showLoaderProfileView() {
+        let screenSize = UIScreen.main.bounds
+        
+        let y = self.navigationController?.navigationBar.frame.height
+        let loader = UIView.init(frame: CGRect(x: 0,
+                                               y: 0 - y!,
+                                               width: screenSize.width,
+                                               height: screenSize.height))
+        loader.backgroundColor = UIColor.init(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.92)
+        
+        let frame = CGRect(x: (screenSize.width-screenSize.width/7)/2, y: (screenSize.height-screenSize.height/7)/2, width: screenSize.width/7, height: screenSize.height/7)
+        let color = UIColor.kg_blueColor()
+        let spinner = NVActivityIndicatorView(frame: frame, type: .ballPulse, color: color, padding: 0.0)
+        loader.addSubview(spinner)
+        spinner.startAnimating()
+        self.view.addSubview(loader)
     }
 }

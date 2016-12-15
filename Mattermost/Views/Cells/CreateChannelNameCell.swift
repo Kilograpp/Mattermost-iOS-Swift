@@ -69,7 +69,7 @@ class CreateChannelNameCell: UITableViewCell, UITextFieldDelegate {
             field.value = text
             let theCFMutableString = NSMutableString(string: text) as CFMutableString
             _ = CFStringTransform(theCFMutableString, nil, kCFStringTransformToLatin, false)
-            handleField.value = (theCFMutableString as String).replacingOccurrences(of: " ", with: "", options: NSString.CompareOptions.literal, range:nil)
+            handleField.value = (theCFMutableString as String).replacingOccurrences(of: " ", with: "-", options: NSString.CompareOptions.literal, range:nil)
         }
         if let iuDelegate = self.delegate {
             iuDelegate.cellUpdated(text: "")
