@@ -232,9 +232,11 @@ extension CreateChannelViewController: UITableViewDelegate {
 
 extension CreateChannelViewController: CellUpdated {
     func cellUpdated(text: String) {
+        if let cell = tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) {
+            (cell as! ChannelInfoCell).infoText.text = fields[1].value
+            (cell as! ChannelInfoCell).placeholder.isHidden = fields[1].value != "" ? true : false
+        }
         tableView.beginUpdates()
-        (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelInfoCell).infoText.text = fields[1].value
-        (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelInfoCell).setupPlaceholder()
         tableView.endUpdates()
     }
 }
