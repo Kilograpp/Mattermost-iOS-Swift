@@ -44,7 +44,7 @@ final class TeamViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        UIStatusBar.shared().reset()
+     //   UIStatusBar.shared().reset()
     }
 }
 
