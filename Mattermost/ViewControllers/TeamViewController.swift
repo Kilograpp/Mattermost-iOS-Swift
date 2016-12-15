@@ -169,8 +169,9 @@ extension TeamViewController: Request {
                                 NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
                                 
                                 DispatchQueue.main.async{
-                                    self.dismiss(animated: true, completion:nil)
-                                    self.hideLoaderView()
+                                    self.dismiss(animated: true, completion:{ _ in
+                                        self.hideLoaderView()
+                                    })
                                 }
                             })
                         }

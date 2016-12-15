@@ -566,8 +566,9 @@ extension ChatViewController: Navigation {
                 let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
                 let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
                 ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-                self.hideLoaderView()
-                self.navigationController?.present(channelSettings, animated: true, completion: nil)
+                self.navigationController?.present(channelSettings, animated: true, completion: { _ in
+                    self.hideLoaderView()
+                })
             })
         })
     }

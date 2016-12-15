@@ -8,50 +8,82 @@
 
 import UIKit
 
-protocol CreateChannelViewControllerConfiguration: class {
-    func configure(privateType: String)
-}
-
-class CreateChannelViewController: UIViewController {
+class CreateChannelViewController: UIViewController, UITableViewDataSource {
 
 //MARK: Properties
-    @IBOutlet weak var channelLabel: UILabel!
-    @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var headerPlaceholderLabel: UILabel!
-    @IBOutlet weak var headerTextView: UITextView!
-    @IBOutlet weak var purposePlaceholderLabel: UILabel!
-    @IBOutlet weak var purposeTextView: UITextView!
-    
+    @IBOutlet weak var tableView: UITableView!
+    fileprivate var fields: [ChannelCreateField] = [ChannelCreateField("Channel Name","displayName"),
+                                                    ChannelCreateField("Channel handle","handle"),
+                                                    ChannelCreateField("Enter header (optional)","header"),
+                                                    ChannelCreateField("Purpose header (optional)","purpose")]
     fileprivate var createButton: UIBarButtonItem!
-    fileprivate var privateType: String! = ""
+    fileprivate var privateType: String!
     
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupNibs()
+        setupKeyboardNotification()
+        tableView.dataSource = self
+        tableView.delegate = self
         initialSetup()
+    }
+    
+    fileprivate func setupKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func keyboardWasShown (notification: NSNotification)
+    {
+        if let info = notification.userInfo {
+            if let keyboardSize =  (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue{
+                var contentInsets:UIEdgeInsets
+                if UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation) {
+                    contentInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardSize.height, 0.0)
+                }
+                else {
+                    contentInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardSize.width, 0.0)
+                }
+            
+                tableView.contentInset = contentInsets
+            
+                tableView.scrollIndicatorInsets = tableView.contentInset
+            }
+        }
+    }
+    
+    func keyboardWillBeHidden (notification: NSNotification)
+    {
+       tableView.contentInset = UIEdgeInsets.zero
+       tableView.scrollIndicatorInsets = UIEdgeInsets.zero
+    }
+    
+    fileprivate func setupNibs() {
+        let nib1 = UINib(nibName: "CreateChannelNameCell", bundle: nil)
+        tableView.register(nib1, forCellReuseIdentifier: "createChannelNameCell")
+        
+        let nib2 = UINib(nibName: "ChannelInfoCell", bundle: nil)
+        tableView.register(nib2, forCellReuseIdentifier: "channelInfoCell")
+
+        
     }
 }
 
 
 //MARK: Configuration
-extension CreateChannelViewController: CreateChannelViewControllerConfiguration {
+extension CreateChannelViewController {
     func configure(privateType: String) {
         self.privateType = privateType
     }
 }
 
-
 fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
-   // func setupNameTextField()
-   // func setupHeaderTextField()
-   // func setupPurposeTextField()
 }
 
 fileprivate protocol Action: class {
-    func backAction()
     func createAction()
 }
 
@@ -63,70 +95,35 @@ fileprivate protocol Request: class {
 
 }
 
-
 //MARK: Setup
 extension CreateChannelViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
-        setupSwipeRight()
-        setupNameTextField()
-       // setupHeaderTextField()
-       // setupPurposeTextField()
     }
     
     func setupNavigationBar() {
         if self.privateType == "P"{
-            self.title = "New private group"
+            self.title = "New Group"
         }else{
-            self.title = "New channel"
+            self.title = "New Channel"
         }
         
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
-        
         self.createButton = UIBarButtonItem.init(title: "Create", style: .done, target: self, action: #selector(createAction))
-        self.createButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = self.createButton
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
     
     func setupNameTextField() {
         if self.privateType == "P"{
-            self.nameTextField.placeholder = "Group Name"
+            self.fields[0].placeholder = "Group Name"
         }else{
-            self.nameTextField.placeholder = "Channel Name"
+            self.fields[0].placeholder = "Channel Name"
         }
     }
-    
- /*   func setupHeaderTextField() {
-        self.headerTextField.lineHeight = 0
-        self.headerTextField.selectedLineHeight = 0
-        self.headerTextField.delegate = self
-        self.headerTextField.tag = 1
-    }
-    
-    func setupPurposeTextField() {
-        self.purposeTextField.delegate = self
-        self.purposeTextField.textColor = UIColor.clear
-        self.purposeTextField.lineHeight = 0
-        self.purposeTextField.selectedLineHeight = 0
-        self.purposeTextField.tag = 2
-    }*/
 }
 
 
 //MARK: Action
 extension CreateChannelViewController: Action {
-    func backAction() {
-        returnToChannel()
-    }
-    
     func createAction() {
         createChannel()
     }
@@ -150,11 +147,11 @@ extension CreateChannelViewController: Navigation {
 //MARK: Request
 extension CreateChannelViewController: Request {
     func createChannel() {
-        let name = self.nameTextField.text
-        let header = self.headerTextView.text
-        let purpose = self.purposeTextView.text
-        self.createButton.isEnabled = false
-        Api.sharedInstance.createChannel(self.privateType, name: name!, header: header!, purpose: purpose!) { (channel, error) in
+        let displayName = self.fields[0].value
+        let name        = self.fields[1].value
+        let header      = self.fields[2].value
+        let purpose     = self.fields[3].value
+        Api.sharedInstance.createChannel(self.privateType, displayName: displayName, name: name, header: header, purpose: purpose) { (channel, error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 self.createButton.isEnabled = true
@@ -169,49 +166,76 @@ extension CreateChannelViewController: Request {
     }
 }
 
-
-//MARK: Interface
-extension CreateChannelViewController {
-    func updateChannelLabel() {
-        let name = self.nameTextField.text
-        guard (name?.characters.count)! > 0 else {
-            self.channelLabel.text = ""
-            return
+extension CreateChannelViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 1: return "Handle"
+        case 2: return "Header"
+        case 3: return "Purpose"
+        default:
+            return nil
         }
-        
-        self.channelLabel.text = name?.capitalized[0]
+    }
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 4
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell: UITableViewCell!
+        switch (indexPath.section) {
+        case 0:
+            let cell0 = tableView.dequeueReusableCell(withIdentifier: "createChannelNameCell") as! CreateChannelNameCell
+            cell0.field = self.fields[indexPath.section]
+            cell0.handleField = self.fields[1]
+            cell0.delegate = self
+            cell = cell0
+        case 1:
+            let cell1 = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
+            cell1.field = self.fields[indexPath.section]
+            cell1.infoText.text = self.fields[indexPath.section].value
+            cell1.delegate = self
+            cell1.limitLength = 48.0
+            cell = cell1
+        case 2:
+            let cell2 = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
+            cell2.field = self.fields[indexPath.section]
+            cell2.infoText.text = self.fields[indexPath.section].value
+            cell2.delegate = self
+            cell = cell2
+        case 3:
+            let cell3 = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
+            cell3.field = self.fields[indexPath.section]
+            cell3.infoText.text = self.fields[indexPath.section].value
+            cell3.delegate = self
+            cell = cell3
+            default: break
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 { return 90 }
+        return ChannelInfoCell.heightWithObject(fields[indexPath.section].value)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 { return 1.0 }
+        return 15.0
     }
 }
 
-
-//MARK: UITextFieldsDelegate
-extension CreateChannelViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let newString: NSString = textField.text! as NSString
-        guard newString.length <= 30 else { return false }
-        textField.text = newString.replacingCharacters(in: range, with: string)
-        if textField == self.nameTextField {
-            self.createButton.isEnabled = (newString.length > 0)
-            updateChannelLabel()
-        }
-        
-        return false
+extension CreateChannelViewController: CellUpdated {
+    func cellUpdated(text: String) {
+        tableView.beginUpdates()
+        (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelInfoCell).infoText.text = fields[1].value
+        (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelInfoCell).setupPlaceholder()
+        tableView.endUpdates()
     }
 }
 
-
-//MARK: UITextViewDelegate
-extension CreateChannelViewController: UITextViewDelegate {
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let newString: NSString = textView.text! as NSString
-        textView.text = newString.replacingCharacters(in: range, with: text)
-        if textView == self.headerTextView {
-            self.headerPlaceholderLabel.isHidden = (textView.text.characters.count > 0)
-        }
-        else {
-            self.purposePlaceholderLabel.isHidden = (textView.text.characters.count > 0)
-        }
-        
-        return false
-    }
-}

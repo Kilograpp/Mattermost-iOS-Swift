@@ -29,7 +29,6 @@ class ChannelNameAndHandleCell: UITableViewCell, UITextFieldDelegate {
         super.awakeFromNib()
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-
         // Initialization code
     }
 
@@ -47,7 +46,7 @@ class ChannelNameAndHandleCell: UITableViewCell, UITextFieldDelegate {
     func textFieldDidChange() {
         guard let text = textField.text else { return }
         if let iuDelegate = self.delgate {
-            if text != ""{
+            if text != "" {
                 iuDelegate.setupSaveButton(true)
             } else {
                 iuDelegate.setupSaveButton(false)

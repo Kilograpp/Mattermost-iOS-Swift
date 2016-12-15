@@ -13,7 +13,7 @@ enum InfoType: String{
     case purpose = "purpose"
 }
 
-class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, HeightForTextView  {
+class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CellUpdated  {
     
     @IBOutlet weak var tableView: UITableView!
     var channel: Channel!
@@ -100,10 +100,10 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
         }
     }
     
-    func heightOfTextView(height: CGFloat) {
+    func cellUpdated(text: String) {
         
-        textViewHeight = height
-        if height < CGFloat(20.0){
+        textViewHeight = ChannelInfoCell.heightWithObject(text)
+        if ChannelInfoCell.heightWithObject(text) < CGFloat(20.0){
             textViewHeight = CGFloat(20.0)
         }
         self.tableView.beginUpdates()
@@ -114,13 +114,15 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     func setupCell() -> UITableViewCell{
         var cell: ChannelInfoCell!
         cell = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
-        cell.delgate = self
+        cell.delegate = self
         switch self.type!{
         case .header:
             cell.infoText.text = channel.header
+            cell.field = ChannelCreateField.init("Enter header", "")
         case .purpose:
             if let purpose = channel.purpose{
                 cell.infoText.text = purpose
+                cell.field = ChannelCreateField.init("Enter purpose", "")
             } else {
                 cell.infoText.text = ""
             }

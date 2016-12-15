@@ -51,6 +51,9 @@
 		8644A4841DED86D1009280EB /* MemberInAdditingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */; };
 		8644A4881DED8A80009280EB /* AllMembersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644A4871DED8A80009280EB /* AllMembersViewController.swift */; };
 		8644A48A1DED908F009280EB /* ChannelSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8644A4891DED908F009280EB /* ChannelSettings.storyboard */; };
+		864AF5BD1E0051730010F083 /* CreateChannelNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864AF5BB1E0051730010F083 /* CreateChannelNameCell.swift */; };
+		864AF5BE1E0051730010F083 /* CreateChannelNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */; };
+		864AF5C01E0124000010F083 /* ChannelCreateField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864AF5BF1E0124000010F083 /* ChannelCreateField.swift */; };
 		864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */; };
 		8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
@@ -338,6 +341,9 @@
 		8644A4821DED86D1009280EB /* MemberInAdditingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberInAdditingCell.xib; sourceTree = "<group>"; };
 		8644A4871DED8A80009280EB /* AllMembersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllMembersViewController.swift; sourceTree = "<group>"; };
 		8644A4891DED908F009280EB /* ChannelSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = ChannelSettings.storyboard; path = storyboards/ChannelSettings.storyboard; sourceTree = "<group>"; };
+		864AF5BB1E0051730010F083 /* CreateChannelNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateChannelNameCell.swift; sourceTree = "<group>"; };
+		864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreateChannelNameCell.xib; sourceTree = "<group>"; };
+		864AF5BF1E0124000010F083 /* ChannelCreateField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCreateField.swift; sourceTree = "<group>"; };
 		864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+LoaderView.swift"; sourceTree = "<group>"; };
 		8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -631,6 +637,15 @@
 				4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */,
 			);
 			name = Teams;
+			sourceTree = "<group>";
+		};
+		864AF5C11E012F050010F083 /* CreateChannel */ = {
+			isa = PBXGroup;
+			children = (
+				864AF5BB1E0051730010F083 /* CreateChannelNameCell.swift */,
+				864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */,
+			);
+			name = CreateChannel;
 			sourceTree = "<group>";
 		};
 		8B3C3ED21DC1F8AB005FCAFE /* Settings */ = {
@@ -1075,6 +1090,7 @@
 		D6E165841D47C08F0014C831 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				864AF5C11E012F050010F083 /* CreateChannel */,
 				8B3C3ED21DC1F8AB005FCAFE /* Settings */,
 				4B4FE7911D800E0C0088ABEC /* Teams */,
 				D67A42F71D7486F7003E2466 /* PostAttachmentsViewCell */,
@@ -1202,6 +1218,7 @@
 				8B3CB3521DD267EB0078DE25 /* ProfileDataSource.swift */,
 				8B3CB3531DD267EB0078DE25 /* UserStatus.swift */,
 				A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */,
+				864AF5BF1E0124000010F083 /* ChannelCreateField.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
 			);
 			path = Classes;
@@ -1392,6 +1409,7 @@
 				8BCDDC881DE6E701006D83BC /* MemberChannelSettingsCell.xib in Resources */,
 				D6330AB31D494BF9006D84F4 /* SF-UI-Display-Regular.otf in Resources */,
 				D6330AB21D494BF9006D84F4 /* SF-UI-Display-Medium.otf in Resources */,
+				864AF5BE1E0051730010F083 /* CreateChannelNameCell.xib in Resources */,
 				8B3CB34A1DD267C40078DE25 /* RightMenu.storyboard in Resources */,
 				CDB6D3B51D771D6900C3018C /* MoreChannelsTableViewCell.xib in Resources */,
 				D62FEB981D4F2B3400390EBC /* Login.storyboard in Resources */,
@@ -1663,6 +1681,7 @@
 				8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */,
 				D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */,
 				D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */,
+				864AF5C01E0124000010F083 /* ChannelCreateField.swift in Sources */,
 				8B5A54961DF75F1A003E9B0E /* PasswordRecoveryViewController.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */,
@@ -1684,6 +1703,7 @@
 				8B3CB3761DD269C30078DE25 /* ApplicationStateManager.swift in Sources */,
 				CDB4BC731D80725600662231 /* AttachmentMappingsContainer.swift in Sources */,
 				8BCDDC701DE6E5C5006D83BC /* ChannelSettingsViewController.swift in Sources */,
+				864AF5BD1E0051730010F083 /* CreateChannelNameCell.swift in Sources */,
 				D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */,
 				D8087AED1D428DE9001918E8 /* NSDate+Formatter.swift in Sources */,
 				8B3CB3851DD4C2D40078DE25 /* ChannelRequestDescriptorsContainer.swift in Sources */,
