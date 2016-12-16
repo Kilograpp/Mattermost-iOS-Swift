@@ -48,7 +48,7 @@ final class FeedNotificationsObserver {
                         self.tableView.reloadData()
                         break
                     }
-                    self.tableView.beginUpdates()
+                    //self.tableView.beginUpdates()
                     if deletions.count > 0 {
                       /*  deletions.forEach({ (index: Int) in
                             let post = self.results[index]
@@ -58,7 +58,7 @@ final class FeedNotificationsObserver {
                         })*/
                         self.tableView.reloadData()
                     }
-//                    self.tableView.beginUpdates()
+                    self.tableView.beginUpdates()
                     if (insertions.count > 0) {
                         if self.days?.first?.posts.count == 1 {
                             self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
