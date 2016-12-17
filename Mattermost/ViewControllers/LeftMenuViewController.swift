@@ -8,6 +8,15 @@
 
 import RealmSwift
 
+
+private protocol Interface: class {
+    func setupChannelsObserver()
+    func updateStatuses()
+    func stopTimer()
+    func reloadChannels()
+}
+
+
 final class LeftMenuViewController: UIViewController {
 
 //MARK: Property
@@ -24,43 +33,30 @@ final class LeftMenuViewController: UIViewController {
     fileprivate var resultsDirect: Results<Channel>! = nil
     fileprivate var resultsOutsideDirect: Results<Channel>! = nil
     
-    //temp timer
     var statusesTimer: Timer?
 
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureResults()
-        configureTableView()
-        configureView()
-        configureInitialSelectedChannel()
-        setupChannelsObserver()
-        configureStartUpdating()
-        //reloadChannels()
+        initialSetup()
     }
-    
+}
+
+
+//MARK: Interface
+extension LeftMenuViewController: Interface {
     //refactor later -> ObserverUtils
     func setupChannelsObserver() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateResults),
+        NotificationCenter.default.addObserver(self, selector: #selector(updateResults),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification),
                                                object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(reloadChannels),
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadChannels),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification),
                                                object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(stopTimer),
+        NotificationCenter.default.addObserver(self, selector: #selector(stopTimer),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
                                                object: nil)
-    }
-    
-    //TEMP TODO:  update statuses
-    fileprivate func configureStartUpdating() {
-        //Костыль (для инициализации UserStatusObserver)
-        UserStatusObserver.sharedObserver
-        self.statusesTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(updateStatuses), userInfo: nil, repeats: true)
     }
     
     func updateStatuses() {
@@ -74,18 +70,8 @@ final class LeftMenuViewController: UIViewController {
         }
     }
     
-    func updateResults() {
-        configureResults()
-        configureInitialSelectedChannel()
-        self.tableView.reloadData()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        reloadChannels()
-    }
-    
     func reloadChannels() {
-        configureResults()
+        prepareResults()
         self.tableView.reloadData()
     }
     
@@ -100,9 +86,10 @@ final class LeftMenuViewController: UIViewController {
             let row = self.resultsPrivate.index(of: channel)
             indexPath = IndexPath(row: row!, section: 1)
         case Constants.ChannelType.DirectTypeChannel:
-            let row = channel.isDirectChannelInterlocutorInTeam ? self.resultsDirect.index(of: channel)
-                                                                : self.resultsOutsideDirect.index(of: channel)
-            let section = channel.isDirectChannelInterlocutorInTeam ? 2 : 3
+            let user = channel.interlocuterFromPrivateChannel()
+            let section = user.isOnTeam ? 2 : 3
+            let row = user.isOnTeam ? self.resultsDirect.index(of: channel)
+                                    : self.resultsOutsideDirect.index(of: channel)
             indexPath = IndexPath(row: row!, section: section)
         default:
             return
@@ -113,13 +100,18 @@ final class LeftMenuViewController: UIViewController {
     }
 }
 
-//MARK: PrivateProtocols
-private protocol Configure : class {
-    func configureView()
-    func configureTableView()
+
+fileprivate protocol Setup: class {
+    func initialSetup()
+    func setupTableView()
+    func setupHeaderView()
+    func setupStartUpdating()
+}
+
+fileprivate protocol Configuration: class {
+    func prepareResults()
     func configureInitialSelectedChannel()
-    func configureStartUpdating()
-    func configureResults()
+    func updateResults()
 }
 
 private protocol Navigation : class {
@@ -127,19 +119,21 @@ private protocol Navigation : class {
     func navigateToMoreChannel(_ section: Int)
     func navigateToCreateChannel(privateType: String)
     func toggleLeftSideMenu()
-    func membersListAction(_ sender: AnyObject)
 }
 
-//MARK: Configuration
-extension LeftMenuViewController : Configure {
-    fileprivate func configureView() {
-        self.teamNameLabel.font = FontBucket.menuTitleFont
-        self.teamNameLabel.textColor = ColorBucket.whiteColor
-        self.teamNameLabel.text = DataManager.sharedInstance.currentTeam?.displayName as String!
-        self.headerView.backgroundColor = ColorBucket.sideMenuHeaderBackgroundColor
+
+//MARK: Setup
+extension LeftMenuViewController: Setup {
+    func initialSetup() {
+        prepareResults()
+        setupTableView()
+        setupHeaderView()
+        configureInitialSelectedChannel()
+        setupChannelsObserver()
+        setupStartUpdating()
     }
     
-    fileprivate func configureTableView() {
+    func setupTableView() {
         self.tableView.separatorStyle = .none
         self.tableView.backgroundColor = ColorBucket.sideMenuBackgroundColor
         
@@ -147,129 +141,54 @@ extension LeftMenuViewController : Configure {
         self.tableView.register(LeftMenuSectionFooter.self, forHeaderFooterViewReuseIdentifier: LeftMenuSectionFooter.reuseIdentifier)
     }
     
-    func configureInitialSelectedChannel() {
-        let indexPathForFirstRow = IndexPath(row: 0, section: 0) as IndexPath
-        guard self.resultsPublic.count > 0 else { return }
-        let initialSelectedChannel = self.resultsPublic[indexPathForFirstRow.row]
-        ChannelObserver.sharedObserver.selectedChannel = initialSelectedChannel
+    func setupHeaderView() {
+        self.teamNameLabel.font = FontBucket.menuTitleFont
+        self.teamNameLabel.textColor = ColorBucket.whiteColor
+        self.teamNameLabel.text = DataManager.sharedInstance.currentTeam?.displayName as String!
+        self.headerView.backgroundColor = ColorBucket.sideMenuHeaderBackgroundColor
     }
     
-    fileprivate func configureResults() {
-        let publicTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PublicTypeChannel, DataManager.sharedInstance.currentTeam!)
-        let privateTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.PrivateTypeChannel, DataManager.sharedInstance.currentTeam!)
-        let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@ AND isDirectChannelInterlocutorInTeam == true", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
-        let directOutsideTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@ AND isDirectChannelInterlocutorInTeam == false AND messagesCount != %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!, "0")
-        
-        
+    func setupStartUpdating() {
+        //Костыль (для инициализации UserStatusObserver)
+        _ = UserStatusObserver.sharedObserver
+        self.statusesTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(updateStatuses), userInfo: nil, repeats: true)
+    }
+}
+
+
+//MARK: Configuration
+extension LeftMenuViewController: Configuration {
+    fileprivate func prepareResults() {
+        let currentTeamPredicate          = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
-        let sortName = ChannelAttributes.displayName.rawValue
+        let publicTypePredicate           = NSPredicate(format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
+        let privateTypePredicate          = NSPredicate(format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)
+        let directTypePredicate           = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
+        let sortName                      = ChannelAttributes.displayName.rawValue
+        
+        let realm = RealmUtils.realmForCurrentThread()
         self.resultsPublic =
-            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(publicTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
+            realm.objects(Channel.self).filter(currentTeamPredicate).filter(publicTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsPrivate =
-            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
+            realm.objects(Channel.self).filter(currentTeamPredicate).filter(privateTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsDirect =
-            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
+            realm.objects(Channel.self).filter(currentTeamPredicate).filter(directTypePredicate).filter(NSPredicate(format: "isInterlocuterOnTeam == true")).filter(NSPredicate(format: "isDirectPrefered == true")).sorted(byProperty: sortName, ascending: true)
         self.resultsOutsideDirect =
-            RealmUtils.realmForCurrentThread().objects(Channel.self).filter(directOutsideTypePredicate).filter(currentUserInChannelPredicate).sorted(byProperty: sortName, ascending: true)
+            realm.objects(Channel.self).filter(directTypePredicate).filter(NSPredicate(format: "isInterlocuterOnTeam == false")).filter(NSPredicate(format: "isDirectPrefered == true")).sorted(byProperty: sortName, ascending: true)
+    }
+    
+    func configureInitialSelectedChannel() {
+        guard self.resultsPublic.count > 0 else { return }
+        ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[0]
+    }
+    
+    func updateResults() {
+        prepareResults()
+        configureInitialSelectedChannel()
+        self.tableView.reloadData()
     }
 }
 
-//MARK: UITableViewDataSource
-extension LeftMenuViewController : UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return resultsPublic.count
-        case 1:
-            return resultsPrivate.count
-        case 2:
-            return resultsDirect.count
-        case 3:
-            return resultsOutsideDirect.count
-        default:
-            return 0
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var channel: Channel!
-        switch indexPath.section {
-        case 0:
-            channel = self.resultsPublic[indexPath.row]
-            break
-        case 1:
-            channel = self.resultsPrivate[indexPath.row]
-            break
-        case 2:
-            channel = self.resultsDirect[indexPath.row]
-            break
-        case 3:
-            channel = self.resultsOutsideDirect[indexPath.row]
-        default:
-            break
-        }
-        
-        return self.builder.cellFor(channel: channel, indexPath: indexPath)
-    }
-}
-
-//MARK: UITableViewDelegate
-extension LeftMenuViewController : UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        didSelectChannelAtIndexPath(indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.builder.cellHeight()
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 25
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return (section == 1) || (section == 3) ? CGFloat(0.00001) : 30
-    }
-
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard (section != 1) && (section != 3) else { return nil }
-        
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
-        view.moreTapHandler = { self.navigateToMoreChannel(section) }
-
-        return view
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
-        switch section {
-        case 0:
-            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PublicTypeChannel))
-            view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
-            break
-        case 1:
-            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PrivateTypeChannel))
-            view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
-            break
-        case 2:
-            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))
-            view.hideMoreButton()
-            break
-        case 3:
-            view.configureWithChannelType(Channel.privateTypeDisplayName("out"))
-            view.hideMoreButton()
-        default:
-            break
-        }
-        
-        return view
-    }
-
-}
 
 //MARK: Navigation
 extension LeftMenuViewController : Navigation {
@@ -328,11 +247,102 @@ extension LeftMenuViewController : Navigation {
         
         self.menuContainerViewController.toggleLeftSideMenuCompletion(nil)
     }
-    
-    @IBAction func membersListAction(_ sender: AnyObject) {
-        print("MEMBERS_LIST")
-    }
-    
-    
 }
 
+
+//MARK: UITableViewDataSource
+extension LeftMenuViewController : UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 4
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return (resultsPublic != nil) ? resultsPublic.count : 0
+        case 1:
+            return (resultsPrivate != nil) ? resultsPrivate.count : 0
+        case 2:
+            return (resultsDirect != nil) ? resultsDirect.count : 0
+        case 3:
+            return (resultsOutsideDirect != nil) ? resultsOutsideDirect.count : 0
+        default:
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var channel: Channel!
+        switch indexPath.section {
+        case 0:
+            channel = self.resultsPublic[indexPath.row]
+            break
+        case 1:
+            channel = self.resultsPrivate[indexPath.row]
+            break
+        case 2:
+            channel = self.resultsDirect[indexPath.row]
+            break
+        case 3:
+            channel = self.resultsOutsideDirect[indexPath.row]
+        default:
+            break
+        }
+        
+        return self.builder.cellFor(channel: channel, indexPath: indexPath)
+    }
+}
+
+
+//MARK: UITableViewDelegate
+extension LeftMenuViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        didSelectChannelAtIndexPath(indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return self.builder.cellHeight()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 25
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return (section == 1) || (section == 3) ? CGFloat(0.00001) : 30
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard (section != 1) && (section != 3) else { return nil }
+        
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
+        view.moreTapHandler = { self.navigateToMoreChannel(section) }
+
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionHeader.reuseIdentifier) as! LeftMenuSectionHeader
+        switch section {
+        case 0:
+            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PublicTypeChannel))
+            view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
+            break
+        case 1:
+            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PrivateTypeChannel))
+            view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
+            break
+        case 2:
+            view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))
+            view.hideMoreButton()
+            break
+        case 3:
+            view.configureWithChannelType(Channel.privateTypeDisplayName("out"))
+            view.hideMoreButton()
+        default:
+            break
+        }
+        
+        return view
+    }
+}

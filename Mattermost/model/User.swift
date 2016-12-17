@@ -34,6 +34,7 @@ final class User: RealmObject {
     dynamic var createAt: Date?
     dynamic var updateAt: Date?
     dynamic var deleteAt: Date?
+    dynamic var isOnTeam: Bool = false
     
     let channels = LinkingObjects(fromType: Channel.self, property: ChannelRelationships.members.rawValue)
     //let notifyProps = NotifyProps()

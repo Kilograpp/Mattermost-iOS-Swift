@@ -12,57 +12,99 @@ import ImagePickerSheetController
 import UITableView_Cache
 import MFSideMenu
 
-final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AttachmentsModuleDelegate {
+
+protocol ChatViewControllerInterface: class {
+    func configureWithPost(post: Post)
+    func changeChannelForPostFromSearch()
+}
+
+
+
+final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
 //MARK: Properties
-    fileprivate var documentInteractionController: UIDocumentInteractionController?
-    var channel : Channel!
-    fileprivate var resultsObserver: FeedNotificationsObserver! = nil
-    fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
+    //UserInterface
     override var tableView: UITableView { return super.tableView! }
     fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
     internal let attachmentsView = PostAttachmentsView()
     fileprivate let emptyDialogueLabel = EmptyDialogueLabel()
-    fileprivate var filesAttachmentsModule: AttachmentsModule!
-    fileprivate var filesPickingController: FilesPickingController!
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
-    var loadingView: UIView?
     var scrollButton: UIButton?
+    //Modules
+    fileprivate var documentInteractionController: UIDocumentInteractionController?
+    fileprivate var filesAttachmentsModule: AttachmentsModule!
+    fileprivate var filesPickingController: FilesPickingController!
+    fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
+    fileprivate var resultsObserver: FeedNotificationsObserver! = nil
+    //Common
+    var channel : Channel!
     var indexPathScroll: NSIndexPath?
-    
-    var hasNextPage: Bool = true
-    var postFromSearch: Post! = nil
-    var isLoadingInProgress: Bool = false
-    
-    func uploading(inProgress: Bool, countItems: Int) {
-        DispatchQueue.main.async { [unowned self] in
-            guard (countItems > 0) else {
-                guard self.textView.text.characters.count > 0 else{
-                    self.rightButton.isEnabled = false
-                    return
-                }
-                self.rightButton.isEnabled = true
-                return
-            }
-            self.rightButton.isEnabled = inProgress
-        }
-    }
-    
-    func removedFromUploading(identifier: String) {
-        let items = self.filesPickingController.attachmentItems.filter {
-            return ($0.identifier == identifier)
-        }
-        guard items.count > 0 else { return }
-        self.filesPickingController.attachmentItems.removeObject(items.first!)
-    }
     
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     fileprivate var emojiResult: [String]?
     fileprivate var membersResult: Array<User> = []
     fileprivate var commandsResult: [String] = []
+    
+    var hasNextPage: Bool = true
+    var postFromSearch: Post! = nil
+    var isLoadingInProgress: Bool = false
+    
+    
+//MARK: LifeCycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        ChannelObserver.sharedObserver.delegate = self
+        initialSetup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.isNavigationBarHidden = false
+        setupInputViewButtons()
+        addSLKKeyboardObservers()
+        replaceStatusBar()
+        
+        if self.postFromSearch != nil {
+            changeChannelForPostFromSearch()
+        }
+        
+        self.textView.resignFirstResponder()
+        addBaseObservers()
+        self.tableView.reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        UIStatusBar.shared().reset()
+        removeSLKKeyboardObservers()
+        removeDocumentInteractionObservers()
+        
+        self.resignFirstResponder()
+    }
+    
+    override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
+        return .grouped
+    }
 }
+
+
+//MARK: ChatViewControllerInterface
+extension ChatViewController: ChatViewControllerInterface {
+    func configureWithPost(post: Post) {
+        self.postFromSearch = post
+        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(post.channel)
+    }
+    
+    func changeChannelForPostFromSearch() {
+        ChannelObserver.sharedObserver.selectedChannel = self.postFromSearch.channel
+    }
+}
+
 
 fileprivate protocol Setup {
     func initialSetup()
@@ -82,7 +124,6 @@ fileprivate protocol Setup {
 fileprivate protocol Private {
     func showTopActivityIndicator()
     func hideTopActivityIndicator()
-    func endRefreshing()
     func clearTextView()
 }
 
@@ -102,80 +143,20 @@ private protocol Navigation {
 }
 
 private protocol Request {
-    func loadFirstPageAndReload()
     func loadFirstPageOfData(isInitial: Bool)
     func loadNextPageOfData()
     func sendPost()
 }
 
-
-//MARK: LifeСycle
-extension ChatViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        ChannelObserver.sharedObserver.delegate = self
-        initialSetup()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.navigationController?.isNavigationBarHidden = false
-        setupInputViewButtons()
-        addSLKKeyboardObservers()
-        replaceStatusBar()
-        
-        if (self.postFromSearch != nil) {
-            changeChannelForPostFromSearch()
-        }
-        
-        self.textView.resignFirstResponder()
-        NotificationCenter.default.addObserver(self, selector: #selector(presentDocumentInteractionController),
-                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didTapImageAction),
-                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification),
-                                               object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadChat),
-                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification),
-                                               object: nil)
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow),
-                                               name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHide),
-                                               name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
-        self.tableView.reloadData()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        UIStatusBar.shared().reset()
-        removeSLKKeyboardObservers()
-        NotificationCenter.default.removeObserver(self,
-                                                  name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
-                                                  object: nil)
-        
-        self.resignFirstResponder()
-    }
-    
-    override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
-        return .grouped
-    }
-    
-    func configureWithPost(post: Post) {
-        self.postFromSearch = post
-        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(post.channel)
-    }
-    
-    func changeChannelForPostFromSearch() {
-        ChannelObserver.sharedObserver.selectedChannel = self.postFromSearch.channel
-    }
+fileprivate protocol NotificationObserver: class {
+    func addBaseObservers()
+    func addChannelObservers()
+    func addSLKKeyboardObservers()
+    func removeSLKKeyboardObservers()
+    func removeActionsObservers()
+    func removeDocumentInteractionObservers()
 }
+
 
 //MARK: Setup
 extension ChatViewController: Setup {
@@ -359,12 +340,6 @@ extension ChatViewController : Private {
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
     
-    
-    func endRefreshing() {
-        //   self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
-        //        self.refreshControl?.endRefreshing()
-    }
-    
     func clearTextView() {
         self.textView.text = nil
     }
@@ -420,7 +395,6 @@ extension ChatViewController : Private {
             }
             actionSheetController.addAction(deleteAction)
         }
-        
         self.present(actionSheetController, animated: true, completion: nil)
     }
     
@@ -449,10 +423,7 @@ extension ChatViewController: Action {
     }
     
     func titleTapAction() {
-        guard Api.sharedInstance.isNetworkReachable() else {
-            AlertManager.sharedManager.showErrorWithMessage(message: "No Internet connectivity detected")
-            return
-        }
+        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
         
         if (self.channel.privateType == Constants.ChannelType.DirectTypeChannel) {
             proceedToProfileFor(user: self.channel.interlocuterFromPrivateChannel())
@@ -462,11 +433,7 @@ extension ChatViewController: Action {
     }
     
     func sendPostAction() {
-        guard self.filesAttachmentsModule.fileUploadingInProgress else {
-            let message = "Please, wait until download finishes"
-            AlertManager.sharedManager.showWarningWithMessage(message: message)
-            return
-        }
+        guard self.filesAttachmentsModule.fileUploadingInProgress else { self.handleWarningWith(message: "Please, wait until download finishes"); return }
         
         switch self.selectedAction {
         case Constants.PostActionType.SendReply:
@@ -484,9 +451,6 @@ extension ChatViewController: Action {
     
     func refreshControlValueChanged() {
         self.loadFirstPageOfData(isInitial: false)
-        //self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
-        // self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
-        
         self.refreshControl?.endRefreshing()
     }
     
@@ -551,15 +515,11 @@ extension ChatViewController: Navigation {
         self.dismissKeyboard(true)
         self.showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
-            guard (error == nil) else {
-                self.hideLoaderView()
-                return
-            }
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
-                guard (error == nil) else {
+                guard error == nil else {
                     let channelType = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                    AlertManager.sharedManager.showErrorWithMessage(message: "You left this \(channelType)".localized)
-                    self.hideLoaderView()
+                    self.handleErrorWith(message: "You left this \(channelType)".localized)
                     return
                 }
                 
@@ -577,42 +537,16 @@ extension ChatViewController: Navigation {
 
 //MARK: Requests
 extension ChatViewController: Request {
-    func loadFirstPageAndReload() {
-        self.isLoadingInProgress = true
-        Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.perform(#selector(self.endRefreshing), with: nil, afterDelay: 0.05)
-            self.isLoadingInProgress = false
-            self.hasNextPage = true
-        })
-    }
     func loadFirstPageOfData(isInitial: Bool) {
         print("loadFirstPageOfData")
         self.isLoadingInProgress = true
         
-        if (self.loadingView == nil) && isInitial {
-            var frame = UIScreen.main.bounds
-            frame.origin.y = 64
-            frame.size.height -= 108
-            self.loadingView = UIView(frame: frame)
-            self.loadingView?.backgroundColor = UIColor.white
-            let avtivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-            avtivityIndicatorView.center = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
-            avtivityIndicatorView.startAnimating()
-            self.loadingView?.addSubview(avtivityIndicatorView)
-            
-            self.view.addSubview(self.loadingView!)
-        }
+        self.showLoaderView()
         
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            
-            if self.loadingView != nil {
-                self.loadingView?.removeFromSuperview()
-                self.loadingView = nil
-            }
-            
+            self.hideLoaderView()
             self.isLoadingInProgress = false
             self.hasNextPage = true
-            
             self.dismissKeyboard(true)
             
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in })
@@ -665,10 +599,9 @@ extension ChatViewController: Request {
             
             guard post.channel.identifier == self.channel.identifier else { return }
             
-            print("start 1")
             //let indexPath =  self.resultsObserver.indexPathForPost(post)
             //self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-
+            
         }
     }
     
@@ -683,11 +616,11 @@ extension ChatViewController: Request {
                 if error?.code == -1009 {
                     self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows!, with: .none)
                 }
-                AlertManager.sharedManager.showErrorWithMessage(message: message)
+                
+                self.handleErrorWith(message: message)
             }
             self.hideTopActivityIndicator()
         }
-        //self.dismissKeyboard(true)
         self.clearTextView()
     }
     
@@ -696,8 +629,8 @@ extension ChatViewController: Request {
         guard self.selectedPost.identifier != nil else { return }
         
         PostUtils.sharedInstance.reply(post: self.selectedPost, channel: self.channel!, message: self.textView.text, attachments: nil) { (error) in
-            if (error != nil) {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message!)!)
+            if error != nil {
+                self.handleErrorWith(message: (error?.message!)!)
             }
             self.selectedPost = nil
         }
@@ -711,11 +644,8 @@ extension ChatViewController: Request {
         
         guard self.selectedPost.identifier != nil else { return }
         
-        PostUtils.sharedInstance.update(post: self.selectedPost, message: self.textView.text, attachments: nil) {_ in
-            self.selectedPost = nil
-        }
+        PostUtils.sharedInstance.update(post: self.selectedPost, message: self.textView.text, attachments: nil) {_ in self.selectedPost = nil }
         self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
-       // self.dismissKeyboard(true)
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
         self.completePost.isHidden = true
@@ -744,6 +674,61 @@ extension ChatViewController: Request {
             RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
         }
+    }
+}
+
+
+//MARK: NotificationObserver
+extension ChatViewController: NotificationObserver {
+    func addBaseObservers() {
+        let center = NotificationCenter.default
+        
+        center.addObserver(self, selector: #selector(presentDocumentInteractionController),
+                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification), object: nil)
+        center.addObserver(self, selector: #selector(didTapImageAction),
+                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification), object: nil)
+        center.addObserver(self, selector: #selector(reloadChat),
+                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification), object: nil)
+        center.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+    }
+    
+    func addChannelObservers() {
+        let center = NotificationCenter.default
+        
+        center.addObserver(self, selector: #selector(handleChannelNotification),
+                           name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
+                           object: nil)
+        center.addObserver(self, selector: #selector(handleLogoutNotification),
+                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
+                           object: nil)
+    }
+    
+    func addSLKKeyboardObservers() {
+        let center = NotificationCenter.default
+        
+        center.addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification),
+                           name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+        center.addObserver(self, selector: #selector(self.handleKeyboardWillShowNotification),
+                           name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
+    }
+    
+    func removeSLKKeyboardObservers() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
+    }
+    
+    func removeActionsObservers() {
+        let center = NotificationCenter.default
+        
+        center.removeObserver(self, name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
+                              object: nil)
+    }
+    
+    func removeDocumentInteractionObservers() {
+        let center = NotificationCenter.default
+        
+        center.removeObserver(self, name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
+                              object: nil)
     }
 }
 
@@ -801,7 +786,6 @@ extension ChatViewController {
 
 
 //MARK: UITableViewDelegate
-
 extension ChatViewController {
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard tableView == self.tableView else { return nil }
@@ -888,6 +872,28 @@ extension ChatViewController {
 }
 
 
+//MARK: AttachmentsModuleDelegate
+extension ChatViewController: AttachmentsModuleDelegate {
+    func uploading(inProgress: Bool, countItems: Int) {
+        DispatchQueue.main.async { [unowned self] in
+            guard countItems > 0 else {
+                self.rightButton.isEnabled = (self.textView.text.characters.count > 0)
+                return
+            }
+            self.rightButton.isEnabled = inProgress
+        }
+    }
+    
+    func removedFromUploading(identifier: String) {
+        let items = self.filesPickingController.attachmentItems.filter {
+            return ($0.identifier == identifier)
+        }
+        guard items.count > 0 else { return }
+        self.filesPickingController.attachmentItems.removeObject(items.first!)
+    }
+}
+
+
 //MARK: ChannelObserverDelegate
 extension ChatViewController: ChannelObserverDelegate {
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void {
@@ -899,11 +905,8 @@ extension ChatViewController: ChannelObserverDelegate {
         self.resultsObserver = nil
         self.emptyDialogueLabel.isHidden = true
         if self.channel != nil {
-            //remove action observer from old channel
-            //after relogin
-            NotificationCenter.default.removeObserver(self,
-                                                      name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
-                                                      object: nil)
+            //remove action observer from old channel after relogin
+            removeActionsObservers()
         }
         
         self.typingIndicatorView?.dismissIndicator()
@@ -912,8 +915,6 @@ extension ChatViewController: ChannelObserverDelegate {
         guard identifier != nil else { return }
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         self.title = self.channel?.displayName
-        
-         self.isTextInputbarHidden = !self.channel.isDirectChannelInterlocutorInTeam
         
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
@@ -932,12 +933,7 @@ extension ChatViewController: ChannelObserverDelegate {
             }
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(handleChannelNotification),
-                                               name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleLogoutNotification),
-                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
-                                               object: nil)
+        addChannelObservers()
     }
 }
 
@@ -949,7 +945,6 @@ extension ChatViewController {
             let user = User.self.objectById(actionNotification.userIdentifier)
             switch (actionNotification.event!) {
             case .Typing:
-                //refactor (to methods)
                 if (actionNotification.userIdentifier != Preferences.sharedInstance.currentUserId) {
                     typingIndicatorView?.insertUsername(user?.displayName)
                 }
@@ -970,9 +965,7 @@ extension ChatViewController {
         controller.addAction(UIAlertAction(title: "Resend", style: .default, handler: { (action:UIAlertAction) in
             self.resendAction(post)
         }))
-        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
-            print("Cancelled")
-        }))
+        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(controller, animated: true) {}
     }
     
@@ -999,17 +992,7 @@ extension ChatViewController {
 
 //MARK: UITextViewDelegate
 extension ChatViewController {
-    func addSLKKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillHideeNotification), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardWillShowNotification), name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
-    }
-    
-    func removeSLKKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
-    }
-    
     func handleKeyboardWillShowNotification() {
-        print("handleKeyboardWillShowNotification")
     }
     
     func handleKeyboardWillHideeNotification() {
@@ -1038,6 +1021,7 @@ extension ChatViewController: AttachmentsModuleDataSource {
         return self.channel
     }
 }
+
 
 //MARK: AutoCompletionView
 extension ChatViewController {
@@ -1113,11 +1097,9 @@ extension ChatViewController {
     
     override func heightForAutoCompletionView() -> CGFloat {
         guard let smilesResult = self.emojiResult else {
-            guard (self.membersResult != [] || self.commandsResult != []) else {
-                return 0
-            }
-            let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
+            guard (self.membersResult != [] || self.commandsResult != []) else { return 0 }
             
+            let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
             return cellHeight * CGFloat(self.membersResult.count+self.commandsResult.count)
         }
         let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
@@ -1127,6 +1109,7 @@ extension ChatViewController {
 }
 
 
+//MARK: ChatViewController
 extension ChatViewController {
     func presentDocumentInteractionController(notification: NSNotification) {
         let fileId = notification.userInfo?["fileId"]
@@ -1136,16 +1119,13 @@ extension ChatViewController {
         if FileManager.default.fileExists(atPath: filePath) {
             self.documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
             self.documentInteractionController?.delegate = self
-            //if (file?.isImage)! {
-                self.documentInteractionController?.presentPreview(animated: true)
-            //} else {
-              //  let frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-              //  self.documentInteractionController?.presentOpenInMenu(from: frame, in: self.view, animated: true)
-            //}
+            self.documentInteractionController?.presentPreview(animated: true)
         }
     }
 }
 
+
+//MARK: UIDocumentInteractionControllerDelegate
 extension ChatViewController: UIDocumentInteractionControllerDelegate {
     func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
     }

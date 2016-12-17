@@ -11,7 +11,7 @@ import RestKit
 
 private protocol ResponseDescriptors: class {
     static func saveResponseDescriptor() -> RKResponseDescriptor
-    static func listUsersPreferencesResponseDescriptor() -> RKResponseDescriptor
+    static func listPreferencesResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class PreferenceResponseDescriptorContainer: BaseResponseDescriptorsContainer {
@@ -28,10 +28,10 @@ extension PreferenceResponseDescriptorContainer: ResponseDescriptors {
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
-    static func listUsersPreferencesResponseDescriptor() -> RKResponseDescriptor {
+    static func listPreferencesResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: PreferenceMappingsContainer.mapping() ,
                                     method: .GET,
-                                    pathPattern: PreferencesPathPatternsContainer.listUsersPreferencesPathPatterns(),
+                                    pathPattern: PreferencesPathPatternsContainer.listPreferencesPathPatterns(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

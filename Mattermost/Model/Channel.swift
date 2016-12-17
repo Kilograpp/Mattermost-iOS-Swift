@@ -74,8 +74,8 @@ final class Channel: RealmObject {
         didSet { computeDisplayNameWidth() }
     }
     dynamic var currentUserInChannel: Bool = false
-    dynamic var isDirectChannelInterlocutorInTeam: Bool = true
-    
+    dynamic var isInterlocuterOnTeam: Bool = true
+    dynamic var isDirectPrefered: Bool = false
     dynamic var team: Team?
     
     var isSelected: Bool {
@@ -112,7 +112,7 @@ final class Channel: RealmObject {
         for channel in directChannels {
             let user = channel.interlocuterFromPrivateChannel()
             try! realm.write {
-                channel.isDirectChannelInterlocutorInTeam = (townSquareUsers?.contains(user))!
+           //     channel.isDirectChannelInterlocutorInTeam = (townSquareUsers?.contains(user))!
             }
         }
     }

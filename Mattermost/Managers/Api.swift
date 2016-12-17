@@ -18,7 +18,7 @@ private protocol Interface: class {
 
 private protocol PreferencesApi: class {
     func savePreferencesWith(_ params: Dictionary<String, String>, complection: @escaping (_ error: Mattermost.Error?) -> Void)
-    func listUsersPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func listPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol NotifyPropsApi: class {
@@ -126,10 +126,10 @@ extension Api: PreferencesApi {
         }
     }
     
-    func listUsersPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+    func listPreferencesWith(_ category: NSString, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let preference = Preference()
         preference.category = "direct_channel_show"
-        let path = SOCStringFromStringWithObject(PreferencesPathPatternsContainer.listUsersPreferencesPathPatterns(), preference)!
+        let path = SOCStringFromStringWithObject(PreferencesPathPatternsContainer.listPreferencesPathPatterns(), preference)!
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             let preferences = MappingUtils.fetchAllPreferences(mappingResult)
@@ -138,7 +138,7 @@ extension Api: PreferencesApi {
                 if (user?.hasChannel())! {
                     let channel = user?.directChannel()
                     try! RealmUtils.realmForCurrentThread().write {
-                        channel?.currentUserInChannel = (preference as Preference).value == Constants.CommonStrings.True//"true"
+                        channel?.isDirectPrefered = ((preference as Preference).value == Constants.CommonStrings.True)
                     }
                 }
             }
@@ -237,7 +237,9 @@ extension Api: ChannelApi {
             let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
                 channels.forEach {
-                    $0.currentUserInChannel = true
+                    if $0.privateType != Constants.ChannelType.DirectTypeChannel {
+                        $0.currentUserInChannel = true
+                    }
                     $0.computeTeam()
                     $0.computeDispayNameIfNeeded()
                     if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{

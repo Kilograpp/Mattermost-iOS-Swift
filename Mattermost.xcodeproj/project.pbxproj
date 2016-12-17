@@ -58,6 +58,7 @@
 		8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
+		8B3AB4A71E046CDC00010170 /* UIViewController+AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3AB4A61E046CDC00010170 /* UIViewController+AlertManager.swift */; };
 		8B3C3ED41DC23765005FCAFE /* NotifyProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */; };
 		8B3C3ED61DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */; };
 		8B3C3ED81DC28487005FCAFE /* CheckSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */; };
@@ -349,6 +350,7 @@
 		8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
+		8B3AB4A61E046CDC00010170 /* UIViewController+AlertManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+AlertManager.swift"; sourceTree = "<group>"; };
 		8B3C3ED31DC23765005FCAFE /* NotifyProps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotifyProps.swift; sourceTree = "<group>"; };
 		8B3C3ED51DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotifyPropsMappingContainer.swift; path = Mappings/NotifyPropsMappingContainer.swift; sourceTree = "<group>"; };
 		8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckSettingsTableViewCell.swift; sourceTree = "<group>"; };
@@ -847,6 +849,7 @@
 				4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */,
 				4B9DD4BC1DB1445200AB4D2D /* UIImage+Orientation.swift */,
 				864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */,
+				8B3AB4A61E046CDC00010170 /* UIViewController+AlertManager.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1685,6 +1688,7 @@
 				D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */,
 				864AF5C01E0124000010F083 /* ChannelCreateField.swift in Sources */,
 				8B5A54961DF75F1A003E9B0E /* PasswordRecoveryViewController.swift in Sources */,
+				8B3AB4A71E046CDC00010170 /* UIViewController+AlertManager.swift in Sources */,
 				D8A096A01D23E81C00B76E1A /* RKValueTransformer+Milliseconds.swift in Sources */,
 				8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */,
 				8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */,

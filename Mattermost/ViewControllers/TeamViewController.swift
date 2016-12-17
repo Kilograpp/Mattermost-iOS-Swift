@@ -69,7 +69,10 @@ fileprivate protocol Configuration {
 }
 
 fileprivate protocol Request {
-    func reloadChat()
+    func loadTeamChannels()
+    func loadUsers()
+    func updateUsersTeamStatus()
+    func updateDirectChannelsPreferedStatus()
 }
 
 
@@ -145,75 +148,58 @@ extension TeamViewController: Configuration {
 
 //MARK: Request
 extension TeamViewController: Request {
-    func reloadChat() {
-        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStartNotification), object: nil))
-        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName), object: nil))
-        
-        showLoaderView()
-        
-        RealmUtils.refresh()
-        Api.sharedInstance.loadTeams { (userShouldSelectTeam, error) in
+    func loadTeamChannels() {
+        Api.sharedInstance.loadChannels { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            Api.sharedInstance.loadCurrentUser { (error) in
-                guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                Api.sharedInstance.loadChannels(with: { (error) in
-                    guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                    Api.sharedInstance.loadCompleteUsersList({ (error) in
-                        guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                        if let townSquare = Channel.townSquare() {
-                            Api.sharedInstance.loadExtraInfoForChannel(townSquare.identifier!, completion: { (error) in
-                                guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                                Channel.updateDirectTeamAffiliation()
-                                
-                                RouterUtils.loadInitialScreen()
-                                NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
-                                
-                                DispatchQueue.main.async{
-                                    self.dismiss(animated: true, completion:{ _ in
-                                        self.hideLoaderView()
-                                    })
-                                }
-                            })
-                        }
-                    })
-                })
-            }
+            self.loadUsers()
         }
     }
     
-    func loadChannels() {
-        Api.sharedInstance.loadChannels(with: { (error) in
-            guard (error == nil) else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
-                self.dismiss(animated: true, completion: nil)
-                return
+    func loadUsers() {
+        Api.sharedInstance.loadCompleteUsersList { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            self.updateUsersTeamStatus()
+        }
+    }
+    
+    func updateUsersTeamStatus() {
+        let townSquare = Channel.townSquare()
+        Api.sharedInstance.loadExtraInfoForChannel((townSquare?.identifier!)!, completion: { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            let realm = RealmUtils.realmForCurrentThread()
+            
+            let townSquareUsers = townSquare?.members
+            let directChannels = realm.objects(Channel.self).filter(NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel))
+            
+            for directChannel in directChannels {
+                let user = directChannel.interlocuterFromPrivateChannel()
+                let isOnTeam = townSquareUsers?.contains(where: { return ($0.identifier == user.identifier) })
+                
+                try! realm.write {
+                    user.isOnTeam = isOnTeam!
+                    directChannel.isInterlocuterOnTeam = isOnTeam!
+                }
             }
-            self.loadCompleteUsersList()
+            self.updateDirectChannelsPreferedStatus()
         })
     }
     
-    func loadCompleteUsersList() {
-        Api.sharedInstance.loadCompleteUsersList({ (error) in
-            guard (error == nil) else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
-                self.dismiss(animated: true, completion: nil)
-                return
-            }
+    func updateDirectChannelsPreferedStatus() {
+        Api.sharedInstance.listPreferencesWith("direct_channel_show", completion: { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserTeamSelectNotification), object: nil)
-            self.dismiss(animated: true, completion: nil)
+            RouterUtils.loadInitialScreen()
+            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
+            
+            DispatchQueue.main.async{
+                self.dismiss(animated: true, completion:{ _ in
+                    self.hideLoaderView()
+                })
+            }
         })
     }
 }
 
-
-//MARK: Handle
-extension TeamViewController {
-    func handleErrorWith(message: String) {
-        AlertManager.sharedManager.showErrorWithMessage(message: message)
-        self.hideLoaderView()
-    }
-}
 
 //MARK: UITableViewDataSource
 extension TeamViewController: UITableViewDataSource {
@@ -238,23 +224,15 @@ extension TeamViewController: UITableViewDelegate {
         guard Api.sharedInstance.isNetworkReachable() else { handleErrorWith(message: "No Internet connectivity detected"); return }
         
         let team = self.results[indexPath.row]
-        guard (Preferences.sharedInstance.currentTeamId != nil) else {
+        if Preferences.sharedInstance.currentTeamId != team.identifier {
             DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier
             Preferences.sharedInstance.save()
             showLoaderView()
-            loadChannels()
-            
-            return
-        }
-        
-        if (Preferences.sharedInstance.currentTeamId != team.identifier) {
-            DataManager.sharedInstance.currentTeam = team
-            Preferences.sharedInstance.currentTeamId = team.identifier
-            Preferences.sharedInstance.save()
-            self.reloadChat()
+            self.loadTeamChannels()
         } else {
             self.dismiss(animated: true, completion: nil)
         }
+
     }
 }

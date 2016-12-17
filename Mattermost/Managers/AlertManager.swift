@@ -16,7 +16,6 @@ enum AlertType {
 }
 
 class AlertManager {
-    
     static let sharedManager: AlertManager = AlertManager()
     
     func showSuccesWithMessage(message:String) {

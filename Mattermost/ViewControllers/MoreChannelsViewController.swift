@@ -38,11 +38,11 @@ final class MoreChannelsViewController: UIViewController {
         super.viewDidLoad()
         
         initialSetup()
-        if self.isPrivateChannel {
+    /*    if self.isPrivateChannel {
             loadChannels()
         } else {
             loadAllChannels()
-        }
+        }*/
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -98,6 +98,7 @@ fileprivate protocol CompletionMessages {
 //MARK: Setup
 extension MoreChannelsViewController: Setup {
     func initialSetup() {
+        prepareResults()
         setupNavigationBar()
         setupSearchBar()
         setupTableView()
@@ -235,7 +236,7 @@ extension MoreChannelsViewController: Navigation {
 extension MoreChannelsViewController: Request {
     func loadChannels() {
         Api.sharedInstance.loadChannels { (error) in
-            Api.sharedInstance.listUsersPreferencesWith("direct_channel_show", completion: { (error) in
+            Api.sharedInstance.listPreferencesWith("direct_channel_show", completion: { (error) in
                 self.prepareResults()
                 self.tableView.reloadData()
             })

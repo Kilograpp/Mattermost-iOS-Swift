@@ -10,7 +10,7 @@ import Foundation
 
 private protocol PathPatterns: class {
     static func savePathPattern() -> String
-    static func listUsersPreferencesPathPatterns() -> String
+    static func listPreferencesPathPatterns() -> String
 }
 
 final class PreferencesPathPatternsContainer: PathPatterns {
@@ -18,7 +18,7 @@ final class PreferencesPathPatternsContainer: PathPatterns {
         return "preferences/save"
     }
     
-    static func listUsersPreferencesPathPatterns() -> String {
+    static func listPreferencesPathPatterns() -> String {
         return "preferences/:\(PreferenceAttributes.category)"
     }
 }
