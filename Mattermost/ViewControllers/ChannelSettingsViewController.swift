@@ -359,7 +359,7 @@ extension ChannelSettingsViewController: Request {
                 leftMenu.reloadChannels()
             })
             let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group " : "Channel "
-            let  message = channelType + self.channel.name! + " was deleted"
+            let  message = channelType + self.channel.displayName! + " was deleted"
             AlertManager.sharedManager.showSuccesWithMessage(message: message)
         }
     }
