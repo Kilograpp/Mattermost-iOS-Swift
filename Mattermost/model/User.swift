@@ -12,7 +12,7 @@ import RealmSwift
 
 private protocol Interface {
     func isSystem() -> Bool
-    func isSelectedDirectChannel() -> Bool
+    func isPreferedDirectChannel() -> Bool
     func directChannel() -> Channel?
     func hasChannel() -> Bool
     func notificationProperies() -> NotifyProps
@@ -105,11 +105,11 @@ extension User: Interface {
         return self.identifier == Constants.Realm.SystemUserIdentifier
     }
     
-    func isSelectedDirectChannel() -> Bool {
+    func isPreferedDirectChannel() -> Bool {
         let channel = self.directChannel()
         guard channel != nil else { return false }
         
-        return channel!.currentUserInChannel
+        return channel!.isDirectPrefered
     }
     
     func directChannel() -> Channel? {

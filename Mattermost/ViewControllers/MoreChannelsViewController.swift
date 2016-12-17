@@ -38,6 +38,9 @@ final class MoreChannelsViewController: UIViewController {
         super.viewDidLoad()
         
         initialSetup()
+        /*if !self.isPrivateChannel {
+            loadChannelsMore()
+        }*/
     /*    if self.isPrivateChannel {
             loadChannels()
         } else {
@@ -80,7 +83,7 @@ fileprivate protocol Navigation {
 
 fileprivate protocol Request {
     func loadChannels()
-    func loadAllChannels()
+    func loadChannelsMore()
     func joinTo(channel: Channel)
     func leave(channel: Channel)
     func createDirectChannelWith(result: ResultTuple)
@@ -159,9 +162,26 @@ extension  MoreChannelsViewController: Configuration {
         let typeValue = self.isPrivateChannel ? Constants.ChannelType.DirectTypeChannel : Constants.ChannelType.PublicTypeChannel
         let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
         let sortName = ChannelAttributes.displayName.rawValue
-        let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
-        for channel in channels {
-            self.results?.append((channel, channel.currentUserInChannel))
+        
+        
+        self.hideLoaderView()
+        Api.sharedInstance.loadChannelsMoreWithCompletion { (channels, error) in
+            self.hideLoaderView()
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            
+            for channel in channels! {
+                let isInChannel = Channel.isUserInChannelWith(channelId: channel.identifier!)
+                self.results?.append((channel, isInChannel))
+            }
+            
+            let existChannels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+            for channel in existChannels {
+                self.results?.append((channel, channel.currentUserInChannel))
+            }
+            
+            self.results = self.results.sorted(by: { ($0.object as! Channel).displayName! < ($1.object as! Channel).displayName! })
+            
+            self.tableView.reloadData()
         }
     }
     
@@ -171,7 +191,7 @@ extension  MoreChannelsViewController: Configuration {
                                                                                       Preferences.sharedInstance.currentUserId!)
         let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
         for user in users {
-            self.results?.append((user, user.isSelectedDirectChannel()))
+            self.results?.append((user, user.isPreferedDirectChannel()))
         }
     }
     
@@ -243,9 +263,11 @@ extension MoreChannelsViewController: Request {
         }
     }
     
-    func loadAllChannels() {
-        Api.sharedInstance.loadAllChannelsWithCompletion { (error) in
+    func loadChannelsMore() {
+        self.showLoaderView()
+        Api.sharedInstance.loadChannelsMoreWithCompletion { (error) in
             self.prepareResults()
+            self.hideLoaderView()
             self.tableView.reloadData()
         }
     }
@@ -310,7 +332,7 @@ extension MoreChannelsViewController: Request {
     func updatePreferencesSave(result: ResultTuple) {
         let user = (result.object as! User)
         
-        guard user.isSelectedDirectChannel() != result.checked else { return }
+        guard user.isPreferedDirectChannel() != result.checked else { return }
         
         let predicate =  NSPredicate(format: "displayName == %@", user.username!)
         let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).first

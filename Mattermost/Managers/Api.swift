@@ -37,7 +37,8 @@ private protocol ChannelApi: class {
     func updateHeader(_ header: String, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func updatePurpose(_ purpose: String, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void)
-    func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    //func loadChannelsMoreWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func loadChannelsMoreWithCompletion(_ completion: @escaping (_ channels: Array<Channel>?, _ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func createChannel(_ type: String, displayName: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
@@ -287,18 +288,15 @@ extension Api: ChannelApi {
             }, failure: completion)
     }
     
-    func loadAllChannelsWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+    func loadChannelsMoreWithCompletion(_ completion: @escaping (_ channels: Array<Channel>?, _ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.moreListPathPattern(), DataManager.sharedInstance.currentTeam)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
-            try! RealmUtils.realmForCurrentThread().write({
-                channels.forEach {$0.computeTeam()
-                }
-                RealmUtils.realmForCurrentThread().add(channels, update: true)
-            })
-            completion(nil)
-            }, failure: completion)
+            let allChannels = MappingUtils.fetchAllChannelsFromList(mappingResult)
+            completion(allChannels, nil)
+        }, failure: { (error) in
+            completion(nil, error)
+        })
     }
     
     func addUserToChannel(_ user:User, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {

@@ -47,7 +47,6 @@ extension UIViewController: LoaderView {
         spinner.startAnimating()
         loader.tag = loadetViewTag
         UIApplication.shared.keyWindow?.addSubview(loader)
-        //self.view.addSubview(loader)
     }
     
     func hideLoaderView(){

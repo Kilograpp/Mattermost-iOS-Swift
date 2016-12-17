@@ -103,20 +103,14 @@ final class Channel: RealmObject {
         return (channels.count > 0) ? channels.first : nil
     }
     
-    static func updateDirectTeamAffiliation() {
+    static func isUserInChannelWith(channelId: String) -> Bool {
         let realm = RealmUtils.realmForCurrentThread()
+        let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId)
         
-        let townSquareUsers = self.townSquare()?.members
-         let directTypePredicate = NSPredicate(format: "privateType == %@ AND team == %@", Constants.ChannelType.DirectTypeChannel, DataManager.sharedInstance.currentTeam!)
-        let directChannels = realm.objects(Channel.self).filter(directTypePredicate)
-        for channel in directChannels {
-            let user = channel.interlocuterFromPrivateChannel()
-            try! realm.write {
-           //     channel.isDirectChannelInterlocutorInTeam = (townSquareUsers?.contains(user))!
-            }
-        }
+        guard channel != nil else { return false }
+        
+        return (channel?.members.contains(DataManager.sharedInstance.currentUser!))!
     }
-
 }
 
 private protocol Support: class {
