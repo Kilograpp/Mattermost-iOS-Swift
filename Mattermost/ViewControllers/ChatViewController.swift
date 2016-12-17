@@ -728,7 +728,6 @@ extension ChatViewController: Request {
             self.selectedAction = Constants.PostActionType.SendNew
             RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
-            
             return
         }
         
