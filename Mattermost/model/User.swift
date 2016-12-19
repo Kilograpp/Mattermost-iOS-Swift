@@ -19,29 +19,39 @@ private protocol Interface {
 }
 
 final class User: RealmObject {
+    dynamic var authData: String?
+    dynamic var authService: String?
+    dynamic var createAt: Date?
+    dynamic var updateAt: Date?
+    dynamic var deleteAt: Date?
     dynamic var email: String?
+    dynamic var emailVerified: Bool = false
     dynamic var firstName: String?
-    dynamic var lastName: String?
     dynamic var identifier: String! {
         didSet { computeAvatarUrl() }
     }
+    dynamic var lastName: String?
+    dynamic var lastPasswordUdate: Date?
+    dynamic var lastPictureUpdate: Date?
+    dynamic var locale: String?
     dynamic var nickname: String?
+    dynamic var notifyProps: NotifyProps?
+    dynamic var roles: String?
+    dynamic var username: String? {
+        didSet { computeNicknameIfRequired() }
+    }
+    
+    var preferences = List<Preference>()
+    
     dynamic var displayNameWidth: Float = 0.0
     dynamic var avatarLink: String!
     dynamic var displayName: String? {
         didSet { computeDisplayNameWidth() }
     }
-    dynamic var createAt: Date?
-    dynamic var updateAt: Date?
-    dynamic var deleteAt: Date?
     dynamic var isOnTeam: Bool = false
     
     let channels = LinkingObjects(fromType: Channel.self, property: ChannelRelationships.members.rawValue)
-    //let notifyProps = NotifyProps()
-    dynamic var notifyProps: NotifyProps?
-    dynamic var username: String? {
-        didSet { computeNicknameIfRequired() }
-    }
+    
     override static func indexedProperties() -> [String] {
         return [UserAttributes.identifier.rawValue]
     }

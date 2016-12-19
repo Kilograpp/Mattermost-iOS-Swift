@@ -11,6 +11,7 @@ import SwiftyJSON
 
 struct NotificationKeys {
     // General
+    static let Broadcast                = "broadcast"
     static let ChannelIdentifier        = "channel_id"
     static let TeamIdentifier           = "team_id"
     static let UserIdentifier           = "user_id"

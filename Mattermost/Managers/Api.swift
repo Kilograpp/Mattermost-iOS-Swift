@@ -49,13 +49,15 @@ private protocol ChannelApi: class {
 
 private protocol UserApi: class {
     func login(_ email: String, password: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func loadCompleteUsersList(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadCurrentUser(completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(firstName: String?, lastName: String?, userName: String?, nickName: String?, email: String?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(currentPassword: String, newPassword: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func update(profileImage: UIImage, completion: @escaping (_ error: Mattermost.Error?) -> Void, progress: @escaping (_ value: Float) -> Void)
     func subscribeToRemoteNotifications(completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func passwordResetFor(email: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    
+    func loadUsersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func loadCompleteUsersList(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol PostApi: class {
@@ -187,11 +189,20 @@ extension Api: TeamApi {
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             let teams = MappingUtils.fetchAllTeams(mappingResult)
-            let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
-            users.forEach{ $0.computeDisplayName()}
+            //let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
+            let preferences = MappingUtils.fetchPreferencesFromInitialLoad(mappingResult)
+            preferences.forEach{ $0.computeKey() }
             Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
             RealmUtils.save(teams)
-            RealmUtils.save(users)
+            let currentUser = DataManager.sharedInstance.currentUser
+            let realm = RealmUtils.realmForCurrentThread()
+            let oldPreferences = currentUser?.preferences
+            try! realm.write {
+                currentUser?.preferences.removeAll()
+                realm.delete(oldPreferences!)
+                realm.add(preferences, update: true)
+                currentUser?.preferences.append(objectsIn: preferences)
+            }
             if (teams.count == 1) {
                 Preferences.sharedInstance.currentTeamId = teams.first!.identifier
                 completion(false, nil)
@@ -235,17 +246,17 @@ extension Api: ChannelApi {
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
-            let channels = MappingUtils.fetchAllChannelsFromList(mappingResult)
+            let channels = mappingResult.array() as! [Channel]//MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
                 channels.forEach {
-                    if $0.privateType != Constants.ChannelType.DirectTypeChannel {
+                /*    if $0.privateType != Constants.ChannelType.DirectTypeChannel {
                         $0.currentUserInChannel = true
-                    }
+                    }*/
                     $0.computeTeam()
-                    $0.computeDispayNameIfNeeded()
-                    if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{
+                   // $0.computeDispayNameIfNeeded()
+                  /*  if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{
                         $0.members = channel.members
-                    }
+                    }*/
                     realm.add($0, update: true)
                 }
             })
@@ -497,6 +508,28 @@ extension Api: UserApi {
             SocketManager.sharedInstance.setNeedsConnect()
             completion(nil)
             }, failure: completion)
+    }
+    
+    func loadUsersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = UserPathPatternsContainer.usersByIdsPathPattern()
+        
+        self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
+            let users = MappingUtils.fetchPreferedUsersBy(ids: ids, mappingResult: mappingResult!)
+            let realm = RealmUtils.realmForCurrentThread()
+            let preferences = Preference.preferedUsersList()
+            for user in users {
+                user.computeDisplayName()
+                let predicate = NSPredicate(format: "name == %@", user.identifier)
+                let preference = preferences.filter(predicate).first
+                user.isOnTeam = (preference?.value == Constants.CommonStrings.True)
+                realm.add(user)
+            }
+            completion(nil)
+        }) { (operation, error) in
+            print(operation?.httpRequestOperation.responseString)
+            let responseString = operation?.httpRequestOperation.responseString
+            completion(error as! Error?)
+            }
     }
     
     func loadCompleteUsersList(_ completion:@escaping (_ error: Mattermost.Error?) -> Void) {

@@ -22,6 +22,7 @@ private protocol PathPatterns: class {
     static func userUpdateImagePathPattern() -> String
     static func attachDevicePathPattern() -> String
     static func passwordResetPathPattern() -> String
+    static func usersByIdsPathPattern() -> String
 }
 
 final class UserPathPatternsContainer: PathPatterns {
@@ -66,5 +67,8 @@ final class UserPathPatternsContainer: PathPatterns {
     }
     static func passwordResetPathPattern() -> String {
         return "users/send_password_reset"
+    }
+    static func usersByIdsPathPattern() -> String {
+        return "users/ids"
     }
 }

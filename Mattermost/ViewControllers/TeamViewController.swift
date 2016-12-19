@@ -70,7 +70,7 @@ fileprivate protocol Configuration {
 
 fileprivate protocol Request {
     func loadTeamChannels()
-    func loadUsers()
+    func loadUsersForFirsPublicChannel()
     func updateUsersTeamStatus()
     func updateDirectChannelsPreferedStatus()
 }
@@ -143,6 +143,15 @@ extension TeamViewController: Configuration {
         let sortName = TeamAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Team.self).sorted(byProperty: sortName, ascending: true)
     }
+    
+    func configurePreferedDirectChannels() {
+        let preferences = Preference.preferedUsersList()
+        var usersIds = Array<String>()
+        preferences.forEach{ usersIds.append($0.userId!) }
+        
+        print(usersIds)
+        
+    }
 }
 
 
@@ -151,11 +160,23 @@ extension TeamViewController: Request {
     func loadTeamChannels() {
         Api.sharedInstance.loadChannels { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            self.loadUsers()
+            self.loadPreferedDirectChannelsInterlocuters()
         }
     }
     
-    func loadUsers() {
+    func loadPreferedDirectChannelsInterlocuters() {
+        let preferences = Preference.preferedUsersList()
+        var usersIds = Array<String>()
+        preferences.forEach{ usersIds.append($0.name!) }
+        
+        Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+        }
+    }
+    
+    
+    
+    func loadUsersForFirsPublicChannel() {
         Api.sharedInstance.loadCompleteUsersList { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             self.updateUsersTeamStatus()

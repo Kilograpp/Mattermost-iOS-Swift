@@ -84,8 +84,8 @@ fileprivate protocol Navigation {
 fileprivate protocol Request {
     func login()
     func loadTeams()
-    func loadChannels()
-    func loadCompleteUsersList()
+//    func loadChannels()
+//    func loadCompleteUsersList()
 }
 
 
@@ -235,20 +235,71 @@ extension LoginViewController: Request {
     
     func loadTeams() {
         Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
-            guard (error == nil) else {
-                self.hideLoaderView()
-                return
-            }
+            guard (error == nil) else { self.hideLoaderView(); return }
             
             if userShouldSelectTeam {
                 self.hideLoaderView()
                 self.proceedToTeams()
             }
             else {
-                self.loadChannels()
+               // self.loadChannels()
+                self.loadTeamChannels()
             }
         })
     }
+    
+    func loadTeamChannels() {
+        Api.sharedInstance.loadChannels { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            self.loadUsers()
+        }
+    }
+    
+    func loadUsers() {
+        Api.sharedInstance.loadCompleteUsersList { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            self.updateUsersTeamStatus()
+        }
+    }
+    
+    func updateUsersTeamStatus() {
+        let townSquare = Channel.townSquare()
+        Api.sharedInstance.loadExtraInfoForChannel((townSquare?.identifier!)!, completion: { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            let realm = RealmUtils.realmForCurrentThread()
+            
+            let townSquareUsers = townSquare?.members
+            let directChannels = realm.objects(Channel.self).filter(NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel))
+            
+            for directChannel in directChannels {
+                let user = directChannel.interlocuterFromPrivateChannel()
+                let isOnTeam = townSquareUsers?.contains(where: { return ($0.identifier == user.identifier) })
+                
+                try! realm.write {
+                    user.isOnTeam = isOnTeam!
+                    directChannel.isInterlocuterOnTeam = isOnTeam!
+                }
+            }
+            self.updateDirectChannelsPreferedStatus()
+        })
+    }
+    
+    func updateDirectChannelsPreferedStatus() {
+        Api.sharedInstance.listPreferencesWith("direct_channel_show", completion: { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            
+            RouterUtils.loadInitialScreen()
+            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
+            
+            DispatchQueue.main.async{
+                self.hideLoaderView()
+                RouterUtils.loadInitialScreen()
+            }
+        })
+    }
+    
+    
+/*
     
     func loadChannels() {
         Api.sharedInstance.loadChannels(with: { (error) in
@@ -271,7 +322,7 @@ extension LoginViewController: Request {
             RouterUtils.loadInitialScreen()
         })
     }
-    
+    */
     func proceedToChat() {
         RouterUtils.loadInitialScreen()
     }

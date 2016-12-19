@@ -43,19 +43,26 @@ extension ChannelMappingsContainer: RequestMapping {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
-            "type"            : ChannelAttributes.privateType.rawValue,
-            "team_id"         : ChannelAttributes.privateTeamId.rawValue,
             "create_at"       : ChannelAttributes.createdAt.rawValue,
-            "display_name"    : ChannelAttributes.displayName.rawValue,
-            "last_post_at"    : ChannelAttributes.lastPostDate.rawValue,
-            "total_msg_count" : ChannelAttributes.messagesCount.rawValue
+            "update_at"       : ChannelAttributes.updateAt.rawValue,
+            "delete_at"       : ChannelAttributes.deleteAt.rawValue,
+            "team_id"         : ChannelAttributes.privateTeamId.rawValue,
+            "type"            : ChannelAttributes.privateType.rawValue,
+            "display_name"    : ChannelAttributes.displayName.rawValue
             ])
         mapping.addAttributeMappings(from: [
             ChannelAttributes.name.rawValue,
             ChannelAttributes.header.rawValue,
             ChannelAttributes.purpose.rawValue
             ])
-        mapping.addRelationshipMapping(withSourceKeyPath: ChannelRelationships.members.rawValue, mapping: UserMappingsContainer.mapping())
+        mapping.addAttributeMappings(from: [
+            "last_post_at"    : ChannelAttributes.lastPostDate.rawValue,
+            "total_msg_count" : ChannelAttributes.messagesCount.rawValue,
+            "extra_update_at" : ChannelAttributes.extraUpdateDate.rawValue,
+            "creator_id"      : ChannelAttributes.creatorId.rawValue
+            ])
+        
+     //   mapping.addRelationshipMapping(withSourceKeyPath: ChannelRelationships.members.rawValue, mapping: UserMappingsContainer.mapping())
         return mapping;
     }
 }

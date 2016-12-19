@@ -38,14 +38,6 @@ final class MoreChannelsViewController: UIViewController {
         super.viewDidLoad()
         
         initialSetup()
-        /*if !self.isPrivateChannel {
-            loadChannelsMore()
-        }*/
-    /*    if self.isPrivateChannel {
-            loadChannels()
-        } else {
-            loadAllChannels()
-        }*/
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -82,8 +74,6 @@ fileprivate protocol Navigation {
 }
 
 fileprivate protocol Request {
-    func loadChannels()
-    func loadChannelsMore()
     func joinTo(channel: Channel)
     func leave(channel: Channel)
     func createDirectChannelWith(result: ResultTuple)
@@ -162,7 +152,6 @@ extension  MoreChannelsViewController: Configuration {
         let typeValue = self.isPrivateChannel ? Constants.ChannelType.DirectTypeChannel : Constants.ChannelType.PublicTypeChannel
         let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
         let sortName = ChannelAttributes.displayName.rawValue
-        
         
         self.hideLoaderView()
         Api.sharedInstance.loadChannelsMoreWithCompletion { (channels, error) in
@@ -254,30 +243,17 @@ extension MoreChannelsViewController: Navigation {
 
 //MARK: MoreChannelsViewControllerRequest
 extension MoreChannelsViewController: Request {
-    func loadChannels() {
-        Api.sharedInstance.loadChannels { (error) in
-            Api.sharedInstance.listPreferencesWith("direct_channel_show", completion: { (error) in
-                self.prepareResults()
-                self.tableView.reloadData()
-            })
-        }
-    }
-    
-    func loadChannelsMore() {
-        self.showLoaderView()
-        Api.sharedInstance.loadChannelsMoreWithCompletion { (error) in
-            self.prepareResults()
-            self.hideLoaderView()
-            self.tableView.reloadData()
-        }
-    }
-    
+//Public channel
     func joinTo(channel: Channel) {
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write {
+            channel.team = DataManager.sharedInstance.currentTeam
+            channel.computeDisplayNameWidth()
+            realm.add(channel)
+        }
+        
         Api.sharedInstance.joinChannel(channel) { (error) in
-            guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
-                return
-            }
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
             self.alreadyUpdatedChannelCount += 1
             self.addedChannelCount += 1
@@ -296,9 +272,11 @@ extension MoreChannelsViewController: Request {
     
     func leave(channel: Channel) {
         Api.sharedInstance.leaveChannel(channel) { (error) in
-            guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
-                return
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write {
+                realm.delete(channel)
             }
             
             self.alreadyUpdatedChannelCount += 1
@@ -312,10 +290,12 @@ extension MoreChannelsViewController: Request {
                 self.alreadyUpdatedChannelCount = 0
                 self.updatedCahnnelIndexPaths.removeAll()
             }
+            
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }
     
+//Direct channel
     func createDirectChannelWith(result: ResultTuple) {
         guard  result.checked != (result.object as! User).hasChannel() else { return }
         

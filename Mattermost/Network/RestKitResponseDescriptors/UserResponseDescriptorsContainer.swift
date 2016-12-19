@@ -14,6 +14,7 @@ private protocol ResponseDescriptors: class {
     static func logoutResponseDescriptor() -> RKResponseDescriptor
     static func loadCurrentUserResponseDescriptor() -> RKResponseDescriptor
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor
+    static func initialLoadPreferencesResponseDescriptor() -> RKResponseDescriptor
     static func completeListResponseDescriptor() -> RKResponseDescriptor
     static func updateNotifyResponseDescriptor() -> RKResponseDescriptor
     static func updateResponseDescriptor() -> RKResponseDescriptor
@@ -21,6 +22,7 @@ private protocol ResponseDescriptors: class {
     static func updateImageResponseDescriptor() -> RKResponseDescriptor
     static func attachDeviceResponseDescriptor() -> RKResponseDescriptor
     static func passwordResetResponseDescriptor() -> RKResponseDescriptor
+    static func listOfPreferedResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class UserResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -56,6 +58,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.initialLoadPathPattern(),
                                     keyPath: "direct_profiles",
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func initialLoadPreferencesResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: PreferenceMappingsContainer.mapping(),
+                                    method: .GET,
+                                    pathPattern: UserPathPatternsContainer.initialLoadPathPattern(),
+                                    keyPath: "preferences",
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     static func completeListResponseDescriptor() -> RKResponseDescriptor {
@@ -104,6 +113,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: UserMappingsContainer.emptyMapping(),
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.passwordResetPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func listOfPreferedResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
+                                    method: .POST,
+                                    pathPattern: UserPathPatternsContainer.usersByIdsPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

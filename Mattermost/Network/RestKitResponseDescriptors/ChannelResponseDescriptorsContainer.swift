@@ -37,7 +37,7 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
         return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
                                     method: .GET,
                                     pathPattern: ChannelPathPatternsContainer.listPathPattern(),
-                                    keyPath: "channels",
+                                    keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     static func channelsListMembersResponseDescriptor() -> RKResponseDescriptor {

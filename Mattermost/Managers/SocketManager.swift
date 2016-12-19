@@ -97,8 +97,11 @@ extension SocketManager: Interface {
 extension SocketManager: MessageHandling {
     fileprivate func handleIncomingMessage(_ text: String) {
         let dictionary = text.toDictionary()!
-        let userId = dictionary[NotificationKeys.UserIdentifier] as? String
-        let channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
+        print(dictionary)
+        //let userId = dictionary[NotificationKeys.UserIdentifier] as? String
+        //let channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
+        let userId = dictionary[NotificationKeys.Broadcast]?[NotificationKeys.UserIdentifier] as? String
+        let channelId = dictionary[NotificationKeys.Broadcast]?[NotificationKeys.ChannelIdentifier] as? String
         switch(SocketNotificationUtils.typeForNotification(dictionary)) {
             case .error:
                 print("ERROR "+text)

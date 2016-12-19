@@ -10,17 +10,22 @@ import Foundation
 import RealmSwift
 
 enum ChannelAttributes: String {
-    case identifier    = "identifier"
-    case createdAt     = "createdAt"
-    case privateTeamId = "privateTeamId"
+    case identifier      = "identifier"
+    case createdAt       = "createdAt"
+    case updateAt        = "updateAt"
+    case deleteAt        = "deleteAt"
+    case privateTeamId   = "privateTeamId"
+    case privateType     = "privateType"
+    case displayName     = "displayName"
+    case name            = "name"
+    case header          = "header"
+    case purpose         = "purpose"
+    case lastPostDate    = "lastPostDate"
+    case messagesCount   = "messagesCount"
+    case extraUpdateDate = "extraUpdateDate"
+    case creatorId       = "creatorId"
+    
     case lastViewDate  = "lastViewDate"
-    case name          = "name"
-    case displayName   = "displayName"
-    case purpose       = "purpose"
-    case header        = "header"
-    case messagesCount = "messagesCount"
-    case lastPostDate  = "lastPostDate"
-    case privateType   = "privateType"
 }
 
 enum ChannelRelationships: String {
@@ -55,28 +60,33 @@ final class Channel: RealmObject {
         }
     }
     
-    dynamic var privateType: String?
-    dynamic var privateTeamId: String? {
-        didSet {
-            computeTeam()
-        }
-    }
-    dynamic var createdAt: Date?
-    dynamic var lastViewDate: Date?
     dynamic var identifier: String?
-    dynamic var name: String?
-    dynamic var displayNameWidth: Float = 0.0
-    dynamic var purpose: String?
-    dynamic var header: String?
-    dynamic var messagesCount: String?
-    dynamic var lastPostDate: Date?
+    dynamic var createdAt: Date?
+    dynamic var updateAt: Date?
+    dynamic var deleteAt: Date?
+    dynamic var privateTeamId: String? {
+        didSet { computeTeam() }
+    }
+    dynamic var privateType: String?
     dynamic var displayName: String? {
         didSet { computeDisplayNameWidth() }
     }
+    dynamic var name: String?
+    dynamic var header: String?
+    dynamic var purpose: String?
+    dynamic var lastPostDate: Date?
+    dynamic var messagesCount: String?
+    dynamic var extraUpdateDate: Date?
+    dynamic var creatorId: String?
+    
+    
+    dynamic var lastViewDate: Date?
+    
+    dynamic var team: Team?
+    dynamic var displayNameWidth: Float = 0.0
     dynamic var currentUserInChannel: Bool = false
     dynamic var isInterlocuterOnTeam: Bool = true
     dynamic var isDirectPrefered: Bool = false
-    dynamic var team: Team?
     
     var isSelected: Bool {
         return self == ChannelObserver.sharedObserver.selectedChannel

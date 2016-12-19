@@ -34,8 +34,10 @@ private protocol PostMethods: class {
 
 private protocol UserMethod: class {
     static func fetchUsersFromInitialLoad(_ mappingResult: RKMappingResult) -> [User]
+    static func fetchPreferencesFromInitialLoad(_ mappingResult: RKMappingResult) -> [Preference]
     static func fetchUsersFromCompleteList(_ mappingResult: RKMappingResult) -> [User]
     //static func fetchUserWithNotifyPropsFromUser(_ mappingResult: RKMappingResult) -> User
+    static func fetchPreferedUsersBy(ids: [String], mappingResult: RKMappingResult) -> [User]
 }
 
 
@@ -106,6 +108,14 @@ extension MappingUtils: UserMethod {
         }
         return []
     }
+    
+    static func fetchPreferencesFromInitialLoad(_ mappingResult: RKMappingResult) -> [Preference] {
+        if let preferences = mappingResult.dictionary()["preferences"] {
+            return preferences as! [Preference]
+        }
+        return []
+    }
+        
     static func fetchUsersFromCompleteList(_ mappingResult: RKMappingResult) -> [User] {
         return mappingResult.array() as! [User]
     }
@@ -115,6 +125,13 @@ extension MappingUtils: UserMethod {
         
         return user
     }*/
+    static func fetchPreferedUsersBy(ids: [String], mappingResult: RKMappingResult) -> [User] {
+        var users = Array<User>()
+        for userId in ids {
+            users.append(mappingResult.dictionary()[userId] as! User)
+        }
+        return users
+    }
 }
 
 extension MappingUtils: ChannelMethods {
