@@ -28,6 +28,7 @@ private protocol NotifyPropsApi: class {
 private protocol TeamApi: class {
     func loadTeams(with completion: @escaping (_ userShouldSelectTeam: Bool, _ error: Mattermost.Error?) -> Void)
     func sendInvites(_ invites: [Dictionary<String , String>], completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func loadTeamMembersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol ChannelApi: class {
@@ -234,6 +235,29 @@ extension Api: TeamApi {
             completion(nil)
         }) { (error) in
             completion(error)
+        }
+    }
+    func loadTeamMembersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let currentTeam = DataManager.sharedInstance.currentTeam
+        let path = SOCStringFromStringWithObject(TeamPathPatternsContainer.teamMembersIds(), currentTeam)
+        
+        self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
+            print(mappingResult)
+            
+            
+            /*let users = MappingUtils.fetchPreferedUsersBy(ids: ids, mappingResult: mappingResult!)
+            let realm = RealmUtils.realmForCurrentThread()
+            let preferences = Preference.preferedUsersList()
+            for user in users {
+                user.computeDisplayName()
+                let predicate = NSPredicate(format: "name == %@", user.identifier)
+                let preference = preferences.filter(predicate).first
+                user.isOnTeam = (preference?.value == Constants.CommonStrings.True)
+                realm.add(user)
+            }*/
+            completion(nil)
+        }) { (operation, error) in
+            completion(Error.errorWithGenericError(error))
         }
     }
 }
@@ -514,6 +538,7 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.usersByIdsPathPattern()
         
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
+            print(operation?.httpRequestOperation.responseString)
             let users = MappingUtils.fetchPreferedUsersBy(ids: ids, mappingResult: mappingResult!)
             let realm = RealmUtils.realmForCurrentThread()
             let preferences = Preference.preferedUsersList()
@@ -526,10 +551,8 @@ extension Api: UserApi {
             }
             completion(nil)
         }) { (operation, error) in
-            print(operation?.httpRequestOperation.responseString)
-            let responseString = operation?.httpRequestOperation.responseString
-            completion(error as! Error?)
-            }
+            completion(Error.errorWithGenericError(error))
+        }
     }
     
     func loadCompleteUsersList(_ completion:@escaping (_ error: Mattermost.Error?) -> Void) {

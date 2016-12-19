@@ -31,12 +31,12 @@ final class Member: RealmObject {
 }
 
 enum MemberAttributes: String {
-    case userId = "user_id"
-    case roles = "roles"
+    case userId       = "user_id"
+    case roles        = "roles"
     case lastViewedAt = "last_viewed_at"
     case lastUpdateAt = "last_update_at"
-    case key = "key"
-    case msgCount = "msg_count"
+    case key          = "key"
+    case msgCount     = "msg_count"
     case mentionCount = "mention_count"
 }
 

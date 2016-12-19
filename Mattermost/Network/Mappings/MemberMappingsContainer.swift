@@ -20,7 +20,7 @@ final class MemberMappingsContainer: BaseMappingsContainer {
 }
 
 
-//MARK: - ResponseMappings
+//MARK: ResponseMappings
 extension MemberMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()

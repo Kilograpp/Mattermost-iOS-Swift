@@ -164,6 +164,10 @@ extension TeamViewController: Request {
         }
     }
     
+    func loadTeamUsers() {
+    
+    }
+    
     func loadPreferedDirectChannelsInterlocuters() {
         let preferences = Preference.preferedUsersList()
         var usersIds = Array<String>()
@@ -171,10 +175,21 @@ extension TeamViewController: Request {
         
         Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            self.loadTeamMembers()
         }
     }
     
-    
+    func loadTeamMembers() {
+        let predicate = NSPredicate(format: "identifier != %@", Preferences.sharedInstance.currentUserId!)
+        let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate)
+        var ids = Array<String>()
+        users.forEach{ ids.append($0.identifier) }
+        
+        Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            
+        }
+    }
     
     func loadUsersForFirsPublicChannel() {
         Api.sharedInstance.loadCompleteUsersList { (error) in

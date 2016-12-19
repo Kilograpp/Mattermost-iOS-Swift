@@ -12,6 +12,7 @@ private protocol PathPatterns: class {
     static func initialLoadPathPattern() -> String
     static func teamListingsPathPattern() -> String
     static func teamInviteMembers() -> String
+    static func teamMembersIds() -> String 
 }
 
 final class TeamPathPatternsContainer: PathPatterns {
@@ -24,5 +25,8 @@ final class TeamPathPatternsContainer: PathPatterns {
     }
     static func teamInviteMembers() -> String {
         return "teams/:\(TeamAttributes.identifier)/invite_members"
+    }
+    static func teamMembersIds() -> String {
+        return "teams/:\(TeamAttributes.identifier)/members/ids/"
     }
 }
