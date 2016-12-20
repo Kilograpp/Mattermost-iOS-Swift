@@ -16,6 +16,7 @@ private protocol RequestMapping: class {
 
 private protocol ResponseMappings: class {
     static func directProfileMapping() -> RKObjectMapping
+    static func idsMapping() -> RKObjectMapping
 }
 
 
@@ -27,19 +28,29 @@ final class UserMappingsContainer: BaseMappingsContainer {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
+            "create_at"    : UserAttributes.createAt.rawValue,
+            "update_at"    : UserAttributes.updateAt.rawValue,
+            "delete_at"    : UserAttributes.deleteAt.rawValue,
+            "username"     : UserAttributes.username.rawValue,
+            "auth_data"    : UserAttributes.authData.rawValue,
+            "auth_service" : UserAttributes.authService.rawValue,
+            "email"        : UserAttributes.email.rawValue,
+            "nickname"     : UserAttributes.nickname.rawValue,
             "firstName"    : UserAttributes.firstName.rawValue,
             "lastName"     : UserAttributes.lastName.rawValue,
-            "username"     : UserAttributes.username.rawValue,
-            "nickname"     : UserAttributes.nickname.rawValue,
-            "email"        : UserAttributes.email.rawValue,
-            "create_at"    : UserAttributes.createAt.rawValue,
-            "delete_at"    : UserAttributes.deleteAt.rawValue
+            "roles"        : UserAttributes.roles.rawValue,
+            "locale"       : UserAttributes.locale.rawValue
             ])
         
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "notify_props",
                                                          toKeyPath: UserAttributes.notifyProps.rawValue,
                                                          with: NotifyPropsMappingsContainer.mapping()))
         return mapping
+    }
+    
+    static func idsMapping() -> RKObjectMapping {
+        let mapping = RKObjectMapping(with: NSMutableDictionary.self)
+        return mapping!
     }
 }
 

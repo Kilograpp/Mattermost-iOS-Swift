@@ -25,10 +25,15 @@ extension MemberMappingsContainer: ResponseMappings {
     override class func mapping() -> RKObjectMapping {
         let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
-            "user_id"           : MemberAttributes.userId.rawValue,
+            "user_id" : MemberAttributes.userId.rawValue,
+            "team_id" : MemberAttributes.teamId.rawValue,
+            "roles" : MemberAttributes.roles.rawValue,
+            "delete_at" : MemberAttributes.deleteAt.rawValue
+            
+         /*   "user_id"           : MemberAttributes.userId.rawValue,
             "last_viewed_at"    : MemberAttributes.lastViewedAt.rawValue,
             "msg_count"         : MemberAttributes.msgCount.rawValue,
-            "mention_count"     : MemberAttributes.mentionCount.rawValue
+            "mention_count"     : MemberAttributes.mentionCount.rawValue*/
             ])
         return mapping
     }

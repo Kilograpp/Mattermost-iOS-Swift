@@ -27,6 +27,6 @@ final class TeamPathPatternsContainer: PathPatterns {
         return "teams/:\(TeamAttributes.identifier)/invite_members"
     }
     static func teamMembersIds() -> String {
-        return "teams/:\(TeamAttributes.identifier)/members/ids/"
+        return "teams/:\(TeamAttributes.identifier)/members/ids"
     }
 }

@@ -14,7 +14,7 @@ private protocol ResponseDescriptors: class {
     static func teamListingsResponseDescriptor() -> RKResponseDescriptor
     static func initalLoadConfigResponseDescriptor() -> RKResponseDescriptor
     static func invitationResponseDescriptor() -> RKResponseDescriptor
- //   static func teamMembersIdsResponseDescriptor() -> RKResponseDescriptor
+    static func teamMembersIdsResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class TeamResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -51,11 +51,11 @@ extension TeamResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: "invites",
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
-    /*static func teamMembersIdsResponseDescriptor() -> RKResponseDescriptor {
+    static func teamMembersIdsResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: MemberMappingsContainer.mapping(),
                                     method: .POST,
                                     pathPattern: TeamPathPatternsContainer.teamMembersIds(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
-    }*/
+    }
 }

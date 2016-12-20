@@ -70,9 +70,9 @@ fileprivate protocol Configuration {
 
 fileprivate protocol Request {
     func loadTeamChannels()
-    func loadUsersForFirsPublicChannel()
-    func updateUsersTeamStatus()
-    func updateDirectChannelsPreferedStatus()
+  //  func loadUsersForFirsPublicChannel()
+  //  func updateUsersTeamStatus()
+//    func updateDirectChannelsPreferedStatus()
 }
 
 
@@ -145,12 +145,11 @@ extension TeamViewController: Configuration {
     }
     
     func configurePreferedDirectChannels() {
-        let preferences = Preference.preferedUsersList()
-        var usersIds = Array<String>()
-        preferences.forEach{ usersIds.append($0.userId!) }
+        let realm = RealmUtils.realmForCurrentThread()
         
-        print(usersIds)
+        let directChannelPredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
         
+        let preferedUsers = realm.objects(User.self)
     }
 }
 
@@ -162,10 +161,6 @@ extension TeamViewController: Request {
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             self.loadPreferedDirectChannelsInterlocuters()
         }
-    }
-    
-    func loadTeamUsers() {
-    
     }
     
     func loadPreferedDirectChannelsInterlocuters() {
@@ -180,7 +175,8 @@ extension TeamViewController: Request {
     }
     
     func loadTeamMembers() {
-        let predicate = NSPredicate(format: "identifier != %@", Preferences.sharedInstance.currentUserId!)
+        let predicate = NSPredicate(format: "identifier != %@ AND identifier != %@", Preferences.sharedInstance.currentUserId!,
+                                                                                     Constants.Realm.SystemUserIdentifier)
         let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate)
         var ids = Array<String>()
         users.forEach{ ids.append($0.identifier) }
@@ -188,10 +184,18 @@ extension TeamViewController: Request {
         Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
+            RouterUtils.loadInitialScreen()
+          //  NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
+            
+            DispatchQueue.main.async{
+                self.dismiss(animated: true, completion:{ _ in
+                    self.hideLoaderView()
+                })
+            }
         }
     }
     
-    func loadUsersForFirsPublicChannel() {
+   /* func loadUsersForFirsPublicChannel() {
         Api.sharedInstance.loadCompleteUsersList { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             self.updateUsersTeamStatus()
@@ -233,7 +237,7 @@ extension TeamViewController: Request {
                 })
             }
         })
-    }
+    }*/
 }
 
 
