@@ -89,7 +89,7 @@ extension LeftMenuViewController: Interface {
             let user = channel.interlocuterFromPrivateChannel()
             let section = user.isOnTeam ? 2 : 3
             let row = user.isOnTeam ? self.resultsDirect.index(of: channel)
-                                    : self.resultsOutsideDirect.index(of: channel)
+                                        : self.resultsOutsideDirect.index(of: channel)
             indexPath = IndexPath(row: row!, section: section)
         default:
             return
@@ -160,29 +160,23 @@ extension LeftMenuViewController: Setup {
 extension LeftMenuViewController: Configuration {
     fileprivate func prepareResults() {
         let currentTeamPredicate          = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
-       // let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
+        let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let publicTypePredicate           = NSPredicate(format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
         let privateTypePredicate          = NSPredicate(format: "privateType == %@", Constants.ChannelType.PrivateTypeChannel)
         let directTypePredicate           = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
+        let directPreferedPredicate       = NSPredicate(format: "isDirectPrefered == true")
         let sortName                      = ChannelAttributes.displayName.rawValue
         
         let realm = RealmUtils.realmForCurrentThread()
         self.resultsPublic =
-            realm.objects(Channel.self).filter(currentTeamPredicate).filter(publicTypePredicate).sorted(byProperty: sortName, ascending: true)
+            realm.objects(Channel.self).filter(currentTeamPredicate).filter(currentUserInChannelPredicate).filter(publicTypePredicate).sorted(byProperty: sortName, ascending: true)
         self.resultsPrivate =
-            realm.objects(Channel.self).filter(currentTeamPredicate).filter(privateTypePredicate).sorted(byProperty: sortName, ascending: true)
-        self.resultsDirect =
-            realm.objects(Channel.self).filter(currentTeamPredicate).filter(directTypePredicate).filter(NSPredicate(format: "isInterlocuterOnTeam == true")).filter(NSPredicate(format: "isDirectPrefered == true")).sorted(byProperty: sortName, ascending: true)
-        self.resultsOutsideDirect =
-            realm.objects(Channel.self).filter(directTypePredicate).filter(NSPredicate(format: "isInterlocuterOnTeam == false")).filter(NSPredicate(format: "isDirectPrefered == true")).sorted(byProperty: sortName, ascending: true)
+            realm.objects(Channel.self).filter(currentTeamPredicate).filter(currentUserInChannelPredicate).filter(privateTypePredicate).sorted(byProperty: sortName, ascending: true)
         
-        print(realm.objects(Channel.self))
+        let allDirect = realm.objects(Channel.self).filter(currentTeamPredicate).filter(currentUserInChannelPredicate).filter(directTypePredicate).filter(directPreferedPredicate)
         
-        print(self.resultsPublic)
-        print(self.resultsPrivate)
-        print(self.resultsDirect)
-        print(self.resultsOutsideDirect)
-        
+        self.resultsDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == true")).sorted(byProperty: sortName, ascending: true)
+        self.resultsOutsideDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == false")).sorted(byProperty: sortName, ascending: true)
     }
     
     func configureInitialSelectedChannel() {
