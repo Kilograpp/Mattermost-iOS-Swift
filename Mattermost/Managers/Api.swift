@@ -59,6 +59,7 @@ private protocol UserApi: class {
     
     func loadUsersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadCompleteUsersList(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol PostApi: class {
@@ -589,6 +590,18 @@ extension Api: UserApi {
             completion(nil)
         }, failure: completion)
     }
+    
+    func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        print("\n\n\n\n"+channel.displayName!+"\n\n\n\n")
+        let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromChannelPathPattern(), DataManager.sharedInstance.currentTeam)!+"\(channel.identifier!)/users/0/100"
+        print("\n\n\n\n"+path+"\n\n\n\n")
+        self.manager.get(path: path, success: { (mappingResult, skipMapping) in
+            let users = MappingUtils.fetchUsersFromCompleteList(mappingResult)
+            print(users)
+            completion(nil)
+        }, failure: completion)
+    }
+    
     
     func update(firstName: String? = nil,
                 lastName: String? = nil,
