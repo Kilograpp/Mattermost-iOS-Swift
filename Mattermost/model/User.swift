@@ -68,19 +68,27 @@ final class User: RealmObject {
 }
 
 enum UserAttributes: String {
-    case privateStatus = "privateStatus"
-    case email         = "email"
-    case firstName     = "firstName"
-    case lastName      = "lastName"
-    case identifier    = "identifier"
-    case nickname      = "nickname"
-    case status        = "status"
-    case username      = "username"
-    case avatarLink    = "avatarLink"
-    case notifyProps   = "notifyProps"
-    case createAt      = "createAt"
-    case updateAt      = "updateAt"
-    case deleteAt      = "deleteAt"
+    case authData          = "authData"
+    case authService       = "authService"
+    case createAt          = "createAt"
+    case updateAt          = "updateAt"
+    case deleteAt          = "deleteAt"
+    case email             = "email"
+    case emailVerified     = "emailVerified"
+    case firstName         = "firstName"
+    case identifier        = "identifier"
+    case lastName          = "lastName"
+    case lastPasswordUdate = "lastPasswordUdate"
+    case lastPictureUpdate = "lastPictureUpdate"
+    case locale            = "locale"
+    case nickname          = "nickname"
+    case notifyProps       = "notifyProps"
+    case roles             = "roles"
+    case username          = "username"
+    
+    case privateStatus     = "privateStatus"
+    case status            = "status"
+    case avatarLink        = "avatarLink"
 }
 
 enum UserRelationships: String {

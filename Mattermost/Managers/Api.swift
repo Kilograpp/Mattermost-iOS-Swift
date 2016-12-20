@@ -243,19 +243,12 @@ extension Api: TeamApi {
         let path = SOCStringFromStringWithObject(TeamPathPatternsContainer.teamMembersIds(), currentTeam)
         
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
-            print(mappingResult)
-            
-            
-            /*let users = MappingUtils.fetchPreferedUsersBy(ids: ids, mappingResult: mappingResult!)
+            let teamMembers = mappingResult?.array() as! [Member]
             let realm = RealmUtils.realmForCurrentThread()
-            let preferences = Preference.preferedUsersList()
-            for user in users {
-                user.computeDisplayName()
-                let predicate = NSPredicate(format: "name == %@", user.identifier)
-                let preference = preferences.filter(predicate).first
-                user.isOnTeam = (preference?.value == Constants.CommonStrings.True)
-                realm.add(user)
-            }*/
+            for teamMember in teamMembers {
+                let user = realm.object(ofType: User.self, forPrimaryKey: teamMember.userId)
+                try! realm.write { user?.isOnTeam = true }
+            }
             completion(nil)
         }) { (operation, error) in
             completion(Error.errorWithGenericError(error))
@@ -540,7 +533,32 @@ extension Api: UserApi {
         
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
             print(operation?.httpRequestOperation.responseString)
-            let users = MappingUtils.fetchPreferedUsersBy(ids: ids, mappingResult: mappingResult!)
+            //Temp cap
+            
+            let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
+            var users = Array<User>()
+            for userId in ids {
+                let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
+                let user = User()
+                user.identifier = userDictionary["id"] as! String!
+                user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
+                user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
+                user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
+                user.username = userDictionary["username"] as! String?
+                user.authData = userDictionary["auth_data"] as! String?
+                user.authService = userDictionary["auth_service"] as! String?
+                user.email = userDictionary["email"] as! String?
+                user.nickname = userDictionary["nickname"] as! String?
+                user.firstName = userDictionary["first_name"] as! String?
+                user.lastName = userDictionary["last_name"] as! String?
+                user.roles = userDictionary["roles"] as! String?
+                user.locale = userDictionary["locale"] as! String?
+                
+                users.append(user)
+            }
+            
+            
+         //   let users = MappingUtils.fetchPreferedUsersBy(ids: ids, mappingResult: mappingResult!)
             let realm = RealmUtils.realmForCurrentThread()
             let preferences = Preference.preferedUsersList()
             for user in users {
@@ -548,7 +566,7 @@ extension Api: UserApi {
                 let predicate = NSPredicate(format: "name == %@", user.identifier)
                 let preference = preferences.filter(predicate).first
                 user.isOnTeam = (preference?.value == Constants.CommonStrings.True)
-                realm.add(user)
+                try! realm.write { realm.add(user) }
             }
             completion(nil)
         }) { (operation, error) in
