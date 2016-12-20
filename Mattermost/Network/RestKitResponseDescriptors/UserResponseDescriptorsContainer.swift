@@ -16,6 +16,7 @@ private protocol ResponseDescriptors: class {
     static func initialLoadResponseDescriptor() -> RKResponseDescriptor
     static func initialLoadPreferencesResponseDescriptor() -> RKResponseDescriptor
     static func completeListResponseDescriptor() -> RKResponseDescriptor
+    static func usersFromChannelResponseDescriptor() -> RKResponseDescriptor
     static func updateNotifyResponseDescriptor() -> RKResponseDescriptor
     static func updateResponseDescriptor() -> RKResponseDescriptor
     static func updatePasswordResponseDescriptor() -> RKResponseDescriptor
@@ -71,6 +72,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.completeListPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func usersFromChannelResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
+                                    method: .GET,
+                                    pathPattern: UserPathPatternsContainer.usersFromChannelPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

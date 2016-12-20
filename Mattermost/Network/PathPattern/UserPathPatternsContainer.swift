@@ -15,6 +15,7 @@ private protocol PathPatterns: class {
     static func socketPathPattern() -> String
     static func initialLoadPathPattern() -> String
     static func completeListPathPattern() -> String
+    static func usersFromChannelPathPattern() -> String
     static func usersStatusPathPattern() -> String
     static func usersUpdateNotifyPathPattern() -> String
     static func userUpdatePathPattern() -> String
@@ -70,5 +71,8 @@ final class UserPathPatternsContainer: PathPatterns {
     }
     static func usersByIdsPathPattern() -> String {
         return "users/ids"
+    }
+    static func usersFromChannelPathPattern() -> String {
+    return "teams/:\(TeamAttributes.identifier.rawValue)/channels/"
     }
 }
