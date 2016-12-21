@@ -85,7 +85,7 @@ final class Channel: RealmObject {
     dynamic var team: Team?
     dynamic var displayNameWidth: Float = 0.0
     dynamic var currentUserInChannel: Bool = false
-    dynamic var isInterlocuterOnTeam: Bool = true
+    dynamic var isInterlocuterOnTeam: Bool = false
     dynamic var isDirectPrefered: Bool = false
     
     var isSelected: Bool {
@@ -97,8 +97,7 @@ final class Channel: RealmObject {
     func interlocuterFromPrivateChannel() -> User {
         let ids = self.name?.components(separatedBy: "__")
         let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
-        let user = safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
-        return user
+        return safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
     }
     
     override class func primaryKey() -> String {

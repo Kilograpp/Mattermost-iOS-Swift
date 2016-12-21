@@ -13,7 +13,7 @@ import RealmSwift
 private protocol Interface {
     func isSystem() -> Bool
     func isPreferedDirectChannel() -> Bool
-    func directChannel() -> Channel?
+    func directChannel() -> Channel
     func hasChannel() -> Bool
     func notificationProperies() -> NotifyProps
 }
@@ -127,13 +127,12 @@ extension User: Interface {
         let channel = self.directChannel()
         guard channel != nil else { return false }
         
-        return channel!.isDirectPrefered
+        return channel.isDirectPrefered
     }
     
-    func directChannel() -> Channel? {
-        let predicate =  NSPredicate(format: "displayName == %@", self.username!)
-        let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate)
-        return (channels.count > 0) ? channels.first : nil
+    func directChannel() -> Channel {
+        let realm = RealmUtils.realmForCurrentThread()
+        return realm.objects(Channel.self).filter(NSPredicate(format: "name CONTAINS[c] %@", self.identifier)).first!
     }
     
     func hasChannel() -> Bool {

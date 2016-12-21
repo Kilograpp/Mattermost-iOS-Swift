@@ -143,14 +143,6 @@ extension TeamViewController: Configuration {
         let sortName = TeamAttributes.displayName.rawValue
         self.results = RealmUtils.realmForCurrentThread().objects(Team.self).sorted(byProperty: sortName, ascending: true)
     }
-    
-    func configurePreferedDirectChannels() {
-        let realm = RealmUtils.realmForCurrentThread()
-        
-        let directChannelPredicate = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
-        
-        let preferedUsers = realm.objects(User.self)
-    }
 }
 
 
@@ -194,50 +186,6 @@ extension TeamViewController: Request {
             }
         }
     }
-    
-   /* func loadUsersForFirsPublicChannel() {
-        Api.sharedInstance.loadCompleteUsersList { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            self.updateUsersTeamStatus()
-        }
-    }
-    
-    func updateUsersTeamStatus() {
-        let townSquare = Channel.townSquare()
-        Api.sharedInstance.loadExtraInfoForChannel((townSquare?.identifier!)!, completion: { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            let realm = RealmUtils.realmForCurrentThread()
-            
-            let townSquareUsers = townSquare?.members
-            let directChannels = realm.objects(Channel.self).filter(NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel))
-            
-            for directChannel in directChannels {
-                let user = directChannel.interlocuterFromPrivateChannel()
-                let isOnTeam = townSquareUsers?.contains(where: { return ($0.identifier == user.identifier) })
-                
-                try! realm.write {
-                    user.isOnTeam = isOnTeam!
-                    directChannel.isInterlocuterOnTeam = isOnTeam!
-                }
-            }
-            self.updateDirectChannelsPreferedStatus()
-        })
-    }
-    
-    func updateDirectChannelsPreferedStatus() {
-        Api.sharedInstance.listPreferencesWith("direct_channel_show", completion: { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            
-            RouterUtils.loadInitialScreen()
-            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
-            
-            DispatchQueue.main.async{
-                self.dismiss(animated: true, completion:{ _ in
-                    self.hideLoaderView()
-                })
-            }
-        })
-    }*/
 }
 
 

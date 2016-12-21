@@ -79,6 +79,7 @@ fileprivate protocol Action {
 
 fileprivate protocol Navigation {
     func proceedToTeams()
+    func proceedToChat()
 }
 
 fileprivate protocol Request {
@@ -207,6 +208,10 @@ extension LoginViewController: Navigation {
         let passwordRecoveryController = self.storyboard?.instantiateViewController(withIdentifier: "PasswordRecoveryViewController") as! PasswordRecoveryViewController
         self.navigationController?.pushViewController(passwordRecoveryController, animated: true)
     }
+    
+    func proceedToChat() {
+        RouterUtils.loadInitialScreen()
+    }
 }
 
 
@@ -251,80 +256,38 @@ extension LoginViewController: Request {
     func loadTeamChannels() {
         Api.sharedInstance.loadChannels { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            self.loadUsers()
+            self.loadPreferedDirectChannelsInterlocuters()
         }
     }
     
-    func loadUsers() {
-        Api.sharedInstance.loadCompleteUsersList { (error) in
+    func loadPreferedDirectChannelsInterlocuters() {
+        let preferences = Preference.preferedUsersList()
+        var usersIds = Array<String>()
+        preferences.forEach{ usersIds.append($0.name!) }
+        
+        Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            self.updateUsersTeamStatus()
+            self.loadTeamMembers()
         }
     }
     
-    func updateUsersTeamStatus() {
-        let townSquare = Channel.townSquare()
-        Api.sharedInstance.loadExtraInfoForChannel((townSquare?.identifier!)!, completion: { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            let realm = RealmUtils.realmForCurrentThread()
-            
-            let townSquareUsers = townSquare?.members
-            let directChannels = realm.objects(Channel.self).filter(NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel))
-            
-            for directChannel in directChannels {
-                let user = directChannel.interlocuterFromPrivateChannel()
-                let isOnTeam = townSquareUsers?.contains(where: { return ($0.identifier == user.identifier) })
-                
-                try! realm.write {
-                    user.isOnTeam = isOnTeam!
-                    directChannel.isInterlocuterOnTeam = isOnTeam!
-                }
-            }
-            self.updateDirectChannelsPreferedStatus()
-        })
-    }
-    
-    func updateDirectChannelsPreferedStatus() {
-        Api.sharedInstance.listPreferencesWith("direct_channel_show", completion: { (error) in
+    func loadTeamMembers() {
+        let predicate = NSPredicate(format: "identifier != %@ AND identifier != %@", Preferences.sharedInstance.currentUserId!,
+                                    Constants.Realm.SystemUserIdentifier)
+        let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate)
+        var ids = Array<String>()
+        users.forEach{ ids.append($0.identifier) }
+        
+        Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
-            RouterUtils.loadInitialScreen()
-            NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
+            //  NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
             
             DispatchQueue.main.async{
                 self.hideLoaderView()
-                RouterUtils.loadInitialScreen()
+                self.proceedToChat()
             }
-        })
-    }
-    
-    
-/*
-    
-    func loadChannels() {
-        Api.sharedInstance.loadChannels(with: { (error) in
-            guard (error == nil) else {
-                self.hideLoaderView()
-                return
-            }
-            
-            self.loadCompleteUsersList()
-        })
-    }
-    
-    func loadCompleteUsersList() {
-        Api.sharedInstance.loadCompleteUsersList({ (error) in
-            guard (error == nil) else {
-                self.hideLoaderView()
-                return
-            }
-            self.hideLoaderView()
-            RouterUtils.loadInitialScreen()
-        })
-    }
-    */
-    func proceedToChat() {
-        RouterUtils.loadInitialScreen()
+        }
     }
 }
 

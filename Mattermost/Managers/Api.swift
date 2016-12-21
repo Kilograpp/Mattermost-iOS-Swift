@@ -247,7 +247,10 @@ extension Api: TeamApi {
             let realm = RealmUtils.realmForCurrentThread()
             for teamMember in teamMembers {
                 let user = realm.object(ofType: User.self, forPrimaryKey: teamMember.userId)
-                try! realm.write { user?.isOnTeam = true }
+                try! realm.write {
+                    user?.isOnTeam = true
+                    user?.directChannel().isInterlocuterOnTeam = true
+                }
             }
             completion(nil)
         }) { (operation, error) in
@@ -267,9 +270,7 @@ extension Api: ChannelApi {
             let channels = mappingResult.array() as! [Channel]//MappingUtils.fetchAllChannelsFromList(mappingResult)
             try! realm.write({
                 channels.forEach {
-                /*    if $0.privateType != Constants.ChannelType.DirectTypeChannel {
-                        $0.currentUserInChannel = true
-                    }*/
+                    $0.currentUserInChannel = true
                     $0.computeTeam()
                    // $0.computeDispayNameIfNeeded()
                   /*  if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{
@@ -532,7 +533,6 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.usersByIdsPathPattern()
         
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
-            print(operation?.httpRequestOperation.responseString)
             //Temp cap
             
             let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
@@ -553,6 +553,7 @@ extension Api: UserApi {
                 user.lastName = userDictionary["last_name"] as! String?
                 user.roles = userDictionary["roles"] as! String?
                 user.locale = userDictionary["locale"] as! String?
+                user.computeDisplayName()
                 
                 users.append(user)
             }
@@ -566,7 +567,11 @@ extension Api: UserApi {
                 let predicate = NSPredicate(format: "name == %@", user.identifier)
                 let preference = preferences.filter(predicate).first
                 user.isOnTeam = (preference?.value == Constants.CommonStrings.True)
-                try! realm.write { realm.add(user) }
+                try! realm.write {
+                    realm.add(user)
+                    user.directChannel().isDirectPrefered = true
+                    user.directChannel().displayName = user.displayName
+                }
             }
             completion(nil)
         }) { (operation, error) in
