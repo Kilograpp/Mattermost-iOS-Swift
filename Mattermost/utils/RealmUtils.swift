@@ -70,13 +70,16 @@ final class RealmUtils {
         })
     }
     
-    static func refresh() {
+    static func refresh(withLogout: Bool) {
         let realm = realmForCurrentThread()
         
         let channels = realm.objects(Channel.self)
         let files = realm.objects(File.self)
         let posts = realm.objects(Post.self)
-        let users = realm.objects(User.self)
+        var users = realm.objects(User.self)
+        if !withLogout {
+            users = users.filter(NSPredicate(format: "identifier != %@", Preferences.sharedInstance.currentUserId!))
+        }
         let attachments = realm.objects(Attachment.self)
         let days = realm.objects(Day.self)
         let members = realm.objects(Member.self)

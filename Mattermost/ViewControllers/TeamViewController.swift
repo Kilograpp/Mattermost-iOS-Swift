@@ -189,6 +189,13 @@ extension TeamViewController: Request {
 }
 
 
+//MARK: Support
+extension TeamViewController {
+    func refreshCurrentTeamIfNeeded() {
+        if Preferences.sharedInstance.currentTeamId != nil { RealmUtils.refresh(withLogout: false) }
+    }
+}
+
 //MARK: UITableViewDataSource
 extension TeamViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -213,11 +220,12 @@ extension TeamViewController: UITableViewDelegate {
         
         let team = self.results[indexPath.row]
         if Preferences.sharedInstance.currentTeamId != team.identifier {
+            refreshCurrentTeamIfNeeded()
             DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier
             Preferences.sharedInstance.save()
             showLoaderView()
-            self.loadTeamChannels()
+            loadTeamChannels()
         } else {
             self.dismiss(animated: true, completion: nil)
         }

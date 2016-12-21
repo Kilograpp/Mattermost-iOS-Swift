@@ -206,7 +206,9 @@ extension Api: TeamApi {
                 currentUser?.preferences.append(objectsIn: preferences)
             }
             if (teams.count == 1) {
-                Preferences.sharedInstance.currentTeamId = teams.first!.identifier
+                DataManager.sharedInstance.currentTeam = teams.first
+                Preferences.sharedInstance.currentTeamId = teams.first?.identifier
+                Preferences.sharedInstance.save()
                 completion(false, nil)
             } else {
                 completion(true, nil)
