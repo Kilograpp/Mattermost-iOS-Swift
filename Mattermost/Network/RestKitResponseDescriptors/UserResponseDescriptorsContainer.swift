@@ -76,7 +76,7 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
     static func usersFromChannelResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: UserMappingsContainer.directProfileMapping(),
+        return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.usersFromChannelPathPattern(),
                                     keyPath: nil,

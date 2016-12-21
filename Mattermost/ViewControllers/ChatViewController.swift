@@ -514,7 +514,7 @@ extension ChatViewController: Navigation {
         self.showLoaderView()
         Api.sharedInstance.loadChannels(with: { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            Api.sharedInstance.loadExtraInfoForChannel(channel.identifier!, completion: { (error) in
+            Api.sharedInstance.loadUsersListFrom(channel: channel, completion: { (error) in
                 guard error == nil else {
                     let channelType = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
                     self.handleErrorWith(message: "You left this \(channelType)".localized)

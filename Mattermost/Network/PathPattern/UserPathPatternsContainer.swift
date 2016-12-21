@@ -73,6 +73,6 @@ final class UserPathPatternsContainer: PathPatterns {
         return "users/ids"
     }
     static func usersFromChannelPathPattern() -> String {
-    return "teams/:\(TeamAttributes.identifier.rawValue)/channels/"
+    return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier.rawValue)/users/0/100"
     }
 }
