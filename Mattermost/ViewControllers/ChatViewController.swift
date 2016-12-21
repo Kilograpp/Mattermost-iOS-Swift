@@ -717,6 +717,8 @@ extension ChatViewController: NotificationObserver {
     func removeActionsObservers() {
         let center = NotificationCenter.default
         
+        guard !channel.isInvalidated else { return }
+        
         center.removeObserver(self, name: NSNotification.Name(ActionsNotification.notificationNameForChannelIdentifier(channel?.identifier)),
                               object: nil)
     }
