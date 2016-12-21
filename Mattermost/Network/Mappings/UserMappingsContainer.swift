@@ -36,8 +36,8 @@ final class UserMappingsContainer: BaseMappingsContainer {
             "auth_service" : UserAttributes.authService.rawValue,
             "email"        : UserAttributes.email.rawValue,
             "nickname"     : UserAttributes.nickname.rawValue,
-            "firstName"    : UserAttributes.firstName.rawValue,
-            "lastName"     : UserAttributes.lastName.rawValue,
+            "first_name"   : UserAttributes.firstName.rawValue,
+            "last_name"    : UserAttributes.lastName.rawValue,
             "roles"        : UserAttributes.roles.rawValue,
             "locale"       : UserAttributes.locale.rawValue
             ])
