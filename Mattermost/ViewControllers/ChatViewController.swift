@@ -18,8 +18,6 @@ protocol ChatViewControllerInterface: class {
     func changeChannelForPostFromSearch()
 }
 
-
-
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
 //MARK: Properties

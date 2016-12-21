@@ -18,8 +18,7 @@ class DataManager {
         get {return User.objectById(Preferences.sharedInstance.currentUserId!)}
         set {Preferences.sharedInstance.currentUserId = newValue!.identifier}
     }
-      
-
+    
     var currentTeam: Team? {
         get {return Team.objectById(Preferences.sharedInstance.currentTeamId!)}
         set {Preferences.sharedInstance.currentTeamId = newValue!.identifier}
@@ -36,7 +35,6 @@ class DataManager {
         return user
     }
     
-
     @objc func clearCachedResponses() {
         URLCache.shared.removeAllCachedResponses()
     }
@@ -46,7 +44,8 @@ class DataManager {
     }
 }
 
-//MARK: - Notification Subscription
+
+//MARK: Notification Subscription
 extension DataManager {
     func subscribeNotifications() {
         Observer.sharedObserver.subscribeForLogoutNotification(self, selector: #selector(clearCachedResponses))
