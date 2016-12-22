@@ -87,10 +87,10 @@ extension ObjectManager: PostRequests {
               success: ((_ mappingResult: RKMappingResult) -> Void)?,
               failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            print(operation?.httpRequestOperation.responseString)
+            print(operation?.httpRequestOperation.responseString ?? "success post object")
             success?(mappingResult!)
         }) { (operation, error) in
-            print(operation?.httpRequestOperation.responseString)
+            print(operation?.httpRequestOperation.responseString ?? "error in post object")
             let responseString = operation?.httpRequestOperation.responseString
             guard responseString != nil else {
                 let errorMessage: String!

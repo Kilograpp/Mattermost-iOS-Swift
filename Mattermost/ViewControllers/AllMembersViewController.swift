@@ -119,7 +119,7 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
             self.lastSelectedIndexPath = nil
             return
         }
-        if member.directChannel() == nil{
+        if member.directChannel() == nil {
             Api.sharedInstance.createDirectChannelWith(member, completion: {_ in
                 ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
                 self.dismiss(animated: true, completion: {

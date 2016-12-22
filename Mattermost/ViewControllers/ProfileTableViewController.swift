@@ -199,8 +199,7 @@ extension ProfileViewController: Navigation {
 //MARK: Request
 extension ProfileViewController: Request {
     internal func updateImage() {
-        self.showLoaderProfileView()
-        
+        self.showLoaderView()
         let image = self.avatarImageView.image
         self.saveButton.isEnabled = false
         Api.sharedInstance.update(profileImage: image!, completion: { (error) in

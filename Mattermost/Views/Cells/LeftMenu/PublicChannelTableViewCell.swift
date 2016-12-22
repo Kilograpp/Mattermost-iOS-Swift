@@ -94,9 +94,6 @@ extension PublicChannelTableViewCell: LeftMenuTableViewCellProtocol {
         if selected {
             self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.blackColor : ColorBucket.sideMenuSelectedTextColor
         } else {
-            print(channel.displayName!, " --- ", channel.hasNewMessages())
-            print("lastView = ", channel.lastViewDate, " last post = ", channel.lastPostDate)
-            
             self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuCommonTextColor
         }
     }
