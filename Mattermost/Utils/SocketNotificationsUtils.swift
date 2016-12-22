@@ -109,13 +109,14 @@ final class SocketNotificationUtils {
         post.channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
         post.pendingId = dictionary[NotificationKeys.PendingPostIdentifier] as? String
         post.parentId = dictionary[NotificationKeys.DataKeys.PostKeys.ParentIdentifier] as? String
-        let files = dictionary[NotificationKeys.DataKeys.PostKeys.Files] as! [String]
-        files.forEach { (fileName) in
+        if let files = dictionary[NotificationKeys.DataKeys.PostKeys.Files] {
+        (files as! [String]).forEach { (fileName) in
             let file = File()
             file.rawLink = fileName
             RealmUtils.save(file)
             //Api.sharedInstance.getInfo(file: file)
             post.files.append(file)
+        }
         }
  
         post.createdAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! TimeInterval/1000.0)

@@ -621,8 +621,8 @@ extension Api: UserApi {
                     user.lastName = userDictionary["last_name"] as! String?
                     user.roles = userDictionary["roles"] as! String?
                     user.locale = userDictionary["locale"] as! String?
-                    if !channel.members.contains(user) {
-                        realm.add(user, update: true)
+                    realm.add(user, update: true)
+                    if !Array(channel.members.map{$0.identifier}).contains(user.identifier) {
                         channel.members.append(user)
                     }
                 }
