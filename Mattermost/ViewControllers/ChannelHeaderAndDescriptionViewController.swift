@@ -81,7 +81,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
                 AlertManager.sharedManager.showSuccesWithMessage(message: "Header was updated".localized)
                 Api.sharedInstance.loadChannels(with: { (error) in
                     guard (error == nil) else { return }
-                    Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                         guard (error == nil) else { return }
                     })
                 })
@@ -92,7 +92,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
                 AlertManager.sharedManager.showSuccesWithMessage(message: "Purpose was updated".localized)
                 Api.sharedInstance.loadChannels(with: { (error) in
                     guard (error == nil) else { return }
-                    Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                    Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                         guard (error == nil) else { return }
                     })
                 })

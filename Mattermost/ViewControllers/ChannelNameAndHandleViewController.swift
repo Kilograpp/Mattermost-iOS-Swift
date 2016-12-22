@@ -117,7 +117,7 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
             AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was updated")
             Api.sharedInstance.loadChannels(with: { (error) in
                 guard (error == nil) else { return }
-                Api.sharedInstance.loadExtraInfoForChannel(self.channel.identifier!, completion: { (error) in
+                Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                     guard (error == nil) else { return }
                 })
             })
