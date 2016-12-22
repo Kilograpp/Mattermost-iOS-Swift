@@ -125,7 +125,8 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
                     return
                 }
                 self.users = users!
-                AlertManager.sharedManager.showSuccesWithMessage(message: member.username!+" was added in channel")
+                let channelType = channel.privateType == "P" ? "group" : "channel"
+                AlertManager.sharedManager.showSuccesWithMessage(message: member.username!+" was added in "+channelType)
                 Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                     guard (error == nil) else { return }
                     self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
