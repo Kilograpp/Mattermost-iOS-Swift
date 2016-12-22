@@ -82,6 +82,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
+    static func usersAreNotInChannelResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
+                                    method: .GET,
+                                    pathPattern: UserPathPatternsContainer.usersNotInChannelPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
     static func updateNotifyResponseDescriptor() -> RKResponseDescriptor {
         return RKResponseDescriptor(mapping: UserMappingsContainer.mapping(),
                                     method: .POST,

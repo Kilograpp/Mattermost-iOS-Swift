@@ -36,7 +36,7 @@ class MemberChannelSettingsCell: UITableViewCell {
 extension MemberChannelSettingsCell {
     func configureWithUser(user: User) {
         self.user = user
-        memberName.text = user.displayName
+        memberName.text = user.username
         memberImage.image = UIImage.sharedAvatarPlaceholder
         ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
             self?.memberImage.image = image

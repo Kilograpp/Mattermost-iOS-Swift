@@ -148,7 +148,7 @@ class AllMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         let membersIdentifiers = Array(membersList.map{$0.identifier!})
         let sortName = UserAttributes.username.rawValue
 
-        let predicate =  NSPredicate(format: "displayName CONTAINS[c] '\(searchText)' AND identifier IN %@", membersIdentifiers)
+        let predicate =  NSPredicate(format: "username CONTAINS[c] '\(searchText)' AND identifier IN %@", membersIdentifiers)
         searchMembersList = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName)
     }
 }

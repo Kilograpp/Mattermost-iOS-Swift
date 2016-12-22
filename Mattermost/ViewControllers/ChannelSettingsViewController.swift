@@ -18,6 +18,7 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
     var searchController: UISearchController!
     var channel: Channel!
     var selectedInfoType: InfoType!
+    var usersAreNotInChannel = Array<User>()
     
     var lastSelectedIndexPath: IndexPath? = nil
     
@@ -197,6 +198,8 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         if segue.identifier == "showMembersAdditing"{
             let addMembersViewController = segue.destination as! AddMembersViewController
             addMembersViewController.channel = self.channel
+            addMembersViewController.users = self.usersAreNotInChannel
+            self.hideLoaderView()
         }
         
         if segue.identifier == "showAllMembers"{
@@ -220,7 +223,15 @@ class ChannelSettingsViewController: UIViewController, UITableViewDelegate, UITa
         guard self.lastSelectedIndexPath == nil else { return }
         
         if (indexPath==IndexPath(row: 0, section: 2)) {
-            self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
+            self.showLoaderView()
+            Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
+                guard (error==nil) else {
+                    self.hideLoaderView()
+                    return
+                }
+                self.usersAreNotInChannel = users!
+                self.performSegue(withIdentifier: "showMembersAdditing", sender: nil)
+            })
         }
         if (indexPath.section==2 && indexPath.row >= 1 && indexPath.row <= membersRowCount){
             self.lastSelectedIndexPath = indexPath

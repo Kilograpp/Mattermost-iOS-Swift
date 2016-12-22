@@ -100,7 +100,7 @@ extension SocketManager: MessageHandling {
         print(dictionary)
         //let userId = dictionary[NotificationKeys.UserIdentifier] as? String
         //let channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
-        let userId = dictionary[NotificationKeys.Broadcast]?[NotificationKeys.UserIdentifier] as? String
+        let userId = dictionary[NotificationKeys.Data]?[NotificationKeys.UserIdentifier] as? String
         let channelId = dictionary[NotificationKeys.Broadcast]?[NotificationKeys.ChannelIdentifier] as? String
         switch(SocketNotificationUtils.typeForNotification(dictionary)) {
             case .error:

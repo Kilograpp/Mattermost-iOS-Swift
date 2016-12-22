@@ -30,7 +30,7 @@ class MemberInAdditingCell: UITableViewCell {
 
 extension MemberInAdditingCell {
     func configureWithUser(user: User) {
-        memberName.text = user.displayName
+        memberName.text = user.username
         memberIcon.image = UIImage.sharedAvatarPlaceholder
         ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
             self?.memberIcon.image = image

@@ -24,6 +24,7 @@ private protocol PathPatterns: class {
     static func attachDevicePathPattern() -> String
     static func passwordResetPathPattern() -> String
     static func usersByIdsPathPattern() -> String
+    static func usersNotInChannelPathPattern() -> String
 }
 
 final class UserPathPatternsContainer: PathPatterns {
@@ -75,4 +76,8 @@ final class UserPathPatternsContainer: PathPatterns {
     static func usersFromChannelPathPattern() -> String {
     return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier.rawValue)/users/0/100"
     }
+    static func usersNotInChannelPathPattern() -> String {
+            return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier.rawValue)/users/not_in_channel/0/100"
+    }
+
 }

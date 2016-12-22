@@ -14,9 +14,8 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var tableView: UITableView!
     var searchController: UISearchController!
     var channel: Channel!
-    var users: Results<User>!
-    var searchUsers: Results<User>!
-    var searchMembersList: Results<User>!
+    var users: Array<User>!
+    var searchUsers: Array<User>!
     
     var lastSelectedIndexPath: IndexPath? = nil
 
@@ -28,7 +27,6 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.delegate = self
         setupNavigationBar()
         setupSearchBar()
-        setupUsers()
         
         let nib = UINib(nibName: "MemberInAdditingCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "memberInAdditingCell")
@@ -126,10 +124,10 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
                     self.lastSelectedIndexPath = nil
                     return
                 }
-                AlertManager.sharedManager.showSuccesWithMessage(message: member.displayName!+" was added in channel")
+                AlertManager.sharedManager.showSuccesWithMessage(message: member.username!+" was added in channel")
                 self.hideLoaderView()
                 self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
-                self.setupUsers()
+                //self.setupUsers()
                 self.tableView.reloadData()
                 if self.searchController.isActive {
                     self.searchController.searchBar.text! += ""
@@ -138,19 +136,6 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
             })
         })
         
-    }
-    
-    func setupUsers() {
-        let sortName = UserAttributes.username.rawValue
-        let identifiers = Array(channel.members.map{$0.identifier!})
-        let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
-        
-        let townSquareIdentifiers = Array(townSquare!.members.map{$0.identifier!})
-        
-        
-        let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@ AND NOT identifier IN %@ AND identifier IN %@", Constants.Realm.SystemUserIdentifier,
-                                     Preferences.sharedInstance.currentUserId!, identifiers, townSquareIdentifiers)
-        users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
     }
     
     //Search updating
@@ -162,17 +147,8 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func filterContent(searchText: String){
-        
-        let sortName = UserAttributes.username.rawValue
-        let identifiers = Array(channel.members.map{$0.identifier!})
-        let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
-        
-        let townSquareIdentifiers = Array(townSquare!.members.map{$0.identifier!})
-        
-        
-        let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@ AND NOT identifier IN %@ AND identifier IN %@ AND displayName CONTAINS[c] '\(searchText)'", Constants.Realm.SystemUserIdentifier,
-                                     Preferences.sharedInstance.currentUserId!, identifiers, townSquareIdentifiers)
-        searchUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+        searchUsers = users.filter({
+                $0.username?.lowercased().range(of: searchText.lowercased()) != nil || searchText==""
+        })
     }
-    
 }

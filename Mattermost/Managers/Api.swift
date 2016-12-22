@@ -60,6 +60,7 @@ private protocol UserApi: class {
     func loadUsersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadCompleteUsersList(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
 }
 
 private protocol PostApi: class {
@@ -597,46 +598,77 @@ extension Api: UserApi {
     func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromChannelPathPattern(), channel)!
         
-        print("\n\n\n\n")
-        print(path)
-        print("\n\n\n\n")
-        
+        self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
+            print(operation.httpRequestOperation.responseString)
+            //Temp cap
+            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+            let ids = Array(responseDictionary!.keys.map{$0})
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write {
+                for userId in ids {
+                    let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
+                    let user = User()
+                    user.identifier = userDictionary["id"] as! String!
+                    user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
+                    user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
+                    user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
+                    user.username = userDictionary["username"] as! String?
+                    user.authData = userDictionary["auth_data"] as! String?
+                    user.authService = userDictionary["auth_service"] as! String?
+                    user.email = userDictionary["email"] as! String?
+                    user.nickname = userDictionary["nickname"] as! String?
+                    user.firstName = userDictionary["first_name"] as! String?
+                    user.lastName = userDictionary["last_name"] as! String?
+                    user.roles = userDictionary["roles"] as! String?
+                    user.locale = userDictionary["locale"] as! String?
+                    if !channel.members.contains(user) {
+                        realm.add(user, update: true)
+                        channel.members.append(user)
+                    }
+                }
+            }
+            completion(nil)
+        }, failure: completion)
+    }
+    
+    func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void){
+        let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersNotInChannelPathPattern(), channel)!
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
             print(operation.httpRequestOperation.responseString)
             //Temp cap
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
             let ids = Array(responseDictionary!.keys.map{$0})
-            for userId in ids {
-                let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
-                let user = User()
-                user.identifier = userDictionary["id"] as! String!
-                user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
-                user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
-                user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
-                user.username = userDictionary["username"] as! String?
-                user.authData = userDictionary["auth_data"] as! String?
-                user.authService = userDictionary["auth_service"] as! String?
-                user.email = userDictionary["email"] as! String?
-                user.nickname = userDictionary["nickname"] as! String?
-                user.firstName = userDictionary["first_name"] as! String?
-                user.lastName = userDictionary["last_name"] as! String?
-                user.roles = userDictionary["roles"] as! String?
-                user.locale = userDictionary["locale"] as! String?
-                
-                users.append(user)
-            }
-            print("\n\n\n\n")
-            print(users)
-            print("\n\n\n\n")
             let realm = RealmUtils.realmForCurrentThread()
-            try! realm.write {
-                channel.members = List(users)
-            }
-            completion(nil)
-        }, failure: completion)
+            //try! realm.write {
+                for userId in ids {
+                    let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
+                    let user = User()
+                    user.identifier = userDictionary["id"] as! String!
+                    user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
+                    user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
+                    user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
+                    user.username = userDictionary["username"] as! String?
+                    user.authData = userDictionary["auth_data"] as! String?
+                    user.authService = userDictionary["auth_service"] as! String?
+                    user.email = userDictionary["email"] as! String?
+                    user.nickname = userDictionary["nickname"] as! String?
+                    user.firstName = userDictionary["first_name"] as! String?
+                    user.lastName = userDictionary["last_name"] as! String?
+                    user.roles = userDictionary["roles"] as! String?
+                    user.locale = userDictionary["locale"] as! String?
+                    //if !channel.members.contains(user) {
+                        //realm.add(user, update: true)
+                        users.append(user)
+                    //}
+                }
+            //}
+            completion(nil, users)
+            
+        }, failure:{ error in
+                completion(error, nil)
+        })
     }
-    
     
     func update(firstName: String? = nil,
                 lastName: String? = nil,
