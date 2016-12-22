@@ -125,7 +125,7 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
                     return
                 }
                 self.users = users!
-                let channelType = channel.privateType == "P" ? "group" : "channel"
+                let channelType = self.channel.privateType == "P" ? "group" : "channel"
                 AlertManager.sharedManager.showSuccesWithMessage(message: member.username!+" was added in "+channelType)
                 Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                     guard (error == nil) else { return }
