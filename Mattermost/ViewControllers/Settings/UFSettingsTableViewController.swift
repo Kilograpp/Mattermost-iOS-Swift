@@ -157,6 +157,7 @@ extension UFSettingsTableViewController: Request {
             }
             self.tableView.reloadData()
             AlertManager.sharedManager.showSuccesWithMessage(message: "Display name was successfully updated")
+            self.returtToSettings()
         }
     }
     
@@ -169,6 +170,7 @@ extension UFSettingsTableViewController: Request {
             }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadRightMenuNotification), object: nil)
             AlertManager.sharedManager.showSuccesWithMessage(message: "Username was successfully updated")
+            self.returtToSettings()
         }
     }
     
@@ -180,6 +182,7 @@ extension UFSettingsTableViewController: Request {
                 return
             }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Nickname was successfully updated")
+            self.returtToSettings()
         }
     }
     
@@ -191,6 +194,7 @@ extension UFSettingsTableViewController: Request {
                 return
             }
             AlertManager.sharedManager.showSuccesWithMessage(message: "Email was successfully updated")
+            self.returtToSettings()
         }
     }
     
