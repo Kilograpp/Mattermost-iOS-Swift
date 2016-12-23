@@ -17,7 +17,6 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.dataSource = self
         tableView.delegate = self
         setupNavigationBar()
