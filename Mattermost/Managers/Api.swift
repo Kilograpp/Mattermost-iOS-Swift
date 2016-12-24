@@ -523,12 +523,36 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.loadCurrentUser()
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
-            let user = mappingResult.firstObject as! User
+            let updatedUser = mappingResult.firstObject as! User
+            let updatedNotifyProps = updatedUser.notifyProps
+            updatedNotifyProps?.userId = updatedUser.identifier
+            updatedNotifyProps?.computeKey()
+            
+            let realm = RealmUtils.realmForCurrentThread()
+            let currentUser = DataManager.sharedInstance.currentUser
+            //let preferences = DataManager.sharedInstance.currentUser?.preferences
+            try! realm.write {
+                //Update user fields
+                currentUser?.updateAt = updatedUser.updateAt
+                currentUser?.deleteAt = updatedUser.deleteAt
+                currentUser?.username = updatedUser.username
+                currentUser?.email = updatedUser.email
+                currentUser?.nickname = updatedUser.nickname
+                currentUser?.firstName = updatedUser.firstName
+                currentUser?.lastName = updatedUser.lastName
+                //Update notifyProps
+                realm.delete((currentUser?.notifyProps)!)
+                realm.add(updatedNotifyProps!)
+                currentUser?.notifyProps = updatedNotifyProps
+            }
+            
+            
+           /* let user = mappingResult.firstObject as! User
             let systemUser = DataManager.sharedInstance.instantiateSystemUser()
             user.computeDisplayName()
             DataManager.sharedInstance.currentUser = user
             RealmUtils.save([user, systemUser])
-            SocketManager.sharedInstance.setNeedsConnect()
+            SocketManager.sharedInstance.setNeedsConnect()*/
             completion(nil)
             }, failure: completion)
     }
@@ -542,6 +566,8 @@ extension Api: UserApi {
             let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
             for userId in ids {
+                guard responseDictionary?[userId] != nil else { continue }
+                
                 let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
                 let user = User()
                 user.identifier = userDictionary["id"] as! String!

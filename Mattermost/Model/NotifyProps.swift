@@ -50,7 +50,7 @@ final class NotifyProps: RealmObject {
     dynamic var push: String? = "all"
     dynamic var pushStatus: String? = "online"
     dynamic var userId: String?
-    dynamic var key: String! = "__notifyProps"
+    dynamic var key: String?
     dynamic var hasUpdated: Bool = false
     
     override static func indexedProperties() -> [String] {
