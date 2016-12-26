@@ -35,7 +35,8 @@ extension ChannelMappingsContainer: RequestMapping {
             ChannelAttributes.privateType.rawValue : "type",
             ChannelAttributes.displayName.rawValue : "display_name",
             ChannelAttributes.header.rawValue      : "header",
-            ChannelAttributes.purpose.rawValue     : "purpose"
+            ChannelAttributes.purpose.rawValue     : "purpose",
+            ChannelAttributes.creatorId.rawValue   : "creator_id"
             ])
         return mapping!
     }

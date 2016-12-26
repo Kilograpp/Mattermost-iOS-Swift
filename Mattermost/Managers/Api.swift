@@ -46,6 +46,7 @@ private protocol ChannelApi: class {
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func getChannel(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol UserApi: class {
@@ -481,6 +482,23 @@ extension Api: ChannelApi {
         }, failure: { (error) in
             completion(error)
         })
+    }
+    
+    //FIXMEGETCHANNEL
+    func getChannel(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.getChannelPathPattern(), channel)
+        
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let obtainedChannel = mappingResult.firstObject as! Channel
+            try! realm.write({
+                print("\n\n\n\nSYKA\n\n\n\n")
+                print(obtainedChannel)
+                print("\n\n\n\nSYKA\n\n\n\n")
+                realm.add(obtainedChannel, update: true)
+            })
+            completion(nil)
+        }, failure: completion)
     }
 }
 

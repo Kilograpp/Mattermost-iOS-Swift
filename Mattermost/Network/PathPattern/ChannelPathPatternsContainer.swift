@@ -22,6 +22,7 @@ private protocol PathPatterns: class {
     static func leaveChannelPathPattern() -> String
     static func joinChannelPathPattern() -> String
     static func deleteChannelPathPattern() -> String
+    static func getChannelPathPattern() -> String
 }
 
 final class ChannelPathPatternsContainer: PathPatterns {
@@ -63,5 +64,9 @@ final class ChannelPathPatternsContainer: PathPatterns {
     }
     static func deleteChannelPathPattern() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/delete"
+    }
+    static func getChannelPathPattern() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/"
+
     }
 }

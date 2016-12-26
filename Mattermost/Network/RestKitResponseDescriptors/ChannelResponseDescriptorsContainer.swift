@@ -24,6 +24,7 @@ private protocol ChannelResponseDescriptors: class {
     static func updatePurposeResponseDescriptor() -> RKResponseDescriptor
     static func updateResponseDescriptor() -> RKResponseDescriptor
     static func deleteResponseDescriptor() -> RKResponseDescriptor
+    static func getChannelResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class ChannelResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -129,6 +130,13 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
                                     method: .POST,
                                     pathPattern: ChannelPathPatternsContainer.deleteChannelPathPattern(),
                                     keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func getChannelResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: ChannelMappingsContainer.mapping(),
+                                    method: .GET,
+                                    pathPattern: ChannelPathPatternsContainer.getChannelPathPattern(),
+                                    keyPath: "channel",
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
 }
