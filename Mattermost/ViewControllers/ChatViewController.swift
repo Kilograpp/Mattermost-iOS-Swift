@@ -826,7 +826,7 @@ extension ChatViewController {
                 if indexPath.row < self.commandsResult.count {
                     item = self.commandsResult[indexPath.row]
                 } else {
-                    item = self.membersResult[indexPath.row - self.commandsResult.count].displayName!
+                    item = self.membersResult[indexPath.row - self.commandsResult.count].username!
                     
                 }
                 item  += " "
@@ -945,10 +945,10 @@ extension ChatViewController {
             switch (actionNotification.event!) {
             case .Typing:
                 if (actionNotification.userIdentifier != Preferences.sharedInstance.currentUserId) {
-                    typingIndicatorView?.insertUsername(user?.displayName)
+                    typingIndicatorView?.insertUsername(user?.username)
                 }
             default:
-                typingIndicatorView?.removeUsername(user?.displayName)
+                typingIndicatorView?.removeUsername(user?.username)
             }
         }
     }
@@ -1074,10 +1074,10 @@ extension ChatViewController {
             if let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first {
                 let townSquareIdentifiers = Array(townSquare.members.map{$0.identifier!})
                 
-                let predicate =  NSPredicate(format: "identifier IN %@ AND displayName BEGINSWITH[c] '\(word)'", townSquareIdentifiers)
+                let predicate =  NSPredicate(format: "identifier IN %@ AND username BEGINSWITH[c] '\(word)'", townSquareIdentifiers)
                 self.membersResult = Array(RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true))
             }
-            self.commandsResult = Constants.LinkCommands.name.filter{
+            self.commandsResult = Constants.LinkCommands.name.filter {
                 return $0.hasPrefix(word.lowercased())
             }
         }
