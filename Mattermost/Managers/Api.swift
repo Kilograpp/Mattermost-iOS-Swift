@@ -490,12 +490,15 @@ extension Api: ChannelApi {
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
-            let obtainedChannel = mappingResult.firstObject as! Channel
+            let obtainedChannel = MappingUtils.fetchAllChannels(mappingResult).first
+      //      print(obtainedChannel)
+          //  let obtainedChannel = mappingResult.firstObject as! Channel
             try! realm.write({
+              //  let obtainedChannel = mappingResult.firstObject as! Channel
                 print("\n\n\n\nSYKA\n\n\n\n")
-                print(obtainedChannel)
+              //  print(obtainedChannel)
                 print("\n\n\n\nSYKA\n\n\n\n")
-                realm.add(obtainedChannel, update: true)
+               // realm.add(obtainedChannel, update: true)
             })
             completion(nil)
         }, failure: completion)
@@ -583,6 +586,7 @@ extension Api: UserApi {
             
             let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
+            print("ids = ", ids)
             for userId in ids {
                 guard responseDictionary?[userId] != nil else { continue }
                 
@@ -616,9 +620,15 @@ extension Api: UserApi {
                 let preference = preferences.filter(predicate).first
                 user.isOnTeam = (preference?.value == Constants.CommonStrings.True)
                 try! realm.write {
-                    realm.add(user)
-                    user.directChannel().isDirectPrefered = true
-                    user.directChannel().displayName = user.displayName
+                    let existUser = realm.object(ofType: User.self, forPrimaryKey: user.identifier)
+                    if existUser == nil {
+                        realm.add(user)
+                        user.directChannel().isDirectPrefered = true
+                        user.directChannel().displayName = user.displayName
+                    } else {
+                        existUser?.directChannel().isDirectPrefered = true
+                        existUser?.directChannel().displayName = user.displayName
+                    }
                 }
             }
             completion(nil)
