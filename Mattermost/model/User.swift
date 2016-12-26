@@ -52,6 +52,7 @@ final class User: RealmObject {
     
     let channels = LinkingObjects(fromType: Channel.self, property: ChannelRelationships.members.rawValue)
     
+
     override static func indexedProperties() -> [String] {
         return [UserAttributes.identifier.rawValue]
     }

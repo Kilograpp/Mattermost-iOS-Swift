@@ -68,6 +68,7 @@ extension ProfileViewController: ProfileViewControllerConfiguration {
     func configureForCurrentUser(displayOnly: Bool) {
         self.user = DataManager.sharedInstance.currentUser!
         self.isDisplayOnly = displayOnly
+        if !self.isDisplayOnly! { loadCurrentUser() }
     }
     
     func configureFor(user: User) {
@@ -198,6 +199,15 @@ extension ProfileViewController: Navigation {
 
 //MARK: Request
 extension ProfileViewController: Request {
+    func loadCurrentUser() {
+        Api.sharedInstance.loadCurrentUser { (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            
+            self.user = DataManager.sharedInstance.currentUser
+            self.tableView.reloadData()
+        }
+    }
+    
     internal func updateImage() {
         self.showLoaderView()
         let image = self.avatarImageView.image
