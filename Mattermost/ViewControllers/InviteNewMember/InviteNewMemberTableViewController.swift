@@ -98,8 +98,11 @@ extension InviteNewMemberTableViewController: Action {
     }
     
     @IBAction func addAnoterAction(_ sender: AnyObject) {
-        self.memberTuplesArray.append((email: "", firstName: "", lastName: ""))
-        self.tableView.reloadData()
+        addMember()
+    }
+    
+    func deleteMemberAction(_ sender: AnyObject) {
+        deleteMemberAt(index: sender.tag)
     }
 }
 
@@ -136,6 +139,42 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
             }
             self.proceedToSuccessInviteNewMember()
         }
+    }
+}
+
+
+//MARK: Support
+extension InviteNewMemberTableViewController {
+    func addMember() {
+        self.memberTuplesArray.append((email: "", firstName: "", lastName: ""))
+        self.tableView.beginUpdates()
+        let section = self.memberTuplesArray.count - 1
+        self.tableView.insertSections(NSIndexSet(index: section) as IndexSet, with: .automatic)
+        self.tableView.insertRows(at: [IndexPath(row: 0, section: section), IndexPath(row: 1, section: section), IndexPath(row: 2, section: section)], with: .automatic)
+        //self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .none)
+      self.tableView.reloadData()
+        self.tableView.endUpdates()
+    //    self.tableView.reloadData()
+    }
+    
+    func deleteMemberAt(index: Int) {
+        self.memberTuplesArray.remove(at: index)
+        
+        self.tableView.beginUpdates()
+        self.tableView.deleteRows(at: [IndexPath(row: 0, section: index), IndexPath(row: 1, section: index), IndexPath(row: 2, section: index)], with: .automatic)
+        self.tableView.deleteSections(NSIndexSet(index: index) as IndexSet, with: .automatic)
+        
+        /*if index < self.memberTuplesArray.count {
+            let range = NSMakeRange(index + 1, self.memberTuplesArray.count - index)
+            self.tableView.reloadSections(NSIndexSet(indexesIn: range) as IndexSet, with: .none)
+        }
+       
+        if (index != 0) && (self.memberTuplesArray.count == 1) {
+            self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .none)
+        }*/
+       self.tableView.reloadData()
+        self.tableView.endUpdates()
+     //   self.tableView.reloadData()
     }
 }
 
@@ -183,11 +222,45 @@ extension InviteNewMemberTableViewController {
 //MARK: UITableViewDelegate
 extension InviteNewMemberTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44
+        return 60
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 20
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Member #" + String(section + 1)
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let width = UIScreen.main.bounds.size.width
+        let heigth = 60
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: Int(width), height: heigth))
+        
+        let y = (section == 0) ? 25 : 5
+        let headerLabel = UILabel(frame: CGRect(x: 15, y: y, width: 200, height: 20))
+        headerLabel.backgroundColor = UIColor.clear
+        headerLabel.font = FontBucket.postDateFont
+        headerLabel.textColor = ColorBucket.sectionTitleColor
+        headerLabel.text = "MEMBER #" + String(section + 1)
+        headerLabel.textAlignment = .left
+        headerView.addSubview(headerLabel)
+        
+        guard self.memberTuplesArray.count > 1 else { return headerView }
+        
+        let deleteButton = UIButton(frame: CGRect(x: Int(width - 65), y: y, width: 50, height: 20))
+        deleteButton.setTitleColor(ColorBucket.errorAlertColor, for: .normal)
+        deleteButton.titleLabel?.font = FontBucket.postDateFont
+        deleteButton.titleLabel?.textAlignment = .right
+        deleteButton.setTitle("delete", for: .normal)
+        deleteButton.tag = section
+        deleteButton.addTarget(self, action: #selector(deleteMemberAction(_:)), for: .touchUpInside)
+        
+        
+        headerView.insertSubview(deleteButton, at: 0)
+        
+        return headerView
     }
 }
 

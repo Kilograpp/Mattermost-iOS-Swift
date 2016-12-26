@@ -38,6 +38,7 @@ private protocol CommonColors: class {
     static var darkGrayColor: UIColor {get}
     static var onlineStatusColor: UIColor {get}
     static var awayStatusColor: UIColor {get}
+    static var sectionTitleColor: UIColor {get}
 }
 
 private protocol SideMenuColors {
@@ -115,6 +116,7 @@ extension ColorBucket : CommonColors {
     static let darkGrayColor = ColorBucket.darkGray()
     static let onlineStatusColor = ColorBucket.onlineStatus()
     static let awayStatusColor = ColorBucket.awayStatus()
+    static let sectionTitleColor = ColorBucket.middleDarkGray()
 }
 
 extension ColorBucket : SideMenuColors {
@@ -211,6 +213,10 @@ extension ColorBucket {
     
     fileprivate class func cloudyBlue() -> UIColor {
         return try! UIColor(rgba_throws: "#E7F0F6")
+    }
+    
+    fileprivate class func middleDarkGray() -> UIColor {
+        return try! UIColor(rgba_throws: "#6D6D72")
     }
     
     fileprivate class func darkDarkGray() -> UIColor {
