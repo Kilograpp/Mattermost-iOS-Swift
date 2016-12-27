@@ -491,14 +491,18 @@ extension Api: ChannelApi {
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
             let obtainedChannel = MappingUtils.fetchAllChannels(mappingResult).first
-      //      print(obtainedChannel)
+            print(obtainedChannel?.name)
           //  let obtainedChannel = mappingResult.firstObject as! Channel
             try! realm.write({
-              //  let obtainedChannel = mappingResult.firstObject as! Channel
-                print("\n\n\n\nSYKA\n\n\n\n")
-              //  print(obtainedChannel)
-                print("\n\n\n\nSYKA\n\n\n\n")
-               // realm.add(obtainedChannel, update: true)
+                channel.updateAt = obtainedChannel?.updateAt
+                channel.deleteAt = obtainedChannel?.deleteAt
+                channel.displayName = obtainedChannel?.displayName!
+                channel.name = obtainedChannel?.name!
+                channel.header = obtainedChannel?.header!
+                channel.purpose = obtainedChannel?.purpose!
+                channel.lastPostDate = obtainedChannel?.lastPostDate
+                channel.messagesCount = obtainedChannel?.messagesCount
+                channel.extraUpdateDate = obtainedChannel?.extraUpdateDate
             })
             completion(nil)
         }, failure: completion)
