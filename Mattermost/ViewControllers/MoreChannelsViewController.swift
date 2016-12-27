@@ -346,7 +346,7 @@ extension MoreChannelsViewController: Request {
             self.alreadyUpdatedChannelCount += 1
             if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
                 if (self.alreadyUpdatedChannelCount == 1) {
-                    self.singleUserMessage(name: user.displayName!)
+                    self.singleUserMessage(name: user.username!)
                 } else {
                     self.multipleUsersMessage()
                 }

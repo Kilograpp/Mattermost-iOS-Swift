@@ -79,7 +79,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
             Api.sharedInstance.updateHeader((tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelInfoCell).infoText.text, channel: channel, completion: { (error) in
                 guard (error == nil) else { return }
                 AlertManager.sharedManager.showSuccesWithMessage(message: "Header was updated".localized)
-                Api.sharedInstance.loadChannels(with: { (error) in
+                Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
                     guard (error == nil) else { return }
                     Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                         guard (error == nil) else { return }
@@ -90,7 +90,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
             Api.sharedInstance.updatePurpose((tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelInfoCell).infoText.text, channel: channel, completion: { (error) in
                 guard (error == nil) else { return }
                 AlertManager.sharedManager.showSuccesWithMessage(message: "Purpose was updated".localized)
-                Api.sharedInstance.loadChannels(with: { (error) in
+                Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
                     guard (error == nil) else { return }
                     Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                         guard (error == nil) else { return }

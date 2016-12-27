@@ -1074,7 +1074,7 @@ extension ChatViewController {
         if (prefix == "@") {
             self.membersResult = usersInTeam.filter({
                 ($0.username?.lowercased().hasPrefix(word.lowercased()))! || word==""
-            })
+            }).sorted { $0.username! < $1.username! }
             
             self.commandsResult = Constants.LinkCommands.name.filter {
                 return $0.hasPrefix(word.lowercased())

@@ -114,7 +114,7 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
             }
             let typeName = (self.channel.privateType! == "P") ? "Group" : "Channel"
             AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was updated")
-            Api.sharedInstance.loadChannels(with: { (error) in
+            Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
                 guard (error == nil) else { return }
                 Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                     guard (error == nil) else { return }
