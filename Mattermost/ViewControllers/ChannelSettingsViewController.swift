@@ -125,6 +125,7 @@ class ChannelSettingsViewController: UIViewController {
 
 fileprivate protocol Request: class {
     func deleteChannel()
+    func leaveChannel()
 }
 
 extension ChannelSettingsViewController: Request {
@@ -149,6 +150,24 @@ extension ChannelSettingsViewController: Request {
             let  message = channelType + self.channel.displayName! + " was deleted"
             AlertManager.sharedManager.showSuccesWithMessage(message: message)
         }
+    }
+    
+    func leaveChannel() {
+        Api.sharedInstance.leaveChannel(channel, completion: { (error) in
+            guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
+            let leavedCannel = self.channel
+            let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
+            leftMenu.configureInitialSelectedChannel()
+            self.dismiss(animated: true, completion: {
+                let realm = RealmUtils.realmForCurrentThread()
+                try! realm.write {
+                    realm.delete(leavedCannel!)
+                }
+                leftMenu.reloadChannels()
+            })
+            let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+            AlertManager.sharedManager.showSuccesWithMessage(message: "You left ".localized + self.channel.displayName! + " " + channelType)
+        })
     }
 }
 
@@ -290,17 +309,7 @@ extension ChannelSettingsViewController: UITableViewDelegate {
                 return
             }
             self.lastSelectedIndexPath = indexPath
-            Api.sharedInstance.leaveChannel(channel, completion: { (error) in
-                guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
-                let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                AlertManager.sharedManager.showSuccesWithMessage(message: "You left ".localized + self.channel.displayName! + " " + channelType)
-                self.dismiss(animated: true, completion: {_ in
-                    Api.sharedInstance.loadChannels(with: { (error) in
-                        guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
-                        self.lastSelectedIndexPath = nil
-                    })
-                })
-            })
+            leaveChannel()
         }
         if (indexPath==IndexPath(row: 0, section: 0)){
             self.lastSelectedIndexPath = nil

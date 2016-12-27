@@ -62,6 +62,7 @@ private protocol UserApi: class {
     func loadCompleteUsersList(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
+    func loadUsersFromCurrentTeam(completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
 }
 
 private protocol PostApi: class {
@@ -725,6 +726,40 @@ extension Api: UserApi {
             
         }, failure:{ error in
                 completion(error, nil)
+        })
+    }
+    
+    func loadUsersFromCurrentTeam(completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void) {
+        let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromCurrentTeamPathPattern(), DataManager.sharedInstance.currentTeam)!
+        self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
+            print(operation.httpRequestOperation.responseString)
+            //Temp cap
+            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+            var users = Array<User>()
+            let ids = Array(responseDictionary!.keys.map{$0})
+            let realm = RealmUtils.realmForCurrentThread()
+            for userId in ids {
+                let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
+                let user = User()
+                user.identifier = userDictionary["id"] as! String!
+                user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
+                user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
+                user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
+                user.username = userDictionary["username"] as! String?
+                user.authData = userDictionary["auth_data"] as! String?
+                user.authService = userDictionary["auth_service"] as! String?
+                user.email = userDictionary["email"] as! String?
+                user.nickname = userDictionary["nickname"] as! String?
+                user.firstName = userDictionary["first_name"] as! String?
+                user.lastName = userDictionary["last_name"] as! String?
+                user.roles = userDictionary["roles"] as! String?
+                user.locale = userDictionary["locale"] as! String?
+                users.append(user)
+            }
+            completion(nil, users)
+            
+        }, failure:{ error in
+            completion(error, nil)
         })
     }
     
