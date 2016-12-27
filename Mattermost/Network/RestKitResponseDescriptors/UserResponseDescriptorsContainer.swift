@@ -17,6 +17,8 @@ private protocol ResponseDescriptors: class {
     static func initialLoadPreferencesResponseDescriptor() -> RKResponseDescriptor
     static func completeListResponseDescriptor() -> RKResponseDescriptor
     static func usersFromChannelResponseDescriptor() -> RKResponseDescriptor
+    static func usersListResponseDescriptor() -> RKResponseDescriptor
+    static func teamUsersListResponseDescriptor() -> RKResponseDescriptor
     static func updateNotifyResponseDescriptor() -> RKResponseDescriptor
     static func updateResponseDescriptor() -> RKResponseDescriptor
     static func updatePasswordResponseDescriptor() -> RKResponseDescriptor
@@ -80,6 +82,20 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
                                     method: .GET,
                                     pathPattern: UserPathPatternsContainer.usersFromChannelPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func usersListResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
+                                    method: .GET,
+                                    pathPattern: UserPathPatternsContainer.usersListPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func teamUsersListResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
+                                    method: .GET,
+                                    pathPattern: UserPathPatternsContainer.teamUsersListPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

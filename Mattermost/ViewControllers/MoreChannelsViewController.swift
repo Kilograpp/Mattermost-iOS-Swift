@@ -153,7 +153,7 @@ extension  MoreChannelsViewController: Configuration {
         let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
         let sortName = ChannelAttributes.displayName.rawValue
         
-        self.hideLoaderView()
+        showLoaderView()
         Api.sharedInstance.loadChannelsMoreWithCompletion { (channels, error) in
             self.hideLoaderView()
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
@@ -162,25 +162,37 @@ extension  MoreChannelsViewController: Configuration {
                 let isInChannel = Channel.isUserInChannelWith(channelId: channel.identifier!)
                 self.results?.append((channel, isInChannel))
             }
-            
             let existChannels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
             for channel in existChannels {
                 self.results?.append((channel, channel.currentUserInChannel))
             }
-            
             self.results = self.results.sorted(by: { ($0.object as! Channel).displayName! < ($1.object as! Channel).displayName! })
-            
             self.tableView.reloadData()
         }
     }
     
     func prepareUserResults() {
-        let sortName = UserAttributes.username.rawValue
-        let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@", Constants.Realm.SystemUserIdentifier,
-                                                                                      Preferences.sharedInstance.currentUserId!)
-        let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
-        for user in users {
-            self.results?.append((user, user.isPreferedDirectChannel()))
+        showLoaderView()
+        
+        Api.sharedInstance.loadUsersList(offset: 0) { (users, error) in
+            self.hideLoaderView()
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return  }
+            
+         
+            let sortName = UserAttributes.username.rawValue
+            let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@", Constants.Realm.SystemUserIdentifier,
+                                         Preferences.sharedInstance.currentUserId!)
+            let preferedUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+            for user in preferedUsers {
+                self.results?.append((user, user.isPreferedDirectChannel()))
+            }
+            for user in users! {
+                if !(self.results?.contains(where: { ($0.object as! User).identifier == user.identifier }))! {
+                    self.results?.append((user, false))
+                }
+            }
+            self.results = self.results.sorted(by: { ($0.object as! User).displayName! < ($1.object as! User).displayName! })
+            self.tableView.reloadData()
         }
     }
     
@@ -241,7 +253,7 @@ extension MoreChannelsViewController: Navigation {
 }
 
 
-//MARK: MoreChannelsViewControllerRequest
+//MARK: Request
 extension MoreChannelsViewController: Request {
 //Public channel
     func joinTo(channel: Channel) {
@@ -300,10 +312,7 @@ extension MoreChannelsViewController: Request {
         guard  result.checked != (result.object as! User).hasChannel() else { return }
         
         Api.sharedInstance.createDirectChannelWith((result.object as! User)) { (channel, error) in
-            guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
-                return
-            }
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
             self.updatePreferencesSave(result: result)
         }
@@ -366,7 +375,6 @@ extension MoreChannelsViewController: CompletionMessages {
         let action = (self.addedChannelCount > 0) ? "joined " : "left "
         let  message = "You've " + action + name + " channel"
         AlertManager.sharedManager.showSuccesWithMessage(message: message)
-        
     }
     
     func multipleChannelsMessage() {

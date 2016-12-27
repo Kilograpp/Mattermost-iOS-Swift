@@ -66,6 +66,13 @@ extension ChannelMappingsContainer: RequestMapping {
      //   mapping.addRelationshipMapping(withSourceKeyPath: ChannelRelationships.members.rawValue, mapping: UserMappingsContainer.mapping())
         return mapping;
     }
+    
+    /*class func moreMapping() -> RKObjectMapping {
+        let mapping = super.mapping()
+        mapping.addAttributeMappings(from: [
+            "create_at"
+            ])
+    }*/
 }
 
 
