@@ -44,6 +44,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var emojiResult: [String]?
     fileprivate var membersResult: Array<User> = []
     fileprivate var commandsResult: [String] = []
+    fileprivate var usersInTeam: Array<User> = []
     
     var hasNextPage: Bool = true
     var postFromSearch: Post! = nil
@@ -117,6 +118,7 @@ fileprivate protocol Setup {
     func setupCompactPost()
     func setupEmptyDialogueLabel()
     func setupModules()
+    func loadUsersFromTeam()
 }
 
 fileprivate protocol Private {
@@ -168,20 +170,20 @@ extension ChatViewController: Setup {
         setupLongCellSelection()
         setupCompactPost()
         setupEmptyDialogueLabel()
+        loadUsersFromTeam()
         setupModules()
-        setupActualTownSquare()
-    }
-    
-    fileprivate func setupActualTownSquare() {
-        let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
-        Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
-            guard (error == nil) else { return }
-        })
     }
     
     fileprivate func setupModules() {
         self.filesAttachmentsModule = AttachmentsModule(delegate: self, dataSource: self)
         self.filesPickingController = FilesPickingController(dataSource: self)
+    }
+    
+    func loadUsersFromTeam() {
+        Api.sharedInstance.loadUsersFromCurrentTeam(completion: { (error, usersArray) in
+            guard error == nil else { return }
+            self.usersInTeam = usersArray!
+        })
     }
     
     fileprivate func setupTableView() {
@@ -1070,13 +1072,10 @@ extension ChatViewController {
         }
         
         if (prefix == "@") {
-            let sortName = UserAttributes.username.rawValue
-            if let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first {
-                let townSquareIdentifiers = Array(townSquare.members.map{$0.identifier!})
-                
-                let predicate =  NSPredicate(format: "identifier IN %@ AND username BEGINSWITH[c] '\(word)'", townSquareIdentifiers)
-                self.membersResult = Array(RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true))
-            }
+            self.membersResult = usersInTeam.filter({
+                ($0.username?.lowercased().hasPrefix(word.lowercased()))! || word==""
+            })
+            
             self.commandsResult = Constants.LinkCommands.name.filter {
                 return $0.hasPrefix(word.lowercased())
             }

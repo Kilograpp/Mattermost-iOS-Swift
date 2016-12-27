@@ -26,7 +26,7 @@ class MemberLinkTableViewCell: UITableViewCell {
     }
     
     func configureWithUser(user: User) {
-        memberNickname.text = "@"+user.displayName!
+        memberNickname.text = "@"+user.username!
         memberImage.image = UIImage.sharedAvatarPlaceholder
         ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
             self?.memberImage.image = image

@@ -27,6 +27,7 @@ private protocol PathPatterns: class {
     static func usersNotInChannelPathPattern() -> String
     static func usersListPathPattern() -> String
     static func teamUsersListPathPattern() -> String
+    static func usersFromCurrentTeamPathPattern() -> String
 }
 
 final class UserPathPatternsContainer: PathPatterns {
@@ -86,5 +87,8 @@ final class UserPathPatternsContainer: PathPatterns {
     }
     static func teamUsersListPathPattern() -> String {
         return "teams/:\(PageWrapper.teamIdPath())/users/:\(PageWrapper.offsetPath())/\(PageWrapper.sizePath())"
+    }
+    static func usersFromCurrentTeamPathPattern() -> String {
+        return "teams/:\(TeamAttributes.identifier)/users/0/100"
     }
 }
