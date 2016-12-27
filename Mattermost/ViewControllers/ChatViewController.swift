@@ -169,14 +169,6 @@ extension ChatViewController: Setup {
         setupCompactPost()
         setupEmptyDialogueLabel()
         setupModules()
-        setupActualTownSquare()
-    }
-    
-    fileprivate func setupActualTownSquare() {
-        let townSquare = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("name == %@", "town-square").first
-        Api.sharedInstance.loadExtraInfoForChannel(townSquare!.identifier!, completion: { (error) in
-            guard (error == nil) else { return }
-        })
     }
     
     fileprivate func setupModules() {
