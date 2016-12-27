@@ -136,6 +136,6 @@ extension MappingUtils: UserMethod {
 
 extension MappingUtils: ChannelMethods {
     static func fetchAllChannelsFromList(_ mappingResult: RKMappingResult) -> [Channel] {
-        return mappingResult.dictionary()["channels"] as! [Channel]
+        return mappingResult.array() as! [Channel]
     }
 }

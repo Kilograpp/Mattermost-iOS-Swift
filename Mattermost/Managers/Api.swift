@@ -491,8 +491,7 @@ extension Api: ChannelApi {
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
             let obtainedChannel = MappingUtils.fetchAllChannels(mappingResult).first
-            print(obtainedChannel?.name)
-          //  let obtainedChannel = mappingResult.firstObject as! Channel
+
             try! realm.write({
                 channel.updateAt = obtainedChannel?.updateAt
                 channel.deleteAt = obtainedChannel?.deleteAt
@@ -651,6 +650,47 @@ extension Api: UserApi {
                         
             completion(nil)
         }, failure: completion)
+    }
+    
+    func loadUsersList(offset: Int, completion: @escaping (_ users: Array<User>?, _ error: Mattermost.Error?) -> Void) {
+        let pageWrapper = PageWrapper(size: 100, channel: Channel(), offset: 0)//PageWrapper.usersListPageWrapper(offset: offset)
+        let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersListPathPattern(), pageWrapper)
+        
+        self.manager.getObjectsAt(path: path!, success: {  (operation, mappingResult) in
+            print(operation.httpRequestOperation.responseString)
+            
+            
+            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+            let ids = Array(responseDictionary!.keys.map{$0})
+            var users = Array<User>()
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write {
+                for userId in ids {
+                    let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
+                    let user = User()
+                    user.identifier = userDictionary["id"] as! String!
+                    user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
+                    user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
+                    user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
+                    user.username = userDictionary["username"] as! String?
+                    user.authData = userDictionary["auth_data"] as! String?
+                    user.authService = userDictionary["auth_service"] as! String?
+                    user.email = userDictionary["email"] as! String?
+                    user.nickname = userDictionary["nickname"] as! String?
+                    user.firstName = userDictionary["first_name"] as! String?
+                    user.lastName = userDictionary["last_name"] as! String?
+                    user.roles = userDictionary["roles"] as! String?
+                    user.locale = userDictionary["locale"] as! String?
+                    user.computeDisplayName()
+                    users.append(user)
+                }
+            }
+            
+            completion(users, nil)
+            
+        }, failure:{ error in
+            completion(nil, error)
+        })
     }
     
     func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {

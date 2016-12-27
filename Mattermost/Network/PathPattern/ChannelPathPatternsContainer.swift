@@ -67,6 +67,5 @@ final class ChannelPathPatternsContainer: PathPatterns {
     }
     static func getChannelPathPattern() -> String {
         return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier)/"
-
     }
 }
