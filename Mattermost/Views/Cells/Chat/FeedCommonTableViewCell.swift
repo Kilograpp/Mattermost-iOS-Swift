@@ -162,11 +162,17 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
     override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         
-        guard self.post.author != nil else { return }
+        if self.post.author == nil {
+        /*Api.sharedInstance.loadUserFor(post: post, { (error) in
+            
+        })*/
+        } else {
+            guard self.post.author != nil else { return }
         
-        self.configureAvatarImage()
-        self.configureBasicLabels()
-        configureParentView()
+            configureAvatarImage()
+            configureBasicLabels()
+          //  configureParentView()
+        }
     }
     
     override class func heightWithPost(_ post: Post) -> CGFloat {

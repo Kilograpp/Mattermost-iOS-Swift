@@ -152,6 +152,7 @@
 		8BE969B31D75E88C0010A524 /* UIColor+PreparedColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969B21D75E88C0010A524 /* UIColor+PreparedColor.swift */; };
 		8BE969B71D7638060010A524 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BE969B61D7638060010A524 /* Settings.storyboard */; };
 		8BE969BE1D7730760010A524 /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */; };
+		8BE9A8CD1E13D1F800295E2E /* UserUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE9A8CC1E13D1F800295E2E /* UserUtils.swift */; };
 		8BEE0C811DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEE0C801DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift */; };
 		8BEE0C851DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEE0C841DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift */; };
 		8BEE0C871DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */; };
@@ -449,6 +450,7 @@
 		8BE969B41D7615EE0010A524 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		8BE969B61D7638060010A524 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = storyboards/Settings.storyboard; sourceTree = "<group>"; };
 		8BE969BD1D7730760010A524 /* ProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
+		8BE9A8CC1E13D1F800295E2E /* UserUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserUtils.swift; path = Mattermost/utils/UserUtils.swift; sourceTree = SOURCE_ROOT; };
 		8BEE0C801DCBE38000CB5779 /* NotifyPropsPathPatternsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotifyPropsPathPatternsContainer.swift; path = PathPattern/NotifyPropsPathPatternsContainer.swift; sourceTree = "<group>"; };
 		8BEE0C841DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotifyPropsResponseDescriptorsContainer.swift; path = RestKitResponseDescriptors/NotifyPropsResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
 		8BEE0C861DCBE6B200CB5779 /* NotifyPropsRequestDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotifyPropsRequestDescriptorsContainer.swift; path = RestKitRequestDescriptor/NotifyPropsRequestDescriptorsContainer.swift; sourceTree = "<group>"; };
@@ -782,6 +784,7 @@
 				D6A887B01D4A0A1100C13191 /* ColorBucket.swift */,
 				D8A0969D1D23E4FA00B76E1A /* Constants.swift */,
 				D8879B1B1D4E102500EB0957 /* FileUtils.swift */,
+				8BE9A8CC1E13D1F800295E2E /* UserUtils.swift */,
 				D6330AB91D494CFD006D84F4 /* FontBucket.swift */,
 				D8436E721D26E48C00DEF464 /* LocaleUtils.swift */,
 				D8087AE41D416FDB001918E8 /* MappingUtils.swift */,
@@ -1622,6 +1625,7 @@
 				8BBA7DC11D874EB5003A5B99 /* SearchingInProcessView.swift in Sources */,
 				8B3CB3681DD268690078DE25 /* FeedNotificationsObserver.swift in Sources */,
 				8B77B5E01DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift in Sources */,
+				8BE9A8CD1E13D1F800295E2E /* UserUtils.swift in Sources */,
 				CDB4BC671D80678000662231 /* BaseRequestDescriptorsContainer.swift in Sources */,
 				CDF07ECC1D7F127400172D1E /* ChannelMappingsContainer.swift in Sources */,
 				D62FEB941D4F2AD700390EBC /* PrivateChannelTableViewCell.swift in Sources */,

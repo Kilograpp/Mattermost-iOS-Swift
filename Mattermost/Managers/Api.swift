@@ -586,55 +586,9 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.usersByIdsPathPattern()
         
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
-            //Temp cap
-            
             let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
-            var users = Array<User>()
-            print("ids = ", ids)
-            for userId in ids {
-                guard responseDictionary?[userId] != nil else { continue }
-                
-                let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
-                let user = User()
-                user.identifier = userDictionary["id"] as! String!
-                user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
-                user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
-                user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
-                user.username = userDictionary["username"] as! String?
-                user.authData = userDictionary["auth_data"] as! String?
-                user.authService = userDictionary["auth_service"] as! String?
-                user.email = userDictionary["email"] as! String?
-                user.nickname = userDictionary["nickname"] as! String?
-                user.firstName = userDictionary["first_name"] as! String?
-                user.lastName = userDictionary["last_name"] as! String?
-                user.roles = userDictionary["roles"] as! String?
-                user.locale = userDictionary["locale"] as! String?
-                user.computeDisplayName()
-                
-                users.append(user)
-            }
-            
-            
-         //   let users = MappingUtils.fetchPreferedUsersBy(ids: ids, mappingResult: mappingResult!)
-            let realm = RealmUtils.realmForCurrentThread()
-            let preferences = Preference.preferedUsersList()
-            for user in users {
-                user.computeDisplayName()
-                let predicate = NSPredicate(format: "name == %@", user.identifier)
-                let preference = preferences.filter(predicate).first
-                user.isOnTeam = (preference?.value == Constants.CommonStrings.True)
-                try! realm.write {
-                    let existUser = realm.object(ofType: User.self, forPrimaryKey: user.identifier)
-                    if existUser == nil {
-                        realm.add(user)
-                        user.directChannel().isDirectPrefered = true
-                        user.directChannel().displayName = user.displayName
-                    } else {
-                        existUser?.directChannel().isDirectPrefered = true
-                        existUser?.directChannel().displayName = user.displayName
-                    }
-                }
-            }
+            let users = MappingUtils.fetchUsersBy(ids: ids, response: responseDictionary!)
+            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
             completion(nil)
         }) { (operation, error) in
             completion(Error.errorWithGenericError(error))
@@ -667,22 +621,7 @@ extension Api: UserApi {
             let realm = RealmUtils.realmForCurrentThread()
             try! realm.write {
                 for userId in ids {
-                    let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
-                    let user = User()
-                    user.identifier = userDictionary["id"] as! String!
-                    user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
-                    user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
-                    user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
-                    user.username = userDictionary["username"] as! String?
-                    user.authData = userDictionary["auth_data"] as! String?
-                    user.authService = userDictionary["auth_service"] as! String?
-                    user.email = userDictionary["email"] as! String?
-                    user.nickname = userDictionary["nickname"] as! String?
-                    user.firstName = userDictionary["first_name"] as! String?
-                    user.lastName = userDictionary["last_name"] as! String?
-                    user.roles = userDictionary["roles"] as! String?
-                    user.locale = userDictionary["locale"] as! String?
-                    user.computeDisplayName()
+                    let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
                     users.append(user)
                 }
             }
@@ -705,21 +644,7 @@ extension Api: UserApi {
             let realm = RealmUtils.realmForCurrentThread()
             try! realm.write {
                 for userId in ids {
-                    let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
-                    let user = User()
-                    user.identifier = userDictionary["id"] as! String!
-                    user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
-                    user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
-                    user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
-                    user.username = userDictionary["username"] as! String?
-                    user.authData = userDictionary["auth_data"] as! String?
-                    user.authService = userDictionary["auth_service"] as! String?
-                    user.email = userDictionary["email"] as! String?
-                    user.nickname = userDictionary["nickname"] as! String?
-                    user.firstName = userDictionary["first_name"] as! String?
-                    user.lastName = userDictionary["last_name"] as! String?
-                    user.roles = userDictionary["roles"] as! String?
-                    user.locale = userDictionary["locale"] as! String?
+                    let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
                     realm.add(user, update: true)
                     if !Array(channel.members.map{$0.identifier}).contains(user.identifier) {
                         channel.members.append(user)
@@ -741,21 +666,7 @@ extension Api: UserApi {
             let realm = RealmUtils.realmForCurrentThread()
             //try! realm.write {
                 for userId in ids {
-                    let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
-                    let user = User()
-                    user.identifier = userDictionary["id"] as! String!
-                    user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
-                    user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
-                    user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
-                    user.username = userDictionary["username"] as! String?
-                    user.authData = userDictionary["auth_data"] as! String?
-                    user.authService = userDictionary["auth_service"] as! String?
-                    user.email = userDictionary["email"] as! String?
-                    user.nickname = userDictionary["nickname"] as! String?
-                    user.firstName = userDictionary["first_name"] as! String?
-                    user.lastName = userDictionary["last_name"] as! String?
-                    user.roles = userDictionary["roles"] as! String?
-                    user.locale = userDictionary["locale"] as! String?
+                    let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
                     //if !channel.members.contains(user) {
                         //realm.add(user, update: true)
                         users.append(user)
@@ -779,21 +690,7 @@ extension Api: UserApi {
             let ids = Array(responseDictionary!.keys.map{$0})
             let realm = RealmUtils.realmForCurrentThread()
             for userId in ids {
-                let userDictionary = (responseDictionary?[userId])! as! Dictionary<String, Any>
-                let user = User()
-                user.identifier = userDictionary["id"] as! String!
-                user.createAt = Date(timeIntervalSince1970: userDictionary["create_at"] as! TimeInterval)
-                user.updateAt = Date(timeIntervalSince1970: userDictionary["update_at"] as! TimeInterval)
-                user.deleteAt = Date(timeIntervalSince1970: userDictionary["delete_at"] as! TimeInterval)
-                user.username = userDictionary["username"] as! String?
-                user.authData = userDictionary["auth_data"] as! String?
-                user.authService = userDictionary["auth_service"] as! String?
-                user.email = userDictionary["email"] as! String?
-                user.nickname = userDictionary["nickname"] as! String?
-                user.firstName = userDictionary["first_name"] as! String?
-                user.lastName = userDictionary["last_name"] as! String?
-                user.roles = userDictionary["roles"] as! String?
-                user.locale = userDictionary["locale"] as! String?
+                let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
                 users.append(user)
             }
             completion(nil, users)

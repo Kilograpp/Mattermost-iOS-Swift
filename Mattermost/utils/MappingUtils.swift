@@ -36,8 +36,7 @@ private protocol UserMethod: class {
     static func fetchUsersFromInitialLoad(_ mappingResult: RKMappingResult) -> [User]
     static func fetchPreferencesFromInitialLoad(_ mappingResult: RKMappingResult) -> [Preference]
     static func fetchUsersFromCompleteList(_ mappingResult: RKMappingResult) -> [User]
-    //static func fetchUserWithNotifyPropsFromUser(_ mappingResult: RKMappingResult) -> User
-    static func fetchPreferedUsersBy(ids: [String], mappingResult: RKMappingResult) -> [User]
+    static func fetchUsersBy(ids: [String], response: Dictionary<String, Any>) -> [User]
 }
 
 
@@ -119,16 +118,14 @@ extension MappingUtils: UserMethod {
     static func fetchUsersFromCompleteList(_ mappingResult: RKMappingResult) -> [User] {
         return mappingResult.array() as! [User]
     }
-    /*static func fetchUserWithNotifyPropsFromUser(_ mappingResult: RKMappingResult) -> User {
-        let user = mappingResult.dictionary()["<null>"] as! User
-        let notifyProps = mappingResult.dictionary()["notify_props"] as! NotifyProps
-        
-        return user
-    }*/
-    static func fetchPreferedUsersBy(ids: [String], mappingResult: RKMappingResult) -> [User] {
+
+    static func fetchUsersBy(ids: [String], response: Dictionary<String, Any>) -> [User] {
         var users = Array<User>()
         for userId in ids {
-            users.append(mappingResult.dictionary()[userId] as! User)
+            guard response[userId] != nil else { continue }
+            
+            let user = UserUtils.userFrom(dictionary: response[userId] as! Dictionary<String, Any>)
+            users.append(user)
         }
         return users
     }

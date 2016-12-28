@@ -13,17 +13,23 @@ protocol TableViewPostDataSource: class {
 }
 
 class FeedBaseTableViewCell: UITableViewCell, Reusable {
+    
+//MARK: Properties
     final var onMentionTap: ((_ nickname : String) -> Void)?
     var errorHandler: ((_ post: Post) -> Void)?
     final var post : Post! {
-        didSet { self.postIdentifier = self.post.identifier
-            self.parentPostIdentifier = self.post.hasParentPost() ? self.post.parentId : nil}
+        didSet {
+            self.postIdentifier = self.post.identifier
+            self.parentPostIdentifier = self.post.hasParentPost() ? self.post.parentId : nil
+        }
     }
     final var postIdentifier: String?
     final var parentPostIdentifier: String?
     final var messageLabel = MessageLabel()
     final var postStatusView: PostStatusView!
     
+    
+//MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setup()
@@ -58,8 +64,8 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     
     
     fileprivate func setup() {
-        self.setupBasics()
-        self.setupMessageLabel()
+        setupBasics()
+        setupMessageLabel()
         setupPostStatusView()
     }
     

@@ -1,0 +1,51 @@
+//
+//  UserUtils.swift
+//  Mattermost
+//
+//  Created by TaHyKu on 28.12.16.
+//  Copyright © 2016 Kilograpp. All rights reserved.
+//
+
+import UIKit
+
+class UserUtils: NSObject {
+    static func userFrom(dictionary: Dictionary<String, Any>) -> User {
+        let user = User()
+        user.identifier  = dictionary["id"] as! String!
+        user.createAt    = Date(timeIntervalSince1970: dictionary["create_at"] as! TimeInterval)
+        user.updateAt    = Date(timeIntervalSince1970: dictionary["update_at"] as! TimeInterval)
+        user.deleteAt    = Date(timeIntervalSince1970: dictionary["delete_at"] as! TimeInterval)
+        user.username    = dictionary["username"] as! String?
+        user.authData    = dictionary["auth_data"] as! String?
+        user.authService = dictionary["auth_service"] as! String?
+        user.email       = dictionary["email"] as! String?
+        user.nickname    = dictionary["nickname"] as! String?
+        user.firstName   = dictionary["first_name"] as! String?
+        user.lastName    = dictionary["last_name"] as! String?
+        user.roles       = dictionary["roles"] as! String?
+        user.locale      = dictionary["locale"] as! String?
+        user.computeDisplayName()
+        
+        return user
+    }
+    
+    static func updateOnTeamAndPreferedStatesFor(user: User) {
+        let predicate = NSPredicate(format: "name == %@", user.identifier)
+        let preferences = DataManager.sharedInstance.currentUser?.preferences.filter(predicate)
+        if preferences?.first != nil {
+            user.isOnTeam = ((preferences?.first?.value)! == Constants.CommonStrings.True)
+        }
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write {
+            let existUser = realm.object(ofType: User.self, forPrimaryKey: user.identifier)
+            if existUser == nil {
+                realm.add(user)
+                user.directChannel().isDirectPrefered = true
+                user.directChannel().displayName = user.displayName
+            } else {
+                existUser?.directChannel().isDirectPrefered = true
+                existUser?.directChannel().displayName = user.displayName
+            }
+        }
+    }
+}
