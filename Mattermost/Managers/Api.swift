@@ -378,20 +378,20 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.update(), channel)
         
         let params: Dictionary<String, Any> = [
-        "create_at" : Int(channel.createdAt!.timeIntervalSince1970),
-        "creator_id" : String(Preferences.sharedInstance.currentUserId!)!,
-        "delete_at" : 0,
-        "display_name" : newDisplayName,
-        "extra_update_at" : Int(NSDate().timeIntervalSince1970),
-        "header" : channel.header!,
-        "id" : channel.identifier!,
-        "last_post_at" : Int(channel.lastPostDate!.timeIntervalSince1970),
-        "name" : newName,
-        "purpose" : channel.purpose!,
-        "team_id" : channel.team!.identifier!,
-        "total_msg_count" : Int(channel.messagesCount!)!,
-        "type" : channel.privateType!,
-        "update_at" : Int(NSDate().timeIntervalSince1970)]
+            "create_at"       : Int(channel.createdAt!.timeIntervalSince1970),
+            "creator_id"      : String(Preferences.sharedInstance.currentUserId!)!,
+            "delete_at"       : 0,
+            "display_name"    : newDisplayName,
+            "extra_update_at" : Int(NSDate().timeIntervalSince1970),
+            "header"          : channel.header!,
+            "id"              : channel.identifier!,
+            "last_post_at"    : Int(channel.lastPostDate!.timeIntervalSince1970),
+            "name"            : newName,
+            "purpose"         : channel.purpose!,
+            "team_id"         : channel.team!.identifier!,
+            "total_msg_count" : Int(channel.messagesCount!)!,
+            "type"            : channel.privateType!,
+            "update_at"       : Int(NSDate().timeIntervalSince1970)]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             completion(nil)
@@ -548,36 +548,8 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.loadCurrentUser()
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
-            let updatedUser = mappingResult.firstObject as! User
-            let updatedNotifyProps = updatedUser.notifyProps
-            updatedNotifyProps?.userId = updatedUser.identifier
-            updatedNotifyProps?.computeKey()
+            UserUtils.updateCurrentUserWith(serverUser: mappingResult.firstObject as! User)
             
-            let realm = RealmUtils.realmForCurrentThread()
-            let currentUser = DataManager.sharedInstance.currentUser
-            //let preferences = DataManager.sharedInstance.currentUser?.preferences
-            try! realm.write {
-                //Update user fields
-                currentUser?.updateAt = updatedUser.updateAt
-                currentUser?.deleteAt = updatedUser.deleteAt
-                currentUser?.username = updatedUser.username
-                currentUser?.email = updatedUser.email
-                currentUser?.nickname = updatedUser.nickname
-                currentUser?.firstName = updatedUser.firstName
-                currentUser?.lastName = updatedUser.lastName
-                //Update notifyProps
-                realm.delete((currentUser?.notifyProps)!)
-                realm.add(updatedNotifyProps!)
-                currentUser?.notifyProps = updatedNotifyProps
-            }
-            
-            
-           /* let user = mappingResult.firstObject as! User
-            let systemUser = DataManager.sharedInstance.instantiateSystemUser()
-            user.computeDisplayName()
-            DataManager.sharedInstance.currentUser = user
-            RealmUtils.save([user, systemUser])
-            SocketManager.sharedInstance.setNeedsConnect()*/
             completion(nil)
             }, failure: completion)
     }
@@ -587,7 +559,7 @@ extension Api: UserApi {
         
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
             let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
-            let users = MappingUtils.fetchUsersBy(ids: ids, response: responseDictionary!)
+            let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
             users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
             completion(nil)
         }) { (operation, error) in
@@ -612,19 +584,8 @@ extension Api: UserApi {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersListPathPattern(), pageWrapper)
         
         self.manager.getObjectsAt(path: path!, success: {  (operation, mappingResult) in
-            print(operation.httpRequestOperation.responseString)
-            
-            
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
-            let ids = Array(responseDictionary!.keys.map{$0})
-            var users = Array<User>()
-            let realm = RealmUtils.realmForCurrentThread()
-            try! realm.write {
-                for userId in ids {
-                    let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
-                    users.append(user)
-                }
-            }
+            let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
             
             completion(users, nil)
             
@@ -637,9 +598,21 @@ extension Api: UserApi {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromChannelPathPattern(), channel)!
         
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            print(operation.httpRequestOperation.responseString)
-            //Temp cap
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+            let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
+            
+            for user in users {
+                UserUtils.updateOnTeamAndPreferedStatesFor(user: user)
+                guard !channel.members.contains(user) else { continue }
+                
+                let realm = RealmUtils.realmForCurrentThread()
+                try! realm.write { channel.members.append(user) }
+            }
+            
+            
+            /*print(operation.httpRequestOperation.responseString)
+            //Temp cap
+            
             let ids = Array(responseDictionary!.keys.map{$0})
             let realm = RealmUtils.realmForCurrentThread()
             try! realm.write {
@@ -650,7 +623,7 @@ extension Api: UserApi {
                         channel.members.append(user)
                     }
                 }
-            }
+            }*/
             completion(nil)
         }, failure: completion)
     }
@@ -802,6 +775,17 @@ extension Api: PostApi {
             guard !skipMapping else { completion(nil); return }
             DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
                 let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                
+                var missingUserIds = Array<String>()
+                for post in posts {
+                    let authorId = post.authorId
+                    if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
+                        missingUserIds.append(post.authorId!)
+                    }
+                }
+                
+                print(missingUserIds)
+                
                 RealmUtils.save(posts)                
                 for post in posts {
                     for file in post.files {

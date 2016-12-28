@@ -36,7 +36,7 @@ private protocol UserMethod: class {
     static func fetchUsersFromInitialLoad(_ mappingResult: RKMappingResult) -> [User]
     static func fetchPreferencesFromInitialLoad(_ mappingResult: RKMappingResult) -> [Preference]
     static func fetchUsersFromCompleteList(_ mappingResult: RKMappingResult) -> [User]
-    static func fetchUsersBy(ids: [String], response: Dictionary<String, Any>) -> [User]
+    static func fetchUsersFrom(response: Dictionary<String, Any>) -> [User]
 }
 
 
@@ -119,12 +119,11 @@ extension MappingUtils: UserMethod {
         return mappingResult.array() as! [User]
     }
 
-    static func fetchUsersBy(ids: [String], response: Dictionary<String, Any>) -> [User] {
+    static func fetchUsersFrom(response: Dictionary<String, Any>) -> [User] {
+        let ids = Array(response.keys.map{$0})
         var users = Array<User>()
         for userId in ids {
-            guard response[userId] != nil else { continue }
-            
-            let user = UserUtils.userFrom(dictionary: response[userId] as! Dictionary<String, Any>)
+            let user = UserUtils.userFrom(dictionary: (response[userId])! as! Dictionary<String, Any>)
             users.append(user)
         }
         return users

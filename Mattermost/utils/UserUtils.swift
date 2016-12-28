@@ -48,4 +48,27 @@ class UserUtils: NSObject {
             }
         }
     }
+    
+    static func updateCurrentUserWith(serverUser: User) {
+        let currentUser = DataManager.sharedInstance.currentUser
+        
+        let serverUserNotifyProps = serverUser.notifyProps
+        serverUserNotifyProps?.userId = serverUser.identifier
+        serverUserNotifyProps?.computeKey()
+        
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write {
+            currentUser?.updateAt = serverUser.updateAt
+            currentUser?.deleteAt = serverUser.deleteAt
+            currentUser?.username = serverUser.username
+            currentUser?.email = serverUser.email
+            currentUser?.nickname = serverUser.nickname
+            currentUser?.firstName = serverUser.firstName
+            currentUser?.lastName = serverUser.lastName
+
+            realm.delete((currentUser?.notifyProps)!)
+            realm.add(serverUserNotifyProps!)
+            currentUser?.notifyProps = serverUserNotifyProps
+        }
+    }
 }
