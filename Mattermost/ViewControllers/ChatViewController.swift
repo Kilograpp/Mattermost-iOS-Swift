@@ -537,6 +537,15 @@ extension ChatViewController: Navigation {
 
 //MARK: Requests
 extension ChatViewController: Request {
+    func loadChannelUsers() {
+        print("loadChannelUsers")
+        self.isLoadingInProgress = true
+        showLoaderView()
+        Api.sharedInstance.loadFirstPage(self.channel, completion: { (error) in
+            self.loadFirstPageOfData(isInitial: true)
+        })
+    }
+    
     func loadFirstPageOfData(isInitial: Bool) {
         print("loadFirstPageOfData")
         self.isLoadingInProgress = true
@@ -924,11 +933,13 @@ extension ChatViewController: ChannelObserverDelegate {
         self.textView.resignFirstResponder()
         
         if (self.postFromSearch == nil) {
-            self.loadFirstPageOfData(isInitial: true)
+           // self.loadFirstPageOfData(isInitial: true)
+            self.loadChannelUsers()
         } else {
             if self.postFromSearch.channel.identifier != identifier {
                 self.postFromSearch = nil
-                self.loadFirstPageOfData(isInitial: true)
+                //self.loadFirstPageOfData(isInitial: true)
+                self.loadChannelUsers()
             } else {
                 loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
             }

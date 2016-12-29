@@ -611,14 +611,6 @@ extension Api: UserApi {
             }
             
             
-            
-            /*for user in users {
-                UserUtils.updateOnTeamAndPreferedStatesFor(user: user)
-                
-             
-            }*/
-            
-            
             /*print(operation.httpRequestOperation.responseString)
             //Temp cap
             
@@ -793,9 +785,21 @@ extension Api: PostApi {
                     }
                 }
                 
-                print(missingUserIds)
+               /* self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
+                    RealmUtils.save(posts)
+                    for post in posts {
+                        for file in post.files {
+                            self.getInfo(fileId: file.identifier!)
+                        }
+                    }
+                    DispatchQueue.main.sync {
+                        completion(nil)
+                    } 
+                })*/
                 
-                RealmUtils.save(posts)                
+                
+                
+                RealmUtils.save(posts)
                 for post in posts {
                     for file in post.files {
                         self.getInfo(fileId: file.identifier!)
