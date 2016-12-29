@@ -15,10 +15,12 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var textField: KGTextField!
     @IBOutlet weak var promtLabel: UILabel!
+    @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var nextButton: UIButton!
     
     let titleName = NSLocalizedString("Mattermost", comment: "")
     let promt = NSLocalizedString("e.g. https://mattermost.example.com", comment: "")
+    let error = NSLocalizedString("Url isn't valid", comment: "")
     let subtitleName = NSLocalizedString("All your team communication in one place, searchable and accessable anywhere.", comment: "")
     let placeholder = NSLocalizedString("Your team URL", comment: "")
     let buttonText = NSLocalizedString("Next step", comment: "")
@@ -54,6 +56,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     fileprivate func configureLabels() {
         self.titleLabel.text = titleName
         self.promtLabel.text = promt
+        self.errorLabel.text = error
         self.subtitleLabel.text = subtitleName
         guard let server = Preferences.sharedInstance.predefinedServerUrl() else {
             return
@@ -68,7 +71,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
         if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
             Api.sharedInstance.checkURL(with: { ( error) in
                 if (error != nil) {
-                    Api.sharedInstance.checkURL(with: { ( error) in
+                    Api.sharedInstance.checkURL(with: { (error) in
                         self.handleErrorWith(message: Constants.ErrorMessages.message[1])
                     })
                 } else {
@@ -96,6 +99,26 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
             })
         }
     }
+    
+    fileprivate func validateServerUrlForTextFieldDelegate() {
+        let urlRegEx = "((http|https)://)(mattermost\\.)([a-zA-Z0-9(\\-)])+((\\.)com)"
+        let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
+        if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
+            self.errorLabel.isHidden = true
+            self.nextButton.isEnabled = true
+        } else {
+            let addres = Preferences.sharedInstance.serverUrl
+            var urlAddress = String.init(format: "%@%@", "https://", addres!)
+            Preferences.sharedInstance.serverUrl = urlAddress
+            if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
+                self.errorLabel.isHidden = true
+                self.nextButton.isEnabled = true
+            } else {
+                self.errorLabel.isHidden = false
+                self.nextButton.isEnabled = false
+            }
+        }
+    }
 }
 
 
@@ -104,6 +127,7 @@ private protocol Setup {
     func setupTitleLabel()
     func setupSubtitleLabel()
     func setupPromtLabel()
+    func setupErrorLabel()
     func setupNextButton()
     func setupTextField()
     func setupNavigationBar()
@@ -121,6 +145,7 @@ extension ServerUrlViewController:Setup {
         setupTitleLabel()
         setupSubtitleLabel()
         setupPromtLabel()
+        setupErrorLabel()
         setupNextButton()
         setupTextField()
         configureLabels()
@@ -153,6 +178,12 @@ extension ServerUrlViewController:Setup {
         self.promtLabel.textColor = ColorBucket.grayColor
     }
     
+    fileprivate func setupErrorLabel() {
+        self.errorLabel.isHidden = true
+        self.errorLabel.font = FontBucket.subtitleServerUrlFont
+        self.errorLabel.textColor = ColorBucket.errorAlertColor
+    }
+    
     fileprivate func setupNextButton() {
         self.nextButton.layer.cornerRadius = 2
         self.nextButton.setTitle(buttonText, for: UIControlState())
@@ -179,6 +210,7 @@ extension ServerUrlViewController: Actions {
     }
     
     func textFieldAction() {
-        self.nextButton.isEnabled = (self.textField.text != "")
+        Preferences.sharedInstance.serverUrl = self.textField.text
+        self.validateServerUrlForTextFieldDelegate()
     }
 }
