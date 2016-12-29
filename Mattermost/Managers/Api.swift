@@ -601,13 +601,22 @@ extension Api: UserApi {
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
             
+            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
             for user in users {
-                UserUtils.updateOnTeamAndPreferedStatesFor(user: user)
-                guard !channel.members.contains(user) else { continue }
-                
-                let realm = RealmUtils.realmForCurrentThread()
-                try! realm.write { channel.members.append(user) }
+                let existUser = User.objectById(user.identifier)
+                if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
+                    let realm = RealmUtils.realmForCurrentThread()
+                    try! realm.write { channel.members.append(existUser!) }
+                }
             }
+            
+            
+            
+            /*for user in users {
+                UserUtils.updateOnTeamAndPreferedStatesFor(user: user)
+                
+             
+            }*/
             
             
             /*print(operation.httpRequestOperation.responseString)
