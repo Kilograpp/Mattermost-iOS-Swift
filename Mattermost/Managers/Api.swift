@@ -785,19 +785,9 @@ extension Api: PostApi {
                     }
                 }
                 
-               /* self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-                    RealmUtils.save(posts)
-                    for post in posts {
-                        for file in post.files {
-                            self.getInfo(fileId: file.identifier!)
-                        }
-                    }
-                    DispatchQueue.main.sync {
-                        completion(nil)
-                    } 
-                })*/
-                
-                
+                self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
+                    if error != nil { print(error!) }
+                })
                 
                 RealmUtils.save(posts)
                 for post in posts {
@@ -836,8 +826,23 @@ extension Api: PostApi {
                 completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 return
             }
+            
             DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
+                let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                
+                var missingUserIds = Array<String>()
+                for post in posts {
+                    let authorId = post.authorId
+                    if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
+                        missingUserIds.append(post.authorId!)
+                    }
+                }
+                
+                self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
+                    if error != nil { print(error!) }
+                })
+                
+                RealmUtils.save(posts)
                 DispatchQueue.main.sync {
                     completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 }
