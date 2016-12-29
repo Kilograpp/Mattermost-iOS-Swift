@@ -39,17 +39,21 @@ class UserUtils: NSObject {
         print(user)
         
         let realm = RealmUtils.realmForCurrentThread()
+        
+        let preferedPredicate = NSPredicate(format: "name == %@", user.identifier)
+        let isPrefered = Preference.preferedUsersList().filter(preferedPredicate).count > 0
+  
         try! realm.write {
             let existUser = realm.object(ofType: User.self, forPrimaryKey: user.identifier)
             if existUser == nil {
                 realm.add(user)
                 
                 guard user.hasChannel() else { return }
-                user.directChannel().isDirectPrefered = true
+                user.directChannel().isDirectPrefered = isPrefered
                 user.directChannel().displayName = user.displayName
             } else {
                 guard (existUser?.hasChannel())! else { return }
-                existUser?.directChannel().isDirectPrefered = true
+                existUser?.directChannel().isDirectPrefered = isPrefered
                 existUser?.directChannel().displayName = user.displayName
             }
         }
