@@ -137,7 +137,7 @@ extension User: Interface {
     }
     
     func hasChannel() -> Bool {
-        let predicate =  NSPredicate(format: "displayName == %@", self.username!)
+        let predicate =  NSPredicate(format: "name CONTAINS[c] %@", self.identifier)
         let channels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate)
         return (channels.count > 0)
     }

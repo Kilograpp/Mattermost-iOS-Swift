@@ -601,12 +601,13 @@ extension Api: UserApi {
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
             
+            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
             for user in users {
-                UserUtils.updateOnTeamAndPreferedStatesFor(user: user)
-                guard !channel.members.contains(user) else { continue }
-                
-                let realm = RealmUtils.realmForCurrentThread()
-                try! realm.write { channel.members.append(user) }
+                let existUser = User.objectById(user.identifier)
+                if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
+                    let realm = RealmUtils.realmForCurrentThread()
+                    try! realm.write { channel.members.append(existUser!) }
+                }
             }
             
             
@@ -784,9 +785,21 @@ extension Api: PostApi {
                     }
                 }
                 
-                print(missingUserIds)
+               /* self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
+                    RealmUtils.save(posts)
+                    for post in posts {
+                        for file in post.files {
+                            self.getInfo(fileId: file.identifier!)
+                        }
+                    }
+                    DispatchQueue.main.sync {
+                        completion(nil)
+                    } 
+                })*/
                 
-                RealmUtils.save(posts)                
+                
+                
+                RealmUtils.save(posts)
                 for post in posts {
                     for file in post.files {
                         self.getInfo(fileId: file.identifier!)

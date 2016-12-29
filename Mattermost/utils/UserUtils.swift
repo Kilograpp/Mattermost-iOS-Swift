@@ -35,14 +35,20 @@ class UserUtils: NSObject {
         if preferences?.first != nil {
             user.isOnTeam = ((preferences?.first?.value)! == Constants.CommonStrings.True)
         }
+        
+        print(user)
+        
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write {
             let existUser = realm.object(ofType: User.self, forPrimaryKey: user.identifier)
             if existUser == nil {
                 realm.add(user)
+                
+                guard user.hasChannel() else { return }
                 user.directChannel().isDirectPrefered = true
                 user.directChannel().displayName = user.displayName
             } else {
+                guard (existUser?.hasChannel())! else { return }
                 existUser?.directChannel().isDirectPrefered = true
                 existUser?.directChannel().displayName = user.displayName
             }
@@ -69,6 +75,31 @@ class UserUtils: NSObject {
             realm.delete((currentUser?.notifyProps)!)
             realm.add(serverUserNotifyProps!)
             currentUser?.notifyProps = serverUserNotifyProps
+        }
+    }
+    
+    static func update(existUser: User, serverUser: User) {
+        let realm = RealmUtils.realmForCurrentThread()
+        
+        try! realm.write {
+            existUser.updateAt = serverUser.updateAt
+            existUser.deleteAt = serverUser.deleteAt
+            existUser.username = serverUser.username
+            existUser.email = serverUser.email
+            existUser.nickname = serverUser.nickname
+            existUser.firstName = serverUser.firstName
+            existUser.lastName = serverUser.lastName
+            }
+        
+        guard existUser.identifier == DataManager.sharedInstance.currentUser?.identifier else { return }
+            let serverUserNotifyProps = serverUser.notifyProps
+            serverUserNotifyProps?.userId = serverUser.identifier
+            serverUserNotifyProps?.computeKey()
+
+        try! realm.write {
+            realm.delete((existUser.notifyProps)!)
+            realm.add(serverUserNotifyProps!)
+            existUser.notifyProps = serverUserNotifyProps
         }
     }
 }
