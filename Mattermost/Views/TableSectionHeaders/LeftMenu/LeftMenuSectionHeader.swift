@@ -73,7 +73,7 @@ extension LeftMenuSectionHeader: LeftMenuSectionHeaderLifeCycle {
         
         self.titleLabel.frame = CGRect(x: 15, y: 9, width: 150, height: 13)
         let xPos = self.bounds.maxX - 25
-        print(self.bounds)
+//        print(self.bounds)
         self.moreButton.frame = CGRect(x: xPos, y: 0, width: 25, height: 25)
     }
 }

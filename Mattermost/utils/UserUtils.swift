@@ -36,7 +36,7 @@ class UserUtils: NSObject {
             user.isOnTeam = ((preferences?.first?.value)! == Constants.CommonStrings.True)
         }
         
-        print(user)
+//        print(user)
         
         let realm = RealmUtils.realmForCurrentThread()
         

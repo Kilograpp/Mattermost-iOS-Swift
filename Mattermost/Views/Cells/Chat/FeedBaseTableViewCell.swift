@@ -55,7 +55,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     
     fileprivate func configureMessage() {
         
-        print(self.post.attributedMessage!)
+//        print(self.post.attributedMessage!)
         
         self.messageLabel.textStorage = self.post.attributedMessage!
         guard self.post.messageType == .system else { return }
