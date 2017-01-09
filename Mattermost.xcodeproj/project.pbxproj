@@ -1860,7 +1860,7 @@
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "40b177ea-da78-4452-b4c2-24e404ec586f";
+				PROVISIONING_PROFILE = "8fbce05f-29b6-41a8-8a0e-431a894c8698";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";

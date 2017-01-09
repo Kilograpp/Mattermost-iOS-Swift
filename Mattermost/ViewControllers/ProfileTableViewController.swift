@@ -72,7 +72,7 @@ extension ProfileViewController: ProfileViewControllerConfiguration {
     }
     
     func configureFor(user: User) {
-        print(user)
+//        print(user)
         self.user = user
     }
 }

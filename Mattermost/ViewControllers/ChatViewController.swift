@@ -534,7 +534,7 @@ extension ChatViewController: Navigation {
 //MARK: Requests
 extension ChatViewController: Request {
     func loadChannelUsers() {
-        print("loadChannelUsers")
+//        print("loadChannelUsers")
         self.isLoadingInProgress = true
         showLoaderView()
         Api.sharedInstance.loadFirstPage(self.channel, completion: { (error) in
@@ -543,7 +543,7 @@ extension ChatViewController: Request {
     }
     
     func loadFirstPageOfData(isInitial: Bool) {
-        print("loadFirstPageOfData")
+//        print("loadFirstPageOfData")
         self.isLoadingInProgress = true
         
         self.showLoaderView()
@@ -559,7 +559,7 @@ extension ChatViewController: Request {
     }
     
     func loadNextPageOfData() {
-        print("loadNextPageOfData")
+//        print("loadNextPageOfData")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
@@ -572,7 +572,7 @@ extension ChatViewController: Request {
     }
     
     func loadPostsBeforePost(post: Post, shortSize: Bool? = false) {
-        print("loadPostsBeforePost")
+//        print("loadPostsBeforePost")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
@@ -590,7 +590,7 @@ extension ChatViewController: Request {
     }
     
     func loadPostsAfterPost(post: Post, shortSize: Bool? = false) {
-        print("loadPostsAfterPost")
+//        print("loadPostsAfterPost")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true

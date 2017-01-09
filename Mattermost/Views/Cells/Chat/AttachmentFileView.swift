@@ -206,9 +206,9 @@ extension AttachmentFileView: Downloading {
                 UIApplication.shared.scheduleLocalNotification(notification)
 
             }) { (identifier, progress) in
-                print("progressTotal = ", progress)
+//                print("progressTotal = ", progress)
                 if fileId == identifier {
-                    print("progress = ", progress)
+//                    print("progress = ", progress)
                     self.progressView.progress = progress
                 }
             }

@@ -120,9 +120,9 @@ extension NotifyProps: Email {
 //MARK: MobilePush
 extension NotifyProps: MobilePush {
     func completeMobilePush() -> String{
-        print((self.push)!)
+//        print((self.push)!)
         let sendIndex = Constants.NotifyProps.Send.index { return $0.state == (self.push)! }!
-        print((self.pushStatus)!)
+//        print((self.pushStatus)!)
         let triggerIndex = Constants.NotifyProps.MobilePush.Trigger.index { return $0.state == (self.pushStatus)! }!
         let send = Constants.NotifyProps.Send[sendIndex].description
         let trigger = Constants.NotifyProps.MobilePush.Trigger[triggerIndex].description
@@ -170,7 +170,7 @@ extension NotifyProps: TriggerWords {
     
     func completeTriggerWords() -> String {
         let user = DataManager.sharedInstance.currentUser
-        print(self.isSensitiveFirstName())
+//        print(self.isSensitiveFirstName())
         var words = self.isSensitiveFirstName() ? StringUtils.quotedString(user?.firstName) : ""
         if self.isNonCaseSensitiveUsername() {
             words = StringUtils.commaTailedString(words)

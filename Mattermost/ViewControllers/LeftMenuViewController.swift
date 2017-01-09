@@ -77,7 +77,7 @@ extension LeftMenuViewController: Interface {
     
     func updateSelectionFor(_ channel: Channel) {
         let indexPath: IndexPath
-        print(channel)
+//        print(channel)
         switch channel.privateType! as String {
         case Constants.ChannelType.PublicTypeChannel:
             let row = self.resultsPublic.index(of: channel)
@@ -204,8 +204,8 @@ extension LeftMenuViewController : Navigation {
             ChannelObserver.sharedObserver.selectedChannel = self.resultsDirect[indexPath.row]
         case 3:
             ChannelObserver.sharedObserver.selectedChannel = self.resultsOutsideDirect[indexPath.row]
-        default:
-            print("unknown channel type")
+        default: break
+//            print("unknown channel type")
         }
         self.tableView.reloadData()
         toggleLeftSideMenu()
