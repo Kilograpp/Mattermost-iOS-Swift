@@ -36,10 +36,7 @@ class UserUtils: NSObject {
             user.isOnTeam = ((preferences?.first?.value)! == Constants.CommonStrings.True)
         }
         
-        print(user)
-        
         let realm = RealmUtils.realmForCurrentThread()
-        
         let preferedPredicate = NSPredicate(format: "name == %@", user.identifier)
         let isPrefered = Preference.preferedUsersList().filter(preferedPredicate).count > 0
   

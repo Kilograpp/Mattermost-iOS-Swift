@@ -61,14 +61,15 @@ extension FeedAttachmentsTableViewCell {
             if file.isImage {
                 let thumbUrl = file.thumbURL()
                 let image = SDImageCache.shared().imageFromMemoryCache(forKey: thumbUrl?.absoluteString)
-                if image != nil {
+                fileHeight = (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings) * 0.56 - 5
+                /*  if image != nil {
                     /*fileHeight = (image?.size.height)!
                     let scale = (UIScreen.screenWidth() - 20) / (image?.size.width)!
                     fileHeight = fileHeight * scale - 20*/
                     fileHeight = fileHeight + (UIScreen.screenWidth() - 20)
                 } else {
                     fileHeight = (UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings) * 0.56 - 5
-                }
+                }*/
             }
             tableViewHeight += fileHeight
         }
