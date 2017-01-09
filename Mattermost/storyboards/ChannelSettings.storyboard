@@ -13,7 +13,7 @@
         <scene sceneID="bIw-Ig-KJF">
             <objects>
                 <navigationController storyboardIdentifier="ChannelSettingsViewController" id="51X-pT-5Ad" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="eci-XC-IH0">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="eci-XC-IH0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -100,7 +100,7 @@
         <!--Add Members View Controller-->
         <scene sceneID="1Re-Yf-ESR">
             <objects>
-                <viewController id="Isq-Mm-oxO" customClass="AddMembersViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddMembersViewController" id="Isq-Mm-oxO" customClass="AddMembersViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="iOY-Mp-Lx0"/>
                         <viewControllerLayoutGuide type="bottom" id="fJ0-hg-M7u"/>
