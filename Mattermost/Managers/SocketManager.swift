@@ -97,18 +97,18 @@ extension SocketManager: Interface {
 extension SocketManager: MessageHandling {
     fileprivate func handleIncomingMessage(_ text: String) {
         let dictionary = text.toDictionary()!
-        print(dictionary)
+//        print(dictionary)
         //let userId = dictionary[NotificationKeys.UserIdentifier] as? String
         //let channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
         let userId = dictionary[NotificationKeys.Data]?[NotificationKeys.UserIdentifier] as? String
         let channelId = dictionary[NotificationKeys.Broadcast]?[NotificationKeys.ChannelIdentifier] as? String
         switch(SocketNotificationUtils.typeForNotification(dictionary)) {
-            case .error:
-                print("ERROR "+text)
+            case .error: break
+//                print("ERROR "+text)
             case .default:
                 break
             case .receivingPost:
-                print("New post")
+//                print("New post")
                 let channelName = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.ChannelName] as! String
                 let channelType = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.ChannelType] as! String
                 let senderName = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.SenderName] as! String
@@ -116,12 +116,12 @@ extension SocketManager: MessageHandling {
                 let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
                 handleReceivingNewPost(channelId!,channelName: channelName,channelType: channelType,senderName: senderName,post: post)
             case .receivingUpdatedPost:
-                print("Updated post")
+//                print("Updated post")
                 let postString = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.Post] as! String
                 let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
                 handleReceivingUpdatedPost(post)
             case .receivingDeletedPost:
-                print("Deleted post")
+//                print("Deleted post")
                 let postString = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.Post] as! String
                 let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
                 handleReceivingDeletedPost(post)
@@ -136,8 +136,8 @@ extension SocketManager: MessageHandling {
                 publishLocalNotificationWithChannelIdentifier(channelId!, userIdentifier: userId!, action: Event.Typing.rawValue)
             case .joinedUser:
                 publishLocalNotificationJoin(userIdentifier: userId!, to: channelId!)
-            default:
-                print("UNKNW: "+text)
+            default: break
+//                print("UNKNW: "+text)
                 //reply with event:"hello"
 //                publishBackendNotificationFetchStatuses()
         }

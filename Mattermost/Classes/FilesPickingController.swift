@@ -101,8 +101,8 @@ extension FilesPickingController: Pickers {
                         AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Photo data.")
                         return
                     }
-                default:
-                    print("Default")
+                default: break
+//                    print("Default")
                 }
             })
         }

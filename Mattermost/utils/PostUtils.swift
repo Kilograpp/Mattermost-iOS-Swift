@@ -153,7 +153,7 @@ extension PostUtils: Upload {
     func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.files.append(contentsOf: items)
         for item in items {
-            print("\(item.identifier) is starting")
+//            print("\(item.identifier) is starting")
             self.upload_images_group.enter()
             item.uploading = true
             Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (file, error) in
@@ -162,7 +162,7 @@ extension PostUtils: Upload {
                 defer {
                     completion(false, error, item)
                     self.upload_images_group.leave()
-                    print("\(item.identifier) is finishing")
+//                    print("\(item.identifier) is finishing")
                 }
                 
                 guard error == nil else {
@@ -177,19 +177,19 @@ extension PostUtils: Upload {
                 let index = self.files.index(where: {$0.identifier == item.identifier})
                 if (index != nil) {
                     self.assignedFiles.append(file!)
-                    print("uploaded")
+//                    print("uploaded")
                 }
                 }, progress: { (identifier, value) in
                     let index = self.files.index(where: {$0.identifier == identifier})
                     guard (index != nil) else { return }
-                    print("\(index) in progress: \(value)")
+//                    print("\(index) in progress: \(value)")
                     progress(value, index!)
             })
         }
         
         self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
             //FIXME: add error
-            print("UPLOADING NOTIFY")
+//            print("UPLOADING NOTIFY")
             //completion(false,nil,item=nil)
             completion(true, nil, AssignedAttachmentViewItem(image: UIImage()))
         })

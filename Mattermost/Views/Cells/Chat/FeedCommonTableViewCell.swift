@@ -71,7 +71,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         if self.post.author == nil {
-            print("bug")
+//            print("bug")
         }
         
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
