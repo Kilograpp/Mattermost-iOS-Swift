@@ -52,21 +52,29 @@ extension PostMappingsContainer: ResponseMappings {
         mapping.assignsNilForMissingRelationships = false
         mapping.addAttributeMappingFromKeyOfRepresentation(toAttribute: PostAttributes.identifier.rawValue)
         mapping.addAttributeMappings(from: [
+            "(\(PostAttributes.identifier)).channel_id"      : PostAttributes.channelId.rawValue,
             "(\(PostAttributes.identifier)).create_at"  : PostAttributes.createdAt.rawValue,
-            "(\(PostAttributes.identifier)).update_at"  : PostAttributes.updatedAt.rawValue,
-            "(\(PostAttributes.identifier)).message"    : PostAttributes.message.rawValue,
-            "(\(PostAttributes.identifier)).type"       : PostAttributes.type.rawValue,
-            "(\(PostAttributes.identifier)).user_id"    : PostAttributes.authorId.rawValue,
-            "(\(PostAttributes.identifier)).channel_id" : PostAttributes.channelId.rawValue,
+            "(\(PostAttributes.identifier)).delete_at"       : PostAttributes.deletedAt.rawValue,
+            "(\(PostAttributes.identifier)).file_ids"        : PostAttributes.fileIds.rawValue,
+            //hashtags here
+            "(\(PostAttributes.identifier)).message"         : PostAttributes.message.rawValue,
+            //original_id here
+            "(\(PostAttributes.identifier)).parent_id"       : PostAttributes.parentId.rawValue,
+            "(\(PostAttributes.identifier)).pending_post_id" : PostAttributes.pendingId.rawValue,
+            //props here
             "(\(PostAttributes.identifier)).root_id"    : PostAttributes.rootId.rawValue,
-            "(\(PostAttributes.identifier)).parent_id"  : PostAttributes.parentId.rawValue
+            "(\(PostAttributes.identifier)).type"       : PostAttributes.type.rawValue,
+            "(\(PostAttributes.identifier)).update_at"  : PostAttributes.updatedAt.rawValue,
+            "(\(PostAttributes.identifier)).user_id"    : PostAttributes.authorId.rawValue
             ])
-        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
+        
+        
+/*        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
             toKeyPath: PostRelationships.files.rawValue,
             with: FileMappingsContainer.simplifiedMapping()))
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
             toKeyPath: PostRelationships.attachments.rawValue,
-            with: AttachmentMappingsContainer.mapping()))
+            with: AttachmentMappingsContainer.mapping()))*/
         return mapping
     }
     

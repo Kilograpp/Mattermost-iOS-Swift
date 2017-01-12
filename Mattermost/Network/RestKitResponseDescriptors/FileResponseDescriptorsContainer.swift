@@ -11,7 +11,7 @@ import RestKit
 
 private protocol ResponseDescriptors: class {
     static func uploadResponseDescriptor() -> RKResponseDescriptor
-    static func getInfoResponseDescriptor() -> RKResponseDescriptor
+    static func getFileInfosResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class FileResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -28,10 +28,10 @@ extension FileResponseDescriptorsContainer: ResponseDescriptors {
                                     keyPath: "filenames",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
-    static func getInfoResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: FileMappingsContainer.getInfoMapping(),
+    static func getFileInfosResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: FileMappingsContainer.getFileInfosMapping(),
                                     method: .GET,
-                                    pathPattern: FilePathPatternsContainer.getInfoPathPattern(),
+                                    pathPattern: FilePathPatternsContainer.getFileInfosPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

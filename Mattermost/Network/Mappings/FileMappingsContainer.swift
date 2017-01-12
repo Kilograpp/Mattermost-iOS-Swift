@@ -12,7 +12,7 @@ import RestKit
 private protocol ResponseMappings: class {
     static func simplifiedMapping() -> RKObjectMapping
     static func uploadMapping() -> RKObjectMapping
-    static func getInfoMapping() -> RKObjectMapping
+    static func getFileInfosMapping() -> RKObjectMapping
 }
 
 
@@ -35,14 +35,22 @@ extension FileMappingsContainer: ResponseMappings {
         mapping?.addPropertyMapping(RKAttributeMapping(fromKeyPath: nil, toKeyPath: FileAttributes.rawLink.rawValue))
         return mapping!
     }
-    static func getInfoMapping() -> RKObjectMapping {
-        let mapping = super.emptyMapping()
+    static func getFileInfosMapping() -> RKObjectMapping {
+        let mapping = super.mapping()
         mapping.addAttributeMappings(from: [
-            "filename"          : FileAttributes.name.rawValue,
+            "create_at"         : FileAttributes.createAt.rawValue,
+            "delete_at"         : FileAttributes.deleteAt.rawValue,
             "extension"         : FileAttributes.ext.rawValue,
-            "size"              : FileAttributes.size.rawValue,
             "mime_type"         : FileAttributes.mimeType.rawValue,
-            "has_preview_image" : FileAttributes.hasPreview.rawValue
+            "name"              : FileAttributes.name.rawValue,
+            "post_id"           : FileAttributes.postId.rawValue,
+            "size"              : FileAttributes.size.rawValue,
+            "update_at"         : FileAttributes.updateAt.rawValue,
+            "user_id"           : FileAttributes.userId.rawValue,
+            
+            "has_preview_image" : FileAttributes.hasPreview.rawValue,
+            "height"            : FileAttributes.height.rawValue,
+            "width"             : FileAttributes.width.rawValue
             ])
          return mapping
     }

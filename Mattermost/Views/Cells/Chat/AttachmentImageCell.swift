@@ -72,6 +72,8 @@ extension AttachmentImageCell: AttachmentImageCellConfiguration {
     }
     
     func heightWith(file: File) -> CGFloat {
+        return UIScreen.main.bounds.width - 60
+        
         //if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
             //return ima
         //}

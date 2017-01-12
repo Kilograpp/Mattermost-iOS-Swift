@@ -9,6 +9,12 @@
 import Foundation
 import RealmSwift
 
+private protocol Interface: class {
+    func unsubscribeNotifications()
+    func subscribeForRealmNotifications()
+}
+
+
 final class FeedNotificationsObserver {
 
 //MARK: Properties
@@ -31,7 +37,11 @@ final class FeedNotificationsObserver {
     deinit {
         unsubscribeNotifications()
     }
-    
+}
+
+
+//MARK: Interface
+extension FeedNotificationsObserver: Interface {
     @objc func unsubscribeNotifications() {
         self.resultsNotificationToken?.stop()
         NotificationCenter.default.removeObserver(self)
@@ -44,50 +54,47 @@ final class FeedNotificationsObserver {
                 self.tableView.reloadData()
                 break
             case .update(_, let deletions, let insertions, let modifications):
-                    if insertions.count > 1 || deletions.count > 1 || modifications.count > 1 {
-                        self.tableView.reloadData()
-                        break
+                if insertions.count > 1 || deletions.count > 1 || modifications.count > 1 {
+                    self.tableView.reloadData()
+                    break
+                }
+                //self.tableView.beginUpdates()
+                if deletions.count > 0 {
+                    /*  deletions.forEach({ (index: Int) in
+                     let post = self.results[index]
+                     var rowsForDelete = Array<IndexPath>
+                     
+                     
+                     })*/
+                    self.tableView.reloadData()
+                }
+                self.tableView.beginUpdates()
+                if (insertions.count > 0) {
+                    if self.days?.first?.posts.count == 1 {
+                        self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
                     }
-                    //self.tableView.beginUpdates()
-                    if deletions.count > 0 {
-                      /*  deletions.forEach({ (index: Int) in
-                            let post = self.results[index]
-                            var rowsForDelete = Array<IndexPath>
-                            
-                        
-                        })*/
-                        self.tableView.reloadData()
-                    }
-                    self.tableView.beginUpdates()
-                    if (insertions.count > 0) {
-                        if self.days?.first?.posts.count == 1 {
-                            self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
-                        }
-                        insertions.forEach({ (index:Int) in
-                            self.tableView.insertRows(at: [NSIndexPath(row: 0, section: 0) as IndexPath], with: .automatic)
-                        })
-                    }
-                    
-                    if modifications.count > 0 {
-                        modifications.forEach({ (index:Int) in
-                            let post = self.results[index]
-                            var rowsForReload = Array<IndexPath>()
-//                            print("start 3")
-                            rowsForReload.append(self.indexPathForPost(post))
-                            //self.tableView.reloadRows(at: [self.indexPathForPost(post)], with: .automatic)
-                            if let postIdentifier = post.identifier {
-                                let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("\(PostAttributes.parentId) == %@", postIdentifier)
-                                for comment in comments {
-//                                    print("start 4")
-                                    rowsForReload.append(self.indexPathForPost(comment))
-                                }
-                                self.tableView.reloadRows(at: rowsForReload, with: .automatic)
-                            }
-                        })
-                    }
-                    self.tableView.endUpdates()
+                    insertions.forEach({ (index:Int) in
+                        self.tableView.insertRows(at: [NSIndexPath(row: 0, section: 0) as IndexPath], with: .automatic)
+                    })
+                }
                 
-                default: break
+                if modifications.count > 0 {
+                    modifications.forEach({ (index:Int) in
+                        let post = self.results[index]
+                        var rowsForReload = Array<IndexPath>()
+                        rowsForReload.append(self.indexPathForPost(post))
+                        if let postIdentifier = post.identifier {
+                            let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("\(PostAttributes.parentId) == %@", postIdentifier)
+                            for comment in comments {
+                                rowsForReload.append(self.indexPathForPost(comment))
+                            }
+                            self.tableView.reloadRows(at: rowsForReload, with: .automatic)
+                        }
+                    })
+                }
+                self.tableView.endUpdates()
+                
+            default: break
             }
         }
         
@@ -95,7 +102,7 @@ final class FeedNotificationsObserver {
             self.resultsNotificationToken = self.results!.addNotificationBlock(resultsNotificationHandler)
             //self.lastDayNotificationToken = self.results.last?.posts.addNotificationBlock(lastDayNotificationsBlock)
         }
-
+        
         if Thread.isMainThread {
             configurationBlock()
         } else {
@@ -106,6 +113,7 @@ final class FeedNotificationsObserver {
     }
 }
 
+
 //MARK: - Notification Subscription
 extension FeedNotificationsObserver {
     func subscribeNotifications() {
@@ -113,6 +121,7 @@ extension FeedNotificationsObserver {
         subscribeForRealmNotifications()
     }
 }
+
 
 //MARK: FetchedResultsController
 extension FeedNotificationsObserver {
@@ -137,13 +146,13 @@ extension FeedNotificationsObserver {
         self.days = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted(byProperty: "date", ascending: false)
     }
 }
-//refactor
+
+
 //MARK: FetchedResultsController
 extension FeedNotificationsObserver {
     func numberOfRows(_ section:Int) -> Int {
        return self.days![section].posts.count
     }
-    
     func numberOfSections() -> Int {
         return days.count
     }

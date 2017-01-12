@@ -41,7 +41,7 @@ class AttachmentFileView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        drawTitle(text: file.name!)
+        //drawTitle(text: file.name!)
         if file.size > 0 {
             //activity indicator will added later
             drawSize(text: StringUtils.suffixedFor(size: file.size))

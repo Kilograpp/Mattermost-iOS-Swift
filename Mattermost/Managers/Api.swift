@@ -63,6 +63,7 @@ private protocol UserApi: class {
     func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
     func loadUsersFromCurrentTeam(completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
+    func loadMissingAuthorsFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol PostApi: class {
@@ -82,6 +83,8 @@ private protocol FileApi : class {
     func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,channel: Channel, completion:  @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void, progress:  @escaping(_ identifier: String, _ value: Float) -> Void)
     func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
     func getInfo(fileId: String)
+    func loadFileInfosFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func getFileInfos(post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 final class Api {
@@ -761,7 +764,20 @@ extension Api: UserApi {
         }, failure: { (error) in
             completion(error)
         })
+    }
+    
+    func loadMissingAuthorsFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        var missingUserIds = Array<String>()
+        for post in posts {
+            let authorId = post.authorId
+            if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
+                missingUserIds.append(post.authorId!)
+            }
+        }
         
+        self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
+            if error != nil { print(error!) }
+        })
     }
 }
 
@@ -769,13 +785,20 @@ extension Api: UserApi {
 //MARK: PostApi
 extension Api: PostApi {
     func loadFirstPage(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        let wrapper = PageWrapper(channel: channel)
-        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.firstPagePathPattern(), wrapper)
+        let path = SOCStringFromStringWithObject(PostPathPatternsContainer.firstPagePathPattern(), PageWrapper(channel: channel))
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             guard !skipMapping else { completion(nil); return }
+
             DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
                 let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                
+                RealmUtils.save(posts)
+                for post in posts {
+                    post.files.forEach({ RealmUtils.save($0) })
+                }
+                
+                print(posts);
                 
                 var missingUserIds = Array<String>()
                 for post in posts {
@@ -789,24 +812,16 @@ extension Api: PostApi {
                     if error != nil { print(error!) }
                 })
                 
-                RealmUtils.save(posts)
-                for post in posts {
-                    for file in post.files {
-                        self.getInfo(fileId: file.identifier!)
-                    }
-                }
-                DispatchQueue.main.sync {
-                    completion(nil)
-                }
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    /*DispatchQueue.main.sync { */completion(nil) //}
+                })
             })
         }) { (error) in
-            
-            //If joined current user -> reload left menu
             if let error = error {
                 if (error.code == -1011) {
                     let notificationName = Constants.NotificationsNames.UserJoinNotification
                     try! RealmUtils.realmForCurrentThread().write {
-                    channel.currentUserInChannel = false
+                        channel.currentUserInChannel = false
                     }
                     NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: channel)
                 }
@@ -829,6 +844,11 @@ extension Api: PostApi {
             
             DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
                 let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                    
+                RealmUtils.save(posts)
+                for post in posts {
+                    post.files.forEach({ RealmUtils.save($0) })
+                }
                 
                 var missingUserIds = Array<String>()
                 for post in posts {
@@ -837,15 +857,34 @@ extension Api: PostApi {
                         missingUserIds.append(post.authorId!)
                     }
                 }
-                
+
                 self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
                     if error != nil { print(error!) }
                 })
                 
-                RealmUtils.save(posts)
+                let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    completion(isLastPage, nil)
+                })
+                
+               // let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                
+                //var missingUserIds = Array<String>()
+                /*for post in posts {
+                    let authorId = post.authorId
+                    if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
+                        missingUserIds.append(post.authorId!)
+                    }
+                }*/
+                
+                /*self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
+                    if error != nil { print(error!) }
+                })*/
+                
+                /*RealmUtils.save(posts)
                 DispatchQueue.main.sync {
                     completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                }
+                }*/
             })
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
@@ -1036,6 +1075,39 @@ extension Api : FileApi {
                 progress(item.identifier, value)
             }
         }
+    }
+    
+    func getFileInfos(post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let wrapper = FileWrapper(channelId: post.channelId, postId: post.identifier!)
+        let path = SOCStringFromStringWithObject(FilePathPatternsContainer.getFileInfosPathPattern(), wrapper)
+        
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
+            let fileInfos = mappingResult.array() as! [File]
+            //PostUtils.update(post: post, fileInfos: fileInfos)
+            for fileInfo in fileInfos {
+                print(fileInfo)
+                FileUtils.updateFileWith(info: fileInfo)
+            }
+            
+            completion(nil)
+        }) { (error) in
+            completion(error)
+        }
+        
+    }
+    
+    func loadFileInfosFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        var chechedPostsCount = 0
+        for post in posts {
+            guard post.files.count > 0 else { chechedPostsCount += 1; continue }
+            
+            self.getFileInfos(post: post, completion: { (error) in
+                chechedPostsCount += 1
+                if posts.count == chechedPostsCount { completion(nil) }
+            })
+        }
+        
+        if posts.count == chechedPostsCount { completion(nil) }
     }
     
     func getInfo(fileId: String) {

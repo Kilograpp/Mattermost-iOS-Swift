@@ -12,7 +12,7 @@ private protocol PathPatterns: class {
     static func uploadPathPattern() -> String
     static func downloadPathPattern() -> String
     static func thumbPathPattern() -> String
-    static func getInfoPathPattern() -> String
+    static func getFileInfosPathPattern() -> String
 }
 
 final class FilePathPatternsContainer: PathPatterns {
@@ -25,7 +25,11 @@ final class FilePathPatternsContainer: PathPatterns {
     static func uploadPathPattern() -> String {
         return "teams/:identifier/files/upload"
     }
-    static func getInfoPathPattern() -> String {
-        return "teams/:path/files/get_info/:path/:path/:path/:path"
+    static func getFileInfosPathPattern() -> String {
+        //return "teams/:path/files/get_info/:path/:path/:path/:path"
+        return "teams/:\(FileWrapperAttributes.teamId)/channels/:\(FileWrapperAttributes.channelId)/posts/:\(FileWrapperAttributes.postId)/get_file_infos"
     }
 }
+
+
+//teams/on95mnb5h7r73n373brm6eddrr/channels/g453kw9oaifdtpawp456apa6ue/posts/a1myxqnwm7nzuxpnhnpb9wz1de/get_file_infos

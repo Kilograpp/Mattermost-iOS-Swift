@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import Realm
 import TSMarkdownParser
 
 
@@ -26,38 +27,40 @@ private protocol Delegate {
 }
 
 enum PostAttributes: String {
-    case authorId = "authorId"
-    case channelId = "channelId"
-    case pendingId = "pendingId"
-    case createdAt = "createdAt"
-    case parentId = "parentId"
-    case rootId = "rootId"
-    case creationDay = "creationDay"
-    case deletedAt = "deletedAt"
-    case identifier = "identifier"
-    case message = "message"
-    case type = "type"
-    case status = "status"
-    case updatedAt = "updatedAt"
-    case attributedMessage = "attributedMessage"
+    case authorId                = "authorId"
+    case channelId               = "channelId"
+    case pendingId               = "pendingId"
+    case createdAt               = "createdAt"
+    case parentId                = "parentId"
+    case rootId                  = "rootId"
+    case creationDay             = "creationDay"
+    case deletedAt               = "deletedAt"
+    case identifier              = "identifier"
+    case message                 = "message"
+    case type                    = "type"
+    case status                  = "status"
+    case updatedAt               = "updatedAt"
+    case attributedMessage       = "attributedMessage"
     case attributedMessageHeight = "attributedMessageHeight"
-    case hasObserverAttached = "hasObserverAttached"
-    case localId = "localIdentifier"
+    case hasObserverAttached     = "hasObserverAttached"
+    case localId                 = "localIdentifier"
+    case fileIds                 = "fileIds"
+    
 }
 
 enum PostRelationships: String {
-    case author = "author"
-    case channel = "channel"
-    case files = "files"
+    case author      = "author"
+    case channel     = "channel"
+    case files       = "files"
     case attachments = "attachments"
-    case day = "day"
+    case day         = "day"
 }
 
 
 @objc enum PostStatus: Int {
     case `default` = 0
-    case error = -1
-    case sending = 1
+    case error     = -1
+    case sending   = 1
 }
 
 @objc enum MessageType: Int {
@@ -89,11 +92,11 @@ final class Post: RealmObject {
     dynamic var deletedAt: Date?
     dynamic var status: PostStatus = .default
     dynamic var localIdentifier: String?
+    dynamic var fileIds: Data?
+    //dynamic var hashtags like this "#ijf #wtf"
 
     dynamic var identifier: String? {
-        didSet {
-            resetStatus()
-        }
+        didSet { resetStatus() }
     }
     dynamic var message: String?
     lazy var attributedMessage: NSTextStorage? = {
@@ -149,6 +152,13 @@ final class Post: RealmObject {
         return [PostAttributes.createdAt.rawValue, PostAttributes.identifier.rawValue, PostAttributes.localId.rawValue]
     }
     
+    static func postWith(identifier: String) -> Post? {
+        let realm = RealmUtils.realmForCurrentThread()
+        if let post = realm.objects(Post.self).filter("identifier = %@", identifier).last {
+            return post
+        }
+        return nil
+    }
 }
 
 private protocol Computations: class {
@@ -206,6 +216,8 @@ extension Post: Inteface {
         return (self.parentId != "" && self.parentId != nil)
 //        return self.parentId != nil
     }
+    
+    
     
     func parentPost() -> Post? {
         //temp!!! will be a post instead of parent post
