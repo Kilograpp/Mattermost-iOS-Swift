@@ -534,7 +534,6 @@ extension ChatViewController: Navigation {
 //MARK: Requests
 extension ChatViewController: Request {
     func loadChannelUsers() {
-//        print("loadChannelUsers")
         self.isLoadingInProgress = true
         showLoaderView()
         Api.sharedInstance.loadFirstPage(self.channel, completion: { (error) in
@@ -543,23 +542,22 @@ extension ChatViewController: Request {
     }
     
     func loadFirstPageOfData(isInitial: Bool) {
-//        print("loadFirstPageOfData")
         self.isLoadingInProgress = true
         
         self.showLoaderView()
-        
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.hideLoaderView()
             self.isLoadingInProgress = false
             self.hasNextPage = true
             self.dismissKeyboard(true)
+            self.tableView.reloadData()
+            
             
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in })
         })
     }
     
     func loadNextPageOfData() {
-//        print("loadNextPageOfData")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
@@ -949,7 +947,7 @@ extension ChatViewController: ChannelObserverDelegate {
                 //self.loadFirstPageOfData(isInitial: true)
                 self.loadChannelUsers()
             } else {
-                loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
+               // loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
             }
         }
         

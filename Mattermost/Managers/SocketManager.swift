@@ -241,6 +241,7 @@ extension SocketManager: Notifications {
                 }
             })
         } else {
+//FIXME: Crash here, when other user has joined to current channel
             handleUserJoined(user: user!, channel: channel!)
         }
     }

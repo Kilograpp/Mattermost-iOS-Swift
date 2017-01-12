@@ -16,6 +16,7 @@ private protocol Interface {
     static func fileIsImage(_ file: File) -> Bool
     static func thumbPostfixForInternalFile(_ file: File) -> String?
     static func removeLocalCopyOf(file: File)
+    static func updateFileWith(info: File)
 }
 
 final class FileUtils {
@@ -73,5 +74,31 @@ final class FileUtils {
         if FileManager.default.fileExists(atPath: filePath) {
            try! FileManager.default.removeItem(atPath: filePath)
         }
+    }
+    
+    static func updateFileWith(info: File) {
+        let realm = RealmUtils.realmForCurrentThread()
+        let file = realm.object(ofType: File.self, forPrimaryKey: info.identifier)
+        print(file)
+        
+        //Maybe append post with adding file to it
+        
+        try! realm.write {
+            file?.createAt = info.createAt
+            file?.deleteAt = info.deleteAt
+            file?.ext = info.ext
+            file?.mimeType = info.mimeType
+            file?.name = info.name
+            file?.postId = info.postId
+            file?.size = info.size
+            file?.updateAt = info.updateAt
+            file?.userId = info.userId
+                
+            file?.hasPreview = info.hasPreview
+            file?.height = info.height
+            file?.width = info.width
+        }
+
+        print(file)
     }
 }

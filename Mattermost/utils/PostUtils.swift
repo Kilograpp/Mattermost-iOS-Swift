@@ -8,6 +8,10 @@
 
 import RealmSwift
 
+private protocol Interface: class {
+    static func update(post: Post, fileInfos: [File])
+}
+
 protocol Send: class {
     func sendPost(channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func send(post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -51,6 +55,17 @@ final class PostUtils: NSObject {
     fileprivate var assignedFiles: Array<File> = Array()
 }
 
+
+//MARK: Interface
+extension PostUtils: Interface {
+    static func update(post: Post, fileInfos: [File]) {
+        for fileInfo in fileInfos {
+            FileUtils.updateFileWith(info: fileInfo)
+        }
+    }
+}
+
+
 //MARK: Send
 extension PostUtils: Send {
     func sendPost(channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -59,28 +74,19 @@ extension PostUtils: Send {
         clearUploadedAttachments()
         send(post: post, completion: completion)
         self.files.forEach { (item) in
-            if !item.uploaded {
-                self.cancelUpload(item: item)
-            }
+            if !item.uploaded { self.cancelUpload(item: item) }
         }
     }
     
     func send(post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         Api.sharedInstance.sendPost(post) { (error) in
-            //completion(error)
-            if error != nil {
-                try! RealmUtils.realmForCurrentThread().write({
-                    post.status = .error
-                })
-            }
+            if error != nil { try! RealmUtils.realmForCurrentThread().write({ post.status = .error }) }
             completion(error)
         }
     }
     
     func resend(post:Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        try! RealmUtils.realmForCurrentThread().write({
-            post.status = .sending
-        })
+        try! RealmUtils.realmForCurrentThread().write({ post.status = .sending })
         send(post: post, completion: completion)
     }
     
@@ -91,12 +97,7 @@ extension PostUtils: Send {
         RealmUtils.save(postReply)
         
         Api.sharedInstance.sendPost(postReply) { (error) in
-            if error != nil {
-                try! RealmUtils.realmForCurrentThread().write({
-                    postReply.status = .error
-                })
-            }
-            
+            if error != nil { try! RealmUtils.realmForCurrentThread().write({ postReply.status = .error }) }
             completion(error)
             self.clearUploadedAttachments()
         }
@@ -153,7 +154,6 @@ extension PostUtils: Upload {
     func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.files.append(contentsOf: items)
         for item in items {
-//            print("\(item.identifier) is starting")
             self.upload_images_group.enter()
             item.uploading = true
             Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (file, error) in
@@ -162,52 +162,35 @@ extension PostUtils: Upload {
                 defer {
                     completion(false, error, item)
                     self.upload_images_group.leave()
-//                    print("\(item.identifier) is finishing")
                 }
                 
-                guard error == nil else {
-                    self.files.removeObject(item)
-                    return
-                }
+                guard error == nil else { self.files.removeObject(item); return }
                 
-                if self.assignedFiles.count == 0 {
-                    self.test = file
-                }
+                if self.assignedFiles.count == 0 { self.test = file }
                 
                 let index = self.files.index(where: {$0.identifier == item.identifier})
-                if (index != nil) {
-                    self.assignedFiles.append(file!)
-//                    print("uploaded")
-                }
+                if (index != nil) { self.assignedFiles.append(file!) }
                 }, progress: { (identifier, value) in
                     let index = self.files.index(where: {$0.identifier == identifier})
                     guard (index != nil) else { return }
-//                    print("\(index) in progress: \(value)")
                     progress(value, index!)
             })
         }
         
         self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
-            //FIXME: add error
-//            print("UPLOADING NOTIFY")
-            //completion(false,nil,item=nil)
             completion(true, nil, AssignedAttachmentViewItem(image: UIImage()))
         })
     }
     
     func cancelUpload(item: AssignedAttachmentViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-      //  self.upload_images_group.leave()
         let index = self.assignedFiles.index(where: {$0.identifier == item.identifier})
         
-        if (index != nil) {
-            self.assignedFiles.remove(at: index!)
-        }
+        if (index != nil) { self.assignedFiles.remove(at: index!) }
         self.files.removeObject(item)
         
         guard item.uploaded else { return }
         guard self.assignedFiles.count > 0 else { return }
-      //  self.assignedFiles.remove(at: files.index(of: item)!)
     }
 }
 

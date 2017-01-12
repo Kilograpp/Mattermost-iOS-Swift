@@ -25,7 +25,7 @@ enum ChannelAttributes: String {
     case extraUpdateDate = "extraUpdateDate"
     case creatorId       = "creatorId"
     
-    case lastViewDate  = "lastViewDate"
+    case lastViewDate    = "lastViewDate"
 }
 
 enum ChannelRelationships: String {
@@ -60,6 +60,7 @@ final class Channel: RealmObject {
         }
     }
     
+//MARK: Properties
     dynamic var identifier: String?
     dynamic var createdAt: Date?
     dynamic var updateAt: Date?
@@ -94,12 +95,7 @@ final class Channel: RealmObject {
     
     var members = List<User>()
     
-    func interlocuterFromPrivateChannel() -> User {
-        let ids = self.name?.components(separatedBy: "__")
-        let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
-        return safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
-    }
-    
+//MARK: LifeCycle
     override class func primaryKey() -> String {
         return ChannelAttributes.identifier.rawValue
     }
@@ -120,7 +116,15 @@ final class Channel: RealmObject {
         
         return (channel?.members.contains(DataManager.sharedInstance.currentUser!))!
     }
+    
+    func interlocuterFromPrivateChannel() -> User {
+        let ids = self.name?.components(separatedBy: "__")
+        let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
+        return safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
+    }
 }
+
+
 
 private protocol Support: class {
     static func teamIdentifierPath() -> String
@@ -130,6 +134,7 @@ private protocol Support: class {
 private protocol URLBuilder: class {
     func buildURL() -> String
 }
+
 
 //  MARK: - Support
 extension Channel: Support {
@@ -161,12 +166,16 @@ extension Channel: Support {
     }
 }
 
+
+//MARK: Computatations
 extension Channel: Computatations {
     func computeDisplayNameWidth() {
         self.displayNameWidth = StringUtils.widthOfString(self.displayName! as NSString!, font: FontBucket.postAuthorNameFont)
     }
 }
 
+
+//MARK: URLBuilder
 extension Channel: URLBuilder {
     func buildURL() -> String {
         let baseUrlArr: [String] = Api.sharedInstance.baseURL().relativeString.components(separatedBy: "/")

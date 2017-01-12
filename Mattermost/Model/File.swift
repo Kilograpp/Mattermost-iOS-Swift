@@ -16,13 +16,24 @@ private protocol Interface: class {
 }
 
 final class File: RealmObject {
-    dynamic var name: String?
+    //Common
+    dynamic var createAt: Date?
+    dynamic var deleteAt: Date?
     dynamic var ext: String?
-    dynamic var hasPreview: Bool = false
-    dynamic var mimeType: String?
-    dynamic var size: Int = 0
-    
     dynamic var identifier: String?
+    dynamic var mimeType: String?
+    dynamic var name: String?
+    dynamic var postId: String?
+    dynamic var size: Int = 0
+    dynamic var updateAt: Date?
+    dynamic var userId: String?
+    //Image
+    dynamic var hasPreview: Bool = false
+    dynamic var height: Int = 0
+    dynamic var width: Int = 0
+    
+    
+    
     dynamic var isImage: Bool = false
     var _downloadLink: String? { return FileUtils.downloadLinkForFile(self)?.absoluteString }
     var _thumbLink: String? { return FileUtils.thumbLinkForFile(self)?.absoluteString }
@@ -44,13 +55,23 @@ final class File: RealmObject {
 }
 
 enum FileAttributes: String {
-    case name       = "name"
+    case createAt   = "createAt"
+    case deleteAt   = "deleteAt"
     case ext        = "ext"
-    case hasPreview = "hasPreview"
-    case mimeType   = "mimeType"
-    case size       = "size"
-    
     case identifier = "identifier"
+    case mimeType   = "mimeType"
+    case name       = "name"
+    case postId     = "postId"
+    case size       = "size"
+    case updateAt   = "updateAt"
+    case userId     = "userId"
+    
+    case hasPreview = "hasPreview"
+    case height     = "height"
+    case width      = "width"
+    
+    
+    
     case isImage    = "isImage"
     case rawLink    = "rawLink"
 }

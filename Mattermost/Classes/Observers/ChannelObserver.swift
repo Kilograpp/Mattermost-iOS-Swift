@@ -17,9 +17,7 @@ protocol ChannelObserverDelegate : class {
 
 class ChannelObserver {
     var selectedChannel: Channel? {
-        didSet {
-            self.handleSelectedChannel()
-        }
+        didSet { self.handleSelectedChannel() }
     }
     weak var delegate : ChannelObserverDelegate? {
         didSet {
