@@ -497,9 +497,9 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToProfileFor(user: User) {
-        Api.sharedInstance.loadChannels(with: { (error) in
+        /*Api.sharedInstance.loadChannels(with: { (error) in
             guard (error == nil) else { return }
-        })
+        })*/
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         (profile as! ProfileViewController).configureFor(user: user)
