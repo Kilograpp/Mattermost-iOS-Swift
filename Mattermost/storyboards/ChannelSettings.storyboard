@@ -100,7 +100,7 @@
         <!--Add Members View Controller-->
         <scene sceneID="1Re-Yf-ESR">
             <objects>
-                <viewController id="Isq-Mm-oxO" customClass="AddMembersViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddMembersViewController" id="Isq-Mm-oxO" customClass="AddMembersViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="iOY-Mp-Lx0"/>
                         <viewControllerLayoutGuide type="bottom" id="fJ0-hg-M7u"/>

@@ -20,6 +20,10 @@ extension Date {
         return (self as NSDate).formattedDate(withFormat: "MMM dd,yyyy", locale: Locale(identifier: "en_US_POSIX"))
     }
     
+    func startDialogDateFormat() -> String {
+                return (self as NSDate).formattedDate(withFormat: "MMMM dd,yyyy", locale: Locale(identifier: "en_US_POSIX"))
+    }
+    
     func messageDateFormatForChannel() -> String {
         return (self as NSDate).formattedDate(withFormat: "MMM d", locale: Locale(identifier: "en_US_POSIX"))
     }

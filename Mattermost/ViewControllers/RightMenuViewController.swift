@@ -170,7 +170,20 @@ extension RightMenuViewController: Navigation {
     
     
     func logOut() {
-        UserStatusManager.sharedInstance.logout()
+        let actionSheetController = UIAlertController(title: nil, message: "Do you realy want to log out?", preferredStyle: .actionSheet)
+        
+        let logOutAction = UIAlertAction(title: "Log out", style: .destructive) { action -> Void in
+            UserStatusManager.sharedInstance.logout()
+        }
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+        }
+        
+        actionSheetController.addAction(logOutAction)
+        actionSheetController.addAction(cancelAction)
+        
+        self.present(actionSheetController, animated: true, completion: nil)
+
     }
 }
 

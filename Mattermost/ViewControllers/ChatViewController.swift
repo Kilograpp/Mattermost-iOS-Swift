@@ -25,7 +25,9 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     override var tableView: UITableView { return super.tableView! }
     fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
     internal let attachmentsView = PostAttachmentsView()
-    fileprivate let emptyDialogueLabel = EmptyDialogueLabel()
+    fileprivate var startHeadDialogueLabel = EmptyDialogueLabel()
+    fileprivate var startTextDialogueLabel = EmptyDialogueLabel()
+    fileprivate let startButton = UIButton.init()
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
     var scrollButton: UIButton?
@@ -37,6 +39,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var resultsObserver: FeedNotificationsObserver! = nil
     //Common
     var channel : Channel!
+    
     var indexPathScroll: NSIndexPath?
     
     fileprivate var selectedPost: Post! = nil
@@ -116,7 +119,6 @@ fileprivate protocol Setup {
     func setupPostAttachmentsView()
     func setupTopActivityIndicator()
     func setupCompactPost()
-    func setupEmptyDialogueLabel()
     func setupModules()
     func loadUsersFromTeam()
 }
@@ -169,7 +171,6 @@ extension ChatViewController: Setup {
         setupTopActivityIndicator()
         setupLongCellSelection()
         setupCompactPost()
-        setupEmptyDialogueLabel()
         loadUsersFromTeam()
         setupModules()
     }
@@ -266,11 +267,6 @@ extension ChatViewController: Setup {
     fileprivate func setupLongCellSelection() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
         self.tableView.addGestureRecognizer(longPressGestureRecognizer)
-    }
-    
-    fileprivate func setupEmptyDialogueLabel() {
-        self.emptyDialogueLabel.backgroundColor = self.tableView.backgroundColor
-        self.view.insertSubview(self.emptyDialogueLabel, aboveSubview: self.tableView)
     }
     
     fileprivate func setupCompactPost() {
@@ -746,7 +742,16 @@ extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         guard self.resultsObserver != nil else { return 0 }
         if (tableView == self.tableView) {
-            self.emptyDialogueLabel.isHidden = (self.resultsObserver.numberOfSections() > 0)
+            if (self.resultsObserver.numberOfSections() < 1) {
+                self.startTextDialogueLabel.isHidden = false
+                self.startHeadDialogueLabel.isHidden = false
+                self.startButton.isHidden = false
+                return self.resultsObserver?.numberOfSections() ?? 1
+            } else {
+                self.startTextDialogueLabel.isHidden = true
+                self.startHeadDialogueLabel.isHidden = true
+                self.startButton.isHidden = true
+            }
             return self.resultsObserver?.numberOfSections() ?? 1
         }
         
@@ -911,7 +916,10 @@ extension ChatViewController: ChannelObserverDelegate {
             resultsObserver.unsubscribeNotifications()
         }
         self.resultsObserver = nil
-        self.emptyDialogueLabel.isHidden = true
+        self.startTextDialogueLabel.isHidden = true
+        self.startHeadDialogueLabel.isHidden = true
+        self.startButton.isHidden = true
+        
         if self.channel != nil {
             //remove action observer from old channel after relogin
             removeActionsObservers()
@@ -943,11 +951,67 @@ extension ChatViewController: ChannelObserverDelegate {
             }
         }
         
+        //NEEDREFACTORING
+        startHeadDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 0)
+        startTextDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 1)
+        
+        self.startTextDialogueLabel.removeFromSuperview()
+        self.startHeadDialogueLabel.removeFromSuperview()
+        self.startButton.removeFromSuperview()
+        
+        self.startHeadDialogueLabel.backgroundColor = self.tableView.backgroundColor
+        self.view.insertSubview(self.startHeadDialogueLabel, aboveSubview: self.tableView)
+        
+        self.startTextDialogueLabel.backgroundColor = self.tableView.backgroundColor
+        self.view.insertSubview(self.startTextDialogueLabel, aboveSubview: self.tableView)
+        
+        self.startButton.frame = CGRect(x       : 0,
+                                        y       : 0,
+                                        width   : UIScreen.main.bounds.size.width*0.90,
+                                        height  : 30)
+        self.startButton.center = CGPoint(x: UIScreen.main.bounds.size.width / 2,
+                                          y: UIScreen.main.bounds.size.height / 1.65)
+        
+        if (channel.privateType == "P") {
+            self.startButton.setTitle("+ Invite others to this private group",for: .normal)
+        } else {
+            self.startButton.setTitle("+ Invite others to this channel",for: .normal)
+        }
+        
+        self.startButton.addTarget(self, action: #selector(startButtonAction), for: .touchUpInside)
+        self.startButton.setTitleColor(UIColor.kg_blueColor(), for: .normal)
+        self.startButton.contentHorizontalAlignment = .left
+        if (channel.privateType != "D") {
+            self.view.insertSubview(self.startButton, aboveSubview: self.tableView)
+        }
+        //ENDREFACTORING
+        
         addChannelObservers()
     }
+    
+    func startButtonAction(sender: UIButton!) {
+        self.showLoaderView()
+        Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
+            guard (error==nil) else {
+                self.hideLoaderView()
+                return
+            }
+            let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
+            let addMembersViewController = channelSettingsStoryboard.instantiateViewController(withIdentifier: "AddMembersViewController") as! AddMembersViewController
+            addMembersViewController.channel = self.channel
+            addMembersViewController.users = users!
+            
+            let backItem = UIBarButtonItem()
+            backItem.title = ""
+            self.navigationItem.backBarButtonItem = backItem
+            self.navigationController?.navigationBar.backIndicatorImage = UIImage(named: "navbar_back_icon")
+            self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navbar_back_icon")
+            
+            self.navigationController?.pushViewController(addMembersViewController, animated: true)
+            self.hideLoaderView()
+        })
+    }
 }
-
-
 //MARK: Handlers
 extension ChatViewController {
     func handleChannelNotification(_ notification: Notification) {
