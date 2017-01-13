@@ -112,9 +112,14 @@ extension ProfileViewController: Setup {
     }
     
     func setupNavigationBar() {
+        self.navigationController?.navigationBar.backIndicatorImage = UIImage(named: "navbar_back_icon")
+        self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navbar_back_icon")
+        self.navigationController?.navigationBar.backItem?.title = " "
+        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -80.0), for: .default)
+//        self.navigationController?.navigationBar.setbac
         self.title = "Profile"
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
+        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: nil, action: nil/*#selector(backAction)*/)
+        self.navigationItem.backBarButtonItem = backButton
         
         if !self.isDisplayOnly! {
             self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
@@ -156,9 +161,9 @@ extension ProfileViewController: Setup {
     }
     
     func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
+//        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
+//        swipeRight.direction = .right
+//        view.addGestureRecognizer(swipeRight)
     }
 }
 
