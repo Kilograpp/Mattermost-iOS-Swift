@@ -732,9 +732,7 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.userUpdateImagePathPattern()
     
         self.manager.post(image: profileImage, identifier: "image_id", name: "image", path: path, parameters: nil, success: { (mappingResult) in
-            print(mappingResult)
             completion(nil)
-            
         }, failure: { (error) in
             completion(error)
         }) { (value) in
@@ -746,7 +744,6 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.attachDevicePathPattern()
         let deviceUUID = Preferences.sharedInstance.deviceUUID
         let params = ["device_id" : "apple:" + deviceUUID!]
-        print(params)
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             completion(nil)
@@ -790,32 +787,25 @@ extension Api: PostApi {
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             guard !skipMapping else { completion(nil); return }
 
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-                
-                RealmUtils.save(posts)
-                for post in posts {
-                    post.files.forEach({ RealmUtils.save($0) })
+            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+            RealmUtils.save(posts)
+            
+            var missingUserIds = Array<String>()
+            for post in posts {
+                post.files.forEach({ RealmUtils.save($0) })
+                let authorId = post.authorId
+                if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
+                    missingUserIds.append(post.authorId!)
                 }
-                
-                print(posts);
-                
-                var missingUserIds = Array<String>()
-                for post in posts {
-                    let authorId = post.authorId
-                    if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
-                        missingUserIds.append(post.authorId!)
-                    }
-                }
-                
-                self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-                    if error != nil { print(error!) }
-                })
-                
-                self.loadFileInfosFor(posts: posts, completion: { (error) in
-                    /*DispatchQueue.main.sync { */completion(nil) //}
-                })
-            })
+            }
+            
+            self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
+                if error != nil { print(error!) }
+             })
+            
+             self.loadFileInfosFor(posts: posts, completion: { (error) in
+                completion(nil)
+             })
         }) { (error) in
             if let error = error {
                 if (error.code == -1011) {
@@ -837,54 +827,27 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.nextPagePathPattern(), wrapper)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            guard !skipMapping else {
-                completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                return
+            let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
+            guard !skipMapping else { completion(isLastPage, nil); return }
+            
+            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+            RealmUtils.save(posts)
+            
+            var missingUserIds = Array<String>()
+            for post in posts {
+                post.files.forEach({ RealmUtils.save($0) })
+                let authorId = post.authorId
+                if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
+                    missingUserIds.append(post.authorId!)
+                }
             }
             
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-                    
-                RealmUtils.save(posts)
-                for post in posts {
-                    post.files.forEach({ RealmUtils.save($0) })
-                }
-                
-                var missingUserIds = Array<String>()
-                for post in posts {
-                    let authorId = post.authorId
-                    if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
-                        missingUserIds.append(post.authorId!)
-                    }
-                }
-
-                self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-                    if error != nil { print(error!) }
-                })
-                
-                let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
-                self.loadFileInfosFor(posts: posts, completion: { (error) in
-                    completion(isLastPage, nil)
-                })
-                
-               // let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-                
-                //var missingUserIds = Array<String>()
-                /*for post in posts {
-                    let authorId = post.authorId
-                    if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
-                        missingUserIds.append(post.authorId!)
-                    }
-                }*/
-                
-                /*self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-                    if error != nil { print(error!) }
-                })*/
-                
-                /*RealmUtils.save(posts)
-                DispatchQueue.main.sync {
-                    completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                }*/
+            self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
+                if error != nil { print(error!) }
+            })
+            
+            self.loadFileInfosFor(posts: posts, completion: { (error) in
+                completion(isLastPage, nil)
             })
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false

@@ -12,15 +12,15 @@ import MRProgress
 
 fileprivate struct DownloadingState {
     static let NotDownloaded: Int = 0
-    static let Downloading: Int = 1
-    static let Downloaded: Int  = 2
+    static let Downloading: Int   = 1
+    static let Downloaded: Int    = 2
 }
 
 fileprivate let NullString = "(null)"
 
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
-   // func heightWith(file: File) -> CGFloat
+    static func heightWithFile(_ file: File) -> CGFloat
 }
 
 final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
@@ -46,15 +46,12 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     }
     
     override func layoutSubviews() {
-        //self.fileNameLabel.sizeToFit()
-        let fileNameHeight: CGFloat = 20
-        self.fileNameLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: fileNameHeight/*self.fileNameLabel.frame.height*/)
-        
-        let height = self.bounds.height - fileNameHeight//self.fileNameLabel.frame.height
-        let width = self.bounds.width
-        
-        self.fileImageView.frame = CGRect(x: 0, y: /*self.fileNameLabel.frame.height*/fileNameHeight, width: width, height: height)
         super.layoutSubviews()
+        
+        self.fileNameLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 20)
+        self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.size.height,
+                                          width: self.bounds.width,
+                                          height: FileUtils.scaledImageHeightWith(file: self.file))
     }
     
     override func prepareForReuse() {
@@ -71,17 +68,11 @@ extension AttachmentImageCell: AttachmentImageCellConfiguration {
         configureLabel()
     }
     
-    func heightWith(file: File) -> CGFloat {
-        return UIScreen.main.bounds.width - 60
+    static func heightWithFile(_ file: File) -> CGFloat {
+        let baseHeight: CGFloat = 20
+        let imageHeight = FileUtils.scaledImageHeightWith(file: file)
         
-        //if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
-            //return ima
-        //}
-        //let width = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings
-        //let scale = width / finalImage.size.width
-        //let height = finalImage.size.height * scale
-        
-        return 0
+        return baseHeight + imageHeight
     }
 }
 
@@ -199,10 +190,10 @@ extension AttachmentImageCell: Updating {
 //MARK: Action
 extension AttachmentImageCell: Action {
     @objc fileprivate func tapAction() {
-        let postLocalId = self.file.post?.localIdentifier
+    /*    let postLocalId = self.file.post?.localIdentifier
         let fileId = self.file.identifier
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.FileImageDidTapNotification),
                                         object: nil, userInfo: ["postLocalId" : postLocalId, "fileId" : fileId])
-        NotificationCenter.default.post(notification as Notification)
+        NotificationCenter.default.post(notification as Notification)*/
     }
 }

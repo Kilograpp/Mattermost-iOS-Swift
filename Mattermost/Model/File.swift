@@ -22,7 +22,12 @@ final class File: RealmObject {
     dynamic var ext: String?
     dynamic var identifier: String?
     dynamic var mimeType: String?
-    dynamic var name: String?
+    dynamic var name: String? {
+        didSet {
+            computeIsImage()
+            computeRawLink()
+        }
+    }
     dynamic var postId: String?
     dynamic var size: Int = 0
     dynamic var updateAt: Date?
@@ -37,14 +42,14 @@ final class File: RealmObject {
     dynamic var isImage: Bool = false
     var _downloadLink: String? { return FileUtils.downloadLinkForFile(self)?.absoluteString }
     var _thumbLink: String? { return FileUtils.thumbLinkForFile(self)?.absoluteString }
-    dynamic var rawLink: String? {
+    dynamic var rawLink: String?/* {
         didSet {
             computeName()
             computeIsImage()
             computeIdentifierIfNeeded()
            // Api.sharedInstance.getInfo(fileId: self.identifier!)
         }
-    }
+    }*/
     dynamic var localLink: String?
     dynamic var downoloadedSize: Int = 0
     fileprivate let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.files.rawValue)
@@ -70,33 +75,40 @@ enum FileAttributes: String {
     case height     = "height"
     case width      = "width"
     
-    
-    
     case isImage    = "isImage"
     case rawLink    = "rawLink"
+    //https://mattermost.kilograpp.com/api/v3/files/9ow9r1uke3bmbxursj8y4nnd5r/get -- file download link example
 }
 
 enum FileRelationships: String {
     case post = "post"
 }
 
-private protocol Computations: class {
-    func computeName()
+fileprivate protocol Computations: class {
+    //func computeName()
     func computeIsImage()
-    func computeIdentifierIfNeeded()
+    func computeRawLink()
+    //func computeIdentifierIfNeeded()
 }
 
 private protocol Support: class {
-    func thumbPostfix() -> String?
+   // func thumbPostfix() -> String?
     static func teamIdentifierPath() -> String
 }
 
 extension File: Computations {
-    fileprivate func computeIdentifierIfNeeded() {
+    func computeIsImage() {
+        self.isImage = FileUtils.fileIsImage(self)
+    }
+    func computeRawLink() {
+        self.rawLink = String(format: "https://mattermost.kilograpp.com/api/v3/files/%@", self.identifier!)
+    }
+    
+/*    func computeIdentifierIfNeeded() {
         guard self.identifier == nil else { return }
         self.identifier = StringUtils.randomUUID()
     }
-    fileprivate func computeName() {
+    func computeName() {
         let components = self.rawLink?.components(separatedBy: "/")
         if let components = components , components.count >= 2 {
             let fileName = components.last!.removingPercentEncoding
@@ -106,9 +118,6 @@ extension File: Computations {
         }
     }
     
-    fileprivate func computeIsImage() {
-        self.isImage = FileUtils.fileIsImage(self)
-    }
     
     static func fileNameFromUrl(url:URL) -> String {
         let rawLink = url.absoluteString
@@ -119,13 +128,13 @@ extension File: Computations {
             } else {
                 return rawLink
             }
-    }
+    }*/
 }
 
 extension File: Support {
-    func thumbPostfix() -> String? {
+  /*  func thumbPostfix() -> String? {
         return FileUtils.thumbPostfixForInternalFile(self)
-    }
+    }*/
     static func teamIdentifierPath() -> String {
         return "\(FileRelationships.post).\(PostRelationships.channel).\(ChannelRelationships.team).\(TeamAttributes.identifier)"
     }

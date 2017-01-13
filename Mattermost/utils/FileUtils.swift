@@ -11,37 +11,43 @@ import SOCKit
 import RestKit
 
 private protocol Interface {
+    static func fileIsImage(_ file: File) -> Bool
     static func downloadLinkForFile(_ file: File) -> URL?
     static func thumbLinkForFile(_ file: File) -> URL?
-    static func fileIsImage(_ file: File) -> Bool
-    static func thumbPostfixForInternalFile(_ file: File) -> String?
+    static func previewLinkForFile(_ file: File) -> URL?
+   // static func thumbPostfixForInternalFile(_ file: File) -> String?
     static func removeLocalCopyOf(file: File)
     static func updateFileWith(info: File)
+    static func scaledImageHeightWith(file: File) -> CGFloat
 }
 
 final class FileUtils {
     static func downloadLinkForFile(_ file: File) -> URL?{
-        if  StringUtils.isValidLink(file.rawLink) {
-            return URL(string: file.rawLink!)
-        } else {
-            let path = SOCStringFromStringWithObject(FilePathPatternsContainer.downloadPathPattern(), file)
-            let result = Api.sharedInstance.baseURL().appendingPathComponent(path!.removingPercentEncoding!)
-            return result
-        }
+        let path = SOCStringFromStringWithObject(FilePathPatternsContainer.downloadPathPattern(), file)
+        let result = Api.sharedInstance.baseURL().appendingPathComponent(path!.removingPercentEncoding!)
+        
+        return result
     }
-    
     static func thumbLinkForFile(_ file: File) -> URL? {
-        if  StringUtils.isValidLink(file.rawLink) {
-            return URL(string: file.rawLink!)
-        } else {
-            let path = SOCStringFromStringWithObject(FilePathPatternsContainer.thumbPathPattern(), file)
-            return Api.sharedInstance.baseURL().appendingPathComponent(path!.removingPercentEncoding!)
-        }
+        guard file.isImage else { return downloadLinkForFile(file) }
+        
+        let path = SOCStringFromStringWithObject(FilePathPatternsContainer.thumbPathPattern(), file)
+        let result = Api.sharedInstance.baseURL().appendingPathComponent(path!.removingPercentEncoding!)
+        
+        return result
+    }
+    static func previewLinkForFile(_ file: File) -> URL? {
+        guard file.hasPreview else { return downloadLinkForFile(file) }
+        
+        let path = SOCStringFromStringWithObject(FilePathPatternsContainer.previewPathPattern(), file)
+        let result = Api.sharedInstance.baseURL().appendingPathComponent(path!.removingPercentEncoding!)
+        
+        return result
     }
     
-    static func thumbPostfixForInternalFile(_ file: File) -> String? {
+    /*  static func thumbPostfixForInternalFile(_ file: File) -> String? {
         return (self.linkWithoutExtension(file.rawLink))! + "_thumb"
-    }
+    }*/
 
     static func localLinkFor(file: File) -> String {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
@@ -54,7 +60,7 @@ final class FileUtils {
     }
     
     static func fileIsImage(_ file: File) -> Bool {
-        return self.stringContainsImagePostfixes(file.rawLink)
+        return self.stringContainsImagePostfixes(file.name)
     }
     
     static func stringContainsImagePostfixes(_ string: String?) -> Bool {
@@ -68,6 +74,12 @@ final class FileUtils {
         }
     }
     
+    static func fileNameFromUrl(url:URL) -> String {
+        let rawLink = url.absoluteString
+        let components = rawLink.components(separatedBy: "/")
+        return (components.count >= 2) ? components.last!.removingPercentEncoding! : rawLink
+    }
+    
     static func removeLocalCopyOf(file: File) {
         let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file.name)!
         
@@ -79,10 +91,8 @@ final class FileUtils {
     static func updateFileWith(info: File) {
         let realm = RealmUtils.realmForCurrentThread()
         let file = realm.object(ofType: File.self, forPrimaryKey: info.identifier)
-        print(file)
         
         //Maybe append post with adding file to it
-        
         try! realm.write {
             file?.createAt = info.createAt
             file?.deleteAt = info.deleteAt
@@ -97,8 +107,17 @@ final class FileUtils {
             file?.hasPreview = info.hasPreview
             file?.height = info.height
             file?.width = info.width
+            file?.computeIsImage()
+            file?.computeRawLink()
         }
-
-        print(file)
+    }
+    
+    static func scaledImageHeightWith(file: File) -> CGFloat {
+        let screenSize = UIScreen.main.bounds.size
+        let scale = screenSize.width /  CGFloat(file.width)
+        let scaledHeight = CGFloat(file.height) * scale
+        let height = min(scaledHeight, (screenSize.height * 0.6))
+        
+        return height
     }
 }

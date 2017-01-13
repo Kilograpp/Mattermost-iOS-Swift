@@ -32,7 +32,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var topActivityIndicatorView: UIActivityIndicatorView?
     var scrollButton: UIButton?
     //Modules
-    fileprivate var documentInteractionController: UIDocumentInteractionController?
+    var documentInteractionController: UIDocumentInteractionController?
     fileprivate var filesAttachmentsModule: AttachmentsModule!
     fileprivate var filesPickingController: FilesPickingController!
     fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
@@ -40,14 +40,12 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     //Common
     var channel : Channel!
     
-    var indexPathScroll: NSIndexPath?
-    
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
-    fileprivate var emojiResult: [String]?
-    fileprivate var membersResult: Array<User> = []
-    fileprivate var commandsResult: [String] = []
-    fileprivate var usersInTeam: Array<User> = []
+    var emojiResult: [String]?
+    var membersResult: Array<User> = []
+    var commandsResult: [String] = []
+    var usersInTeam: Array<User> = []
     
     var hasNextPage: Bool = true
     var postFromSearch: Post! = nil
@@ -195,11 +193,7 @@ extension ChatViewController: Setup {
         self.tableView.register(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier, cacheSize: 10)
         self.tableView.register(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier, cacheSize: 18)
         self.tableView.register(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
-        self.autoCompletionView.register(EmojiTableViewCell.classForCoder(), forCellReuseIdentifier: EmojiTableViewCell.reuseIdentifier)
-        let nib = UINib(nibName: "MemberLinkTableViewCell", bundle: nil)
-        self.autoCompletionView.register(nib, forCellReuseIdentifier: "memberLinkTableViewCell")
-        self.registerPrefixes(forAutoCompletion: ["@", ":"])
-        
+        setupTableViewForAutocompletion()
     }
     
     fileprivate func setupInputBar() {
@@ -392,10 +386,6 @@ extension ChatViewController : Private {
             actionSheetController.addAction(deleteAction)
         }
         self.present(actionSheetController, animated: true, completion: nil)
-    }
-    
-    fileprivate func showCompletePost(_ post: Post, action: String) {
-        
     }
 }
 
@@ -741,29 +731,22 @@ extension ChatViewController: NotificationObserver {
 extension ChatViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         guard self.resultsObserver != nil else { return 0 }
-        if (tableView == self.tableView) {
-            if (self.resultsObserver.numberOfSections() < 1) {
-                self.startTextDialogueLabel.isHidden = false
-                self.startHeadDialogueLabel.isHidden = false
-                self.startButton.isHidden = false
-                return self.resultsObserver?.numberOfSections() ?? 1
-            } else {
-                self.startTextDialogueLabel.isHidden = true
-                self.startHeadDialogueLabel.isHidden = true
-                self.startButton.isHidden = true
-            }
-            return self.resultsObserver?.numberOfSections() ?? 1
-        }
+        guard tableView == self.tableView else { return 1 }
         
-        return 1
+        let isntDialogEmpty = (self.resultsObserver.numberOfSections() > 0)
+        self.startTextDialogueLabel.isHidden = isntDialogEmpty
+        self.startHeadDialogueLabel.isHidden = isntDialogEmpty
+        self.startButton.isHidden = isntDialogEmpty
+        
+        return self.resultsObserver?.numberOfSections() ?? 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (tableView == self.tableView) {
-            return self.resultsObserver?.numberOfRows(section) ?? 0
+        guard tableView == self.tableView else {
+            return (self.emojiResult != nil) ? (self.emojiResult?.count)! : self.membersResult.count + commandsResult.count
         }
         
-        return (self.emojiResult != nil) ? (self.emojiResult?.count)! : self.membersResult.count + commandsResult.count
+        return self.resultsObserver?.numberOfRows(section) ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -786,13 +769,8 @@ extension ChatViewController {
             }
             
             return cell
-        }
-        else {
-            if emojiResult != nil {
-                return autoCompletionEmojiCellForRowAtIndexPath(indexPath)
-            } else {
-                return autoCompletionMembersCellForRowAtIndexPath(indexPath)
-            }
+        } else {
+            return (emojiResult != nil) ? autoCompletionEmojiCellForRowAtIndexPath(indexPath) : autoCompletionMembersCellForRowAtIndexPath(indexPath)
         }
     }
 }
@@ -825,46 +803,20 @@ extension ChatViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (tableView == self.tableView) {
-            let post = resultsObserver?.postForIndexPath(indexPath)
-            return self.builder.heightForPost(post!)
-        }
+        guard tableView == self.tableView else { return 40 }
         
-        return 40
+        let post = resultsObserver?.postForIndexPath(indexPath)
+        return self.builder.heightForPost(post!)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (tableView == self.autoCompletionView) {
-            guard let emojiResult = self.emojiResult else {
-                var item: String = ""
-                if indexPath.row < self.commandsResult.count {
-                    item = self.commandsResult[indexPath.row]
-                } else {
-                    item = self.membersResult[indexPath.row - self.commandsResult.count].username!
-                    
-                }
-                item  += " "
-                self.acceptAutoCompletion(with: item, keepPrefix: true)
-                return
-            }
-            var item = emojiResult[indexPath.row]
-            if (self.foundPrefix == ":") {
-                item += ":"
-            }
-            item += " "
-            
-            self.acceptAutoCompletion(with: item, keepPrefix: true)
-        }
+        if (tableView == self.autoCompletionView) { didSelectAutocompleteRowAt(indexPath: indexPath) }
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let actualPosition = self.tableView.contentOffset.y
-        if actualPosition > UIScreen.screenHeight() {
-            self.scrollButton?.isHidden = false
-        }
-        if actualPosition < 50 {
-            self.scrollButton?.isHidden = true
-        }
+        if actualPosition > UIScreen.screenHeight() { self.scrollButton?.isHidden = false }
+        if actualPosition < 50 { self.scrollButton?.isHidden = true }
     }
     
     func keyboardWillShow(_ notification:NSNotification) {
@@ -889,18 +841,13 @@ extension ChatViewController {
 extension ChatViewController: AttachmentsModuleDelegate {
     func uploading(inProgress: Bool, countItems: Int) {
         DispatchQueue.main.async { [unowned self] in
-            guard countItems > 0 else {
-                self.rightButton.isEnabled = (self.textView.text.characters.count > 0)
-                return
-            }
+            guard countItems > 0 else { self.rightButton.isEnabled = (self.textView.text.characters.count > 0); return }
             self.rightButton.isEnabled = inProgress
         }
     }
     
     func removedFromUploading(identifier: String) {
-        let items = self.filesPickingController.attachmentItems.filter {
-            return ($0.identifier == identifier)
-        }
+        let items = self.filesPickingController.attachmentItems.filter { return ($0.identifier == identifier) }
         guard items.count > 0 else { return }
         self.filesPickingController.attachmentItems.removeObject(items.first!)
     }
@@ -992,10 +939,8 @@ extension ChatViewController: ChannelObserverDelegate {
     func startButtonAction(sender: UIButton!) {
         self.showLoaderView()
         Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
-            guard (error==nil) else {
-                self.hideLoaderView()
-                return
-            }
+            guard (error==nil) else { self.hideLoaderView(); return }
+            
             let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
             let addMembersViewController = channelSettingsStoryboard.instantiateViewController(withIdentifier: "AddMembersViewController") as! AddMembersViewController
             addMembersViewController.channel = self.channel
@@ -1093,141 +1038,5 @@ extension ChatViewController: AttachmentsModuleDataSource {
     }
     func channel(attachmentsModule: AttachmentsModule) -> Channel {
         return self.channel
-    }
-}
-
-
-//MARK: AutoCompletionView
-extension ChatViewController {
-    func autoCompletionEmojiCellForRowAtIndexPath(_ indexPath: IndexPath) -> EmojiTableViewCell {
-        let cell = self.autoCompletionView.dequeueReusableCell(withIdentifier: EmojiTableViewCell.reuseIdentifier) as! EmojiTableViewCell
-        cell.selectionStyle = .default
-        
-        guard let searchResult = self.emojiResult else { return cell }
-        guard let prefix = self.foundPrefix else { return cell }
-        
-        let text = searchResult[indexPath.row]
-        let originalIndex = Constants.EmojiArrays.mattermost.index(of: text)
-        cell.configureWith(index: originalIndex)
-        
-        return cell
-    }
-    
-    func autoCompletionMembersCellForRowAtIndexPath(_ indexPath: IndexPath) -> MemberLinkTableViewCell {
-        let cell = self.autoCompletionView.dequeueReusableCell(withIdentifier: "memberLinkTableViewCell") as! MemberLinkTableViewCell
-        cell.selectionStyle = .default
-        
-        guard  (self.membersResult != [] || self.commandsResult != []) else { return cell }
-        guard let prefix = self.foundPrefix else { return cell }
-        if indexPath.row < self.commandsResult.count{
-            let commandIndex = Constants.LinkCommands.name.index(of: commandsResult[indexPath.row])
-            cell.configureWithIndex(index: commandIndex!)
-        } else {
-            let member = self.membersResult[indexPath.row - self.commandsResult.count]
-            cell.configureWithUser(user: member)
-        }
-        
-        return cell
-    }
-    
-    override func shouldProcessText(forAutoCompletion text: String) -> Bool {
-        return true
-    }
-    
-    override func didChangeAutoCompletionPrefix(_ prefix: String, andWord word: String) {
-        var array:Array<String> = []
-        self.emojiResult = nil
-        self.membersResult = []
-        self.commandsResult = []
-        
-        if (prefix == ":") && word.characters.count > 0 {
-            array = Constants.EmojiArrays.mattermost.filter { NSPredicate(format: "self BEGINSWITH[c] %@", word).evaluate(with: $0) };
-        }
-        
-        if (prefix == "@") {
-            self.membersResult = usersInTeam.filter({
-                ($0.username?.lowercased().hasPrefix(word.lowercased()))! || word==""
-            }).sorted { $0.username! < $1.username! }
-            
-            self.commandsResult = Constants.LinkCommands.name.filter {
-                return $0.hasPrefix(word.lowercased())
-            }
-        }
-        
-        var show = false
-        if array.count > 0 {
-            let sortedArray = array.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
-            self.emojiResult = sortedArray
-            show = sortedArray.count > 0
-        } else {
-            show = self.membersResult != [] || self.commandsResult != []
-        }
-        
-        self.showAutoCompletionView(show)
-    }
-    
-    override func heightForAutoCompletionView() -> CGFloat {
-        guard let smilesResult = self.emojiResult else {
-            guard (self.membersResult != [] || self.commandsResult != []) else { return 0 }
-            
-            let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
-            return cellHeight * CGFloat(self.membersResult.count+self.commandsResult.count)
-        }
-        let cellHeight = (self.autoCompletionView.delegate?.tableView!(self.autoCompletionView, heightForRowAt: IndexPath(row: 0, section: 0)))!
-        
-        return cellHeight * CGFloat(smilesResult.count)
-    }
-}
-
-
-//MARK: ChatViewController
-extension ChatViewController {
-    func presentDocumentInteractionController(notification: NSNotification) {
-        let fileId = notification.userInfo?["fileId"]
-        let file = RealmUtils.realmForCurrentThread().object(ofType: File.self, forPrimaryKey: fileId)
-        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file?.name)!
-        
-        if FileManager.default.fileExists(atPath: filePath) {
-            self.documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
-            self.documentInteractionController?.delegate = self
-            self.documentInteractionController?.presentPreview(animated: true)
-        }
-    }
-}
-
-
-//MARK: UIDocumentInteractionControllerDelegate
-extension ChatViewController: UIDocumentInteractionControllerDelegate {
-    func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
-    }
-    func documentInteractionController(_ controller: UIDocumentInteractionController, didEndSendingToApplication application: String?) {
-    }
-    func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
-    }
-    func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
-    }
-    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
-        return self
-    }
-}
-
-
-//MARK: ImagesPreviewViewController
-extension ChatViewController {
-    func openPreviewWith(postLocalId: String, fileId: String) {
-        let last = self.navigationController?.viewControllers.last
-        guard last != nil else { return }
-        guard !(last?.isKind(of: ImagesPreviewViewController.self))! else { return }
-        
-        let gallery = self.storyboard?.instantiateViewController(withIdentifier: "ImagesPreviewViewController") as! ImagesPreviewViewController
-
-        gallery.configureWith(postLocalId: postLocalId, initalFileId: fileId)
-        let transaction = CATransition()
-        transaction.duration = 0.5
-        transaction.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transaction.type = kCATransitionMoveIn
-        transaction.subtype = kCATransitionFromBottom
-        self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
-        self.navigationController?.pushViewController(gallery, animated: false)
     }
 }

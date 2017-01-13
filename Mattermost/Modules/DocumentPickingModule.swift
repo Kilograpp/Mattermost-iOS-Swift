@@ -17,7 +17,7 @@ final class DocumentPickingModule: FilesPickingModuleBase { }
 extension DocumentPickingModule: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         let fileItem = AssignedAttachmentViewItem(image: UIImage(named: "attach_file_icon")!)
-        fileItem.fileName = File.fileNameFromUrl(url: url)
+        fileItem.fileName = FileUtils.fileNameFromUrl(url: url)
         fileItem.isFile = true
         fileItem.url = url
         self.delegate.didPick(items: [ fileItem ])

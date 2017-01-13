@@ -74,7 +74,7 @@ extension ImagePickingModule: UIImagePickerControllerDelegate {
         if (info[UIImagePickerControllerMediaType] as! String != kUTTypeImage as String) {
             let fileItem = AssignedAttachmentViewItem(image: UIImage(named: "attach_file_icon")!)
             let url = info[UIImagePickerControllerMediaURL] as! URL
-            fileItem.fileName = File.fileNameFromUrl(url: url)
+            fileItem.fileName = FileUtils.fileNameFromUrl(url: url)
             fileItem.isFile = true
             fileItem.url = url
             self.delegate.didPick(items: [ fileItem ])
