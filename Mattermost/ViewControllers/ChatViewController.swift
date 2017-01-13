@@ -679,8 +679,8 @@ extension ChatViewController: NotificationObserver {
                            name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification), object: nil)
         center.addObserver(self, selector: #selector(didTapImageAction),
                            name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification), object: nil)
-        center.addObserver(self, selector: #selector(reloadChat),
-                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification), object: nil)
+//        center.addObserver(self, selector: #selector(reloadChat),
+//                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification), object: nil)
         center.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
     }

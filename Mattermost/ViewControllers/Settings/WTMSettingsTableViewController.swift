@@ -61,7 +61,6 @@ fileprivate protocol Request {
 extension WTMSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
-//        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -70,12 +69,6 @@ extension WTMSettingsTableViewController: Setup {
         self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
         self.saveButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = self.saveButton
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
     

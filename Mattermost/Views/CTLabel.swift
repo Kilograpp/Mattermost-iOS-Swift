@@ -106,49 +106,7 @@ final class CTLabel : UIView {
         
         self.transform = CGAffineTransform(scaleX: 1.0, y: -1.0);
     }
-    
-//    func drawTextInContext(text: NSAttributedString, ctx:CGContext) {
-////        ctx.textMatrix = CGAffineTransform(scaleX: 1, y: -1);
-//        
-//        let stringRef = attributedText as! CFAttributedString
-//        let typeSetter = CTTypesetterCreateWithAttributedString(stringRef);
-//        
-//        var lines: Array<RenderedText2Line> = []
-//        
-//        var startIdx: CFIndex = 0
-//        var lineIdx: CFIndex = 0
-//
-//        let len: CFIndex = CFAttributedStringGetLength(stringRef);
-//        
-//        var size = CGSize.zero;
-//        
-//        while (startIdx < len) {
-//            let lineCharactersCount: CFIndex = CTTypesetterSuggestLineBreak(typeSetter, startIdx, Double(width))
-//            let line = CTTypesetterCreateLine(typeSetter, CFRangeMake(startIdx, lineCharactersCount))
-//            var ascent: CGFloat = 0
-//            var descent: CGFloat = 0
-//            var leading: CGFloat = 0
-//            let lineWidth = CTLineGetTypographicBounds(line, &ascent, &descent, &leading)
-//            
-//            size.width = max(size.width, CGFloat(lineWidth));
-//            size.height += ascent + descent + leading;
-//            
-//            let renderedLine = RenderedText2Line(line:line, origin:CGPoint(x:0, y:size.height-descent-leading))
-//            lines.append(renderedLine)
-//            
-//            startIdx+=lineCharactersCount
-//            lineIdx += 1
-//        }
-//        
-//        self.lines = lines
-//
-//        for line in lines {
-//            var origin = line.origin
-//            origin.y = self.bounds.size.height - origin.y
-//            ctx.textPosition = origin;
-//            CTLineDraw(line.line, ctx);
-//        }
-//    }
+
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let point = touches.first?.location(in: self) else {return}

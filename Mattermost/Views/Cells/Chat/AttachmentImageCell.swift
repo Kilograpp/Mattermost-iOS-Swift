@@ -17,6 +17,8 @@ fileprivate struct DownloadingState {
 }
 
 fileprivate let NullString = "(null)"
+fileprivate let TitleFont = UIFont.systemFont(ofSize: 13)
+fileprivate let BackImage = UIImage(named: "image_back")
 
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
@@ -104,15 +106,13 @@ extension AttachmentImageCell: Setup {
     fileprivate func setupImageView() {
         self.fileImageView.contentMode = .scaleToFill
         self.addSubview(self.fileImageView)
-        self.fileImageView.backgroundColor = UIColor.clear
+        //was clear
+        self.fileImageView.backgroundColor = UIColor.white
         self.fileImageView.contentMode = .scaleAspectFit
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
-        self.fileImageView.isUserInteractionEnabled = true
-        self.fileImageView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     fileprivate func setupLabel() {
-        fileNameLabel.font = UIFont.systemFont(ofSize: 13)
+        fileNameLabel.font = TitleFont
         fileNameLabel.textColor = ColorBucket.blueColor
         fileNameLabel.numberOfLines = 1
         self.addSubview(fileNameLabel)
@@ -125,8 +125,6 @@ extension AttachmentImageCell: Updating {
     fileprivate func configureLabel() {
         guard fileName != nil else { return }
         fileNameLabel.text = fileName
-        fileNameLabel.sizeToFit()
-        self.layoutSubviews()
     }
     
     fileprivate func configureImageView() {
@@ -141,7 +139,8 @@ extension AttachmentImageCell: Updating {
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
             self.fileImageView.image = image
         } else {
-            self.fileImageView.image = UIImage(named: "image_back")
+            self.fileImageView.image = BackImage
+
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
                 DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
@@ -161,15 +160,14 @@ extension AttachmentImageCell: Updating {
                     // Ensure the post is still the same
                     guard self?.fileName == fileName else { return }
                     
-                    DispatchQueue.main.sync(execute: {
-                        self?.fileImageView.image = finalImage
+                    DispatchQueue.main.async(execute: {
+
                         
                         let postLocalId = self?.file.post?.localIdentifier
                         guard postLocalId != nil else { return }
                         
-                        let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.ReloadChatNotification),
-                                                        object: nil, userInfo: ["postLocalId" : postLocalId])
-                        NotificationCenter.default.post(notification as Notification)
+                        self?.fileImageView.image = finalImage
+                        self?.layoutSubviews()
                     })
                 }
             }

@@ -63,7 +63,6 @@ extension RNSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
-//        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -76,12 +75,6 @@ extension RNSettingsTableViewController: Setup {
     
     func setupForCurrentNotifyProps() {
         self.selectedReplyOption = Constants.NotifyProps.Reply.Trigger.index { return $0.state == (self.notifyProps?.comments)! }!
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 

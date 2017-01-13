@@ -43,7 +43,6 @@ extension SettingsTableViewController {
     func initialSetup() {
         // CODEREVIEW: Код в комментах - зло. Git все помнит, можно смело удалять. Либо починить причину коммента
        // setupimagesCompressSwitch()
-//        setupSwipeRight()
         self.menuContainerViewController.panMode = .init(0)
     }
     
@@ -51,12 +50,6 @@ extension SettingsTableViewController {
     // CODEREVIEW: Метод должен быть fileprivate
     func setupimagesCompressSwitch() {
         self.imagesCompressSwitch?.setOn((Preferences.sharedInstance.shouldCompressImages?.boolValue)!, animated: false)
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 

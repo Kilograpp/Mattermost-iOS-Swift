@@ -1116,7 +1116,7 @@ extension Api : FileApi {
         
         operation.setDownloadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
             let result = Float(totalWritten) / Float(expectedToWrite)
-            print("downloading progress = ", result)
+//            print("downloading progress = ", result)
             progress(fileId, result)
         }
         
@@ -1127,7 +1127,7 @@ extension Api : FileApi {
                 file?.downoloadedSize = (file?.size)!
                 file?.localLink = filePath
             }
-            print("downloading finished")
+//            print("downloading finished")
             self.downloadOperationsArray.removeObject(operation!)
             completion(nil)
         }, failure: { (operation: AFRKHTTPRequestOperation?, error: Swift.Error?) -> Void in

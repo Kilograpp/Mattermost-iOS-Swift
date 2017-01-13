@@ -64,17 +64,10 @@ fileprivate protocol Request {
 extension NSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
-//        setupSwipeRight()
     }
     
     func setupNavigationBar() {
         self.title = "Notification"
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 

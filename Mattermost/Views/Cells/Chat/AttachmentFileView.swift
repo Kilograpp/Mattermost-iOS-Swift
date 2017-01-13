@@ -17,6 +17,11 @@ fileprivate struct DownloadingState {
 }
 
 class AttachmentFileView: UIView {
+    static let NotDownloadedFileIcon = UIImage(named: "chat_notdownloaded_icon")
+    static let DownloadedFileIcon = UIImage(named: "chat_downloaded_icon")
+    static let FileDownloadingProgressIcon = UIImage(named: "chat_downloading_icon")
+    
+    static let fileSizeFont = UIFont.systemFont(ofSize: 13)
     
 //MARK: Properties
     let iconImageView = UIImageView()
@@ -41,15 +46,13 @@ class AttachmentFileView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        //drawTitle(text: file.name!)
+        drawTitle(text: file.name!)
         if file.size > 0 {
             //activity indicator will added later
             drawSize(text: StringUtils.suffixedFor(size: file.size))
         }
         
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
-        self.isUserInteractionEnabled = true
-        self.addGestureRecognizer(tapGestureRecognizer)
+
     }
 }
 
@@ -81,10 +84,15 @@ fileprivate protocol Downloading: class {
 //MARK: Setup
 extension AttachmentFileView: Setup {
     func initialSetup() {
-        self.backgroundColor = UIColor.clear
+        // was UIColor.clear
+        self.backgroundColor = UIColor.white
         self.setupIcon()
         self.setupProgressView()
         self.setupDownloadingState()
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        self.isUserInteractionEnabled = true
+        self.addGestureRecognizer(tapGestureRecognizer)
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateFileSize),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadFileSizeNotification),
@@ -121,7 +129,7 @@ extension AttachmentFileView: Setup {
     fileprivate func drawTitle(text: String) {
         var fileName = self.file.name! as NSString
         let textColor = ColorBucket.blueColor
-        let textFont =  UIFont.systemFont(ofSize: 13)
+        let textFont =  AttachmentFileView.fileSizeFont
         let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
         var height = CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
         if height > 36 {
@@ -138,7 +146,7 @@ extension AttachmentFileView: Setup {
         let textFont = FontBucket.messageFont
         let backgroundColor = self.backgroundColor
         let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor, NSBackgroundColorAttributeName: backgroundColor] as [String : Any]
-        var titleHeigth = CGFloat(StringUtils.heightOfString(file.name!, width: frame.width - 64, font: UIFont.systemFont(ofSize: 13)))
+        var titleHeigth = CGFloat(StringUtils.heightOfString(file.name!, width: frame.width - 64, font: AttachmentFileView.fileSizeFont))
         if titleHeigth > 28 {
             titleHeigth = 28
         }
@@ -154,11 +162,11 @@ extension AttachmentFileView: AttachmentFileViewConfiguration {
     fileprivate func updateIconForCurrentState() {
         switch self.downloadingState {
         case DownloadingState.NotDownloaded:
-            self.iconImageView.image = UIImage(named: "chat_notdownloaded_icon")
+            self.iconImageView.image = AttachmentFileView.NotDownloadedFileIcon
         case DownloadingState.Downloading:
-            self.iconImageView.image = UIImage(named: "chat_downloading_icon")
+            self.iconImageView.image = AttachmentFileView.FileDownloadingProgressIcon
         case DownloadingState.Downloaded:
-            self.iconImageView.image = UIImage(named: "chat_downloaded_icon")
+            self.iconImageView.image = AttachmentFileView.DownloadedFileIcon
         default:
             break
         }

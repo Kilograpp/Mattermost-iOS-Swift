@@ -79,7 +79,6 @@ extension UFSettingsTableViewController: Setup {
         setupNavigationBar()
         setupTableView()
         setupGestureRecognizers()
-//        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -96,12 +95,6 @@ extension UFSettingsTableViewController: Setup {
     }
     
     func setupGestureRecognizers() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
-    }
-    
-    func setupSwipeRight() {
         let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)

@@ -62,7 +62,6 @@ extension InviteNewMemberTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupTableView()
-//        setupSwipeRight()
     }
     
     func setupNavigationBar() {
@@ -74,12 +73,6 @@ extension InviteNewMemberTableViewController: Setup {
     
     func setupTableView() {
         self.tableView.register(InviteNewMemberTableViewCell.self, forCellReuseIdentifier: InviteNewMemberTableViewCell.reuseIdentifier)
-    }
-    
-    func setupSwipeRight() {
-//        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-//        swipeRight.direction = .right
-//        view.addGestureRecognizer(swipeRight)
     }
 }
 

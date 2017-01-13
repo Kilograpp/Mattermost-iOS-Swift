@@ -67,7 +67,6 @@ extension AboutViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupLinks()
-//        setupSwipeRight()
         self.menuContainerViewController.panMode = .init(0)
     }
     
@@ -91,12 +90,6 @@ extension AboutViewController: Setup {
     
     func setupTimer() {
         self.iconsResizeAnimationTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(iconResizeAnimation), userInfo: nil, repeats: true)
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 

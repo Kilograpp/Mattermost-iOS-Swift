@@ -96,7 +96,6 @@ extension MoreChannelsViewController: Setup {
         setupSearchBar()
         setupTableView()
         setupEmptyDialogueLabel()
-//        setupSwipeRight()
         self.menuContainerViewController.panMode = .init(0)
     }
     
@@ -125,12 +124,6 @@ extension MoreChannelsViewController: Setup {
         let moreType = (self.isPrivateChannel) ? "direct chats" : "channels"
         self.emptySearchLabel.text = "No " + moreType + " found!"
         self.view.insertSubview(self.emptySearchLabel, aboveSubview: self.tableView)
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 
