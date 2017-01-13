@@ -25,7 +25,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     }
     final var postIdentifier: String?
     final var parentPostIdentifier: String?
-    final var messageLabel = MessageLabel()
+    final var messageLabel = CTLabel()//MessageLabel()
     final var postStatusView: PostStatusView!
     
     
@@ -41,7 +41,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     
     
     override func prepareForReuse() {
-        self.messageLabel.textStorage = nil
+//        self.messageLabel.textStorage = nil
         self.messageLabel.alpha = 1
         self.postIdentifier = nil
     }
@@ -57,9 +57,10 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         
 //        print(self.post.attributedMessage!)
         
-        self.messageLabel.textStorage = self.post.attributedMessage!
+//        self.messageLabel.textStorage = self.post.attributedMessage!
+        self.messageLabel.layoutData = post.renderedText
         guard self.post.messageType == .system else { return }
-        self.messageLabel.alpha = 0.5
+//        self.messageLabel.alpha = 0.5
     }
     
     
@@ -76,8 +77,8 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     fileprivate func setupMessageLabel() {
         //FIXME: CodeReview: Заменить на конкретный цвет
         self.messageLabel.backgroundColor = ColorBucket.whiteColor
-        self.messageLabel.numberOfLines = 0
-        self.messageLabel.layer.drawsAsynchronously = true
+//        self.messageLabel.numberOfLines = 0
+//        self.messageLabel.layer.drawsAsynchronously = true
         messageLabel.isUserInteractionEnabled = true
         messageLabel.onUrlTap = { (url:URL) in
             self.openURL(url)

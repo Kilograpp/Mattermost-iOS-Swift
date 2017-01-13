@@ -131,6 +131,8 @@ final class Post: RealmObject {
     fileprivate var hasObserverAttached: Bool = false
     fileprivate var statusChangeHandler: ((_ status: PostStatus) -> Void)?
     
+    var renderedText: AttributedTextLayoutData?
+    
 
     deinit {
         self.removeStatusObserverIfNeeded()

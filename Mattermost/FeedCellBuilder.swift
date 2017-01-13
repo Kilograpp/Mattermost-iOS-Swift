@@ -59,6 +59,11 @@ extension FeedCellBuilder: FeedCellBuilderInterface {
         }
         cell!.transform = self.tableView.transform
         cell?.errorHandler = errorHandler
+        
+        if post.renderedText == nil {
+            post.renderedText = AttributedTextLayoutData(text: post.attributedMessage!, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+        }
+        
         cell!.configureWithPost(post)
         
         return cell!

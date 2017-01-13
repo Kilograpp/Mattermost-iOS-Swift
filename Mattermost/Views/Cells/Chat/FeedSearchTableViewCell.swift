@@ -181,10 +181,10 @@ extension FeedSearchTableViewCell: TableViewPostDataSource {
     final func configureSelectionWithText(text: String) {
         let notAllowedCharacters = CharacterSet.init(charactersIn: "!@#$%^&*()_+|,;.\"'")
         let result = text.components(separatedBy: notAllowedCharacters).joined(separator: "")
-        let range = (self.messageLabel.textStorage!.string.lowercased() as NSString).range(of: result.lowercased())
-        
-        self.messageLabel.textStorage?.addAttributes([NSBackgroundColorAttributeName : ColorBucket.searchTextBackgroundColor], range: range)
-        self.messageLabel.textStorage?.addAttributes([NSForegroundColorAttributeName : ColorBucket.searchTextColor], range: range)
+//        let range = (self.messageLabel.textStorage!.string.lowercased() as NSString).range(of: result.lowercased())
+//        
+//        self.messageLabel.textStorage?.addAttributes([NSBackgroundColorAttributeName : ColorBucket.searchTextBackgroundColor], range: range)
+//        self.messageLabel.textStorage?.addAttributes([NSForegroundColorAttributeName : ColorBucket.searchTextColor], range: range)
     }
     
     override class func heightWithPost(_ post: Post) -> CGFloat {
