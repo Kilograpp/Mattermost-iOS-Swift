@@ -8,6 +8,8 @@
 import Foundation
 
 extension UIImage {
+    static let avatarPlaceholderImage = UIImage(named: "feed_system_avatar")!
+    
     class func roundedImageOfSize(_ sourceImage: UIImage, size: CGSize) -> UIImage {
         let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, true, 0)
@@ -19,7 +21,7 @@ extension UIImage {
         
         let result = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext();
-        
+
         return result;
     }
     
@@ -29,12 +31,12 @@ extension UIImage {
     
     fileprivate static func feedSystemAvatar() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
-        let bundleImage = UIImage(named: "feed_system_avatar")
+        let bundleImage = UIImage.avatarPlaceholderImage
         UIGraphicsBeginImageContextWithOptions(rect.size, true, 0);
-        let context = UIGraphicsGetCurrentContext()
+        let context = UIGraphicsGetCurrentContext()!
         UIColor.white.setFill()
-        context?.fill(rect)
-        bundleImage?.draw(in: rect)
+        context.fill(rect)
+        bundleImage.draw(in: rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext()
         return image

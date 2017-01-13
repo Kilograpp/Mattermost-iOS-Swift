@@ -29,8 +29,8 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.setupAvatarImageView()
-        self.setupNameLabel()
-        self.setupDateLabel()
+//        self.setupNameLabel()
+//        self.setupDateLabel()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -41,15 +41,15 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         guard !self.post.isInvalidated else { return }
         guard self.post.author != nil else { return }
         
-        let nameWidth = CGFloat(self.post.author.displayNameWidth)
-        let dateWidth = CGFloat(self.post.createdAtStringWidth)
+//        let nameWidth = CGFloat(self.post.author.displayNameWidth)
+//        let dateWidth = CGFloat(self.post.createdAtStringWidth)
         
         let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
         
         let originY = self.post.hasParentPost() ? (36 + 64 + Constants.UI.ShortPaddingSize) : 36
         self.messageLabel.frame = CGRect(x: 53, y: originY, width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
-        self.nameLabel.frame = CGRect(x: 53, y: 8, width: nameWidth, height: 20)
-        self.dateLabel.frame = CGRect(x: self.nameLabel.frame.maxX + 5, y: 8, width: dateWidth, height: 20)
+//        self.nameLabel.frame = CGRect(x: 53, y: 8, width: nameWidth, height: 20)
+//        self.dateLabel.frame = CGRect(x: self.nameLabel.frame.maxX + 5, y: 8, width: dateWidth, height: 20)
         
         let size = self.parentView.requeredSize()
         self.parentView.frame = CGRect(x: 53, y: 36, width: size.width, height: size.height)
@@ -59,6 +59,14 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+    }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        let nameWidth = CGFloat(self.post.author.displayNameWidth)
+        let dateWidth = CGFloat(self.post.createdAtStringWidth)
+        (self.post.author.displayName! as NSString).draw(in: CGRect(x: 53, y: 8, width: nameWidth, height: 20), withAttributes: [NSFontAttributeName : FontBucket.postAuthorNameFont, NSForegroundColorAttributeName : ColorBucket.blackColor])
+        (self.post.createdAtString! as NSString).draw(in: CGRect(x: 53 + nameWidth + 5, y: 11, width: dateWidth, height: 15), withAttributes: [NSFontAttributeName : FontBucket.postDateFont, NSForegroundColorAttributeName : ColorBucket.grayColor])
     }
 }
 
@@ -76,7 +84,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }
-//            self?.avatarImageView.image = image
+            self?.avatarImageView.image = image
         }
     }
     
@@ -118,8 +126,8 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         //FIXME: CodeReview: Конкретный цвет
         self.avatarImageView.backgroundColor = ColorBucket.whiteColor
         self.avatarImageView.contentMode = .scaleAspectFill
-        self.avatarImageView.layer.cornerRadius = 20
-        self.avatarImageView.layer.masksToBounds = true
+//        self.avatarImageView.layer.cornerRadius = 20
+//        self.avatarImageView.layer.masksToBounds = true
         self.addSubview(self.avatarImageView)
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         

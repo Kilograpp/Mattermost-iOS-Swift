@@ -142,7 +142,8 @@ final class Post: RealmObject {
         return [PostAttributes.attributedMessage.rawValue,
                 PostRelationships.author.rawValue,
                 PostRelationships.channel.rawValue,
-                PostAttributes.hasObserverAttached.rawValue
+                PostAttributes.hasObserverAttached.rawValue,
+                "renderedText"
         ]
     }
     
