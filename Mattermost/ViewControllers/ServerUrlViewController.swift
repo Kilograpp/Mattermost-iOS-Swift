@@ -101,7 +101,7 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     }
     
     fileprivate func validateServerUrlForTextFieldDelegate() {
-        let urlRegEx = "((http|https)://)(mattermost\\.)([a-zA-Z0-9(\\-)])+((\\.)com)"
+        let urlRegEx = "((http|https)://)(([a-zA-Z0-9(\\-)])+\\.)([a-zA-Z0-9(\\-)])+((\\.)com)"
         let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
         if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
             self.errorLabel.isHidden = true
@@ -205,6 +205,7 @@ extension ServerUrlViewController:Setup {
 //MARK: Actions
 extension ServerUrlViewController: Actions {
     @IBAction func nextButtonAction(_ sender: AnyObject) {
+        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
         Preferences.sharedInstance.serverUrl = self.textField.text
         validateServerUrl()
     }

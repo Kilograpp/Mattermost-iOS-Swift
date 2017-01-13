@@ -65,7 +65,7 @@ extension WTMSettingsTableViewController: Setup {
     }
     
     func setupNavigationBar() {
-        self.title = "Mobile push notifications"
+        self.title = "Words that trigger mentiones"
         
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
         self.navigationItem.leftBarButtonItem = backButton

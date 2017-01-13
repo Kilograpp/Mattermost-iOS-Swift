@@ -89,7 +89,7 @@ fileprivate protocol Action: class {
 }
 
 fileprivate protocol Navigation: class {
-    func returnToChannel()
+    func returnToNew(channel: Channel)
 }
 
 fileprivate protocol Request: class {
@@ -133,10 +133,6 @@ extension CreateChannelViewController: Action {
 
 //MARK: Navigation
 extension CreateChannelViewController: Navigation {
-    func returnToChannel() {
-        _ = self.navigationController?.popViewController(animated: true)
-    }
-    
     func returnToNew(channel: Channel) {
         (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(channel)
         ChannelObserver.sharedObserver.selectedChannel = channel
