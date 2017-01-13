@@ -67,15 +67,12 @@ extension AboutViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupLinks()
-        setupSwipeRight()
+//        setupSwipeRight()
         self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {
         self.title = "About Mattermost"
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
     }
     
     func setupLinks() {

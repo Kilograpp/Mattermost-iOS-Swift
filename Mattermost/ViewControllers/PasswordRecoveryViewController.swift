@@ -78,9 +78,6 @@ extension PasswordRecoveryViewController: Setup {
         
         self.title = self.titleName
         self.setNeedsStatusBarAppearanceUpdate()
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
     }
     
     func setupEmailTextField() {

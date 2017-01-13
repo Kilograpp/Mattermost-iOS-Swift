@@ -96,15 +96,12 @@ extension MoreChannelsViewController: Setup {
         setupSearchBar()
         setupTableView()
         setupEmptyDialogueLabel()
-        setupSwipeRight()
+//        setupSwipeRight()
         self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {
         self.title = self.isPrivateChannel ? "Add Users".localized : "More Channel".localized
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
         
         let addDoneTitle = self.isPrivateChannel ? "Done".localized : "Save".localized
         self.addDoneButton = UIBarButtonItem.init(title: addDoneTitle, style: .done, target: self, action: #selector(addDoneAction))

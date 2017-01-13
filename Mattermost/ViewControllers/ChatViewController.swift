@@ -946,11 +946,6 @@ extension ChatViewController: ChannelObserverDelegate {
             addMembersViewController.channel = self.channel
             addMembersViewController.users = users!
             
-            let backItem = UIBarButtonItem()
-            backItem.title = ""
-            self.navigationItem.backBarButtonItem = backItem
-            self.navigationController?.navigationBar.backIndicatorImage = UIImage(named: "navbar_back_icon")
-            self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navbar_back_icon")
             
             self.navigationController?.pushViewController(addMembersViewController, animated: true)
             self.hideLoaderView()

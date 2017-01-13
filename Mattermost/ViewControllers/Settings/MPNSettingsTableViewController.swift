@@ -65,14 +65,11 @@ extension MPNSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
-        setupSwipeRight()
+//        setupSwipeRight()
     }
     
     func setupNavigationBar() {
         self.title = "Mobile push notifications"
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
         
         self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
         self.saveButton.isEnabled = false

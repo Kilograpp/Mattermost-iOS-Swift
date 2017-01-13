@@ -12,6 +12,7 @@ import MFSideMenu
 
 class RouterUtils {
     class func loadInitialScreen() {
+        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -80.0), for: .default)
         let isSignedIn = UserStatusManager.sharedInstance.isSignedIn()
         if isSignedIn {
             loadConversationScene()

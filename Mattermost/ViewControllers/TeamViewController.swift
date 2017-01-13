@@ -82,7 +82,7 @@ extension TeamViewController: Setup {
         setupNavigationBar()
         setupTitleLabel()
         setupTableView()
-        setupSwipeRight()
+//        setupSwipeRight()
     }
     
     func setupNavigationBar() {

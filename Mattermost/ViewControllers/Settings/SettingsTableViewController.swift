@@ -43,7 +43,7 @@ extension SettingsTableViewController {
     func initialSetup() {
         // CODEREVIEW: Код в комментах - зло. Git все помнит, можно смело удалять. Либо починить причину коммента
        // setupimagesCompressSwitch()
-        setupSwipeRight()
+//        setupSwipeRight()
         self.menuContainerViewController.panMode = .init(0)
     }
     
