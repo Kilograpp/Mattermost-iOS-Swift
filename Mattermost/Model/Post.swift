@@ -71,7 +71,6 @@ enum PostRelationships: String {
 
 @objc enum CellType: Int {
     case attachment
-    case followUp
     case common
 }
 
@@ -104,6 +103,7 @@ final class Post: RealmObject {
         return string
     }()
     dynamic var attributedMessageHeight: Float = 0.0
+    dynamic var isFollowUp: Bool = false
     
     func setType(_ type: String) {
         switch type {

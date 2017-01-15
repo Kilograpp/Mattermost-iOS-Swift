@@ -18,7 +18,6 @@ fileprivate struct DownloadingState {
 
 fileprivate let NullString = "(null)"
 fileprivate let TitleFont = UIFont.systemFont(ofSize: 13)
-fileprivate let BackImage = UIImage(named: "image_back")
 
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
@@ -129,40 +128,35 @@ extension AttachmentImageCell: Updating {
     
     fileprivate func configureImageView() {
         let fileName = self.fileName
-        var downloadUrl = self.file.thumbURL()!
+        var downloadUrl = self.file.previewURL()
+        let size = FileUtils.scaledImageSizeWith(file: self.file!)
         
-        if (downloadUrl.absoluteString.contains(NullString)) {
-            let fixedPath = downloadUrl.absoluteString.replacingOccurrences(of: NullString, with: Preferences.sharedInstance.currentTeamId!)
-            downloadUrl = NSURL(string: fixedPath)! as URL
+        if (downloadUrl?.absoluteString.contains(NullString))! {
+            let fixedPath = downloadUrl?.absoluteString.replacingOccurrences(of: NullString, with: Preferences.sharedInstance.currentTeamId!)
+            downloadUrl = NSURL(string: fixedPath!)! as URL
         }
         
-        if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl.absoluteString) {
+        if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl?.absoluteString) {
             self.fileImageView.image = image
         } else {
-            self.fileImageView.image = BackImage
+            self.fileImageView.image = Constants.Post.BackImage
 
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
                 DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                     // Handle unpredictable errors
                     guard image != nil else { return }
-                    
+
                     var finalImage: UIImage = image!
                     if cacheType == .none {
-                        let width = UIScreen.screenWidth() - Constants.UI.DoublePaddingSize
-                        let scale = width / finalImage.size.width
-                        let height = finalImage.size.height * scale
-                        
-                        finalImage = image!.imageByScalingAndCroppingForSize(CGSize(width: width, height: height), radius: 3)
-                        SDImageCache.shared().store(finalImage, forKey: downloadUrl.absoluteString)
+                        finalImage = image!.imageByScalingAndCroppingForSize(size, radius: 3)
+                        SDImageCache.shared().store(finalImage, forKey: downloadUrl?.absoluteString)
                     }
                     
                     // Ensure the post is still the same
                     guard self?.fileName == fileName else { return }
                     
                     DispatchQueue.main.async(execute: {
-
-                        
                         let postLocalId = self?.file.post?.localIdentifier
                         guard postLocalId != nil else { return }
                         

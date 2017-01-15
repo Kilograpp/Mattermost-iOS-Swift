@@ -82,6 +82,12 @@ extension MappingUtils: PostMethods {
         posts.forEach {
             $0.setSystemAuthorIfNeeded()
             $0.computeMissingFields()
+            
+            if (previousPost != nil) {
+                let postsInterval = ($0.createdAt as NSDate?)?.minutesLaterThan(previousPost?.createdAt)
+                $0.isFollowUp = ($0.authorId == previousPost?.authorId) && (postsInterval! < Constants.Post.FollowUpDelay)
+            }
+            
             let existingPost = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", $0.identifier!).first
             if existingPost != nil { $0.localIdentifier = existingPost!.localIdentifier! }
             

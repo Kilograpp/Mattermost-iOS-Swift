@@ -232,7 +232,12 @@ extension PostUtils: PostConfiguration {
     func assignFilesToPostIfNeeded(_ post: Post) {
         guard self.assignedFiles.count > 0 else { return }
         
-        post.files.append(objectsIn: self.assignedFiles)
+        var fileIds = Array<String>()
+        self.assignedFiles.forEach({ fileIds.append($0.identifier!) })
+        
+        //post.fileIds = //NSKeyedArchiver.archivedData(withRootObject: fileIds)
+        
+        //post.files.append(objectsIn: self.assignedFiles)
     }
     
     func clearUploadedAttachments() {

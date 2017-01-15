@@ -93,7 +93,7 @@ extension ProfileCellBuilder: Inteface {
         cell.isCopyEnabled = self.isDisplayOnly
     }
     
-    func cellForPost(post: Post, searchingText: String) -> UITableViewCell {
+  /*  func cellForPost(post: Post, searchingText: String) -> UITableViewCell {
         let reuseIdentifier = post.hasAttachments() ?  FeedSearchAttachmentTableViewCell.reuseIdentifier : FeedSearchTableViewCell.reuseIdentifier
         
         let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! FeedBaseTableViewCell
@@ -101,5 +101,5 @@ extension ProfileCellBuilder: Inteface {
         cell.configureWithPost(post)
         (cell as! FeedSearchTableViewCell).configureSelectionWithText(text: searchingText)
         return cell
-    }
+    }*/
 }

@@ -9,8 +9,8 @@
 import UIKit
 
 private protocol FeedCellBuilderInterface: class {
-    func heightForPost(_ post: Post) -> CGFloat
-    func cellForPost(_ post: Post, errorHandler: @escaping (_ post:Post) -> Void) -> UITableViewCell
+    func heightForPost(_ post: Post, prevPost: Post?) -> CGFloat
+    func cellForPost(_ post: Post, prevPost: Post?, errorHandler: @escaping (_ post:Post) -> Void) -> UITableViewCell
 }
 
 
@@ -36,22 +36,11 @@ final class FeedCellBuilder {
 
 //MARK: FeedCellBuilderInterface
 extension FeedCellBuilder: FeedCellBuilderInterface {
-    func cellForPost(_ post: Post, errorHandler: @escaping (_ post:Post) -> Void) -> UITableViewCell {
-        var reuseIdentifier: String
-    
-        switch post.cellType {
-        case .attachment:
-            reuseIdentifier = FeedAttachmentsTableViewCell.reuseIdentifier
-            break
-        case .followUp:
-//            reuseIdentifier =  FeedFollowUpTableViewCell.reuseIdentifier
-//            break
-            reuseIdentifier = FeedCommonTableViewCell.reuseIdentifier
-            break
-        case .common:
-            reuseIdentifier = FeedCommonTableViewCell.reuseIdentifier
-            break
-        }
+    func cellForPost(_ post: Post, prevPost: Post?, errorHandler: @escaping (_ post:Post) -> Void) -> UITableViewCell {
+        
+        let reuseIdentifier = (post.cellType == .common) ? FeedCommonTableViewCell.reuseIdentifier : FeedAttachmentsTableViewCell.reuseIdentifier
+        
+        
         
         var cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? FeedBaseTableViewCell
         if cell == nil {
@@ -71,15 +60,17 @@ extension FeedCellBuilder: FeedCellBuilderInterface {
         return cell!
     }
     
-    func heightForPost(_ post: Post) -> CGFloat {
+    func heightForPost(_ post: Post, prevPost: Post?) -> CGFloat {
         switch post.cellType {
             case .attachment:
                 return FeedAttachmentsTableViewCell.heightWithPost(post)
-            case .followUp:
+       /*     case .followUp:
 //                return FeedFollowUpTableViewCell.heightWithPost(post)
-                return FeedCommonTableViewCell.heightWithPost(post)
+                return FeedCommonTableViewCell.heightWithPost(post)*/
             case .common:
                 return FeedCommonTableViewCell.heightWithPost(post)
+            /*case .attachmentFollowUp:
+                return FeedCommonTableViewCell.heightWithPost(post)*/
         }
     }
 }

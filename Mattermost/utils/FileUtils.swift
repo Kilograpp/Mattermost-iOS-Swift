@@ -19,6 +19,7 @@ private protocol Interface {
     static func removeLocalCopyOf(file: File)
     static func updateFileWith(info: File)
     static func scaledImageHeightWith(file: File) -> CGFloat
+    static func scaledImageSizeWith(file: File) -> CGSize
 }
 
 final class FileUtils {
@@ -112,12 +113,15 @@ final class FileUtils {
         }
     }
     
-    static func scaledImageHeightWith(file: File) -> CGFloat {
-        let screenSize = UIScreen.main.bounds.size
-        let scale = screenSize.width /  CGFloat(file.width)
-        let scaledHeight = CGFloat(file.height) * scale
-        let height = min(scaledHeight, (screenSize.height * 0.6))
+    static func scaledImageSizeWith(file: File) -> CGSize {
+        let width = UIScreen.screenWidth() - Constants.UI.DoublePaddingSize
+        let scale = width /  CGFloat(file.width)
+        let height = CGFloat(file.height) * scale
         
-        return height
+        return CGSize(width: width, height: min(height, UIScreen.screenHeight() * 0.6))
+    }
+    
+    static func scaledImageHeightWith(file: File) -> CGFloat {
+        return scaledImageSizeWith(file: file).height
     }
 }

@@ -612,22 +612,6 @@ extension Api: UserApi {
                     try! realm.write { channel.members.append(existUser!) }
                 }
             }
-            
-            
-            /*print(operation.httpRequestOperation.responseString)
-            //Temp cap
-            
-            let ids = Array(responseDictionary!.keys.map{$0})
-            let realm = RealmUtils.realmForCurrentThread()
-            try! realm.write {
-                for userId in ids {
-                    let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
-                    realm.add(user, update: true)
-                    if !Array(channel.members.map{$0.identifier}).contains(user.identifier) {
-                        channel.members.append(user)
-                    }
-                }
-            }*/
             completion(nil)
         }, failure: completion)
     }
@@ -801,10 +785,10 @@ extension Api: PostApi {
             
             self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
                 if error != nil { print(error!) }
-             })
-            
-             self.loadFileInfosFor(posts: posts, completion: { (error) in
-                completion(nil)
+                
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    completion(nil)
+                })
              })
         }) { (error) in
             if let error = error {
@@ -1011,13 +995,16 @@ extension Api : FileApi {
         
         if item.isFile {
             self.manager.postFileWith(url: item.url, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
-                let file = File()
+               /* let file = File()
                 let dictionary = mappingResult.firstObject as! [String:String]
                 let rawLink = dictionary[FileAttributes.rawLink.rawValue]
                 file.identifier = params["client_ids"]
                 file.rawLink = rawLink
                 completion(file, nil)
+                RealmUtils.save(file)*/
+                let file = mappingResult.firstObject as! File
                 RealmUtils.save(file)
+                completion(file, nil)
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in
@@ -1025,13 +1012,16 @@ extension Api : FileApi {
             }
         } else {
             self.manager.post(image: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
-                let file = File()
+                /*let file = File()
                 let dictionary = mappingResult.firstObject as! [String:String]
                 let rawLink = dictionary[FileAttributes.rawLink.rawValue]
                 file.identifier = params["client_ids"]
                 file.rawLink = rawLink
-                completion(file, nil)
+                completion(file, nil)*/
+                
+                let file = mappingResult.firstObject as! File
                 RealmUtils.save(file)
+                completion(file, nil)
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in

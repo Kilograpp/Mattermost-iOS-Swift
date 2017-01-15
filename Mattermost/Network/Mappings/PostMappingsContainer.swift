@@ -42,6 +42,7 @@ extension PostMappingsContainer: ResponseMappings {
             "parent_id"         : PostAttributes.parentId.rawValue,
             "user_id"           : PostAttributes.authorId.rawValue,
             "channel_id"        : PostAttributes.channelId.rawValue,
+            "file_ids"          : PostAttributes.fileIds.rawValue,
             "files.backendLink" : "filenames"
             ])
         return mapping
@@ -117,7 +118,8 @@ extension PostMappingsContainer: RequestMapping {
             PostAttributes.channelId.rawValue  : "channel_id",
             PostAttributes.pendingId.rawValue  : "pending_post_id",
             PostAttributes.parentId.rawValue   : "parent_id",
-            PostAttributes.rootId.rawValue     : "root_id"
+            PostAttributes.rootId.rawValue     : "root_id"/*,
+            PostAttributes.fileIds.rawValue    : "file_ids"*/
             ])
         return mapping!
     }
