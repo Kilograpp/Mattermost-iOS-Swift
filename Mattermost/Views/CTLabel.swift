@@ -73,11 +73,6 @@ final class AttributedLineLayoutData {
 
 final class CTLabel : UIView {
     let width: CGFloat = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
-    var attributedText : NSAttributedString? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
     
     var layoutData: AttributedTextLayoutData? {
         didSet {
@@ -85,7 +80,7 @@ final class CTLabel : UIView {
         }
     }
     
-    var highlightedText: NSAttributedString?
+    var highlightedLayoutData: AttributedTextLayoutData?
     var highlighted: Bool = false
     
     var onMentionTap: ((_ username: String) -> Void)?
@@ -95,14 +90,12 @@ final class CTLabel : UIView {
     var onEmailTap: ((_ email: String) -> Void)?
     
     override func draw(_ rect: CGRect) {
-        layoutData?.drawTextInContext(ctx: UIGraphicsGetCurrentContext()!)
-        if highlighted {
-            //            renderedText?.drawTextInContext(ctx: UIGraphicsGetCurrentContext()!)
-        } else {
-            //            renderedText.drawTextInContext(text: attributedText!, ctx: UIGraphicsGetCurrentContext()!)
+        defer {
+            self.transform = CGAffineTransform(scaleX: 1.0, y: -1.0);
         }
         
-        self.transform = CGAffineTransform(scaleX: 1.0, y: -1.0);
+        guard let dataToDisplay = highlighted ? highlightedLayoutData : layoutData else {return}
+        dataToDisplay.drawTextInContext(ctx: UIGraphicsGetCurrentContext()!)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let point = touches.first?.location(in: self) else {return}
@@ -110,7 +103,11 @@ final class CTLabel : UIView {
         
         if charIdx != NSNotFound {
             var range = NSRange()
-            guard let text = attributedText else {return}
+            guard let ld = layoutData else {
+                return
+            }
+
+            let text = ld.attributedText
             let username = text.mentionAtIndex(charIdx, effectiveRange: &range)
             let hashTag = text.hashTagAtIndex(charIdx, effectiveRange: &range)
             let email = text.emailAtIndex(charIdx, effectiveRange: &range)
@@ -120,7 +117,8 @@ final class CTLabel : UIView {
             if (username != nil) || (hashTag != nil) || (email != nil) || (url != nil) || (phone != nil) {
                 let mutableString = text.mutableCopy() as! NSMutableAttributedString
                 mutableString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.blue, range: range)
-                highlightedText = (mutableString.copy() as! NSAttributedString)
+                let highlightedText = (mutableString.copy() as! NSAttributedString)
+                highlightedLayoutData = AttributedTextLayoutData(text: highlightedText, maxWidth: width)
                 setNeedsDisplay()
             }
         }
@@ -129,33 +127,40 @@ final class CTLabel : UIView {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let point = touches.first?.location(in: self) else {return}
         let charIdx = charachterIndexAtPoint(point: point)
+        defer {
+            cancelHighlight()
+        }
         
-        if let username = attributedText!.mentionAtIndex(charIdx) {
+        guard let ld = layoutData else {
+            return
+        }
+        
+        if let username = ld.attributedText.mentionAtIndex(charIdx) {
             self.onMentionTap?(username)
             return
         }
         
-        if let hashTag = attributedText!.hashTagAtIndex(charIdx) {
+        if let hashTag = ld.attributedText.hashTagAtIndex(charIdx) {
             self.onHashTagTap?(hashTag)
             return
         }
         
-        if let email = attributedText!.emailAtIndex(charIdx) {
+        if let email = ld.attributedText.emailAtIndex(charIdx) {
             self.onEmailTap?(email)
             return
         }
         
-        if let url = attributedText!.URLAtIndex(charIdx) {
+        if let url = ld.attributedText.URLAtIndex(charIdx) {
             self.onUrlTap?(url)
             return
         }
         
-        if let phone = attributedText!.phoneAtIndex(charIdx) {
+        if let phone = ld.attributedText.phoneAtIndex(charIdx) {
             self.onPhoneTap?(phone)
             return
         }
         
-        cancelHighlight()
+        
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -164,7 +169,7 @@ final class CTLabel : UIView {
     
     fileprivate func cancelHighlight() {
         highlighted = false
-        highlightedText = nil
+        highlightedLayoutData = nil
         setNeedsDisplay()
     }
     
@@ -190,7 +195,7 @@ final class CTLabel : UIView {
     }
     
     func prepareForReuse() {
-        self.attributedText = nil
-        self.highlightedText = nil
+        self.layoutData = nil
+        self.highlightedLayoutData = nil
     }
 }
