@@ -87,8 +87,13 @@ extension ObjectManager: PostRequests {
               success: ((_ mappingResult: RKMappingResult) -> Void)?,
               failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-//            print(operation?.httpRequestOperation.responseString ?? "success post object")
+            
+            if let data = operation?.httpRequestOperation.request.httpBody {
+                 print(try! RKNSJSONSerialization.object(from: data))
+            }
+            
             success?(mappingResult!)
+           
         }) { (operation, error) in
 //            print(operation?.httpRequestOperation.responseString ?? "error in post object")
             let responseString = operation?.httpRequestOperation.responseString
@@ -238,6 +243,7 @@ extension ObjectManager: PostRequests {
                                                                      constructingBodyWith: constructingBodyWithBlock)
         
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
+//            print(try! RKNSJSONSerialization.object(from: operation?.httpRequestOperation.request.httpBody))
             success?(mappingResult!)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in

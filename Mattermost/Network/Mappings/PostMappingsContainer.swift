@@ -42,7 +42,7 @@ extension PostMappingsContainer: ResponseMappings {
             "parent_id"         : PostAttributes.parentId.rawValue,
             "user_id"           : PostAttributes.authorId.rawValue,
             "channel_id"        : PostAttributes.channelId.rawValue,
-           // "file_ids"          : PostAttributes.fileIds.rawValue,
+            "file_ids"          : PostAttributes.fileIds.rawValue,
             "files.backendLink" : "filenames"
             ])
         return mapping
@@ -91,9 +91,14 @@ extension PostMappingsContainer: ResponseMappings {
             "(\(PostAttributes.identifier)).root_id"    : PostAttributes.rootId.rawValue,
             "(\(PostAttributes.identifier)).parent_id"  : PostAttributes.parentId.rawValue
             ])
-        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
-            toKeyPath: PostRelationships.files.rawValue,
-            with: FileMappingsContainer.simplifiedMapping()))
+        
+//        mapping.addRelationshipMapping(withSourceKeyPath: "fileIds", mapping: FileMappingsContainer.simplifiedMapping())
+        
+        
+
+//        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
+//            toKeyPath: PostRelationships.files.rawValue,
+//            with: FileMappingsContainer.simplifiedMapping()))
         mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
             toKeyPath: PostRelationships.attachments.rawValue,
             with: AttachmentMappingsContainer.mapping()))
@@ -113,14 +118,27 @@ extension PostMappingsContainer: RequestMapping {
         let mapping = RKObjectMapping.request()
         mapping?.addAttributeMappings(from: [ "message" ])
         mapping?.addAttributeMappings(from: [
-            PostAttributes.identifier.rawValue : "id",
-            Post.filesLinkPath()               : "filenames",
+//            PostAttributes.identifier.rawValue : "id",
+//            Post.filesLinkPath()               : "filenames",
             PostAttributes.channelId.rawValue  : "channel_id",
             PostAttributes.pendingId.rawValue  : "pending_post_id",
             PostAttributes.parentId.rawValue   : "parent_id",
-            PostAttributes.rootId.rawValue     : "root_id"/*,
-            PostAttributes.fileIds.rawValue    : "file_ids"*/
+            PostAttributes.rootId.rawValue     : "root_id"
             ])
+        
+        mapping?.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "fileIds",
+            toKeyPath: "file_ids",
+            with: RealmStringMappingsContainer.commonMapping()))
+        return mapping!
+    }
+}
+
+
+final class RealmStringMappingsContainer : BaseMappingsContainer {
+    static func commonMapping() -> RKObjectMapping {
+        let mapping = RKObjectMapping.request()
+        mapping?.addAttributeMappings(from: ["string" : "asd"])
+        
         return mapping!
     }
 }
