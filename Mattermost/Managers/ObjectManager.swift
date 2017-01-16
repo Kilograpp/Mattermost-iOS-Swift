@@ -87,13 +87,6 @@ extension ObjectManager: PostRequests {
               success: ((_ mappingResult: RKMappingResult) -> Void)?,
               failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            
-            
-            if operation?.httpRequestOperation.request.httpBody != nil {
-                print("777", String(data: (operation?.httpRequestOperation.request.httpBody)!, encoding: .utf8))
-            }
-            
-            
 //            print(operation?.httpRequestOperation.responseString ?? "success post object")
             success?(mappingResult!)
         }) { (operation, error) in

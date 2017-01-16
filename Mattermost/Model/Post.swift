@@ -75,6 +75,17 @@ enum PostRelationships: String {
 }
 
 
+class RealmString: Object {
+    dynamic var string = ""
+    
+    static func initWith(string: String) -> RealmString {
+        let realmString = RealmString()
+        realmString.string = string
+        
+        return realmString
+    }
+}
+
 final class Post: RealmObject {
     fileprivate dynamic var _attributedMessageData: RealmAttributedString?
     dynamic var messageType: MessageType = .default
@@ -91,7 +102,8 @@ final class Post: RealmObject {
     dynamic var deletedAt: Date?
     dynamic var status: PostStatus = .default
     dynamic var localIdentifier: String?
-    dynamic var fileIds: Data?
+    var fileIds: List<RealmString>? = nil
+    //dynamic var fileIds: Data?
     //dynamic var hashtags like this "#ijf #wtf"
 
     dynamic var identifier: String? {

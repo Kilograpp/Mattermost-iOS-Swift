@@ -42,7 +42,7 @@ extension PostMappingsContainer: ResponseMappings {
             "parent_id"         : PostAttributes.parentId.rawValue,
             "user_id"           : PostAttributes.authorId.rawValue,
             "channel_id"        : PostAttributes.channelId.rawValue,
-            "file_ids"          : PostAttributes.fileIds.rawValue,
+           // "file_ids"          : PostAttributes.fileIds.rawValue,
             "files.backendLink" : "filenames"
             ])
         return mapping
@@ -56,7 +56,7 @@ extension PostMappingsContainer: ResponseMappings {
             "(\(PostAttributes.identifier)).channel_id"      : PostAttributes.channelId.rawValue,
             "(\(PostAttributes.identifier)).create_at"  : PostAttributes.createdAt.rawValue,
             "(\(PostAttributes.identifier)).delete_at"       : PostAttributes.deletedAt.rawValue,
-            "(\(PostAttributes.identifier)).file_ids"        : PostAttributes.fileIds.rawValue,
+          //  "(\(PostAttributes.identifier)).file_ids"        : PostAttributes.fileIds.rawValue,
             //hashtags here
             "(\(PostAttributes.identifier)).message"         : PostAttributes.message.rawValue,
             //original_id here
