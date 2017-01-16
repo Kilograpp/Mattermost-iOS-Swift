@@ -233,12 +233,13 @@ extension PostUtils: PostConfiguration {
     func assignFilesToPostIfNeeded(_ post: Post) {
         guard self.assignedFiles.count > 0 else { return }
     
-        let fileIds = List<RealmString>()
-        self.assignedFiles.forEach({
-            let fileId = RealmString.initWith(string: $0.identifier!)
-            fileIds.append(fileId)
-        })
-        post.fileIds = fileIds
+//        let fileIds = List<RealmString>()
+//        self.assignedFiles.forEach({
+//            let fileId = RealmString.initWith(string: $0.identifier!)
+//            fileIds.append(fileId)
+//        })
+//        post.fileIds = fileIds
+        self.assignedFiles.forEach({post.files.append($0)})
     }
     
     func clearUploadedAttachments() {

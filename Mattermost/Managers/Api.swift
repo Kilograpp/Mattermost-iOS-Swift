@@ -885,17 +885,37 @@ extension Api: PostApi {
     
     func sendPost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
-        self.manager.post(object: post, path: path, success: { (mappingResult) in
-            let resultPost = mappingResult.firstObject as! Post
+//        self.manager.post(object: post, path: path, success: { (mappingResult) in
+//            let resultPost = mappingResult.firstObject as! Post
+//            try! RealmUtils.realmForCurrentThread().write {
+//                //addition parameters
+//                post.status = .default
+//                post.identifier = resultPost.identifier
+//            }
+//            completion(nil)
+//        }, failure: { (error) in
+//            completion(error)
+//        })
+        
+//        let params = ["message": post.message,
+//                      "channel_id" : post.channelId,
+//                      "file_ids"]
+        let array: NSMutableArray = NSMutableArray()
+        post.files.forEach({array.add($0.identifier as! NSString)})
+        self.manager.post(post, path: path, parameters: ["file_ids" : array.copy()], success: { (operation, mappingResult) in
+            if let data = operation?.httpRequestOperation.request.httpBody {
+                print(try! RKNSJSONSerialization.object(from: data))
+            }
+            
+            let resultPost = mappingResult?.firstObject as! Post
             try! RealmUtils.realmForCurrentThread().write {
                 //addition parameters
                 post.status = .default
                 post.identifier = resultPost.identifier
             }
-            completion(nil)
-        }, failure: { (error) in
-            completion(error)
-        })
+        }) { (operation, error) in
+//            completion(error)
+        }
     }
     
     func getPostWithId(_ identifier: String, channel: Channel, completion: @escaping ((_ post: Post?, _ error: Error?) -> Void)) {
