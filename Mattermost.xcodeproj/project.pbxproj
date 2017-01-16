@@ -1155,17 +1155,17 @@
 		D6E165851D47C0960014C831 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				8B882D6E1DA6575F0028F13D /* FeedSearchTableViewCell.swift */,
-				8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */,
-				D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */,
 				D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */,
 				D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */,
-				D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */,
-				D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */,
-				D86EF7F91D59F13C00BD49A3 /* AttachmentFileCell.swift */,
+				D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */,
 				D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */,
-				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
+				D86EF7F91D59F13C00BD49A3 /* AttachmentFileCell.swift */,
+				D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */,
 				4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */,
+				8B882D6E1DA6575F0028F13D /* FeedSearchTableViewCell.swift */,
+				8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */,
+				D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */,
+				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
 				86408A731DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.swift */,
 				86408A741DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.xib */,
 			);

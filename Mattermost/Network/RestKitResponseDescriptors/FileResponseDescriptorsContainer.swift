@@ -22,10 +22,10 @@ final class FileResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
 //ResponseDescriptors
 extension FileResponseDescriptorsContainer: ResponseDescriptors {
     static func uploadResponseDescriptor() -> RKResponseDescriptor {
-        return RKResponseDescriptor(mapping: FileMappingsContainer.uploadMapping(),
+        return RKResponseDescriptor(mapping: FileMappingsContainer.getFileInfosMapping(),//uploadMapping(),
                                     method: .POST,
                                     pathPattern: FilePathPatternsContainer.uploadPathPattern(),
-                                    keyPath: "filenames",
+                                    keyPath: "file_infos",//"filenames",
                                     statusCodes:  RKStatusCodeIndexSetForClass(.successful))
     }
     static func getFileInfosResponseDescriptor() -> RKResponseDescriptor {

@@ -17,8 +17,8 @@ fileprivate struct DownloadingState {
 }
 
 class AttachmentFileView: UIView {
-    static let NotDownloadedFileIcon = UIImage(named: "chat_notdownloaded_icon")
-    static let DownloadedFileIcon = UIImage(named: "chat_downloaded_icon")
+    static let NotDownloadedFileIcon       = UIImage(named: "chat_notdownloaded_icon")
+    static let DownloadedFileIcon          = UIImage(named: "chat_downloaded_icon")
     static let FileDownloadingProgressIcon = UIImage(named: "chat_downloading_icon")
     
     static let fileSizeFont = UIFont.systemFont(ofSize: 13)
@@ -46,13 +46,13 @@ class AttachmentFileView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        drawTitle(text: file.name!)
+        guard self.file.name != nil else { return }
+        
+        drawTitle(text: self.file.name!)
         if file.size > 0 {
             //activity indicator will added later
             drawSize(text: StringUtils.suffixedFor(size: file.size))
         }
-        
-
     }
 }
 
@@ -214,9 +214,7 @@ extension AttachmentFileView: Downloading {
                 UIApplication.shared.scheduleLocalNotification(notification)
 
             }) { (identifier, progress) in
-//                print("progressTotal = ", progress)
                 if fileId == identifier {
-//                    print("progress = ", progress)
                     self.progressView.progress = progress
                 }
             }

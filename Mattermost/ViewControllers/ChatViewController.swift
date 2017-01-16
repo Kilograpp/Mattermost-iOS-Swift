@@ -143,6 +143,7 @@ private protocol Navigation {
 }
 
 private protocol Request {
+    func loadChannelUsers()
     func loadFirstPageOfData(isInitial: Bool)
     func loadNextPageOfData()
     func sendPost()
@@ -526,7 +527,10 @@ extension ChatViewController: Request {
     func loadChannelUsers() {
         self.isLoadingInProgress = true
         showLoaderView()
-        Api.sharedInstance.loadFirstPage(self.channel, completion: { (error) in
+        
+        Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            
             self.loadFirstPageOfData(isInitial: true)
         })
     }
@@ -759,8 +763,8 @@ extension ChatViewController {
             let errorHandler = { (post:Post) in
                 self.errorAction(post)
             }
-            
-            let cell = self.builder.cellForPost(post!, errorHandler: errorHandler)
+        
+            let cell = self.builder.cellForPost(post!, prevPost: nil, errorHandler: errorHandler)
             if (cell.isKind(of: FeedCommonTableViewCell.self)) {
                 (cell as! FeedCommonTableViewCell).avatarTapHandler = {
                     guard (post?.author.identifier != "SystemUserIdentifier") else { return }
@@ -806,7 +810,7 @@ extension ChatViewController {
         guard tableView == self.tableView else { return 40 }
         
         let post = resultsObserver?.postForIndexPath(indexPath)
-        return self.builder.heightForPost(post!)
+        return self.builder.heightForPost(post!, prevPost: nil)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

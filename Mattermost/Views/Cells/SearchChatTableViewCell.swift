@@ -168,6 +168,7 @@ extension SearchChatTableViewCell: SearchChatTableViewCellConfiguration {
     func configureAvatarImage() {
         let postIdentifier = self.post.identifier
         self.postIdentifier = postIdentifier
+                
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         // FIXME: CodeReview: зачем проверять наличие у поста identifier?
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
@@ -179,7 +180,7 @@ extension SearchChatTableViewCell: SearchChatTableViewCellConfiguration {
     func configureMessageLabel() {
         self.messageLabel.textStorage = self.post.attributedMessage!
         guard self.post.messageType == .system else { return }
-        self.messageLabel.alpha = 0.5
+        //self.messageLabel.alpha = 0.5
     }
 }
 

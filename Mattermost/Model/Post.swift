@@ -71,10 +71,20 @@ enum PostRelationships: String {
 
 @objc enum CellType: Int {
     case attachment
-    case followUp
     case common
 }
 
+
+class RealmString: Object {
+    dynamic var string = ""
+    
+    static func initWith(string: String) -> RealmString {
+        let realmString = RealmString()
+        realmString.string = string
+        
+        return realmString
+    }
+}
 
 final class Post: RealmObject {
     fileprivate dynamic var _attributedMessageData: RealmAttributedString?
@@ -92,7 +102,8 @@ final class Post: RealmObject {
     dynamic var deletedAt: Date?
     dynamic var status: PostStatus = .default
     dynamic var localIdentifier: String?
-    dynamic var fileIds: Data?
+    var fileIds: List<RealmString>? = nil
+    //dynamic var fileIds: Data?
     //dynamic var hashtags like this "#ijf #wtf"
 
     dynamic var identifier: String? {
@@ -104,6 +115,7 @@ final class Post: RealmObject {
         return string
     }()
     dynamic var attributedMessageHeight: Float = 0.0
+    dynamic var isFollowUp: Bool = false
     
     func setType(_ type: String) {
         switch type {

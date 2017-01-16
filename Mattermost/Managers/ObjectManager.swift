@@ -193,7 +193,7 @@ extension ObjectManager: PostRequests {
                                                                      constructingBodyWith: constructingBodyWithBlock)
         
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
-//            print("upOk"); success?(mappingResult!)
+            print("upOk"); success?(mappingResult!)
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
             //MARK: Cap with fixed later

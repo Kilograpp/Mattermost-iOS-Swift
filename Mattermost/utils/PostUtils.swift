@@ -7,6 +7,7 @@
 //
 
 import RealmSwift
+import Realm
 
 private protocol Interface: class {
     static func update(post: Post, fileInfos: [File])
@@ -232,7 +233,13 @@ extension PostUtils: PostConfiguration {
     func assignFilesToPostIfNeeded(_ post: Post) {
         guard self.assignedFiles.count > 0 else { return }
         
-        post.files.append(objectsIn: self.assignedFiles)
+    
+        var fileIds = List<RealmString>()
+        self.assignedFiles.forEach({
+            let fileId = RealmString.initWith(string: $0.identifier!)
+            fileIds.append(fileId)
+        })
+        post.fileIds = fileIds
     }
     
     func clearUploadedAttachments() {
