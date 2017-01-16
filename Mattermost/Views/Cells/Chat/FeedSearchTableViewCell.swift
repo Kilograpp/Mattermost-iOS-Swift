@@ -10,17 +10,14 @@ import UIKit
 import WebImage
 
 protocol FeedSearchTableViewCellConfiguration {
-    func configureBasicLabels()
+  //  func configureBasicLabels()
     func configureAvatarImageView()
 }
 
 class FeedSearchTableViewCell: FeedBaseTableViewCell {
     
 //MARK: Properties
-    fileprivate let channelLabel: UILabel = UILabel()
     fileprivate let avatarImageView: UIImageView = UIImageView()
-    fileprivate let nameLabel: UILabel = UILabel()
-    fileprivate let timeLabel: UILabel = UILabel()
     fileprivate let arrowImageView: UIImageView = UIImageView()
     
     var disclosureTapHandler : (() -> Void)?
@@ -37,29 +34,37 @@ class FeedSearchTableViewCell: FeedBaseTableViewCell {
     }
     
     override func layoutSubviews() {
-        let channelWidth = CGFloat(self.post.channel.displayNameWidth)
-        let nameWidth = CGFloat(self.post.author.displayNameWidth)
-        let timeWidth = CGFloat(self.post.createdAtStringWidth)
-        let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
-        let textHeight = CGFloat(self.post.attributedMessageHeight)
+        guard self.post.author != nil else { return }
         
-        self.channelLabel.frame = CGRect(x: Constants.UI.MiddlePaddingSize,
-                                         y: Constants.UI.MiddlePaddingSize, width: channelWidth, height: 14)
         
-        self.nameLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize,
+        
+        
+        
+        
+        
+        //let channelWidth = CGFloat(self.post.channel.displayNameWidth)
+        //let nameWidth = CGFloat(self.post.author.displayNameWidth)
+        //let timeWidth = CGFloat(self.post.createdAtStringWidth)
+        //let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
+        //let textHeight = CGFloat(self.post.attributedMessageHeight)
+        
+        //self.channelLabel.frame = CGRect(x: Constants.UI.MiddlePaddingSize,
+          //                               y: Constants.UI.MiddlePaddingSize, width: channelWidth, height: 14)
+        
+    /*    self.nameLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize,
                                       y: self.channelLabel.frame.maxY + Constants.UI.MiddlePaddingSize,
                                       width: nameWidth, height: Constants.UI.DoublePaddingSize)
         
         self.timeLabel.frame = CGRect(x: self.nameLabel.frame.maxX + Constants.UI.ShortPaddingSize,
                                       y: self.nameLabel.frame.origin.y,
-                                      width: timeWidth, height: Constants.UI.DoublePaddingSize)
+                                      width: timeWidth, height: Constants.UI.DoublePaddingSize)*/
         
-        self.messageLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize,
+     /*   self.messageLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize,
                                          y: self.nameLabel.frame.maxY + Constants.UI.ShortPaddingSize,
-                                         width: textWidth, height: textHeight)
+                                         width: textWidth, height: textHeight)*/
         
-        self.arrowImageView.center = CGPoint(x: self.messageLabel.frame.maxX + Constants.UI.StandardPaddingSize,
-                                             y: self.messageLabel.frame.maxY / 1.5)
+        /* self.arrowImageView.center = CGPoint(x: self.messageLabel.frame.maxX + Constants.UI.StandardPaddingSize,
+                                             y: self.messageLabel.frame.maxY / 1.5)*/
         
         super.layoutSubviews()
     }
@@ -67,18 +72,25 @@ class FeedSearchTableViewCell: FeedBaseTableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
     }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        
+        drawChannelName()
+        drawBasicInfo()
+    }
 }
 
 
 //MARK: FeedSearchTableViewCellConfiguration
 extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
-    final func configureBasicLabels() {
+   /* final func configureBasicLabels() {
         guard self.post.author != nil else { return }
         
         self.channelLabel.text = self.post.channel.displayName!
         self.nameLabel.text = self.post.author.displayName
         self.timeLabel.text = self.post.createdAtString
-    }
+    }*/
     
     final func configureAvatarImageView() {
         let postIdentifier = self.post.identifier
@@ -97,11 +109,13 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
 
 protocol FeedSearchTableViewCellSetup {
     func initialSetup()
-    func setupChannelLabel()
     func setupAvatarImageView()
-    func setupNameLabel()
-    func setupTimeLabel()
     func setupArrowImageView()
+}
+
+fileprivate protocol Drawing {
+    func drawChannelName()
+    func drawBasicInfo()
 }
 
 protocol FeedSearchTableViewCellAction {
@@ -112,19 +126,17 @@ protocol FeedSearchTableViewCellAction {
 //MARK: FeedSearchTableViewCellSetup
 extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
     func initialSetup() {
-        setupChannelLabel()
+       // setupChannelLabel()
         setupAvatarImageView()
-        setupNameLabel()
-        setupTimeLabel()
         setupArrowImageView()
     }
 
-    func setupChannelLabel() {
+  /*  func setupChannelLabel() {
         self.channelLabel.backgroundColor = ColorBucket.whiteColor
         self.channelLabel.textColor = ColorBucket.channelColor
         self.channelLabel.font = FontBucket.channelFont
         self.addSubview(self.channelLabel)
-    }
+    }*/
     
     func setupAvatarImageView() {
         self.avatarImageView.frame = CGRect(x: Constants.UI.MiddlePaddingSize, y: Constants.UI.DoublePaddingSize + Constants.UI.MiddlePaddingSize, width: 40, height: 40)
@@ -136,7 +148,7 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
         self.addSubview(self.avatarImageView)
     }
     
-    func setupNameLabel() {
+  /*  func setupNameLabel() {
         self.nameLabel.backgroundColor = ColorBucket.whiteColor
         self.nameLabel.textColor = ColorBucket.authorColor
         self.nameLabel.font = FontBucket.postAuthorNameFont
@@ -148,7 +160,7 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
         self.timeLabel.font = FontBucket.postDateFont
         self.timeLabel.textColor = ColorBucket.grayColor
         self.addSubview(self.timeLabel)
-    }
+    }*/
     
     func setupArrowImageView() {
         self.arrowImageView.image = UIImage(named: "comments_send_icon")
@@ -158,6 +170,29 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(self.disclosureTapAction))
         self.addGestureRecognizer(tapGestureRecognizer)
         self.addSubview(self.arrowImageView)
+    }
+}
+
+
+//MARK: Drawing
+extension FeedSearchTableViewCell: Drawing {
+    func drawChannelName() {
+        let channelWidth = CGFloat(self.post.channel.displayNameWidth)
+        let channelRect = CGRect(x: Constants.UI.MiddlePaddingSize, y: Constants.UI.MiddlePaddingSize, width: channelWidth, height: CGFloat(14))
+        (self.post.channel.displayName! as NSString).draw(in: channelRect, withAttributes: [NSFontAttributeName : FontBucket.channelFont, NSForegroundColorAttributeName : ColorBucket.channelColor])
+    }
+    
+    func drawBasicInfo() {
+        guard self.post.author != nil else { return }
+        
+        let nameWidth = CGFloat(self.post.author.displayNameWidth)
+        let nameRect = CGRect(x: Constants.UI.MessagePaddingSize, y: <#T##CGFloat#>, width: <#T##CGFloat#>, height: <#T##CGFloat#>)
+        
+        
+        
+        let dateWidth = CGFloat(self.post.createdAtStringWidth)
+        (self.post.author.displayName! as NSString).draw(in: CGRect(x: Constants.UI.MessagePaddingSize, y: 8, width: nameWidth, height: 20), withAttributes: [NSFontAttributeName : FontBucket.postAuthorNameFont, NSForegroundColorAttributeName : ColorBucket.blackColor])
+        (self.post.createdAtString! as NSString).draw(in: CGRect(x: Constants.UI.MessagePaddingSize + nameWidth + 5, y: 11, width: dateWidth, height: 15), withAttributes: [NSFontAttributeName : FontBucket.postDateFont, NSForegroundColorAttributeName : ColorBucket.grayColor])
     }
 }
 
@@ -175,7 +210,7 @@ extension FeedSearchTableViewCell: TableViewPostDataSource {
     override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         configureAvatarImageView()
-        configureBasicLabels()
+     //   configureBasicLabels()
     }
     
     final func configureSelectionWithText(text: String) {

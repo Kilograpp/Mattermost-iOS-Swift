@@ -17,8 +17,8 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
     
 //MARK: Properties
     fileprivate let avatarImageView: UIImageView = UIImageView()
-    fileprivate let nameLabel: UILabel = UILabel()
-    fileprivate let dateLabel: UILabel = UILabel()
+  //  fileprivate let nameLabel: UILabel = UILabel()
+//    fileprivate let dateLabel: UILabel = UILabel()
     fileprivate let parentView: CompactPostView = CompactPostView.compactPostView(ActionType.CompleteReply)
 
     var avatarTapHandler : (() -> Void)?
