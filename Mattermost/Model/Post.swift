@@ -145,6 +145,13 @@ final class Post: RealmObject {
     
     var renderedText: AttributedTextLayoutData?
     
+    var fileIdsTest : [String] {
+        get {
+            guard let ids = fileIds else {return []}
+            return ids.map({$0.string})
+        }
+    }
+    
 
     deinit {
         self.removeStatusObserverIfNeeded()
