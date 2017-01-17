@@ -73,12 +73,12 @@ class FeedSearchTableViewCell: FeedBaseTableViewCell {
         super.prepareForReuse()
     }
     
-    override func draw(_ rect: CGRect) {
+   /* override func draw(_ rect: CGRect) {
         super.draw(rect)
         
-        drawChannelName()
-        drawBasicInfo()
-    }
+      //  drawChannelName()
+//        drawBasicInfo()
+    }*/
 }
 
 
@@ -113,10 +113,10 @@ protocol FeedSearchTableViewCellSetup {
     func setupArrowImageView()
 }
 
-fileprivate protocol Drawing {
+/*fileprivate protocol Drawing {
     func drawChannelName()
     func drawBasicInfo()
-}
+}*/
 
 protocol FeedSearchTableViewCellAction {
     func disclosureTapAction()
@@ -127,8 +127,8 @@ protocol FeedSearchTableViewCellAction {
 extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
     func initialSetup() {
        // setupChannelLabel()
-        setupAvatarImageView()
-        setupArrowImageView()
+    //    setupAvatarImageView()
+//        setupArrowImageView()
     }
 
   /*  func setupChannelLabel() {
@@ -175,26 +175,26 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellSetup {
 
 
 //MARK: Drawing
-extension FeedSearchTableViewCell: Drawing {
+/*extension FeedSearchTableViewCell: Drawing {
     func drawChannelName() {
-        let channelWidth = CGFloat(self.post.channel.displayNameWidth)
-        let channelRect = CGRect(x: Constants.UI.MiddlePaddingSize, y: Constants.UI.MiddlePaddingSize, width: channelWidth, height: CGFloat(14))
-        (self.post.channel.displayName! as NSString).draw(in: channelRect, withAttributes: [NSFontAttributeName : FontBucket.channelFont, NSForegroundColorAttributeName : ColorBucket.channelColor])
+ //       let channelWidth = CGFloat(self.post.channel.displayNameWidth)
+//        let channelRect = CGRect(x: Constants.UI.MiddlePaddingSize, y: Constants.UI.MiddlePaddingSize, width: channelWidth, height: CGFloat(14))
+//        (self.post.channel.displayName! as NSString).draw(in: channelRect, withAttributes: [NSFontAttributeName : FontBucket.channelFont, NSForegroundColorAttributeName : ColorBucket.channelColor])
     }
     
     func drawBasicInfo() {
-        guard self.post.author != nil else { return }
+  /*      guard self.post.author != nil else { return }
         
         let nameWidth = CGFloat(self.post.author.displayNameWidth)
-        let nameRect = CGRect(x: Constants.UI.MessagePaddingSize, y: <#T##CGFloat#>, width: <#T##CGFloat#>, height: <#T##CGFloat#>)
+      //  let nameRect = CGRect(x: Constants.UI.MessagePaddingSize, y: , width: , height: )
         
         
         
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
         (self.post.author.displayName! as NSString).draw(in: CGRect(x: Constants.UI.MessagePaddingSize, y: 8, width: nameWidth, height: 20), withAttributes: [NSFontAttributeName : FontBucket.postAuthorNameFont, NSForegroundColorAttributeName : ColorBucket.blackColor])
-        (self.post.createdAtString! as NSString).draw(in: CGRect(x: Constants.UI.MessagePaddingSize + nameWidth + 5, y: 11, width: dateWidth, height: 15), withAttributes: [NSFontAttributeName : FontBucket.postDateFont, NSForegroundColorAttributeName : ColorBucket.grayColor])
+        (self.post.createdAtString! as NSString).draw(in: CGRect(x: Constants.UI.MessagePaddingSize + nameWidth + 5, y: 11, width: dateWidth, height: 15), withAttributes: [NSFontAttributeName : FontBucket.postDateFont, NSForegroundColorAttributeName : ColorBucket.grayColor])*/
     }
-}
+}*/
 
 
 //MARK: FeedSearchTableViewCellAction
