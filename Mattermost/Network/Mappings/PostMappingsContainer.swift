@@ -42,7 +42,7 @@ extension PostMappingsContainer: ResponseMappings {
             "parent_id"         : PostAttributes.parentId.rawValue,
             "user_id"           : PostAttributes.authorId.rawValue,
             "channel_id"        : PostAttributes.channelId.rawValue,
-            "file_ids"          : PostAttributes.fileIds.rawValue,
+//            "file_ids"          : PostAttributes.fileIds.rawValue,
             "files.backendLink" : "filenames"
             ])
         return mapping
@@ -123,12 +123,14 @@ extension PostMappingsContainer: RequestMapping {
             PostAttributes.channelId.rawValue  : "channel_id",
             PostAttributes.pendingId.rawValue  : "pending_post_id",
             PostAttributes.parentId.rawValue   : "parent_id",
-            PostAttributes.rootId.rawValue     : "root_id"
+            PostAttributes.rootId.rawValue     : "root_id"//,
+//            "fileIds"              : "file_ids",
             ])
         
-        mapping?.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "fileIds",
-            toKeyPath: "file_ids",
-            with: RealmStringMappingsContainer.commonMapping()))
+//        mapping?.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).files",
+//            toKeyPath: "file_ids",
+//            with: FileMappingsContainer.ezMapping()))
+        
         return mapping!
     }
 }
