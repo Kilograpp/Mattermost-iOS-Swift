@@ -959,6 +959,11 @@ extension Api: PostApi {
         
         self.manager.searchPostsWith(terms: terms, path: path, parameters: params, success: { (mappingResult) in
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+            
+            var missingIds = posts.filter({ $0.author == nil }).map({ $0.authorId })
+            print(missingIds)
+            
+            
             completion(posts, nil)
         }) { (error) in
             completion(nil, error)

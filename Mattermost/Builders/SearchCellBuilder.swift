@@ -36,6 +36,14 @@ extension SearchCellBuilder: Inteface {
         
         let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! FeedBaseTableViewCell
         cell.transform = self.tableView.transform
+        
+        
+        if post.renderedText == nil {
+            let attrStr = post.attributedMessage!
+            //            let dateStr = NSAttributedString
+            post.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+        }
+        
         cell.configureWithPost(post)
         (cell as! FeedSearchTableViewCell).configureSelectionWithText(text: searchingText)
         return cell
