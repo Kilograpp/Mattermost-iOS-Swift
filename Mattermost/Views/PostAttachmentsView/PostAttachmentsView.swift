@@ -77,9 +77,10 @@ extension PostAttachmentsView : Private {
         self.collectionView?.delegate = self
         self.collectionView?.dataSource = self
         
-        self.collectionView?.register(PostAttachmentsViewCell.self, forCellWithReuseIdentifier: PostAttachmentsViewCell.identifier)
-        self.collectionView?.register(PostFileViewCell.self, forCellWithReuseIdentifier: PostFileViewCell.identifier)
+        self.collectionView?.register(PostImageViewCell.self, forCellWithReuseIdentifier: "PostImageViewCellReuseIdentifier")
+        self.collectionView?.register(PostFileViewCell.self, forCellWithReuseIdentifier: "PostFileViewCellReuseIdentifier")
         
+        //snapkit
         self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         let left = NSLayoutConstraint(item: self.collectionView!, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
         let right = NSLayoutConstraint(item: self.collectionView!, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
@@ -89,6 +90,7 @@ extension PostAttachmentsView : Private {
     }
     
     fileprivate func setupConstraints() {
+        //snapkit
         self.translatesAutoresizingMaskIntoConstraints = false
         self.leftConstraint = NSLayoutConstraint(item: self, attribute: .left, relatedBy: .equal, toItem: self.anchorView, attribute: .left, multiplier: 1, constant: 0)
         self.rightConstraint = NSLayoutConstraint(item: self, attribute: .right, relatedBy: .equal, toItem: self.anchorView, attribute: .right, multiplier: 1, constant: 0)
@@ -103,6 +105,7 @@ extension PostAttachmentsView : Private {
         self.addSubview(topBarView)
         topBarView.backgroundColor = ColorBucket.lightGrayColor
         
+        //snapkit
         let left = NSLayoutConstraint(item: topBarView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
         let right = NSLayoutConstraint(item: topBarView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
         let height = NSLayoutConstraint(item: topBarView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 1)
@@ -114,7 +117,7 @@ extension PostAttachmentsView : Private {
 extension PostAttachmentsView : Public {
     func updateProgressValueAtIndex(_ index: Int, value: Float) {
         guard let cellAtIndex = self.collectionView?.cellForItem(at: IndexPath(item:index, section: 0)) else { return }
-        (cellAtIndex  as! PostAttachmentsViewCell).updateProgressViewWithValue(value)
+        (cellAtIndex  as! PostAttachmentsViewBaseCell).updateProgressViewWithValue(value)
     }
     
     func updateAppearance() {
@@ -145,7 +148,7 @@ extension PostAttachmentsView : Public {
     
     func removeActivityAt(index: Int) {
         guard let cellAtIndex = self.collectionView?.cellForItem(at: IndexPath(item:index, section: 0)) else { return }
-        (cellAtIndex  as! PostAttachmentsViewCell).viewWithTag(77)?.removeFromSuperview()
+        (cellAtIndex  as! PostAttachmentsViewBaseCell).viewWithTag(77)?.removeFromSuperview()
     }
 }
 
@@ -160,18 +163,13 @@ extension PostAttachmentsView : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //FIXME: builder!
-        let item = self.dataSource?.item(atIndex: indexPath.row)
-        var reuseIdentifier = PostAttachmentsViewCell.identifier
+        guard let item = self.dataSource?.item(atIndex: indexPath.row) else {return UICollectionViewCell()}
         
-        if item!.isFile {
-            reuseIdentifier = PostFileViewCell.identifier
-        }
+        let reuseIdentifier = item.isFile ? "PostFileViewCellReuseIdentifier" : "PostImageViewCellReuseIdentifier"
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        var convertedCell = cell as! PostAttachmentsViewCell
-        if item!.isFile {
-            convertedCell = cell as! PostFileViewCell
-        }
         
+        var convertedCell = cell as! PostAttachmentsViewBaseCell
         convertedCell.configureWithItem((self.dataSource?.item(atIndex: indexPath.row))!)
         convertedCell.removeTapHandler = {(imageItem) in
             self.delegate?.didRemove(item: imageItem)
@@ -193,6 +191,6 @@ extension PostAttachmentsView : UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return PostAttachmentsViewCell.itemSize
+        return PostAttachmentsViewBaseCell.itemSize
     }
 }
