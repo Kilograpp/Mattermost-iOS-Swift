@@ -812,22 +812,14 @@ extension Api: PostApi {
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
             RealmUtils.save(posts)
+            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
-            var missingUserIds = Array<String>()
-            for post in posts {
-                post.files.forEach({ RealmUtils.save($0) })
-                let authorId = post.authorId
-                if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
-                    missingUserIds.append(post.authorId!)
-                }
-            }
-            
-            self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-                if error != nil { print(error!) }
-            })
-            
-            self.loadFileInfosFor(posts: posts, completion: { (error) in
-                completion(isLastPage, nil)
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    completion(isLastPage, nil)
+                })
             })
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
@@ -954,13 +946,16 @@ extension Api: PostApi {
         let params = ["team_id" : Preferences.sharedInstance.currentTeamId!]
         
         self.manager.searchPostsWith(terms: terms, path: path, parameters: params, success: { (mappingResult) in
+            
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+            RealmUtils.save(posts)
+            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
-            var missingIds = posts.filter({ $0.author == nil }).map({ $0.authorId })
-            print(missingIds)
-            
-            
-            completion(posts, nil)
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                completion(posts, nil)
+            })
         }) { (error) in
             completion(nil, error)
         }
