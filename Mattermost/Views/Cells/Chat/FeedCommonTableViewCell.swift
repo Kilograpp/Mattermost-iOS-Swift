@@ -79,6 +79,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         
         guard !self.post.isFollowUp else { self.avatarImageView.image = nil; return }
         
+        self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }

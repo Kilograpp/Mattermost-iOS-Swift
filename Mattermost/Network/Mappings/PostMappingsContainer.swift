@@ -123,8 +123,8 @@ extension PostMappingsContainer: RequestMapping {
             PostAttributes.channelId.rawValue  : "channel_id",
             PostAttributes.pendingId.rawValue  : "pending_post_id",
             PostAttributes.parentId.rawValue   : "parent_id",
-            PostAttributes.rootId.rawValue     : "root_id"//,
-//            "fileIds"              : "file_ids",
+            PostAttributes.rootId.rawValue     : "root_id",
+            PostAttributes.fileIds.rawValue    : "file_ids",
             ])
         
 //        mapping?.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).files",

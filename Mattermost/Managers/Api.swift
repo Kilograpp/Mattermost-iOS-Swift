@@ -756,8 +756,12 @@ extension Api: UserApi {
             }
         }
         
+        guard missingUserIds.count > 0 else { completion(nil); return }
+        
         self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
             if error != nil { print(error!) }
+            
+            completion(error)
         })
     }
 }
@@ -773,8 +777,20 @@ extension Api: PostApi {
 
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
             RealmUtils.save(posts)
+            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
-            var missingUserIds = Array<String>()
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    completion(nil)
+                })
+                
+            })
+            
+            
+            
+     /*       var missingUserIds = Array<String>()
             for post in posts {
                 post.files.forEach({ RealmUtils.save($0) })
                 let authorId = post.authorId
@@ -789,7 +805,7 @@ extension Api: PostApi {
                 self.loadFileInfosFor(posts: posts, completion: { (error) in
                     completion(nil)
                 })
-             })
+             })*/
         }) { (error) in
             if let error = error {
                 if (error.code == -1011) {

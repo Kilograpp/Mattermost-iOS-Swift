@@ -75,7 +75,7 @@ enum PostRelationships: String {
 }
 
 
-class RealmString: Object {
+/*class RealmString: Object {
     dynamic var string = ""
     
     static func initWith(string: String) -> RealmString {
@@ -84,7 +84,7 @@ class RealmString: Object {
         
         return realmString
     }
-}
+}*/
 
 final class Post: RealmObject {
     fileprivate dynamic var _attributedMessageData: RealmAttributedString?
@@ -102,8 +102,8 @@ final class Post: RealmObject {
     dynamic var deletedAt: Date?
     dynamic var status: PostStatus = .default
     dynamic var localIdentifier: String?
-    var fileIds: List<RealmString>? = nil
-    //dynamic var fileIds: Data?
+    //var fileIds: List<RealmString>? = nil
+    dynamic var fileIds: Data?
     //dynamic var hashtags like this "#ijf #wtf"
 
     dynamic var identifier: String? {
@@ -145,12 +145,12 @@ final class Post: RealmObject {
     
     var renderedText: AttributedTextLayoutData?
     
-    var fileIdsTest : [String] {
+/*    var fileIdsTest : [String] {
         get {
             guard let ids = fileIds else {return []}
             return ids.map({$0.string})
         }
-    }
+    }*/
     
 
     deinit {
