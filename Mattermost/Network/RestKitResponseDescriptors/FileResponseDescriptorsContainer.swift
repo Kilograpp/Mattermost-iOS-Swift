@@ -32,7 +32,7 @@ extension FileResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: FileMappingsContainer.getFileInfosMapping(),
                                     method: .GET,
                                     pathPattern: FilePathPatternsContainer.getFileInfosPathPattern(),
-                                    keyPath: "file_infos",
+                                    keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
 }

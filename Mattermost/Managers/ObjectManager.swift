@@ -41,10 +41,10 @@ extension ObjectManager: GetRequests {
         
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
             let eTag = operation?.httpRequestOperation.response.allHeaderFields["Etag"] as? String
-//            print(operation?.httpRequestOperation.responseString ?? "")
+            print(operation?.httpRequestOperation.responseString ?? "")
             success?(mappingResult!, eTag == cachedETag)
         }) { (operation, error) in
-//            print(operation?.httpRequestOperation.responseString ?? "")
+            print(operation?.httpRequestOperation.responseString ?? "")
             failure?(self.handleOperation(operation!, withError: error!))
         }
     }

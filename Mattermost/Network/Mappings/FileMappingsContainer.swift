@@ -55,10 +55,10 @@ extension FileMappingsContainer: ResponseMappings {
          return mapping
     }
     
-    static func ezMapping() -> RKObjectMapping {
+ /*   static func ezMapping() -> RKObjectMapping {
         let mp = super.emptyMapping()
         mp.addPropertyMapping(RKAttributeMapping(fromKeyPath: "identifier", toKeyPath: nil))
         
         return mp
-    }
+    }*/
 }

@@ -83,22 +83,8 @@ extension MappingUtils: PostMethods {
             $0.setSystemAuthorIfNeeded()
             $0.computeMissingFields()
             
-            if (previousPost != nil) {
-                let postsInterval = ($0.createdAt as NSDate?)?.minutesLaterThan(previousPost?.createdAt)
-                $0.isFollowUp = ($0.authorId == previousPost?.authorId) && (postsInterval! < Constants.Post.FollowUpDelay)
-            }
-            
             let existingPost = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", $0.identifier!).first
             if existingPost != nil { $0.localIdentifier = existingPost!.localIdentifier! }
-
-       /*     if $0.fileIds != nil {
-                for fileId in $0.fileIds! {
-                    let file = File()
-                    file.identifier = (fileId as RealmString).string
-                    $0.files.append(file);
-                }
-            }*/
-
 
             if $0.fileIds != nil {
                 let fileIds: [String] = (NSKeyedUnarchiver.unarchiveObject(with: $0.fileIds!) as? [String])!
@@ -109,6 +95,7 @@ extension MappingUtils: PostMethods {
                 }
             }
             
+            $0.isFollowUp = FeedCellBuilder.isFollowUp($0, previous: previousPost)
             $0.cellType = FeedCellBuilder.typeForPost($0, previous: previousPost)
             previousPost = $0
         }

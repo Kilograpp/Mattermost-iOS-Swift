@@ -785,27 +785,7 @@ extension Api: PostApi {
                 self.loadFileInfosFor(posts: posts, completion: { (error) in
                     completion(nil)
                 })
-                
             })
-            
-            
-            
-     /*       var missingUserIds = Array<String>()
-            for post in posts {
-                post.files.forEach({ RealmUtils.save($0) })
-                let authorId = post.authorId
-                if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
-                    missingUserIds.append(post.authorId!)
-                }
-            }
-            
-            self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-                if error != nil { print(error!) }
-                
-                self.loadFileInfosFor(posts: posts, completion: { (error) in
-                    completion(nil)
-                })
-             })*/
         }) { (error) in
             if let error = error {
                 if (error.code == -1011) {
