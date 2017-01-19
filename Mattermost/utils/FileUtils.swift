@@ -51,9 +51,15 @@ final class FileUtils {
     }*/
 
     static func localLinkFor(file: File) -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        /*  let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let fileName = "/" + (file.downloadURL()?.lastPathComponent)!
-        return paths[0].appending(fileName)
+        return paths[0].appending(fileName)*/
+        
+       // let fileId = notification.userInfo?["fileId"]
+       // let file = RealmUtils.realmForCurrentThread().object(ofType: File.self, forPrimaryKey: fileId)
+        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file.name)!
+        
+        return filePath
     }
     
     fileprivate static func linkWithoutExtension(_ link: String?) -> String? {

@@ -100,6 +100,7 @@ extension AttachmentImageCell: Setup {
     func initialSetup() {
         setupImageView()
         setupLabel()
+        setupGestureRecognizers()
     }
     
     fileprivate func setupImageView() {
@@ -115,6 +116,12 @@ extension AttachmentImageCell: Setup {
         fileNameLabel.textColor = ColorBucket.blueColor
         fileNameLabel.numberOfLines = 1
         self.addSubview(fileNameLabel)
+    }
+    
+    fileprivate func setupGestureRecognizers() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        self.isUserInteractionEnabled = true
+        self.addGestureRecognizer(tapGestureRecognizer)
     }
 }
 
@@ -182,10 +189,10 @@ extension AttachmentImageCell: Updating {
 //MARK: Action
 extension AttachmentImageCell: Action {
     @objc fileprivate func tapAction() {
-    /*    let postLocalId = self.file.post?.localIdentifier
+        let postLocalId = self.file.post?.localIdentifier
         let fileId = self.file.identifier
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.FileImageDidTapNotification),
-                                        object: nil, userInfo: ["postLocalId" : postLocalId, "fileId" : fileId])
-        NotificationCenter.default.post(notification as Notification)*/
+                                        object: nil, userInfo: ["postLocalId" : postLocalId!, "fileId" : fileId!])
+        NotificationCenter.default.post(notification as Notification)
     }
 }

@@ -230,7 +230,7 @@ extension AttachmentFileView: Downloading {
     fileprivate func openDownloadedFile() {
         let fileId = self.file.identifier
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
-                                          object: nil, userInfo: ["fileId" : fileId])
+                                          object: nil, userInfo: ["fileId" : fileId!])
         NotificationCenter.default.post(notification as Notification)
     }
     
