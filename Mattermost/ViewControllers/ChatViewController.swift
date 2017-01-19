@@ -63,8 +63,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.isNavigationBarHidden = false
-        setupInputViewButtons()
+//        self.navigationController?.isNavigationBarHidden = false
+//        setupInputViewButtons()
         addSLKKeyboardObservers()
         replaceStatusBar()
         
@@ -74,7 +74,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         
         self.textView.resignFirstResponder()
         addBaseObservers()
-        self.tableView.reloadData()
+//        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -210,6 +210,7 @@ extension ChatViewController: Setup {
         self.textView.layer.borderWidth = 0;
         self.textInputbar.textView.font = FontBucket.inputTextViewFont;
     }
+    
     
     fileprivate func setupInputViewButtons() {
         let width = UIScreen.screenWidth() / 3
@@ -882,11 +883,18 @@ extension ChatViewController: ChannelObserverDelegate {
         //new channel
         guard identifier != nil else { return }
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
-        self.title = self.channel?.displayName
+//        self.title = self.channel?.displayName
         
         if (self.navigationItem.titleView != nil) {
-            (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
+            //refactor
+            if self.navigationItem.titleView is UILabel {
+                (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
+            } else {
+                (self.navigationItem.titleView as! ChatNavigationBarTitleView).titleLabel?.text = self.channel?.displayName
+            }
         }
+        
+        
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         self.textView.resignFirstResponder()
         

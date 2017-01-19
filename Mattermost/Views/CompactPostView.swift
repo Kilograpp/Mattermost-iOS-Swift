@@ -59,6 +59,7 @@ class CompactPostView: UIView {
         self.contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
         self.contentView.layer.shadowOpacity = 0.15
         self.contentView.layer.shadowPath = shadowPath.cgPath
+        self.contentView.isOpaque = true
     }
 }
 
