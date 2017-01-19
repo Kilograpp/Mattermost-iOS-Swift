@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import QuartzCore
 
 let BaseHeight = CGFloat(64)
 let ContentHeight = CGFloat(48)
@@ -18,24 +19,16 @@ struct ActionType {
     static let CompleteReply = "completeReply"
 }
 
-private protocol Setup {
-    func initialSetup()
-    func setupBackground()
-    func setupContentView()
-    func setupSeparatorView()
-    func setupAvatarImageView()
-    func setupNameLabel()
-    func setupTypeLabel()
-    func setupMessageLabel()
+private protocol Interface: class {
+    func configureWithCompletePost(_ post: Post)
+    func configureWithPost(_ post: Post, action: String)
+    func requeredSize() -> CGSize
 }
 
-private protocol Action {
-    func cancelAction()
-}
 
 class CompactPostView: UIView {
 
-//Properties
+//MARK: Properties
     fileprivate let contentView: UIView = UIView()
     fileprivate let separatorView: UIView = UIView()
     fileprivate let avatarImageView: UIImageView = UIImageView()
@@ -48,6 +41,7 @@ class CompactPostView: UIView {
     
     var actionType: String = ""
     
+//MARK: LifeCycle
     class func compactPostView(_ type: String) -> CompactPostView {
         let compactPostView = CompactPostView()
         compactPostView.actionType = type
@@ -56,6 +50,21 @@ class CompactPostView: UIView {
         return compactPostView
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let shadowPath = UIBezierPath(rect: self.contentView.bounds)
+        self.contentView.layer.masksToBounds = false
+        self.contentView.layer.shadowColor = ColorBucket.parentShadowColor.cgColor
+        self.contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
+        self.contentView.layer.shadowOpacity = 0.15
+        self.contentView.layer.shadowPath = shadowPath.cgPath
+    }
+}
+
+
+//MARK: Interface
+extension CompactPostView: Interface {
     func configureWithCompletePost(_ post: Post) {
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         ImageDownloader.downloadFeedAvatarForUser(post.author) { [weak self] (image, error) in
@@ -80,8 +89,23 @@ class CompactPostView: UIView {
 }
 
 
-//MARK: Setup
+fileprivate protocol Setup {
+    func initialSetup()
+    func setupBackground()
+    func setupContentView()
+    func setupSeparatorView()
+    func setupAvatarImageView()
+    func setupNameLabel()
+    func setupTypeLabel()
+    func setupMessageLabel()
+}
 
+fileprivate protocol Action {
+    func cancelAction()
+}
+
+
+//MARK: Setup
 extension CompactPostView: Setup {
     func initialSetup() {
         setupBackground()
@@ -103,12 +127,11 @@ extension CompactPostView: Setup {
     
     func setupContentView() {
         self.contentView.backgroundColor = (self.actionType == ActionType.CompleteReply) ? ColorBucket.parentBackgroundColor : UIColor.white
-        self.contentView.layer.shadowColor = ColorBucket.parentShadowColor.cgColor
-        self.contentView.layer.shadowOpacity = 0.15
-        self.contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
+        
         self.contentView.layer.cornerRadius = 3.0
         let width = self.requeredSize().width - Constants.UI.StandardPaddingSize
         self.contentView.frame = CGRect(x: Constants.UI.MiddlePaddingSize, y: Constants.UI.LongPaddingSize, width: width, height: ContentHeight)
+        
         self.addSubview(self.contentView)
     }
     
@@ -167,7 +190,6 @@ extension CompactPostView: Setup {
 
 
 //MARK: Action
-
 extension CompactPostView: Action {
     func cancelAction() {
         self.cancelHandler!()
