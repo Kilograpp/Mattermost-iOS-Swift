@@ -138,8 +138,8 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
     override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         
-        guard self.post.author != nil else { return }
-        configureAvatarImage()
+        if self.post.author != nil { configureAvatarImage() }
+        if self.post.parentPost() != nil { configureParentView() }
     }
     
     override class func heightWithPost(_ post: Post) -> CGFloat {
