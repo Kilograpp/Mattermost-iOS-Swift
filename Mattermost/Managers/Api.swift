@@ -257,7 +257,7 @@ extension Api: TeamApi {
                 let user = realm.object(ofType: User.self, forPrimaryKey: teamMember.userId)
                 try! realm.write {
                     user?.isOnTeam = true
-                    user?.directChannel().isInterlocuterOnTeam = true
+                    user?.directChannel()?.isInterlocuterOnTeam = true
                 }
             }
             completion(nil)

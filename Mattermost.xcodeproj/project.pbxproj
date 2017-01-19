@@ -232,6 +232,7 @@
 		D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */; };
 		D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */; };
 		D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */; };
+		D6D7B9BB1E30E39A00F98967 /* AttachedFileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D6E165871D47C1200014C831 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* Reusable.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
@@ -540,6 +541,7 @@
 		D6C0B4701D5E0A26006C506A /* RKObjectManager+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RKObjectManager+Additions.h"; sourceTree = "<group>"; };
 		D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RKObjectManager+Additions.m"; sourceTree = "<group>"; };
 		D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserStatusObserver.swift; path = Observers/UserStatusObserver.swift; sourceTree = "<group>"; };
+		D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachedFileCache.swift; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D6E165861D47C1200014C831 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -1251,6 +1253,7 @@
 				A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */,
 				864AF5BF1E0124000010F083 /* ChannelCreateField.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
+				D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1619,6 +1622,7 @@
 				8B3CB3401DD2675F0078DE25 /* MoreCellBuilder.swift in Sources */,
 				D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */,
 				864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */,
+				D6D7B9BB1E30E39A00F98967 /* AttachedFileCache.swift in Sources */,
 				4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				8B77B5EA1DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift in Sources */,

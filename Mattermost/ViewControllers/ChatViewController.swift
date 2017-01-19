@@ -27,7 +27,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     internal let attachmentsView = PostAttachmentsView()
     fileprivate var startHeadDialogueLabel = EmptyDialogueLabel()
     fileprivate var startTextDialogueLabel = EmptyDialogueLabel()
-    fileprivate let startButton = UIButton.init()
+    fileprivate let startButton = UIButton()
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
     var scrollButton: UIButton?
@@ -491,7 +491,7 @@ extension ChatViewController: Navigation {
         /*Api.sharedInstance.loadChannels(with: { (error) in
             guard (error == nil) else { return }
         })*/
-        let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
+        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         (profile as! ProfileViewController).configureFor(user: user)
         let navigation = self.menuContainerViewController.centerViewController
@@ -871,6 +871,7 @@ extension ChatViewController: ChannelObserverDelegate {
         self.startHeadDialogueLabel.isHidden = true
         self.startButton.isHidden = true
         
+        
         if self.channel != nil {
             //remove action observer from old channel after relogin
             removeActionsObservers()
@@ -903,8 +904,8 @@ extension ChatViewController: ChannelObserverDelegate {
         }
         
         //NEEDREFACTORING
-        startHeadDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 0)
-        startTextDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 1)
+        startHeadDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 0)
+        startTextDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 1)
         
         self.startTextDialogueLabel.removeFromSuperview()
         self.startHeadDialogueLabel.removeFromSuperview()
@@ -938,6 +939,13 @@ extension ChatViewController: ChannelObserverDelegate {
         //ENDREFACTORING
         
         addChannelObservers()
+        
+        guard let _ = filesAttachmentsModule else {return}
+        if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
+            self.filesAttachmentsModule.presentWithCachedItems()
+        } else {
+            self.filesAttachmentsModule.hideAttachmentsView()
+        }
     }
     
     func startButtonAction(sender: UIButton!) {
