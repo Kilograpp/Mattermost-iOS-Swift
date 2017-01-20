@@ -34,6 +34,7 @@ private protocol PublicChannelTableViewCellSetup {
     func setupContentView()
     func setupTitleLabel()
     func setupHighlightView()
+    func setupBadgeLabel()
     func highlightViewBackgroundColor() -> UIColor
 }
 
@@ -61,11 +62,11 @@ extension PublicChannelTableViewCell: PublicChannelTableViewCellSetup {
         setupContentView()
         setupTitleLabel()
         setupHighlightView()
+        setupBadgeLabel()
     }
     
     func setupContentView() {
         self.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        self.badgeLabel.isHidden = true
     }
     
     func setupTitleLabel() {
@@ -75,6 +76,10 @@ extension PublicChannelTableViewCell: PublicChannelTableViewCellSetup {
     
     func setupHighlightView() {
         self.highlightView.layer.cornerRadius = 3;
+    }
+    
+    func setupBadgeLabel() {
+        badgeLabel.layer.cornerRadius = 10;
     }
     
     func highlightViewBackgroundColor() -> UIColor {
@@ -91,6 +96,9 @@ extension PublicChannelTableViewCell: LeftMenuTableViewCellProtocol {
         self.titleLabel.text = channel.displayName!
         self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
         self.titleLabel.font = (channel.hasNewMessages()) ? FontBucket.highlighTedTitleFont : FontBucket.normalTitleFont
+        badgeLabel.isHidden = (channel.mentionsCount==0)
+        badgeLabel.text = String(channel.mentionsCount)
+        badgeLabel.font = FontBucket.normalTitleFont
         if selected {
             self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.blackColor : ColorBucket.sideMenuSelectedTextColor
         } else {
@@ -103,8 +111,6 @@ extension PublicChannelTableViewCell: LeftMenuTableViewCellProtocol {
                                                selector: #selector(configureStatusViewWithNotification(_:)),
                                                name: (self.channel?.displayName).map { NSNotification.Name(rawValue: $0) } ,
                                                object: nil)
-        
-        
     }
     
     func reloadCell() {

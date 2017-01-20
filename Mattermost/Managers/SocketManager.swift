@@ -176,9 +176,12 @@ extension SocketManager: Notifications {
                 if post.channel != nil {
                     post.channel.lastPostDate = post.createdAt
                 }
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
-            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+            Api.sharedInstance.getChannelMembers(completion: { error in
+                guard error == nil else { return }
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+            })
         }
     }
     

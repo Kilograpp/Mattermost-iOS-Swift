@@ -276,6 +276,7 @@ extension MoreChannelsViewController: Request {
         Api.sharedInstance.leaveChannel(channel) { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
+            let nameOfDeletedChannel = channel.displayName!
             let realm = RealmUtils.realmForCurrentThread()
             try! realm.write {
                 realm.delete(channel)
@@ -285,7 +286,7 @@ extension MoreChannelsViewController: Request {
             self.deletedChannelCount += 1
             if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
                 if self.alreadyUpdatedChannelCount == 1 {
-                    self.singleChannelMessage(name: channel.displayName!)
+                    self.singleChannelMessage(name: nameOfDeletedChannel)
                 } else {
                     self.multipleChannelsMessage()
                 }

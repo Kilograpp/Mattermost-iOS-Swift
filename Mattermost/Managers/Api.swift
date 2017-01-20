@@ -47,6 +47,7 @@ private protocol ChannelApi: class {
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func getChannel(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func getChannelMembers(completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol UserApi: class {
@@ -63,6 +64,7 @@ private protocol UserApi: class {
     func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
     func loadUsersFromCurrentTeam(completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
+    func autocompleteUsersIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ usersInChannel: Array<User>?, _ usersOutOfChannel:  Array<User>?) -> Void)
     func loadMissingAuthorsFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
@@ -277,7 +279,11 @@ extension Api: ChannelApi {
             let realm = RealmUtils.realmForCurrentThread()
 
             let channels = mappingResult.array() as! [Channel]//MappingUtils.fetchAllChannelsFromList(mappingResult)
+            let oldChannels = try! Realm().objects(Channel.self)
             try! realm.write({
+                oldChannels.forEach {
+                    $0.currentUserInChannel = false
+                }
                 channels.forEach {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
@@ -321,7 +327,8 @@ extension Api: ChannelApi {
         
         self.manager.post(path: path, success: { (mappingResult) in
             try! RealmUtils.realmForCurrentThread().write({
-                channel.lastViewDate = Date()
+                channel.lastViewDate = channel.lastPostDate
+                channel.mentionsCount = 0
             })
             completion(nil)
             }, failure: completion)
@@ -510,6 +517,28 @@ extension Api: ChannelApi {
             completion(nil)
         }, failure: completion)
     }
+    
+    func getChannelMembers(completion: @escaping (Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.getChannelMembersPathPattern(), DataManager.sharedInstance.currentTeam)
+        self.manager.getObjectsAt(path: path!, success: {  (operation, mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let data = operation.httpRequestOperation.responseData
+            let responseArray = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! Array<Dictionary<String, Any>>
+            
+            try! realm.write({
+                responseArray.forEach {
+                    let newMentionsCount = ($0["mention_count"]! as! NSNumber).intValue
+                    let newLastPostDate = Date(timeIntervalSince1970: $0["last_update_at"]! as! TimeInterval)
+                    let newLastViewDate = Date(timeIntervalSince1970: $0["last_viewed_at"]! as! TimeInterval)
+                    let updateChannel = try! Realm().objects(Channel.self).filter("identifier = %@", $0["channel_id"]).first!
+                    updateChannel.mentionsCount = newMentionsCount
+                    updateChannel.lastPostDate = newLastPostDate
+                    updateChannel.lastViewDate = newLastViewDate
+                }
+            })
+            completion(nil)
+        }, failure: completion)
+    }
 }
 
 
@@ -625,17 +654,11 @@ extension Api: UserApi {
             var users = Array<User>()
             let ids = Array(responseDictionary!.keys.map{$0})
             let realm = RealmUtils.realmForCurrentThread()
-            //try! realm.write {
-                for userId in ids {
-                    let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
-                    //if !channel.members.contains(user) {
-                        //realm.add(user, update: true)
-                        users.append(user)
-                    //}
-                }
-            //}
+            for userId in ids {
+                let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
+                users.append(user)
+            }
             completion(nil, users)
-            
         }, failure:{ error in
                 completion(error, nil)
         })
@@ -661,6 +684,29 @@ extension Api: UserApi {
         })
     }
     
+    func autocompleteUsersIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ usersInChannel: Array<User>?, _ usersOutOfChannel:  Array<User>?) -> Void) {
+        let path = SOCStringFromStringWithObject(UserPathPatternsContainer.autocompleteUsersInChannelPathPattern(), channel)!
+        self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
+            print(operation.httpRequestOperation.responseString)
+            //Temp cap
+            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+            let inChannelDictionary = responseDictionary?["in_channel"] as! Array<Dictionary<String, Any>>
+            let outOfChannelDictionary = responseDictionary?["out_of_channel"] as! Array<Dictionary<String, Any>>
+            var usersInChannel = Array<User>()
+            var usersOutOfChannel = Array<User>()
+            for userDescription in inChannelDictionary {
+                let user = UserUtils.userFrom(dictionary: userDescription)
+                usersInChannel.append(user)
+            }
+            for userDescription in outOfChannelDictionary {
+                let user = UserUtils.userFrom(dictionary: userDescription)
+                usersOutOfChannel.append(user)
+            }
+            completion(nil, usersInChannel, usersOutOfChannel)
+        }, failure:{ error in
+            completion(error, nil, nil)
+        })
+    }
     func update(firstName: String? = nil,
                 lastName: String? = nil,
                 userName: String? = nil,

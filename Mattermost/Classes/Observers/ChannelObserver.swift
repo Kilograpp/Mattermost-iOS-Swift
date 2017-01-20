@@ -27,9 +27,8 @@ class ChannelObserver {
     @nonobjc static let sharedObserver = ChannelObserver.sharedInstanse();
     
     //MARK: - Private
-    
     fileprivate func handleSelectedChannel() {
-        self.delegate?.didSelectChannelWithIdentifier(self.selectedChannel?.identifier)
+        self.delegate?.didSelectChannelWithIdentifier(self.selectedChannel?.identifier)        
     }
 }
 

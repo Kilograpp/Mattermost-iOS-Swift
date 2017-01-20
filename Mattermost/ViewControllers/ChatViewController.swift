@@ -43,21 +43,54 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var selectedPost: Post! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     var emojiResult: [String]?
-    var membersResult: Array<User> = []
+    
+    //var membersResult: Array<User> = [] //USELESS FIELD COUSE 3.6
+    var usersInChannelResult: Array<User> = []
+    var usersOutOfChannelResult: Array<User> = []
     var commandsResult: [String] = []
-    var usersInTeam: Array<User> = []
+    //var usersInTeam: Array<User> = [] //USELESS FIELD COUSE 3.6
+    var usersInChannel: Array<User> = []
+    var usersOutOfChannel: Array<User> = []
+    var autoCompletionSectionIndexes = [0, 1, 2]
+    var numberOfSection = 3
     
     var hasNextPage: Bool = true
     var postFromSearch: Post! = nil
     var isLoadingInProgress: Bool = false
-    
+    var isNeededAutocompletionRequest: Bool = false
     
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         ChannelObserver.sharedObserver.delegate = self
-        initialSetup()
+        Api.sharedInstance.loadTeams(with: { (_ userShouldSelectTeam, error) in
+            guard (error == nil) else { self.hideLoaderView(); return }
+            Api.sharedInstance.loadChannels { (error) in
+                guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                let preferences = Preference.preferedUsersList()
+                var usersIds = Array<String>()
+                preferences.forEach{ usersIds.append($0.name!) }
+                
+                Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
+                    guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                    let predicate = NSPredicate(format: "identifier != %@ AND identifier != %@", Preferences.sharedInstance.currentUserId!,
+                                                Constants.Realm.SystemUserIdentifier)
+                    let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate)
+                    var ids = Array<String>()
+                    users.forEach{ ids.append($0.identifier) }
+                    
+                    Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
+                        guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                        Api.sharedInstance.getChannelMembers() { (error) in
+                            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                            self.initialSetup()
+                        }
+                    }
+                }
+            }
+        })
+        self.initialSetup()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -118,7 +151,7 @@ fileprivate protocol Setup {
     func setupTopActivityIndicator()
     func setupCompactPost()
     func setupModules()
-    func loadUsersFromTeam()
+    //func loadUsersFromTeam()
 }
 
 fileprivate protocol Private {
@@ -170,7 +203,7 @@ extension ChatViewController: Setup {
         setupTopActivityIndicator()
         setupLongCellSelection()
         setupCompactPost()
-        loadUsersFromTeam()
+        //loadUsersFromTeam()
         setupModules()
     }
     
@@ -179,12 +212,12 @@ extension ChatViewController: Setup {
         self.filesPickingController = FilesPickingController(dataSource: self)
     }
     
-    func loadUsersFromTeam() {
+    /*func loadUsersFromTeam() {
         Api.sharedInstance.loadUsersFromCurrentTeam(completion: { (error, usersArray) in
             guard error == nil else { return }
             self.usersInTeam = usersArray!
         })
-    }
+    }*/
     
     fileprivate func setupTableView() {
         self.tableView.separatorStyle = .none
@@ -488,9 +521,6 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToProfileFor(user: User) {
-        /*Api.sharedInstance.loadChannels(with: { (error) in
-            guard (error == nil) else { return }
-        })*/
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         (profile as! ProfileViewController).configureFor(user: user)
@@ -545,9 +575,12 @@ extension ChatViewController: Request {
             self.hasNextPage = true
             self.dismissKeyboard(true)
             self.tableView.reloadData()
+        
             
             
-            Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in })
+            Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+            })
         })
     }
     
@@ -733,9 +766,11 @@ extension ChatViewController: NotificationObserver {
 
 //MARK: UITableViewDataSource
 extension ChatViewController {
+    
+    //NewAutocomplite
     override func numberOfSections(in tableView: UITableView) -> Int {
         guard self.resultsObserver != nil else { return 0 }
-        guard tableView == self.tableView else { return 1 }
+        guard tableView == self.tableView else { return numberOfSection }
         
         let isntDialogEmpty = (self.resultsObserver.numberOfSections() > 0)
         self.startTextDialogueLabel.isHidden = isntDialogEmpty
@@ -745,14 +780,28 @@ extension ChatViewController {
         return self.resultsObserver?.numberOfSections() ?? 1
     }
     
+    //NewAutocomplite
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard tableView == self.tableView else {
-            return (self.emojiResult != nil) ? (self.emojiResult?.count)! : self.membersResult.count + commandsResult.count
+            guard self.emojiResult == nil else {
+                return  (self.emojiResult?.count)!
+            }
+            switch section {
+            case autoCompletionSectionIndexes[0]:
+                return commandsResult.count
+            case autoCompletionSectionIndexes[1]:
+                return usersInChannelResult.count
+            case autoCompletionSectionIndexes[2]:
+                return usersOutOfChannelResult.count
+            default:
+                break
+            }
+            return 0
         }
-        
         return self.resultsObserver?.numberOfRows(section) ?? 0
     }
     
+    //NewAutocomplite
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (tableView == self.tableView) {
             let post = resultsObserver?.postForIndexPath(indexPath)
@@ -776,6 +825,21 @@ extension ChatViewController {
         } else {
             return (emojiResult != nil) ? autoCompletionEmojiCellForRowAtIndexPath(indexPath) : autoCompletionMembersCellForRowAtIndexPath(indexPath)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard tableView != self.tableView else { return nil }
+        switch section {
+        case autoCompletionSectionIndexes[0]:
+            return "Special Mentions"
+        case autoCompletionSectionIndexes[1]:
+            return "Channel Members"
+        case autoCompletionSectionIndexes[2]:
+            return "Not in Channel"
+        default:
+            break
+        }
+        return nil
     }
 }
 
@@ -803,6 +867,7 @@ extension ChatViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if (tableView == self.autoCompletionView) {return 25}
         return CGFloat.leastNormalMagnitude
     }
     
@@ -1019,6 +1084,18 @@ extension ChatViewController {
     
     override func textViewDidChange(_ textView: UITextView) {
         SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
+    }
+    override func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard Api.sharedInstance.isNetworkReachable() else {
+            isNeededAutocompletionRequest = false
+            return true
+        }
+        guard !textView.text.contains("@") && text=="@" else {
+            isNeededAutocompletionRequest = false
+            return true
+        }
+        isNeededAutocompletionRequest = true
+        return true
     }
 }
 

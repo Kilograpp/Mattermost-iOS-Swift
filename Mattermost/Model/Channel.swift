@@ -24,6 +24,7 @@ enum ChannelAttributes: String {
     case messagesCount   = "messagesCount"
     case extraUpdateDate = "extraUpdateDate"
     case creatorId       = "creatorId"
+    case mentionsCount   = "mentionsCount"
     
     case lastViewDate    = "lastViewDate"
 }
@@ -79,7 +80,7 @@ final class Channel: RealmObject {
     dynamic var messagesCount: String?
     dynamic var extraUpdateDate: Date?
     dynamic var creatorId: String?
-    
+    dynamic var mentionsCount: Int = 0
     
     dynamic var lastViewDate: Date?
     
