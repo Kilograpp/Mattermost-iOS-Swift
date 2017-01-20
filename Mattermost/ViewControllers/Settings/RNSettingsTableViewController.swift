@@ -63,14 +63,10 @@ extension RNSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
-        setupSwipeRight()
     }
     
     func setupNavigationBar() {
         self.title = "Reply notifications"
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
         
         self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
         self.saveButton.isEnabled = false
@@ -79,12 +75,6 @@ extension RNSettingsTableViewController: Setup {
     
     func setupForCurrentNotifyProps() {
         self.selectedReplyOption = Constants.NotifyProps.Reply.Trigger.index { return $0.state == (self.notifyProps?.comments)! }!
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 

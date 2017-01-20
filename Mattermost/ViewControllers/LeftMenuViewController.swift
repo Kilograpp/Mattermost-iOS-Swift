@@ -227,12 +227,6 @@ extension LeftMenuViewController : Navigation {
         let center = (self.menuContainerViewController!.centerViewController as AnyObject)
         guard !(center.topViewController??.isKind(of: CreateChannelViewController.self))! else { return }
         
-        let backItem = UIBarButtonItem()
-        backItem.title = ""
-        ((center as! UINavigationController).viewControllers.last! as! ChatViewController).navigationItem.backBarButtonItem = backItem
-        ((center as! UINavigationController).viewControllers.last! as! ChatViewController).navigationController?.navigationBar.backIndicatorImage = UIImage(named: "navbar_back_icon")
-        ((center as! UINavigationController).viewControllers.last! as! ChatViewController).navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navbar_back_icon")
-        
         let moreStoryboard = UIStoryboard(name:  "More", bundle: Bundle.main)
         let createChannel = moreStoryboard.instantiateViewController(withIdentifier: "CreateChannelViewController") as! CreateChannelViewController
         createChannel.configure(privateType: privateType)

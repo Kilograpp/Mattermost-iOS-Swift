@@ -11,6 +11,7 @@ import Foundation
 fileprivate protocol Interface {
     func upload(attachments: [AssignedAttachmentViewItem])
     func reset()
+    func presentWithCachedItems()
 }
 
 protocol AttachmentsModuleDelegate: class {
@@ -27,6 +28,8 @@ protocol AttachmentsModuleDataSource {
 final class AttachmentsModule {
     let delegate: AttachmentsModuleDelegate
     let dataSource: AttachmentsModuleDataSource
+    var isPresented: Bool = false
+    let cache = AttachedFileCache()
     fileprivate let viewController: UIViewController
 
     fileprivate var items: [AssignedAttachmentViewItem] = []
@@ -57,10 +60,18 @@ fileprivate protocol UserInteraction {
 }
 
 extension AttachmentsModule: Interface {
+    func presentWithCachedItems() {
+        let channel = self.dataSource.channel(attachmentsModule: self)
+        self.items = cache.cachedFilesForChannel(channel)!
+        
+        self.showAttachmentsView()
+    }
     
     func reset() {
         self.items.removeAll()
         self.hideAttachmentsView()
+        let channel = self.dataSource.channel(attachmentsModule: self)
+        self.cache.clearFilesForChannel(channel)
     }
     
     func upload(attachments: [AssignedAttachmentViewItem]) {
@@ -69,7 +80,9 @@ extension AttachmentsModule: Interface {
 
         items.append(contentsOf: attachments)
         
-        PostUtils.sharedInstance.upload(items: attachments, channel: self.dataSource.channel(attachmentsModule: self), completion: { (finished, error, item) in
+        let channel = self.dataSource.channel(attachmentsModule: self)
+        cache.cacheFilesForChannel(items: attachments, channel: channel)
+        PostUtils.sharedInstance.upload(items: attachments, channel: channel, completion: { (finished, error, item) in
             defer {
                 let index = self.items.index(of: item)
                 if index != nil { self.dataSource.postAttachmentsView(attachmentsModule: self).removeActivityAt(index: index!) }
@@ -121,6 +134,7 @@ extension AttachmentsModule: PostAttachmentViewDelegate {
 
 extension AttachmentsModule: AttachmentsViewControls {
     func showAttachmentsView() {
+        isPresented = true
         self.dataSource.postAttachmentsView(attachmentsModule: self).showAnimated()
         var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
         oldInset.top = PostAttachmentsView.attachmentsViewHeight
@@ -129,6 +143,7 @@ extension AttachmentsModule: AttachmentsViewControls {
     }
     
     func hideAttachmentsView() {
+        isPresented = false
         self.dataSource.postAttachmentsView(attachmentsModule: self).hideAnimated()
         var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
         oldInset.top = 0

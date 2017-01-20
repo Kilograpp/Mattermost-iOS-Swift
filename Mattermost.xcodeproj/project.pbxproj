@@ -225,12 +225,14 @@
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
 		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
 		D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */; };
+		D69A1F181E29520F00AB6334 /* CTLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69A1F171E29520F00AB6334 /* CTLabel.swift */; };
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
 		D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */; };
 		D6C0B46B1D5DB0AA006C506A /* LeftMenuSectionFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */; };
 		D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */; };
 		D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */; };
 		D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */; };
+		D6D7B9BB1E30E39A00F98967 /* AttachedFileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D6E165871D47C1200014C831 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* Reusable.swift */; };
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
@@ -531,6 +533,7 @@
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
 		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
 		D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsViewCell.swift; path = PostAttachmentsViewCell/PostAttachmentsViewCell.swift; sourceTree = "<group>"; };
+		D69A1F171E29520F00AB6334 /* CTLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTLabel.swift; sourceTree = "<group>"; };
 		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
 		D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsView.swift; path = PostAttachmentsView/PostAttachmentsView.swift; sourceTree = "<group>"; };
 		D6C0B46A1D5DB0AA006C506A /* LeftMenuSectionFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuSectionFooter.swift; path = LeftMenu/LeftMenuSectionFooter.swift; sourceTree = "<group>"; };
@@ -538,6 +541,7 @@
 		D6C0B4701D5E0A26006C506A /* RKObjectManager+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RKObjectManager+Additions.h"; sourceTree = "<group>"; };
 		D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RKObjectManager+Additions.m"; sourceTree = "<group>"; };
 		D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserStatusObserver.swift; path = Observers/UserStatusObserver.swift; sourceTree = "<group>"; };
+		D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachedFileCache.swift; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D6E165861D47C1200014C831 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedBaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -1153,17 +1157,17 @@
 		D6E165851D47C0960014C831 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				8B882D6E1DA6575F0028F13D /* FeedSearchTableViewCell.swift */,
-				8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */,
-				D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */,
 				D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */,
 				D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */,
-				D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */,
-				D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */,
-				D86EF7F91D59F13C00BD49A3 /* AttachmentFileCell.swift */,
+				D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */,
 				D8BFE6061D5F4F6A00DCA0C1 /* Attachable.swift */,
-				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
+				D86EF7F91D59F13C00BD49A3 /* AttachmentFileCell.swift */,
+				D83305F01D53890500E92CD6 /* AttachmentImageCell.swift */,
 				4B9DD4BA1DB0C94800AB4D2D /* AttachmentFileView.swift */,
+				8B882D6E1DA6575F0028F13D /* FeedSearchTableViewCell.swift */,
+				8B882D6C1DA657510028F13D /* FeedSearchAttachmentTableViewCell.swift */,
+				D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */,
+				8B882D701DA6F8A10028F13D /* EmojiTableViewCell.swift */,
 				86408A731DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.swift */,
 				86408A741DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.xib */,
 			);
@@ -1190,6 +1194,7 @@
 			isa = PBXGroup;
 			children = (
 				D8117D251DB4E7AE0058F003 /* EmptyDialogueLabel.swift */,
+				D69A1F171E29520F00AB6334 /* CTLabel.swift */,
 			);
 			name = Labels;
 			sourceTree = "<group>";
@@ -1248,6 +1253,7 @@
 				A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */,
 				864AF5BF1E0124000010F083 /* ChannelCreateField.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
+				D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1616,6 +1622,7 @@
 				8B3CB3401DD2675F0078DE25 /* MoreCellBuilder.swift in Sources */,
 				D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */,
 				864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */,
+				D6D7B9BB1E30E39A00F98967 /* AttachedFileCache.swift in Sources */,
 				4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */,
 				D85D92E91D40079B002F8800 /* User.swift in Sources */,
 				8B77B5EA1DC7A0EA00DF0689 /* PreferenceMappingsContainer.swift in Sources */,
@@ -1750,6 +1757,7 @@
 				8B9E27CB1DC0985D00543C6C /* NSettingsTableViewController.swift in Sources */,
 				8BBA7DCB1D87FECF003A5B99 /* SearchChatTableViewCell.swift in Sources */,
 				4B9DD4BB1DB0C94800AB4D2D /* AttachmentFileView.swift in Sources */,
+				D69A1F181E29520F00AB6334 /* CTLabel.swift in Sources */,
 				D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */,
 				8B3C3EDA1DC29080005FCAFE /* TextSettingsTableViewCell.swift in Sources */,
 				8B9E1C131DB7454900C05B36 /* DirectChannelTableViewCell.swift in Sources */,

@@ -27,6 +27,7 @@ private protocol ResponseDescriptors: class {
     static func passwordResetResponseDescriptor() -> RKResponseDescriptor
     static func listOfPreferedResponseDescriptor() -> RKResponseDescriptor
     static func usersFromCurrentTeamResponseDescriptor() -> RKResponseDescriptor
+    static func autocompleteUsersInChannelResponseDescriptor() -> RKResponseDescriptor
 }
 
 final class UserResponseDescriptorsContainer: BaseResponseDescriptorsContainer {
@@ -159,6 +160,13 @@ extension UserResponseDescriptorsContainer: ResponseDescriptors {
         return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
                                     method: .POST,
                                     pathPattern: UserPathPatternsContainer.usersByIdsPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
+    static func autocompleteUsersInChannelResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
+                                    method: .GET,
+                                    pathPattern: UserPathPatternsContainer.autocompleteUsersInChannelPathPattern(),
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }

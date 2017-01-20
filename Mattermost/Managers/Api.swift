@@ -47,6 +47,7 @@ private protocol ChannelApi: class {
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func getChannel(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func getChannelMembers(completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol UserApi: class {
@@ -63,6 +64,7 @@ private protocol UserApi: class {
     func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
     func loadUsersFromCurrentTeam(completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void)
+    func autocompleteUsersIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ usersInChannel: Array<User>?, _ usersOutOfChannel:  Array<User>?) -> Void)
     func loadMissingAuthorsFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
@@ -257,7 +259,7 @@ extension Api: TeamApi {
                 let user = realm.object(ofType: User.self, forPrimaryKey: teamMember.userId)
                 try! realm.write {
                     user?.isOnTeam = true
-                    user?.directChannel().isInterlocuterOnTeam = true
+                    user?.directChannel()?.isInterlocuterOnTeam = true
                 }
             }
             completion(nil)
@@ -277,7 +279,11 @@ extension Api: ChannelApi {
             let realm = RealmUtils.realmForCurrentThread()
 
             let channels = mappingResult.array() as! [Channel]//MappingUtils.fetchAllChannelsFromList(mappingResult)
+            let oldChannels = try! Realm().objects(Channel.self)
             try! realm.write({
+                oldChannels.forEach {
+                    $0.currentUserInChannel = false
+                }
                 channels.forEach {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
@@ -321,7 +327,8 @@ extension Api: ChannelApi {
         
         self.manager.post(path: path, success: { (mappingResult) in
             try! RealmUtils.realmForCurrentThread().write({
-                channel.lastViewDate = Date()
+                channel.lastViewDate = channel.lastPostDate
+                channel.mentionsCount = 0
             })
             completion(nil)
             }, failure: completion)
@@ -510,6 +517,27 @@ extension Api: ChannelApi {
             completion(nil)
         }, failure: completion)
     }
+    
+    func getChannelMembers(completion: @escaping (Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.getChannelMembersPathPattern(), DataManager.sharedInstance.currentTeam)
+        self.manager.getObjectsAt(path: path!, success: {  (operation, mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let data = operation.httpRequestOperation.responseData
+            let responseArray = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! Array<Dictionary<String, Any>>
+            
+            try! realm.write({
+                responseArray.forEach {
+                    let newMentionsCount = ($0["mention_count"]! as! NSNumber).intValue
+                    let updateChannel = try! Realm().objects(Channel.self).filter("identifier = %@", $0["channel_id"]).first!
+                    if (($0["msg_count"]! as! NSNumber).intValue > Int(updateChannel.messagesCount!)!) {
+                        updateChannel.lastViewDate = updateChannel.lastPostDate! - 1
+                    }
+                    updateChannel.mentionsCount = newMentionsCount
+                }
+            })
+            completion(nil)
+        }, failure: completion)
+    }
 }
 
 
@@ -612,22 +640,6 @@ extension Api: UserApi {
                     try! realm.write { channel.members.append(existUser!) }
                 }
             }
-            
-            
-            /*print(operation.httpRequestOperation.responseString)
-            //Temp cap
-            
-            let ids = Array(responseDictionary!.keys.map{$0})
-            let realm = RealmUtils.realmForCurrentThread()
-            try! realm.write {
-                for userId in ids {
-                    let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
-                    realm.add(user, update: true)
-                    if !Array(channel.members.map{$0.identifier}).contains(user.identifier) {
-                        channel.members.append(user)
-                    }
-                }
-            }*/
             completion(nil)
         }, failure: completion)
     }
@@ -641,17 +653,11 @@ extension Api: UserApi {
             var users = Array<User>()
             let ids = Array(responseDictionary!.keys.map{$0})
             let realm = RealmUtils.realmForCurrentThread()
-            //try! realm.write {
-                for userId in ids {
-                    let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
-                    //if !channel.members.contains(user) {
-                        //realm.add(user, update: true)
-                        users.append(user)
-                    //}
-                }
-            //}
+            for userId in ids {
+                let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
+                users.append(user)
+            }
             completion(nil, users)
-            
         }, failure:{ error in
                 completion(error, nil)
         })
@@ -677,6 +683,29 @@ extension Api: UserApi {
         })
     }
     
+    func autocompleteUsersIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ usersInChannel: Array<User>?, _ usersOutOfChannel:  Array<User>?) -> Void) {
+        let path = SOCStringFromStringWithObject(UserPathPatternsContainer.autocompleteUsersInChannelPathPattern(), channel)!
+        self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
+            print(operation.httpRequestOperation.responseString)
+            //Temp cap
+            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+            let inChannelDictionary = responseDictionary?["in_channel"] as! Array<Dictionary<String, Any>>
+            let outOfChannelDictionary = responseDictionary?["out_of_channel"] as! Array<Dictionary<String, Any>>
+            var usersInChannel = Array<User>()
+            var usersOutOfChannel = Array<User>()
+            for userDescription in inChannelDictionary {
+                let user = UserUtils.userFrom(dictionary: userDescription)
+                usersInChannel.append(user)
+            }
+            for userDescription in outOfChannelDictionary {
+                let user = UserUtils.userFrom(dictionary: userDescription)
+                usersOutOfChannel.append(user)
+            }
+            completion(nil, usersInChannel, usersOutOfChannel)
+        }, failure:{ error in
+            completion(error, nil, nil)
+        })
+    }
     func update(firstName: String? = nil,
                 lastName: String? = nil,
                 userName: String? = nil,
@@ -772,8 +801,12 @@ extension Api: UserApi {
             }
         }
         
+        guard missingUserIds.count > 0 else { completion(nil); return }
+        
         self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
             if error != nil { print(error!) }
+            
+            completion(error)
         })
     }
 }
@@ -789,23 +822,15 @@ extension Api: PostApi {
 
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
             RealmUtils.save(posts)
+            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
-            var missingUserIds = Array<String>()
-            for post in posts {
-                post.files.forEach({ RealmUtils.save($0) })
-                let authorId = post.authorId
-                if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
-                    missingUserIds.append(post.authorId!)
-                }
-            }
-            
-            self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-                if error != nil { print(error!) }
-             })
-            
-             self.loadFileInfosFor(posts: posts, completion: { (error) in
-                completion(nil)
-             })
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    completion(nil)
+                })
+            })
         }) { (error) in
             if let error = error {
                 if (error.code == -1011) {
@@ -832,22 +857,14 @@ extension Api: PostApi {
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
             RealmUtils.save(posts)
+            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
-            var missingUserIds = Array<String>()
-            for post in posts {
-                post.files.forEach({ RealmUtils.save($0) })
-                let authorId = post.authorId
-                if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
-                    missingUserIds.append(post.authorId!)
-                }
-            }
-            
-            self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-                if error != nil { print(error!) }
-            })
-            
-            self.loadFileInfosFor(posts: posts, completion: { (error) in
-                completion(isLastPage, nil)
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    completion(isLastPage, nil)
+                })
             })
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
@@ -901,17 +918,37 @@ extension Api: PostApi {
     
     func sendPost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
-        self.manager.post(object: post, path: path, success: { (mappingResult) in
-            let resultPost = mappingResult.firstObject as! Post
+//        self.manager.post(object: post, path: path, success: { (mappingResult) in
+//            let resultPost = mappingResult.firstObject as! Post
+//            try! RealmUtils.realmForCurrentThread().write {
+//                //addition parameters
+//                post.status = .default
+//                post.identifier = resultPost.identifier
+//            }
+//            completion(nil)
+//        }, failure: { (error) in
+//            completion(error)
+//        })
+        
+//        let params = ["message": post.message,
+//                      "channel_id" : post.channelId,
+//                      "file_ids"]
+        let array: NSMutableArray = NSMutableArray()
+        post.files.forEach({array.add($0.identifier as! NSString)})
+        self.manager.post(post, path: path, parameters: ["file_ids" : array.copy()], success: { (operation, mappingResult) in
+            if let data = operation?.httpRequestOperation.request.httpBody {
+                print(try! RKNSJSONSerialization.object(from: data))
+            }
+            
+            let resultPost = mappingResult?.firstObject as! Post
             try! RealmUtils.realmForCurrentThread().write {
                 //addition parameters
                 post.status = .default
                 post.identifier = resultPost.identifier
             }
-            completion(nil)
-        }, failure: { (error) in
-            completion(error)
-        })
+        }) { (operation, error) in
+//            completion(error)
+        }
     }
     
     func getPostWithId(_ identifier: String, channel: Channel, completion: @escaping ((_ post: Post?, _ error: Error?) -> Void)) {
@@ -954,8 +991,16 @@ extension Api: PostApi {
         let params = ["team_id" : Preferences.sharedInstance.currentTeamId!]
         
         self.manager.searchPostsWith(terms: terms, path: path, parameters: params, success: { (mappingResult) in
+            
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-            completion(posts, nil)
+            RealmUtils.save(posts)
+            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
+            
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                completion(posts, nil)
+            })
         }) { (error) in
             completion(nil, error)
         }
@@ -1011,13 +1056,16 @@ extension Api : FileApi {
         
         if item.isFile {
             self.manager.postFileWith(url: item.url, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
-                let file = File()
+               /* let file = File()
                 let dictionary = mappingResult.firstObject as! [String:String]
                 let rawLink = dictionary[FileAttributes.rawLink.rawValue]
                 file.identifier = params["client_ids"]
                 file.rawLink = rawLink
                 completion(file, nil)
+                RealmUtils.save(file)*/
+                let file = mappingResult.firstObject as! File
                 RealmUtils.save(file)
+                completion(file, nil)
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in
@@ -1025,13 +1073,16 @@ extension Api : FileApi {
             }
         } else {
             self.manager.post(image: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
-                let file = File()
+                /*let file = File()
                 let dictionary = mappingResult.firstObject as! [String:String]
                 let rawLink = dictionary[FileAttributes.rawLink.rawValue]
                 file.identifier = params["client_ids"]
                 file.rawLink = rawLink
-                completion(file, nil)
+                completion(file, nil)*/
+                
+                let file = mappingResult.firstObject as! File
                 RealmUtils.save(file)
+                completion(file, nil)
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in

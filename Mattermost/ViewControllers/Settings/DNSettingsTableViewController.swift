@@ -71,14 +71,10 @@ extension DNSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
-        setupSwipeRight()
     }
     
     func setupNavigationBar() {
         self.title = "Desktop notifications"
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
         
         self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
         self.saveButton.isEnabled = false
@@ -90,13 +86,6 @@ extension DNSettingsTableViewController: Setup {
         self.selectedSoundOption = (self.notifyProps?.isDesktopSoundOn())!
         self.selectedDurationOption = Constants.NotifyProps.DesktopPush.Duration.index{ return $0.state == (self.notifyProps?.desktopDuration)! }!
     }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
-    }
-
 }
 
 

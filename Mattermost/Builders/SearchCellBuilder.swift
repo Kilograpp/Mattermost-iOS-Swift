@@ -32,17 +32,24 @@ final class SearchCellBuilder {
 //MARK: Interface
 extension SearchCellBuilder: Inteface {
     func cellForPost(post: Post, searchingText: String) -> UITableViewCell {
-        let reuseIdentifier = post.hasAttachments() ?  FeedSearchAttachmentTableViewCell.reuseIdentifier : FeedSearchTableViewCell.reuseIdentifier
+        let reuseIdentifier = /*post.hasAttachments() ?  FeedSearchAttachmentTableViewCell.reuseIdentifier :*/ FeedSearchTableViewCell.reuseIdentifier
         
         let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! FeedBaseTableViewCell
         cell.transform = self.tableView.transform
+        
+        
+        if post.renderedText == nil {
+            let attrStr = post.attributedMessage!
+            //            let dateStr = NSAttributedString
+            post.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+        }
+        
         cell.configureWithPost(post)
         (cell as! FeedSearchTableViewCell).configureSelectionWithText(text: searchingText)
         return cell
     }
     
     func heightForPost(post: Post) -> CGFloat {
-        return post.hasAttachments() ? FeedSearchAttachmentTableViewCell.heightWithPost(post) : FeedSearchTableViewCell.heightWithPost(post)
+        return /* post.hasAttachments() ? FeedSearchAttachmentTableViewCell.heightWithPost(post) :*/ FeedSearchTableViewCell.heightWithPost(post)
     }
-    
 }

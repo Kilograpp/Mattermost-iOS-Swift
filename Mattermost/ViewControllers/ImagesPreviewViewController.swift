@@ -90,8 +90,6 @@ fileprivate protocol ImageOperation: class {
 extension ImagesPreviewViewController {
     func setupNavigationBar() {
         self.title = String(self.initialImageIndex + 1) + "/" + String(describing: (self.imageFiles?.count)!)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "navbar_back_icon"),
-                                                                style: .done, target: self, action: #selector(backAction))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveAction))
     }
     

@@ -28,6 +28,7 @@ private protocol PathPatterns: class {
     static func usersListPathPattern() -> String
     static func teamUsersListPathPattern() -> String
     static func usersFromCurrentTeamPathPattern() -> String
+    static func autocompleteUsersInChannelPathPattern() -> String
 }
 
 final class UserPathPatternsContainer: PathPatterns {
@@ -90,5 +91,8 @@ final class UserPathPatternsContainer: PathPatterns {
     }
     static func usersFromCurrentTeamPathPattern() -> String {
         return "teams/:\(TeamAttributes.identifier)/users/0/100"
+    }
+    static func autocompleteUsersInChannelPathPattern() -> String {
+        return "teams/:\(Channel.teamIdentifierPath())/channels/:\(ChannelAttributes.identifier.rawValue)/users/autocomplete"
     }
 }

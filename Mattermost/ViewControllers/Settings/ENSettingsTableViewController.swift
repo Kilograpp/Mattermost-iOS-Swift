@@ -63,14 +63,11 @@ extension ENSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupForCurrentNotifyProps()
-        setupSwipeRight()
     }
     
     func setupNavigationBar() {
         self.title = "Email notifications"
         
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
         
         self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
         self.saveButton.isEnabled = false
@@ -79,12 +76,6 @@ extension ENSettingsTableViewController: Setup {
     
     func setupForCurrentNotifyProps() {
         self.selectedEmailOption = (self.notifyProps?.email == /*"true"*/Constants.CommonStrings.True) ? 0 : 1
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 

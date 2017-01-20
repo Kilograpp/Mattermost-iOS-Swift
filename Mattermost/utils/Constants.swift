@@ -81,13 +81,17 @@ struct Constants {
         static let DeleteOwn   = "deleteOwn"
     }
     
+    struct Post {
+        static let FollowUpDelay: Double = 5 // 5 min for example
+        static let BackImage = UIImage(named: "image_back")
+    }
+    
     struct ChannelType {
         static let PublicTypeChannel  = "O"
         static let PrivateTypeChannel = "P"
-        static let DirectTypeChannel = "D"
+        static let DirectTypeChannel  = "D"
     }
 
-    
     struct EmojiArrays {
         static let apple: Array = [ "😠", "☺️", "😰", "😖", "😢", "😞", "😥", "😨", "😳", "😁", "😀", "😍", "😂", "😗", "😚", "😘", "😙", "😆", "😔",
                                     "😣", "😡", "😡", "😊", "😌", "😆", "😱", "😪", "😄", "😃", "😭", "😛", "😜", "😝", "😓", "😅", "😩", "😤", "😒",
@@ -116,19 +120,24 @@ struct Constants {
     }
     
     struct NotifyProps {
-        static let Send = [ (state: "all", description: "For all activity"), (state: "mention", description: "For mentions and direct messages"), (state: "none", description: "Never") ]
+        static let Send = [ (state: "all", description: "For all activity"), (state: "mention", description: "For mentions and direct messages"),
+                            (state: "none", description: "Never") ]
         struct DesktopPush {
-            static let Duration = [ (state: "3", description: "3 seconds"), (state: "5", description: "5 seconds"), (state: "10", description: "10 seconds"), (state: "0", description: "Unlimited") ]
+            static let Duration = [ (state: "3", description: "3 seconds"), (state: "5", description: "5 seconds"),
+                                    (state: "10", description: "10 seconds"), (state: "0", description: "Unlimited") ]
         }
         struct MobilePush {
-            static let Trigger = [ (state: "online", description: "Online, away or offline"), (state: "away", description: "Away or offline"), (state: "offline", description: "Offline") ]
+            static let Trigger = [ (state: "online", description: "Online, away or offline"), (state: "away", description: "Away or offline"),
+                                   (state: "offline", description: "Offline") ]
         }
         struct Words {
             static let ChannelWide = "\"@channel\", \"@all\""
             static let None = "No words configured"
         }
         struct Reply {
-            static let Trigger = [ (state: "any", description: "Trigger notifications on messages in reply threads that I start or participate in"), (state: "root", description: "Trigger notifications on messages in threads that I start"), (state: "never", description: "Do not trigger notifications on messages in reply threads unless I'm mentioned") ]
+            static let Trigger = [ (state: "any", description: "Trigger notifications on messages in reply threads that I start or participate in"),
+                                   (state: "root", description: "Trigger notifications on messages in threads that I start"),
+                                   (state: "never", description: "Do not trigger notifications on messages in reply threads unless I'm mentioned") ]
         }
     }
     

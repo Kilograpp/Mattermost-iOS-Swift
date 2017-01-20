@@ -39,6 +39,7 @@ private protocol PrivateChannelTableViewCellSetup {
     func setupContentView()
     func setupTitleLabel()
     func setupHighlightView()
+    func setupBadgeLabel()
     func highlightViewBackgroundColor() -> UIColor
 }
 
@@ -49,11 +50,11 @@ extension PrivateChannelTableViewCell: PrivateChannelTableViewCellSetup {
         setupContentView()
         setupTitleLabel()
         setupHighlightView()
+        setupBadgeLabel()
     }
     
     func setupContentView() {
         self.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        self.badgeLabel.isHidden = true
     }
     
     func setupTitleLabel() {
@@ -63,6 +64,11 @@ extension PrivateChannelTableViewCell: PrivateChannelTableViewCellSetup {
     
     func setupHighlightView() {
         self.highlightView.layer.cornerRadius = 3;
+    }
+    
+    func setupBadgeLabel() {
+        badgeLabel.layer.cornerRadius = 10;
+        badgeLabel.layer.masksToBounds = true
     }
     
     func highlightViewBackgroundColor() -> UIColor {
@@ -79,6 +85,10 @@ extension PrivateChannelTableViewCell: LeftMenuTableViewCellProtocol {
         self.titleLabel.text = channel.displayName!
         self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
         self.titleLabel.font = (channel.hasNewMessages()) ? FontBucket.highlighTedTitleFont : FontBucket.normalTitleFont
+        badgeLabel.isHidden = (channel.mentionsCount==0)
+        badgeLabel.text = String(channel.mentionsCount)
+        badgeLabel.font = FontBucket.normalTitleFont
+
         if selected {
             self.titleLabel.textColor =  (channel.hasNewMessages()) ? ColorBucket.blackColor : ColorBucket.sideMenuSelectedTextColor
         } else {

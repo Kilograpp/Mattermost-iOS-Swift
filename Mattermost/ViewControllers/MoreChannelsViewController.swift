@@ -96,15 +96,11 @@ extension MoreChannelsViewController: Setup {
         setupSearchBar()
         setupTableView()
         setupEmptyDialogueLabel()
-        setupSwipeRight()
         self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {
         self.title = self.isPrivateChannel ? "Add Users".localized : "More Channel".localized
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
         
         let addDoneTitle = self.isPrivateChannel ? "Done".localized : "Save".localized
         self.addDoneButton = UIBarButtonItem.init(title: addDoneTitle, style: .done, target: self, action: #selector(addDoneAction))
@@ -128,12 +124,6 @@ extension MoreChannelsViewController: Setup {
         let moreType = (self.isPrivateChannel) ? "direct chats" : "channels"
         self.emptySearchLabel.text = "No " + moreType + " found!"
         self.view.insertSubview(self.emptySearchLabel, aboveSubview: self.tableView)
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 
@@ -286,6 +276,7 @@ extension MoreChannelsViewController: Request {
         Api.sharedInstance.leaveChannel(channel) { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
+            let nameOfDeletedChannel = channel.displayName!
             let realm = RealmUtils.realmForCurrentThread()
             try! realm.write {
                 realm.delete(channel)
@@ -295,7 +286,7 @@ extension MoreChannelsViewController: Request {
             self.deletedChannelCount += 1
             if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
                 if self.alreadyUpdatedChannelCount == 1 {
-                    self.singleChannelMessage(name: channel.displayName!)
+                    self.singleChannelMessage(name: nameOfDeletedChannel)
                 } else {
                     self.multipleChannelsMessage()
                 }

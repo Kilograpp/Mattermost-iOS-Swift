@@ -50,6 +50,7 @@ private protocol DirectChannelTableViewCellSetup {
     func setupStatusView()
     func setupHighlightView()
     func setupUserFormPrivateChannel()
+    func setupBadgeLabel()
     func setupStatusViewWithBackendStatus(_ backendStatus: String)
     func highlightViewBackgroundColor() -> UIColor
 }
@@ -67,6 +68,10 @@ extension DirectChannelTableViewCell: LeftMenuTableViewCellProtocol {
         let backendStatus = UserStatusObserver.sharedObserver.statusForUserWithIdentifier(self.channel!.interlocuterFromPrivateChannel().identifier).backendStatus
         setupStatusViewWithBackendStatus(backendStatus!)
         
+        badgeLabel.isHidden = (channel.mentionsCount==0)
+        badgeLabel.text = String(channel.mentionsCount)
+        badgeLabel.font = FontBucket.normalTitleFont
+
         self.highlightView.backgroundColor = selected ? ColorBucket.sideMenuCellSelectedColor : ColorBucket.sideMenuBackgroundColor
         self.titleLabel.font = (channel.hasNewMessages()) ? FontBucket.highlighTedTitleFont : FontBucket.normalTitleFont
         if selected {
@@ -98,11 +103,11 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellSetup {
         setupTitleLabel()
         setupStatusView()
         setupHighlightView()
+        setupBadgeLabel()
     }
     
     func setupContentView() {
         self.backgroundColor = ColorBucket.sideMenuBackgroundColor
-        self.badgeLabel.isHidden = true
     }
     
     func setupTitleLabel() {
@@ -114,6 +119,11 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellSetup {
         self.statusView.layer.cornerRadius = 4
         self.statusView.layer.borderColor = ColorBucket.lightGrayColor.cgColor
         self.statusView.layer.borderWidth = 1;
+    }
+    
+    func setupBadgeLabel() {
+        badgeLabel.layer.cornerRadius = 10;
+        badgeLabel.layer.masksToBounds = true
     }
     
     func setupHighlightView() {

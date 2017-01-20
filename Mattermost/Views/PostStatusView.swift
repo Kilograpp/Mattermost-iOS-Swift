@@ -65,7 +65,6 @@ extension PostStatusView {
             sendingView.removeFromSuperview()
             addSubview(errorView)
         case .sending:
-//            addSubview(errorView)
             errorView.removeFromSuperview()
             sendingView.startAnimating()
             addSubview(sendingView)

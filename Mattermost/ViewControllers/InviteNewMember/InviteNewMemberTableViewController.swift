@@ -62,27 +62,17 @@ extension InviteNewMemberTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupTableView()
-        setupSwipeRight()
     }
     
     func setupNavigationBar() {
         self.title = "Invite New Member"
         
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
-        
-        let inviteButton = UIBarButtonItem.init(title: "Invite", style: .done, target: self, action: #selector(inviteAction))
+        let inviteButton = UIBarButtonItem(title: "Invite", style: .done, target: self, action: #selector(inviteAction))
         self.navigationItem.rightBarButtonItem = inviteButton
     }
     
     func setupTableView() {
         self.tableView.register(InviteNewMemberTableViewCell.self, forCellReuseIdentifier: InviteNewMemberTableViewCell.reuseIdentifier)
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 

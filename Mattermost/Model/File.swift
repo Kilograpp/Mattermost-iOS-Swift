@@ -9,9 +9,9 @@
 import Foundation
 import RealmSwift
 
-
 private protocol Interface: class {
     func downloadURL() -> URL?
+    func previewURL() -> URL?
     func thumbURL() -> URL?
 }
 
@@ -38,18 +38,11 @@ final class File: RealmObject {
     dynamic var width: Int = 0
     
     
-    
     dynamic var isImage: Bool = false
     var _downloadLink: String? { return FileUtils.downloadLinkForFile(self)?.absoluteString }
+    var _previewLink: String? { return FileUtils.previewLinkForFile(self)?.absoluteString }
     var _thumbLink: String? { return FileUtils.thumbLinkForFile(self)?.absoluteString }
-    dynamic var rawLink: String?/* {
-        didSet {
-            computeName()
-            computeIsImage()
-            computeIdentifierIfNeeded()
-           // Api.sharedInstance.getInfo(fileId: self.identifier!)
-        }
-    }*/
+    dynamic var rawLink: String?
     dynamic var localLink: String?
     dynamic var downoloadedSize: Int = 0
     fileprivate let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.files.rawValue)
@@ -144,6 +137,9 @@ extension File: Support {
 extension File: Interface {
     func downloadURL() -> URL? {
         return URL(string: self._downloadLink ?? StringUtils.emptyString())
+    }
+    func previewURL() -> URL? {
+        return URL(string: self._previewLink ?? StringUtils.emptyString())!
     }
     func thumbURL() -> URL? {
         return URL(string: self._thumbLink ?? StringUtils.emptyString())

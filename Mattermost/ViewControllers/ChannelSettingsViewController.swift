@@ -45,12 +45,6 @@ class ChannelSettingsViewController: UIViewController {
     
     //Имеет смысл передавать идентификатор, а не сам объект
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let backItem = UIBarButtonItem()
-        backItem.title = ""
-        navigationItem.backBarButtonItem = backItem
-        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "navbar_back_icon")
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navbar_back_icon")
-        
         if segue.identifier == "showMembersAdditing"{
             let addMembersViewController = segue.destination as! AddMembersViewController
             addMembersViewController.channel = self.channel

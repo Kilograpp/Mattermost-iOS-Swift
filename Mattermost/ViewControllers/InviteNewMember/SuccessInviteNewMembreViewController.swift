@@ -60,15 +60,11 @@ extension SuccessInviteNewMembreViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
         setupInvitesCountLabel()
-        setupSwipeRight()
         self.menuContainerViewController.panMode = .init(0)
     }
     
     func setupNavigationBar() {
         self.title = "Invite New Member"
-        
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon"), style: .done, target: self, action: #selector(backAction))
-        self.navigationItem.leftBarButtonItem = backButton
         
         let doneButton = UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(doneAction))
         self.navigationItem.rightBarButtonItem = doneButton
@@ -78,12 +74,6 @@ extension SuccessInviteNewMembreViewController: Setup {
         var text = "You have successfully invited " + String(self.intitesCount) + " new user"
         text += (self.intitesCount > 1) ? "s." : "."
         self.invitesCountLabel?.text = text
-    }
-    
-    func setupSwipeRight() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 
