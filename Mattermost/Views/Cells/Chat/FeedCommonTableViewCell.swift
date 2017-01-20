@@ -45,13 +45,18 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         self.messageLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: y, width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
         
         let size = self.parentView.requeredSize()
-        self.parentView.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: 36, width: size.width, height: size.height)
+        
+        if self.post.hasParentPost() {
+            self.parentView.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: 36, width: size.width, height: size.height)
+        }
         
         super.layoutSubviews()
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        self.parentView.removeFromSuperview()
     }
     
     override func draw(_ rect: CGRect) {
@@ -62,8 +67,13 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         
         let nameWidth = CGFloat(self.post.author.displayNameWidth)
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
-        (self.post.author.displayName! as NSString).draw(in: CGRect(x: Constants.UI.MessagePaddingSize, y: 8, width: nameWidth, height: 20), withAttributes: [NSFontAttributeName : FontBucket.postAuthorNameFont, NSForegroundColorAttributeName : ColorBucket.blackColor])
-        (self.post.createdAtString! as NSString).draw(in: CGRect(x: Constants.UI.MessagePaddingSize + nameWidth + 5, y: 11, width: dateWidth, height: 15), withAttributes: [NSFontAttributeName : FontBucket.postDateFont, NSForegroundColorAttributeName : ColorBucket.grayColor])
+        let authorStringFrame = CGRect(x: Constants.UI.MessagePaddingSize, y: 8, width: nameWidth, height: 20)
+        let authorStringAttributes = [NSFontAttributeName : FontBucket.postAuthorNameFont, NSForegroundColorAttributeName : ColorBucket.blackColor]
+        (self.post.author.displayName! as NSString).draw(in: authorStringFrame, withAttributes: authorStringAttributes)
+        
+        let dateStringFrame = CGRect(x: Constants.UI.MessagePaddingSize + nameWidth + 5, y: 11, width: dateWidth, height: 15)
+        let dateStringAttributes = [NSFontAttributeName : FontBucket.postDateFont, NSForegroundColorAttributeName : ColorBucket.grayColor]
+        (self.post.createdAtString! as NSString).draw(in: dateStringFrame, withAttributes: dateStringAttributes)
     }
 }
 
@@ -138,6 +148,9 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
     override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         
+        let isf = post.isFollowUp ? 0 : 30
+        setNeedsDisplay(CGRect(x: 53, y: 0, width: Int(UIScreen.screenWidth() - 80), height: isf))
+//        setNeedsDisplay()
         if self.post.author != nil { configureAvatarImage() }
         if self.post.parentPost() != nil { configureParentView() }
     }

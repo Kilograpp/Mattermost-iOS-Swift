@@ -43,6 +43,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     override func prepareForReuse() {
         self.messageLabel.alpha = 1
         self.postIdentifier = nil
+        self.parentPostIdentifier = nil
     }
     
     override func layoutSubviews() {

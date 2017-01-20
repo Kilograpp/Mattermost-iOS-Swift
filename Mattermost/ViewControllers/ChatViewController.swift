@@ -64,40 +64,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         super.viewDidLoad()
         
         ChannelObserver.sharedObserver.delegate = self
-        /*Api.sharedInstance.loadTeams(with: { (_ userShouldSelectTeam, error) in
-            guard (error == nil) else { self.hideLoaderView(); return }
-            Api.sharedInstance.loadChannels { (error) in
-                guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                let preferences = Preference.preferedUsersList()
-                var usersIds = Array<String>()
-                preferences.forEach{ usersIds.append($0.name!) }
-                
-                Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
-                    guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                    let predicate = NSPredicate(format: "identifier != %@ AND identifier != %@", Preferences.sharedInstance.currentUserId!,
-                                                Constants.Realm.SystemUserIdentifier)
-                    let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate)
-                    var ids = Array<String>()
-                    users.forEach{ ids.append($0.identifier) }
-                    
-                    Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
-                        guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                        Api.sharedInstance.getChannelMembers(completion: { error in
-                            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                            self.initialSetup()
-                        })
-                    }
-                }
-            }
-        })*/
         self.initialSetup()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.isNavigationBarHidden = false
-        setupInputViewButtons()
+//        self.navigationController?.isNavigationBarHidden = false
+//        setupInputViewButtons()
         addSLKKeyboardObservers()
         replaceStatusBar()
         
@@ -223,7 +197,7 @@ extension ChatViewController: Setup {
         self.tableView.separatorStyle = .none
         self.tableView.keyboardDismissMode = .onDrag
         self.tableView.backgroundColor = ColorBucket.whiteColor
-        self.tableView.register(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.register(FeedCommonTableViewCell.self, forCellReuseIdentifier: FeedCommonTableViewCell.reuseIdentifier, cacheSize: 15)
         self.tableView.register(FeedAttachmentsTableViewCell.self, forCellReuseIdentifier: FeedAttachmentsTableViewCell.reuseIdentifier, cacheSize: 10)
         self.tableView.register(FeedFollowUpTableViewCell.self, forCellReuseIdentifier: FeedFollowUpTableViewCell.reuseIdentifier, cacheSize: 18)
         self.tableView.register(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())

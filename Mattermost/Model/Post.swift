@@ -235,21 +235,19 @@ extension Post: Inteface {
         return createdAt!.timeIntervalSince(post.createdAt!)
     }
     func hasParentPost() -> Bool {
-        return (self.parentId != "" && self.parentId != nil)
+        guard let pid = parentId, pid != "" else {
+            return false
+        }
+        
+        return true
+//        return (self.parentId != "" && self.parentId != nil)
 //        return self.parentId != nil
     }
     
     
     
     func parentPost() -> Post? {
-        //temp!!! will be a post instead of parent post
-//        return (self.parentId != nil) ? try! Realm().objects(Post).filter("identifier = %@", self.parentId!).last : nil
-//        if let parentPost = try! Realm().objects(Post.self).filter("identifier = %@", self.parentId!).last {
-//                return parentPost
-//        }
-//        return self
-        
-        guard let parentId = self.parentId, let parentPost = try! Realm().objects(Post.self).filter("identifier = %@", self.parentId!).last else {
+        guard let parentId = self.parentId, let parentPost = try! Realm().objects(Post.self).filter("identifier = %@", parentId).last else {
             return nil
         }
         
@@ -309,6 +307,13 @@ extension Post: Computations {
     }
     fileprivate func computeAttributedString() {
         self.attributedMessage = NSTextStorage(attributedString: TSMarkdownParser.sharedInstance.attributedString(fromMarkdown: self.message!))
+        
+        if self.messageType == .system {
+            guard let atrStr = self.attributedMessage else {return}
+            
+            let range = NSRange(location: 0, length: (atrStr.string as NSString).length)
+            self.attributedMessage?.addAttribute(NSForegroundColorAttributeName, value: ColorBucket.lightGrayColor, range: range)
+        }
     }
     fileprivate func computeAttributedStringData() {
         self._attributedMessageData = RealmAttributedString(attributedString: self.attributedMessage)
