@@ -30,7 +30,6 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         super.layoutSubviews()
         
         let x = Constants.UI.MessagePaddingSize
-        
         var y: CGFloat = self.post.isFollowUp ? 0 : 36
         y += self.post.hasParentPost() ? (64 + Constants.UI.ShortPaddingSize) : 0
         if (self.post.message?.characters.count)! > 0 { y += CGFloat(post.attributedMessageHeight) }

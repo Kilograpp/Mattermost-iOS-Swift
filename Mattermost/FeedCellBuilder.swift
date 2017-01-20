@@ -28,6 +28,14 @@ final class FeedCellBuilder {
         return nil
     }
     
+    static func isFollowUp(_ post: Post, previous: Post?) -> Bool {
+        guard previous != nil else { return false }
+        
+        let postsInterval = (post.createdAt as NSDate?)?.minutesLaterThan(previous?.createdAt)
+        return (post.authorId == previous?.authorId) && (postsInterval! < Constants.Post.FollowUpDelay)
+        
+    }
+    
     static func typeForPost(_ post: Post, previous: Post?) -> CellType {
         return post.hasAttachments() ? .attachment : .common
     }

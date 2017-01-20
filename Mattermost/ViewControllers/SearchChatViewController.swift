@@ -129,7 +129,7 @@ extension SearchChatViewController: Setup {
         self.tableView.keyboardDismissMode = .onDrag
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.register(FeedSearchTableViewCell.self, forCellReuseIdentifier: FeedSearchTableViewCell.reuseIdentifier, cacheSize: 10)
-        self.tableView.register(FeedSearchAttachmentTableViewCell.self, forCellReuseIdentifier: FeedSearchAttachmentTableViewCell.reuseIdentifier, cacheSize: 10)
+       // self.tableView.register(FeedSearchAttachmentTableViewCell.self, forCellReuseIdentifier: FeedSearchAttachmentTableViewCell.reuseIdentifier, cacheSize: 10)
         self.tableView.register(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
     

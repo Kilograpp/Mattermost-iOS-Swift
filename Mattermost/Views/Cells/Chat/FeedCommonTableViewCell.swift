@@ -17,8 +17,6 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
     
 //MARK: Properties
     fileprivate let avatarImageView: UIImageView = UIImageView()
-    fileprivate let nameLabel: UILabel = UILabel()
-    fileprivate let dateLabel: UILabel = UILabel()
     fileprivate let parentView: CompactPostView = CompactPostView.compactPostView(ActionType.CompleteReply)
 
     var avatarTapHandler : (() -> Void)?
@@ -35,6 +33,8 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
     }
     
     override func layoutSubviews() {
+        self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
+        
         guard !self.post.isInvalidated else { return }
         guard self.post.author != nil else { return }
         
@@ -42,13 +42,10 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         
         var y: CGFloat = self.post.isFollowUp ? 0 : 36
         y += self.post.hasParentPost() ? (64 + Constants.UI.ShortPaddingSize) : 0
-        
-        self.messageLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: y,
-                                         width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
+        self.messageLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: y, width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
         
         let size = self.parentView.requeredSize()
-        self.parentView.frame = CGRect(x: Constants.UI.MessagePaddingSize,
-                                       y: 36, width: size.width, height: size.height)
+        self.parentView.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: 36, width: size.width, height: size.height)
         
         super.layoutSubviews()
     }
@@ -77,8 +74,9 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         let postIdentifier = self.post.identifier
         self.postIdentifier = postIdentifier
         
-        guard !self.post.isFollowUp else { self.avatarImageView.image = nil; return }
+        guard !self.post.isFollowUp else { self.avatarImageView.isHidden = true; return }
         
+        self.avatarImageView.isHidden = false
         self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
         ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }
@@ -99,8 +97,6 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
 
 protocol _FeedCommonTableViewCellSetup : class {
     func setupAvatarImageView()
- //   func setupNameLabel()
- //   func setupDateLabel()
 }
 
 protocol _FeedCommonTableViewCellAction: class {
@@ -126,23 +122,6 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
         self.avatarImageView.isUserInteractionEnabled = true
         self.avatarImageView.addGestureRecognizer(tapGestureRecognizer)
     }
-    
-    /* final func setupNameLabel() {
-        //FIXME: CodeReview: Заменить на конкретный цвет
-        self.nameLabel.backgroundColor = ColorBucket.whiteColor
-        //FIXME: CodeReview: Заменить на конкретный цвет
-        self.nameLabel.textColor = ColorBucket.blackColor
-        self.nameLabel.font = FontBucket.postAuthorNameFont
-        self.addSubview(self.nameLabel)
-    }
-    
-    final func setupDateLabel() {
-        self.dateLabel.backgroundColor = UIColor.white
-        self.addSubview(self.dateLabel)
-        self.dateLabel.font = FontBucket.postDateFont
-        //FIXME: CodeReview: Заменить на конкретный цвет
-        self.dateLabel.textColor = ColorBucket.grayColor
-    }*/
 }
 
 
@@ -159,18 +138,14 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
     override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         
-        guard self.post.author != nil else { return }
-        
-        configureAvatarImage()
+        if self.post.author != nil { configureAvatarImage() }
+        if self.post.parentPost() != nil { configureParentView() }
     }
     
     override class func heightWithPost(_ post: Post) -> CGFloat {
         var height: CGFloat = post.isFollowUp ? 0 : 44
         height += CGFloat(post.attributedMessageHeight)
-        
-        if (post.hasParentPost()) {
-            height += 64 + Constants.UI.ShortPaddingSize
-        }
+        if (post.hasParentPost()) { height += 64 + Constants.UI.ShortPaddingSize }
         
         return height
     }

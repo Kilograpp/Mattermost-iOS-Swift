@@ -49,12 +49,12 @@ class UserUtils: NSObject {
                 realm.add(user)
                 
                 guard user.hasChannel() else { return }
-                user.directChannel().isDirectPrefered = isPrefered
-                user.directChannel().displayName = user.displayName
+                user.directChannel()?.isDirectPrefered = isPrefered
+                user.directChannel()?.displayName = user.displayName
             } else {
                 guard (existUser?.hasChannel())! else { return }
-                existUser?.directChannel().isDirectPrefered = isPrefered
-                existUser?.directChannel().displayName = user.displayName
+                existUser?.directChannel()?.isDirectPrefered = isPrefered
+                existUser?.directChannel()?.displayName = user.displayName
             }
         }
     }

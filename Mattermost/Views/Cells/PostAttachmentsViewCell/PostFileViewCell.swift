@@ -7,17 +7,21 @@
 //
 
 import Foundation
-import SnapKit
 
-class PostFileViewCell: PostAttachmentsViewCell {
-
-//MARK: Properties
-    let nameLabel = UILabel()
-    let fileLabel = UILabel()
+class PostFileViewCell: PostAttachmentsViewBaseCell {
+    let formatLabel = UILabel()
+    let titleLabel = UILabel()
     
 //MARK: LifeCycle
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        let view = UIView(frame: CGRect(x: 5, y: 5, width: PostAttachmentsViewBaseCell.itemSize.width - 10, height: PostAttachmentsViewBaseCell.itemSize.height - 10))
+        view.backgroundColor = UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1)
+        view.layer.cornerRadius = 8
+        view.clipsToBounds = true
+//        addSubview(view)
+        insertSubview(view, belowSubview: removeButton)
         setupLabel()
     }
     
@@ -26,12 +30,12 @@ class PostFileViewCell: PostAttachmentsViewCell {
         self.clipsToBounds = true
         
         guard item.isFile else {
-            self.nameLabel.text = ""
-            self.fileLabel.text = ""
+            self.formatLabel.text = ""
+            self.titleLabel.text = ""
             return
         }
-        self.nameLabel.text = item.fileName
-        self.fileLabel.text = self.fileTypeString(fileNameString: item.fileName!)
+        self.formatLabel.text = self.fileTypeString(fileNameString: item.fileName!)
+        self.titleLabel.text = item.fileName
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -39,8 +43,9 @@ class PostFileViewCell: PostAttachmentsViewCell {
     }
     
     override func layoutSubviews() {
-        self.nameLabel.frame = CGRect(x: 3, y: 40, width: 63, height: self.nameLabel.frame.height)
-        self.fileLabel.frame = CGRect(x: 3, y: 15, width: 63, height: self.fileLabel.frame.height)
+        super.layoutSubviews()
+        self.formatLabel.frame = CGRect(x: 10, y: 17, width: 50, height: 16)
+        self.titleLabel.frame = CGRect(x: 10, y: 31, width: 50, height: 25)
     }
     
     func fileTypeString(fileNameString: String) -> String {
@@ -67,32 +72,18 @@ private protocol Setup {
 
 extension PostFileViewCell: Setup {
     func setupLabel() {
-        let nameLabelView = UIView()
-        self.addSubview(nameLabelView)
-        self.backgroundImageView?.backgroundColor = UIColor.clear
-        self.nameLabel.font = UIFont.systemFont(ofSize: 12)
-        self.nameLabel.textColor = UIColor.black
-        nameLabelView.addSubview(self.nameLabel)
-        self.nameLabel.snp.makeConstraints { (make) -> Void in
-            make.top.equalTo(self).offset(38)
-            make.left.equalTo(self).offset(3)
-            make.bottom.equalTo(self).offset(-10)
-            make.right.equalTo(self).offset(-3)
-        }
-        self.nameLabel.textAlignment = NSTextAlignment.center
+//        backgroundColor = UIColor.yellow
+        self.formatLabel.font = FontBucket.semiboldFontOfSize(15)
+        self.formatLabel.textColor = UIColor.gray
+        self.formatLabel.textAlignment = NSTextAlignment.center
+        self.addSubview(self.formatLabel)
         
-        let fileLabelView = UIView()
-        self.addSubview(fileLabelView)
-        self.fileLabel.font = UIFont.systemFont(ofSize: 19)
-        self.fileLabel.textColor = UIColor.black
-        fileLabelView.addSubview(self.fileLabel)
-        self.fileLabel.snp.makeConstraints { (make) -> Void in
-            make.top.equalTo(self).offset(25)
-            make.left.equalTo(self).offset(3)
-            make.bottom.equalTo(self).offset(-20)
-            make.right.equalTo(self).offset(-3)
-        }
-        self.nameLabel.lineBreakMode = NSLineBreakMode.byTruncatingTail
-        self.fileLabel.textAlignment = NSTextAlignment.center
+        self.titleLabel.font = FontBucket.regularFontOfSize(10)
+        self.titleLabel.textColor = UIColor.black
+        self.titleLabel.numberOfLines = 2;
+        self.addSubview(self.titleLabel)
+
+        self.formatLabel.lineBreakMode = NSLineBreakMode.byTruncatingTail
+        self.titleLabel.textAlignment = NSTextAlignment.center
     }
 }
