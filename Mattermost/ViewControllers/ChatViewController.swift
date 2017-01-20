@@ -64,7 +64,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         super.viewDidLoad()
         
         ChannelObserver.sharedObserver.delegate = self
-        Api.sharedInstance.loadTeams(with: { (_ userShouldSelectTeam, error) in
+        /*Api.sharedInstance.loadTeams(with: { (_ userShouldSelectTeam, error) in
             guard (error == nil) else { self.hideLoaderView(); return }
             Api.sharedInstance.loadChannels { (error) in
                 guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
@@ -82,14 +82,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
                     
                     Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
                         guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                        Api.sharedInstance.getChannelMembers() { (error) in
+                        Api.sharedInstance.getChannelMembers(completion: { error in
                             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                             self.initialSetup()
-                        }
+                        })
                     }
                 }
             }
-        })
+        })*/
         self.initialSetup()
     }
     

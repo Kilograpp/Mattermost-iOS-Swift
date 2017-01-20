@@ -123,6 +123,7 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellSetup {
     
     func setupBadgeLabel() {
         badgeLabel.layer.cornerRadius = 10;
+        badgeLabel.layer.masksToBounds = true
     }
     
     func setupHighlightView() {
