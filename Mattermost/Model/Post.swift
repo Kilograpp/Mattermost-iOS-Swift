@@ -244,10 +244,16 @@ extension Post: Inteface {
     func parentPost() -> Post? {
         //temp!!! will be a post instead of parent post
 //        return (self.parentId != nil) ? try! Realm().objects(Post).filter("identifier = %@", self.parentId!).last : nil
-        if let parentPost = try! Realm().objects(Post.self).filter("identifier = %@", self.parentId!).last {
-                return parentPost
+//        if let parentPost = try! Realm().objects(Post.self).filter("identifier = %@", self.parentId!).last {
+//                return parentPost
+//        }
+//        return self
+        
+        guard let parentId = self.parentId, let parentPost = try! Realm().objects(Post.self).filter("identifier = %@", self.parentId!).last else {
+            return nil
         }
-        return self
+        
+        return parentPost
     }
     
     func permalink() -> String {
