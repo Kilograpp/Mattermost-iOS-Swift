@@ -7,7 +7,7 @@
 //
 
 import Foundation
-/*
+
 //MARK: ChatViewController
 extension ChatViewController {
     func presentDocumentInteractionController(notification: NSNotification) {
@@ -58,4 +58,4 @@ extension ChatViewController {
         self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
         self.navigationController?.pushViewController(gallery, animated: false)
     }
-}*/
+}
