@@ -80,6 +80,7 @@ extension PublicChannelTableViewCell: PublicChannelTableViewCellSetup {
     
     func setupBadgeLabel() {
         badgeLabel.layer.cornerRadius = 10;
+        badgeLabel.layer.masksToBounds = true
     }
     
     func highlightViewBackgroundColor() -> UIColor {
