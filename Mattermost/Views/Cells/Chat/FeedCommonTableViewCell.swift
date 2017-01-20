@@ -40,7 +40,7 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         
         let textWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
         
-        var y: CGFloat = self.post.isFollowUp ? 0 : 36
+        var y: CGFloat = self.post.isFollowUp ? 8 : 36
         y += self.post.hasParentPost() ? (64 + Constants.UI.ShortPaddingSize) : 0
         self.messageLabel.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: y, width: textWidth, height: CGFloat(self.post.attributedMessageHeight))
         
@@ -156,7 +156,7 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
     }
     
     override class func heightWithPost(_ post: Post) -> CGFloat {
-        var height: CGFloat = post.isFollowUp ? 0 : 44
+        var height: CGFloat = post.isFollowUp ? 16 : 44
         height += CGFloat(post.attributedMessageHeight)
         if (post.hasParentPost()) { height += 64 + Constants.UI.ShortPaddingSize }
         
