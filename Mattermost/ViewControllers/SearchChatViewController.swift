@@ -26,7 +26,7 @@ class SearchChatViewController: UIViewController {
     
 //MARK: Properties
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchTextField: UITextField!
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var noResultView: UIView!
     @IBOutlet weak var loadingEmozziView: UIView!
@@ -55,21 +55,12 @@ class SearchChatViewController: UIViewController {
         configureForSearchStage(SearchStage.SearchNotStarted)
         prepareSearchRequestResults()
         self.autocompleteTableView.isHidden = true
-        self.menuContainerViewController.panMode = .init(0)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        self.menuContainerViewController.panMode = .init(3)
-        
-        super.viewWillDisappear(animated)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         UIStatusBar.shared().reset()
-        //let width = UIScreen.screenWidth() - 75
-        //self.searchTextField.superview?.frame = CGRect(x: 8, y: 20, width: width, height: 44)
     }
 }
 
@@ -87,7 +78,7 @@ fileprivate protocol Setup {
     func setupNavigationBar()
     func setupTableView()
     func setupSearchView()
-    func setupSearchIconTextField()
+    func setupSearchBar()
     func setupAutocompleteTableView()
 }
 
@@ -116,7 +107,7 @@ extension SearchChatViewController: Setup {
         setupNavigationBar()
         setupTableView()
         setupSearchView()
-        setupSearchIconTextField()
+        setupSearchBar()
         setupAutocompleteTableView()
     }
     
@@ -129,7 +120,6 @@ extension SearchChatViewController: Setup {
         self.tableView.keyboardDismissMode = .onDrag
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.register(FeedSearchTableViewCell.self, forCellReuseIdentifier: FeedSearchTableViewCell.reuseIdentifier, cacheSize: 10)
-       // self.tableView.register(FeedSearchAttachmentTableViewCell.self, forCellReuseIdentifier: FeedSearchAttachmentTableViewCell.reuseIdentifier, cacheSize: 10)
         self.tableView.register(FeedTableViewSectionHeader.self, forHeaderFooterViewReuseIdentifier: FeedTableViewSectionHeader.reuseIdentifier())
     }
     
@@ -142,17 +132,10 @@ extension SearchChatViewController: Setup {
         self.searchingInProcessView!.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
     }
     
-    func setupSearchIconTextField() {
-        let leftImageView = UIImageView()
-        leftImageView.image = UIImage(named: "common_search_icon")
-        
-        let leftView = UIView()
-        leftView.addSubview(leftImageView)
-        
-        leftView.frame = CGRect(x: 0, y: 0, width: 16, height: 20)
-        leftImageView.frame = CGRect(x: 6, y: 2, width: 13, height: 14)
-        searchTextField.leftViewMode = UITextFieldViewMode.always
-        searchTextField.leftView = leftView
+    func setupSearchBar() {
+        let cancelButtonAttributes: NSDictionary = [NSForegroundColorAttributeName: ColorBucket.blueColor]
+        UIBarButtonItem.appearance().setTitleTextAttributes(cancelButtonAttributes as? [String : AnyObject], for: UIControlState.normal)
+        self.searchBar.becomeFirstResponder()
     }
     
     func setupAutocompleteTableView() {
@@ -184,14 +167,21 @@ extension SearchChatViewController {
 //MARK: Navigation
 extension SearchChatViewController {
     func returnToChat() {
-        let transition = CATransition()
+     /*   let transition = CATransition()
         transition.duration = 0.3
         transition.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
         transition.type = kCATransitionReveal
         transition.subtype = kCATransitionFromTop
         
         self.navigationController?.view.layer.add(transition, forKey: kCATransition)
-        _ = self.navigationController?.popViewController(animated: false)
+        _ = self.navigationController?.popViewController(animated: false)*/
+        
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.type = kCATransitionPush
+        transition.subtype = kCATransitionFromTop
+        view.window!.layer.add(transition, forKey: kCATransition)
+        self.dismiss(animated: false)
     }
     
     func proceedToChatWithPost(post: Post) {
@@ -209,7 +199,7 @@ extension SearchChatViewController {
 //MARK: FetchedResultsController
 extension SearchChatViewController {
     func prepareSearchResults() {
-        let terms = self.searchTextField.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let terms = self.searchBar.text!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
         if ((terms as NSString).length > 0) {
             configureForSearchStage(SearchStage.SearchRequstInProgress)
@@ -283,7 +273,7 @@ extension SearchChatViewController: Private {
     }
     
     func prepareSearchRequestResults() {
-        let terms = self.searchTextField.text!
+        let terms = self.searchBar.text!
         let realm = RealmUtils.realmForCurrentThread()
         self.searchRequestResults = realm.objects(SearchRequest.self).filter(NSPredicate(format: "text BEGINSWITH[c] %@", terms))
         self.autocompleteTableView.reloadData()
@@ -333,7 +323,7 @@ extension SearchChatViewController: UITableViewDataSource {
         }
         
         let post = postsForDate(date: self.dates[indexPath.section])[indexPath.row]
-        let cell = self.builder.cellForPost(post: post, searchingText: self.searchTextField.text!)
+        let cell = self.builder.cellForPost(post: post, searchingText: self.searchBar.text!)
         (cell as! FeedSearchTableViewCell).disclosureTapHandler = {
             self.proceedToChatWithPost(post: post)
         }
@@ -348,7 +338,7 @@ extension SearchChatViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard tableView == self.autocompleteTableView else { return }
         
-        self.searchTextField.text = self.searchRequestResults?[indexPath.row].text
+        self.searchBar.text = self.searchRequestResults?[indexPath.row].text
         prepareSearchResults()
         self.autocompleteTableView.isHidden = true
     }
@@ -382,24 +372,23 @@ extension SearchChatViewController: UITableViewDelegate {
 }
 
 
-//MARK: UITextFieldDelegate
-extension SearchChatViewController: UITextFieldDelegate {
-    func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        self.configureForSearchStage(0)
-        return true
+//MARK: UISearchBarDelegate
+extension SearchChatViewController: UISearchBarDelegate {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        returnToChat()
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         self.autocompleteTableView.isHidden = (self.searchRequestResults?.count == 0)
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         self.autocompleteTableView.isHidden = true
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let newString: NSString = textField.text! as NSString
-        textField.text = newString.replacingCharacters(in: range, with: string)
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newString: NSString = searchBar.text! as NSString
+        searchBar.text = newString.replacingCharacters(in: range, with: text)
         
         prepareSearchRequestResults()
         if self.autocompleteTableView.isHidden {

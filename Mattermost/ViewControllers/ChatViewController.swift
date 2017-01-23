@@ -507,17 +507,16 @@ extension ChatViewController: Action {
 
 //MARK: Navigation
 extension ChatViewController: Navigation {
-    func proceedToSearchChat() {
-        let transaction = CATransition()
-        transaction.duration = 0.3
-        transaction.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transaction.type = kCATransitionMoveIn
-        transaction.subtype = kCATransitionFromBottom
-        self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
+    func proceedToSearchChat() {        
         let identifier = String(describing: SearchChatViewController.self)
         let searchChat = self.storyboard?.instantiateViewController(withIdentifier: identifier) as! SearchChatViewController
-        searchChat.configureWithChannel(channel: self.channel!)
-        self.navigationController?.pushViewController(searchChat, animated: false)
+        searchChat.configureWithChannel(channel: self.channel)
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.type = kCATransitionPush
+        transition.subtype = kCATransitionFromBottom
+        view.window!.layer.add(transition, forKey: kCATransition)
+        self.present(searchChat, animated: false, completion: nil)
     }
     
     func proceedToProfileFor(user: User) {
