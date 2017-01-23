@@ -81,7 +81,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         
         self.textView.resignFirstResponder()
         addBaseObservers()
-        self.tableView.reloadData()
+//        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -312,7 +312,7 @@ extension ChatViewController: Setup {
         super.textWillUpdate()
         
         guard self.filesPickingController.attachmentItems.count > 0 else { return }
-        self.rightButton.isEnabled = !self.filesAttachmentsModule.fileUploadingInProgress
+        self.rightButton.isEnabled = !self.filesAttachmentsModule.fileUploadingInProgress 
     }
 }
 
@@ -547,7 +547,7 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hasNextPage = true
             self.dismissKeyboard(true)
-            self.tableView.reloadData()
+//            self.tableView.reloadData()
         
             
             
@@ -745,7 +745,7 @@ extension ChatViewController {
         self.startHeadDialogueLabel.isHidden = isntDialogEmpty
         self.startButton.isHidden = isntDialogEmpty
         
-        return self.resultsObserver?.numberOfSections() ?? 1
+        return self.resultsObserver?.numberOfSections() ?? 0
     }
     
     //NewAutocomplite
@@ -885,8 +885,10 @@ extension ChatViewController: AttachmentsModuleDelegate {
     
     func removedFromUploading(identifier: String) {
         let items = self.filesPickingController.attachmentItems.filter { return ($0.identifier == identifier) }
+        let idx = self.filesPickingController.attachmentItems.index(of: items.first!)
         guard items.count > 0 else { return }
         self.filesPickingController.attachmentItems.removeObject(items.first!)
+        PostUtils.sharedInstance.removeAttachmentAtIdex(idx!)
     }
 }
 
@@ -1051,9 +1053,14 @@ extension ChatViewController {
     }
     
     override func textViewDidChange(_ textView: UITextView) {
+        DispatchQueue.main.async {
+            self.rightButton.isEnabled =  self.textView.text != "" || self.filesPickingController.attachmentItems.count > 0
+        }
+        
         SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
     }
     override func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+//        rightButton.isEnabled =  textView.text != "" || filesPickingController.attachmentItems.count > 0
         guard Api.sharedInstance.isNetworkReachable() else {
             isNeededAutocompletionRequest = false
             return true
