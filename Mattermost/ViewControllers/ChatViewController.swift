@@ -570,16 +570,12 @@ extension ChatViewController: Request {
     }
     
     func loadPostsBeforePost(post: Post, shortSize: Bool? = false) {
-//        print("loadPostsBeforePost")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
         Api.sharedInstance.loadPostsBeforePost(post: post, shortList: shortSize) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
-            if !self.hasNextPage {
-                self.postFromSearch = nil
-                return
-            }
+            if !self.hasNextPage { self.postFromSearch = nil; return }
             
             self.isLoadingInProgress = false
             self.resultsObserver.prepareResults()
@@ -588,7 +584,6 @@ extension ChatViewController: Request {
     }
     
     func loadPostsAfterPost(post: Post, shortSize: Bool? = false) {
-//        print("loadPostsAfterPost")
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true

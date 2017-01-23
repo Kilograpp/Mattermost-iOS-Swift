@@ -94,4 +94,18 @@ final class RealmUtils {
             realm.delete(members)
         })
     }
+    
+    static func deletePostsIn(channel: Channel) {
+        let realm = realmForCurrentThread()
+        
+        let days = channel.days
+        let posts = channel.posts
+        let files = posts.map{$0.files}
+        
+        try! realm.write ({
+            realm.delete(days)
+            realm.delete(posts)
+            realm.delete(files)
+        })
+    }
 }
