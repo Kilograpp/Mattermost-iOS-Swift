@@ -312,7 +312,7 @@ extension ChatViewController: Setup {
         super.textWillUpdate()
         
         guard self.filesPickingController.attachmentItems.count > 0 else { return }
-        self.rightButton.isEnabled = !self.filesAttachmentsModule.fileUploadingInProgress
+        self.rightButton.isEnabled = !self.filesAttachmentsModule.fileUploadingInProgress 
     }
 }
 
@@ -1056,9 +1056,14 @@ extension ChatViewController {
     }
     
     override func textViewDidChange(_ textView: UITextView) {
+        DispatchQueue.main.async {
+            self.rightButton.isEnabled =  self.textView.text != "" || self.filesPickingController.attachmentItems.count > 0
+        }
+        
         SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
     }
     override func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+//        rightButton.isEnabled =  textView.text != "" || filesPickingController.attachmentItems.count > 0
         guard Api.sharedInstance.isNetworkReachable() else {
             isNeededAutocompletionRequest = false
             return true

@@ -125,7 +125,6 @@ final class CTLabel : UIView {
 //    }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("attempt to open url")
         guard let point = touches.first?.location(in: self) else {return}
         let charIdx = charachterIndexAtPoint(point: point)
         
