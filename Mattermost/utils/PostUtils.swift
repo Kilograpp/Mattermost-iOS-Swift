@@ -11,6 +11,7 @@ import Realm
 
 private protocol Interface: class {
     static func update(post: Post, fileInfos: [File])
+    func removeAttachmentAtIdex(_ index: Int)
 }
 
 protocol Send: class {
@@ -63,6 +64,11 @@ extension PostUtils: Interface {
         for fileInfo in fileInfos {
             FileUtils.updateFileWith(info: fileInfo)
         }
+    }
+    
+    func removeAttachmentAtIdex(_ index: Int) {
+        files.remove(at: index)
+        assignedFiles.remove(at: index)
     }
 }
 
