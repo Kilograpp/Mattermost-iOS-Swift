@@ -106,14 +106,15 @@ extension FeedBaseTableViewCell: ChatMessageTapActions {
         UIApplication.shared.openURL(url!)
     }
     func openURL(_ url:URL) {
-        //fix for ios9
         if #available(iOS 10.0, *) {
             UIApplication.shared.open(url.URLWithScheme(.HTTP)!, options: [:], completionHandler: nil)
         } else {
             UIApplication.shared.openURL(url)
         }
-//        UIApplication.shared.openURL(URL(string: "www.google.ru")!)
-//        UIApplication.shared.openURL(url)
+    }
+    
+    func mentionTapAction(_ mentionString: String) {
+        //add impl
     }
 }
 

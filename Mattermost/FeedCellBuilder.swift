@@ -60,7 +60,6 @@ extension FeedCellBuilder: FeedCellBuilderInterface {
         
         if post.renderedText == nil {
             let attrStr = post.attributedMessage!
-//            let dateStr = NSAttributedString
             post.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
         }
         

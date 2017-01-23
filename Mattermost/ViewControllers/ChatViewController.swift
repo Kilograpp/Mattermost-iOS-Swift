@@ -81,7 +81,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         
         self.textView.resignFirstResponder()
         addBaseObservers()
-        self.tableView.reloadData()
+//        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -312,7 +312,7 @@ extension ChatViewController: Setup {
         super.textWillUpdate()
         
         guard self.filesPickingController.attachmentItems.count > 0 else { return }
-        self.rightButton.isEnabled = !self.filesAttachmentsModule.fileUploadingInProgress
+        self.rightButton.isEnabled = !self.filesAttachmentsModule.fileUploadingInProgress 
     }
 }
 
@@ -481,17 +481,16 @@ extension ChatViewController: Action {
 
 //MARK: Navigation
 extension ChatViewController: Navigation {
-    func proceedToSearchChat() {
-        let transaction = CATransition()
-        transaction.duration = 0.3
-        transaction.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transaction.type = kCATransitionMoveIn
-        transaction.subtype = kCATransitionFromBottom
-        self.navigationController!.view.layer.add(transaction, forKey: kCATransition)
+    func proceedToSearchChat() {        
         let identifier = String(describing: SearchChatViewController.self)
         let searchChat = self.storyboard?.instantiateViewController(withIdentifier: identifier) as! SearchChatViewController
-        searchChat.configureWithChannel(channel: self.channel!)
-        self.navigationController?.pushViewController(searchChat, animated: false)
+        searchChat.configureWithChannel(channel: self.channel)
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.type = kCATransitionPush
+        transition.subtype = kCATransitionFromBottom
+        view.window!.layer.add(transition, forKey: kCATransition)
+        self.present(searchChat, animated: false, completion: nil)
     }
     
     func proceedToProfileFor(user: User) {
@@ -548,7 +547,7 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hasNextPage = true
             self.dismissKeyboard(true)
-            self.tableView.reloadData()
+//            self.tableView.reloadData()
         
             
             
@@ -751,7 +750,7 @@ extension ChatViewController {
         self.startHeadDialogueLabel.isHidden = isntDialogEmpty
         self.startButton.isHidden = isntDialogEmpty
         
-        return self.resultsObserver?.numberOfSections() ?? 1
+        return self.resultsObserver?.numberOfSections() ?? 0
     }
     
     //NewAutocomplite
@@ -1057,9 +1056,14 @@ extension ChatViewController {
     }
     
     override func textViewDidChange(_ textView: UITextView) {
+        DispatchQueue.main.async {
+            self.rightButton.isEnabled =  self.textView.text != "" || self.filesPickingController.attachmentItems.count > 0
+        }
+        
         SocketManager.sharedInstance.sendNotificationAboutAction(.Typing, channel: channel!)
     }
     override func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+//        rightButton.isEnabled =  textView.text != "" || filesPickingController.attachmentItems.count > 0
         guard Api.sharedInstance.isNetworkReachable() else {
             isNeededAutocompletionRequest = false
             return true

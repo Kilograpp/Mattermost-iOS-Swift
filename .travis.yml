@@ -28,6 +28,7 @@ script:
 
 after_script:
 - ".travis/remove_keychain.sh"
+- "cat /Users/travis/Library/Logs/gym/Mattermost-Mattermost.log"
 
 branches:
   only:

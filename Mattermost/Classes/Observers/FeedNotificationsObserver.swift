@@ -58,18 +58,15 @@ extension FeedNotificationsObserver: Interface {
                     self.tableView.reloadData()
                     break
                 }
-                //self.tableView.beginUpdates()
+
                 if deletions.count > 0 {
-                    /*  deletions.forEach({ (index: Int) in
-                     let post = self.results[index]
-                     var rowsForDelete = Array<IndexPath>
-                     
-                     
-                     })*/
                     self.tableView.reloadData()
+                    break
                 }
+                
                 self.tableView.beginUpdates()
                 if (insertions.count > 0) {
+                    //this will work if insertions contains ONLY 1 value,
                     if self.days?.first?.posts.count == 1 {
                         self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
                     }
