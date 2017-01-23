@@ -46,16 +46,17 @@ final class FeedCellBuilder {
 extension FeedCellBuilder: FeedCellBuilderInterface {
     func cellForPost(_ post: Post, prevPost: Post?, errorHandler: @escaping (_ post:Post) -> Void) -> UITableViewCell {
         
-        let reuseIdentifier = (post.cellType == .common) ? FeedCommonTableViewCell.reuseIdentifier : FeedAttachmentsTableViewCell.reuseIdentifier
+//        let reuseIdentifier = (post.cellType == .common) ? FeedCommonTableViewCell.reuseIdentifier : FeedAttachmentsTableViewCell.reuseIdentifier
+        let reuseIdentifier = ModernConversationTableViewCell.reuseIdentifier
         
         
         
-        var cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? FeedBaseTableViewCell
+        var cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? ModernConversationTableViewCell
         if cell == nil {
-            cell = FeedBaseTableViewCell(style: .default, reuseIdentifier: FeedBaseTableViewCell.reuseIdentifier)
+            cell = ModernConversationTableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
         }
         cell!.transform = self.tableView.transform
-        cell?.errorHandler = errorHandler
+//        cell?.errorHandler = errorHandler
         
         if post.renderedText == nil {
             let attrStr = post.attributedMessage!
@@ -69,16 +70,17 @@ extension FeedCellBuilder: FeedCellBuilderInterface {
     }
     
     func heightForPost(_ post: Post, prevPost: Post?) -> CGFloat {
-        switch post.cellType {
-            case .attachment:
-                return FeedAttachmentsTableViewCell.heightWithPost(post)
-       /*     case .followUp:
-//                return FeedFollowUpTableViewCell.heightWithPost(post)
-                return FeedCommonTableViewCell.heightWithPost(post)*/
-            case .common:
-                return FeedCommonTableViewCell.heightWithPost(post)
-            /*case .attachmentFollowUp:
-                return FeedCommonTableViewCell.heightWithPost(post)*/
-        }
+        return ModernConversationTableViewCell.heightWithPost(post)
+//        switch post.cellType {
+//            case .attachment:
+//                return FeedAttachmentsTableViewCell.heightWithPost(post)
+//       /*     case .followUp:
+////                return FeedFollowUpTableViewCell.heightWithPost(post)
+//                return FeedCommonTableViewCell.heightWithPost(post)*/
+//            case .common:
+//                return FeedCommonTableViewCell.heightWithPost(post)
+//            /*case .attachmentFollowUp:
+//                return FeedCommonTableViewCell.heightWithPost(post)*/
+//        }
     }
 }

@@ -55,7 +55,6 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     
     fileprivate func configureMessage() {
         self.messageLabel.layoutData = post.renderedText
-        guard self.post.messageType == .system else { return }
     }
     
     
