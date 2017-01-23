@@ -85,9 +85,6 @@ extension TSMarkdownParser {
             NSForegroundColorAttributeName : ColorBucket.commonMessageColor
         ]
     }
-    
-
-    
 }
 
 // MARK: - Parsers
@@ -131,9 +128,11 @@ extension TSMarkdownParser {
                 let preparedLink = link?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
                 if let url = URL(string: preparedLink ?? StringUtils.emptyString()) {
                     attributedString.addAttribute(NSLinkAttributeName, value: url, range: range)
+                    
                 }
             }
             attributedString.addAttributes(self.linkAttributes, range: range)
+            attributedString.addAttribute(NSForegroundColorAttributeName, value: ColorBucket.linkColor, range: range)
         }
         
         self.addLinkDetection { [unowned self] (attributedString, range, link) in
@@ -143,6 +142,7 @@ extension TSMarkdownParser {
                 }
             }
             attributedString.addAttributes(self.linkAttributes, range: range)
+            attributedString.addAttribute(NSForegroundColorAttributeName, value: ColorBucket.linkColor, range: range)
         }
     }
     
