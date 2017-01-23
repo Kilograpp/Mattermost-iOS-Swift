@@ -81,7 +81,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         
         self.textView.resignFirstResponder()
         addBaseObservers()
-        self.tableView.reloadData()
+//        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -547,7 +547,7 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hasNextPage = true
             self.dismissKeyboard(true)
-            self.tableView.reloadData()
+//            self.tableView.reloadData()
         
             
             
@@ -750,7 +750,7 @@ extension ChatViewController {
         self.startHeadDialogueLabel.isHidden = isntDialogEmpty
         self.startButton.isHidden = isntDialogEmpty
         
-        return self.resultsObserver?.numberOfSections() ?? 1
+        return self.resultsObserver?.numberOfSections() ?? 0
     }
     
     //NewAutocomplite
