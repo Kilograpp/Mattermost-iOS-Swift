@@ -1926,7 +1926,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -2115,7 +2115,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
