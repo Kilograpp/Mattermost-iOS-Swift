@@ -537,8 +537,8 @@ extension ChatViewController: Navigation {
         transition.duration = 0.3
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromBottom
-        view.window!.layer.add(transition, forKey: kCATransition)
-        self.present(searchChat, animated: false, completion: nil)
+        //self.view.layer.add(transition, forKey: kCATransition)
+        self.present(searchChat, animated: true, completion: nil)
     }
     
     func proceedToProfileFor(user: User) {
@@ -609,7 +609,6 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hasNextPage = true
             self.dismissKeyboard(true)
-            self.tableView.reloadData()
 
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
