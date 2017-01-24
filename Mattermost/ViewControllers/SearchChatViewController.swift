@@ -181,8 +181,12 @@ extension SearchChatViewController {
         transition.duration = 0.3
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromTop
-        view.window!.layer.add(transition, forKey: kCATransition)
-        self.dismiss(animated: false)
+        
+        let container = self.presentingViewController as! MFSideMenuContainerViewController
+        let navigation = container.centerViewController as! UINavigationController
+        
+        //navigation.topViewController?.view.layer.add(transition, forKey: kCATransition)
+        self.dismiss(animated: true)
     }
     
     func proceedToChatWithPost(post: Post) {
