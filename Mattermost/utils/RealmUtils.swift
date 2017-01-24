@@ -95,12 +95,13 @@ final class RealmUtils {
         })
     }
     
-    static func deletePostsIn(channel: Channel) {
+    static func clearChannelWith(channelId: String, exept: Post? = nil) {
         let realm = realmForCurrentThread()
         
-        let channelPredicate = NSPredicate(format: "channelId == %@", channel.identifier!)
+        let channelPredicate = NSPredicate(format: "channelId == %@", channelId)
         let days = realm.objects(Day.self).filter(channelPredicate)
-        let posts = realm.objects(Post.self).filter(channelPredicate)
+        var posts = realm.objects(Post.self).filter(channelPredicate)
+        if exept != nil {posts = posts.filter(NSPredicate(format: "identifier != %@", (exept?.identifier)!)) }
         
         try! realm.write ({
             posts.forEach({ if $0.fileIds != nil { realm.delete($0.files) } })

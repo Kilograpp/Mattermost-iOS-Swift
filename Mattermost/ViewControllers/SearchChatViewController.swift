@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import MFSideMenu
 
 struct SearchStage {
     static let SearchNotStarted: Int       = 0
@@ -185,13 +186,21 @@ extension SearchChatViewController {
     }
     
     func proceedToChatWithPost(post: Post) {
-        let viewControllers: Array = (self.navigationController?.viewControllers)!
+        let container = self.presentingViewController as! MFSideMenuContainerViewController
+        let chat = (container.centerViewController as! UINavigationController).topViewController as! ChatViewController
+        RealmUtils.save(post)
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write { post.computeMissingFields() }
+        
+        chat.configureWith(postFound: post);
+        
+        returnToChat()
+        /*let viewControllers: Array = (self.navigationController?.viewControllers)!
         let chat: ChatViewController = viewControllers[viewControllers.count - 2] as! ChatViewController
         
-        //post.computeMissingFields()
-        RealmUtils.save(post)
+        
         chat.configureWithPost(post: post)
-        _ = self.navigationController?.popViewController(animated: true)
+        _ = self.navigationController?.popViewController(animated: true)*/
     }
 }
 

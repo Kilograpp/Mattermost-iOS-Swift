@@ -31,6 +31,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate let startButton = UIButton.init()
     var refreshControl: UIRefreshControl?
     var topActivityIndicatorView: UIActivityIndicatorView?
+    var bottomActivityIndicatorView: UIActivityIndicatorView?
     var scrollButton: UIButton?
     //Modules
     var documentInteractionController: UIDocumentInteractionController?
@@ -104,6 +105,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 //MARK: ChatViewControllerInterface
 extension ChatViewController: ChatViewControllerInterface {
     func configureWith(postFound: Post) {
+        RealmUtils.clearChannelWith(channelId: postFound.channelId!, exept: postFound)
         ChannelObserver.sharedObserver.selectedChannel = postFound.channel
         
         loadPostsAfterPost(post: postFound)
@@ -131,6 +133,7 @@ fileprivate protocol Setup {
     func setupRefreshControl()
     func setupPostAttachmentsView()
     func setupTopActivityIndicator()
+    func setupBottomActivityIndicator()
     func setupCompactPost()
     func setupModules()
     //func loadUsersFromTeam()
@@ -183,6 +186,7 @@ extension ChatViewController: Setup {
         setupRefreshControl()
         setupPostAttachmentsView()
         setupTopActivityIndicator()
+        setupBottomActivityIndicator()
         setupLongCellSelection()
         setupCompactPost()
         //loadUsersFromTeam()
@@ -274,6 +278,11 @@ extension ChatViewController: Setup {
         self.topActivityIndicatorView!.transform = self.tableView.transform;
     }
     
+    fileprivate func setupBottomActivityIndicator() {
+        self.bottomActivityIndicatorView  = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        self.bottomActivityIndicatorView!.transform = self.tableView.transform;
+    }
+    
     fileprivate func setupLongCellSelection() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
         self.tableView.addGestureRecognizer(longPressGestureRecognizer)
@@ -337,6 +346,16 @@ extension ChatViewController : Private {
         self.topActivityIndicatorView!.startAnimating()
     }
     
+    func showBottomActivityIndicator() {
+        let activityIndicatorHeight = self.topActivityIndicatorView!.bounds.height
+        let y = self.tableView.bounds.height - activityIndicatorHeight * 2
+        let tableHeaderView = UIView(frame:CGRect(x: 0, y: y, width: self.tableView.bounds.width, height: activityIndicatorHeight * 2))
+        self.topActivityIndicatorView!.center = CGPoint(x: tableHeaderView.center.x, y: tableHeaderView.center.y - activityIndicatorHeight / 5)
+        tableHeaderView.addSubview(self.bottomActivityIndicatorView!)
+        self.tableView.tableHeaderView = tableHeaderView;
+        self.bottomActivityIndicatorView!.startAnimating()
+    }
+    
     func attachmentSelection() {
         self.filesPickingController.pick()
     }
@@ -344,6 +363,11 @@ extension ChatViewController : Private {
     func hideTopActivityIndicator() {
         self.topActivityIndicatorView!.stopAnimating()
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+    }
+    
+    func hideBottomActivityIndicator() {
+        self.bottomActivityIndicatorView!.stopAnimating()
+        self.tableView.tableHeaderView = UIView(frame: CGRect.zero)
     }
     
     func clearTextView() {
@@ -597,15 +621,18 @@ extension ChatViewController: Request {
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
+        showBottomActivityIndicator()
         Api.sharedInstance.loadPostsAfterPost(post: post, shortList: shortSize) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
             
-            self.resultsObserver.unsubscribeNotifications()
+            self.hideBottomActivityIndicator()
+            
+            /*self.resultsObserver.unsubscribeNotifications()
             self.resultsObserver.prepareResults()
             self.resultsObserver.subscribeNotifications()
             
-            guard post.channel.identifier == self.channel.identifier else { return }
+            guard post.channel.identifier == self.channel.identifier else { return }*/
             
             //let indexPath =  self.resultsObserver.indexPathForPost(post)
             //self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
@@ -786,6 +813,10 @@ extension ChatViewController {
             if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             //    self.loadNextPageOfData()
                 loadPostsBeforePost(post: self.resultsObserver.lastPost())
+            }
+            
+            if indexPath == IndexPath(row: 0, section: 0) {
+                loadPostsAfterPost(post: post!)
             }
             
             /*if (Int(self.channel.messagesCount!)! > self.resultsObserver.numberOfPosts()) &&

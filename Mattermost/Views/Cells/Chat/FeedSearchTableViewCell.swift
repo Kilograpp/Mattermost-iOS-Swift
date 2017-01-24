@@ -128,7 +128,7 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
 //MARK: Action
 extension FeedSearchTableViewCell: FeedSearchTableViewCellAction {
     func disclosureTapAction() {
-  //      self.disclosureTapHandler!()
+        self.disclosureTapHandler!()
     }
 }
 
