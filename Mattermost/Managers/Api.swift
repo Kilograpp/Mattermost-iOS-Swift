@@ -934,33 +934,22 @@ extension Api: PostApi {
     
     func sendPost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.creationPathPattern(), post)
-//        self.manager.post(object: post, path: path, success: { (mappingResult) in
-//            let resultPost = mappingResult.firstObject as! Post
-//            try! RealmUtils.realmForCurrentThread().write {
-//                //addition parameters
-//                post.status = .default
-//                post.identifier = resultPost.identifier
-//            }
-//            completion(nil)
-//        }, failure: { (error) in
-//            completion(error)
-//        })
-        
-//        let params = ["message": post.message,
-//                      "channel_id" : post.channelId,
-//                      "file_ids"]
+
         let array: NSMutableArray = NSMutableArray()
         post.files.forEach({array.add($0.identifier as! NSString)})
         self.manager.post(post, path: path, parameters: ["file_ids" : array.copy()], success: { (operation, mappingResult) in
-            if let data = operation?.httpRequestOperation.request.httpBody {
-                print(try! RKNSJSONSerialization.object(from: data))
-            }
+//            if let data = operation?.httpRequestOperation.request.httpBody {
+//                print(try! RKNSJSONSerialization.object(from: data))
+//            }
             
             let resultPost = mappingResult?.firstObject as! Post
             try! RealmUtils.realmForCurrentThread().write {
                 //addition parameters
                 post.status = .default
                 post.identifier = resultPost.identifier
+                var previousPost: Post?
+//                post.isFollowUp = FeedCellBuilder.isFollowUp($0, previous: previousPost)
+//                post.cellType = FeedCellBuilder.typeForPost($0, previous: previousPost)
             }
         }) { (operation, error) in
 //            completion(error)
@@ -1183,7 +1172,6 @@ extension Api : FileApi {
         
         operation.setDownloadProgressBlock { (written: UInt, totalWritten: Int64, expectedToWrite: Int64) -> Void in
             let result = Float(totalWritten) / Float(expectedToWrite)
-            print("downloading progress = ", result)
             progress(fileId, result)
         }
         
@@ -1194,7 +1182,6 @@ extension Api : FileApi {
                 file?.downoloadedSize = (file?.size)!
                 file?.localLink = filePath
             }
-            print("downloading finished")
             self.downloadOperationsArray.removeObject(operation!)
             completion(nil)
         }, failure: { (operation: AFRKHTTPRequestOperation?, error: Swift.Error?) -> Void in

@@ -244,8 +244,6 @@ extension Post: Inteface {
 //        return self.parentId != nil
     }
     
-    
-    
     func parentPost() -> Post? {
         guard let parentId = self.parentId, let parentPost = try! Realm().objects(Post.self).filter("identifier = %@", parentId).last else {
             return nil
