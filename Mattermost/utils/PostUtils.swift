@@ -120,10 +120,12 @@ extension PostUtils: Update {
 //MARK: Delete
 extension PostUtils: Delete {
     func delete(post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        let day = post.day
+        let dayPrimaryKey = post.day?.key
         guard post.identifier != nil else { completion(nil); return }
         Api.sharedInstance.deletePost(post) { (error) in
             completion(error)
+            let realm = RealmUtils.realmForCurrentThread()
+            let day = realm.object(ofType: Day.self, forPrimaryKey: dayPrimaryKey)
             guard day?.posts.count == 0 else { return }
             RealmUtils.deleteObject(day!)
         }
