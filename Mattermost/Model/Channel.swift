@@ -123,6 +123,13 @@ final class Channel: RealmObject {
         let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
         return safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
     }
+    
+    func lastPost() -> Post? {
+        let predicate = NSPredicate(format: "channelId = %@", identifier ?? "")
+        let results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byProperty: "createdAt", ascending: false)
+        
+        return results.first
+    }
 }
 
 
