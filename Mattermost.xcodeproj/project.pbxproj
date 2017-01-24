@@ -225,6 +225,7 @@
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
 		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
 		D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */; };
+		D68596E41E37D12700B46C23 /* DisableBitcode.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */; };
 		D69A1F181E29520F00AB6334 /* CTLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69A1F171E29520F00AB6334 /* CTLabel.swift */; };
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
 		D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */; };
@@ -533,6 +534,7 @@
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
 		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
 		D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsViewCell.swift; path = PostAttachmentsViewCell/PostAttachmentsViewCell.swift; sourceTree = "<group>"; };
+		D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DisableBitcode.xcconfig; sourceTree = "<group>"; };
 		D69A1F171E29520F00AB6334 /* CTLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTLabel.swift; sourceTree = "<group>"; };
 		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
 		D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsView.swift; path = PostAttachmentsView/PostAttachmentsView.swift; sourceTree = "<group>"; };
@@ -883,6 +885,7 @@
 		9B822D8772CC01B506FE072D = {
 			isa = PBXGroup;
 			children = (
+				D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */,
 				9B8226364A9CB357915ABAC5 /* Mattermost */,
 				9B82243559F26A9911CEBFB1 /* MattermostTests */,
 				0DD091C44E54D1A5B34DF000 /* Pods */,
@@ -1429,6 +1432,7 @@
 				8BE969B71D7638060010A524 /* Settings.storyboard in Resources */,
 				D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */,
 				8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */,
+				D68596E41E37D12700B46C23 /* DisableBitcode.xcconfig in Resources */,
 				8B882D661DA5A21F0028F13D /* Localizable.strings in Resources */,
 				9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */,
 				D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */,
@@ -2115,7 +2119,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
