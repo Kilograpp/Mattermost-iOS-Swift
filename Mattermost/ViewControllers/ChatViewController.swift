@@ -537,8 +537,8 @@ extension ChatViewController: Navigation {
         transition.duration = 0.3
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromBottom
-        view.window!.layer.add(transition, forKey: kCATransition)
-        self.present(searchChat, animated: false, completion: nil)
+        //self.view.layer.add(transition, forKey: kCATransition)
+        self.present(searchChat, animated: true, completion: nil)
     }
     
     func proceedToProfileFor(user: User) {
