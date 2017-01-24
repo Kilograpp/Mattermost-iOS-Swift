@@ -147,6 +147,10 @@ extension FeedNotificationsObserver {
 
 //MARK: FetchedResultsController
 extension FeedNotificationsObserver {
+    func numberOfPosts() -> Int {
+        return self.results.count
+    }
+    
     func numberOfRows(_ section:Int) -> Int {
        return self.days![section].posts.count
     }

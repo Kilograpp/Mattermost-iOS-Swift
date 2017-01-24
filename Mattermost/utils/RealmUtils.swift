@@ -98,14 +98,15 @@ final class RealmUtils {
     static func deletePostsIn(channel: Channel) {
         let realm = realmForCurrentThread()
         
-        let days = channel.days
-        let posts = channel.posts
-        let files = posts.map{$0.files}
+        let channelPredicate = NSPredicate(format: "channelId == %@", channel.identifier!)
+        let days = realm.objects(Day.self).filter(channelPredicate)
+        let posts = realm.objects(Post.self).filter(channelPredicate)
         
         try! realm.write ({
+            posts.forEach({ if $0.fileIds != nil { realm.delete($0.files) } })
+            
             realm.delete(days)
             realm.delete(posts)
-            realm.delete(files)
         })
     }
 }

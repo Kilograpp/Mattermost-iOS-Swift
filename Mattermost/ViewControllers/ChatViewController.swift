@@ -14,6 +14,7 @@ import MFSideMenu
 
 
 protocol ChatViewControllerInterface: class {
+    func configureWith(postFound: Post)
     func configureWithPost(post: Post)
     func changeChannelForPostFromSearch()
 }
@@ -102,6 +103,13 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 
 //MARK: ChatViewControllerInterface
 extension ChatViewController: ChatViewControllerInterface {
+    func configureWith(postFound: Post) {
+        ChannelObserver.sharedObserver.selectedChannel = postFound.channel
+        
+        loadPostsAfterPost(post: postFound)
+        loadPostsBeforePost(post: postFound)
+    }
+    
     func configureWithPost(post: Post) {
         self.postFromSearch = post
         (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(post.channel)
@@ -573,13 +581,15 @@ extension ChatViewController: Request {
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
-        Api.sharedInstance.loadPostsBeforePost(post: post, shortList: shortSize) { (isLastPage, error) in
+        showTopActivityIndicator()
+        Api.sharedInstance.loadPostsBeforePost(post: post) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
-            if !self.hasNextPage { self.postFromSearch = nil; return }
+            //if !self.hasNextPage { self.postFromSearch = nil; return }
             
             self.isLoadingInProgress = false
-            self.resultsObserver.prepareResults()
-            self.loadPostsAfterPost(post: post, shortSize: true)
+            self.hideTopActivityIndicator()
+            //self.resultsObserver.prepareResults()
+          //  self.loadPostsAfterPost(post: post, shortSize: true)
         }
     }
     
@@ -774,8 +784,14 @@ extension ChatViewController {
         if (tableView == self.tableView) {
             let post = resultsObserver?.postForIndexPath(indexPath)
             if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
-                self.loadNextPageOfData()
+            //    self.loadNextPageOfData()
+                loadPostsBeforePost(post: self.resultsObserver.lastPost())
             }
+            
+            /*if (Int(self.channel.messagesCount!)! > self.resultsObserver.numberOfPosts()) &&
+               (self.tableView.offsetFromTop() < 200) {
+                loadPostsBeforePost(post: self.resultsObserver.lastPost())
+            }*/
             
             let errorHandler = { (post:Post) in
                 self.errorAction(post)
