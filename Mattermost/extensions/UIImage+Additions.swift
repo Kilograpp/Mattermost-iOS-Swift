@@ -34,15 +34,17 @@ extension UIImage {
         let bundleImage = UIImage.avatarPlaceholderImage
         UIGraphicsBeginImageContextWithOptions(rect.size, true, 0);
         let context = UIGraphicsGetCurrentContext()!
+//        context.setBlendMode(normal)
+
+        bundleImage.draw(in: rect)
         UIColor.white.setFill()
         context.fill(rect)
-        bundleImage.draw(in: rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext()
         return image
     }
     
-    fileprivate static func avatarPlaceholder() -> UIImage {
+    static func avatarPlaceholder() -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         UIGraphicsBeginImageContextWithOptions(rect.size, true, 0)
         let context = UIGraphicsGetCurrentContext()
@@ -50,6 +52,9 @@ extension UIImage {
         context?.addPath(ref);
         context?.setFillColor(UIColor(white: 0.95, alpha: 1).cgColor);
         context?.fillPath();
+        
+        UIColor.white.setFill()
+        context?.fill(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext();
         

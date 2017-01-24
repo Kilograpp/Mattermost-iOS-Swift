@@ -59,6 +59,12 @@ extension FeedCellBuilder: FeedCellBuilderInterface {
         
         if post.renderedText == nil {
             let attrStr = post.attributedMessage!
+            
+            if post.messageType == .system {
+                let range = NSRange(location: 0, length: (attrStr.string as NSString).length)
+                post.attributedMessage?.addAttribute(NSForegroundColorAttributeName, value: ColorBucket.lightGrayColor, range: range)
+            }
+            
             post.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
         }
         

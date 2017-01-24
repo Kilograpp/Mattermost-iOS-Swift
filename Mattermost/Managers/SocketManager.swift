@@ -245,7 +245,12 @@ extension SocketManager: Notifications {
             })
         } else {
 //FIXME: Crash here, when other user has joined to current channel
-            handleUserJoined(user: user!, channel: channel!)
+            guard let usr = user, let chnl = channel else {
+                print("FIX ME PLS")
+                return
+            }
+            
+            handleUserJoined(user: usr, channel: chnl)
         }
     }
     
