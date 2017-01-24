@@ -20,7 +20,7 @@ final class TeamViewController: UIViewController {
     var realm: Realm?
     fileprivate var results: Results<Team>! = nil
     fileprivate lazy var builder: TeamCellBuilder = TeamCellBuilder(tableView: self.tableView)
-    
+    var lastTeam: Team? = nil
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -143,7 +143,14 @@ extension TeamViewController: Configuration {
 extension TeamViewController: Request {
     func loadTeamChannels() {
         Api.sharedInstance.loadChannels { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!);
+                    self.refreshCurrentTeamIfNeeded()
+                    DataManager.sharedInstance.currentTeam = self.lastTeam
+                    Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
+                    Preferences.sharedInstance.save()
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+                
+                return }
             self.loadPreferedDirectChannelsInterlocuters()
         }
     }
@@ -154,7 +161,14 @@ extension TeamViewController: Request {
         preferences.forEach{ usersIds.append($0.name!) }
         
         Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!);
+                    self.refreshCurrentTeamIfNeeded()
+                    DataManager.sharedInstance.currentTeam = self.lastTeam
+                    Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
+                    Preferences.sharedInstance.save()
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+
+                return }
             self.loadTeamMembers()
         }
     }
@@ -167,7 +181,14 @@ extension TeamViewController: Request {
         users.forEach{ ids.append($0.identifier) }
         
         Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!);
+                self.refreshCurrentTeamIfNeeded()
+                DataManager.sharedInstance.currentTeam = self.lastTeam
+                Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
+                Preferences.sharedInstance.save()
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+                return }
             
             RouterUtils.loadInitialScreen()
           //  NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
@@ -210,7 +231,9 @@ extension TeamViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard Api.sharedInstance.isNetworkReachable() else { handleErrorWith(message: "No Internet connectivity detected"); return }
-        
+        if (Preferences.sharedInstance.currentTeamId != nil) {
+            lastTeam = DataManager.sharedInstance.currentTeam
+        }
         let team = self.results[indexPath.row]
         if Preferences.sharedInstance.currentTeamId != team.identifier {
             refreshCurrentTeamIfNeeded()
@@ -222,6 +245,5 @@ extension TeamViewController: UITableViewDelegate {
         } else {
             self.dismiss(animated: true, completion: nil)
         }
-
     }
 }

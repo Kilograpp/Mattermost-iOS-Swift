@@ -212,6 +212,14 @@ extension LeftMenuViewController : Navigation {
     }
     
     fileprivate func navigateToMoreChannel(_ section: Int)  {
+        
+        let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
+        let realm = RealmUtils.realmForCurrentThread()
+        guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
+            self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
+            return
+        }
+        
         let center = (self.menuContainerViewController!.centerViewController as AnyObject)
         guard !(center.topViewController??.isKind(of: MoreChannelsViewController.self))! else { return }
         
@@ -223,6 +231,13 @@ extension LeftMenuViewController : Navigation {
     }
     
     fileprivate func navigateToCreateChannel(privateType: String) {
+        
+        let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
+        let realm = RealmUtils.realmForCurrentThread()
+        guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
+            self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
+            return
+        }
         
         let center = (self.menuContainerViewController!.centerViewController as AnyObject)
         guard !(center.topViewController??.isKind(of: CreateChannelViewController.self))! else { return }

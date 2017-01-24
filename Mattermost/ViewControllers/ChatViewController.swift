@@ -71,7 +71,15 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
+        let realm = RealmUtils.realmForCurrentThread()
+        guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
+            self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
+            self.textView.isEditable = false
+            //self.rightButton.isEnabled = false
+            //self.leftButton.isEnabled = false
+            return
+        }
 //        self.navigationController?.isNavigationBarHidden = false
 //        setupInputViewButtons()
         addSLKKeyboardObservers()
@@ -513,7 +521,15 @@ extension ChatViewController: Action {
 
 //MARK: Navigation
 extension ChatViewController: Navigation {
-    func proceedToSearchChat() {        
+    func proceedToSearchChat() {
+        
+        let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
+        let realm = RealmUtils.realmForCurrentThread()
+        guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
+            self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
+            return
+        }
+        
         let identifier = String(describing: SearchChatViewController.self)
         let searchChat = self.storyboard?.instantiateViewController(withIdentifier: identifier) as! SearchChatViewController
         searchChat.configureWithChannel(channel: self.channel)
@@ -535,6 +551,14 @@ extension ChatViewController: Navigation {
     
     func proceedToChannelSettings(channel: Channel) {
         self.dismissKeyboard(true)
+        
+        let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
+        let realm = RealmUtils.realmForCurrentThread()
+        guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
+            self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
+            return
+        }
+        
         self.showLoaderView()
         Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
@@ -573,16 +597,19 @@ extension ChatViewController: Request {
     func loadFirstPageOfData(isInitial: Bool) {
         self.isLoadingInProgress = true
         
+        let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
+        let realm = RealmUtils.realmForCurrentThread()
+        guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
+            self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
+            return
+        }
         self.showLoaderView()
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.hideLoaderView()
             self.isLoadingInProgress = false
             self.hasNextPage = true
             self.dismissKeyboard(true)
-//            self.tableView.reloadData()
-        
-            
-            
+
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
