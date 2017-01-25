@@ -153,7 +153,11 @@ extension AttachmentsModule: AttachmentsViewControls {
 
 extension AttachmentsModule: UserInteraction {
     fileprivate func show(error: Error) {
-        AlertManager.sharedManager.showErrorWithMessage(message: error.message!)
+        var message = error.message!
+        if error.code == -1011 {
+            message = "You can't upload file more than 50 mb"
+        }
+        AlertManager.sharedManager.showErrorWithMessage(message: message)
     }
 }
 
