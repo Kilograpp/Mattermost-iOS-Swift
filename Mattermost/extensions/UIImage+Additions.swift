@@ -34,11 +34,10 @@ extension UIImage {
         let bundleImage = UIImage.avatarPlaceholderImage
         UIGraphicsBeginImageContextWithOptions(rect.size, true, 0);
         let context = UIGraphicsGetCurrentContext()!
-//        context.setBlendMode(normal)
 
         bundleImage.draw(in: rect)
-        UIColor.white.setFill()
-        context.fill(rect)
+//        UIColor.white.setFill()
+//        context.fill(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext()
         return image

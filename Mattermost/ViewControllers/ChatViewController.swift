@@ -53,6 +53,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     //var usersInTeam: Array<User> = [] //USELESS FIELD COUSE 3.6
     var usersInChannel: Array<User> = []
     var usersOutOfChannel: Array<User> = []
+    //REVIEW: enum for sections
     var autoCompletionSectionIndexes = [0, 1, 2]
     var numberOfSection = 3
     
@@ -75,6 +76,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
         let realm = RealmUtils.realmForCurrentThread()
         guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
+            //REVIEW: localize
             self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
             self.textView.isEditable = false
             //self.rightButton.isEnabled = false
@@ -661,8 +663,10 @@ extension ChatViewController: Request {
                 var message = (error?.message!)!
                 if error?.code == -1011{
                     let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                    //REVIEW: localization
                     message = "You left this " + channelType
                 }
+                //REVIEW: hardcode
                 if error?.code == -1009 {
                     self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows!, with: .none)
                 }
@@ -1042,6 +1046,14 @@ extension ChatViewController: ChannelObserverDelegate {
         //ENDREFACTORING
         
         addChannelObservers()
+        
+        guard let _ = filesAttachmentsModule else {return}
+        
+        if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
+            filesAttachmentsModule.presentWithCachedItems()
+        } else {
+            attachmentsView.hideAnimated()
+        }
     }
     
     func startButtonAction(sender: UIButton!) {
