@@ -116,8 +116,10 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
             AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was updated")
             Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
                 guard (error == nil) else { return }
+                ChannelObserver.sharedObserver.selectedChannel = self.channel
                 Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                     guard (error == nil) else { return }
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                 })
             })
         })
