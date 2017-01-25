@@ -78,7 +78,7 @@ private protocol PostApi: class {
     func loadFirstPage(_ channel: Channel, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func loadNextPage(_ channel: Channel, fromPost: Post, completion:  @escaping(_ isLastPage: Bool, _ error: Mattermost.Error?) -> Void)
     func loadPostsBeforePost(post: Post/*, shortList: Bool?*/, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void)
-    func loadPostsAfterPost(post: Post, shortList: Bool?, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void)
+    func loadPostsAfterPost(post: Post/*, shortList: Bool?*/, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void)
 }
 
 private protocol FileApi : class {
@@ -910,13 +910,28 @@ extension Api: PostApi {
         }
     }
     
-    func loadPostsAfterPost(post: Post, shortList: Bool? = false, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void) {
-        let size = (shortList == true) ? 10 : 60
-        let wrapper = PageWrapper(size: size, channel: post.channel, lastPostId: post.identifier)
+    func loadPostsAfterPost(post: Post,/* shortList: Bool? = false,*/ completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void) {
+        //let size = (shortList == true) ? 10 : 60
+        let wrapper = PageWrapper(size: 60, channel: post.channel, lastPostId: post.identifier)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.afterPostPathPattern(), wrapper)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            guard !skipMapping else {
+            let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
+            guard !skipMapping else { completion(isLastPage, nil); return }
+            
+            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+            RealmUtils.save(posts)
+            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
+            
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    completion(isLastPage, nil)
+                })
+            })
+            
+        /*    guard !skipMapping else {
                 completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 return
             }
@@ -925,7 +940,7 @@ extension Api: PostApi {
                 DispatchQueue.main.sync {
                     completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 }
-            })
+            })*/
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
             completion(isLastPage, error)

@@ -15,8 +15,8 @@ import MFSideMenu
 
 protocol ChatViewControllerInterface: class {
     func configureWith(postFound: Post)
-    func configureWithPost(post: Post)
-    func changeChannelForPostFromSearch()
+/*    func configureWithPost(post: Post)
+    func changeChannelForPostFromSearch()*/
 }
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -57,7 +57,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var numberOfSection = 3
     
     var hasNextPage: Bool = true
-    var postFromSearch: Post! = nil
+    var hasNewestPage: Bool = false
+    //var postFromSearch: Post! = nil
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
     
@@ -85,9 +86,9 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         addSLKKeyboardObservers()
         replaceStatusBar()
         
-        if self.postFromSearch != nil {
+   /*     if self.postFromSearch != nil {
             changeChannelForPostFromSearch()
-        }
+        }*/
         
         self.textView.resignFirstResponder()
         addBaseObservers()
@@ -114,20 +115,19 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 extension ChatViewController: ChatViewControllerInterface {
     func configureWith(postFound: Post) {
         RealmUtils.clearChannelWith(channelId: postFound.channelId!, exept: postFound)
+        self.hasNewestPage = true
         ChannelObserver.sharedObserver.selectedChannel = postFound.channel
-        
-        loadPostsAfterPost(post: postFound)
         loadPostsBeforePost(post: postFound)
     }
     
-    func configureWithPost(post: Post) {
+/*    func configureWithPost(post: Post) {
         self.postFromSearch = post
         (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(post.channel)
     }
     
     func changeChannelForPostFromSearch() {
         ChannelObserver.sharedObserver.selectedChannel = self.postFromSearch.channel
-    }
+    }*/
 }
 
 
@@ -171,7 +171,7 @@ private protocol Navigation {
 private protocol Request {
     func loadChannelUsers()
     func loadFirstPageOfData(isInitial: Bool)
-    func loadNextPageOfData()
+//func loadNextPageOfData()
     func sendPost()
 }
 
@@ -608,6 +608,7 @@ extension ChatViewController: Request {
             self.hideLoaderView()
             self.isLoadingInProgress = false
             self.hasNextPage = true
+            self.hasNewestPage = false
             self.dismissKeyboard(true)
 
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
@@ -616,7 +617,7 @@ extension ChatViewController: Request {
         })
     }
     
-    func loadNextPageOfData() {
+    /*func loadNextPageOfData() {
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
@@ -626,7 +627,7 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
         }
-    }
+    }*/
     
     func loadPostsBeforePost(post: Post, shortSize: Bool? = false) {
         guard !self.isLoadingInProgress else { return }
@@ -635,12 +636,9 @@ extension ChatViewController: Request {
         showTopActivityIndicator()
         Api.sharedInstance.loadPostsBeforePost(post: post) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
-            //if !self.hasNextPage { self.postFromSearch = nil; return }
-            
             self.isLoadingInProgress = false
+            
             self.hideTopActivityIndicator()
-            //self.resultsObserver.prepareResults()
-          //  self.loadPostsAfterPost(post: post, shortSize: true)
         }
     }
     
@@ -649,21 +647,11 @@ extension ChatViewController: Request {
         
         self.isLoadingInProgress = true
         showBottomActivityIndicator()
-        Api.sharedInstance.loadPostsAfterPost(post: post, shortList: shortSize) { (isLastPage, error) in
-            self.hasNextPage = !isLastPage
+        Api.sharedInstance.loadPostsAfterPost(post: post) { (isLastPage, error) in
+            self.hasNewestPage = !isLastPage
             self.isLoadingInProgress = false
             
             self.hideBottomActivityIndicator()
-            
-            /*self.resultsObserver.unsubscribeNotifications()
-            self.resultsObserver.prepareResults()
-            self.resultsObserver.subscribeNotifications()
-            
-            guard post.channel.identifier == self.channel.identifier else { return }*/
-            
-            //let indexPath =  self.resultsObserver.indexPathForPost(post)
-            //self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-            
         }
     }
     
@@ -837,12 +825,15 @@ extension ChatViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (tableView == self.tableView) {
             let post = resultsObserver?.postForIndexPath(indexPath)
-            if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
-            //    self.loadNextPageOfData()
+            if (indexPath == self.tableView.lastIndexPath()) && self.hasNextPage {
                 loadPostsBeforePost(post: self.resultsObserver.lastPost())
             }
+          /*  if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
+            //    self.loadNextPageOfData()
+                loadPostsBeforePost(post: self.resultsObserver.lastPost())
+            }*/
             
-            if indexPath == IndexPath(row: 0, section: 0) {
+            if (indexPath == IndexPath(row: 0, section: 0)) && self.hasNewestPage {
                 loadPostsAfterPost(post: post!)
             }
             
@@ -997,8 +988,12 @@ extension ChatViewController: ChannelObserverDelegate {
         }
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         self.textView.resignFirstResponder()
+
+        guard !self.hasNewestPage else { return }
         
-        if (self.postFromSearch == nil) {
+        self.loadChannelUsers()
+
+      /*  if (self.postFromSearch == nil) {
            // self.loadFirstPageOfData(isInitial: true)
             self.loadChannelUsers()
         } else {
@@ -1009,7 +1004,7 @@ extension ChatViewController: ChannelObserverDelegate {
             } else {
                // loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
             }
-        }
+        }*/
         
         //NEEDREFACTORING
         startHeadDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 0)

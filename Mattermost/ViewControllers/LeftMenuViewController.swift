@@ -253,7 +253,7 @@ extension LeftMenuViewController : Navigation {
         let navigation = self.menuContainerViewController.centerViewController as! UINavigationController
         if navigation.viewControllers.count == 2 {
             let chat = navigation.viewControllers.first as! ChatViewController
-            chat.postFromSearch = nil
+        //    chat.postFromSearch = nil
         }
         
         self.menuContainerViewController.toggleLeftSideMenuCompletion(nil)
