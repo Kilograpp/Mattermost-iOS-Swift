@@ -243,6 +243,7 @@ extension ChatViewController: Setup {
     fileprivate func setupInputViewButtons() {
         let width = UIScreen.screenWidth() / 3
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: 44))
+        
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.textColor = ColorBucket.blackColor
         titleLabel.isUserInteractionEnabled = true
@@ -1011,8 +1012,8 @@ extension ChatViewController: ChannelObserverDelegate {
         }*/
         
         //NEEDREFACTORING
-        startHeadDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 0)
-        startTextDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 1)
+        startHeadDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 0)
+        startTextDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 1)
         
         self.startTextDialogueLabel.removeFromSuperview()
         self.startHeadDialogueLabel.removeFromSuperview()
