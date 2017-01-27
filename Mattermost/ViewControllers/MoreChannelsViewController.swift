@@ -10,6 +10,8 @@ import Foundation
 import RealmSwift
 
 typealias ResultTuple = (object: RealmObject, checked: Bool)
+fileprivate let kShowChatSegueIdentifier = "showChatViewController"
+fileprivate let kSearchBarBackgroundColor = UIColor(red: 239.0/255.0, green: 239.0/255.0, blue: 244.0/255.0, alpha: 1.0)
 
 final class MoreChannelsViewController: UIViewController {
     
@@ -21,7 +23,8 @@ final class MoreChannelsViewController: UIViewController {
     fileprivate let emptySearchLabel = EmptyDialogueLabel()
     
     fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
-    fileprivate let showChatViewController = "showChatViewController"
+    //CODEREVIEW -> private constants
+
     
     fileprivate var results: Array<ResultTuple>! = Array()
     fileprivate var filteredResults: Array<ResultTuple>! = Array()
@@ -29,6 +32,8 @@ final class MoreChannelsViewController: UIViewController {
     fileprivate var alreadyUpdatedChannelCount: Int = 0
     fileprivate var addedChannelCount: Int = 0
     fileprivate var deletedChannelCount: Int = 0
+    
+    fileprivate var searchController: UISearchController!
     
     var isPrivateChannel: Bool = false
     var isSearchActive: Bool = false
@@ -109,8 +114,28 @@ extension MoreChannelsViewController: Setup {
     }
     
     func setupSearchBar() {
-        self.searchBar.returnKeyType = .done
-        self.searchBar.enablesReturnKeyAutomatically = false
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.searchBarStyle = .prominent
+        searchController.searchBar.backgroundColor = .white
+        searchController.searchBar.barTintColor = .white
+        let view: UIView = searchController.searchBar.subviews[0] as UIView
+        for subView: UIView in view.subviews {
+            if let textView = subView as? UITextField {
+                textView.backgroundColor = kSearchBarBackgroundColor
+            }
+        }
+        let rect = searchController.searchBar.frame
+        let lineView = UIView(frame: CGRect(x: 0, y: rect.size.height-2, width: rect.size.width, height: 2))
+        lineView.backgroundColor = UIColor.white
+        searchController.searchBar.addSubview(lineView)
+        
+        self.definesPresentationContext = false
+        self.extendedLayoutIncludesOpaqueBars = true
+        self.edgesForExtendedLayout = .all
+        searchController.searchBar.isTranslucent = false
+        tableView.tableHeaderView = searchController.searchBar
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
     }
     
     func setupTableView() {
@@ -466,6 +491,28 @@ extension MoreChannelsViewController : UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.builder.cellHeight()
+    }
+}
+
+//MARK: Search updating
+extension MoreChannelsViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            filterContent(searchText: searchText)
+            tableView.reloadData()
+        }
+    }
+    
+    func filterContent(searchText: String){
+        self.isSearchActive = (searchText.characters.count > 0)
+        self.filteredResults = self.results.filter({
+            if self.isPrivateChannel {
+                return (($0.object as! User).username?.hasPrefix(searchText.lowercased()))!
+            } else {
+                return (($0.object as! Channel).displayName?.lowercased().hasPrefix(searchText.lowercased()))!
+            }
+        })
+        self.emptySearchLabel.isHidden = (self.filteredResults.count > 0)
     }
 }
 

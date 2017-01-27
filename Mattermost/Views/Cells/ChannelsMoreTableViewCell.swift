@@ -12,6 +12,7 @@ import WebImage
 private protocol Configuration {
     func configureWith(resultTuple: ResultTuple)
     func cellHeigth() -> CGFloat
+    
     func configureWith(user: User)
     func configureWith(channel: Channel)
     func configureAvatarForPrivate(channel: Channel)
@@ -25,7 +26,7 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
     fileprivate let channelLetterLabel = UILabel()
     fileprivate let nameLabel = UILabel()
     let checkBoxButton = UIButton()
-    fileprivate let separatorView = UIView()
+    fileprivate let separatorLayer = CALayer()
     
 //MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -52,7 +53,8 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
                                            width: Constants.UI.DoublePaddingSize,
                                            height: Constants.UI.DoublePaddingSize)
         
-        self.separatorView.frame = CGRect(x: 70, y: 59, width: UIScreen.screenWidth() - 70, height: 1)
+        let separatorHeight = CGFloat(0.5)
+        self.separatorLayer.frame = CGRect(x: 70, y: 60 - separatorHeight, width: UIScreen.screenWidth() - 70, height: separatorHeight)
         
         super.layoutSubviews()
     }
@@ -108,9 +110,10 @@ extension ChannelsMoreTableViewCell: Configuration {
         self.avatarImageView.image = nil
         self.channelLetterLabel.superview?.isHidden = false
         self.channelLetterLabel.text = channel.displayName![0]
+        channelLetterLabel.textColor = UIColor.black
         
-        let backgroundLayer = self.channelLetterLabel.superview?.layer.sublayers?[0] as! CAGradientLayer
-        backgroundLayer.updateLayer(backgroundLayer)
+//        let backgroundLayer = self.channelLetterLabel.superview?.layer.sublayers?[0] as! CAGradientLayer
+//        backgroundLayer.updateLayer(backgroundLayer)
     }
 
     func configureAvatarForPrivate(channel: Channel) {
@@ -140,10 +143,6 @@ fileprivate protocol Setup {
     func setupNameLabel()
     func setupCheckBoxButton()
 }
-/*
-private protocol ChannelsMoreTableViewCellAction {
-    func checkBoxAction()
-}*/
 
 
 //MARK: Setup
@@ -174,13 +173,13 @@ extension ChannelsMoreTableViewCell: Setup {
         self.channelLetterLabel.textColor = ColorBucket.whiteColor
         self.channelLetterLabel.textAlignment = .center
         
-        let backgroundView = UIView(frame: frame)
-        let layer = CAGradientLayer.blueGradientForAvatarImageView()
-        layer.frame = CGRect(x:0, y:0, width:40, height: 40)
-        backgroundView.layer.insertSublayer(layer, at: 0)
-        backgroundView.addSubview(self.channelLetterLabel)
-        
-        self.avatarImageView.addSubview(backgroundView)
+//        let backgroundView = UIView(frame: frame)
+//        let layer = CAGradientLayer.blueGradientForAvatarImageView()
+//        layer.frame = CGRect(x:0, y:0, width:40, height: 40)
+//        backgroundView.layer.insertSublayer(layer, at: 0)
+//        backgroundView.addSubview(self.channelLetterLabel)
+//        
+//        self.avatarImageView.addSubview(backgroundView)
     }
     
     func setupNameLabel() {
@@ -204,7 +203,7 @@ extension ChannelsMoreTableViewCell: Setup {
     }
     
     func setupSeparatorView() {
-        self.separatorView.backgroundColor = ColorBucket.separatorViewBackgroundColor
-        self.addSubview(self.separatorView)
+        separatorLayer.backgroundColor = ColorBucket.separatorViewBackgroundColor.cgColor
+        self.layer.addSublayer(separatorLayer)
     }
 }
