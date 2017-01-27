@@ -169,14 +169,14 @@ extension LeftMenuViewController: Configuration {
         
         let realm = RealmUtils.realmForCurrentThread()
         self.resultsPublic =
-            realm.objects(Channel.self).filter(currentTeamPredicate).filter(currentUserInChannelPredicate).filter(publicTypePredicate).sorted(byProperty: sortName, ascending: true)
+            realm.objects(Channel.self).filter(currentTeamPredicate).filter(currentUserInChannelPredicate).filter(publicTypePredicate).sorted(byKeyPath: sortName, ascending: true)
         self.resultsPrivate =
-            realm.objects(Channel.self).filter(currentTeamPredicate).filter(currentUserInChannelPredicate).filter(privateTypePredicate).sorted(byProperty: sortName, ascending: true)
+            realm.objects(Channel.self).filter(currentTeamPredicate).filter(currentUserInChannelPredicate).filter(privateTypePredicate).sorted(byKeyPath: sortName, ascending: true)
         
         let allDirect = realm.objects(Channel.self).filter(currentTeamPredicate).filter(currentUserInChannelPredicate).filter(directTypePredicate).filter(directPreferedPredicate)
         
-        self.resultsDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == true")).sorted(byProperty: sortName, ascending: true)
-        self.resultsOutsideDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == false")).sorted(byProperty: sortName, ascending: true)
+        self.resultsDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == true")).sorted(byKeyPath: sortName, ascending: true)
+        self.resultsOutsideDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == false")).sorted(byKeyPath: sortName, ascending: true)
     }
     
     func configureInitialSelectedChannel() {
@@ -252,7 +252,7 @@ extension LeftMenuViewController : Navigation {
     fileprivate func toggleLeftSideMenu() {
         let navigation = self.menuContainerViewController.centerViewController as! UINavigationController
         if navigation.viewControllers.count == 2 {
-            let chat = navigation.viewControllers.first as! ChatViewController
+            _ = navigation.viewControllers.first as! ChatViewController
         //    chat.postFromSearch = nil
         }
         

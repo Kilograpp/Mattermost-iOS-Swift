@@ -62,7 +62,7 @@ final class MessageLabel: AttributedLabel, Delegate {
     }
     
     fileprivate func characterIndexForTouch(_ touch: UITouch) -> Int {
-        guard let storage = self.textStorage else { return 0 }
+        guard let _ = self.textStorage else { return 0 }
         
         let locationOfTouch = touch.location(in: self)
         self.textContainer.size = self.bounds.size

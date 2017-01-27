@@ -26,9 +26,9 @@ final class MoreChannelsViewController: UIViewController {
     //CODEREVIEW -> private constants
 
     
-    fileprivate var results: Array<ResultTuple>! = Array()
-    fileprivate var filteredResults: Array<ResultTuple>! = Array()
-    fileprivate var updatedCahnnelIndexPaths: Array<IndexPath> = Array()
+    fileprivate var results: [ResultTuple] = []
+    fileprivate var filteredResults: [ResultTuple] = []
+    fileprivate var updatedCahnnelIndexPaths: [IndexPath] = []
     fileprivate var alreadyUpdatedChannelCount: Int = 0
     fileprivate var addedChannelCount: Int = 0
     fileprivate var deletedChannelCount: Int = 0
@@ -141,7 +141,7 @@ extension MoreChannelsViewController: Setup {
     func setupTableView() {
         self.tableView.backgroundColor = ColorBucket.whiteColor
         self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
-        self.tableView.register(ChannelsMoreTableViewCell.self, forCellReuseIdentifier: ChannelsMoreTableViewCell.reuseIdentifier, cacheSize: 10)
+        self.tableView.register(ChannelsMoreTableViewCell.self, forCellReuseIdentifier: ChannelsMoreTableViewCell.reuseIdentifier, cacheSize: 15)
     }
     
     fileprivate func setupEmptyDialogueLabel() {
@@ -175,11 +175,11 @@ extension  MoreChannelsViewController: Configuration {
             
             for channel in channels! {
                 let isInChannel = Channel.isUserInChannelWith(channelId: channel.identifier!)
-                self.results?.append((channel, isInChannel))
+                self.results.append((channel, isInChannel))
             }
-            let existChannels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+            let existChannels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byKeyPath: sortName, ascending: true)
             for channel in existChannels {
-                self.results?.append((channel, channel.currentUserInChannel))
+                self.results.append((channel, channel.currentUserInChannel))
             }
             self.results = self.results.sorted(by: { ($0.object as! Channel).displayName! < ($1.object as! Channel).displayName! })
             self.tableView.reloadData()
@@ -196,13 +196,13 @@ extension  MoreChannelsViewController: Configuration {
             let sortName = UserAttributes.username.rawValue
             let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@", Constants.Realm.SystemUserIdentifier,
                                          Preferences.sharedInstance.currentUserId!)
-            let preferedUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+            let preferedUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byKeyPath: sortName, ascending: true)
             for user in preferedUsers {
-                self.results?.append((user, user.isPreferedDirectChannel()))
+                self.results.append((user, user.isPreferedDirectChannel()))
             }
             for user in users! {
-                if !(self.results?.contains(where: { ($0.object as! User).identifier == user.identifier && ($0.object as! User).identifier != Preferences.sharedInstance.currentUserId!}))! && user.identifier != Preferences.sharedInstance.currentUserId! {
-                    self.results?.append((user, false))
+                if !(self.results.contains(where: { ($0.object as! User).identifier == user.identifier && ($0.object as! User).identifier != Preferences.sharedInstance.currentUserId!})) && user.identifier != Preferences.sharedInstance.currentUserId! {
+                    self.results.append((user, false))
                 }
             }
             self.results = self.results.sorted(by: { ($0.object as! User).displayName! < ($1.object as! User).displayName! })
@@ -513,43 +513,5 @@ extension MoreChannelsViewController: UISearchResultsUpdating {
             }
         })
         self.emptySearchLabel.isHidden = (self.filteredResults.count > 0)
-    }
-}
-
-
-//MARK: UISearchBarDelegate
-extension MoreChannelsViewController: UISearchBarDelegate {
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.isSearchActive = ((self.searchBar.text?.characters.count)! > 0)
-        
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.isSearchActive = ((self.searchBar.text?.characters.count)! > 0)
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.text = nil
-        self.searchBar.resignFirstResponder()
-        self.isSearchActive = false
-        self.tableView.reloadData()
-        self.filteredResults = nil
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.isSearchActive = (searchText.characters.count > 0)
-        self.filteredResults = self.results.filter({
-            if self.isPrivateChannel {
-                return (($0.object as! User).username?.hasPrefix(searchText.lowercased()))!
-            } else {
-                return (($0.object as! Channel).displayName?.lowercased().hasPrefix(searchText.lowercased()))!
-            }
-        })
-        self.emptySearchLabel.isHidden = (self.filteredResults.count > 0)
-        self.tableView.reloadData()
     }
 }

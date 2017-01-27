@@ -16,7 +16,7 @@ final class AttributedTextLayoutData {
     var lines : [AttributedLineLayoutData] = []
     
     init(text: NSAttributedString, maxWidth: CGFloat) {
-        let stringRef = text as! CFAttributedString
+        let stringRef = text as CFAttributedString
         let typeSetter = CTTypesetterCreateWithAttributedString(stringRef);
         
         var lines: Array<AttributedLineLayoutData> = []
@@ -191,7 +191,7 @@ final class CTLabel : UIView {
             var origin = line.origin
             origin.y = self.bounds.size.height - origin.y
             let size = CGSize(width: CGFloat(lineWidth), height: ascent+descent+leading)
-            var lineRect = CGRect(origin: origin, size: size)
+            let lineRect = CGRect(origin: origin, size: size)
 //            lineRect = lineRect.offsetBy(dx: 0, dy: -ascent)
 
             if lineRect.contains(point) {

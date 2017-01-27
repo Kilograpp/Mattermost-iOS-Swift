@@ -41,6 +41,6 @@ final class Day: RealmObject {
     }
     
     func sortedPosts() -> Results<Post> {
-        return posts.sorted(byProperty: "createdAt", ascending: true)
+        return posts.sorted(byKeyPath: "createdAt", ascending: true)
     }
 }

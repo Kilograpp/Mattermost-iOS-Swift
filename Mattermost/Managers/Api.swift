@@ -286,10 +286,7 @@ extension Api: ChannelApi {
                 channels.forEach {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
-                   // $0.computeDispayNameIfNeeded()
-                  /*  if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{
-                        $0.members = channel.members
-                    }*/
+                    $0.gradientType = Int(arc4random_uniform(5))
                     realm.add($0, update: true)
                 }
             })
@@ -307,7 +304,6 @@ extension Api: ChannelApi {
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let channelDictionary = Reflection.fetchNotNullValues(object: mappingResult.firstObject as! Channel)
-            print(channelDictionary)
             RealmUtils.create(channelDictionary)
             let updatedChannel = try! Realm().objects(Channel.self).filter("identifier = %@", (mappingResult.firstObject as! Channel).identifier!).first!
             let realm = RealmUtils.realmForCurrentThread()
@@ -427,6 +423,7 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
+                channel.gradientType = Int(arc4random_uniform(5))
                 realm.add(channel)
             })
             completion(channel ,nil)
@@ -646,7 +643,6 @@ extension Api: UserApi {
     func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void){
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersNotInChannelPathPattern(), channel)!
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            print(operation.httpRequestOperation.responseString)
             //Temp cap
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
@@ -1083,7 +1079,6 @@ extension Api : FileApi {
             let fileInfos = mappingResult.array() as! [File]
             //PostUtils.update(post: post, fileInfos: fileInfos)
             for fileInfo in fileInfos {
-                print(fileInfo)
                 FileUtils.updateFileWith(info: fileInfo)
             }
             
