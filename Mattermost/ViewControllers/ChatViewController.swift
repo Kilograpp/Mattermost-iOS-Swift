@@ -71,6 +71,10 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         self.initialSetup()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        saveSentPostForChannel()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
@@ -132,6 +136,10 @@ extension ChatViewController: ChatViewControllerInterface {
     }*/
 }
 
+fileprivate protocol UnsentPostConfigure {
+    func saveSentPostForChannel()
+    func configureWithSentPost()
+}
 
 fileprivate protocol Setup {
     func initialSetup()
@@ -440,6 +448,18 @@ extension ChatViewController : Private {
     }
 }
 
+//MARK: UnsentPostConfigure
+extension ChatViewController: UnsentPostConfigure {
+    func saveSentPostForChannel() {
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write {
+            self.channel.unsentPost?.message = self.textView.text
+        }
+    }
+    func configureWithSentPost() {
+        self.textView.text = self.channel.unsentPost?.message
+    }
+}
 
 //MARK: Action
 extension ChatViewController: Action {
@@ -978,6 +998,7 @@ extension ChatViewController: ChannelObserverDelegate {
         
         if self.channel != nil {
             //remove action observer from old channel after relogin
+            saveSentPostForChannel()
             removeActionsObservers()
         }
         
@@ -1045,6 +1066,9 @@ extension ChatViewController: ChannelObserverDelegate {
             self.view.insertSubview(self.startButton, aboveSubview: self.tableView)
         }
         //ENDREFACTORING
+        
+        //update with UnsentPost
+        configureWithSentPost()
         
         addChannelObservers()
         

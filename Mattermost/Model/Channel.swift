@@ -89,6 +89,7 @@ final class Channel: RealmObject {
     dynamic var currentUserInChannel: Bool = false
     dynamic var isInterlocuterOnTeam: Bool = false
     dynamic var isDirectPrefered: Bool = false
+    dynamic var unsentPost: UnsentPost?  = UnsentPost()
     
     var isSelected: Bool {
         return self == ChannelObserver.sharedObserver.selectedChannel

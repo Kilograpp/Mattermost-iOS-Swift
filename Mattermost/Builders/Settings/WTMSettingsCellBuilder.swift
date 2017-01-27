@@ -140,7 +140,7 @@ extension WTMSettingsCellBuilder: Inteface {
         }
         
         if self.sensetiveWordsString.characters.count > 0 {
-            mentionKeys = StringUtils.commaTailedString(mentionKeys) + self.sensetiveWordsString
+            mentionKeys = StringUtils.commaTailedString(mentionKeys) + self.sensetiveWordsString.replacingOccurrences(of: " ", with: ",")
         }
         
         return mentionKeys
@@ -183,7 +183,7 @@ extension WTMSettingsCellBuilder: Configuration {
     }
     
     func configure(cell: TextSettingsTableViewCell) {
-        cell.wordsTextView?.text = self.sensetiveWordsString
+        cell.wordsTextView?.text = self.sensetiveWordsString.replacingOccurrences(of: ",", with: ", ")
         cell.placeholderLabel?.isHidden = ((cell.wordsTextView?.text.characters.count)! > 0)
     }
 }

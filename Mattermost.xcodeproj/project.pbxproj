@@ -56,6 +56,7 @@
 		864AF5BE1E0051730010F083 /* CreateChannelNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */; };
 		864AF5C01E0124000010F083 /* ChannelCreateField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864AF5BF1E0124000010F083 /* ChannelCreateField.swift */; };
 		864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */; };
+		86DE048E1E3A17DF008128EC /* UnsentPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DE048D1E3A17DF008128EC /* UnsentPost.swift */; };
 		8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
@@ -356,6 +357,7 @@
 		864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreateChannelNameCell.xib; sourceTree = "<group>"; };
 		864AF5BF1E0124000010F083 /* ChannelCreateField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCreateField.swift; sourceTree = "<group>"; };
 		864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+LoaderView.swift"; sourceTree = "<group>"; };
+		86DE048D1E3A17DF008128EC /* UnsentPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsentPost.swift; sourceTree = "<group>"; };
 		8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
@@ -829,6 +831,7 @@
 			children = (
 				D86EF7E81D57742200BD49A3 /* AttributedString */,
 				D8087AE01D414A71001918E8 /* Channel.swift */,
+				86DE048D1E3A17DF008128EC /* UnsentPost.swift */,
 				D8812AEB1D44141100436B5C /* File.swift */,
 				D8087AE61D427E23001918E8 /* Post.swift */,
 				D8087ADE1D413DB7001918E8 /* Team.swift */,
@@ -1791,6 +1794,7 @@
 				8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
+				86DE048E1E3A17DF008128EC /* UnsentPost.swift in Sources */,
 				860755AA1DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift in Sources */,
 				8B3CB3641DD268390078DE25 /* ImagePickingModule.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
@@ -1930,7 +1934,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",

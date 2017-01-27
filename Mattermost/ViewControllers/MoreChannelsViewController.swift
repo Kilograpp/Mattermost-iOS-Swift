@@ -167,7 +167,6 @@ extension  MoreChannelsViewController: Configuration {
         Api.sharedInstance.loadUsersList(offset: 0) { (users, error) in
             self.hideLoaderView()
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return  }
-            
          
             let sortName = UserAttributes.username.rawValue
             let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@", Constants.Realm.SystemUserIdentifier,
@@ -177,7 +176,7 @@ extension  MoreChannelsViewController: Configuration {
                 self.results?.append((user, user.isPreferedDirectChannel()))
             }
             for user in users! {
-                if !(self.results?.contains(where: { ($0.object as! User).identifier == user.identifier }))! {
+                if !(self.results?.contains(where: { ($0.object as! User).identifier == user.identifier && ($0.object as! User).identifier != Preferences.sharedInstance.currentUserId!}))! && user.identifier != Preferences.sharedInstance.currentUserId! {
                     self.results?.append((user, false))
                 }
             }
@@ -189,6 +188,7 @@ extension  MoreChannelsViewController: Configuration {
     func saveResults() {
         self.addedChannelCount = 0
         self.deletedChannelCount = 0
+        self.showLoaderView()
         if self.isPrivateChannel {
             saveUserResults()
         } else {
@@ -319,6 +319,7 @@ extension MoreChannelsViewController: Request {
         
         try! RealmUtils.realmForCurrentThread().write {
             channel?.currentUserInChannel = result.checked ? true : false
+            channel?.isDirectPrefered = result.checked ? true : false
         }
         
         var value: String
@@ -354,7 +355,31 @@ extension MoreChannelsViewController: Request {
                 self.updatedCahnnelIndexPaths.removeAll()
             }
             
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+            Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
+                guard (error == nil) else { self.hideLoaderView(); return }
+                Api.sharedInstance.loadChannels { (error) in
+                guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                
+                    let preferences = Preference.preferedUsersList()
+                    var usersIds = Array<String>()
+                    preferences.forEach{ usersIds.append($0.name!) }
+
+                    Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
+                        guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                        let predicate = NSPredicate(format: "identifier != %@ AND identifier != %@", Preferences.sharedInstance.currentUserId!,
+                                            Constants.Realm.SystemUserIdentifier)
+                        let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate)
+                        var ids = Array<String>()
+                        users.forEach{ ids.append($0.identifier) }
+                
+                        Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
+                            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+                        }
+                    }
+                }
+            })
         }
     }
 }
