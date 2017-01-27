@@ -168,24 +168,6 @@ extension SearchChatViewController {
 //MARK: Navigation
 extension SearchChatViewController {
     func returnToChat() {
-     /*   let transition = CATransition()
-        transition.duration = 0.3
-        transition.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transition.type = kCATransitionReveal
-        transition.subtype = kCATransitionFromTop
-        
-        self.navigationController?.view.layer.add(transition, forKey: kCATransition)
-        _ = self.navigationController?.popViewController(animated: false)*/
-        
-        let transition = CATransition()
-        transition.duration = 0.3
-        transition.type = kCATransitionPush
-        transition.subtype = kCATransitionFromTop
-        
-        let container = self.presentingViewController as! MFSideMenuContainerViewController
-        let navigation = container.centerViewController as! UINavigationController
-        
-        //navigation.topViewController?.view.layer.add(transition, forKey: kCATransition)
         self.dismiss(animated: true)
     }
     
@@ -196,15 +178,9 @@ extension SearchChatViewController {
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write { post.computeMissingFields() }
         
-        chat.configureWith(postFound: post);
+        chat.loadPostsBeforeSelectedPostFromSearch(post: post);
         
         returnToChat()
-        /*let viewControllers: Array = (self.navigationController?.viewControllers)!
-        let chat: ChatViewController = viewControllers[viewControllers.count - 2] as! ChatViewController
-        
-        
-        chat.configureWithPost(post: post)
-        _ = self.navigationController?.popViewController(animated: true)*/
     }
 }
 

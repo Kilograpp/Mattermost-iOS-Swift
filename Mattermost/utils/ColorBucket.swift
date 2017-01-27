@@ -105,6 +105,8 @@ extension ColorBucket : PostColors {
     static let searchTextColor = ColorBucket.brightBlue()
     static let searchTextBackgroundColor = ColorBucket.transparentOrange()
     static let searchAutocompleteTextColor = ColorBucket.middleBlack()
+    static let selectedPostFromSearchBackgroundColor = ColorBucket.transparentBrightBlue()
+    static let modificatedTransparentBrightBlueColor = ColorBucket.modificatedTransparentBrightBlue()
 }
 
 extension ColorBucket : CommonColors {
@@ -233,6 +235,14 @@ extension ColorBucket {
     
     fileprivate class func brightBlue() -> UIColor {
         return try! UIColor(rgba_throws: "#007AFF")
+    }
+    
+    fileprivate class func transparentBrightBlue() -> UIColor {
+        return UIColor(hex6: 0x007AFF, alpha: 0.05)
+    }
+    
+    fileprivate class func modificatedTransparentBrightBlue() -> UIColor {
+        return try! UIColor(rgba_throws: "#F2F8FF")
     }
     
     fileprivate class func sideMenuTextColor() -> UIColor {

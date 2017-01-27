@@ -14,9 +14,7 @@ import MFSideMenu
 
 
 protocol ChatViewControllerInterface: class {
-    func configureWith(postFound: Post)
-/*    func configureWithPost(post: Post)
-    func changeChannelForPostFromSearch()*/
+    func loadPostsBeforeSelectedPostFromSearch(post: Post)
 }
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -115,21 +113,12 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 
 //MARK: ChatViewControllerInterface
 extension ChatViewController: ChatViewControllerInterface {
-    func configureWith(postFound: Post) {
-        RealmUtils.clearChannelWith(channelId: postFound.channelId!, exept: postFound)
+    func loadPostsBeforeSelectedPostFromSearch(post: Post) {
+        RealmUtils.clearChannelWith(channelId: post.channelId!, exept: post)
         self.hasNewestPage = true
-        ChannelObserver.sharedObserver.selectedChannel = postFound.channel
-        loadPostsBeforePost(post: postFound)
+        ChannelObserver.sharedObserver.selectedChannel = post.channel
+        loadPostsBeforePost(post: post, needScroll: true)
     }
-    
-/*    func configureWithPost(post: Post) {
-        self.postFromSearch = post
-        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(post.channel)
-    }
-    
-    func changeChannelForPostFromSearch() {
-        ChannelObserver.sharedObserver.selectedChannel = self.postFromSearch.channel
-    }*/
 }
 
 
@@ -632,7 +621,7 @@ extension ChatViewController: Request {
         }
     }*/
     
-    func loadPostsBeforePost(post: Post, shortSize: Bool? = false) {
+    func loadPostsBeforePost(post: Post, needScroll: Bool? = false) {
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
@@ -642,6 +631,11 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             
             self.hideTopActivityIndicator()
+            if needScroll! {
+                let indexPath = self.resultsObserver.indexPathForPost(post)
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                (self.tableView.cellForRow(at: indexPath) as! FeedBaseTableViewCell).highlightBackground()
+            }
         }
     }
     
