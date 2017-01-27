@@ -10,11 +10,16 @@ import Foundation
 extension UIImage {
     static let avatarPlaceholderImage = UIImage(named: "feed_system_avatar")!
     
-    class func roundedImageOfSize(_ sourceImage: UIImage, size: CGSize) -> UIImage {
+    class func roundedImageOfSize(_ sourceImage: UIImage, size: CGSize, hightlighted: Bool? = false) -> UIImage {
         let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, true, 0)
         let context = UIGraphicsGetCurrentContext()
-        UIColor.white.setFill()
+        if !hightlighted! {
+            UIColor.white.setFill()
+        } else {
+            ColorBucket.modificatedTransparentBrightBlueColor.setFill()
+        }
+
         context?.fill(frame);
         UIBezierPath(roundedRect: frame, cornerRadius: ceil(size.width / 2)).addClip()
         sourceImage.draw(in: frame)
@@ -36,8 +41,6 @@ extension UIImage {
         let context = UIGraphicsGetCurrentContext()!
 
         bundleImage.draw(in: rect)
-//        UIColor.white.setFill()
-//        context.fill(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext()
         return image
@@ -50,9 +53,12 @@ extension UIImage {
         let ref = UIBezierPath(roundedRect: rect, cornerRadius: 20).cgPath
         context?.addPath(ref);
         context?.setFillColor(UIColor(white: 0.95, alpha: 1).cgColor);
+        //need to test
         context?.fillPath();
         
-        UIColor.white.setFill()
+        //UIColor.white.setFill()
+        //UIColor.red.setFill()
+        //UIColor.clear.setFill()
         context?.fill(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext();

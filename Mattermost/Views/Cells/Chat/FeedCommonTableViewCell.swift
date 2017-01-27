@@ -57,6 +57,8 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         super.prepareForReuse()
         
         self.parentView.removeFromSuperview()
+        self.backgroundColor = UIColor.white
+        self.messageLabel.backgroundColor = UIColor.white
     }
     
     override func draw(_ rect: CGRect) {
@@ -161,5 +163,15 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
         if (post.hasParentPost()) { height += 64 + Constants.UI.ShortPaddingSize }
         
         return height
+    }
+    
+    override func highlightBackground() {
+        let color = ColorBucket.selectedPostFromSearchBackgroundColor
+        self.backgroundColor = color
+        self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!,
+                                                                size: CGSize(width: 40, height: 40),
+                                                                hightlighted: true)
+        
+        self.messageLabel.backgroundColor = ColorBucket.modificatedTransparentBrightBlueColor
     }
 }
