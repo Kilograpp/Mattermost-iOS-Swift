@@ -1,6 +1,6 @@
-github "Kilograpp/ImagePickerSheetController" "8e26c71ab96f8720e2f53e43fbb34d4f64abd0e1"
+github "Kilograpp/ImagePickerSheetController" "0.9.4"
 github "jdg/MBProgressHUD" "1.0.0"
-github "Kilograpp/MFSideMenu" "c6119ce7e1b5ce1648bbb14a6234de56fa5afb36"
+github "Kilograpp/MFSideMenu" "1.0.1"
 github "ninjaprox/NVActivityIndicatorView" "v3.2"
 github "rs/SDWebImage" "3.8.2"
 github "Skyscanner/SkyFloatingLabelTextField" "v2.0.0"
