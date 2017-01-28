@@ -114,6 +114,7 @@ extension AttachmentImageCell: Setup {
     fileprivate func setupLabel() {
         fileNameLabel.font = TitleFont
         fileNameLabel.textColor = ColorBucket.blueColor
+        fileNameLabel.backgroundColor = ColorBucket.whiteColor
         fileNameLabel.numberOfLines = 1
         self.addSubview(fileNameLabel)
     }
