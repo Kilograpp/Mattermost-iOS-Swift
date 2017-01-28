@@ -90,39 +90,49 @@ final class CTLabel : UIView {
     var onEmailTap: ((_ email: String) -> Void)?
     
     override func draw(_ rect: CGRect) {
+
+        
+        let ctx = UIGraphicsGetCurrentContext()!
         defer {
-            self.transform = CGAffineTransform(scaleX: 1.0, y: -1.0);
+//            self.transform = CGAffineTransform(scaleX: 1.0, y: -1.0);
+            ctx.restoreGState()
         }
+        
+        ctx.saveGState()
+        
+        ctx.textMatrix = .identity
+        ctx.translateBy(x: 0, y: bounds.height)
+        ctx.scaleBy(x: 1.0, y: -1.0)
         
         guard let dataToDisplay = highlighted ? highlightedLayoutData : layoutData else {return}
         dataToDisplay.drawTextInContext(ctx: UIGraphicsGetCurrentContext()!)
     }
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        guard let point = touches.first?.location(in: self) else {return}
-//        let charIdx = charachterIndexAtPoint(point: point)
-//        
-//        if charIdx != NSNotFound {
-//            var range = NSRange()
-//            guard let ld = layoutData else {
-//                return
-//            }
-//
-//            let text = ld.attributedText
-//            let username = text.mentionAtIndex(charIdx, effectiveRange: &range)
-//            let hashTag = text.hashTagAtIndex(charIdx, effectiveRange: &range)
-//            let email = text.emailAtIndex(charIdx, effectiveRange: &range)
-//            let url = text.URLAtIndex(charIdx, effectiveRange: &range)
-//            let phone = text.phoneAtIndex(charIdx, effectiveRange: &range)
-//            
-//            if (username != nil) || (hashTag != nil) || (email != nil) || (url != nil) || (phone != nil) {
-//                let mutableString = text.mutableCopy() as! NSMutableAttributedString
-//                mutableString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.blue, range: range)
-//                let highlightedText = (mutableString.copy() as! NSAttributedString)
-//                highlightedLayoutData = AttributedTextLayoutData(text: highlightedText, maxWidth: width)
-//                setNeedsDisplay()
-//            }
-//        }
-//    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let point = touches.first?.location(in: self) else {return}
+        let charIdx = charachterIndexAtPoint(point: point)
+        
+        if charIdx != NSNotFound {
+            var range = NSRange()
+            guard let ld = layoutData else {
+                return
+            }
+
+            let text = ld.attributedText
+            let username = text.mentionAtIndex(charIdx, effectiveRange: &range)
+            let hashTag = text.hashTagAtIndex(charIdx, effectiveRange: &range)
+            let email = text.emailAtIndex(charIdx, effectiveRange: &range)
+            let url = text.URLAtIndex(charIdx, effectiveRange: &range)
+            let phone = text.phoneAtIndex(charIdx, effectiveRange: &range)
+            
+            if (username != nil) || (hashTag != nil) || (email != nil) || (url != nil) || (phone != nil) {
+                let mutableString = text.mutableCopy() as! NSMutableAttributedString
+                mutableString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.blue, range: range)
+                let highlightedText = (mutableString.copy() as! NSAttributedString)
+                highlightedLayoutData = AttributedTextLayoutData(text: highlightedText, maxWidth: width)
+                setNeedsDisplay()
+            }
+        }
+    }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let point = touches.first?.location(in: self) else {return}
