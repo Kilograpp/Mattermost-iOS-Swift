@@ -89,6 +89,9 @@ final class Channel: RealmObject {
     dynamic var currentUserInChannel: Bool = false
     dynamic var isInterlocuterOnTeam: Bool = false
     dynamic var isDirectPrefered: Bool = false
+    dynamic var unsentPost: UnsentPost?  = UnsentPost()
+    //0..6 int
+    dynamic var gradientType: Int = 0
     
     var isSelected: Bool {
         return self == ChannelObserver.sharedObserver.selectedChannel
@@ -126,7 +129,7 @@ final class Channel: RealmObject {
     
     func lastPost() -> Post? {
         let predicate = NSPredicate(format: "channelId = %@", identifier ?? "")
-        let results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byProperty: "createdAt", ascending: false)
+        let results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byKeyPath: "createdAt", ascending: false)
         
         return results.first
     }

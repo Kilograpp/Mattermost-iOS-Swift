@@ -44,7 +44,7 @@ final class PostUtils: NSObject {
 
 //MARK: Properies
     static let sharedInstance = PostUtils()
-    fileprivate let upload_images_group = DispatchGroup()
+    fileprivate let upload_files_group = DispatchGroup()
     fileprivate var files = Array<AssignedAttachmentViewItem>()
     fileprivate var test: File?
     
@@ -163,14 +163,14 @@ extension PostUtils: Upload {
     func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
         self.files.append(contentsOf: items)
         for item in items {
-            self.upload_images_group.enter()
+            self.upload_files_group.enter()
             item.uploading = true
             Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (file, error) in
                 guard self.files.contains(item) else { return }
                 
                 defer {
                     completion(false, error, item)
-                    self.upload_images_group.leave()
+                    self.upload_files_group.leave()
                 }
                 
                 guard error == nil else { self.files.removeObject(item); return }
@@ -186,7 +186,7 @@ extension PostUtils: Upload {
             })
         }
         
-        self.upload_images_group.notify(queue: DispatchQueue.main, execute: {
+        self.upload_files_group.notify(queue: DispatchQueue.main, execute: {
             completion(true, nil, AssignedAttachmentViewItem(image: UIImage()))
         })
     }
@@ -245,12 +245,6 @@ extension PostUtils: PostConfiguration {
     func assignFilesToPostIfNeeded(_ post: Post) {
         guard self.assignedFiles.count > 0 else { return }
     
-//        let fileIds = List<RealmString>()
-//        self.assignedFiles.forEach({
-//            let fileId = RealmString.initWith(string: $0.identifier!)
-//            fileIds.append(fileId)
-//        })
-//        post.fileIds = fileIds
         self.assignedFiles.forEach({post.files.append($0)})
     }
     

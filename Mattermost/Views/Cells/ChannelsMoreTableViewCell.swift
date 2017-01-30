@@ -12,6 +12,7 @@ import WebImage
 private protocol Configuration {
     func configureWith(resultTuple: ResultTuple)
     func cellHeigth() -> CGFloat
+    
     func configureWith(user: User)
     func configureWith(channel: Channel)
     func configureAvatarForPrivate(channel: Channel)
@@ -25,7 +26,10 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
     fileprivate let channelLetterLabel = UILabel()
     fileprivate let nameLabel = UILabel()
     let checkBoxButton = UIButton()
-    fileprivate let separatorView = UIView()
+    fileprivate let separatorLayer = CALayer()
+    
+    fileprivate var channelId: String = ""
+    fileprivate var channel: Channel?
     
 //MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -39,20 +43,22 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
     }
     
     override func layoutSubviews() {
-        self.avatarImageView.frame = CGRect(x: Constants.UI.StandardPaddingSize, y: Constants.UI.LongPaddingSize, width: 40, height: 40)
+        avatarImageView.frame = CGRect(x: Constants.UI.StandardPaddingSize, y: Constants.UI.LongPaddingSize, width: 40, height: 40)
+        channelLetterLabel.frame = avatarImageView.frame
         
         let width = UIScreen.screenWidth() - self.avatarImageView.frame.maxX - 4 * Constants.UI.StandardPaddingSize - Constants.UI.DoublePaddingSize
-        self.nameLabel.frame = CGRect(x: self.avatarImageView.frame.maxX + Constants.UI.StandardPaddingSize,
+        nameLabel.frame = CGRect(x: self.avatarImageView.frame.maxX + Constants.UI.StandardPaddingSize,
                                       y: Constants.UI.DoublePaddingSize,
                                       width: width,
                                       height: Constants.UI.DoublePaddingSize)
         
-        self.checkBoxButton.frame = CGRect(x: self.nameLabel.frame.maxX + Constants.UI.DoublePaddingSize,
+        checkBoxButton.frame = CGRect(x: self.nameLabel.frame.maxX + Constants.UI.DoublePaddingSize,
                                            y: Constants.UI.DoublePaddingSize,
                                            width: Constants.UI.DoublePaddingSize,
                                            height: Constants.UI.DoublePaddingSize)
         
-        self.separatorView.frame = CGRect(x: 70, y: 59, width: UIScreen.screenWidth() - 70, height: 1)
+        let separatorHeight = CGFloat(0.5)
+        separatorLayer.frame = CGRect(x: 70, y: 60 - separatorHeight, width: UIScreen.screenWidth() - 70, height: separatorHeight)
         
         super.layoutSubviews()
     }
@@ -86,40 +92,34 @@ extension ChannelsMoreTableViewCell: Configuration {
         ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
             self?.avatarImageView.image = image
         }
-        self.channelLetterLabel.superview?.isHidden = true
         self.nameLabel.text = user.displayName
     }
     
     func configureWith(channel: Channel) {
-        if (channel.privateType == Constants.ChannelType.PublicTypeChannel) {
-            configureAvatarForPublic(channel: channel)
-        }
-        if (channel.privateType == Constants.ChannelType.PrivateTypeChannel) {
-            configureAvatarForPrivate(channel: channel)
-        }
+        self.channel = channel
+        channelId = channel.identifier!
         if (channel.privateType == Constants.ChannelType.DirectTypeChannel) {
             configureAvatarForDirect(channel: channel)
+        } else {
+            configureAvatarForPublic(channel: channel)
         }
         
         self.nameLabel.text = channel.displayName
     }
     
     func configureAvatarForPublic(channel: Channel) {
-        self.avatarImageView.image = nil
-        self.channelLetterLabel.superview?.isHidden = false
+        GradientImageBuilder.gradientImageWithType(type: channel.gradientType) { (image) in
+            guard self.channelId == self.channel?.identifier else {return}
+            
+            self.avatarImageView.image = image
+        }
         self.channelLetterLabel.text = channel.displayName![0]
-        
-        let backgroundLayer = self.channelLetterLabel.superview?.layer.sublayers?[0] as! CAGradientLayer
-        backgroundLayer.updateLayer(backgroundLayer)
     }
 
     func configureAvatarForPrivate(channel: Channel) {
         self.avatarImageView.image = nil
         self.channelLetterLabel.superview?.isHidden = false
         self.channelLetterLabel.text = channel.displayName![0]
-        
-        let backgroundLayer = self.channelLetterLabel.superview?.layer.sublayers?[0] as! CAGradientLayer
-        backgroundLayer.updateLayer(backgroundLayer)
     }
     
     func configureAvatarForDirect(channel: Channel) {
@@ -128,7 +128,7 @@ extension ChannelsMoreTableViewCell: Configuration {
         ImageDownloader.downloadFeedAvatarForUser(user) { [weak self] (image, error) in
             self?.avatarImageView.image = image
         }
-        self.channelLetterLabel.superview?.isHidden = true
+        self.channelLetterLabel.isHidden = true
     }
 }
 
@@ -140,16 +140,12 @@ fileprivate protocol Setup {
     func setupNameLabel()
     func setupCheckBoxButton()
 }
-/*
-private protocol ChannelsMoreTableViewCellAction {
-    func checkBoxAction()
-}*/
 
 
 //MARK: Setup
 extension ChannelsMoreTableViewCell: Setup {
     func initialSetup() {
-        self.selectionStyle = .none
+        selectionStyle = .none
         setupAvatarImageView()
         setupChannelLetterLabel()
         setupNameLabel()
@@ -158,29 +154,24 @@ extension ChannelsMoreTableViewCell: Setup {
     }
     
     func setupAvatarImageView() {
-        self.avatarImageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        self.avatarImageView.contentMode = .scaleAspectFill
-        self.avatarImageView.layer.cornerRadius = Constants.UI.DoublePaddingSize
-        self.avatarImageView.layer.masksToBounds = true
-        self.addSubview(self.avatarImageView)
+        avatarImageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        avatarImageView.contentMode = .scaleAspectFill
+        avatarImageView.layer.cornerRadius = Constants.UI.DoublePaddingSize
+        avatarImageView.layer.masksToBounds = true
+        addSubview(self.avatarImageView)
     }
     
     func setupChannelLetterLabel() {
         let frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         
-        self.channelLetterLabel.frame = frame
-        self.channelLetterLabel.backgroundColor = UIColor.clear
-        self.channelLetterLabel.font = FontBucket.letterChannelFont
-        self.channelLetterLabel.textColor = ColorBucket.whiteColor
-        self.channelLetterLabel.textAlignment = .center
+        channelLetterLabel.frame = frame
+        channelLetterLabel.backgroundColor = UIColor.clear
+        channelLetterLabel.font = FontBucket.letterChannelFont
+        channelLetterLabel.textColor = ColorBucket.whiteColor
+        channelLetterLabel.textAlignment = .center
+        channelLetterLabel.textColor = UIColor.white
         
-        let backgroundView = UIView(frame: frame)
-        let layer = CAGradientLayer.blueGradientForAvatarImageView()
-        layer.frame = CGRect(x:0, y:0, width:40, height: 40)
-        backgroundView.layer.insertSublayer(layer, at: 0)
-        backgroundView.addSubview(self.channelLetterLabel)
-        
-        self.avatarImageView.addSubview(backgroundView)
+        addSubview(channelLetterLabel)
     }
     
     func setupNameLabel() {
@@ -192,19 +183,19 @@ extension ChannelsMoreTableViewCell: Setup {
     }
     
     func setupCheckBoxButton() {
-        self.checkBoxButton.frame = CGRect(x: 0, y: 0, width: Constants.UI.DoublePaddingSize, height: Constants.UI.DoublePaddingSize)
-        self.checkBoxButton.backgroundColor = ColorBucket.whiteColor
-        self.checkBoxButton.layer.cornerRadius = Constants.UI.DoublePaddingSize / 2
-        self.checkBoxButton.layer.borderColor = ColorBucket.checkButtonBorderColor.cgColor
-        self.checkBoxButton.layer.borderWidth = 1
-        self.checkBoxButton.layer.masksToBounds = true
-        self.checkBoxButton.setImage(UIImage(named: "check_blue"), for: .selected)
-        self.checkBoxButton.isUserInteractionEnabled = false
-        self.addSubview(self.checkBoxButton)
+        checkBoxButton.frame = CGRect(x: 0, y: 0, width: Constants.UI.DoublePaddingSize, height: Constants.UI.DoublePaddingSize)
+        checkBoxButton.backgroundColor = ColorBucket.whiteColor
+        checkBoxButton.layer.cornerRadius = Constants.UI.DoublePaddingSize / 2
+        checkBoxButton.layer.borderColor = ColorBucket.checkButtonBorderColor.cgColor
+        checkBoxButton.layer.borderWidth = 1
+        checkBoxButton.layer.masksToBounds = true
+        checkBoxButton.setImage(UIImage(named: "check_blue"), for: .selected)
+        checkBoxButton.isUserInteractionEnabled = false
+        addSubview(checkBoxButton)
     }
     
     func setupSeparatorView() {
-        self.separatorView.backgroundColor = ColorBucket.separatorViewBackgroundColor
-        self.addSubview(self.separatorView)
+        separatorLayer.backgroundColor = ColorBucket.separatorViewBackgroundColor.cgColor
+        self.layer.addSublayer(separatorLayer)
     }
 }

@@ -122,6 +122,7 @@ extension AllMembersViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //CODEREVIEW WTF????
         var cell: UITableViewCell!
         let memberCell = tableView.dequeueReusableCell(withIdentifier: "memberChannelSettingsCell") as! MemberChannelSettingsCell
         let member = searchController.isActive ? searchMembersList[indexPath.row] : membersList[indexPath.row]
@@ -141,10 +142,6 @@ extension AllMembersViewController: UITableViewDataSource {
 
 //MARK: UITableViewDelegate
 extension AllMembersViewController: UITableViewDelegate {
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard self.lastSelectedIndexPath == nil else { return }
         self.lastSelectedIndexPath = indexPath

@@ -56,6 +56,7 @@
 		864AF5BE1E0051730010F083 /* CreateChannelNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */; };
 		864AF5C01E0124000010F083 /* ChannelCreateField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864AF5BF1E0124000010F083 /* ChannelCreateField.swift */; };
 		864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */; };
+		86DE048E1E3A17DF008128EC /* UnsentPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DE048D1E3A17DF008128EC /* UnsentPost.swift */; };
 		8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
@@ -242,6 +243,7 @@
 		D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */; };
 		D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165A91D47EA920014C831 /* UIImage+Additions.swift */; };
 		D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F895F51D5CC8CB0019342E /* LeftMenuSectionHeader.swift */; };
+		D6FB96421E3BC4FA00202CCC /* GradientImagesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6FB96411E3BC4FA00202CCC /* GradientImagesBuilder.swift */; };
 		D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AD31D401FB3001918E8 /* RealmUtils.swift */; };
 		D8087ADF1D413DB7001918E8 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087ADE1D413DB7001918E8 /* Team.swift */; };
 		D8087AE11D414A71001918E8 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE01D414A71001918E8 /* Channel.swift */; };
@@ -356,6 +358,7 @@
 		864AF5BC1E0051730010F083 /* CreateChannelNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreateChannelNameCell.xib; sourceTree = "<group>"; };
 		864AF5BF1E0124000010F083 /* ChannelCreateField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCreateField.swift; sourceTree = "<group>"; };
 		864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+LoaderView.swift"; sourceTree = "<group>"; };
+		86DE048D1E3A17DF008128EC /* UnsentPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsentPost.swift; sourceTree = "<group>"; };
 		8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
@@ -553,6 +556,7 @@
 		D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = Carthage/Build/iOS/MBProgressHUD.framework; sourceTree = "<group>"; };
 		D6E165A91D47EA920014C831 /* UIImage+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Additions.swift"; sourceTree = "<group>"; };
 		D6F895F51D5CC8CB0019342E /* LeftMenuSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuSectionHeader.swift; path = LeftMenu/LeftMenuSectionHeader.swift; sourceTree = "<group>"; };
+		D6FB96411E3BC4FA00202CCC /* GradientImagesBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientImagesBuilder.swift; sourceTree = "<group>"; };
 		D8087AD31D401FB3001918E8 /* RealmUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmUtils.swift; sourceTree = "<group>"; };
 		D8087ADE1D413DB7001918E8 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		D8087AE01D414A71001918E8 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
@@ -829,6 +833,7 @@
 			children = (
 				D86EF7E81D57742200BD49A3 /* AttributedString */,
 				D8087AE01D414A71001918E8 /* Channel.swift */,
+				86DE048D1E3A17DF008128EC /* UnsentPost.swift */,
 				D8812AEB1D44141100436B5C /* File.swift */,
 				D8087AE61D427E23001918E8 /* Post.swift */,
 				D8087ADE1D413DB7001918E8 /* Team.swift */,
@@ -1257,6 +1262,7 @@
 				864AF5BF1E0124000010F083 /* ChannelCreateField.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
 				D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */,
+				D6FB96411E3BC4FA00202CCC /* GradientImagesBuilder.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1601,6 +1607,7 @@
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
+				D6FB96421E3BC4FA00202CCC /* GradientImagesBuilder.swift in Sources */,
 				8B3CB3671DD268690078DE25 /* ChannelObserver.swift in Sources */,
 				8B3CB3441DD2675F0078DE25 /* TeamCellBuilder.swift in Sources */,
 				4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */,
@@ -1791,6 +1798,7 @@
 				8BE969A51D74C73B0010A524 /* AboutViewController.swift in Sources */,
 				D8436E731D26E48C00DEF464 /* LocaleUtils.swift in Sources */,
 				CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */,
+				86DE048E1E3A17DF008128EC /* UnsentPost.swift in Sources */,
 				860755AA1DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift in Sources */,
 				8B3CB3641DD268390078DE25 /* ImagePickingModule.swift in Sources */,
 				D8436E6D1D26D9F300DEF464 /* RKRequestDescriptor+RuntimeFinder.swift in Sources */,
@@ -1898,7 +1906,7 @@
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0.2;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
@@ -1930,7 +1938,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Maxim Gubin (X4SVWSJYVW)";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1945,7 +1953,7 @@
 				PROVISIONING_PROFILE = "41c923ca-0156-4473-b579-4f04388467ef";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0.2;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
@@ -2134,7 +2142,7 @@
 				PROVISIONING_PROFILE = "f04ccae7-c78d-465d-ab85-1f59e64c5fdc";
 				PROVISIONING_PROFILE_SPECIFIER = "Appstore Mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0.2;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;

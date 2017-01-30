@@ -186,7 +186,7 @@ extension NotifyProps: TriggerWords {
         }
         var otherWords = self.otherNonCaseSensitive()
         if (otherWords.characters.count > 0) {
-            otherWords = "\"" + otherWords.replacingOccurrences(of: ",", with: "\",\"") + "\""
+            otherWords = "\"" + otherWords.replacingOccurrences(of: ",", with: "\", \"") + "\""
             words = StringUtils.commaTailedString(words)
             words += otherWords
         }

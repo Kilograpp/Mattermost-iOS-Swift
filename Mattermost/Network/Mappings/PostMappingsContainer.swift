@@ -118,8 +118,8 @@ extension PostMappingsContainer: RequestMapping {
         let mapping = RKObjectMapping.request()
         mapping?.addAttributeMappings(from: [ "message" ])
         mapping?.addAttributeMappings(from: [
-//            PostAttributes.identifier.rawValue : "id",
-//            Post.filesLinkPath()               : "filenames",
+            PostAttributes.identifier.rawValue : "id",
+            Post.filesLinkPath()               : "filenames",
             PostAttributes.channelId.rawValue  : "channel_id",
             PostAttributes.pendingId.rawValue  : "pending_post_id",
             PostAttributes.parentId.rawValue   : "parent_id",

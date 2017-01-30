@@ -82,7 +82,6 @@ private protocol PostApi: class {
 }
 
 private protocol FileApi : class {
-    func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,channel: Channel, completion:  @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void, progress:  @escaping(_ identifier: String, _ value: Float) -> Void)
     func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
     func getInfo(fileId: String)
     func loadFileInfosFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -287,10 +286,7 @@ extension Api: ChannelApi {
                 channels.forEach {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
-                   // $0.computeDispayNameIfNeeded()
-                  /*  if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{
-                        $0.members = channel.members
-                    }*/
+                    $0.gradientType = Int(arc4random_uniform(5))
                     realm.add($0, update: true)
                 }
             })
@@ -308,7 +304,6 @@ extension Api: ChannelApi {
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let channelDictionary = Reflection.fetchNotNullValues(object: mappingResult.firstObject as! Channel)
-            print(channelDictionary)
             RealmUtils.create(channelDictionary)
             let updatedChannel = try! Realm().objects(Channel.self).filter("identifier = %@", (mappingResult.firstObject as! Channel).identifier!).first!
             let realm = RealmUtils.realmForCurrentThread()
@@ -428,6 +423,7 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
+                channel.gradientType = Int(arc4random_uniform(5))
                 realm.add(channel)
             })
             completion(channel ,nil)
@@ -647,7 +643,6 @@ extension Api: UserApi {
     func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void){
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersNotInChannelPathPattern(), channel)!
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            print(operation.httpRequestOperation.responseString)
             //Temp cap
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
@@ -1039,29 +1034,6 @@ extension Api: PostApi {
 
 //MARK: FileApi
 extension Api : FileApi {
-    func uploadImageItemAtChannel(_ item: AssignedAttachmentViewItem,
-                                  channel: Channel,
-                                  completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
-                                  progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
-        let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
-        let params = ["channel_id" : channel.identifier!,
-                      "client_ids"  : StringUtils.randomUUID()]
-        
-        self.manager.post(image: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
-            let file = File()
-            let dictionary = mappingResult.firstObject as! [String:String]
-            let rawLink = dictionary[FileAttributes.rawLink.rawValue]
-            file.identifier = params["client_ids"]
-            file.rawLink = rawLink
-            completion(file, nil)
-            RealmUtils.save(file)
-            }, failure: { (error) in
-                completion(nil, error)
-            }) { (value) in
-                progress(item.identifier, value)
-        }
-    }
-    
     func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem) {
         self.manager.cancelUploadingOperationForImageItem(item)
     }
@@ -1074,18 +1046,15 @@ extension Api : FileApi {
         let params = ["channel_id" : channel.identifier!,
                       "client_ids" : item.identifier]
         
+        let particialCompletion = { (mappingResult: RKMappingResult) in
+            let file = mappingResult.firstObject as! File
+            RealmUtils.save(file)
+            completion(file, nil)
+        }
+        
         if item.isFile {
             self.manager.postFileWith(url: item.url, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
-               /* let file = File()
-                let dictionary = mappingResult.firstObject as! [String:String]
-                let rawLink = dictionary[FileAttributes.rawLink.rawValue]
-                file.identifier = params["client_ids"]
-                file.rawLink = rawLink
-                completion(file, nil)
-                RealmUtils.save(file)*/
-                let file = mappingResult.firstObject as! File
-                RealmUtils.save(file)
-                completion(file, nil)
+                particialCompletion(mappingResult)
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in
@@ -1093,16 +1062,7 @@ extension Api : FileApi {
             }
         } else {
             self.manager.post(image: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
-                /*let file = File()
-                let dictionary = mappingResult.firstObject as! [String:String]
-                let rawLink = dictionary[FileAttributes.rawLink.rawValue]
-                file.identifier = params["client_ids"]
-                file.rawLink = rawLink
-                completion(file, nil)*/
-                
-                let file = mappingResult.firstObject as! File
-                RealmUtils.save(file)
-                completion(file, nil)
+                particialCompletion(mappingResult)
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in
@@ -1119,7 +1079,6 @@ extension Api : FileApi {
             let fileInfos = mappingResult.array() as! [File]
             //PostUtils.update(post: post, fileInfos: fileInfos)
             for fileInfo in fileInfos {
-                print(fileInfo)
                 FileUtils.updateFileWith(info: fileInfo)
             }
             
