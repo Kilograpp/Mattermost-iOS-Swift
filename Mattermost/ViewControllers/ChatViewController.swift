@@ -956,6 +956,7 @@ extension ChatViewController {
         let keyboardRectangle = keyboardFrame.cgRectValue
         let keyboardHeight = keyboardRectangle.height
         self.scrollBottomUp(keyboardHeight: keyboardHeight)
+        self.installContentInsents()
     }
     
     func keyboardWillHide(_ notification:NSNotification) {
@@ -964,6 +965,7 @@ extension ChatViewController {
         let keyboardRectangle = keyboardFrame.cgRectValue
         let keyboardHeight = keyboardRectangle.height
         self.scrollBottomDown(keyboardHeight: keyboardHeight)
+        self.installContentInsents()
     }
 }
 
