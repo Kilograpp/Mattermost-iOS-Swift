@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="g0q-Ue-pbo">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Git Lab View Controller-->
+        <scene sceneID="HhN-Jk-dgK">
+            <objects>
+                <viewController id="g0q-Ue-pbo" customClass="GitLabViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Myt-lo-t6n"/>
+                        <viewControllerLayoutGuide type="bottom" id="YEy-DV-raT"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="LPn-QV-Arw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OMB-Pb-ADk">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1nR-6R-Kj8">
+                                        <rect key="frame" x="319" y="26" width="48" height="30"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelButtonAction:" destination="g0q-Ue-pbo" eventType="touchUpInside" id="ycc-V5-Mul"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.10980392156862745" green="0.45490196078431372" blue="0.81568627450980391" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="30o-iW-MWF"/>
+                                    <constraint firstAttribute="trailing" secondItem="1nR-6R-Kj8" secondAttribute="trailing" constant="8" id="LKi-yR-sv4"/>
+                                    <constraint firstAttribute="bottom" secondItem="1nR-6R-Kj8" secondAttribute="bottom" constant="8" id="fmj-WQ-CWa"/>
+                                </constraints>
+                            </view>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MXf-mt-H7G">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <outlet property="delegate" destination="g0q-Ue-pbo" id="Rwe-VN-nYw"/>
+                                </connections>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OMB-Pb-ADk" firstAttribute="leading" secondItem="LPn-QV-Arw" secondAttribute="leading" id="OoS-nX-SXM"/>
+                            <constraint firstItem="MXf-mt-H7G" firstAttribute="leading" secondItem="LPn-QV-Arw" secondAttribute="leading" id="ZHB-go-mEy"/>
+                            <constraint firstItem="YEy-DV-raT" firstAttribute="top" secondItem="MXf-mt-H7G" secondAttribute="bottom" id="oYu-UK-G5O"/>
+                            <constraint firstItem="MXf-mt-H7G" firstAttribute="top" secondItem="OMB-Pb-ADk" secondAttribute="bottom" id="qJr-io-3fE"/>
+                            <constraint firstAttribute="trailing" secondItem="OMB-Pb-ADk" secondAttribute="trailing" id="w3s-hm-0vC"/>
+                            <constraint firstAttribute="trailing" secondItem="MXf-mt-H7G" secondAttribute="trailing" id="wDB-lg-MEe"/>
+                            <constraint firstItem="OMB-Pb-ADk" firstAttribute="top" secondItem="LPn-QV-Arw" secondAttribute="top" id="yyh-TH-vRd"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="MXf-mt-H7G" id="a2e-fG-aTw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IMP-lL-0AA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="8.8000000000000007" y="143.47826086956522"/>
+        </scene>
+    </scenes>
+</document>

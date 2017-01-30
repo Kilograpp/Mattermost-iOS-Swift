@@ -33,6 +33,7 @@ extension TeamMappingsContainer: ResponseMappings {
     static func initialLoadConfigMapping() -> RKObjectMapping {
         let entityMapping = RKObjectMapping(for: NSMutableDictionary.self)
         entityMapping?.addAttributeMappings(from: ["SiteName" : PreferencesAttributes.siteName.rawValue])
+        entityMapping?.addAttributeMappings(from: ["EnableSignUpWithGitLab" : PreferencesAttributes.signUpWithGitLab.rawValue])
         return entityMapping!
     }
     static func invitationMapping() -> RKObjectMapping {

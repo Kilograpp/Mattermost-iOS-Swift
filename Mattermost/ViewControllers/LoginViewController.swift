@@ -10,12 +10,14 @@ final class LoginViewController: UIViewController {
 
 //MARK: Properties
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var gitLabButton: UIButton!
     @IBOutlet weak var passwordTextField: KGTextField!
     @IBOutlet weak var loginTextField: KGTextField!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var recoveryButton: UIButton!
     @IBOutlet weak var loaderView: UIView!
     let titleName =  NSLocalizedString("Sign In", comment: "")
+    let gitLabButtonTitle =  NSLocalizedString("GitLab", comment: "")
     let email = NSLocalizedString("Email", comment: "")
     let password = NSLocalizedString("Password", comment: "")
     let forgotPassword = NSLocalizedString("Forgot password?", comment: "")
@@ -38,6 +40,8 @@ final class LoginViewController: UIViewController {
         
         if !UserStatusManager.sharedInstance.isSignedIn() {
             _ = self.loginTextField.becomeFirstResponder()
+        } else if Preferences.sharedInstance.signUpWithGitLab, let token = UserStatusManager.sharedInstance.cookie()?.value {
+            login(token)
         }
     }
     
@@ -63,6 +67,7 @@ fileprivate protocol Setup {
     func setupNavigationBar()
     func setupTitleLabel()
     func setupLoginButton()
+    func setupGitLabButton()
     func setupLoginTextField()
     func setupPasswordTextField()
     func setupRecoveryButton()
@@ -83,6 +88,7 @@ fileprivate protocol Navigation {
 }
 
 fileprivate protocol Request {
+    func login(_ token: String)
     func login()
     func loadTeams()
 //    func loadChannels()
@@ -95,6 +101,7 @@ extension LoginViewController: Setup {
     func initialSetup() {
         setupTitleLabel()
         setupLoginButton()
+        setupGitLabButton()
         setupLoginTextField()
         setupPasswordTextField()
         setupRecoveryButton()
@@ -129,6 +136,12 @@ extension LoginViewController: Setup {
         self.loginButton.setTitle(self.titleName, for: UIControlState())
         self.loginButton.titleLabel?.font = FontBucket.loginButtonFont
         self.loginButton.isEnabled = false
+    }
+    
+    fileprivate func setupGitLabButton() {
+        gitLabButton.setTitle(self.gitLabButtonTitle, for: UIControlState())
+        gitLabButton.titleLabel?.font = FontBucket.loginButtonFont
+        gitLabButton.isHidden = !Preferences.sharedInstance.signUpWithGitLab
     }
     
     fileprivate func setupLoginTextField() {
@@ -217,6 +230,20 @@ extension LoginViewController: Navigation {
 
 //MARK: Request
 extension LoginViewController: Request {
+    func login(_ token: String) {
+        showLoaderView()
+        Api.sharedInstance.login(token) { (error) in
+            guard (error == nil) else {
+//                let message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
+                let message = "Authorizion Failed"
+                AlertManager.sharedManager.showErrorWithMessage(message: message)
+                self.hideLoaderView()
+                return
+            }
+            self.loadTeams()
+        }
+    }
+    
     func login() {
         showLoaderView()
         passwordTextField.endEditing(false)

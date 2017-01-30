@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="VqN-sf-Nn3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="VqN-sf-Nn3">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -86,6 +86,20 @@
                                     <action selector="loginAction:" destination="k6n-Wu-QkU" eventType="touchUpInside" id="hHz-Sb-Skq"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mHT-Em-dqf">
+                                <rect key="frame" x="137.5" y="347" width="45" height="30"/>
+                                <state key="normal" title="GitLab">
+                                    <color key="titleColor" red="0.33333333333333331" green="0.26666666666666666" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="W2c-ac-ZMs" kind="presentation" id="FYi-QK-1de"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jJC-XP-PjQ">
                                 <rect key="frame" x="18" y="277" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
@@ -130,6 +144,7 @@
                             <constraint firstItem="VBY-jz-cKC" firstAttribute="centerX" secondItem="D8K-vy-EXh" secondAttribute="centerX" id="Drs-rq-SbR"/>
                             <constraint firstItem="Fe4-9Z-OP6" firstAttribute="centerX" secondItem="D8K-vy-EXh" secondAttribute="centerX" id="Gc7-43-8Fv"/>
                             <constraint firstItem="MwB-Xc-MT1" firstAttribute="top" secondItem="Fe4-9Z-OP6" secondAttribute="bottom" constant="40" id="KkY-YD-3k7"/>
+                            <constraint firstItem="mHT-Em-dqf" firstAttribute="centerX" secondItem="MwB-Xc-MT1" secondAttribute="centerX" id="L9K-uV-9nG"/>
                             <constraint firstAttribute="trailing" secondItem="GXp-iK-xZE" secondAttribute="trailing" id="OZF-RS-zCs"/>
                             <constraint firstItem="jJC-XP-PjQ" firstAttribute="leading" secondItem="D8K-vy-EXh" secondAttribute="leading" constant="18" id="aGK-rH-OaV"/>
                             <constraint firstItem="IOi-YG-yKZ" firstAttribute="top" secondItem="OkX-WL-axv" secondAttribute="bottom" constant="-64" id="eem-A0-KRg"/>
@@ -139,10 +154,12 @@
                             <constraint firstItem="GXp-iK-xZE" firstAttribute="top" secondItem="IOi-YG-yKZ" secondAttribute="bottom" id="qhC-i3-tPP"/>
                             <constraint firstItem="VBY-jz-cKC" firstAttribute="width" secondItem="Fe4-9Z-OP6" secondAttribute="width" id="qtM-gU-Ulo"/>
                             <constraint firstItem="IOi-YG-yKZ" firstAttribute="leading" secondItem="D8K-vy-EXh" secondAttribute="leading" id="sdN-jK-Lyg"/>
+                            <constraint firstItem="mHT-Em-dqf" firstAttribute="top" secondItem="MwB-Xc-MT1" secondAttribute="bottom" constant="8" id="xnc-iq-yhZ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Login" id="Mu6-VB-uGL"/>
                     <connections>
+                        <outlet property="gitLabButton" destination="mHT-Em-dqf" id="lg7-D9-IAw"/>
                         <outlet property="loaderView" destination="GXp-iK-xZE" id="zin-eE-clZ"/>
                         <outlet property="loginButton" destination="MwB-Xc-MT1" id="5Zb-Ne-g13"/>
                         <outlet property="loginTextField" destination="VBY-jz-cKC" id="igE-Du-nZD"/>
@@ -230,6 +247,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="VDb-6S-841"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="errorLabel" destination="9ln-wm-zj4" id="dXI-jX-CYf"/>
                         <outlet property="nextButton" destination="Vvj-v6-Cnq" id="kgN-FE-pM0"/>
@@ -242,7 +264,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QAb-KV-dsv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="924" y="487"/>
+            <point key="canvasLocation" x="922.5" y="486.97183098591552"/>
         </scene>
         <!--Team View Controller-->
         <scene sceneID="QxJ-Tc-IgU">
@@ -336,6 +358,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="81v-gx-kkv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2983" y="487"/>
+        </scene>
+        <!--GitLab-->
+        <scene sceneID="rzV-cO-wQr">
+            <objects>
+                <viewControllerPlaceholder storyboardName="GitLab" id="W2c-ac-ZMs" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kjh-14-q3v" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="923" y="990"/>
         </scene>
         <!--Password Recovery-->
         <scene sceneID="D8P-17-AeJ">

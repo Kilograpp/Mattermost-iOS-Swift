@@ -19,6 +19,7 @@ private protocol PreferenceMethods: class {
 private protocol TeamMethods: class {
     static func containsSingleTeam(_ mappingResult: RKMappingResult) -> Bool
     static func fetchSiteName(_ mappingResult: RKMappingResult) -> String?
+    static func fetchSignUpWithGitLab(_ mappingResult: RKMappingResult) -> Bool
     static func fetchAllTeams(_ mappingResult: RKMappingResult) -> [Team]
 }
 
@@ -64,6 +65,13 @@ extension MappingUtils: TeamMethods {
         let resultDictionary = mappingResult.dictionary()
         let clientConfigDictionary = resultDictionary?["client_cfg"] as! [String:String]
         return clientConfigDictionary[PreferencesAttributes.siteName.rawValue]
+    }
+    
+    static func fetchSignUpWithGitLab(_ mappingResult: RKMappingResult) -> Bool {
+        //s3 refactor
+        let resultDictionary = mappingResult.dictionary()
+        let clientConfigDictionary = resultDictionary?["client_cfg"] as! [String:String]
+        return clientConfigDictionary[PreferencesAttributes.signUpWithGitLab.rawValue] == "true"
     }
     
     static func fetchAllTeams(_ mappingResult: RKMappingResult) -> [Team] {

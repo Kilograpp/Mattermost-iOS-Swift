@@ -38,6 +38,8 @@
 		4BEA108C1D79B551006BB298 /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEA108B1D79B551006BB298 /* TeamViewController.swift */; };
 		4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */; };
 		63CBCC7DD14644DF41DADEAD /* Pods_Mattermost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16480FE9907B36335721461 /* Pods_Mattermost.framework */; };
+		6E313DD81E3745F300045DFF /* GitLab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E313DD71E3745F300045DFF /* GitLab.storyboard */; };
+		6E313DDA1E37465800045DFF /* GitLabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E313DD91E37465800045DFF /* GitLabViewController.swift */; };
 		860755A81DEDDE5C00438B09 /* ChannelInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860755A71DEDDE5C00438B09 /* ChannelInfoCell.swift */; };
 		860755AA1DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860755A91DEE7DD900438B09 /* ChannelNameAndHandleViewController.swift */; };
 		860755B01DEE817C00438B09 /* ChannelNameAndHandleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860755AF1DEE817C00438B09 /* ChannelNameAndHandleCell.xib */; };
@@ -336,6 +338,8 @@
 		4BEA108B1D79B551006BB298 /* TeamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePickerSheetController.framework; path = Carthage/Build/iOS/ImagePickerSheetController.framework; sourceTree = "<group>"; };
 		502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.debug.xcconfig"; sourceTree = "<group>"; };
+		6E313DD71E3745F300045DFF /* GitLab.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GitLab.storyboard; sourceTree = "<group>"; };
+		6E313DD91E37465800045DFF /* GitLabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitLabViewController.swift; sourceTree = "<group>"; };
 		793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.release.xcconfig"; sourceTree = "<group>"; };
 		84FE37F21E03059D00C34B82 /* Release.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		860755A71DEDDE5C00438B09 /* ChannelInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelInfoCell.swift; sourceTree = "<group>"; };
@@ -1015,6 +1019,7 @@
 				8BBA7DBE1D8747B8003A5B99 /* SearchChatViewController.swift */,
 				8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */,
 				8B5A54951DF75F1A003E9B0E /* PasswordRecoveryViewController.swift */,
+				6E313DD91E37465800045DFF /* GitLabViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1041,6 +1046,7 @@
 				9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */,
 				D62FEB971D4F2B3400390EBC /* Login.storyboard */,
 				8644A4891DED908F009280EB /* ChannelSettings.storyboard */,
+				6E313DD71E3745F300045DFF /* GitLab.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -1431,6 +1437,7 @@
 				413B762C1D58CF4100F297BE /* ru.lproj in Resources */,
 				8BE969B71D7638060010A524 /* Settings.storyboard in Resources */,
 				D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */,
+				6E313DD81E3745F300045DFF /* GitLab.storyboard in Resources */,
 				8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */,
 				8B882D661DA5A21F0028F13D /* Localizable.strings in Resources */,
 				9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */,
@@ -1735,6 +1742,7 @@
 				CDB6D3CE1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift in Sources */,
 				8BF5A7181E24D0A100544AF6 /* FileWrapper.swift in Sources */,
 				CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */,
+				6E313DDA1E37465800045DFF /* GitLabViewController.swift in Sources */,
 				D8879B1C1D4E102500EB0957 /* FileUtils.swift in Sources */,
 				860755B21DEE82E200438B09 /* ChannelNameAndHandleCell.swift in Sources */,
 				8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */,

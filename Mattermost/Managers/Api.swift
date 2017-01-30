@@ -231,6 +231,7 @@ extension Api: TeamApi {
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
+            Preferences.sharedInstance.signUpWithGitLab = MappingUtils.fetchSignUpWithGitLab(mappingResult)
             completion(nil)
         }) { (error) in
             completion(error)
@@ -542,6 +543,29 @@ extension Api: ChannelApi {
 
 //MARK: UserApi
 extension Api: UserApi {
+    func login(_ token: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = UserPathPatternsContainer.loadCurrentUser()
+        manager.httpClient.setDefaultHeader("Authorization", value: "Bearer \(token)")
+        
+        manager.get(path: path, success: { (mappingResult) in
+            let user = mappingResult.0.firstObject as! User
+            let notifyProps = user.notifyProps
+            notifyProps?.userId = user.identifier
+            notifyProps?.computeKey()
+            let systemUser = DataManager.sharedInstance.instantiateSystemUser()
+            user.computeDisplayName()
+            DataManager.sharedInstance.currentUser = user
+            RealmUtils.save([user, systemUser])
+            RealmUtils.save(notifyProps!)
+            
+            _ = DataManager.sharedInstance.currentUser
+            
+            SocketManager.sharedInstance.setNeedsConnect()
+            //completion(nil)
+            NotificationsUtils.subscribeToRemoteNotificationsIfNeeded(completion: completion)
+        }, failure: completion)
+    }
+    
     func login(_ email: String, password: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = UserPathPatternsContainer.loginPathPattern()
         let parameters = ["login_id" : email, "password": password, "token" : ""]

@@ -20,6 +20,7 @@ private protocol Interface: class {
 
 enum PreferencesAttributes: String {
     case siteName             = "siteName"
+    case signUpWithGitLab     = "signUpWithGitLab"
     case serverUrl            = "serverUrl"
     case currentUserId        = "currentUserId"
     case currentTeamId        = "currentTeamId"
@@ -37,6 +38,7 @@ final class Preferences: NSObject, NSCoding {
     dynamic var currentUserId: String?
     dynamic var currentTeamId: String?
     dynamic var siteName: String?
+    dynamic var signUpWithGitLab = false
     dynamic var shouldCompressImages: NSNumber?
     dynamic var deviceUUID: String?
     
