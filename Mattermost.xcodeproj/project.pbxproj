@@ -1898,7 +1898,7 @@
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0.2;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
@@ -1945,7 +1945,7 @@
 				PROVISIONING_PROFILE = "41c923ca-0156-4473-b579-4f04388467ef";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0.2;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
@@ -2134,7 +2134,7 @@
 				PROVISIONING_PROFILE = "f04ccae7-c78d-465d-ab85-1f59e64c5fdc";
 				PROVISIONING_PROFILE_SPECIFIER = "Appstore Mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0.2;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
