@@ -1044,6 +1044,8 @@ extension ChatViewController: ChannelObserverDelegate {
         if (channel.privateType != "D") {
             self.view.insertSubview(self.startButton, aboveSubview: self.tableView)
         }
+        
+        installContentInsents()
         //ENDREFACTORING
         
         addChannelObservers()
@@ -1063,6 +1065,20 @@ extension ChatViewController: ChannelObserverDelegate {
             self.navigationController?.pushViewController(addMembersViewController, animated: true)
             self.hideLoaderView()
         })
+    }
+    
+    func installContentInsents() {
+        DispatchQueue.main.async {
+            //Change TableView contentInsents if atachmentView is active
+            if (self.attachmentsView.isShown) {
+                var oldInset = self.tableView.contentInset
+                //oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
+                oldInset.top = PostAttachmentsView.attachmentsViewHeight
+                self.tableView.contentInset = oldInset
+                self.tableView.scrollIndicatorInsets = oldInset
+                self.scrollButton?.frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100 - self.attachmentsView.frame.height, width: 50, height: 50)
+            }
+        }
     }
 }
 //MARK: Handlers
@@ -1157,6 +1173,9 @@ extension ChatViewController: FilesPickingControllerDataSource {
 extension ChatViewController: AttachmentsModuleDataSource {
     func tableView(attachmentsModule: AttachmentsModule) -> UITableView {
         return self.tableView
+    }
+    func scrollButton(attachmentsModule: AttachmentsModule) -> UIButton {
+        return self.scrollButton!
     }
     func postAttachmentsView(attachmentsModule: AttachmentsModule) -> PostAttachmentsView {
         return self.attachmentsView
