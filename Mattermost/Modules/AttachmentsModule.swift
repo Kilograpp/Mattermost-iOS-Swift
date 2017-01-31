@@ -21,6 +21,7 @@ protocol AttachmentsModuleDelegate: class {
 
 protocol AttachmentsModuleDataSource {
     func tableView(attachmentsModule: AttachmentsModule) -> UITableView
+    func scrollButton(attachmentsModule: AttachmentsModule) -> UIButton
     func postAttachmentsView(attachmentsModule: AttachmentsModule) -> PostAttachmentsView
     func channel(attachmentsModule: AttachmentsModule) -> Channel
 }
@@ -118,16 +119,23 @@ extension AttachmentsModule: PostAttachmentViewDelegate {
     }
     
     func attachmentsViewWillAppear() {
-        var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
-        //oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
-        oldInset.top = PostAttachmentsView.attachmentsViewHeight
-        self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
+        DispatchQueue.main.async { [unowned self] in
+            var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
+            //oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
+            oldInset.top = PostAttachmentsView.attachmentsViewHeight
+            self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
+            self.dataSource.tableView(attachmentsModule: self).scrollIndicatorInsets = oldInset
+            self.dataSource.scrollButton(attachmentsModule: self).frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100 - PostAttachmentsView.attachmentsViewHeight, width: 50, height: 50)
+
+        }
     }
     
     func attachmentViewWillDisappear() {
         var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
         oldInset.top = 0
         self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
+        self.dataSource.tableView(attachmentsModule: self).scrollIndicatorInsets = oldInset
+        self.dataSource.scrollButton(attachmentsModule: self).frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100, width: 50, height: 50)
     }
 }
 

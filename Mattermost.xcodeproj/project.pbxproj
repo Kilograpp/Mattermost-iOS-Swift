@@ -240,7 +240,6 @@
 		D6E1659B1D47C4FB0014C831 /* FeedBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659A1D47C4FB0014C831 /* FeedBaseTableViewCell.swift */; };
 		D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E1659D1D47C5A10014C831 /* FeedCommonTableViewCell.swift */; };
 		D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A51D47E9B00014C831 /* MFSideMenu.framework */; };
-		D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */; };
 		D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165A91D47EA920014C831 /* UIImage+Additions.swift */; };
 		D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F895F51D5CC8CB0019342E /* LeftMenuSectionHeader.swift */; };
 		D6FB96421E3BC4FA00202CCC /* GradientImagesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6FB96411E3BC4FA00202CCC /* GradientImagesBuilder.swift */; };
@@ -413,7 +412,6 @@
 		8B618CC21DDCDE8300AC6CDD /* MattermostError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostError.swift; sourceTree = "<group>"; };
 		8B618CC41DDCDEEB00AC6CDD /* MattermostErrorMappingsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostErrorMappingsContainer.swift; sourceTree = "<group>"; };
 		8B618CC61DDCDEF300AC6CDD /* MattermostErrorResponseDescriptorsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MattermostErrorResponseDescriptorsContainer.swift; sourceTree = "<group>"; };
-		8B618CC81DDF19B700AC6CDD /* MRProgress.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MRProgress.framework; path = "Pods/../build/Debug-iphoneos/MRProgress/MRProgress.framework"; sourceTree = "<group>"; };
 		8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8B77B5DD1DC31CCE00DF0689 /* InviteNewMemberTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteNewMemberTableViewController.swift; sourceTree = "<group>"; };
 		8B77B5DF1DC31D0000DF0689 /* SuccessInviteNewMembreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessInviteNewMembreViewController.swift; sourceTree = "<group>"; };
@@ -623,7 +621,6 @@
 				D837F2791D76DCF700CA933F /* HEXColor.framework in Frameworks */,
 				8BCA40271D8AC078004D15F7 /* NVActivityIndicatorView.framework in Frameworks */,
 				D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */,
-				D6E165A81D47E9C50014C831 /* MBProgressHUD.framework in Frameworks */,
 				D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */,
 				D8812C351D476EB800436B5C /* Starscream.framework in Frameworks */,
 				D617E69E1D46AF2000283C0A /* SlackTextViewController.framework in Frameworks */,
@@ -1312,7 +1309,6 @@
 			isa = PBXGroup;
 			children = (
 				4483418C1DF6A83900C39824 /* SkyFloatingLabelTextField.framework */,
-				8B618CC81DDF19B700AC6CDD /* MRProgress.framework */,
 				4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */,
 				8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */,
 				4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */,
@@ -1566,7 +1562,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TSMarkdownParser.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SlackTextViewController.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MFSideMenu.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
