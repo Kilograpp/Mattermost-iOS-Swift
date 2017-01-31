@@ -217,7 +217,8 @@ extension CreateChannelViewController: UITableViewDelegate {
         case 1:
             let cell1 = tableView.dequeueReusableCell(withIdentifier: "channelInfoCell") as! ChannelInfoCell
             cell1.field = self.fields[indexPath.section]
-            cell1.infoText.text = self.fields[indexPath.section].value.lowercased()
+            cell1.isHandlerCell = true
+            cell1.infoText.text = self.fields[indexPath.section].value.lowercased().replacingOccurrences(of: " ", with: "", options: NSString.CompareOptions.literal, range:nil)
             cell1.placeholder.textColor = handleError ? .red : UIColor.kg_lightGrayTextColor()
             cell1.infoText.textColor = handleError ? .red : .black
             cell1.delegate = self

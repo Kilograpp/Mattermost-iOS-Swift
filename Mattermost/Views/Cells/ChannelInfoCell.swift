@@ -20,6 +20,7 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     var delegate : CellUpdated?
     var field: ChannelCreateField!
     var limitLength : CGFloat = 396.0
+    var isHandlerCell = false
 
     @IBAction func deleteTextAction(_ sender: AnyObject) {
         infoText.text = ""
@@ -79,6 +80,9 @@ class ChannelInfoCell: UITableViewCell, UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if (isHandlerCell && text == " ") {
+            return false
+        }
         return ChannelInfoCell.heightWithObject(infoText.text + text) <= limitLength
     }
 }
