@@ -1001,7 +1001,7 @@ extension ChatViewController: ChannelObserverDelegate {
         //new channel
         guard identifier != nil else { return }
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
-        self.title = self.channel?.displayName
+//        self.title = self.channel?.displayName
         
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
