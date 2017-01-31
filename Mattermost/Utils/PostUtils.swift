@@ -67,8 +67,12 @@ extension PostUtils: Interface {
     }
     
     func removeAttachmentAtIdex(_ index: Int) {
-        files.remove(at: index)
-        assignedFiles.remove(at: index)
+        if files.indices.contains(index) {
+            files.remove(at: index)
+        }
+        if assignedFiles.indices.contains(index) {
+            assignedFiles.remove(at: index)
+        }
     }
 }
 

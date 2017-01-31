@@ -121,7 +121,7 @@ extension AttachmentFileView: Setup {
     }
     
     fileprivate func setupIcon() {
-        self.iconImageView.backgroundColor = UIColor.clear
+        self.iconImageView.backgroundColor = UIColor.white
         self.iconImageView.frame = CGRect(x: 5, y: 5, width: 44, height: 44).offsetBy(dx: frame.origin.x, dy: frame.origin.y)
         self.addSubview(self.iconImageView)
     }
