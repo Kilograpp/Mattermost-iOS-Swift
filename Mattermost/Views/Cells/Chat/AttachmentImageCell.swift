@@ -49,6 +49,9 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        guard self.file != nil else {
+            return
+        }
         self.fileNameLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 20)
         self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.size.height,
                                           width: self.bounds.width,
@@ -108,7 +111,7 @@ extension AttachmentImageCell: Setup {
         self.addSubview(self.fileImageView)
         //was clear
         self.fileImageView.backgroundColor = UIColor.white
-        self.fileImageView.contentMode = .scaleAspectFit
+//        self.fileImageView.contentMode = .scaleAspectFit
     }
     
     fileprivate func setupLabel() {
@@ -145,6 +148,7 @@ extension AttachmentImageCell: Updating {
         
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl?.absoluteString) {
             self.fileImageView.image = image
+            self.layoutSubviews()
         } else {
             self.fileImageView.image = Constants.Post.BackImage
 

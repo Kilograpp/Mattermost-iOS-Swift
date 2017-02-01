@@ -64,6 +64,7 @@ extension PostUtils: Interface {
         for fileInfo in fileInfos {
             FileUtils.updateFileWith(info: fileInfo)
         }
+        //NEED UPDATE
     }
     
     func removeAttachmentAtIdex(_ index: Int) {
