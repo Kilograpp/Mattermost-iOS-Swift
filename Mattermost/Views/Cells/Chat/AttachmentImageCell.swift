@@ -110,7 +110,6 @@ extension AttachmentImageCell: Setup {
     fileprivate func setupImageView() {
         self.addSubview(self.fileImageView)
         //was clear
-        //        self.fileImageView.backgroundColor = UIColor.white
         self.fileImageView.contentMode = .center
         self.fileImageView.backgroundColor = emptyImageViewBackgroundColor
     }
@@ -142,7 +141,6 @@ extension AttachmentImageCell: Updating {
         let fileName = self.fileName
         var downloadUrl = self.file.previewURL()
         let size = FileUtils.scaledImageSizeWith(file: self.file!)
-        //        print("EXPECTED SIZE: \(size)")
         
         if (downloadUrl?.absoluteString.contains(NullString))! {
             let fixedPath = downloadUrl?.absoluteString.replacingOccurrences(of: NullString, with: Preferences.sharedInstance.currentTeamId!)
@@ -161,7 +159,6 @@ extension AttachmentImageCell: Updating {
                     guard image != nil else { return }
                     
                     var finalImage: UIImage = image!
-                    //                    print("REAL SIZE: \(finalImage.size)")
                     if cacheType == .none {
                         finalImage = image!.imageByScalingAndCroppingForSize(size, radius: 3)
                         SDImageCache.shared().store(finalImage, forKey: downloadUrl?.absoluteString)
@@ -174,10 +171,8 @@ extension AttachmentImageCell: Updating {
                         let postLocalId = self?.file.post?.localIdentifier
                         guard postLocalId != nil else { return }
                         
-                        //                        print("ACTUAL SIZE: \(finalImage.size)")
                         self?.fileImageView.image = finalImage
                         self?.fileImageView.backgroundColor = UIColor.white
-                        //                        self?.layoutSubviews()
                     })
                 }
             }
