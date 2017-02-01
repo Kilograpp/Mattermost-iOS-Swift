@@ -70,9 +70,8 @@ fileprivate protocol Configuration {
 
 fileprivate protocol Request {
     func loadTeamChannels()
-  //  func loadUsersForFirsPublicChannel()
-  //  func updateUsersTeamStatus()
-//    func updateDirectChannelsPreferedStatus()
+    func loadPreferedDirectChannelsInterlocuters()
+    func loadTeamMembers()
 }
 
 
