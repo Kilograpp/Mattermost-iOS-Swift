@@ -50,16 +50,14 @@ extension UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         UIGraphicsBeginImageContextWithOptions(rect.size, true, 0)
         let context = UIGraphicsGetCurrentContext()
+        UIColor.white.setFill()
+        context?.fill(rect)
+        
         let ref = UIBezierPath(roundedRect: rect, cornerRadius: 20).cgPath
         context?.addPath(ref);
         context?.setFillColor(UIColor(white: 0.95, alpha: 1).cgColor);
-        //need to test
         context?.fillPath();
-        
-        //UIColor.white.setFill()
-        //UIColor.red.setFill()
-        //UIColor.clear.setFill()
-        context?.fill(rect)
+    
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext();
         

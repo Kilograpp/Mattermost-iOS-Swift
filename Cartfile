@@ -7,6 +7,6 @@ github "daltoniam/Starscream"
 github "laptobbe/TSMarkdownParser"
 github "realm/realm-cocoa"
 github "slackhq/SlackTextViewController"
-github "ninjaprox/NVActivityIndicatorView"
+github "ninjaprox/NVActivityIndicatorView" ~> 3.3
 github "Kilograpp/ImagePickerSheetController" "0.9.4"
 github "Skyscanner/SkyFloatingLabelTextField"

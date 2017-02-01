@@ -81,22 +81,13 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
             //REVIEW: localize
             self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
             self.textView.isEditable = false
-            //self.rightButton.isEnabled = false
-            //self.leftButton.isEnabled = false
             return
         }
-//        self.navigationController?.isNavigationBarHidden = false
-//        setupInputViewButtons()
         addSLKKeyboardObservers()
         replaceStatusBar()
         
-   /*     if self.postFromSearch != nil {
-            changeChannelForPostFromSearch()
-        }*/
-        
         self.textView.resignFirstResponder()
         addBaseObservers()
-//        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -196,7 +187,6 @@ extension ChatViewController: Setup {
         setupBottomActivityIndicator()
         setupLongCellSelection()
         setupCompactPost()
-        //loadUsersFromTeam()
         setupModules()
     }
     
@@ -204,13 +194,6 @@ extension ChatViewController: Setup {
         self.filesAttachmentsModule = AttachmentsModule(delegate: self, dataSource: self)
         self.filesPickingController = FilesPickingController(dataSource: self)
     }
-    
-    /*func loadUsersFromTeam() {
-        Api.sharedInstance.loadUsersFromCurrentTeam(completion: { (error, usersArray) in
-            guard error == nil else { return }
-            self.usersInTeam = usersArray!
-        })
-    }*/
     
     fileprivate func setupTableView() {
         self.tableView.separatorStyle = .none
@@ -418,7 +401,6 @@ extension ChatViewController : Private {
         
         if (post.author.identifier == Preferences.sharedInstance.currentUserId) {
             let editAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                //self.selectedPost = post
                 self.completePost.configureWithPost(self.selectedPost, action: ActionType.Edit)
                 self.completePost.isHidden = false
                 self.configureRightButtonWithTitle("Save", action: Constants.PostActionType.SendUpdate)
@@ -442,6 +424,7 @@ extension ChatViewController: UnsentPostConfigure {
     func saveSentPostForChannel() {
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write {
+            guard self.channel != nil else { return }
             self.channel.unsentPost?.message = self.textView.text
         }
     }
@@ -549,7 +532,6 @@ extension ChatViewController: Navigation {
         transition.duration = 0.3
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromBottom
-        //self.view.layer.add(transition, forKey: kCATransition)
         self.present(searchChat, animated: true, completion: nil)
     }
     
@@ -1014,19 +996,6 @@ extension ChatViewController: ChannelObserverDelegate {
         guard !self.hasNewestPage else { return }
         
         self.loadChannelUsers()
-
-      /*  if (self.postFromSearch == nil) {
-           // self.loadFirstPageOfData(isInitial: true)
-            self.loadChannelUsers()
-        } else {
-            if self.postFromSearch.channel.identifier != identifier {
-                self.postFromSearch = nil
-                //self.loadFirstPageOfData(isInitial: true)
-                self.loadChannelUsers()
-            } else {
-               // loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
-            }
-        }*/
         
         //NEEDREFACTORING
         startHeadDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 0)
