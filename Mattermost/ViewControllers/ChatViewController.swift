@@ -67,6 +67,43 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         
         ChannelObserver.sharedObserver.delegate = self
         self.initialSetup()
+        createTestChannels()
+        if (self.channel.identifier!.characters.count < 4) {
+            startHeadDialogueLabel.text = "Тестовый канал!"
+            startTextDialogueLabel.text = "Для тестирования функционала чата перейдите в существующий на сервере канал!"
+            startButton.isHidden = true
+            leftButton.isEnabled = false
+            textView.isEditable = false
+        }
+    }
+    
+    func createTestChannels(){
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write({
+            for id in 1...200 {
+                realm.add(createRandomChannel(id: id), update: true)
+            }
+        })
+
+    }
+    func createRandomChannel(id: Int) -> Channel{
+        var newChannel = Channel()
+        newChannel.currentUserInChannel = true
+        newChannel.team = RealmUtils.realmForCurrentThread().object(ofType:Team.self, forPrimaryKey: DataManager.sharedInstance.currentTeam!.identifier!)
+        newChannel.gradientType = Int(arc4random_uniform(5))
+        newChannel.displayName = "Test Test Test"
+        newChannel.identifier = String(id)
+        newChannel.createdAt = Date()
+        newChannel.isInterlocuterOnTeam = true
+        if id <= 25 {
+            newChannel.privateType = "O"
+        } else if id <= 50 {
+            newChannel.privateType = "P"
+        } else if id <= 200 {
+            newChannel.privateType = "D"
+        }
+        newChannel.isDirectPrefered = true
+        return newChannel
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -479,7 +516,9 @@ extension ChatViewController: Action {
     
     
     func refreshControlValueChanged() {
-        self.loadFirstPageOfData(isInitial: false)
+        if self.channel.identifier!.characters.count > 4 {
+            self.loadFirstPageOfData(isInitial: false)
+        }
         self.refreshControl?.endRefreshing()
     }
     
@@ -582,7 +621,14 @@ extension ChatViewController: Request {
         showLoaderView()
         
         Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            guard error == nil else {
+                if (self.channel.identifier!.characters.count < 4) {
+                    self.hideLoaderView()
+                    return
+                }
+                self.handleErrorWith(message: (error?.message)!);
+                return
+            }
             
             self.loadFirstPageOfData(isInitial: true)
         })
@@ -796,7 +842,7 @@ extension ChatViewController {
         let isntDialogEmpty = (self.resultsObserver.numberOfSections() > 0)
         self.startTextDialogueLabel.isHidden = isntDialogEmpty
         self.startHeadDialogueLabel.isHidden = isntDialogEmpty
-        self.startButton.isHidden = isntDialogEmpty
+        self.startButton.isHidden = isntDialogEmpty || self.channel.identifier!.characters.count < 4
         
         return self.resultsObserver?.numberOfSections() ?? 0
     }
@@ -1045,6 +1091,18 @@ extension ChatViewController: ChannelObserverDelegate {
             filesAttachmentsModule.presentWithCachedItems()
         } else {
             attachmentsView.hideAnimated()
+        }
+        
+        if (self.channel.identifier!.characters.count < 4) {
+            startHeadDialogueLabel.text = "Тестовый канал!"
+            startTextDialogueLabel.text = "Для тестирования функционала чата перейдите в существующий на сервере канал!"
+            startButton.isHidden = true
+            leftButton.isEnabled = false
+            textView.isEditable = false
+        } else {
+            startButton.isHidden = false
+            leftButton.isEnabled = true
+            textView.isEditable = true
         }
     }
     
