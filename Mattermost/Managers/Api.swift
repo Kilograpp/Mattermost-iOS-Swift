@@ -525,7 +525,7 @@ extension Api: ChannelApi {
                 responseArray.forEach {
                     let newMentionsCount = ($0["mention_count"]! as! NSNumber).intValue
                     let updateChannel = try! Realm().objects(Channel.self).filter("identifier = %@", $0["channel_id"]).first!
-                    updateChannel.lastViewDate = Date(timeIntervalSince1970: TimeInterval(($0["last_viewed_at"]! as! NSNumber).intValue) / 1000)
+                    updateChannel.lastViewDate = Date(timeIntervalSince1970: TimeInterval(($0["last_viewed_at"]! as! NSNumber).doubleValue) / 1000)
                     updateChannel.messagesCount! = String(describing: ($0["msg_count"]! as! NSNumber).intValue)
                     updateChannel.mentionsCount = newMentionsCount
                 }
