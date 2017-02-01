@@ -183,7 +183,7 @@ extension SocketManager: Notifications {
                 return
             }
             Api.sharedInstance.getChannel(channel: channel, completion: { error in
-                
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
             
 //            Api.sharedInstance.getChannelMembers(completion: { error in

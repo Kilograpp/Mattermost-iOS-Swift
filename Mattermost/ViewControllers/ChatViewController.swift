@@ -73,6 +73,12 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         saveSentPostForChannel()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
@@ -856,14 +862,14 @@ extension ChatViewController {
     //NewAutocomplite
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (tableView == self.tableView) {
-            let post = resultsObserver?.postForIndexPath(indexPath)
+            guard let post = resultsObserver?.postForIndexPath(indexPath) else { return UITableViewCell() }
             if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
             //    self.loadNextPageOfData()
                 loadPostsBeforePost(post: self.resultsObserver.lastPost())
             }
             
             if indexPath == IndexPath(row: 0, section: 0) {
-                loadPostsAfterPost(post: post!)
+                loadPostsAfterPost(post: post)
             }
             
             /*if (Int(self.channel.messagesCount!)! > self.resultsObserver.numberOfPosts()) &&
@@ -874,12 +880,11 @@ extension ChatViewController {
             let errorHandler = { (post:Post) in
                 self.errorAction(post)
             }
-        
-            let cell = self.builder.cellForPost(post!, prevPost: nil, errorHandler: errorHandler)
+            let cell = self.builder.cellForPost(post, prevPost: nil, errorHandler: errorHandler)
             if (cell.isKind(of: FeedCommonTableViewCell.self)) {
                 (cell as! FeedCommonTableViewCell).avatarTapHandler = {
-                    guard (post?.author.identifier != "SystemUserIdentifier") else { return }
-                    self.proceedToProfileFor(user: (post?.author)!)
+                    guard (post.author.identifier != "SystemUserIdentifier") else { return }
+                    self.proceedToProfileFor(user: (post.author)!)
                 }
             }
             
