@@ -474,6 +474,7 @@
 		9B82299925DAB67819BE3C95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B822FEE7A890495F4436A4C /* MattermostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MattermostTests.swift; sourceTree = "<group>"; };
 		A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+SharedBar.swift"; sourceTree = "<group>"; };
+		A6E3831256E74A91D2E24259 /* Pods-Mattermost.appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.appstore.xcconfig"; sourceTree = "<group>"; };
 		C16480FE9907B36335721461 /* Pods_Mattermost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mattermost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationController.swift; path = NavigationControllers/ChatNavigationController/ChatNavigationController.swift; sourceTree = "<group>"; };
 		CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreChannelsViewController.swift; sourceTree = "<group>"; };
@@ -643,6 +644,7 @@
 			children = (
 				502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */,
 				793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */,
+				A6E3831256E74A91D2E24259 /* Pods-Mattermost.appstore.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1888,7 +1890,7 @@
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8fbce05f-29b6-41a8-8a0e-431a894c8698";
+				PROVISIONING_PROFILE = "ae45558f-e278-4764-91e2-d7794ae58777";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
@@ -2103,7 +2105,7 @@
 		};
 		D68596E11E37902500B46C23 /* Appstore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */;
+			baseConfigurationReference = A6E3831256E74A91D2E24259 /* Pods-Mattermost.appstore.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

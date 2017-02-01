@@ -9,7 +9,7 @@
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "E642ADC2-EA10-41BE-B059-E4281AE0B831",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "6AB9A9E5ED55E5604CF27180D56734D2239FECC1" : "Mattermost\/",
+    "6AB9A9E5ED55E5604CF27180D56734D2239FECC1" : "Mattermost-iOS-Swift\/",
     "020E3A1B3C4524E6AD8342A26BA83EC64799F576" : "Mattermost-Native\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Mattermost",
