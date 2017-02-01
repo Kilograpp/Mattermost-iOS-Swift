@@ -36,7 +36,6 @@ extension ImagePickingModule: Interface {
         
         let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
         controller.maximumSelection = max
-//        print("Images to selection:\(controller.maximumSelection)")
         let assignImagesHandler = {
             let convertedAssets = AssetsUtils.convertedArrayOfAssets(controller.selectedImageAssets)
             self.delegate.didPick(items: convertedAssets)

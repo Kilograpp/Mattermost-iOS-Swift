@@ -14,9 +14,7 @@ import MFSideMenu
 
 
 protocol ChatViewControllerInterface: class {
-    func configureWith(postFound: Post)
-    func configureWithPost(post: Post)
-    func changeChannelForPostFromSearch()
+    func loadPostsBeforeSelectedPostFromSearch(post: Post)
 }
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -53,11 +51,13 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     //var usersInTeam: Array<User> = [] //USELESS FIELD COUSE 3.6
     var usersInChannel: Array<User> = []
     var usersOutOfChannel: Array<User> = []
+    //REVIEW: enum for sections
     var autoCompletionSectionIndexes = [0, 1, 2]
     var numberOfSection = 3
     
     var hasNextPage: Bool = true
-    var postFromSearch: Post! = nil
+    var hasNewestPage: Bool = false
+    //var postFromSearch: Post! = nil
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
     
@@ -78,24 +78,16 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
         let realm = RealmUtils.realmForCurrentThread()
         guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
+            //REVIEW: localize
             self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
             self.textView.isEditable = false
-            //self.rightButton.isEnabled = false
-            //self.leftButton.isEnabled = false
             return
         }
-//        self.navigationController?.isNavigationBarHidden = false
-//        setupInputViewButtons()
         addSLKKeyboardObservers()
         replaceStatusBar()
         
-        if self.postFromSearch != nil {
-            changeChannelForPostFromSearch()
-        }
-        
         self.textView.resignFirstResponder()
         addBaseObservers()
-//        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -116,21 +108,11 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 
 //MARK: ChatViewControllerInterface
 extension ChatViewController: ChatViewControllerInterface {
-    func configureWith(postFound: Post) {
-        RealmUtils.clearChannelWith(channelId: postFound.channelId!, exept: postFound)
-        ChannelObserver.sharedObserver.selectedChannel = postFound.channel
-        
-        loadPostsAfterPost(post: postFound)
-        loadPostsBeforePost(post: postFound)
-    }
-    
-    func configureWithPost(post: Post) {
-        self.postFromSearch = post
-        (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(post.channel)
-    }
-    
-    func changeChannelForPostFromSearch() {
-        ChannelObserver.sharedObserver.selectedChannel = self.postFromSearch.channel
+    func loadPostsBeforeSelectedPostFromSearch(post: Post) {
+        RealmUtils.clearChannelWith(channelId: post.channelId!, exept: post)
+        self.hasNewestPage = true
+        ChannelObserver.sharedObserver.selectedChannel = post.channel
+        loadPostsBeforePost(post: post, needScroll: true)
     }
 }
 
@@ -179,7 +161,7 @@ private protocol Navigation {
 private protocol Request {
     func loadChannelUsers()
     func loadFirstPageOfData(isInitial: Bool)
-    func loadNextPageOfData()
+//func loadNextPageOfData()
     func sendPost()
 }
 
@@ -205,7 +187,6 @@ extension ChatViewController: Setup {
         setupBottomActivityIndicator()
         setupLongCellSelection()
         setupCompactPost()
-        //loadUsersFromTeam()
         setupModules()
     }
     
@@ -213,13 +194,6 @@ extension ChatViewController: Setup {
         self.filesAttachmentsModule = AttachmentsModule(delegate: self, dataSource: self)
         self.filesPickingController = FilesPickingController(dataSource: self)
     }
-    
-    /*func loadUsersFromTeam() {
-        Api.sharedInstance.loadUsersFromCurrentTeam(completion: { (error, usersArray) in
-            guard error == nil else { return }
-            self.usersInTeam = usersArray!
-        })
-    }*/
     
     fileprivate func setupTableView() {
         self.tableView.separatorStyle = .none
@@ -249,6 +223,7 @@ extension ChatViewController: Setup {
     fileprivate func setupInputViewButtons() {
         let width = UIScreen.screenWidth() / 3
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: 44))
+        
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.textColor = ColorBucket.blackColor
         titleLabel.isUserInteractionEnabled = true
@@ -426,7 +401,6 @@ extension ChatViewController : Private {
         
         if (post.author.identifier == Preferences.sharedInstance.currentUserId) {
             let editAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                //self.selectedPost = post
                 self.completePost.configureWithPost(self.selectedPost, action: ActionType.Edit)
                 self.completePost.isHidden = false
                 self.configureRightButtonWithTitle("Save", action: Constants.PostActionType.SendUpdate)
@@ -450,6 +424,7 @@ extension ChatViewController: UnsentPostConfigure {
     func saveSentPostForChannel() {
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write {
+            guard self.channel != nil else { return }
             self.channel.unsentPost?.message = self.textView.text
         }
     }
@@ -557,7 +532,6 @@ extension ChatViewController: Navigation {
         transition.duration = 0.3
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromBottom
-        //self.view.layer.add(transition, forKey: kCATransition)
         self.present(searchChat, animated: true, completion: nil)
     }
     
@@ -628,6 +602,7 @@ extension ChatViewController: Request {
             self.hideLoaderView()
             self.isLoadingInProgress = false
             self.hasNextPage = true
+            self.hasNewestPage = false
             self.dismissKeyboard(true)
 
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
@@ -636,7 +611,7 @@ extension ChatViewController: Request {
         })
     }
     
-    func loadNextPageOfData() {
+    /*func loadNextPageOfData() {
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
@@ -646,21 +621,23 @@ extension ChatViewController: Request {
             self.isLoadingInProgress = false
             self.hideTopActivityIndicator()
         }
-    }
+    }*/
     
-    func loadPostsBeforePost(post: Post, shortSize: Bool? = false) {
+    func loadPostsBeforePost(post: Post, needScroll: Bool? = false) {
         guard !self.isLoadingInProgress else { return }
         
         self.isLoadingInProgress = true
         showTopActivityIndicator()
         Api.sharedInstance.loadPostsBeforePost(post: post) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
-            //if !self.hasNextPage { self.postFromSearch = nil; return }
-            
             self.isLoadingInProgress = false
+            
             self.hideTopActivityIndicator()
-            //self.resultsObserver.prepareResults()
-          //  self.loadPostsAfterPost(post: post, shortSize: true)
+            if needScroll! {
+                let indexPath = self.resultsObserver.indexPathForPost(post)
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                (self.tableView.cellForRow(at: indexPath) as! FeedBaseTableViewCell).highlightBackground()
+            }
         }
     }
     
@@ -669,21 +646,11 @@ extension ChatViewController: Request {
         
         self.isLoadingInProgress = true
         showBottomActivityIndicator()
-        Api.sharedInstance.loadPostsAfterPost(post: post, shortList: shortSize) { (isLastPage, error) in
-            self.hasNextPage = !isLastPage
+        Api.sharedInstance.loadPostsAfterPost(post: post) { (isLastPage, error) in
+            self.hasNewestPage = !isLastPage
             self.isLoadingInProgress = false
             
             self.hideBottomActivityIndicator()
-            
-            /*self.resultsObserver.unsubscribeNotifications()
-            self.resultsObserver.prepareResults()
-            self.resultsObserver.subscribeNotifications()
-            
-            guard post.channel.identifier == self.channel.identifier else { return }*/
-            
-            //let indexPath =  self.resultsObserver.indexPathForPost(post)
-            //self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-            
         }
     }
     
@@ -693,8 +660,10 @@ extension ChatViewController: Request {
                 var message = (error?.message!)!
                 if error?.code == -1011{
                     let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                    //REVIEW: localization
                     message = "You left this " + channelType
                 }
+                //REVIEW: hardcode
                 if error?.code == -1009 {
                     self.tableView.reloadRows(at: self.tableView.indexPathsForVisibleRows!, with: .none)
                 }
@@ -857,12 +826,15 @@ extension ChatViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (tableView == self.tableView) {
             let post = resultsObserver?.postForIndexPath(indexPath)
-            if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
-            //    self.loadNextPageOfData()
+            if (indexPath == self.tableView.lastIndexPath()) && self.hasNextPage {
                 loadPostsBeforePost(post: self.resultsObserver.lastPost())
             }
+          /*  if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
+            //    self.loadNextPageOfData()
+                loadPostsBeforePost(post: self.resultsObserver.lastPost())
+            }*/
             
-            if indexPath == IndexPath(row: 0, section: 0) {
+            if (indexPath == IndexPath(row: 0, section: 0)) && self.hasNewestPage {
                 loadPostsAfterPost(post: post!)
             }
             
@@ -1020,23 +992,14 @@ extension ChatViewController: ChannelObserverDelegate {
         }
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         self.textView.resignFirstResponder()
+
+        guard !self.hasNewestPage else { return }
         
-        if (self.postFromSearch == nil) {
-           // self.loadFirstPageOfData(isInitial: true)
-            self.loadChannelUsers()
-        } else {
-            if self.postFromSearch.channel.identifier != identifier {
-                self.postFromSearch = nil
-                //self.loadFirstPageOfData(isInitial: true)
-                self.loadChannelUsers()
-            } else {
-               // loadPostsBeforePost(post: self.postFromSearch, shortSize: true)
-            }
-        }
+        self.loadChannelUsers()
         
         //NEEDREFACTORING
-        startHeadDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 0)
-        startTextDialogueLabel = EmptyDialogueLabel.init(channel: self.channel, type: 1)
+        startHeadDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 0)
+        startTextDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 1)
         
         self.startTextDialogueLabel.removeFromSuperview()
         self.startHeadDialogueLabel.removeFromSuperview()
@@ -1075,6 +1038,14 @@ extension ChatViewController: ChannelObserverDelegate {
         configureWithSentPost()
         
         addChannelObservers()
+        
+        guard let _ = filesAttachmentsModule else {return}
+        
+        if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
+            filesAttachmentsModule.presentWithCachedItems()
+        } else {
+            attachmentsView.hideAnimated()
+        }
     }
     
     func startButtonAction(sender: UIButton!) {

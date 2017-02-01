@@ -78,7 +78,7 @@ private protocol PostApi: class {
     func loadFirstPage(_ channel: Channel, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func loadNextPage(_ channel: Channel, fromPost: Post, completion:  @escaping(_ isLastPage: Bool, _ error: Mattermost.Error?) -> Void)
     func loadPostsBeforePost(post: Post/*, shortList: Bool?*/, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void)
-    func loadPostsAfterPost(post: Post, shortList: Bool?, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void)
+    func loadPostsAfterPost(post: Post/*, shortList: Bool?*/, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void)
 }
 
 private protocol FileApi : class {
@@ -286,10 +286,7 @@ extension Api: ChannelApi {
                 channels.forEach {
                     $0.currentUserInChannel = true
                     $0.computeTeam()
-                   // $0.computeDispayNameIfNeeded()
-                  /*  if let channel = realm.objects(Channel.self).filter("identifier = %@", $0.identifier!).first{
-                        $0.members = channel.members
-                    }*/
+                    $0.gradientType = Int(arc4random_uniform(5))
                     realm.add($0, update: true)
                 }
             })
@@ -307,7 +304,6 @@ extension Api: ChannelApi {
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let channelDictionary = Reflection.fetchNotNullValues(object: mappingResult.firstObject as! Channel)
-            print(channelDictionary)
             RealmUtils.create(channelDictionary)
             let updatedChannel = try! Realm().objects(Channel.self).filter("identifier = %@", (mappingResult.firstObject as! Channel).identifier!).first!
             let realm = RealmUtils.realmForCurrentThread()
@@ -427,6 +423,7 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
+                channel.gradientType = Int(arc4random_uniform(5))
                 realm.add(channel)
             })
             completion(channel ,nil)
@@ -645,7 +642,6 @@ extension Api: UserApi {
     func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void){
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersNotInChannelPathPattern(), channel)!
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            print(operation.httpRequestOperation.responseString)
             //Temp cap
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
@@ -908,13 +904,28 @@ extension Api: PostApi {
         }
     }
     
-    func loadPostsAfterPost(post: Post, shortList: Bool? = false, completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void) {
-        let size = (shortList == true) ? 10 : 60
-        let wrapper = PageWrapper(size: size, channel: post.channel, lastPostId: post.identifier)
+    func loadPostsAfterPost(post: Post,/* shortList: Bool? = false,*/ completion: @escaping(_ isLastPage: Bool, _ error: Error?) -> Void) {
+        //let size = (shortList == true) ? 10 : 60
+        let wrapper = PageWrapper(size: 60, channel: post.channel, lastPostId: post.identifier)
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.afterPostPathPattern(), wrapper)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            guard !skipMapping else {
+            let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
+            guard !skipMapping else { completion(isLastPage, nil); return }
+            
+            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+            RealmUtils.save(posts)
+            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
+            
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    completion(isLastPage, nil)
+                })
+            })
+            
+        /*    guard !skipMapping else {
                 completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 return
             }
@@ -923,7 +934,7 @@ extension Api: PostApi {
                 DispatchQueue.main.sync {
                     completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
                 }
-            })
+            })*/
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
             completion(isLastPage, error)
@@ -1067,7 +1078,6 @@ extension Api : FileApi {
             let fileInfos = mappingResult.array() as! [File]
             //PostUtils.update(post: post, fileInfos: fileInfos)
             for fileInfo in fileInfos {
-                print(fileInfo)
                 FileUtils.updateFileWith(info: fileInfo)
             }
             

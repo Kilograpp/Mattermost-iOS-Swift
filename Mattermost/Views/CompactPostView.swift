@@ -54,12 +54,14 @@ class CompactPostView: UIView {
         super.layoutSubviews()
         
         let shadowPath = UIBezierPath(rect: self.contentView.bounds)
-        self.contentView.layer.masksToBounds = false
+//        self.contentView.layer.masksToBounds = false
         self.contentView.layer.shadowColor = ColorBucket.parentShadowColor.cgColor
         self.contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
         self.contentView.layer.shadowOpacity = 0.15
         self.contentView.layer.shadowPath = shadowPath.cgPath
         self.contentView.isOpaque = true
+        self.contentView.layer.shouldRasterize = true
+        self.contentView.layer.rasterizationScale = UIScreen.main.scale
     }
 }
 

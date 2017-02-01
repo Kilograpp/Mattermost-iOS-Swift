@@ -222,8 +222,12 @@ extension PostUtils: PostConfiguration {
         let post = Post()
         post.message = message
         post.createdAt = Date()
-        post.channelId = channel.identifier
+        let lastPostInChannel = channel.lastPost()
         post.authorId = Preferences.sharedInstance.currentUserId
+        let postsInterval = (post.createdAt as NSDate?)?.minutesLaterThan(lastPostInChannel?.createdAt)
+        post.isFollowUp =  (post.authorId == lastPostInChannel?.authorId) && (postsInterval! < Constants.Post.FollowUpDelay)
+        post.channelId = channel.identifier
+
         self.configureBackendPendingId(post)
         self.assignFilesToPostIfNeeded(post)
         post.computeMissingFields()

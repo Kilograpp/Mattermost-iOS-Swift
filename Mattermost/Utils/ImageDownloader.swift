@@ -11,7 +11,8 @@ import WebImage
 final class ImageDownloader {
     static func downloadFeedAvatarForUser(_ user: User, completion: @escaping (_ image: UIImage?, _ error: NSError?) -> Void) {
         guard !user.isSystem() else {
-            completion(UIImage.sharedFeedSystemAvatar, nil)
+            //TODO: Possible refactor
+            completion(UIImage.avatarPlaceholderImage/*UIImage.sharedFeedSystemAvatar*/, nil)
             return
         }
         

@@ -226,6 +226,7 @@
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
 		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
 		D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */; };
+		D68596E41E37D12700B46C23 /* DisableBitcode.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */; };
 		D69A1F181E29520F00AB6334 /* CTLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69A1F171E29520F00AB6334 /* CTLabel.swift */; };
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
 		D6BE52F01D7435BD00FCC1D6 /* PostAttachmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */; };
@@ -241,6 +242,7 @@
 		D6E165A61D47E9B00014C831 /* MFSideMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A51D47E9B00014C831 /* MFSideMenu.framework */; };
 		D6E165AA1D47EA920014C831 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165A91D47EA920014C831 /* UIImage+Additions.swift */; };
 		D6F895F61D5CC8CB0019342E /* LeftMenuSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F895F51D5CC8CB0019342E /* LeftMenuSectionHeader.swift */; };
+		D6FB96421E3BC4FA00202CCC /* GradientImagesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6FB96411E3BC4FA00202CCC /* GradientImagesBuilder.swift */; };
 		D8087AD41D401FB3001918E8 /* RealmUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AD31D401FB3001918E8 /* RealmUtils.swift */; };
 		D8087ADF1D413DB7001918E8 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087ADE1D413DB7001918E8 /* Team.swift */; };
 		D8087AE11D414A71001918E8 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8087AE01D414A71001918E8 /* Channel.swift */; };
@@ -302,6 +304,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2801F77C864C8AB9B421FD55 /* Pods-Mattermost.appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mattermost.appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Mattermost/Pods-Mattermost.appstore.xcconfig"; sourceTree = "<group>"; };
 		413B76211D58C6CD00F297BE /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en.lproj; path = Settings.bundle/en.lproj; sourceTree = "<group>"; };
 		413B762B1D58CF4100F297BE /* ru.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ru.lproj; sourceTree = "<group>"; };
 		4195DCE91D54A4BC00E8ED84 /* KGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KGTextField.swift; sourceTree = "<group>"; };
@@ -533,6 +536,7 @@
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
 		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
 		D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsViewCell.swift; path = PostAttachmentsViewCell/PostAttachmentsViewCell.swift; sourceTree = "<group>"; };
+		D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DisableBitcode.xcconfig; sourceTree = "<group>"; };
 		D69A1F171E29520F00AB6334 /* CTLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTLabel.swift; sourceTree = "<group>"; };
 		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
 		D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsView.swift; path = PostAttachmentsView/PostAttachmentsView.swift; sourceTree = "<group>"; };
@@ -551,6 +555,7 @@
 		D6E165A71D47E9C50014C831 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = Carthage/Build/iOS/MBProgressHUD.framework; sourceTree = "<group>"; };
 		D6E165A91D47EA920014C831 /* UIImage+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Additions.swift"; sourceTree = "<group>"; };
 		D6F895F51D5CC8CB0019342E /* LeftMenuSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeftMenuSectionHeader.swift; path = LeftMenu/LeftMenuSectionHeader.swift; sourceTree = "<group>"; };
+		D6FB96411E3BC4FA00202CCC /* GradientImagesBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientImagesBuilder.swift; sourceTree = "<group>"; };
 		D8087AD31D401FB3001918E8 /* RealmUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmUtils.swift; sourceTree = "<group>"; };
 		D8087ADE1D413DB7001918E8 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		D8087AE01D414A71001918E8 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
@@ -643,6 +648,7 @@
 			children = (
 				502415DAC7BBD67A9632E0AD /* Pods-Mattermost.debug.xcconfig */,
 				793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */,
+				2801F77C864C8AB9B421FD55 /* Pods-Mattermost.appstore.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -883,6 +889,7 @@
 		9B822D8772CC01B506FE072D = {
 			isa = PBXGroup;
 			children = (
+				D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */,
 				9B8226364A9CB357915ABAC5 /* Mattermost */,
 				9B82243559F26A9911CEBFB1 /* MattermostTests */,
 				0DD091C44E54D1A5B34DF000 /* Pods */,
@@ -1254,6 +1261,7 @@
 				864AF5BF1E0124000010F083 /* ChannelCreateField.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
 				D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */,
+				D6FB96411E3BC4FA00202CCC /* GradientImagesBuilder.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1428,6 +1436,7 @@
 				8BE969B71D7638060010A524 /* Settings.storyboard in Resources */,
 				D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */,
 				8BBA7DC41D874F1C003A5B99 /* SearchingInProcessView.xib in Resources */,
+				D68596E41E37D12700B46C23 /* DisableBitcode.xcconfig in Resources */,
 				8B882D661DA5A21F0028F13D /* Localizable.strings in Resources */,
 				9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */,
 				D6330AB41D494BF9006D84F4 /* SF-UI-Text-Bold.otf in Resources */,
@@ -1595,6 +1604,7 @@
 				D83306021D5695B200E92CD6 /* String+UrlAtIndex.swift in Sources */,
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
+				D6FB96421E3BC4FA00202CCC /* GradientImagesBuilder.swift in Sources */,
 				8B3CB3671DD268690078DE25 /* ChannelObserver.swift in Sources */,
 				8B3CB3441DD2675F0078DE25 /* TeamCellBuilder.swift in Sources */,
 				4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */,
@@ -1893,7 +1903,7 @@
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.2;
+				SWIFT_VERSION = 3.0.1;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
@@ -1940,7 +1950,7 @@
 				PROVISIONING_PROFILE = "41c923ca-0156-4473-b579-4f04388467ef";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.2;
+				SWIFT_VERSION = 3.0.1;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
@@ -2103,7 +2113,7 @@
 		};
 		D68596E11E37902500B46C23 /* Appstore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 793889CD3D2B3DF9F949A8E3 /* Pods-Mattermost.release.xcconfig */;
+			baseConfigurationReference = 2801F77C864C8AB9B421FD55 /* Pods-Mattermost.appstore.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2129,7 +2139,7 @@
 				PROVISIONING_PROFILE = "f04ccae7-c78d-465d-ab85-1f59e64c5fdc";
 				PROVISIONING_PROFILE_SPECIFIER = "Appstore Mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.2;
+				SWIFT_VERSION = 3.0.1;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = NO;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
