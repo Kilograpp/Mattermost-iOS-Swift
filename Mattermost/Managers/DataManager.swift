@@ -20,7 +20,10 @@ class DataManager {
     }
     
     var currentTeam: Team? {
-        get {return Team.objectById(Preferences.sharedInstance.currentTeamId!)}
+        get {
+            if Preferences.sharedInstance.currentTeamId == nil { return nil }
+            return Team.objectById(Preferences.sharedInstance.currentTeamId!)
+        }
         set {Preferences.sharedInstance.currentTeamId = newValue!.identifier}
     }
     
