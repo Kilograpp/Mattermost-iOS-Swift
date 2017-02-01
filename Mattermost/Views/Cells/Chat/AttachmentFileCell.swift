@@ -17,8 +17,8 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        fileView = AttachmentFileView(file: file, frame: self.bounds)
-        contentView.addSubview(fileView)
+   //     fileView = AttachmentFileView(file: file, frame: self.bounds)
+   //     contentView.addSubview(fileView)
         self.backgroundColor = UIColor.white
     }
     
@@ -29,7 +29,7 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
 //MARK: Properties
     fileprivate var file: File!{
         didSet {
-            fileView.setNeedsDisplay()
+            //fileView.setNeedsDisplay()
         }
     }
     fileprivate var fileView: AttachmentFileView!
