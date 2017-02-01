@@ -18,6 +18,7 @@ fileprivate struct DownloadingState {
 
 fileprivate let NullString = "(null)"
 fileprivate let TitleFont = UIFont.systemFont(ofSize: 13)
+fileprivate let emptyImageViewBackgroundColor = UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1)
 
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
@@ -26,7 +27,7 @@ protocol AttachmentImageCellConfiguration: class {
 
 final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     
-//MARK: Properties
+    //MARK: Properties
     fileprivate var file: File! {
         didSet { computeFileName() }
     }
@@ -34,7 +35,7 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     fileprivate let fileImageView = UIImageView()
     fileprivate let fileNameLabel = UILabel()
     
-//MARK: LifeCycle
+    //MARK: LifeCycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -52,9 +53,10 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
         guard self.file != nil else { return }
         
         self.fileNameLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 20)
-        self.fileImageView.frame = CGRect(x: 0, y: self.fileNameLabel.frame.size.height,
+        self.fileImageView.frame = CGRect(x: 0,
+                                          y: self.fileNameLabel.frame.maxY,
                                           width: self.bounds.width,
-                                          height: FileUtils.scaledImageHeightWith(file: self.file))
+                                          height: bounds.height - 21)
     }
     
     override func prepareForReuse() {
@@ -106,11 +108,11 @@ extension AttachmentImageCell: Setup {
     }
     
     fileprivate func setupImageView() {
-        self.fileImageView.contentMode = .scaleToFill
         self.addSubview(self.fileImageView)
         //was clear
-        self.fileImageView.backgroundColor = UIColor.white
-        self.fileImageView.contentMode = .scaleAspectFit
+        //        self.fileImageView.backgroundColor = UIColor.white
+        self.fileImageView.contentMode = .center
+        self.fileImageView.backgroundColor = emptyImageViewBackgroundColor
     }
     
     fileprivate func setupLabel() {
@@ -140,6 +142,7 @@ extension AttachmentImageCell: Updating {
         let fileName = self.fileName
         var downloadUrl = self.file.previewURL()
         let size = FileUtils.scaledImageSizeWith(file: self.file!)
+        //        print("EXPECTED SIZE: \(size)")
         
         if (downloadUrl?.absoluteString.contains(NullString))! {
             let fixedPath = downloadUrl?.absoluteString.replacingOccurrences(of: NullString, with: Preferences.sharedInstance.currentTeamId!)
@@ -150,14 +153,15 @@ extension AttachmentImageCell: Updating {
             self.fileImageView.image = image
         } else {
             self.fileImageView.image = Constants.Post.BackImage
-
+            
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
                 DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                     // Handle unpredictable errors
                     guard image != nil else { return }
-
+                    
                     var finalImage: UIImage = image!
+                    //                    print("REAL SIZE: \(finalImage.size)")
                     if cacheType == .none {
                         finalImage = image!.imageByScalingAndCroppingForSize(size, radius: 3)
                         SDImageCache.shared().store(finalImage, forKey: downloadUrl?.absoluteString)
@@ -170,8 +174,10 @@ extension AttachmentImageCell: Updating {
                         let postLocalId = self?.file.post?.localIdentifier
                         guard postLocalId != nil else { return }
                         
+                        //                        print("ACTUAL SIZE: \(finalImage.size)")
                         self?.fileImageView.image = finalImage
-                        self?.layoutSubviews()
+                        self?.fileImageView.backgroundColor = UIColor.white
+                        //                        self?.layoutSubviews()
                     })
                 }
             }
