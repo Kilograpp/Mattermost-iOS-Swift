@@ -556,7 +556,6 @@ extension ChatViewController: Action {
 //MARK: Navigation
 extension ChatViewController: Navigation {
     func proceedToSearchChat() {
-        
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
         let realm = RealmUtils.realmForCurrentThread()
         guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
@@ -656,18 +655,6 @@ extension ChatViewController: Request {
             })
         })
     }
-    
-    /*func loadNextPageOfData() {
-        guard !self.isLoadingInProgress else { return }
-        
-        self.isLoadingInProgress = true
-        showTopActivityIndicator()
-        Api.sharedInstance.loadNextPage(self.channel!, fromPost: resultsObserver.lastPost()) { (isLastPage, error) in
-            self.hasNextPage = !isLastPage
-            self.isLoadingInProgress = false
-            self.hideTopActivityIndicator()
-        }
-    }*/
     
     func loadPostsBeforePost(post: Post, needScroll: Bool? = false) {
         guard !self.isLoadingInProgress else { return }
@@ -783,8 +770,6 @@ extension ChatViewController: NotificationObserver {
                            name: NSNotification.Name(rawValue: Constants.NotificationsNames.DocumentInteractionNotification), object: nil)
         center.addObserver(self, selector: #selector(didTapImageAction),
                            name: NSNotification.Name(rawValue: Constants.NotificationsNames.FileImageDidTapNotification), object: nil)
-//        center.addObserver(self, selector: #selector(reloadChat),
-//                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification), object: nil)
         center.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.SLKKeyboardWillShow, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.SLKKeyboardWillHide, object: nil)
     }
@@ -875,19 +860,10 @@ extension ChatViewController {
             if (indexPath == self.tableView.lastIndexPath()) && self.hasNextPage {
                 loadPostsBeforePost(post: self.resultsObserver.lastPost())
             }
-          /*  if self.hasNextPage && self.tableView.offsetFromTop() < 200 {
-            //    self.loadNextPageOfData()
-                loadPostsBeforePost(post: self.resultsObserver.lastPost())
-            }*/
-            
+
             if (indexPath == IndexPath(row: 0, section: 0)) && self.hasNewestPage {
                 loadPostsAfterPost(post: post!)
             }
-            
-            /*if (Int(self.channel.messagesCount!)! > self.resultsObserver.numberOfPosts()) &&
-               (self.tableView.offsetFromTop() < 200) {
-                loadPostsBeforePost(post: self.resultsObserver.lastPost())
-            }*/
             
             let errorHandler = { (post:Post) in
                 self.errorAction(post)
@@ -1031,7 +1007,6 @@ extension ChatViewController: ChannelObserverDelegate {
         //new channel
         guard identifier != nil else { return }
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
-        self.title = self.channel?.displayName
         
         if (self.navigationItem.titleView != nil) {
             (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
