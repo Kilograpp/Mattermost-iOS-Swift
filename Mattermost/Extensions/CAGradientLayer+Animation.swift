@@ -81,6 +81,8 @@ extension CAGradientLayer {
         return colorsArray
     }
     
+    
+    
     func updateLayer(_ labelLayer: CAGradientLayer) {
         let colorsArray = makeArrayColors(labelLayer)
         let index = Int(arc4random_uniform(6))

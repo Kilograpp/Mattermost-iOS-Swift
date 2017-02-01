@@ -10,6 +10,7 @@
 protocol TableViewPostDataSource: class {
     func configureWithPost(_ post: Post)
     static func heightWithPost(_ post: Post) -> CGFloat
+    func highlightBackground()
 }
 
 class FeedBaseTableViewCell: UITableViewCell, Reusable {
@@ -128,6 +129,10 @@ extension FeedBaseTableViewCell {
     }
     
     class func heightWithPost(_ post: Post) -> CGFloat {
+        preconditionFailure("This method must be overridden")
+    }
+    
+    func highlightBackground() {
         preconditionFailure("This method must be overridden")
     }
 }

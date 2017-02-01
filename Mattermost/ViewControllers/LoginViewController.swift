@@ -280,12 +280,12 @@ extension LoginViewController: Request {
         
         Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            
-            //  NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
-            
-            DispatchQueue.main.async{
-                self.hideLoaderView()
-                self.proceedToChat()
+            Api.sharedInstance.getChannelMembers { (error) in
+                guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                DispatchQueue.main.async {
+                    self.hideLoaderView()
+                    self.proceedToChat()
+                }
             }
         }
     }

@@ -36,7 +36,6 @@ final class AttachmentsModule {
     fileprivate var items: [AssignedAttachmentViewItem] = []
     var fileUploadingInProgress: Bool = true {
         didSet {
-            //if self.fileUploadingInProgress { print("done"); self.dataSource.tableView(attachmentsModule: self).reloadData() }
             self.delegate.uploading(inProgress: self.fileUploadingInProgress, countItems: self.items.count)
         }
     }

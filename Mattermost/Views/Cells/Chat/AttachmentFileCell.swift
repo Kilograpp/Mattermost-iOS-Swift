@@ -14,15 +14,31 @@ protocol AttachmentFileCellConfiguration: class {
 
 final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
     
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        fileView = AttachmentFileView(file: file, frame: self.bounds)
+        contentView.addSubview(fileView)
+        self.backgroundColor = UIColor.white
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 //MARK: Properties
-    fileprivate var file: File!
+    fileprivate var file: File!{
+        didSet {
+            fileView.setNeedsDisplay()
+        }
+    }
     fileprivate var fileView: AttachmentFileView!
     
 //MARK: LifeCycle
-    override func prepareForReuse() {
-        fileView.removeFromSuperview()
-        fileView = nil
-    }
+//    override func prepareForReuse() {
+//        fileView.removeFromSuperview()
+//        fileView = nil
+//    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -34,11 +50,9 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
 extension AttachmentFileCell: AttachmentFileCellConfiguration {
     func configureWithFile(_ file: File) {
         self.file = file
-        fileView = AttachmentFileView(file: file, frame: self.bounds)
-        contentView.addSubview(fileView)
-        self.backgroundColor = UIColor.white
+
         //TEMP TODO: files uploading
         self.selectionStyle = .none
-        self.setNeedsDisplay()
+//        self.setNeedsDisplay()
     }
 }

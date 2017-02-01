@@ -99,9 +99,14 @@ final class RealmUtils {
         let realm = realmForCurrentThread()
         
         let channelPredicate = NSPredicate(format: "channelId == %@", channelId)
-        let days = realm.objects(Day.self).filter(channelPredicate)
+        var days = realm.objects(Day.self).filter(channelPredicate)
         var posts = realm.objects(Post.self).filter(channelPredicate)
-        if exept != nil {posts = posts.filter(NSPredicate(format: "identifier != %@", (exept?.identifier)!)) }
+        print("days ", days.count, " posts ", posts.count)
+        if exept != nil {
+            days = days.filter(NSPredicate(format: "key != %@", (exept?.day?.key)!))
+            posts = posts.filter(NSPredicate(format: "identifier != %@", (exept?.identifier)!))
+        }
+        print("days ", days.count, " posts ", posts.count)
         
         try! realm.write ({
             posts.forEach({ if $0.fileIds != nil { realm.delete($0.files) } })

@@ -90,6 +90,8 @@ final class Channel: RealmObject {
     dynamic var isInterlocuterOnTeam: Bool = false
     dynamic var isDirectPrefered: Bool = false
     dynamic var unsentPost: UnsentPost?  = UnsentPost()
+    //0..6 int
+    dynamic var gradientType: Int = 0
     
     var isSelected: Bool {
         return self == ChannelObserver.sharedObserver.selectedChannel
@@ -123,6 +125,13 @@ final class Channel: RealmObject {
         let ids = self.name?.components(separatedBy: "__")
         let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
         return safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
+    }
+    
+    func lastPost() -> Post? {
+        let predicate = NSPredicate(format: "channelId = %@", identifier ?? "")
+        let results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byProperty: "createdAt", ascending: false)
+        
+        return results.first
     }
 }
 

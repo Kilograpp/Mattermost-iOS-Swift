@@ -70,9 +70,8 @@ fileprivate protocol Configuration {
 
 fileprivate protocol Request {
     func loadTeamChannels()
-  //  func loadUsersForFirsPublicChannel()
-  //  func updateUsersTeamStatus()
-//    func updateDirectChannelsPreferedStatus()
+    func loadPreferedDirectChannelsInterlocuters()
+    func loadTeamMembers()
 }
 
 
@@ -148,9 +147,11 @@ extension TeamViewController: Request {
                     DataManager.sharedInstance.currentTeam = self.lastTeam
                     Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
                     Preferences.sharedInstance.save()
+                
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                 
                 return }
+            
             self.loadPreferedDirectChannelsInterlocuters()
         }
     }
@@ -189,6 +190,7 @@ extension TeamViewController: Request {
                 Preferences.sharedInstance.save()
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                 return }
+            
             
             RouterUtils.loadInitialScreen()
           //  NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))

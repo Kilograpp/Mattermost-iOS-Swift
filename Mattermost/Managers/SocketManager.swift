@@ -129,7 +129,6 @@ extension SocketManager: MessageHandling {
                 guard let status = dictionary[NotificationKeys.Data]?[NotificationKeys.Status] as? String else { return }
                 publishLocalNotificationStatusChanged(userId!, status: status)
             case .receivingStatuses:
-                print(text)
                 guard let statuses = dictionary[NotificationKeys.Data] as? [String:String] else { return }
                 publishLocalNotificationStatusSetup(statuses)
             case .receivingTyping:
