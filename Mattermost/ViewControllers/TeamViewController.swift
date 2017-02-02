@@ -46,6 +46,11 @@ final class TeamViewController: UIViewController {
         
      //   UIStatusBar.shared().reset()
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
 }
 
 

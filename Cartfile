@@ -1,6 +1,6 @@
 github "Kilograpp/UITableView-Cache" "master"
 github "yeahdongcn/UIColor-Hex-Swift"
-github "rs/SDWebImage"
+github "rs/SDWebImage" "3.8.0"
 github "jdg/MBProgressHUD" ~> 1.0.0
 github "Kilograpp/MFSideMenu" "1.0.1"
 github "daltoniam/Starscream"
@@ -8,5 +8,5 @@ github "laptobbe/TSMarkdownParser"
 github "realm/realm-cocoa"
 github "slackhq/SlackTextViewController"
 github "ninjaprox/NVActivityIndicatorView" ~> 3.3
-github "Kilograpp/ImagePickerSheetController" "0.9.4"
+github "Kilograpp/ImagePickerSheetController" "0.9.7"
 github "Skyscanner/SkyFloatingLabelTextField"
