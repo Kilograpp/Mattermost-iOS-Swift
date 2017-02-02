@@ -70,7 +70,8 @@ extension PostAttachmentsView : Private {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         
-        self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        self.collectionView = UICollectionView(frame: bounds, collectionViewLayout: layout)
+        self.collectionView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.addSubview(self.collectionView!)
         self.collectionView?.backgroundColor = ColorBucket.whiteColor
         
@@ -79,18 +80,10 @@ extension PostAttachmentsView : Private {
         
         self.collectionView?.register(PostImageViewCell.self, forCellWithReuseIdentifier: "PostImageViewCellReuseIdentifier")
         self.collectionView?.register(PostFileViewCell.self, forCellWithReuseIdentifier: "PostFileViewCellReuseIdentifier")
-        
-        //snapkit
-        self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
-        let left = NSLayoutConstraint(item: self.collectionView!, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
-        let right = NSLayoutConstraint(item: self.collectionView!, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
-        let top = NSLayoutConstraint(item: self.collectionView!, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0)
-        let bottom = NSLayoutConstraint(item: self.collectionView!, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0)
-        self.addConstraints([left, right, top, bottom])
     }
     
     fileprivate func setupConstraints() {
-        //snapkit
+//        autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.translatesAutoresizingMaskIntoConstraints = false
         self.leftConstraint = NSLayoutConstraint(item: self, attribute: .left, relatedBy: .equal, toItem: self.anchorView, attribute: .left, multiplier: 1, constant: 0)
         self.rightConstraint = NSLayoutConstraint(item: self, attribute: .right, relatedBy: .equal, toItem: self.anchorView, attribute: .right, multiplier: 1, constant: 0)
@@ -100,17 +93,10 @@ extension PostAttachmentsView : Private {
     }
     
     func setupTopBarView() {
-        let topBarView = UIView()
-        topBarView.translatesAutoresizingMaskIntoConstraints = false
+        let topBarView = UIView(frame: CGRect(x:0, y: 0, width:bounds.width, height:0.5))
+        topBarView.autoresizingMask = [.flexibleWidth]
         self.addSubview(topBarView)
-        topBarView.backgroundColor = ColorBucket.lightGrayColor
-        
-        //snapkit
-        let left = NSLayoutConstraint(item: topBarView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
-        let right = NSLayoutConstraint(item: topBarView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
-        let height = NSLayoutConstraint(item: topBarView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 1)
-        let top = NSLayoutConstraint(item: topBarView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0)
-        self.addConstraints([left, right, height, top])
+        topBarView.backgroundColor = ColorBucket.commonLightSeparatorColor
     }
 }
 
@@ -169,7 +155,7 @@ extension PostAttachmentsView : UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         
-        var convertedCell = cell as! PostAttachmentsViewBaseCell
+        let convertedCell = cell as! PostAttachmentsViewBaseCell
         convertedCell.configureWithItem((self.dataSource?.item(atIndex: indexPath.row))!)
         convertedCell.removeTapHandler = {(imageItem) in
             self.delegate?.didRemove(item: imageItem)

@@ -20,6 +20,7 @@ class ProfileTableViewCell: UITableViewCell, Reusable {
     @IBOutlet weak var titleLabel: UILabel?
     @IBOutlet weak var infoLabel: UILabel?
     @IBOutlet weak var arrowButton: UIButton?
+    @IBOutlet weak var infoLabelTrailingLayoutConstraint: NSLayoutConstraint?
     
     var isCopyEnabled = false
     

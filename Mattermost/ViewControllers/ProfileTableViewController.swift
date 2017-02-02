@@ -200,7 +200,7 @@ extension ProfileViewController: Request {
     }
     
     internal func updateImage() {
-        self.showLoaderView()
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         let image = self.avatarImageView.image
         self.saveButton.isEnabled = false
         Api.sharedInstance.update(profileImage: image!, completion: { (error) in
