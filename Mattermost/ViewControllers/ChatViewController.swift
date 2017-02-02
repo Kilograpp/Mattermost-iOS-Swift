@@ -430,9 +430,10 @@ extension ChatViewController : Private {
 //MARK: UnsentPostConfigure
 extension ChatViewController: UnsentPostConfigure {
     func saveSentPostForChannel() {
+        guard !self.channel.isInvalidated else { return }
+        
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write {
-            guard self.channel != nil else { return }
             self.channel.unsentPost?.message = self.textView.text
         }
     }
