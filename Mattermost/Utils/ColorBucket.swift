@@ -39,6 +39,7 @@ private protocol CommonColors: class {
     static var onlineStatusColor: UIColor {get}
     static var awayStatusColor: UIColor {get}
     static var sectionTitleColor: UIColor {get}
+    static var commonLightSeparatorColor: UIColor {get}
 }
 
 private protocol SideMenuColors {
@@ -119,6 +120,7 @@ extension ColorBucket : CommonColors {
     static let onlineStatusColor = ColorBucket.onlineStatus()
     static let awayStatusColor = ColorBucket.awayStatus()
     static let sectionTitleColor = ColorBucket.middleDarkGray()
+    static let commonLightSeparatorColor = try! UIColor(rgba_throws: "#BBBBBB")
 }
 
 extension ColorBucket : SideMenuColors {
