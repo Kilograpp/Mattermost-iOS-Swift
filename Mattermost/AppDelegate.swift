@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         RouterUtils.loadInitialScreen()
         registerForRemoteNotifications()
         Fabric.with([Crashlytics.self])
+        
+        
         return true
     }
 
@@ -47,6 +49,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
         print(userInfo)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.DidReceiveRemoteNotification), object: userInfo)
+        
+//        if let aps = userInfo["aps"] as? NSDictionary {
+//            if let badgeNumber = aps["badge"] as? Int {
+//                UIApplication.shared.applicationIconBadgeNumber = badgeNumber
+//            }
+//        }
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

@@ -139,7 +139,12 @@ extension FilesPickingController: UserInteraction {
 extension FilesPickingController: FilesPickingModuleDelegate {
     func didPick(items: [AssignedAttachmentViewItem]) {
         self.attachmentItems += items
-        self.dataSource.attachmentsModule(controller: self).upload(attachments: items)
+        self.dataSource.attachmentsModule(controller: self).upload(attachments: items) { (finished, error, item) in
+            //attachmentItems from FilesPickingController: need to delete item after error in upload(attachments: items)...
+            if error != nil {
+                self.attachmentItems.removeObject(item)
+            }
+        }  
     }
 }
 

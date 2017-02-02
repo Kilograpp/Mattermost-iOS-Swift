@@ -31,6 +31,7 @@ class ChannelSettingsViewController: UIViewController {
         setupNavigationBar()
         setupChannelsObserver()
         setupNibs()
+        self.loadData()
     }
     
     func setupNavigationBar() {
@@ -228,7 +229,6 @@ extension ChannelSettingsViewController: UITableViewDelegate {
         super.viewWillAppear(animated)
         
         replaceStatusBar()
-        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -248,7 +248,7 @@ extension ChannelSettingsViewController: UITableViewDelegate {
         guard self.lastSelectedIndexPath == nil else { return }
         
         if (indexPath==IndexPath(row: 0, section: 2)) {
-            self.showLoaderView()
+            self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
             Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
                 guard (error==nil) else {
                     self.hideLoaderView()
@@ -310,6 +310,28 @@ extension ChannelSettingsViewController: UITableViewDelegate {
             self.performSegue(withIdentifier: "showNameAndHandle", sender: nil)
         }
         
+    }
+    
+    func loadData() {
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
+        Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
+            guard error == nil else {
+                self.handleErrorWith(message: (error?.message)!)
+                self.dismiss(animated: true, completion: nil)
+                return
+            }
+            Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
+                guard error == nil else {
+                    let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
+                    self.handleErrorWith(message: "You left this \(channelType)".localized)
+                    self.dismiss(animated: true, completion: nil)
+                    return
+                }
+                self.channel = try! Realm().objects(Channel.self).filter("identifier = %@", self.channel.identifier!).first!
+                self.tableView.reloadData()
+                self.hideLoaderView()
+            })
+        })
     }
 
 }

@@ -11,6 +11,7 @@ import RealmSwift
 import ImagePickerSheetController
 import UITableView_Cache
 import MFSideMenu
+import NVActivityIndicatorView
 
 
 protocol ChatViewControllerInterface: class {
@@ -61,7 +62,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
     
-//MARK: LifeCycle
+    //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -591,23 +592,11 @@ extension ChatViewController: Navigation {
             return
         }
         
-        self.showLoaderView()
-        Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            Api.sharedInstance.loadUsersListFrom(channel: channel, completion: { (error) in
-                guard error == nil else {
-                    let channelType = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                    self.handleErrorWith(message: "You left this \(channelType)".localized)
-                    return
-                }
-                
-                let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
-                let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
-                ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-                self.navigationController?.present(channelSettings, animated: true, completion: { _ in
-                    self.hideLoaderView()
-                })
-            })
+                    
+        let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
+        let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
+        ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+        self.navigationController?.present(channelSettings, animated: true, completion: { _ in
         })
     }
 }
@@ -617,7 +606,7 @@ extension ChatViewController: Navigation {
 extension ChatViewController: Request {
     func loadChannelUsers() {
         self.isLoadingInProgress = true
-        showLoaderView()
+        showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
         
         Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
             guard error == nil else {
@@ -642,7 +631,8 @@ extension ChatViewController: Request {
             self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
             return
         }
-        self.showLoaderView()
+        
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             self.hideLoaderView()
             self.isLoadingInProgress = false
@@ -653,6 +643,8 @@ extension ChatViewController: Request {
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
+            
+            self.tableView.reloadData()
         })
     }
     
@@ -1082,7 +1074,7 @@ extension ChatViewController: ChannelObserverDelegate {
     }
     
     func startButtonAction(sender: UIButton!) {
-        self.showLoaderView()
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
         Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
             guard (error==nil) else { self.hideLoaderView(); return }
             
@@ -1212,5 +1204,29 @@ extension ChatViewController: AttachmentsModuleDataSource {
     }
     func channel(attachmentsModule: AttachmentsModule) -> Channel {
         return self.channel
+    }
+}
+
+//MARK: loader override
+extension ChatViewController {
+    override func showLoaderView(topOffset: CGFloat, bottomOffset: CGFloat) {
+        
+        //stopActions
+        self.leftButton.isEnabled = false
+        self.textView.isEditable = false
+        self.rightButton.isEnabled = false
+        
+        super.showLoaderView(topOffset: topOffset, bottomOffset: bottomOffset)
+    }
+    
+    override func hideLoaderView(){
+        super.hideLoaderView()
+        
+        //startActions
+        self.leftButton.isEnabled = true
+        self.textView.isEditable = true
+        self.rightButton.isEnabled = self.textView.text != "" || self.filesPickingController.attachmentItems.count > 0
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleTapAction))
+        self.navigationItem.titleView?.addGestureRecognizer(tapGestureRecognizer)
     }
 }

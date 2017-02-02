@@ -62,14 +62,7 @@ class PostAttachmentsViewBaseCell : UICollectionViewCell {
     
     func updateProgressViewWithValue(_ value: Float) {
         self.progressView.progress = value
-        self.progressView.isHidden = value == 1
-        if value == 1 {
-            let activity = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-            activity.tag = 77
-            activity.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
-            activity.startAnimating()
-            self.addSubview(activity)
-        }
+        self.progressView.isHidden = (value == 1)
     }
     
     override func prepareForReuse() {
