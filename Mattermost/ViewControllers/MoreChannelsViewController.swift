@@ -140,7 +140,8 @@ extension MoreChannelsViewController: Setup {
     
     func setupTableView() {
         self.tableView.backgroundColor = ColorBucket.whiteColor
-        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+//        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
+        self.tableView.keyboardDismissMode = .onDrag
         self.tableView.register(ChannelsMoreTableViewCell.self, forCellReuseIdentifier: ChannelsMoreTableViewCell.reuseIdentifier, cacheSize: 15)
     }
     

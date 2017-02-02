@@ -95,12 +95,14 @@ extension LeftMenuSectionHeader: LeftMenuSectionHeaderSetup {
     func setupTitleLabel() {
         self.titleLabel.font = FontBucket.headerTitleFont
         self.titleLabel.textColor = ColorBucket.lightGrayColor
+        self.titleLabel.backgroundColor = ColorBucket.sideMenuBackgroundColor
         self.addSubview(self.titleLabel)
     }
     
     func setupMoreButton() {
         self.moreButton.setImage(UIImage(named: "side_menu_more_icon"), for: UIControlState())
         self.moreButton.addTarget(self, action: #selector(moreAction), for: .touchUpInside)
+        self.moreButton.backgroundColor = ColorBucket.sideMenuBackgroundColor
         self.addSubview(self.moreButton)
     }
 }

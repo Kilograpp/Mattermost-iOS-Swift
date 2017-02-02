@@ -30,7 +30,9 @@ final class DirectChannelTableViewCell: UITableViewCell {
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
+        self.titleLabel.backgroundColor = highlighted ? UIColor.clear : self.highlightViewBackgroundColor()
         self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.withAlphaComponent(0.5) : self.highlightViewBackgroundColor()
+        
     }
     
     override func prepareForReuse() {
@@ -113,12 +115,14 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellSetup {
     func setupTitleLabel() {
         self.titleLabel.font = FontBucket.normalTitleFont
         self.titleLabel.textColor = ColorBucket.sideMenuCommonTextColor
+        self.titleLabel.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
     
     func setupStatusView() {
         self.statusView.layer.cornerRadius = 4
         self.statusView.layer.borderColor = ColorBucket.lightGrayColor.cgColor
         self.statusView.layer.borderWidth = 1;
+        self.statusView.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
     
     func setupBadgeLabel() {

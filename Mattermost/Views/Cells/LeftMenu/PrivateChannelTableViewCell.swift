@@ -27,6 +27,7 @@ final class PrivateChannelTableViewCell: UITableViewCell {
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         self.highlightView.backgroundColor = highlighted ? ColorBucket.sideMenuCellHighlightedColor : self.highlightViewBackgroundColor()
+        self.titleLabel.backgroundColor = highlighted ? UIColor.clear : self.highlightViewBackgroundColor()
     }
     
     func configureStatusViewWithNotification(_ notification: Notification) {
@@ -60,6 +61,7 @@ extension PrivateChannelTableViewCell: PrivateChannelTableViewCellSetup {
     func setupTitleLabel() {
         self.titleLabel.font = FontBucket.normalTitleFont
         self.titleLabel.textColor = ColorBucket.lightGrayColor
+        self.titleLabel.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
     
     func setupHighlightView() {
