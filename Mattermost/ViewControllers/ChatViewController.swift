@@ -149,6 +149,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
         return .grouped
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        var center = self.scrollButton?.center
+        center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
+        self.scrollButton?.center = center!
+    }
 }
 
 
@@ -468,9 +476,10 @@ extension ChatViewController : Private {
 //MARK: UnsentPostConfigure
 extension ChatViewController: UnsentPostConfigure {
     func saveSentPostForChannel() {
+        guard !self.channel.isInvalidated else { return }
+        
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write {
-            guard self.channel != nil else { return }
             self.channel.unsentPost?.message = self.textView.text
         }
     }
