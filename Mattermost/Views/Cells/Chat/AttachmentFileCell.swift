@@ -23,6 +23,7 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
    //     fileView = AttachmentFileView(file: file, frame: self.bounds)
    //     contentView.addSubview(fileView)
         self.backgroundColor = UIColor.white
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -33,6 +34,7 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
     fileprivate var file: File!{
         didSet {
             //fileView.setNeedsDisplay()
+
         }
     }
     fileprivate var fileView: AttachmentFileView!
