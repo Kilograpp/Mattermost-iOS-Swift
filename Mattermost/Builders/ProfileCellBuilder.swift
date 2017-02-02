@@ -51,6 +51,7 @@ extension ProfileCellBuilder: Inteface {
             configureSecondSection(cell: cell, row: indexPath.row, user: user)
         }
         cell.arrowButton?.isHidden = self.isDisplayOnly
+        cell.infoLabelTrailingLayoutConstraint?.constant = (self.isDisplayOnly) ? 10 : 25
         
         return cell
     }

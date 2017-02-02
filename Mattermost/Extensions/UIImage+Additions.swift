@@ -70,7 +70,7 @@ extension UIImage {
         let scaledWidth  = self.size.width * scaleFactor
         let scaledHeight = self.size.height * scaleFactor
         
-        UIGraphicsBeginImageContextWithOptions(size, true, 2)
+        UIGraphicsBeginImageContextWithOptions(size, true, 1)
         
         let thumbnailRect = CGRect(x: 0, y: 0, width: scaledWidth, height: scaledHeight)
         

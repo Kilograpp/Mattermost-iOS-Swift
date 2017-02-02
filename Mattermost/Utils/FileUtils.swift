@@ -120,11 +120,13 @@ final class FileUtils {
     }
     
     static func scaledImageSizeWith(file: File) -> CGSize {
-        let width = UIScreen.screenWidth() - Constants.UI.DoublePaddingSize
-        let scale = width /  CGFloat(file.width)
-        let height = CGFloat(file.height) * scale
+        let maxWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
+        let maxHeight = UIScreen.screenHeight() * 0.6
+        let xScaleFactor = maxWidth / CGFloat(file.width)
+        let yScaleFactor = maxHeight / CGFloat(file.height)
+        let scaleFactor = min(xScaleFactor, yScaleFactor)
         
-        return CGSize(width: width, height: min(height, UIScreen.screenHeight() * 0.6))
+        return CGSize(width: CGFloat(file.width) * scaleFactor, height: min(CGFloat(file.height) * scaleFactor, UIScreen.screenHeight() * 0.6))
     }
     
     static func scaledImageHeightWith(file: File) -> CGFloat {
