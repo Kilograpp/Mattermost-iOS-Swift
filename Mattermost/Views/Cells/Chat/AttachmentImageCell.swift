@@ -145,8 +145,11 @@ extension AttachmentImageCell: Updating {
             downloadUrl = NSURL(string: fixedPath!)! as URL
         }
         
+        
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl?.absoluteString) {
             self.fileImageView.image = image
+            self.fileImageView.backgroundColor = UIColor.white
+            
         } else {
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in

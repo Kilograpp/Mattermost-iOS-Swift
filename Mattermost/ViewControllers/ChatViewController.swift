@@ -68,7 +68,10 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         
         ChannelObserver.sharedObserver.delegate = self
         self.initialSetup()
-        createTestChannels()
+//        DispatchQueue.main.async {
+//            self.createTestChannels()
+//        }
+//
         if (self.channel.identifier!.characters.count < 4) {
             startHeadDialogueLabel.text = "Тестовый канал!"
             startTextDialogueLabel.text = "Для тестирования функционала чата перейдите в существующий на сервере канал!"
@@ -639,17 +642,19 @@ extension ChatViewController: Request {
         
         self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.hideLoaderView()
-            self.isLoadingInProgress = false
-            self.hasNextPage = true
-            self.hasNewestPage = false
-            self.dismissKeyboard(true)
-
-            Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
-            })
-            
-            self.tableView.reloadData()
+            DispatchQueue.main.async {
+                self.hideLoaderView()
+                self.isLoadingInProgress = false
+                self.hasNextPage = true
+                self.hasNewestPage = false
+                self.dismissKeyboard(true)
+                
+                Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+                })
+                
+                self.createTestChannels()
+            }
         })
     }
     

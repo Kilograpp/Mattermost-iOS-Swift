@@ -589,7 +589,7 @@ extension Api: UserApi {
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
             let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
-            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
+            UserUtils.updateOnTeamAndPreferedStatesFor(users: users)
             completion(nil)
         }) { (operation, error) in
             completion(Error.errorWithGenericError(error))
@@ -627,18 +627,26 @@ extension Api: UserApi {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromChannelPathPattern(), channel)!
         
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
-            let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
-            
-            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
-            for user in users {
-                let existUser = User.objectById(user.identifier)
-                if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
-                    let realm = RealmUtils.realmForCurrentThread()
-                    try! realm.write { channel.members.append(existUser!) }
+            DispatchQueue.main.async {
+                let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+                let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
+                
+    //            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
+                UserUtils.updateOnTeamAndPreferedStatesFor(users: users)
+                
+                var usersToAdd : [User] = []
+                for user in users {
+                    let existUser = User.objectById(user.identifier)
+                    if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
+                        usersToAdd.append(existUser!)
+                    }
                 }
+                
+                let realm = RealmUtils.realmForCurrentThread()
+                try! realm.write { channel.members.append(contentsOf: usersToAdd) }
+                
+                completion(nil)
             }
-            completion(nil)
         }, failure: completion)
     }
     
@@ -818,14 +826,15 @@ extension Api: PostApi {
             guard !skipMapping else { completion(nil); return }
 
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-            RealmUtils.save(posts)
+//            RealmUtils.save(posts)
             for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
                 if error != nil { print(error.debugDescription) }
                 
                 self.loadFileInfosFor(posts: posts, completion: { (error) in
-                    completion(nil)
+                    RealmUtils.save(posts)
+                    completion(error)
                 })
             })
         }) { (error) in
@@ -853,13 +862,14 @@ extension Api: PostApi {
             guard !skipMapping else { completion(isLastPage, nil); return }
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-            RealmUtils.save(posts)
+
             for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
                 if error != nil { print(error.debugDescription) }
                 
                 self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    RealmUtils.save(posts)
                     completion(isLastPage, nil)
                 })
             })
@@ -1092,17 +1102,23 @@ extension Api : FileApi {
     }
     
     func loadFileInfosFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        var chechedPostsCount = 0
+        let filesGroup = DispatchGroup()
+        var commonError: Mattermost.Error?
         for post in posts {
-            guard post.files.count > 0 else { chechedPostsCount += 1; continue }
+            guard post.files.count > 0 else {continue }
             
+            filesGroup.enter()
             self.getFileInfos(post: post, completion: { (error) in
-                chechedPostsCount += 1
-                if posts.count == chechedPostsCount { completion(nil) }
+                commonError = error
+                filesGroup.leave()
             })
         }
         
-        if posts.count == chechedPostsCount { completion(nil) }
+        filesGroup.notify(queue: DispatchQueue.main) { 
+            DispatchQueue.main.async {
+                completion(commonError)
+            }
+        }
     }
     
     func getInfo(fileId: String) {
