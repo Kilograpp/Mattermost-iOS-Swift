@@ -84,8 +84,13 @@ extension AttachmentsModule: Interface {
         cache.cacheFilesForChannel(items: attachments, channel: channel)
         PostUtils.sharedInstance.upload(items: attachments, channel: channel, completion: { (finished, error, item) in
             defer {
-                let index = self.items.index(of: item)
-                if index != nil { self.dataSource.postAttachmentsView(attachmentsModule: self).removeActivityAt(index: index!) }
+                print(item.identifier)
+                print(self.items[0].identifier)
+                
+                let index = self.items.index(where: { $0.identifier == item.identifier })
+                if index != nil {
+                    self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index!, value: 1)
+                }
                 self.fileUploadingInProgress = true
             }
 
@@ -101,7 +106,7 @@ extension AttachmentsModule: Interface {
             self.items[index].uploaded = value == 1
             self.items[index].uploading = value < 1
             self.items[index].uploadProgress = value
-            self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index, value: value)
+            self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index, value: min(value, 0.95))
         }
     }
 }
