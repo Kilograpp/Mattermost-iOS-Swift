@@ -82,9 +82,9 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     }
     
     func createTestChannels(){
-        let val = UserDefaults.standard.value(forKey: "no_need")
+        let val = UserDefaults.standard.string(forKey: "no_need")
         
-        guard val != "yes" else {return}
+        guard val != "yes"  else {return}
         
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write({
