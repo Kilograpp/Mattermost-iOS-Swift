@@ -189,7 +189,7 @@ extension UFSettingsTableViewController: Request {
     }
     
     internal func updatePassword() {
-        self.showLoaderView()
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         
         let oldPassword = self.builder.infoFor(section: 0)
         let newPassword = self.builder.infoFor(section: 1)

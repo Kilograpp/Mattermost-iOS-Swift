@@ -168,7 +168,7 @@ extension  MoreChannelsViewController: Configuration {
         let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
         let sortName = ChannelAttributes.displayName.rawValue
         
-        showLoaderView()
+        showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         Api.sharedInstance.loadChannelsMoreWithCompletion { (channels, error) in
             self.hideLoaderView()
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
@@ -187,7 +187,7 @@ extension  MoreChannelsViewController: Configuration {
     }
     
     func prepareUserResults() {
-        showLoaderView()
+        showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         
         Api.sharedInstance.loadUsersList(offset: 0) { (users, error) in
             self.hideLoaderView()
@@ -213,7 +213,7 @@ extension  MoreChannelsViewController: Configuration {
     func saveResults() {
         self.addedChannelCount = 0
         self.deletedChannelCount = 0
-        self.showLoaderView()
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         if self.isPrivateChannel {
             saveUserResults()
         } else {

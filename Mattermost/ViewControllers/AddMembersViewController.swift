@@ -110,7 +110,7 @@ class AddMembersViewController: UIViewController, UITableViewDelegate, UITableVi
         
         let member = searchController.isActive ? searchUsers[indexPath.row] : users[indexPath.row]
         
-        self.showLoaderView()
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         
         Api.sharedInstance.addUserToChannel(member, channel: channel, completion: { (error) in
             guard (error == nil) else {

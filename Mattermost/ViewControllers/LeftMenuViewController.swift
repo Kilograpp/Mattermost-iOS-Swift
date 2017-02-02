@@ -159,6 +159,7 @@ extension LeftMenuViewController: Setup {
 //MARK: Configuration
 extension LeftMenuViewController: Configuration {
     fileprivate func prepareResults() {
+        guard (DataManager.sharedInstance.currentTeam != nil) else { return }
         let currentTeamPredicate          = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let publicTypePredicate           = NSPredicate(format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)

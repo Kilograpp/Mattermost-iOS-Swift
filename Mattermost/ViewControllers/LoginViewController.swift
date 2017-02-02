@@ -218,7 +218,7 @@ extension LoginViewController: Navigation {
 //MARK: Request
 extension LoginViewController: Request {
     func login() {
-        showLoaderView()
+        showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         passwordTextField.endEditing(false)
         loginTextField.endEditing(false)
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in
