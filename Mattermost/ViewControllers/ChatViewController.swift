@@ -82,13 +82,19 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     }
     
     func createTestChannels(){
+        let val = UserDefaults.standard.string(forKey: "no_need")
+        
+        guard val != "yes"  else {return}
+        
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write({
             for id in 1...200 {
                 realm.add(createRandomChannel(id: id), update: true)
             }
         })
-
+        
+        UserDefaults.standard.set("yes", forKey: "no_need")
+        UserDefaults.standard.synchronize()
     }
     func createRandomChannel(id: Int) -> Channel{
         var newChannel = Channel()

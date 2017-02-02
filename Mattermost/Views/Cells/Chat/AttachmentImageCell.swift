@@ -59,6 +59,8 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     
     override func prepareForReuse() {
         self.file = nil
+        self.fileImageView.backgroundColor = emptyImageViewBackgroundColor
+        self.fileImageView.image = nil
     }
 }
 
