@@ -248,7 +248,7 @@ extension TeamViewController: UITableViewDelegate {
             DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier
             Preferences.sharedInstance.save()
-            showLoaderView()
+            showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
             loadTeamChannels()
         } else {
             self.dismiss(animated: true, completion: nil)
