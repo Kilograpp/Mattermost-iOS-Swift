@@ -14,6 +14,10 @@ class LoginNavigationController: UINavigationController, UINavigationControllerD
         
         setupNavigationBar()
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 }
 
 
