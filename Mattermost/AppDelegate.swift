@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         RouterUtils.loadInitialScreen()
         registerForRemoteNotifications()
         Fabric.with([Crashlytics.self])
+        
+        
         return true
     }
 

@@ -30,11 +30,14 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         initialSetup()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNavigationBar()
+        
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
