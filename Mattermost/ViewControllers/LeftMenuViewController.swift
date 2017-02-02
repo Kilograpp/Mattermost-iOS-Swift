@@ -339,10 +339,12 @@ extension LeftMenuViewController : UITableViewDelegate {
         case 0:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PublicTypeChannel))
             view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
+            view.hideMoreButton()
             break
         case 1:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PrivateTypeChannel))
             view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
+            view.hideMoreButton()
             break
         case 2:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))
