@@ -103,6 +103,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     override class func tableViewStyle(for decoder: NSCoder) -> UITableViewStyle {
         return .grouped
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        var center = self.scrollButton?.center
+        center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
+        self.scrollButton?.center = center!
+    }
 }
 
 
