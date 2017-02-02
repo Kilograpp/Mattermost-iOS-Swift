@@ -557,6 +557,8 @@ extension ChatViewController: Action {
 //MARK: Navigation
 extension ChatViewController: Navigation {
     func proceedToSearchChat() {
+        guard (self.channel.identifier!.characters.count > 4) else { return }
+
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
         let realm = RealmUtils.realmForCurrentThread()
         guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
@@ -575,6 +577,7 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToProfileFor(user: User) {
+        guard (self.channel.identifier!.characters.count > 4) else { return }
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         (profile as! ProfileViewController).configureFor(user: user)
@@ -583,6 +586,9 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToChannelSettings(channel: Channel) {
+        
+        guard (self.channel.identifier!.characters.count > 4) else { return }
+
         self.dismissKeyboard(true)
         
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
@@ -632,9 +638,9 @@ extension ChatViewController: Request {
             return
         }
         
-        self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
+        if isInitial {  self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0) }
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.hideLoaderView()
+            if isInitial {   self.hideLoaderView() }
             self.isLoadingInProgress = false
             self.hasNextPage = true
             self.hasNewestPage = false
