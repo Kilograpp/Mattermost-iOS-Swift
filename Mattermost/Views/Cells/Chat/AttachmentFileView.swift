@@ -218,7 +218,7 @@ extension AttachmentFileView: Downloading {
                 
                 let notification = UILocalNotification()
                 notification.alertBody = "File was successfully downloaded"
-                notification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
+//                notification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
                 UIApplication.shared.scheduleLocalNotification(notification)
 
             }) { (identifier, progress) in

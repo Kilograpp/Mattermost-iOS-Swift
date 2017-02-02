@@ -9,7 +9,7 @@
 import Foundation
 
 fileprivate protocol Interface {
-    func upload(attachments: [AssignedAttachmentViewItem])
+    func upload(attachments: [AssignedAttachmentViewItem] , completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void )
     func reset()
     func presentWithCachedItems()
 }
@@ -74,7 +74,8 @@ extension AttachmentsModule: Interface {
         self.cache.clearFilesForChannel(channel)
     }
     
-    func upload(attachments: [AssignedAttachmentViewItem]) {
+    //Комплишн необходим (т.к при ошибке нужно удалять и из FilesPickerController..
+    func upload(attachments: [AssignedAttachmentViewItem] , completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void ) {
         showAttachmentsView()
         self.fileUploadingInProgress = false
 
@@ -84,9 +85,15 @@ extension AttachmentsModule: Interface {
         cache.cacheFilesForChannel(items: attachments, channel: channel)
         PostUtils.sharedInstance.upload(items: attachments, channel: channel, completion: { (finished, error, item) in
             defer {
-                let index = self.items.index(of: item)
-                if index != nil { self.dataSource.postAttachmentsView(attachmentsModule: self).removeActivityAt(index: index!) }
+                print(item.identifier)
+                print(self.items[0].identifier)
+                
+                let index = self.items.index(where: { $0.identifier == item.identifier })
+                if index != nil {
+                    self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index!, value: 1)
+                }
                 self.fileUploadingInProgress = true
+                completion(finished, error, item)
             }
 
             guard let error = error else { return }
@@ -101,7 +108,7 @@ extension AttachmentsModule: Interface {
             self.items[index].uploaded = value == 1
             self.items[index].uploading = value < 1
             self.items[index].uploadProgress = value
-            self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index, value: value)
+            self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index, value: min(value, 0.95))
         }
     }
 }

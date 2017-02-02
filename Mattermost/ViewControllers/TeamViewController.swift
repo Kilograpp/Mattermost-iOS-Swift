@@ -46,6 +46,11 @@ final class TeamViewController: UIViewController {
         
      //   UIStatusBar.shared().reset()
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
 }
 
 
@@ -87,6 +92,7 @@ extension TeamViewController: Setup {
         let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon2"), style: .done, target: self, action: #selector(backAction))
         backButton.tintColor = UIColor.white
         self.navigationItem.leftBarButtonItem = backButton
+        self.setNeedsStatusBarAppearanceUpdate()
     }
     
     func setupTableView() {

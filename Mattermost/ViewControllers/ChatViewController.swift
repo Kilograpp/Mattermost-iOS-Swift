@@ -597,6 +597,8 @@ extension ChatViewController: Request {
             Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
+            
+            self.tableView.reloadData()
         })
     }
     

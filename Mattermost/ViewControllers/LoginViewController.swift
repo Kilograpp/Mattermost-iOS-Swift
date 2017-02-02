@@ -52,6 +52,13 @@ final class LoginViewController: UIViewController {
         return .lightContent
     }
     
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        passwordTextField.resignFirstResponder()
+        loginTextField.resignFirstResponder()
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

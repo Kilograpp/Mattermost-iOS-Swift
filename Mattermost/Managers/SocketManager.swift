@@ -177,16 +177,24 @@ extension SocketManager: Notifications {
                 }
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
-            Api.sharedInstance.getChannelMembers(completion: { error in
-                guard error == nil else { return }
+            
+            guard let channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: channelId) else {
+                return
+            }
+            Api.sharedInstance.getChannel(channel: channel, completion: { error in
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
+            
+//            Api.sharedInstance.getChannelMembers(completion: { error in
+//                guard error == nil else { return }
+//                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+//            })
         }
     }
     
     func handleReceivingUpdatedPost(_ updatedPost:Post) {
         if postExistsWithIdentifier(updatedPost.identifier!, pendingIdentifier: updatedPost.pendingId!) {
-            let existedPost = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", PostAttributes.identifier.rawValue, updatedPost.identifier!).first!
+            guard let existedPost = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", PostAttributes.identifier.rawValue, updatedPost.identifier!).first else { return }
             updatedPost.localIdentifier = existedPost.localIdentifier
         }
         RealmUtils.save(updatedPost)
