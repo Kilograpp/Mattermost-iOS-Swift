@@ -52,72 +52,11 @@ final class ServerUrlViewController: UIViewController, UITextFieldDelegate {
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return UIStatusBarStyle.default
     }
-    
-    fileprivate func configureLabels() {
-        self.titleLabel.text = titleName
-        self.promtLabel.text = promt
-        self.errorLabel.text = error
-        self.subtitleLabel.text = subtitleName
-        guard let server = Preferences.sharedInstance.predefinedServerUrl() else {
-            return
-        }
-        self.textField.text = server
-        self.nextButton.isEnabled = true
-    }
-    
-    fileprivate func validateServerUrl() {
-        let urlRegEx = "((http|https)://){1}((.)*)"
-        let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
-        if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
-            Api.sharedInstance.checkURL(with: { ( error) in
-                if (error != nil) {
-                    Api.sharedInstance.checkURL(with: { (error) in
-                        self.handleErrorWith(message: Constants.ErrorMessages.message[1])
-                    })
-                } else {
-                    self.performSegue(withIdentifier: "showLogin", sender: nil)
-                }
-            })
-        } else {
-            let addres = Preferences.sharedInstance.serverUrl
-            var urlAddress = String.init(format: "%@%@", "https://", addres!)
-            Preferences.sharedInstance.serverUrl = urlAddress
-            Api.sharedInstance.checkURL(with: { ( error) in
-                if (error != nil) {
-                    urlAddress = String.init(format: "%@%@", "http://", addres!)
-                    Preferences.sharedInstance.serverUrl = urlAddress
-                    Api.sharedInstance.checkURL(with: { ( error) in
-                        if (error != nil) {
-                            self.handleErrorWith(message: Constants.ErrorMessages.message[1])
-                        } else {
-                            self.performSegue(withIdentifier: "showLogin", sender: nil)
-                        }
-                    })
-                } else {
-                    self.performSegue(withIdentifier: "showLogin", sender: nil)
-                }
-            })
-        }
-    }
-    
-    fileprivate func validateServerUrlForTextFieldDelegate() {
-        let urlRegEx = "((http|https)://)(([a-zA-Z0-9(\\-)])+\\.)([a-zA-Z0-9(\\-)])+((\\.)com)"
-        let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
-        if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
-            self.errorLabel.isHidden = true
-            self.nextButton.isEnabled = true
-        } else {
-            let addres = Preferences.sharedInstance.serverUrl
-            var urlAddress = String.init(format: "%@%@", "https://", addres!)
-            Preferences.sharedInstance.serverUrl = urlAddress
-            if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
-                self.errorLabel.isHidden = true
-                self.nextButton.isEnabled = true
-            } else {
-                self.errorLabel.isHidden = false
-                self.nextButton.isEnabled = false
-            }
-        }
+ 
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        textField.resignFirstResponder()
     }
 }
 
@@ -199,6 +138,76 @@ extension ServerUrlViewController:Setup {
         self.textField.autocorrectionType = .no
         self.textField.addTarget(self, action: #selector(ServerUrlViewController.textFieldAction), for: .editingChanged)
     }
+}
+
+extension ServerUrlViewController {
+    fileprivate func configureLabels() {
+        self.titleLabel.text = titleName
+        self.promtLabel.text = promt
+        self.errorLabel.text = error
+        self.subtitleLabel.text = subtitleName
+        guard let server = Preferences.sharedInstance.predefinedServerUrl() else {
+            return
+        }
+        self.textField.text = server
+        self.nextButton.isEnabled = true
+    }
+    
+    fileprivate func validateServerUrl() {
+        let urlRegEx = "((http|https)://){1}((.)*)"
+        let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
+        if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
+            Api.sharedInstance.checkURL(with: { ( error) in
+                if (error != nil) {
+                    Api.sharedInstance.checkURL(with: { (error) in
+                        self.handleErrorWith(message: Constants.ErrorMessages.message[1])
+                    })
+                } else {
+                    self.performSegue(withIdentifier: "showLogin", sender: nil)
+                }
+            })
+        } else {
+            let addres = Preferences.sharedInstance.serverUrl
+            var urlAddress = String.init(format: "%@%@", "https://", addres!)
+            Preferences.sharedInstance.serverUrl = urlAddress
+            Api.sharedInstance.checkURL(with: { ( error) in
+                if (error != nil) {
+                    urlAddress = String.init(format: "%@%@", "http://", addres!)
+                    Preferences.sharedInstance.serverUrl = urlAddress
+                    Api.sharedInstance.checkURL(with: { ( error) in
+                        if (error != nil) {
+                            self.handleErrorWith(message: Constants.ErrorMessages.message[1])
+                        } else {
+                            self.performSegue(withIdentifier: "showLogin", sender: nil)
+                        }
+                    })
+                } else {
+                    self.performSegue(withIdentifier: "showLogin", sender: nil)
+                }
+            })
+        }
+    }
+    
+    fileprivate func validateServerUrlForTextFieldDelegate() {
+        let urlRegEx = "((http|https)://)(([a-zA-Z0-9(\\-)])+\\.)([a-zA-Z0-9(\\-)])+((\\.)com)"
+        let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
+        if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
+            self.errorLabel.isHidden = true
+            self.nextButton.isEnabled = true
+        } else {
+            let addres = Preferences.sharedInstance.serverUrl
+            var urlAddress = String.init(format: "%@%@", "https://", addres!)
+            Preferences.sharedInstance.serverUrl = urlAddress
+            if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
+                self.errorLabel.isHidden = true
+                self.nextButton.isEnabled = true
+            } else {
+                self.errorLabel.isHidden = false
+                self.nextButton.isEnabled = false
+            }
+        }
+    }
+
 }
 
 
