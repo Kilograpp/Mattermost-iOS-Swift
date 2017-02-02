@@ -41,6 +41,8 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        tableView.delegate = nil
+        tableView.dataSource = nil
     }
 }
 
@@ -50,6 +52,8 @@ extension FeedAttachmentsTableViewCell {
     override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         self.attachments = self.post.files
+        tableView.delegate = self
+        tableView.dataSource = self
         self.tableView.reloadData()
     }
     
