@@ -63,6 +63,12 @@ class SearchChatViewController: UIViewController {
         
         UIStatusBar.shared().reset()
     }
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesBegan(touches, with: event)
+//        
+//        searchBar.resignFirstResponder()
+//    }
 }
 
 
