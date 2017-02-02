@@ -581,7 +581,9 @@ extension ChatViewController: Request {
         showLoaderView()
         
         Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            guard error == nil else {
+                self.handleErrorWith(message: (error?.message)!)
+                return }
             
             self.loadFirstPageOfData(isInitial: true)
         })

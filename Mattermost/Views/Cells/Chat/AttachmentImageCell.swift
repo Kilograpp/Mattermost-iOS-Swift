@@ -18,7 +18,7 @@ fileprivate struct DownloadingState {
 
 fileprivate let NullString = "(null)"
 fileprivate let TitleFont = UIFont.systemFont(ofSize: 13)
-fileprivate let emptyImageViewBackgroundColor = UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1)
+fileprivate let emptyImageViewBackgroundColor = UIColor(colorLiteralRed: 0.93, green: 0.93, blue: 0.93, alpha: 1)
 
 protocol AttachmentImageCellConfiguration: class {
     func configureWithFile(_ file: File)
@@ -26,8 +26,6 @@ protocol AttachmentImageCellConfiguration: class {
 }
 
 final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
-    
-    //MARK: Properties
     fileprivate var file: File! {
         didSet { computeFileName() }
     }
@@ -150,8 +148,6 @@ extension AttachmentImageCell: Updating {
         if let image = SDImageCache.shared().imageFromMemoryCache(forKey: downloadUrl?.absoluteString) {
             self.fileImageView.image = image
         } else {
-            self.fileImageView.image = Constants.Post.BackImage
-            
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
                 DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
