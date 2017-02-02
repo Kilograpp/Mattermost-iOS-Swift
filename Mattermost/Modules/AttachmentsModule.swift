@@ -9,7 +9,7 @@
 import Foundation
 
 fileprivate protocol Interface {
-    func upload(attachments: [AssignedAttachmentViewItem])
+    func upload(attachments: [AssignedAttachmentViewItem] , completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void )
     func reset()
     func presentWithCachedItems()
 }
@@ -74,7 +74,8 @@ extension AttachmentsModule: Interface {
         self.cache.clearFilesForChannel(channel)
     }
     
-    func upload(attachments: [AssignedAttachmentViewItem]) {
+    //Комплишн необходим (т.к при ошибке нужно удалять и из FilesPickerController..
+    func upload(attachments: [AssignedAttachmentViewItem] , completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void ) {
         showAttachmentsView()
         self.fileUploadingInProgress = false
 
@@ -87,6 +88,7 @@ extension AttachmentsModule: Interface {
                 let index = self.items.index(of: item)
                 if index != nil { self.dataSource.postAttachmentsView(attachmentsModule: self).removeActivityAt(index: index!) }
                 self.fileUploadingInProgress = true
+                completion(finished, error, item)
             }
 
             guard let error = error else { return }
