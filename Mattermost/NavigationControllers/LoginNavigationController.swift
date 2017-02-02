@@ -16,6 +16,9 @@ class LoginNavigationController: UINavigationController, UINavigationControllerD
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
+        if self.topViewController is ServerUrlViewController {
+            return .default
+        }
         return .lightContent
     }
 }
