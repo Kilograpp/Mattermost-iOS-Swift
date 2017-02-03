@@ -33,12 +33,13 @@ final class TeamViewController: UIViewController {
         super.viewWillAppear(animated)
         
         replaceStatusBar()
+        setupNavigationView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        setupNavigationView()
+//        setupNavigationView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -123,9 +124,8 @@ extension TeamViewController: Setup {
     }
     
     func setupNavigationView() {
-//        self.navigationView.backgroundColor = ColorBucket.topBlueColorForGradient
         let bgLayer = CAGradientLayer.blueGradientForNavigationBar()
-        bgLayer.frame = CGRect(x:0,y:0,width:self.navigationView.bounds.width,height: self.navigationView.bounds.height)
+        bgLayer.frame = CGRect(x:0,y:0,width:UIScreen.screenWidth(),height: UIScreen.screenWidth() * 135/375)
         bgLayer.animateLayerInfinitely(bgLayer)
         self.navigationView.layer.insertSublayer(bgLayer, at: 0)
         self.navigationView.bringSubview(toFront: self.titleLabel)
