@@ -28,6 +28,12 @@ class PasswordRecoveryViewController: UIViewController {
 
         initialSetup()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupNavigationBar()
+    }
 }
 
 
@@ -58,7 +64,7 @@ fileprivate protocol Request: class {
 //MARK: Setup
 extension PasswordRecoveryViewController: Setup {
     func initialSetup() {
-        setupNavigationBar()
+//        setupNavigationBar()
         setupEmailTextField()
         setupPromtLabel()
         setupRecoveryButton()
@@ -69,13 +75,12 @@ extension PasswordRecoveryViewController: Setup {
         guard let navigationController = self.navigationController else { return }
         
         navigationController.navigationBar.titleTextAttributes = nil
-        navigationController.navigationBar.tintColor = nil
+        navigationController.navigationBar.tintColor = UIColor.black
         navigationController.navigationBar.barStyle = .default
         navigationController.navigationBar.isTranslucent = true
-        navigationController.navigationBar.backgroundColor = nil
-        navigationController.navigationBar.shadowImage = nil
-        navigationController.navigationBar.setBackgroundImage(nil, for: .default)
-        
+        navigationController.navigationBar.backgroundColor = UIColor.clear
+        navigationController.navigationBar.shadowImage = UIImage()
+        navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.title = self.titleName
         self.setNeedsStatusBarAppearanceUpdate()
     }
@@ -139,7 +144,8 @@ extension PasswordRecoveryViewController: Request {
         let email = self.emailTextField.text
         Api.sharedInstance.passwordResetFor(email: email!) { (error) in
             guard (error == nil) else {
-                let message = (error?.code == -1011) ? "Incorrect email!" : (error?.message)!
+                //Message with rus localization on wrong email.. (code = 500) https://youtrack.kilograpp.com/issue/MM-1339
+                let message = (error?.code == -1011) || (error?.code == 500) ? "Incorrect email!" : (error?.message)!
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
                 return
             }
