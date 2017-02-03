@@ -72,7 +72,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
 //            self.createTestChannels()
 //        }
 //
-        if (self.channel.identifier!.characters.count < 4) {
+        guard self.channel != nil else { return }
+        if (self.channel.identifier!.characters.count < 4 && !self.channel.isInvalidated) {
             startHeadDialogueLabel.text = "Тестовый канал!"
             startTextDialogueLabel.text = "Для тестирования функционала чата перейдите в существующий на сервере канал!"
             startButton.isHidden = true
@@ -482,6 +483,7 @@ extension ChatViewController : Private {
 //MARK: UnsentPostConfigure
 extension ChatViewController: UnsentPostConfigure {
     func saveSentPostForChannel() {
+        guard self.channel != nil else { return }
         guard !self.channel.isInvalidated else { return }
         
         let realm = RealmUtils.realmForCurrentThread()
