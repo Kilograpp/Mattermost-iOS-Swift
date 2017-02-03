@@ -207,8 +207,10 @@ extension LoginViewController: Action {
 extension LoginViewController: Navigation {
     func proceedToTeams() {
         let teamViewController = self.storyboard?.instantiateViewController(withIdentifier: "TeamViewController")
-        let loginNavigationController = LoginNavigationController(rootViewController: teamViewController!)
-        self.present(loginNavigationController, animated: true, completion: nil)
+//        let loginNavigationController = LoginNavigationController(rootViewController: teamViewController!)
+//        self.present(loginNavigationController, animated: true, completion: nil)
+//        self.present(teamViewController!, animated: true, completion: nil)
+        self.navigationController?.pushViewController(teamViewController!, animated: true)
     }
     
     func proceedToPasswordRecovery() {

@@ -44,12 +44,12 @@ final class TeamViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-     //   UIStatusBar.shared().reset()
+        UIStatusBar.shared().reset()
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .lightContent
+//    }
 
 }
 
@@ -88,11 +88,24 @@ extension TeamViewController: Setup {
         setupTableView()
     }
     
+    func needToSetupNavigationBar() -> Bool {
+        if (self.presentingViewController != nil) {
+            return true
+        }
+        if self.navigationController?.presentingViewController?.presentedViewController == self.navigationController {
+            return true
+        }
+        return false
+    }
+    
     func setupNavigationBar() {
-        let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon2"), style: .done, target: self, action: #selector(backAction))
-        backButton.tintColor = UIColor.white
-        self.navigationItem.leftBarButtonItem = backButton
-        self.setNeedsStatusBarAppearanceUpdate()
+        if needToSetupNavigationBar() {
+            let backButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backAction))
+//            let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon2"), style: .done, target: self, action: #selector(backAction))
+            backButton.tintColor = UIColor.white
+            self.navigationItem.leftBarButtonItem = backButton
+//            self.setNeedsStatusBarAppearanceUpdate()
+        }
     }
     
     func setupTableView() {
@@ -110,6 +123,7 @@ extension TeamViewController: Setup {
     }
     
     func setupNavigationView() {
+//        self.navigationView.backgroundColor = ColorBucket.topBlueColorForGradient
         let bgLayer = CAGradientLayer.blueGradientForNavigationBar()
         bgLayer.frame = CGRect(x:0,y:0,width:self.navigationView.bounds.width,height: self.navigationView.bounds.height)
         bgLayer.animateLayerInfinitely(bgLayer)
