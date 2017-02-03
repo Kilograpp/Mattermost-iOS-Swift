@@ -89,7 +89,7 @@ final class Channel: RealmObject {
     dynamic var currentUserInChannel: Bool = false
     dynamic var isInterlocuterOnTeam: Bool = false
     dynamic var isDirectPrefered: Bool = false
-    dynamic var unsentPost: UnsentPost?  = UnsentPost()
+    dynamic var unsentPost: String  = ""
     //0..6 int
     dynamic var gradientType: Int = 0
     
