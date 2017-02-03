@@ -975,7 +975,7 @@ extension Api: PostApi {
 //                post.cellType = FeedCellBuilder.typeForPost($0, previous: previousPost)
             }
         }) { (operation, error) in
-//            completion(error)
+            completion(Mattermost.Error(error: error))
         }
     }
     
