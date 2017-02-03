@@ -636,9 +636,10 @@ extension Api: UserApi {
                 
                 var usersToAdd : [User] = []
                 for user in users {
-                    let existUser = User.objectById(user.identifier)
-                    if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
-                        usersToAdd.append(existUser!)
+                    if let existUser = User.objectById(user.identifier) {
+                        if !channel.members.contains(where: { $0.identifier == existUser.identifier }) {
+                            usersToAdd.append(existUser)
+                        }
                     }
                 }
                 
