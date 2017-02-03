@@ -774,15 +774,23 @@ extension ChatViewController: Request {
         
         let postIdentifier = self.selectedPost.identifier!
         PostUtils.sharedInstance.delete(post: self.selectedPost) { (error) in
-            self.selectedAction = Constants.PostActionType.SendNew
+            defer {
+               self.selectedAction = Constants.PostActionType.SendNew
+                self.selectedPost = nil
+            }
             
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: error!.message)
+                return
+            }
+
             let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("parentId == %@", postIdentifier)
             guard comments.count > 0 else { return }
             
             RealmUtils.deletePostObjects(comments)
             
             RealmUtils.deleteObject(self.selectedPost)
-            self.selectedPost = nil
+            
         }
     }
 }
