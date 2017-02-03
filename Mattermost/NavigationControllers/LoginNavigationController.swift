@@ -16,10 +16,12 @@ class LoginNavigationController: UINavigationController, UINavigationControllerD
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if self.topViewController is ServerUrlViewController {
+        switch self.topViewController {
+        case is ServerUrlViewController, is PasswordRecoveryViewController:
             return .default
+        default:
+            return .lightContent
         }
-        return .lightContent
     }
 }
 

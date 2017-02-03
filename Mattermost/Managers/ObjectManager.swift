@@ -204,6 +204,8 @@ extension ObjectManager: PostRequests {
                 success!(RKMappingResult())
                 return
             }
+            failure?(self.handleOperation(operation!, withError: error!))
+            
 //            print(operation?.httpRequestOperation.responseString ?? "")
             
 //            print("upFail"); failure?(self.handleOperation(operation!, withError: error!))
