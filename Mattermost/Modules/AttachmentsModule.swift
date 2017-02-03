@@ -85,8 +85,8 @@ extension AttachmentsModule: Interface {
         cache.cacheFilesForChannel(items: attachments, channel: channel)
         PostUtils.sharedInstance.upload(items: attachments, channel: channel, completion: { (finished, error, item) in
             defer {
-                print(item.identifier)
-                print(self.items[0].identifier)
+//                print(item.identifier)
+//                print(self.items[0].identifier)
                 
                 let index = self.items.index(where: { $0.identifier == item.identifier })
                 if index != nil {
