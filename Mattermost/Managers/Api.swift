@@ -634,11 +634,14 @@ extension Api: UserApi {
     //            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
                 UserUtils.updateOnTeamAndPreferedStatesFor(users: users)
                 
+                
+                
                 var usersToAdd : [User] = []
                 for user in users {
                     let existUser = User.objectById(user.identifier)
                     if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
-                        usersToAdd.append(existUser!)
+                        //temp crash fixing with "if" 
+                        if existUser != nil { usersToAdd.append(existUser!) }
                     }
                 }
                 
