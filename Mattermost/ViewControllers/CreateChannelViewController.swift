@@ -30,6 +30,12 @@ class CreateChannelViewController: UIViewController, UITableViewDataSource {
         initialSetup()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        replaceStatusBar()
+    }
+    
     fileprivate func setupKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden), name: NSNotification.Name.UIKeyboardWillHide, object: nil)

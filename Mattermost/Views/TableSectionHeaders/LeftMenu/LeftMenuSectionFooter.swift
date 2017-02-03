@@ -27,6 +27,7 @@ final class LeftMenuSectionFooter : UITableViewHeaderFooterView {
         super.init(reuseIdentifier: reuseIdentifier)
         
         self.setup()
+        titleButton.isHidden = true
     }
     
     required init?(coder aDecoder: NSCoder) {

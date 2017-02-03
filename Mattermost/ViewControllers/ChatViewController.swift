@@ -11,6 +11,7 @@ import RealmSwift
 import ImagePickerSheetController
 import UITableView_Cache
 import MFSideMenu
+import NVActivityIndicatorView
 
 
 protocol ChatViewControllerInterface: class {
@@ -61,12 +62,58 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
     
-//MARK: LifeCycle
+    //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         ChannelObserver.sharedObserver.delegate = self
         self.initialSetup()
+//        DispatchQueue.main.async {
+//            self.createTestChannels()
+//        }
+//
+        if (self.channel.identifier!.characters.count < 4) {
+            startHeadDialogueLabel.text = "Тестовый канал!"
+            startTextDialogueLabel.text = "Для тестирования функционала чата перейдите в существующий на сервере канал!"
+            startButton.isHidden = true
+            leftButton.isEnabled = false
+            textView.isEditable = false
+        }
+    }
+    
+    func createTestChannels(){
+        let val = UserDefaults.standard.string(forKey: "no_need")
+        
+        guard val != "yes"  else {return}
+        
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write({
+            for id in 1...200 {
+                realm.add(createRandomChannel(id: id), update: true)
+            }
+        })
+        
+        UserDefaults.standard.set("yes", forKey: "no_need")
+        UserDefaults.standard.synchronize()
+    }
+    func createRandomChannel(id: Int) -> Channel{
+        var newChannel = Channel()
+        newChannel.currentUserInChannel = true
+        newChannel.team = RealmUtils.realmForCurrentThread().object(ofType:Team.self, forPrimaryKey: DataManager.sharedInstance.currentTeam!.identifier!)
+        newChannel.gradientType = Int(arc4random_uniform(5))
+        newChannel.displayName = "Test Test Test"
+        newChannel.identifier = String(id)
+        newChannel.createdAt = Date()
+        newChannel.isInterlocuterOnTeam = true
+        if id <= 25 {
+            newChannel.privateType = "O"
+        } else if id <= 50 {
+            newChannel.privateType = "P"
+        } else if id <= 200 {
+            newChannel.privateType = "D"
+        }
+        newChannel.isDirectPrefered = true
+        return newChannel
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -84,10 +131,15 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
             return
         }
         addSLKKeyboardObservers()
-        replaceStatusBar()
         
         self.textView.resignFirstResponder()
         addBaseObservers()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        replaceStatusBar()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -488,7 +540,9 @@ extension ChatViewController: Action {
     
     
     func refreshControlValueChanged() {
-        self.loadFirstPageOfData(isInitial: false)
+        if self.channel.identifier!.characters.count > 4 {
+            self.loadFirstPageOfData(isInitial: false)
+        }
         self.refreshControl?.endRefreshing()
     }
     
@@ -526,6 +580,8 @@ extension ChatViewController: Action {
 //MARK: Navigation
 extension ChatViewController: Navigation {
     func proceedToSearchChat() {
+        guard (self.channel.identifier!.characters.count > 4) else { return }
+
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
         let realm = RealmUtils.realmForCurrentThread()
         guard realm.objects(Channel.self).filter(currentTeamPredicate).count > 0 else {
@@ -544,6 +600,7 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToProfileFor(user: User) {
+        guard (self.channel.identifier!.characters.count > 4) else { return }
         let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         (profile as! ProfileViewController).configureFor(user: user)
@@ -552,6 +609,9 @@ extension ChatViewController: Navigation {
     }
     
     func proceedToChannelSettings(channel: Channel) {
+        
+        guard (self.channel.identifier!.characters.count > 4) else { return }
+
         self.dismissKeyboard(true)
         
         let currentTeamPredicate = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
@@ -561,23 +621,11 @@ extension ChatViewController: Navigation {
             return
         }
         
-        self.showLoaderView()
-        Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            Api.sharedInstance.loadUsersListFrom(channel: channel, completion: { (error) in
-                guard error == nil else {
-                    let channelType = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                    self.handleErrorWith(message: "You left this \(channelType)".localized)
-                    return
-                }
-                
-                let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
-                let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
-                ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-                self.navigationController?.present(channelSettings, animated: true, completion: { _ in
-                    self.hideLoaderView()
-                })
-            })
+                    
+        let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
+        let channelSettings = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController")
+        ((channelSettings as! UINavigationController).viewControllers[0] as! ChannelSettingsViewController).channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
+        self.navigationController?.present(channelSettings, animated: true, completion: { _ in
         })
     }
 }
@@ -587,10 +635,17 @@ extension ChatViewController: Navigation {
 extension ChatViewController: Request {
     func loadChannelUsers() {
         self.isLoadingInProgress = true
-        showLoaderView()
+        showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
         
         Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+            guard error == nil else {
+                if (self.channel.identifier!.characters.count < 4) {
+                    self.hideLoaderView()
+                    return
+                }
+                self.handleErrorWith(message: (error?.message)!);
+                return
+            }
             
             self.loadFirstPageOfData(isInitial: true)
         })
@@ -605,19 +660,23 @@ extension ChatViewController: Request {
             self.handleErrorWith(message: "Error when choosing team.\nPlease rechoose team")
             return
         }
-        self.showLoaderView()
+        
+        if isInitial {  self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0) }
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            self.hideLoaderView()
-            self.isLoadingInProgress = false
-            self.hasNextPage = true
-            self.hasNewestPage = false
-            self.dismissKeyboard(true)
-
-            Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
-            })
-            
-            self.tableView.reloadData()
+            DispatchQueue.main.async {
+            if isInitial {   self.hideLoaderView() }
+                self.hideLoaderView()
+                self.isLoadingInProgress = false
+                self.hasNextPage = true
+                self.hasNewestPage = false
+                self.dismissKeyboard(true)
+                
+                Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+                })
+                
+                self.createTestChannels()
+            }
         })
     }
     
@@ -792,7 +851,7 @@ extension ChatViewController {
         let isntDialogEmpty = (self.resultsObserver.numberOfSections() > 0)
         self.startTextDialogueLabel.isHidden = isntDialogEmpty
         self.startHeadDialogueLabel.isHidden = isntDialogEmpty
-        self.startButton.isHidden = isntDialogEmpty
+        self.startButton.isHidden = isntDialogEmpty || self.channel.identifier!.characters.count < 4
         
         return self.resultsObserver?.numberOfSections() ?? 0
     }
@@ -951,6 +1010,8 @@ extension ChatViewController: AttachmentsModuleDelegate {
 //MARK: ChannelObserverDelegate
 extension ChatViewController: ChannelObserverDelegate {
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void {
+//        UIStatusBar.shared().reset()
+        
         //old channel
         //unsubscribing from realm and channelActions
         if resultsObserver != nil {
@@ -1032,10 +1093,22 @@ extension ChatViewController: ChannelObserverDelegate {
         } else {
             attachmentsView.hideAnimated()
         }
+        
+        if (self.channel.identifier!.characters.count < 4) {
+            startHeadDialogueLabel.text = "Тестовый канал!"
+            startTextDialogueLabel.text = "Для тестирования функционала чата перейдите в существующий на сервере канал!"
+            startButton.isHidden = true
+            leftButton.isEnabled = false
+            textView.isEditable = false
+        } else {
+            startButton.isHidden = false
+            leftButton.isEnabled = true
+            textView.isEditable = true
+        }
     }
     
     func startButtonAction(sender: UIButton!) {
-        self.showLoaderView()
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
         Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
             guard (error==nil) else { self.hideLoaderView(); return }
             
@@ -1165,5 +1238,29 @@ extension ChatViewController: AttachmentsModuleDataSource {
     }
     func channel(attachmentsModule: AttachmentsModule) -> Channel {
         return self.channel
+    }
+}
+
+//MARK: loader override
+extension ChatViewController {
+    override func showLoaderView(topOffset: CGFloat, bottomOffset: CGFloat) {
+        
+        //stopActions
+        self.leftButton.isEnabled = false
+        self.textView.isEditable = false
+        self.rightButton.isEnabled = false
+        
+        super.showLoaderView(topOffset: topOffset, bottomOffset: bottomOffset)
+    }
+    
+    override func hideLoaderView(){
+        super.hideLoaderView()
+        
+        //startActions
+        self.leftButton.isEnabled = true
+        self.textView.isEditable = true
+        self.rightButton.isEnabled = self.textView.text != "" || self.filesPickingController.attachmentItems.count > 0
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleTapAction))
+        self.navigationItem.titleView?.addGestureRecognizer(tapGestureRecognizer)
     }
 }

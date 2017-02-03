@@ -51,8 +51,6 @@ extension UFSettingsTableViewController: Configuration {
 fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
-    func setupTableView()
-    func setupGestureRecognizers()
 }
 
 fileprivate protocol Action: class {
@@ -77,8 +75,6 @@ fileprivate protocol Request: class {
 extension UFSettingsTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
-        setupTableView()
-        setupGestureRecognizers()
     }
     
     func setupNavigationBar() {
@@ -87,17 +83,6 @@ extension UFSettingsTableViewController: Setup {
         self.saveButton = UIBarButtonItem.init(title: "Save", style: .done, target: self, action: #selector(saveAction))
         self.saveButton.isEnabled = false
         self.navigationItem.rightBarButtonItem = self.saveButton
-    }
-    
-    func setupTableView() {
-        self.tableView?.backgroundColor = UIColor.kg_lightLightGrayColor()
-        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
-    }
-    
-    func setupGestureRecognizers() {
-        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(backAction))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
     }
 }
 
@@ -189,7 +174,7 @@ extension UFSettingsTableViewController: Request {
     }
     
     internal func updatePassword() {
-        self.showLoaderView()
+        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         
         let oldPassword = self.builder.infoFor(section: 0)
         let newPassword = self.builder.infoFor(section: 1)

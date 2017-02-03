@@ -159,6 +159,7 @@ extension LeftMenuViewController: Setup {
 //MARK: Configuration
 extension LeftMenuViewController: Configuration {
     fileprivate func prepareResults() {
+        guard (DataManager.sharedInstance.currentTeam != nil) else { return }
         let currentTeamPredicate          = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
         let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == true")
         let publicTypePredicate           = NSPredicate(format: "privateType == %@", Constants.ChannelType.PublicTypeChannel)
@@ -338,10 +339,12 @@ extension LeftMenuViewController : UITableViewDelegate {
         case 0:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PublicTypeChannel))
             view.addTapHandler = { self.navigateToCreateChannel(privateType: "O") }
+            view.hideMoreButton()
             break
         case 1:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.PrivateTypeChannel))
             view.addTapHandler = { self.navigateToCreateChannel(privateType: "P") }
+            view.hideMoreButton()
             break
         case 2:
             view.configureWithChannelType(Channel.privateTypeDisplayName(Constants.ChannelType.DirectTypeChannel))

@@ -67,8 +67,8 @@ extension UIImage {
     func imageByScalingAndCroppingForSize(_ size: CGSize, radius: CGFloat) -> UIImage {
 
         let scaleFactor  = size.height / self.size.height
-        let scaledWidth  = self.size.width * scaleFactor
-        let scaledHeight = self.size.height * scaleFactor
+        let scaledWidth  = ceil(self.size.width * scaleFactor)
+        let scaledHeight = ceil(self.size.height * scaleFactor)
         
         UIGraphicsBeginImageContextWithOptions(size, true, 1)
         
@@ -77,7 +77,8 @@ extension UIImage {
         let context = UIGraphicsGetCurrentContext()
         ColorBucket.lightGrayColor.setFill()
         context?.fill(CGRect(origin: CGPoint.zero, size: size))
-        UIBezierPath(roundedRect: CGRect(origin: CGPoint.zero, size: size), cornerRadius: radius).addClip()
+        let integralSize = CGSize(width: ceil(size.width), height: ceil(size.height))
+        UIBezierPath(roundedRect: CGRect(origin: CGPoint.zero, size: integralSize), cornerRadius: radius).addClip()
         
         self.draw(in: thumbnailRect)
         

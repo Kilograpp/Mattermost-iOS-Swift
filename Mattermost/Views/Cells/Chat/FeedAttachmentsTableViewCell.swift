@@ -32,7 +32,7 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         let x = Constants.UI.MessagePaddingSize
         var y: CGFloat = self.post.isFollowUp ? 0 : 36
         y += self.post.hasParentPost() ? (64 + Constants.UI.ShortPaddingSize) : 0
-        if (self.post.message?.characters.count)! > 0 { y += CGFloat(post.attributedMessageHeight) }
+        if (self.post.message?.characters.count)! > 0 { y += CGFloat(post.attributedMessageHeight) + 15.0 }
         let widht = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize
         let height = self.tableView.contentSize.height
         
@@ -41,6 +41,8 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        tableView.delegate = nil
+        tableView.dataSource = nil
     }
 }
 
@@ -50,12 +52,14 @@ extension FeedAttachmentsTableViewCell {
     override func configureWithPost(_ post: Post) {
         super.configureWithPost(post)
         self.attachments = self.post.files
+        tableView.delegate = self
+        tableView.dataSource = self
         self.tableView.reloadData()
     }
     
     override class func heightWithPost(_ post: Post) -> CGFloat {
         var heigth: CGFloat = !post.isFollowUp ? 36 : 0
-        heigth += CGFloat(post.attributedMessageHeight)
+        heigth += CGFloat(post.attributedMessageHeight + 15.0)
         post.files.forEach({
             heigth += $0.isImage ? AttachmentImageCell.heightWithFile($0) : 56
         })

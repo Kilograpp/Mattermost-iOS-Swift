@@ -124,6 +124,9 @@ final class Channel: RealmObject {
     func interlocuterFromPrivateChannel() -> User {
         let ids = self.name?.components(separatedBy: "__")
         let interlocuterId = ids?.first == Preferences.sharedInstance.currentUserId ? ids?.last : ids?.first
+        if interlocuterId == nil {
+            return safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", "cnxnpk8o7jf95b9zmb6ydc3bqy")).first!
+        }
         return safeRealm.objects(User.self).filter(NSPredicate(format: "identifier = %@", interlocuterId!)).first!
     }
     

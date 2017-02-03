@@ -166,7 +166,6 @@
 		9B822C33C9A77E5620D8B206 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B82213C4E48A6E01F0B3DA0 /* Main.storyboard */; };
 		9B822D4F5FE09663955B4184 /* MattermostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B822FEE7A890495F4436A4C /* MattermostTests.swift */; };
 		9B822DD67E4829F1434BAC30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B8220F2E4D1D8538A51229B /* Assets.xcassets */; };
-		A5D385C31DFAFF00001505C2 /* UIViewController+SharedBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */; };
 		CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */; };
 		CD8825771D6C9CC800D08D45 /* MoreChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */; };
 		CDB4BC5A1D8033DF00662231 /* FileResponseDescriptorsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB4BC591D8033DF00662231 /* FileResponseDescriptorsContainer.swift */; };
@@ -221,6 +220,7 @@
 		D6330AB71D494BF9006D84F4 /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AAF1D494BF9006D84F4 /* SF-UI-Text-Regular.otf */; };
 		D6330AB81D494BF9006D84F4 /* SF-UI-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6330AB01D494BF9006D84F4 /* SF-UI-Text-Semibold.otf */; };
 		D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6330AB91D494CFD006D84F4 /* FontBucket.swift */; };
+		D63C815A1E43A2B4003E7751 /* UIViewController+SharedBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63C81591E43A2B4003E7751 /* UIViewController+SharedBar.swift */; };
 		D64AEDC71D48A152007D93D0 /* WebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E165A31D47E99C0014C831 /* WebImage.framework */; };
 		D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */; };
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
@@ -475,7 +475,6 @@
 		9B82277B4990BE0D7CE06FE9 /* MattermostTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MattermostTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B82299925DAB67819BE3C95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B822FEE7A890495F4436A4C /* MattermostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MattermostTests.swift; sourceTree = "<group>"; };
-		A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+SharedBar.swift"; sourceTree = "<group>"; };
 		C16480FE9907B36335721461 /* Pods_Mattermost.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mattermost.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD157A8B1D75EA6E0079BD30 /* ChatNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatNavigationController.swift; path = NavigationControllers/ChatNavigationController/ChatNavigationController.swift; sourceTree = "<group>"; };
 		CD8825761D6C9CC800D08D45 /* MoreChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreChannelsViewController.swift; sourceTree = "<group>"; };
@@ -531,6 +530,7 @@
 		D6330AAF1D494BF9006D84F4 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
 		D6330AB01D494BF9006D84F4 /* SF-UI-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-UI-Text-Semibold.otf"; sourceTree = "<group>"; };
 		D6330AB91D494CFD006D84F4 /* FontBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontBucket.swift; sourceTree = "<group>"; };
+		D63C81591E43A2B4003E7751 /* UIViewController+SharedBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+SharedBar.swift"; path = "Mattermost/extensions/UIViewController+SharedBar.swift"; sourceTree = SOURCE_ROOT; };
 		D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedAttachmentsTableViewCell.swift; sourceTree = "<group>"; };
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
 		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
@@ -881,6 +881,7 @@
 				4B9DD4BC1DB1445200AB4D2D /* UIImage+Orientation.swift */,
 				864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */,
 				8B3AB4A61E046CDC00010170 /* UIViewController+AlertManager.swift */,
+				D63C81591E43A2B4003E7751 /* UIViewController+SharedBar.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1256,7 +1257,6 @@
 				8BF5A7171E24D0A100544AF6 /* FileWrapper.swift */,
 				8B3CB3521DD267EB0078DE25 /* ProfileDataSource.swift */,
 				8B3CB3531DD267EB0078DE25 /* UserStatus.swift */,
-				A5D385C21DFAFF00001505C2 /* UIViewController+SharedBar.swift */,
 				864AF5BF1E0124000010F083 /* ChannelCreateField.swift */,
 				D6C0B4751D5E28D5006C506A /* Observers */,
 				D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */,
@@ -1608,6 +1608,7 @@
 				4B404A7A1D92914A002F9F6D /* ObserverUtils.swift in Sources */,
 				8B3CB37E1DD26BD00078DE25 /* FeedCellBuilder.swift in Sources */,
 				8B3CB37B1DD269C30078DE25 /* SocketManager.swift in Sources */,
+				D63C815A1E43A2B4003E7751 /* UIViewController+SharedBar.swift in Sources */,
 				8B3CB3571DD267EB0078DE25 /* AttributedLabel.swift in Sources */,
 				D6E165811D47539E0014C831 /* PostUtils.swift in Sources */,
 				86408A751DF9BBEC00DD6DE2 /* MemberLinkTableViewCell.swift in Sources */,
@@ -1781,7 +1782,6 @@
 				D8087AFA1D429844001918E8 /* TSMarkdownParser+Singleton.swift in Sources */,
 				860755A81DEDDE5C00438B09 /* ChannelInfoCell.swift in Sources */,
 				8BEE0C851DCBE4E300CB5779 /* NotifyPropsResponseDescriptorsContainer.swift in Sources */,
-				A5D385C31DFAFF00001505C2 /* UIViewController+SharedBar.swift in Sources */,
 				CDB4BC651D8062B600662231 /* PostRequestDescriptorsContainer.swift in Sources */,
 				D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */,
 				D8A0969C1D233CB400B76E1A /* Preferences.swift in Sources */,

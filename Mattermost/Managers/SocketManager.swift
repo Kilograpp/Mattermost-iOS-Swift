@@ -168,7 +168,9 @@ extension SocketManager: Notifications {
             RealmUtils.save(post)
             
             for file in post.files {
-                Api.sharedInstance.getInfo(fileId: file.identifier!)
+                if file.identifier != nil {
+                    Api.sharedInstance.getInfo(fileId: file.identifier!)
+                }
             }
             
             try! RealmUtils.realmForCurrentThread().write({

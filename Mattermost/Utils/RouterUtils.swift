@@ -30,7 +30,7 @@ class RouterUtils {
     }
     
     fileprivate class func loadConversationScene() -> Void {
-        let sb = UIStoryboard.init(name: "Main", bundle: nil) 
+        let sb = UIStoryboard(name: "Main", bundle: nil) 
         let centerVc = sb.instantiateInitialViewController()
         let leftVc = sb.instantiateViewController(withIdentifier: String(describing: "LeftMenuViewController"))
         let rightVc = sb.instantiateViewController(withIdentifier: String(describing: "RightMenuViewController"))

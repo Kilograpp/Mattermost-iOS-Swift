@@ -11,6 +11,8 @@ import RealmSwift
 
 final class RealmUtils {
     
+    static let realmQueue: DispatchQueue = DispatchQueue(label: "com.kilograpp.realmQueue")
+    
     fileprivate static var realmForMainThread: Realm = {
         return try! Realm()
     }()

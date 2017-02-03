@@ -97,25 +97,25 @@ final class FileUtils {
     
     static func updateFileWith(info: File) {
         let realm = RealmUtils.realmForCurrentThread()
-        let file = realm.object(ofType: File.self, forPrimaryKey: info.identifier)
+        guard let file = realm.object(ofType: File.self, forPrimaryKey: info.identifier) else {return}
         
         //Maybe append post with adding file to it
         try! realm.write {
-            file?.createAt = info.createAt
-            file?.deleteAt = info.deleteAt
-            file?.ext = info.ext
-            file?.mimeType = info.mimeType
-            file?.name = info.name
-            file?.postId = info.postId
-            file?.size = info.size
-            file?.updateAt = info.updateAt
-            file?.userId = info.userId
+            file.createAt = info.createAt
+            file.deleteAt = info.deleteAt
+            file.ext = info.ext
+            file.mimeType = info.mimeType
+            file.name = info.name
+            file.postId = info.postId
+            file.size = info.size
+            file.updateAt = info.updateAt
+            file.userId = info.userId
                 
-            file?.hasPreview = info.hasPreview
-            file?.height = info.height
-            file?.width = info.width
-            file?.computeIsImage()
-            file?.computeRawLink()
+            file.hasPreview = info.hasPreview
+            file.height = info.height
+            file.width = info.width
+            file.computeIsImage()
+            file.computeRawLink()
         }
     }
     
