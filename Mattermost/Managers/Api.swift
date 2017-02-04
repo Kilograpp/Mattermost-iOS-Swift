@@ -92,6 +92,10 @@ final class Api {
     
 //MARK: Properties
     static let sharedInstance = Api()
+    fileprivate static let apiHandlerQueue: DispatchQueue = {
+        let queue = DispatchQueue(label: "com.kilograpp.api.handler", qos: .utility)
+        return queue
+    }()
     fileprivate var _managerCache: ObjectManager?
     fileprivate var downloadOperationsArray = Array<AFRKHTTPRequestOperation>()
     fileprivate var networkReachabilityManager = NetworkReachabilityManager.init()
@@ -197,29 +201,37 @@ extension Api: TeamApi {
         let path = TeamPathPatternsContainer.initialLoadPathPattern()
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
-            let teams = MappingUtils.fetchAllTeams(mappingResult)
-            //let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
-            let preferences = MappingUtils.fetchPreferencesFromInitialLoad(mappingResult)
-            preferences.forEach{ $0.computeKey() }
-            Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
-            RealmUtils.save(teams)
-            let currentUser = DataManager.sharedInstance.currentUser
-            let realm = RealmUtils.realmForCurrentThread()
-            let oldPreferences = currentUser?.preferences
-            try! realm.write {
-                currentUser?.preferences.removeAll()
-                realm.delete(oldPreferences!)
-                realm.add(preferences, update: true)
-                currentUser?.preferences.append(objectsIn: preferences)
+            Api.apiHandlerQueue.async() {
+                let teams = MappingUtils.fetchAllTeams(mappingResult)
+                //let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
+                let preferences = MappingUtils.fetchPreferencesFromInitialLoad(mappingResult)
+                preferences.forEach{ $0.computeKey() }
+                Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
+                RealmUtils.save(teams)
+                let currentUser = DataManager.sharedInstance.currentUser
+                let realm = RealmUtils.realmForCurrentThread()
+                let oldPreferences = currentUser?.preferences
+                try! realm.write {
+                    currentUser?.preferences.removeAll()
+                    realm.delete(oldPreferences!)
+                    realm.add(preferences, update: true)
+                    currentUser?.preferences.append(objectsIn: preferences)
+                }
+                if (teams.count == 1) {
+                    DataManager.sharedInstance.currentTeam = teams.first
+                    Preferences.sharedInstance.currentTeamId = teams.first?.identifier
+                    Preferences.sharedInstance.save()
+                    DispatchQueue.main.async {
+                        completion(false, nil)
+                    }
+                    
+                } else {
+                    DispatchQueue.main.async {
+                        completion(true, nil)
+                    }
+                }
             }
-            if (teams.count == 1) {
-                DataManager.sharedInstance.currentTeam = teams.first
-                Preferences.sharedInstance.currentTeamId = teams.first?.identifier
-                Preferences.sharedInstance.save()
-                completion(false, nil)
-            } else {
-                completion(true, nil)
-            }
+            
         }) { (error) in
             completion(true, error)
         }
@@ -252,16 +264,22 @@ extension Api: TeamApi {
         let path = SOCStringFromStringWithObject(TeamPathPatternsContainer.teamMembersIds(), currentTeam)
         
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
-            let teamMembers = mappingResult?.array() as! [Member]
-            let realm = RealmUtils.realmForCurrentThread()
-            for teamMember in teamMembers {
-                let user = realm.object(ofType: User.self, forPrimaryKey: teamMember.userId)
-                try! realm.write {
-                    user?.isOnTeam = true
-                    user?.directChannel()?.isInterlocuterOnTeam = true
+            Api.apiHandlerQueue.async()  {
+                let teamMembers = mappingResult?.array() as! [Member]
+                let realm = RealmUtils.realmForCurrentThread()
+                for teamMember in teamMembers {
+                    let user = realm.object(ofType: User.self, forPrimaryKey: teamMember.userId)
+                    try! realm.write {
+                        user?.isOnTeam = true
+                        user?.directChannel()?.isInterlocuterOnTeam = true
+                    }
                 }
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+                
             }
-            completion(nil)
+            
         }) { (operation, error) in
             completion(Error.errorWithGenericError(error))
         }
@@ -275,23 +293,26 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.listPathPattern(), DataManager.sharedInstance.currentTeam)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            let realm = RealmUtils.realmForCurrentThread()
-
-            let channels = mappingResult.array() as! [Channel]//MappingUtils.fetchAllChannelsFromList(mappingResult)
-            let oldChannels = try! Realm().objects(Channel.self)
-            try! realm.write({
-                oldChannels.forEach {
-                    $0.currentUserInChannel = false
-                }
-                channels.forEach {
-                    $0.currentUserInChannel = true
-                    $0.computeTeam()
-                    $0.gradientType = Int(arc4random_uniform(5))
-                    realm.add($0, update: true)
-                }
-            })
+            Api.apiHandlerQueue.async()  {
+                let realm = RealmUtils.realmForCurrentThread()
+                
+                let channels = mappingResult.array() as! [Channel]//MappingUtils.fetchAllChannelsFromList(mappingResult)
+                let oldChannels = try! Realm().objects(Channel.self)
+                try! realm.write({
+                    oldChannels.forEach {
+                        $0.currentUserInChannel = false
+                    }
+                    channels.forEach {
+                        $0.currentUserInChannel = true
+                        $0.computeTeam()
+                        $0.gradientType = Int(arc4random_uniform(5))
+                        realm.add($0, update: true)
+                    }
+                })
+        
+                completion(nil)
+            }
             
-            completion(nil)
             }, failure: completion)
     }
     
@@ -321,7 +342,6 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updateLastViewDatePathPattern(), channel)
         
         self.manager.post(path: path, success: { (mappingResult) in
-            Swift.print("WAS \(UIApplication.shared.applicationIconBadgeNumber) - \(channel.mentionsCount)")
             UIApplication.shared.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber - channel.mentionsCount  
             try! RealmUtils.realmForCurrentThread().write({
                 channel.lastViewDate = channel.lastPostDate
@@ -861,21 +881,29 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.nextPagePathPattern(), wrapper)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
-            guard !skipMapping else { completion(isLastPage, nil); return }
-            
-            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-
-            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
-            
-            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
-                if error != nil { print(error.debugDescription) }
+            Api.apiHandlerQueue.async() {
+                let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
+                guard !skipMapping else { completion(isLastPage, nil); return }
                 
-                self.loadFileInfosFor(posts: posts, completion: { (error) in
-                    RealmUtils.save(posts)
-                    completion(isLastPage, nil)
+                let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                
+                for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
+                
+                self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                    if error != nil { print(error.debugDescription) }
+                    
+                    self.loadFileInfosFor(posts: posts, completion: { (error) in
+                        Api.apiHandlerQueue.async() {
+                            RealmUtils.save(posts)
+//                            DispatchQueue.main.async {
+                                completion(isLastPage, nil)
+//                            }
+                        }
+                        
+                    })
                 })
-            })
+            }
+            
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
             completion(isLastPage, error)
