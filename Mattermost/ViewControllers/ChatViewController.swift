@@ -27,11 +27,11 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     internal let attachmentsView = PostAttachmentsView()
     fileprivate var startHeadDialogueLabel = EmptyDialogueLabel()
     fileprivate var startTextDialogueLabel = EmptyDialogueLabel()
-    fileprivate let startButton = UIButton.init()
-    var refreshControl: UIRefreshControl?
-    var topActivityIndicatorView: UIActivityIndicatorView?
-    var bottomActivityIndicatorView: UIActivityIndicatorView?
-    var scrollButton: UIButton?
+    fileprivate let startButton = UIButton()
+    fileprivate var refreshControl: UIRefreshControl?
+    fileprivate var topActivityIndicatorView: UIActivityIndicatorView?
+    fileprivate var bottomActivityIndicatorView: UIActivityIndicatorView?
+    fileprivate var scrollButton: UIButton?
     //Modules
     var documentInteractionController: UIDocumentInteractionController?
     fileprivate var filesAttachmentsModule: AttachmentsModule!
@@ -62,21 +62,14 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
     
+    fileprivate let navigationTitleView = ConversationTitleView(frame: CGRect(x: 15, y: 0, width: UIScreen.screenWidth() * 0.75 - 20, height: 44))
+    
     //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         ChannelObserver.sharedObserver.delegate = self
-        self.initialSetup()
-        
-        guard self.channel != nil else { return }
-        if (self.channel.identifier!.characters.count < 4 && !self.channel.isInvalidated) {
-            startHeadDialogueLabel.text = "Тестовый канал!"
-            startTextDialogueLabel.text = "Для тестирования функционала чата перейдите в существующий на сервере канал!"
-            startButton.isHidden = true
-            leftButton.isEnabled = false
-            textView.isEditable = false
-        }
+        initialSetup()
     }
     
 
@@ -246,19 +239,24 @@ extension ChatViewController: Setup {
     }
     
     fileprivate func setupInputViewButtons() {
-        let width = UIScreen.screenWidth() / 3
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: 44))
+//        let width = UIScreen.screenWidth() / 3
+//        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: 44))
+//        
+//        titleLabel.backgroundColor = UIColor.clear
+//        titleLabel.textColor = ColorBucket.blackColor
+//        titleLabel.isUserInteractionEnabled = true
+//        titleLabel.font = FontBucket.titleChannelFont
+//        titleLabel.textAlignment = .center
+//        titleLabel.text = self.channel?.displayName
+//        
+//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleTapAction))
+        self.navigationItem.titleView = navigationTitleView
+        navigationTitleView.configureWithChannel(channel: self.channel)
+       
         
-        titleLabel.backgroundColor = UIColor.clear
-        titleLabel.textColor = ColorBucket.blackColor
-        titleLabel.isUserInteractionEnabled = true
-        titleLabel.font = FontBucket.titleChannelFont
-        titleLabel.textAlignment = .center
-        titleLabel.text = self.channel?.displayName
+//        self.navigationItem.titleView?.addGestureRecognizer(tapGestureRecognizer)
         
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleTapAction))
-        self.navigationItem.titleView = titleLabel
-        self.navigationItem.titleView?.addGestureRecognizer(tapGestureRecognizer)
+        
         
         self.rightButton.titleLabel!.font = FontBucket.feedSendButtonTitleFont;
         self.rightButton.setTitle("Send", for: UIControlState())
@@ -1012,9 +1010,7 @@ extension ChatViewController: ChannelObserverDelegate {
         guard identifier != nil else { return }
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         
-        if (self.navigationItem.titleView != nil) {
-            (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
-        }
+        navigationTitleView.configureWithChannel(channel: channel)
         self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
         self.textView.resignFirstResponder()
 
@@ -1040,8 +1036,8 @@ extension ChatViewController: ChannelObserverDelegate {
                                         y       : 0,
                                         width   : UIScreen.main.bounds.size.width*0.90,
                                         height  : 30)
-        self.startButton.center = CGPoint(x: UIScreen.main.bounds.size.width / 2,
-                                          y: UIScreen.main.bounds.size.height / 1.65)
+        self.startButton.center = CGPoint(x: UIScreen.screenWidth() / 2,
+                                          y: UIScreen.screenHeight() / 1.65)
         
         if (channel.privateType == "P") {
             self.startButton.setTitle("+ Invite others to this private group",for: .normal)
@@ -1138,7 +1134,8 @@ extension ChatViewController {
     }
     
     func reloadTitle() {
-        (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
+        navigationTitleView.configureWithChannel(channel: channel)
+//        (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
     }
     
     func errorAction(_ post: Post) {

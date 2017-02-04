@@ -225,6 +225,7 @@
 		D64AEDCA1D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */; };
 		D64AEDCC1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */; };
 		D65626691D49678100981057 /* FeedTableViewSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */; };
+		D66BB1531E462D2B00AEB057 /* ConversationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66BB1521E462D2B00AEB057 /* ConversationTitleView.swift */; };
 		D67A42F91D74871E003E2466 /* PostAttachmentsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */; };
 		D69A1F181E29520F00AB6334 /* CTLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69A1F171E29520F00AB6334 /* CTLabel.swift */; };
 		D6A887B11D4A0A1100C13191 /* ColorBucket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A887B01D4A0A1100C13191 /* ColorBucket.swift */; };
@@ -534,6 +535,7 @@
 		D64AEDC91D48A1F0007D93D0 /* FeedAttachmentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedAttachmentsTableViewCell.swift; sourceTree = "<group>"; };
 		D64AEDCB1D48BEFA007D93D0 /* FeedFollowUpTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedFollowUpTableViewCell.swift; sourceTree = "<group>"; };
 		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
+		D66BB1521E462D2B00AEB057 /* ConversationTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationTitleView.swift; sourceTree = "<group>"; };
 		D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsViewCell.swift; path = PostAttachmentsViewCell/PostAttachmentsViewCell.swift; sourceTree = "<group>"; };
 		D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DisableBitcode.xcconfig; sourceTree = "<group>"; };
 		D69A1F171E29520F00AB6334 /* CTLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTLabel.swift; sourceTree = "<group>"; };
@@ -1121,6 +1123,7 @@
 				4B4497F31D93ECA9009939A9 /* PostStatusView.swift */,
 				8B31024E1D985455001FE701 /* CompactPostView.swift */,
 				4B7270811DABF4C000445586 /* AlertView.swift */,
+				D66BB1521E462D2B00AEB057 /* ConversationTitleView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1620,6 +1623,7 @@
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				8B3CB3751DD269C30078DE25 /* Api.swift in Sources */,
 				8B3C91611E27EDE80099F3F6 /* Chat+Autocompletion.swift in Sources */,
+				D66BB1531E462D2B00AEB057 /* ConversationTitleView.swift in Sources */,
 				D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */,
 				8B618CC31DDCDE8300AC6CDD /* MattermostError.swift in Sources */,
 				CDB6D3B91D772A0100C3018C /* MoreChannelsTableViewCell.swift in Sources */,
