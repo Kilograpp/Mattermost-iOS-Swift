@@ -282,15 +282,13 @@ extension Post: Computations {
         let components = calendar!.dateComponents(unitFlags, from: createdAt!)
         let dayDate = calendar!.date(from: components)
         let key = "\(dayDate!.timeIntervalSince1970)_\(channelId!)"
-        var day: Day! = RealmUtils.realmForCurrentThread().object(ofType: Day.self, forPrimaryKey: key)
-
-        defer { self.day = day }
-        guard day == nil else { return }
         
-        day = Day()
+        let day = Day()
         day.date = dayDate
         day.key = key
         day.channelId = channelId
+        
+        self.day = day
         
     }
     fileprivate func computePendingId() {

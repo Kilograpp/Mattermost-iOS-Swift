@@ -17,15 +17,12 @@ private protocol Interface: class {
 
 final class FeedNotificationsObserver {
 
-//MARK: Properties
     fileprivate var results: Results<Post>! = nil
     fileprivate var days: Results<Day>! = nil
     fileprivate var tableView: UITableView
     fileprivate var resultsNotificationToken: NotificationToken?
-    fileprivate var lastDayNotificationToken: NotificationToken?
     fileprivate let channel: Channel!
-    
-//MARK: LifeCycle
+
     init(tableView: UITableView, channel: Channel) {
         self.channel = channel
         self.tableView = tableView
@@ -48,16 +45,12 @@ extension FeedNotificationsObserver: Interface {
     }
     
     func subscribeForRealmNotifications() {
-        let resultsNotificationHandler = { (changes: RealmCollectionChange<Results<Post>> ) in
+        let resultsNotificationHandler = { (changes: RealmCollectionChange<Results<Day>> ) in
             switch changes {
             case .initial:
                 self.tableView.reloadData()
                 break
             case .update(_, let deletions, let insertions, let modifications):
-                if insertions.count > 1 || deletions.count > 1 || modifications.count > 1 {
-                    self.tableView.reloadData()
-                    break
-                }
 
                 if deletions.count > 0 {
                     self.tableView.reloadData()
@@ -65,30 +58,22 @@ extension FeedNotificationsObserver: Interface {
                 }
                 
                 self.tableView.beginUpdates()
-                if (insertions.count > 0) {
-                    //this will work if insertions contains ONLY 1 value,
-                    if self.days?.first?.posts.count == 1 {
-                        self.tableView.insertSections(NSIndexSet(index: 0) as IndexSet, with: .none)
-                    }
-                    insertions.forEach({ (index:Int) in
-                        self.tableView.insertRows(at: [NSIndexPath(row: 0, section: 0) as IndexPath], with: .automatic)
-                    })
-                }
-                
-                if modifications.count > 0 {
-                    modifications.forEach({ (index:Int) in
-                        let post = self.results[index]
-                        var rowsForReload = Array<IndexPath>()
-                        rowsForReload.append(self.indexPathForPost(post))
-                        if let postIdentifier = post.identifier {
-                            let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("\(PostAttributes.parentId) == %@", postIdentifier)
-                            for comment in comments {
-                                rowsForReload.append(self.indexPathForPost(comment))
-                            }
-                            self.tableView.reloadRows(at: rowsForReload, with: .automatic)
+                self.tableView.insertSections(IndexSet(insertions), with: .none)
+                modifications.forEach({ (index) in
+                    var indexes: [IndexPath] = []
+                    let newRowsCount = self.days[index].posts.count - self.tableView.numberOfRows(inSection: index)
+                    
+                    if newRowsCount == 1 && insertions.count == 0 && index == 0{ // fix me plzzz
+                        indexes.append(IndexPath(row: 0, section: index))
+                    } else {
+                        for row in 0..<newRowsCount {
+                            indexes.append(IndexPath(row: self.tableView.numberOfRows(inSection: index) + row, section: index))
                         }
-                    })
-                }
+                    }
+                    
+                    self.tableView.insertRows(at: indexes, with: .none)
+                })
+
                 self.tableView.endUpdates()
                 
             default: break
@@ -96,8 +81,7 @@ extension FeedNotificationsObserver: Interface {
         }
         
         let configurationBlock = {
-            self.resultsNotificationToken = self.results!.addNotificationBlock(resultsNotificationHandler)
-            //self.lastDayNotificationToken = self.results.last?.posts.addNotificationBlock(lastDayNotificationsBlock)
+            self.resultsNotificationToken = self.days!.addNotificationBlock(resultsNotificationHandler)
         }
         
         if Thread.isMainThread {
@@ -109,6 +93,7 @@ extension FeedNotificationsObserver: Interface {
         }
     }
 }
+
 
 
 //MARK: - Notification Subscription
@@ -136,11 +121,11 @@ extension FeedNotificationsObserver {
     
     func fetchPosts() {
         let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
-        self.results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byProperty: "createdAt", ascending: false)
+        self.results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byKeyPath: "createdAt", ascending: false)
     }
     func fetchDays() {
         let predicate = NSPredicate(format: "channelId = %@", self.channel?.identifier ?? "")
-        self.days = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted(byProperty: "date", ascending: false)
+        self.days = RealmUtils.realmForCurrentThread().objects(Day.self).filter(predicate).sorted(byKeyPath: "date", ascending: false)
     }
 }
 

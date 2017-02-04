@@ -30,7 +30,6 @@ final class Day: RealmObject {
         }
     }
     let posts = LinkingObjects(fromType: Post.self, property: PostRelationships.day.rawValue)
-    
 
     override class func primaryKey() -> String {
         return DayAttributes.key.rawValue
@@ -41,6 +40,6 @@ final class Day: RealmObject {
     }
     
     func sortedPosts() -> Results<Post> {
-        return posts.sorted(byProperty: "createdAt", ascending: true)
+        return posts.sorted(byKeyPath: PostAttributes.createdAt.rawValue, ascending: true)
     }
 }
