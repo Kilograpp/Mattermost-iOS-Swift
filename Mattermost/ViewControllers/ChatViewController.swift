@@ -68,10 +68,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         
         ChannelObserver.sharedObserver.delegate = self
         self.initialSetup()
-//        DispatchQueue.main.async {
-//            self.createTestChannels()
-//        }
-//
+        
         guard self.channel != nil else { return }
         if (self.channel.identifier!.characters.count < 4 && !self.channel.isInvalidated) {
             startHeadDialogueLabel.text = "Тестовый канал!"
@@ -82,41 +79,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         }
     }
     
-    func createTestChannels(){
-        let val = UserDefaults.standard.string(forKey: "no_need")
-        
-        guard val != "yes"  else {return}
-        
-        let realm = RealmUtils.realmForCurrentThread()
-        try! realm.write({
-            for id in 1...200 {
-                realm.add(createRandomChannel(id: id), update: true)
-            }
-        })
-        
-        UserDefaults.standard.set("yes", forKey: "no_need")
-        UserDefaults.standard.synchronize()
-    }
-    func createRandomChannel(id: Int) -> Channel{
-        var newChannel = Channel()
-        newChannel.currentUserInChannel = true
-        newChannel.team = RealmUtils.realmForCurrentThread().object(ofType:Team.self, forPrimaryKey: DataManager.sharedInstance.currentTeam!.identifier!)
-        newChannel.gradientType = Int(arc4random_uniform(5))
-        newChannel.displayName = "Test Test Test"
-        newChannel.identifier = String(id)
-        newChannel.createdAt = Date()
-        newChannel.isInterlocuterOnTeam = true
-        if id <= 25 {
-            newChannel.privateType = "O"
-        } else if id <= 50 {
-            newChannel.privateType = "P"
-        } else if id <= 200 {
-            newChannel.privateType = "D"
-        }
-        newChannel.isDirectPrefered = true
-        return newChannel
-    }
-    
+
+
     override func viewDidDisappear(_ animated: Bool) {
         saveSentPostForChannel()
     }
@@ -886,7 +850,7 @@ extension ChatViewController {
                 loadPostsBeforePost(post: self.resultsObserver.lastPost())
             }
 
-            if (indexPath == IndexPath(row: 0, section: 0)) && self.hasNewestPage {
+            if indexPath == IndexPath(row: 0, section: 0) && self.hasNewestPage {
                 loadPostsAfterPost(post: post!)
             }
             
@@ -895,10 +859,10 @@ extension ChatViewController {
             }
         
             let cell = self.builder.cellForPost(post!, prevPost: nil, errorHandler: errorHandler)
-            if (cell.isKind(of: FeedCommonTableViewCell.self)) {
-                (cell as! FeedCommonTableViewCell).avatarTapHandler = {
-                    guard (post?.author.identifier != "SystemUserIdentifier") else { return }
-                    self.proceedToProfileFor(user: (post?.author)!)
+            if let commonCell = cell as? FeedCommonTableViewCell {
+                commonCell.avatarTapHandler = {
+                    guard post?.author.identifier != "SystemUserIdentifier" else { return }
+                    self.proceedToProfileFor(user: post!.author)
                 }
             }
             
