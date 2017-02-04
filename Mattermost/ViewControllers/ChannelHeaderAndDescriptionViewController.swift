@@ -73,6 +73,8 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
     }
     
     func saveButtonAction(){
+        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
+        
         navigationItem.rightBarButtonItem?.isEnabled = false
         switch self.type!{
         case .header:
@@ -83,6 +85,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
                     guard (error == nil) else { return }
                     Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                         guard (error == nil) else { return }
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                     })
                 })
             })
@@ -94,6 +97,7 @@ class ChannelHeaderAndDescriptionViewController: UIViewController, UITableViewDe
                     guard (error == nil) else { return }
                     Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                         guard (error == nil) else { return }
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                     })
                 })
             })

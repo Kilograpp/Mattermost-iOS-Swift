@@ -68,6 +68,10 @@ class ChannelSettingsViewController: UIViewController {
         }
     }
     
+    func reloadChannel() {
+        self.tableView.reloadData()
+    }
+    
     func backAction(){
         self.dismiss(animated: true, completion: nil)
     }
@@ -82,6 +86,9 @@ class ChannelSettingsViewController: UIViewController {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(stopTimer),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.StatusesSocketNotification),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadChannel),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification),
                                                object: nil)
     }
     
@@ -251,6 +258,7 @@ extension ChannelSettingsViewController: UITableViewDelegate {
             self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
             Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
                 guard (error==nil) else {
+                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                     self.hideLoaderView()
                     return
                 }

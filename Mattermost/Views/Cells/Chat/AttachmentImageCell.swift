@@ -34,7 +34,7 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
     fileprivate let fileNameLabel = UILabel()
     
     //MARK: LifeCycle
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.selectionStyle = .none
@@ -194,6 +194,11 @@ extension AttachmentImageCell: Updating {
 //MARK: Action
 extension AttachmentImageCell: Action {
     @objc fileprivate func tapAction() {
+        guard Api.sharedInstance.isNetworkReachable() else {
+            AlertManager.sharedManager.showErrorWithMessage(message: "No Internet connectivity detected")
+            return
+        }
+        
         let postLocalId = self.file.post?.localIdentifier
         let fileId = self.file.identifier
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.FileImageDidTapNotification),

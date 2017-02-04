@@ -528,6 +528,8 @@ extension ChatViewController: Action {
     func sendPostAction() {
         guard self.filesAttachmentsModule.fileUploadingInProgress else { self.handleWarningWith(message: "Please, wait until download finishes"); return }
         
+        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
+        
         switch self.selectedAction {
         case Constants.PostActionType.SendReply:
             sendPostReply()
@@ -818,6 +820,9 @@ extension ChatViewController: NotificationObserver {
         center.addObserver(self, selector: #selector(handleLogoutNotification),
                            name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserLogoutNotificationName),
                            object: nil)
+        center.addObserver(self, selector: #selector(reloadTitle),
+                                               name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification),
+                                               object: nil)
     }
     
     func addSLKKeyboardObservers() {
@@ -1168,6 +1173,10 @@ extension ChatViewController {
         self.channel = nil
         self.resultsObserver = nil
         ChannelObserver.sharedObserver.delegate = nil
+    }
+    
+    func reloadTitle() {
+        (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
     }
     
     func errorAction(_ post: Post) {
