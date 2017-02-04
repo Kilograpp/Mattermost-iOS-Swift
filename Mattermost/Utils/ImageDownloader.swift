@@ -8,7 +8,14 @@
 
 import WebImage
 
+
+
 final class ImageDownloader {
+    static let downloadQueue: DispatchQueue = {
+        let queue = DispatchQueue(label: "com.kilograpp.image.download", qos: .utility)
+        return queue
+    }()
+    
     static func downloadFeedAvatarForUser(_ user: User, completion: @escaping (_ image: UIImage?, _ error: NSError?) -> Void) {
         guard !user.isSystem() else {
             //TODO: Possible refactor
@@ -23,7 +30,7 @@ final class ImageDownloader {
         } else {
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 (image, error, cacheType, isFinished, imageUrl) in
-                DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+                downloadQueue.async {
                     
                     // Handle unpredictable errors
                     guard image != nil else {
@@ -63,7 +70,7 @@ final class ImageDownloader {
         else {
             let imageDownloadComplectionHandler: SDWebImageCompletionWithFinishedBlock = {
                 (image, error, cacheType, isFinished, imageUrl) in
-                DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive).async {
+                downloadQueue.async {
                     guard image != nil else {
                         complection(nil, error as NSError?)
                         return
@@ -84,4 +91,5 @@ final class ImageDownloader {
                                                                    completed: imageDownloadComplectionHandler)
         }
     }
+
 }
