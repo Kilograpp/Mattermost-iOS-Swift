@@ -155,7 +155,7 @@ extension AttachmentImageCell: Updating {
         } else {
             let imageDownloadCompletionHandler: SDWebImageCompletionWithFinishedBlock = {
                 [weak self] (image, error, cacheType, isFinished, imageUrl) in
-                DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+                DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async {
                     // Handle unpredictable errors
                     guard image != nil else { return }
                     

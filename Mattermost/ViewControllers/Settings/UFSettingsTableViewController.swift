@@ -232,6 +232,11 @@ extension UFSettingsTableViewController {
 
 //MARK: UITextFieldDelegate
 extension UFSettingsTableViewController: UITextFieldDelegate {
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        self.saveButton.isEnabled = true
+        return true
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         self.saveButton.isEnabled = true
         return true
