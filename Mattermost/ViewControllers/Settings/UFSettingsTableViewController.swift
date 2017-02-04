@@ -189,6 +189,8 @@ extension UFSettingsTableViewController: Request {
     }
     
     internal func updatePassword() {
+        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
+        
         self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         
         let oldPassword = self.builder.infoFor(section: 0)
@@ -196,12 +198,17 @@ extension UFSettingsTableViewController: Request {
         let retryNewPassword = self.builder.infoFor(section: 2)
         guard newPassword == retryNewPassword else {
             AlertManager.sharedManager.showErrorWithMessage(message: "New password in fields isn't same.")
+            self.hideLoaderView()
             return
         }
         
         Api.sharedInstance.update(currentPassword: oldPassword, newPassword: newPassword) { (error) in
             self.hideLoaderView()
             guard error == nil else {
+                if error?.code == -1011 {
+                    AlertManager.sharedManager.showErrorWithMessage(message: "Wrong old password")
+                    return
+                }
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }

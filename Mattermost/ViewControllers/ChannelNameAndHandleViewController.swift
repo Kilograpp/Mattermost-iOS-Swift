@@ -102,6 +102,8 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
     }
     
     func saveButtonAction(){
+        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
+        
         let newDisplayName = (tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! ChannelNameAndHandleCell).textField.text
         let newName = (tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) as! ChannelNameAndHandleCell).textField.text
         
@@ -116,7 +118,6 @@ class ChannelNameAndHandleViewController: UIViewController, UITableViewDelegate,
             AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was updated")
             Api.sharedInstance.getChannel(channel: self.channel, completion: { (error) in
                 guard (error == nil) else { return }
-                ChannelObserver.sharedObserver.selectedChannel = self.channel
                 Api.sharedInstance.loadUsersListFrom(channel: self.channel, completion: { (error) in
                     guard (error == nil) else { return }
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
