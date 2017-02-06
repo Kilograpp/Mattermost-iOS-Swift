@@ -282,14 +282,12 @@ extension Post: Computations {
         let components = calendar!.dateComponents(unitFlags, from: createdAt!)
         let dayDate = calendar!.date(from: components)
         let key = "\(dayDate!.timeIntervalSince1970)_\(channelId!)"
-        
+
         let day = Day()
         day.date = dayDate
-        day.key = key
+        day.key = key 
         day.channelId = channelId
-        
-        self.day = day
-        
+        self.day = day        
     }
     fileprivate func computePendingId() {
         self.pendingId = "\(Preferences.sharedInstance.currentUserId):\(self.createdAt!.timeIntervalSince1970)"
