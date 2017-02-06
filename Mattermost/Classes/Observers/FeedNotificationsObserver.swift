@@ -47,36 +47,36 @@ extension FeedNotificationsObserver: Interface {
     func subscribeForRealmNotifications() {
         let resultsNotificationHandler = { (changes: RealmCollectionChange<Results<Day>> ) in
             switch changes {
-            case .initial:
-                self.tableView.reloadData()
-                break
-            case .update(_, let deletions, let insertions, let modifications):
-
-                if deletions.count > 0 {
+                case .initial:
                     self.tableView.reloadData()
                     break
-                }
-                
-                self.tableView.beginUpdates()
-                self.tableView.insertSections(IndexSet(insertions), with: .none)
-                modifications.forEach({ (index) in
-                    var indexes: [IndexPath] = []
-                    let newRowsCount = self.days[index].posts.count - self.tableView.numberOfRows(inSection: index)
-                    
-                    if newRowsCount == 1 && insertions.count == 0 && index == 0{ // fix me plzzz
-                        indexes.append(IndexPath(row: 0, section: index))
-                    } else {
-                        for row in 0..<newRowsCount {
-                            indexes.append(IndexPath(row: self.tableView.numberOfRows(inSection: index) + row, section: index))
-                        }
+                case .update(_, let deletions, let insertions, let modifications):
+
+                    if deletions.count > 0 {
+                        self.tableView.reloadData()
+                        break
                     }
                     
-                    self.tableView.insertRows(at: indexes, with: .none)
-                })
+                    self.tableView.beginUpdates()
+                    self.tableView.insertSections(IndexSet(insertions), with: .none)
+                    modifications.forEach({ (index) in
+                        var indexes: [IndexPath] = []
+                        let newRowsCount = self.days[index].posts.count - self.tableView.numberOfRows(inSection: index)
+                        
+                        if newRowsCount == 1 && insertions.count == 0 && index == 0{ // fix me plzzz
+                            indexes.append(IndexPath(row: 0, section: index))
+                        } else {
+                            for row in 0..<newRowsCount {
+                                indexes.append(IndexPath(row: self.tableView.numberOfRows(inSection: index) + row, section: index))
+                            }
+                        }
+                        
+                        self.tableView.insertRows(at: indexes, with: .none)
+                    })
 
-                self.tableView.endUpdates()
-                
-            default: break
+                    self.tableView.endUpdates()
+                    
+                default: break
             }
         }
         
@@ -93,7 +93,6 @@ extension FeedNotificationsObserver: Interface {
         }
     }
 }
-
 
 
 //MARK: - Notification Subscription

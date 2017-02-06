@@ -89,8 +89,8 @@ extension FeedAttachmentsTableViewCell: Setup {
         self.tableView.bounces = false
         self.tableView.isScrollEnabled = false
         
-        self.tableView.register(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier, cacheSize: 7)
-        self.tableView.register(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier, cacheSize: 7)
+        self.tableView.register(AttachmentImageCell.self, forCellReuseIdentifier: AttachmentImageCell.reuseIdentifier, cacheSize: 15)
+        self.tableView.register(AttachmentFileCell.self, forCellReuseIdentifier: AttachmentFileCell.reuseIdentifier, cacheSize: 15)
         self.addSubview(self.tableView)
     }
 }

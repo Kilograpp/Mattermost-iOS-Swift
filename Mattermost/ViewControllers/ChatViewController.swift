@@ -19,8 +19,6 @@ protocol ChatViewControllerInterface: class {
 }
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-//MARK: Properties
     //UserInterface
     override var tableView: UITableView { return super.tableView! }
     fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
@@ -58,7 +56,6 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     
     var hasNextPage: Bool = true
     var hasNewestPage: Bool = false
-    //var postFromSearch: Post! = nil
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
     
@@ -71,8 +68,6 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         ChannelObserver.sharedObserver.delegate = self
         initialSetup()
     }
-    
-
 
     override func viewDidDisappear(_ animated: Bool) {
         saveSentPostForChannel()
@@ -239,16 +234,6 @@ extension ChatViewController: Setup {
     }
     
     fileprivate func setupInputViewButtons() {
-//        let width = UIScreen.screenWidth() / 3
-//        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: 44))
-//        
-//        titleLabel.backgroundColor = UIColor.clear
-//        titleLabel.textColor = ColorBucket.blackColor
-//        titleLabel.isUserInteractionEnabled = true
-//        titleLabel.font = FontBucket.titleChannelFont
-//        titleLabel.textAlignment = .center
-//        titleLabel.text = self.channel?.displayName
-//        
 //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleTapAction))
         self.navigationItem.titleView = navigationTitleView
         navigationTitleView.configureWithChannel(channel: self.channel)
@@ -1140,10 +1125,17 @@ extension ChatViewController {
     
     func errorAction(_ post: Post) {
         let controller = UIAlertController(title: "Your message was not sent", message: "Tap resend to send this message again", preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: "Resend", style: .default, handler: { (action:UIAlertAction) in
+        controller.addAction(UIAlertAction(title: "Resend", style: .default, handler: { [unowned self](action:UIAlertAction) in
             self.resendAction(post)
         }))
+        
+        controller.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [unowned self](action:UIAlertAction) in
+            print("add implementation")
+//            deletePost(post)
+        }))
+        
         controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
         present(controller, animated: true) {}
     }
     

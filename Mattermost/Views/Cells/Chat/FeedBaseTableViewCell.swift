@@ -7,6 +7,8 @@
 //
 
 
+import RealmSwift
+
 protocol TableViewPostDataSource: class {
     func configureWithPost(_ post: Post)
     static func heightWithPost(_ post: Post) -> CGFloat
@@ -28,6 +30,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     final var parentPostIdentifier: String?
     final var messageLabel = CTLabel()
     final var postStatusView: PostStatusView!
+    final var notificationToken: NotificationToken?
     
     
 //MARK: LifeCycle
@@ -45,6 +48,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         self.messageLabel.alpha = 1
         self.postIdentifier = nil
         self.parentPostIdentifier = nil
+        notificationToken?.stop()
     }
     
     override func layoutSubviews() {
@@ -126,6 +130,22 @@ extension FeedBaseTableViewCell {
         self.configureMessage()
         postStatusView.configureWithStatus(post)
         postStatusView.errorHandler = self.errorHandler
+        
+        
+        guard post.rootId == nil else {return}
+       notificationToken = post.addNotificationBlock { change in
+            switch change {
+            case .change(let properties):
+                if let readChange = properties.first(where: { $0.name == "rootId" }) {
+                    //hide
+                }
+
+            case .deleted:
+                print("deleted")
+            case .error(let error):
+                print("deleted")
+            }
+        }
     }
     
     class func heightWithPost(_ post: Post) -> CGFloat {
