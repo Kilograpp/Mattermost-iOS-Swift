@@ -132,12 +132,12 @@ extension FeedBaseTableViewCell {
         postStatusView.errorHandler = self.errorHandler
         
         
-        guard post.rootId == nil else {return}
+       guard post.rootId == nil else {return}
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
                 if let readChange = properties.first(where: { $0.name == "rootId" }) {
-                    //hide
+                    self.postStatusView.isHidden = true
                 }
 
             case .deleted:
