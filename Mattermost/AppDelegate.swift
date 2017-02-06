@@ -35,9 +35,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        Api.sharedInstance.getChannelMembers { (error) in
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: userInfo)
-        }
+        // guard на авторизацию
+//        Api.sharedInstance.getChannelMembers { (error) in
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+//        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
