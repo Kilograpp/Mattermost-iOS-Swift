@@ -67,7 +67,9 @@ final class FileUtils {
     }
     
     static func fileIsImage(_ file: File) -> Bool {
-        return self.stringContainsImagePostfixes(file.name)
+        let fileName = file.name!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)
+
+        return self.stringContainsImagePostfixes(fileName)
     }
     
     static func stringContainsImagePostfixes(_ string: String?) -> Bool {
