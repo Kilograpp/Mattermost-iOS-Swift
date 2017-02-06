@@ -649,16 +649,16 @@ extension Api: UserApi {
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
+            
             users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
             for user in users {
                 let existUser = User.objectById(user.identifier)
                 if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
                     let realm = RealmUtils.realmForCurrentThread()
-                        try! realm.write { channel.members.append(existUser!) }
-                        }
-                        completion(nil)
-
+                    try! realm.write { channel.members.append(existUser!) }
+                }
             }
+            completion(nil)
         }, failure: completion)
     }
     
