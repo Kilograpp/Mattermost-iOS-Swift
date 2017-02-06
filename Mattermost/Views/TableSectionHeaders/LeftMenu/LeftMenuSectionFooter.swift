@@ -27,7 +27,6 @@ final class LeftMenuSectionFooter : UITableViewHeaderFooterView {
         super.init(reuseIdentifier: reuseIdentifier)
         
         self.setup()
-        titleButton.isHidden = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -37,7 +36,7 @@ final class LeftMenuSectionFooter : UITableViewHeaderFooterView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.titleButton.frame = CGRect(x: 15, y: 0, width: 50, height: 29)
+        titleButton.frame = CGRect(x: 15, y: 0, width: 50, height: 29)
     }
 }
 
@@ -48,25 +47,25 @@ extension LeftMenuSectionFooter : PrivateSetup {
     }
     
     fileprivate func setupTitleButton() {
-        self.addSubview(self.titleButton)
-        self.titleButton.setImage(UIImage(named: "common_arrow_icon_passive"), for: UIControlState())
-        self.titleButton.titleLabel?.font = FontBucket.footerTitleFont
-        self.titleButton.setTitleColor(ColorBucket.sideMenuCommonTextColor, for: .normal)
-        self.titleButton.setTitle("more ", for: UIControlState())
-        self.titleButton.setTitleColor(ColorBucket.sideMenuCommonTextColor, for: .normal)
-        self.titleButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
-        self.titleButton.titleLabel!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
-        self.titleButton.imageView!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
-        self.titleButton.addTarget(self, action: #selector(moreAction), for: .touchUpInside)
+        addSubview(self.titleButton)
+        titleButton.setImage(UIImage(named: "common_arrow_icon_passive"), for: UIControlState())
+        titleButton.titleLabel?.font = FontBucket.footerTitleFont
+        titleButton.setTitleColor(ColorBucket.sideMenuCommonTextColor, for: .normal)
+        titleButton.setTitle("more ", for: UIControlState())
+        titleButton.setTitleColor(ColorBucket.sideMenuCommonTextColor, for: .normal)
+        titleButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
+        titleButton.titleLabel!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
+        titleButton.imageView!.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
+        titleButton.addTarget(self, action: #selector(moreAction), for: .touchUpInside)
     }
     
     fileprivate func setupContentView() {
-        self.contentView.backgroundColor = ColorBucket.sideMenuBackgroundColor
+        contentView.backgroundColor = ColorBucket.sideMenuBackgroundColor
     }
 }
 
 extension LeftMenuSectionFooter : Actions {
     func moreAction() {
-        self.moreTapHandler!()
+        moreTapHandler!()
     }
 }

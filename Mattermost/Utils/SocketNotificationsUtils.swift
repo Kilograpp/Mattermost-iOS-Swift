@@ -103,6 +103,7 @@ final class SocketNotificationUtils {
     
     static func postFromDictionary(_ dictionary:[String:AnyObject]) -> Post {
         let post = Post()
+        
         post.message = dictionary[NotificationKeys.DataKeys.PostKeys.Message] as? String
         post.identifier = dictionary[NotificationKeys.Identifier] as? String
         post.authorId = dictionary[NotificationKeys.UserIdentifier] as? String
@@ -124,6 +125,8 @@ final class SocketNotificationUtils {
         post.deletedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Delete_at] as! TimeInterval/1000.0)
 
         post.computeMissingFields()
+        post.setType(dictionary["type"] as! String)
+        
         return post
     }
     

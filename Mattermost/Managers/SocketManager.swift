@@ -165,15 +165,16 @@ extension SocketManager: Notifications {
     func handleReceivingNewPost(_ channelId:String,channelName:String,channelType:String,senderName:String,post:Post) {
         // if user is not author
         if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.pendingId!) {
-            RealmUtils.save(post)
+//            RealmUtils.save(post) // -> 2 transactions brings error with realm transaction. Placed to second transaction with post channel.
             
             for file in post.files {
                 if file.identifier != nil {
                     Api.sharedInstance.getInfo(fileId: file.identifier!)
                 }
             }
-            
-            try! RealmUtils.realmForCurrentThread().write({
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write({
+                realm.add(post, update: true)
                 if post.channel != nil {
                     post.channel.lastPostDate = post.createdAt
                 }
@@ -303,7 +304,14 @@ extension SocketManager: StateControl {
 extension SocketManager: Validation {
     fileprivate func postExistsWithIdentifier(_ identifier: String, pendingIdentifier: String) -> Bool {
         let realm = try! Realm()
-        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.pendingId.rawValue, pendingIdentifier)
+        var predicate:NSPredicate
+        let localIdPredicate = NSPredicate(format: "%K == %@", PostAttributes.identifier.rawValue, identifier)
+        if pendingIdentifier != StringUtils.emptyString() {
+            let pendingIdPredicate = NSPredicate(format: "%K == %@", PostAttributes.pendingId.rawValue, pendingIdentifier)
+            predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [ localIdPredicate, pendingIdPredicate ])
+        } else {
+            predicate = localIdPredicate
+        }
         return realm.objects(Post.self).filter(predicate).first != nil
     }
 }
