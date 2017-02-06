@@ -236,6 +236,8 @@ extension ChannelSettingsViewController: UITableViewDelegate {
         super.viewWillAppear(animated)
         
         replaceStatusBar()
+        //TEMP
+        self.tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
