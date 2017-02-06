@@ -59,35 +59,32 @@ class UserUtils: NSObject {
         return user
     }
     
-    static func updateOnTeamAndPreferedStatesFor(users: [User]) {
-        let realm = RealmUtils.realmForCurrentThread()
-        try! realm.write {
-            for user in users {
+    static func updateOnTeamAndPreferedStatesFor(user: User) {
         let predicate = NSPredicate(format: "name == %@", user.identifier)
         let preferences = DataManager.sharedInstance.currentUser?.preferences.filter(predicate)
         if preferences?.first != nil {
             user.isOnTeam = ((preferences?.first?.value)! == Constants.CommonStrings.True)
         }
         
+        //        print(user)
+        
+        let realm = RealmUtils.realmForCurrentThread()
         
         let preferedPredicate = NSPredicate(format: "name == %@", user.identifier)
         let isPrefered = Preference.preferedUsersList().filter(preferedPredicate).count > 0
         
-        let existUser = realm.object(ofType: User.self, forPrimaryKey: user.identifier)
-        
-        if existUser != nil {
+        try! realm.write {
+            let existUser = realm.object(ofType: User.self, forPrimaryKey: user.identifier)
+            if existUser == nil {
+                realm.add(user)
+                
+                guard user.hasChannel() else { return }
+                user.directChannel()?.isDirectPrefered = isPrefered
+                user.directChannel()?.displayName = user.displayName
+            } else {
                 guard (existUser?.hasChannel())! else { return }
                 existUser?.directChannel()?.isDirectPrefered = isPrefered
                 existUser?.directChannel()?.displayName = user.displayName
-
-        } else {
-            if !user.hasChannel() {
-                user.directChannel()?.isDirectPrefered = isPrefered
-                user.directChannel()?.displayName = user.displayName
-            }
-            
-            realm.add(user)
-        }
             }
         }
     }

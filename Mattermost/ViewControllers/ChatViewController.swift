@@ -1134,7 +1134,9 @@ extension ChatViewController {
     }
     
     func reloadTitle() {
-        navigationTitleView.configureWithChannel(channel: channel)
+        if channel != nil {
+            navigationTitleView.configureWithChannel(channel: channel)
+        }
 //        (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
     }
     

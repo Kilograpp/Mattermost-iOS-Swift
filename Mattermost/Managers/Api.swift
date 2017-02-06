@@ -609,7 +609,7 @@ extension Api: UserApi {
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
             let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
-            UserUtils.updateOnTeamAndPreferedStatesFor(users: users)
+            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
             completion(nil)
         }) { (operation, error) in
             completion(Error.errorWithGenericError(error))
@@ -647,29 +647,17 @@ extension Api: UserApi {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromChannelPathPattern(), channel)!
         
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            DispatchQueue.main.async {
-                let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
-                let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
-                
-    //            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
-                UserUtils.updateOnTeamAndPreferedStatesFor(users: users)
-                
-                
-                
-                var usersToAdd : [User] = []
-                for user in users {
+            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+            let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
+            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
+            for user in users {
+                let existUser = User.objectById(user.identifier)
+                if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
+                    let realm = RealmUtils.realmForCurrentThread()
+                        try! realm.write { channel.members.append(existUser!) }
+                        }
+                        completion(nil)
 
-                    let existUser = User.objectById(user.identifier)
-                    if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
-                        //temp crash fixing with "if" 
-                        if existUser != nil { usersToAdd.append(existUser!) }
-                    }
-                }
-                
-                let realm = RealmUtils.realmForCurrentThread()
-                try! realm.write { channel.members.append(contentsOf: usersToAdd) }
-                
-                completion(nil)
             }
         }, failure: completion)
     }
