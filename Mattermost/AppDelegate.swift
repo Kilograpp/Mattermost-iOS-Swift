@@ -35,7 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        
+        Api.sharedInstance.getChannelMembers { (error) in
+            
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
