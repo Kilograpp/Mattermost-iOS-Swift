@@ -647,8 +647,9 @@ extension ChatViewController: Request {
         Api.sharedInstance.loadPostsBeforePost(post: post) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
-            
-            self.hideTopActivityIndicator()
+            if isLastPage {
+                self.hideTopActivityIndicator()
+            }
             if needScroll! {
                 let indexPath = self.resultsObserver.indexPathForPost(post)
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
