@@ -78,7 +78,7 @@ extension FeedNotificationsObserver: Interface {
 
                     
                     self.tableView.beginUpdates()
-                    self.tableView.insertSections(IndexSet(insertions), with: .automatic)
+                    self.tableView.insertSections(IndexSet(insertions), with: .top)
                     self.tableView.reloadSections(IndexSet(sectionsToReload), with: .automatic)
                     self.tableView.insertRows(at: rowsToInsert, with: .automatic)
                     self.tableView.endUpdates()
