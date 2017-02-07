@@ -214,10 +214,10 @@ extension AttachmentFileView: Downloading {
                 }
                 self.downloadingState = DownloadingState.Downloaded
                 
-                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded")
+                AlertManager.sharedManager.showFileDownloadedAlert(fileIdentifier: self.file.identifier!, tapHandler: AttachmentFileView.openDownloadedFileByIdentifier)
                 
                 let notification = UILocalNotification()
-                notification.alertBody = "File was successfully downloaded"
+                notification.alertBody = "File was successfully downloaded".localized
 //                notification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
                 UIApplication.shared.scheduleLocalNotification(notification)
 
@@ -233,6 +233,12 @@ extension AttachmentFileView: Downloading {
         self.downloadingState = DownloadingState.NotDownloaded
         self.progressView.isHidden = true
         Api.sharedInstance.cancelDownloading(fileId: self.file.identifier!)
+    }
+    
+    fileprivate static func openDownloadedFileByIdentifier(identifier: String) {
+        let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
+                                        object: nil, userInfo: ["fileId" : identifier])
+        NotificationCenter.default.post(notification as Notification)
     }
     
     fileprivate func openDownloadedFile() {
