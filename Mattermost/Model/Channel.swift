@@ -132,7 +132,7 @@ final class Channel: RealmObject {
     
     func lastPost() -> Post? {
         let predicate = NSPredicate(format: "channelId = %@", identifier ?? "")
-        let results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byProperty: "createdAt", ascending: false)
+        let results = RealmUtils.realmForCurrentThread().objects(Post.self).filter(predicate).sorted(byKeyPath: "createdAt", ascending: false)
         
         return results.first
     }

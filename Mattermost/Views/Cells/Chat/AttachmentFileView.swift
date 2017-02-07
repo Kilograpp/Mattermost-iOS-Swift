@@ -155,16 +155,10 @@ extension AttachmentFileView: AttachmentFileViewConfiguration {
     }
     
     fileprivate func drawTitle(text: String) {
-        var fileName = self.file.name! as NSString
+        let fileName = self.file.name! as NSString
         let textColor = ColorBucket.blueColor
         let textFont =  AttachmentFileView.fileSizeFont
         let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
-//        var height = CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
-//        if height > 36 {
-//            height = 36
-//            let range = NSMakeRange(38, fileName.length - 38)
-//            fileName = fileName.replacingCharacters(in: range, with: "...") as NSString
-//        }
         let nameFrame = CGRect(x: 54, y: 8, width: frame.width - 64, height: 36).offsetBy(dx: 0, dy: frame.origin.y)
         fileName.draw(in: nameFrame, withAttributes: attributes)
     }
