@@ -163,6 +163,8 @@ extension UFSettingsTableViewController: Request {
     
     internal func updateEmail() {
         let email = self.builder.infoFor(section: 0)
+        guard email.isValidEmail() else { handleErrorWith(message: "Email is invalid"); return }
+        
         Api.sharedInstance.update(email: email) { (error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
