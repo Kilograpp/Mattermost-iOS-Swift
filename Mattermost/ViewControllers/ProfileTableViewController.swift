@@ -200,6 +200,8 @@ extension ProfileViewController: Request {
     }
     
     internal func updateImage() {
+        guard Api.sharedInstance.isNetworkReachable() else { handleErrorWith(message: "No Internet connectivity detected"); return }
+        
         self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         let image = self.avatarImageView.image
         self.saveButton.isEnabled = false
