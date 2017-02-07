@@ -547,7 +547,7 @@ extension Api: ChannelApi {
             try! realm.write({
                 responseArray.forEach {
                     let newMentionsCount = ($0["mention_count"]! as! NSNumber).intValue
-                    guard let updateChannel = try! Realm().objects(Channel.self).filter("identifier = %@", $0["channel_id"]).first else { return }
+                    guard let updateChannel = try! Realm().objects(Channel.self).filter("identifier = %@", $0["channel_id"]!).first else { return }
                     updateChannel.lastViewDate = Date(timeIntervalSince1970: TimeInterval(($0["last_viewed_at"]! as! NSNumber).doubleValue) / 1000)
                     updateChannel.messagesCount! = String(describing: ($0["msg_count"]! as! NSNumber).intValue)
                     updateChannel.mentionsCount = newMentionsCount
@@ -609,7 +609,7 @@ extension Api: UserApi {
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
             let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
-            UserUtils.updateOnTeamAndPreferedStatesFor(users: users)
+            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
             completion(nil)
         }) { (operation, error) in
             completion(Error.errorWithGenericError(error))
@@ -647,30 +647,18 @@ extension Api: UserApi {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromChannelPathPattern(), channel)!
         
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            DispatchQueue.main.async {
-                let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
-                let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
-                
-    //            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
-                UserUtils.updateOnTeamAndPreferedStatesFor(users: users)
-                
-                
-                
-                var usersToAdd : [User] = []
-                for user in users {
-
-                    let existUser = User.objectById(user.identifier)
-                    if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
-                        //temp crash fixing with "if" 
-                        if existUser != nil { usersToAdd.append(existUser!) }
-                    }
+            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
+            let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
+            
+            users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
+            for user in users {
+                let existUser = User.objectById(user.identifier)
+                if !channel.members.contains(where: { $0.identifier == existUser?.identifier }) {
+                    let realm = RealmUtils.realmForCurrentThread()
+                    try! realm.write { channel.members.append(existUser!) }
                 }
-                
-                let realm = RealmUtils.realmForCurrentThread()
-                try! realm.write { channel.members.append(contentsOf: usersToAdd) }
-                
-                completion(nil)
             }
+            completion(nil)
         }, failure: completion)
     }
     
@@ -681,7 +669,6 @@ extension Api: UserApi {
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
             let ids = Array(responseDictionary!.keys.map{$0})
-            let realm = RealmUtils.realmForCurrentThread()
             for userId in ids {
                 let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
                 users.append(user)
@@ -700,7 +687,6 @@ extension Api: UserApi {
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
             let ids = Array(responseDictionary!.keys.map{$0})
-            let realm = RealmUtils.realmForCurrentThread()
             for userId in ids {
                 let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
                 users.append(user)
@@ -825,7 +811,7 @@ extension Api: UserApi {
         var missingUserIds = Array<String>()
         for post in posts {
             let authorId = post.authorId
-            if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
+            if User.objectById(authorId!) == nil && !missingUserIds.contains(authorId!) {
                 missingUserIds.append(post.authorId!)
             }
         }
@@ -833,8 +819,6 @@ extension Api: UserApi {
         guard missingUserIds.count > 0 else { completion(nil); return }
         
         self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-            if error != nil { print(error!) }
-            
             completion(error)
         })
     }
@@ -847,20 +831,26 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.firstPagePathPattern(), PageWrapper(channel: channel))
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            guard !skipMapping else { completion(nil); return }
-
-            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-//            RealmUtils.save(posts)
-            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
-            
-            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
-                if error != nil { print(error.debugDescription) }
+            Api.apiHandlerQueue.async() {
+                guard !skipMapping else { completion(nil); return }
                 
-                self.loadFileInfosFor(posts: posts, completion: { (error) in
-                    RealmUtils.save(posts)
-                    completion(error)
+                let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
+                
+                self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                    if error != nil { print(error.debugDescription) }
+                    
+                    self.loadFileInfosFor(posts: posts, completion: { (error) in
+                        Api.apiHandlerQueue.async() {
+                            RealmUtils.save(posts)
+                            DispatchQueue.main.async {
+                                completion(error)
+                            }
+                        }
+                    })
                 })
-            })
+
+            }
         }) { (error) in
             if let error = error {
                 if (error.code == -1011) {
@@ -896,9 +886,9 @@ extension Api: PostApi {
                     self.loadFileInfosFor(posts: posts, completion: { (error) in
                         Api.apiHandlerQueue.async() {
                             RealmUtils.save(posts)
-//                            DispatchQueue.main.async {
+                            DispatchQueue.main.async {
                                 completion(isLastPage, nil)
-//                            }
+                            }
                         }
                         
                     })
@@ -917,31 +907,23 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.beforePostPathPattern(), wrapper)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            /*        guard !skipMapping else {
-                completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                return
-            }
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
-                DispatchQueue.main.sync {
-                    completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                }
-            })*/
-            
-            let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
-            guard !skipMapping else { completion(isLastPage, nil); return }
-            
-            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-            RealmUtils.save(posts)
-            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
-            
-            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
-                if error != nil { print(error.debugDescription) }
+            Api.apiHandlerQueue.async() {
+                let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
+                guard !skipMapping else { completion(isLastPage, nil); return }
                 
-                self.loadFileInfosFor(posts: posts, completion: { (error) in
-                    completion(isLastPage, nil)
+                let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+                RealmUtils.save(posts)
+                for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
+                
+                self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                    if error != nil { print(error.debugDescription) }
+                    
+                    self.loadFileInfosFor(posts: posts, completion: { (error) in
+                        completion(isLastPage, nil)
+                    })
                 })
-            })
+            }
+            
             
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
@@ -970,16 +952,7 @@ extension Api: PostApi {
                 })
             })
             
-        /*    guard !skipMapping else {
-                completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                return
-            }
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
-                DispatchQueue.main.sync {
-                    completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                }
-            })*/
+
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
             completion(isLastPage, error)
@@ -992,18 +965,11 @@ extension Api: PostApi {
         let array: NSMutableArray = NSMutableArray()
         post.files.forEach({array.add($0.identifier as! NSString)})
         self.manager.post(post, path: path, parameters: ["file_ids" : array.copy()], success: { (operation, mappingResult) in
-//            if let data = operation?.httpRequestOperation.request.httpBody {
-//                print(try! RKNSJSONSerialization.object(from: data))
-//            }
-            
             let resultPost = mappingResult?.firstObject as! Post
             try! RealmUtils.realmForCurrentThread().write {
                 //addition parameters
                 post.status = .default
                 post.identifier = resultPost.identifier
-                var previousPost: Post?
-//                post.isFollowUp = FeedCellBuilder.isFollowUp($0, previous: previousPost)
-//                post.cellType = FeedCellBuilder.typeForPost($0, previous: previousPost)
             }
         }) { (operation, error) in
             completion(Mattermost.Error(error: error))
@@ -1120,13 +1086,17 @@ extension Api : FileApi {
         let path = SOCStringFromStringWithObject(FilePathPatternsContainer.getFileInfosPathPattern(), wrapper)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            let fileInfos = mappingResult.array() as! [File]
-            //PostUtils.update(post: post, fileInfos: fileInfos)
-            for fileInfo in fileInfos {
-                FileUtils.updateFileWith(info: fileInfo)
+            Api.apiHandlerQueue.async() {
+                let fileInfos = mappingResult.array() as! [File]
+                //PostUtils.update(post: post, fileInfos: fileInfos)
+                for fileInfo in fileInfos {
+                    FileUtils.updateFileWith(info: fileInfo)
+                }
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
             }
-            
-            completion(nil)
+
         }) { (error) in
             completion(error)
         }
@@ -1134,23 +1104,24 @@ extension Api : FileApi {
     }
     
     func loadFileInfosFor(posts: [Post], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        let filesGroup = DispatchGroup()
-        var commonError: Mattermost.Error?
-        for post in posts {
-            guard post.files.count > 0 else {continue }
+        Api.apiHandlerQueue.async() {
+            let filesGroup = DispatchGroup()
+            var commonError: Mattermost.Error?
+            for post in posts {
+                guard post.files.count > 0 else {continue }
+                
+                filesGroup.enter()
+                self.getFileInfos(post: post, completion: { (error) in
+                    commonError = error
+                    filesGroup.leave()
+                })
+            }
             
-            filesGroup.enter()
-            self.getFileInfos(post: post, completion: { (error) in
-                commonError = error
-                filesGroup.leave()
-            })
-        }
-        
-        filesGroup.notify(queue: DispatchQueue.main) { 
-            DispatchQueue.main.async {
+            filesGroup.notify(queue: DispatchQueue.main) {
                 completion(commonError)
             }
         }
+
     }
     
     func getInfo(fileId: String) {
