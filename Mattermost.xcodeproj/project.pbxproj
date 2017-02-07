@@ -29,7 +29,6 @@
 		4B4FE7951D802CE00088ABEC /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */; };
 		4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */; };
 		4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */; };
-		4B7270821DABF4C000445586 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7270811DABF4C000445586 /* AlertView.swift */; };
 		4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */; };
 		4B7DB5A51DA5500F000908FB /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A41DA5500F000908FB /* Member.swift */; };
 		4B7DB5A71DA5576D000908FB /* MemberMappingsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A61DA5576D000908FB /* MemberMappingsContainer.swift */; };
@@ -269,6 +268,7 @@
 		D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85D92EC1D400C42002F8800 /* RealmObject.swift */; };
 		D85D92EF1D400F9E002F8800 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D85D92EE1D400F9E002F8800 /* Realm.framework */; };
 		D85D92F01D400FB1002F8800 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D85D92E61D400743002F8800 /* RealmSwift.framework */; };
+		D869BC041E49103200D7F3E4 /* SwiftMessages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D869BC031E49103200D7F3E4 /* SwiftMessages.framework */; };
 		D86EF7EC1D5774FC00BD49A3 /* RealmAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7EB1D5774FC00BD49A3 /* RealmAttributedString.swift */; };
 		D86EF7EE1D57753500BD49A3 /* StringParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7ED1D57753500BD49A3 /* StringParameter.swift */; };
 		D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86EF7F11D57772400BD49A3 /* StringAttribute.swift */; };
@@ -328,7 +328,6 @@
 		4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginNavigationController.swift; path = NavigationControllers/LoginNavigationController.swift; sourceTree = "<group>"; };
 		4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerUrlViewController.swift; sourceTree = "<group>"; };
 		4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketNotificationsUtils.swift; sourceTree = "<group>"; };
-		4B7270811DABF4C000445586 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+Animation.swift"; sourceTree = "<group>"; };
 		4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
 		4B7DB5A41DA5500F000908FB /* Member.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
@@ -585,6 +584,7 @@
 		D85D92E81D40079B002F8800 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D85D92EC1D400C42002F8800 /* RealmObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RealmObject.swift; path = ../Model/RealmObject.swift; sourceTree = "<group>"; };
 		D85D92EE1D400F9E002F8800 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
+		D869BC031E49103200D7F3E4 /* SwiftMessages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftMessages.framework; path = Carthage/Build/iOS/SwiftMessages.framework; sourceTree = "<group>"; };
 		D86EF7EB1D5774FC00BD49A3 /* RealmAttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmAttributedString.swift; sourceTree = "<group>"; };
 		D86EF7ED1D57753500BD49A3 /* StringParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringParameter.swift; sourceTree = "<group>"; };
 		D86EF7F11D57772400BD49A3 /* StringAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringAttribute.swift; sourceTree = "<group>"; };
@@ -617,6 +617,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D869BC041E49103200D7F3E4 /* SwiftMessages.framework in Frameworks */,
 				4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */,
 				8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */,
 				D624CE261D7B0AA7001754F3 /* UITableView_Cache.framework in Frameworks */,
@@ -1122,7 +1123,6 @@
 				D65626661D49674700981057 /* TableSectionHeadersFooters */,
 				4B4497F31D93ECA9009939A9 /* PostStatusView.swift */,
 				8B31024E1D985455001FE701 /* CompactPostView.swift */,
-				4B7270811DABF4C000445586 /* AlertView.swift */,
 				D66BB1521E462D2B00AEB057 /* ConversationTitleView.swift */,
 			);
 			path = Views;
@@ -1312,6 +1312,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D869BC031E49103200D7F3E4 /* SwiftMessages.framework */,
 				4483418C1DF6A83900C39824 /* SkyFloatingLabelTextField.framework */,
 				4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */,
 				8B6778211DAC2FEB00FB7E01 /* QuartzCore.framework */,
@@ -1573,6 +1574,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/UITableView_Cache.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/NVActivityIndicatorView.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ImagePickerSheetController.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftMessages.framework",
 			);
 			name = "Copy Carthage Frameworks";
 			outputPaths = (
@@ -1650,7 +1652,6 @@
 				D8087AE51D416FDB001918E8 /* MappingUtils.swift in Sources */,
 				8BCDDC831DE6E701006D83BC /* InformationChannelSettingsCell.swift in Sources */,
 				8B9E27CD1DC0989000543C6C /* WTMSettingsTableViewController.swift in Sources */,
-				4B7270821DABF4C000445586 /* AlertView.swift in Sources */,
 				8644A47A1DED867A009280EB /* ChannelHeaderAndDescriptionViewController.swift in Sources */,
 				8B3C3ED61DC26AB2005FCAFE /* NotifyPropsMappingContainer.swift in Sources */,
 				D8087AE11D414A71001918E8 /* Channel.swift in Sources */,
@@ -1887,6 +1888,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Maxim Gubin (26358JFF57)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Maxim Gubin (26358JFF57)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = X4SVWSJYVW;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
