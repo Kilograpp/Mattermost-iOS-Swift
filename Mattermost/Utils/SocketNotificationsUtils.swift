@@ -41,7 +41,7 @@ struct NotificationKeys {
             static let RootIdentifier   = "root_id"
             static let ParentIdentifier = "parent_id"
             static let Message          = "message"
-            static let Files            = "filenames"
+            static let Files            = "file_ids"
             //Also : channelId, userId, pendingPostId, Id
             
             //Undefined in Post class as RealmObject
@@ -111,13 +111,14 @@ final class SocketNotificationUtils {
         post.pendingId = dictionary[NotificationKeys.PendingPostIdentifier] as? String
         post.parentId = dictionary[NotificationKeys.DataKeys.PostKeys.ParentIdentifier] as? String
         if let files = dictionary[NotificationKeys.DataKeys.PostKeys.Files] {
-        (files as! [String]).forEach { (fileName) in
-            let file = File()
-            file.rawLink = fileName
-            RealmUtils.save(file)
-            //Api.sharedInstance.getInfo(file: file)
-            post.files.append(file)
-        }
+            (files as! [String]).forEach { (fileName) in
+                let file = File()
+                file.rawLink = fileName
+                Api.sharedInstance.getInfo(fileId: fileName)
+                post.files.append(file)
+                //Api.sharedInstance.getInfo(file: file)
+                
+            }
         }
  
         post.createdAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! TimeInterval/1000.0)
