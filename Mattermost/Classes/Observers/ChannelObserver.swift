@@ -21,14 +21,16 @@ class ChannelObserver {
     }
     weak var delegate : ChannelObserverDelegate? {
         didSet {
-            self.delegate?.didSelectChannelWithIdentifier(self.selectedChannel?.identifier)
+            self.handleSelectedChannel()
         }
     }
     @nonobjc static let sharedObserver = ChannelObserver.sharedInstanse();
     
     //MARK: - Private
     fileprivate func handleSelectedChannel() {
-        self.delegate?.didSelectChannelWithIdentifier(self.selectedChannel?.identifier)        
+        DispatchQueue.main.async {
+            self.delegate?.didSelectChannelWithIdentifier(self.selectedChannel?.identifier)
+        }
     }
 }
 
