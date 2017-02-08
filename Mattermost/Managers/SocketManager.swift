@@ -165,15 +165,16 @@ extension SocketManager: Notifications {
     func handleReceivingNewPost(_ channelId:String,channelName:String,channelType:String,senderName:String,post:Post) {
         // if user is not author
         if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.pendingId!) {
-            RealmUtils.save(post)
+//            RealmUtils.save(post) // -> 2 transactions brings error with realm transaction. Placed to second transaction with post channel.
             
             for file in post.files {
                 if file.identifier != nil {
                     Api.sharedInstance.getInfo(fileId: file.identifier!)
                 }
             }
-            
-            try! RealmUtils.realmForCurrentThread().write({
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write({
+                realm.add(post, update: true)
                 if post.channel != nil {
                     post.channel.lastPostDate = post.createdAt
                 }
@@ -204,13 +205,18 @@ extension SocketManager: Notifications {
     
     func handleReceivingDeletedPost(_ deletedPost:Post) {
         // if user is not author
-        let day = deletedPost.day
-        if postExistsWithIdentifier(deletedPost.identifier!, pendingIdentifier: deletedPost.pendingId!) {
-            let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first
-            guard post != nil else { return }
-            RealmUtils.deleteObject(post!)
-            if day?.posts.count == 0 {
-                RealmUtils.deleteObject(day!)
+        guard postExistsWithIdentifier(deletedPost.identifier!, pendingIdentifier: deletedPost.pendingId!) else { return }
+        let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first
+        guard post != nil else { return }
+        let day = post?.day
+        let daysCount = day?.posts.count
+        
+        try! RealmUtils.realmForCurrentThread().write {
+            RealmUtils.realmForCurrentThread().delete(post!)
+            if daysCount == 1 {
+                RealmUtils.realmForCurrentThread().delete(day!)
+            } else {
+                day?.updateDate = Date()
             }
         }
     }
@@ -303,7 +309,14 @@ extension SocketManager: StateControl {
 extension SocketManager: Validation {
     fileprivate func postExistsWithIdentifier(_ identifier: String, pendingIdentifier: String) -> Bool {
         let realm = try! Realm()
-        let predicate = NSPredicate(format: "%K == %@ || %K == %@", PostAttributes.identifier.rawValue, identifier, PostAttributes.pendingId.rawValue, pendingIdentifier)
+        var predicate:NSPredicate
+        let localIdPredicate = NSPredicate(format: "%K == %@", PostAttributes.identifier.rawValue, identifier)
+        if pendingIdentifier != StringUtils.emptyString() {
+            let pendingIdPredicate = NSPredicate(format: "%K == %@", PostAttributes.pendingId.rawValue, pendingIdentifier)
+            predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [ localIdPredicate, pendingIdPredicate ])
+        } else {
+            predicate = localIdPredicate
+        }
         return realm.objects(Post.self).filter(predicate).first != nil
     }
 }

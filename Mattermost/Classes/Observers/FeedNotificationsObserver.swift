@@ -57,23 +57,30 @@ extension FeedNotificationsObserver: Interface {
                         break
                     }
                     
-                    self.tableView.beginUpdates()
-                    self.tableView.insertSections(IndexSet(insertions), with: .none)
-                    modifications.forEach({ (index) in
-                        var indexes: [IndexPath] = []
+                    var rowsToInsert: [IndexPath] = []
+                    var sectionsToReload: [Int] = []
+                    
+                    for index in modifications {
                         let newRowsCount = self.days[index].posts.count - self.tableView.numberOfRows(inSection: index)
-                        
                         if newRowsCount == 1 && insertions.count == 0 && index == 0{ // fix me plzzz
-                            indexes.append(IndexPath(row: 0, section: index))
+                            rowsToInsert.append(IndexPath(row: 0, section: index))
                         } else {
+                            guard newRowsCount > 0 else {
+                                sectionsToReload.append(index);
+                                continue
+                            }
                             for row in 0..<newRowsCount {
-                                indexes.append(IndexPath(row: self.tableView.numberOfRows(inSection: index) + row, section: index))
+                                rowsToInsert.append(IndexPath(row: self.tableView.numberOfRows(inSection: index) + row, section: index))
                             }
                         }
-                        
-                        self.tableView.insertRows(at: indexes, with: .none)
-                    })
 
+                    }
+
+                    
+                    self.tableView.beginUpdates()
+                    self.tableView.insertSections(IndexSet(insertions), with: .top)
+                    self.tableView.reloadSections(IndexSet(sectionsToReload), with: .automatic)
+                    self.tableView.insertRows(at: rowsToInsert, with: .automatic)
                     self.tableView.endUpdates()
                     
                 default: break
@@ -142,7 +149,11 @@ extension FeedNotificationsObserver {
         return days.count
     }
     func postForIndexPath(_ indexPath:IndexPath) -> Post {
-        return days![indexPath.section].sortedPosts()[self.numberOfRows(indexPath.section) - indexPath.row - 1]
+        var postIndex: Int = self.numberOfRows(indexPath.section) - indexPath.row - 1
+        if postIndex < 0 {
+            postIndex = 0
+        }
+        return days![indexPath.section].sortedPosts()[postIndex]
     }
     func lastPost() -> Post {
         return results!.last!

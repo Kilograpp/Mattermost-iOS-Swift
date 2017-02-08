@@ -153,7 +153,7 @@ extension TeamViewController: Navigation {
 extension TeamViewController: Configuration {
     func prepareResults() {
         let sortName = TeamAttributes.displayName.rawValue
-        self.results = RealmUtils.realmForCurrentThread().objects(Team.self).sorted(byProperty: sortName, ascending: true)
+        self.results = RealmUtils.realmForCurrentThread().objects(Team.self).sorted(byKeyPath: sortName, ascending: true)
     }
 }
 

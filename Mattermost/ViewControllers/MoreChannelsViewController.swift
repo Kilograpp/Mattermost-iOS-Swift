@@ -178,7 +178,7 @@ extension  MoreChannelsViewController: Configuration {
                 let isInChannel = Channel.isUserInChannelWith(channelId: channel.identifier!)
                 self.results.append((channel, isInChannel))
             }
-            let existChannels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+            let existChannels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byKeyPath: sortName, ascending: true)
             for channel in existChannels {
                 self.results.append((channel, channel.currentUserInChannel))
             }
@@ -197,7 +197,7 @@ extension  MoreChannelsViewController: Configuration {
             let sortName = UserAttributes.username.rawValue
             let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@", Constants.Realm.SystemUserIdentifier,
                                          Preferences.sharedInstance.currentUserId!)
-            let preferedUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName, ascending: true)
+            let preferedUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byKeyPath: sortName, ascending: true)
             for user in preferedUsers {
                 self.results.append((user, user.isPreferedDirectChannel()))
             }

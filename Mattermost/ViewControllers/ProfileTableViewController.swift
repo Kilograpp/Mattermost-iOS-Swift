@@ -210,7 +210,7 @@ extension ProfileViewController: Request {
             SDImageCache.shared().removeImage(forKey: self.user?.smallAvatarCacheKey())
             SDImageCache.shared().removeImage(forKey: self.user?.avatarLink)
             
-            ImageDownloader.downloadFeedAvatarForUser(self.user!) { [weak self] (image, error) in
+            ImageDownloader.downloadFeedAvatarForUser(self.user!) { (image, error) in
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadRightMenuNotification), object: nil)
             }
             ImageDownloader.downloadFullAvatarForUser(self.user!) { _,_ in }
