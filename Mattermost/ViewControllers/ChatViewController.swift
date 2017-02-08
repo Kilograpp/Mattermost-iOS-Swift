@@ -237,7 +237,6 @@ extension ChatViewController: Setup {
         self.navigationItem.titleView = navigationTitleView
         navigationTitleView.configureWithChannel(channel: self.channel)
        
-        
 //        self.navigationItem.titleView?.addGestureRecognizer(tapGestureRecognizer)
         
         
@@ -599,11 +598,7 @@ extension ChatViewController: Request {
         
         Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
             guard error == nil else {
-                if (self.channel.identifier!.characters.count < 4) {
-                    self.hideLoaderView()
-                    return
-                }
-                self.handleErrorWith(message: (error?.message)!);
+                self.handleErrorWith(message: error!.message)
                 return
             }
             
@@ -623,19 +618,19 @@ extension ChatViewController: Request {
         
         if isInitial {  self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0) }
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
-            DispatchQueue.main.async {
-            self.tableView.reloadData()
-            if isInitial {   self.hideLoaderView() }
-                self.hideLoaderView()
-                self.isLoadingInProgress = false
-                self.hasNextPage = true
-                self.hasNewestPage = false
-                self.dismissKeyboard(true)
-                
-                Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
-                })
+            
+            if isInitial {
+                self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
             }
+            self.hideLoaderView()
+            self.isLoadingInProgress = false
+            self.hasNextPage = true
+            self.hasNewestPage = false
+            self.dismissKeyboard(true)
+            
+            Api.sharedInstance.updateLastViewDateForChannel(self.channel, completion: {_ in
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+            })
         })
     }
     
@@ -985,9 +980,7 @@ extension ChatViewController: ChannelObserverDelegate {
         
         //old channel
         //unsubscribing from realm and channelActions
-        if resultsObserver != nil {
-            resultsObserver.unsubscribeNotifications()
-        }
+
         self.resultsObserver = nil
         self.startTextDialogueLabel.isHidden = true
         self.startHeadDialogueLabel.isHidden = true
@@ -1006,7 +999,7 @@ extension ChatViewController: ChannelObserverDelegate {
         self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: identifier)
         
         navigationTitleView.configureWithChannel(channel: channel)
-        self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
+        
         self.textView.resignFirstResponder()
 
         guard !self.hasNewestPage else { return }
