@@ -10,7 +10,6 @@ import RealmSwift
 import Realm
 
 private protocol Interface: class {
-    static func update(post: Post, fileInfos: [File])
     func removeAttachmentAtIdex(_ index: Int)
 }
 
@@ -60,12 +59,7 @@ final class PostUtils: NSObject {
 
 //MARK: Interface
 extension PostUtils: Interface {
-    static func update(post: Post, fileInfos: [File]) {
-        for fileInfo in fileInfos {
-            FileUtils.updateFileWith(info: fileInfo)
-        }
-        //NEED UPDATE
-    }
+
     
     func removeAttachmentAtIdex(_ index: Int) {
         if files.indices.contains(index) {

@@ -136,7 +136,7 @@ extension FeedBaseTableViewCell {
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
-                if let readChange = properties.first(where: { $0.name == "rootId" }) {
+                if properties.first(where: { $0.name == "rootId" }) != nil {
                     self.postStatusView.isHidden = true
                 }
 

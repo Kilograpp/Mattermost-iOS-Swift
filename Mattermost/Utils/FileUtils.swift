@@ -17,7 +17,6 @@ private protocol Interface {
     static func previewLinkForFile(_ file: File) -> URL?
    // static func thumbPostfixForInternalFile(_ file: File) -> String?
     static func removeLocalCopyOf(file: File)
-    static func updateFileWith(info: File)
     static func scaledImageHeightWith(file: File) -> CGFloat
     static func scaledImageSizeWith(file: File) -> CGSize
 }
@@ -67,19 +66,14 @@ final class FileUtils {
     }
     
     static func fileIsImage(_ file: File) -> Bool {
-        return self.stringContainsImagePostfixes(file.name)
+        return self.stringContainsImagePrefix(file.mimeType)
     }
     
-    static func stringContainsImagePostfixes(_ string: String?) -> Bool {
-        let pathExtension = URL(string: string ?? StringUtils.emptyString())?.pathExtension
-        if  pathExtension?.caseInsensitiveCompare("png")  == .orderedSame ||
-            pathExtension?.caseInsensitiveCompare("jpg")  == .orderedSame ||
-            pathExtension?.caseInsensitiveCompare("jpeg") == .orderedSame {
-            return true
-        } else {
-            return false
-        }
+    static func stringContainsImagePrefix(_ string: String?) -> Bool {
+        return string?.hasPrefix("image") ?? false
+        
     }
+
     
     static func fileNameFromUrl(url:URL) -> String {
         let rawLink = url.absoluteString
@@ -95,29 +89,7 @@ final class FileUtils {
         }
     }
     
-    static func updateFileWith(info: File) {
-        let realm = RealmUtils.realmForCurrentThread()
-        guard let file = realm.object(ofType: File.self, forPrimaryKey: info.identifier) else {return}
-        
-        //Maybe append post with adding file to it
-        try! realm.write {
-            file.createAt = info.createAt
-            file.deleteAt = info.deleteAt
-            file.ext = info.ext
-            file.mimeType = info.mimeType
-            file.name = info.name
-            file.postId = info.postId
-            file.size = info.size
-            file.updateAt = info.updateAt
-            file.userId = info.userId
-                
-            file.hasPreview = info.hasPreview
-            file.height = info.height
-            file.width = info.width
-            file.computeIsImage()
-            file.computeRawLink()
-        }
-    }
+ 
     
     static func scaledImageSizeWith(file: File) -> CGSize {
         let maxWidth = UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize

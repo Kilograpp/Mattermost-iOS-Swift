@@ -198,8 +198,8 @@ extension ServerUrlViewController {
             self.errorLabel.isHidden = true
             self.nextButton.isEnabled = true
         } else {
-            let addres = Preferences.sharedInstance.serverUrl
-            var urlAddress = String.init(format: "%@%@", "https://", addres!)
+            let address = Preferences.sharedInstance.serverUrl
+            let urlAddress = String(format: "%@%@", "https://", address!)
             Preferences.sharedInstance.serverUrl = urlAddress
             if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
                 self.errorLabel.isHidden = true

@@ -11,6 +11,7 @@ import RealmSwift
 
 enum DayAttributes: String {
     case key = "key"
+    case updateDate = "updateDate"
     case channelId = "channelId"
     case text = "text"
     case date = "date"
@@ -24,6 +25,7 @@ final class Day: RealmObject {
     dynamic var key: String?
     dynamic var channelId: String?
     dynamic var text: String?
+    dynamic var updateDate: Date?
     dynamic var date: Date? {
         didSet {
             self.text = DateFormatter.sharedConversionSectionsDateFormatter?.string(from: self.date!)

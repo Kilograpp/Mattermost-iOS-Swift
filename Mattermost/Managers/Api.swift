@@ -92,10 +92,6 @@ final class Api {
     
 //MARK: Properties
     static let sharedInstance = Api()
-    fileprivate static let apiHandlerQueue: DispatchQueue = {
-        let queue = DispatchQueue(label: "com.kilograpp.api.handler", qos: .utility)
-        return queue
-    }()
     fileprivate var _managerCache: ObjectManager?
     fileprivate var downloadOperationsArray = Array<AFRKHTTPRequestOperation>()
     fileprivate var networkReachabilityManager = NetworkReachabilityManager.init()
@@ -136,9 +132,13 @@ extension Api: PreferencesApi {
        let path = PreferencesPathPatternsContainer.savePathPattern()
         
         self.manager.savePreferencesAt(path: path, parameters: [params], success: { (success) in
-            complection(nil)
+            DispatchQueue.main.async {
+                complection(nil)
+            }
         }) { (error) in
-            complection(error)
+            DispatchQueue.main.async {
+                complection(error)
+            }
         }
     }
     
@@ -158,9 +158,13 @@ extension Api: PreferencesApi {
                     }
                 }
             }
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
             }, failure: { (error) in
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
         })
     }
 }
@@ -187,9 +191,13 @@ extension Api: NotifyPropsApi {
                 notifyProps?.push = object.push
                 notifyProps?.pushStatus = notifyProps?.pushStatus
             }
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
             }, failure: { (error) in
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
         })
     }
 }
@@ -201,39 +209,38 @@ extension Api: TeamApi {
         let path = TeamPathPatternsContainer.initialLoadPathPattern()
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
-            Api.apiHandlerQueue.async() {
-                let teams = MappingUtils.fetchAllTeams(mappingResult)
-                //let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
-                let preferences = MappingUtils.fetchPreferencesFromInitialLoad(mappingResult)
-                preferences.forEach{ $0.computeKey() }
-                Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
-                RealmUtils.save(teams)
-                let currentUser = DataManager.sharedInstance.currentUser
-                let realm = RealmUtils.realmForCurrentThread()
-                let oldPreferences = currentUser?.preferences
-                try! realm.write {
-                    currentUser?.preferences.removeAll()
-                    realm.delete(oldPreferences!)
-                    realm.add(preferences, update: true)
-                    currentUser?.preferences.append(objectsIn: preferences)
+            let teams = MappingUtils.fetchAllTeams(mappingResult)
+            //let users = MappingUtils.fetchUsersFromInitialLoad(mappingResult)
+            let preferences = MappingUtils.fetchPreferencesFromInitialLoad(mappingResult)
+            preferences.forEach{ $0.computeKey() }
+            Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
+            RealmUtils.save(teams)
+            let currentUser = DataManager.sharedInstance.currentUser
+            let realm = RealmUtils.realmForCurrentThread()
+            let oldPreferences = currentUser?.preferences
+            try! realm.write {
+                currentUser?.preferences.removeAll()
+                realm.delete(oldPreferences!)
+                realm.add(preferences, update: true)
+                currentUser?.preferences.append(objectsIn: preferences)
+            }
+            if (teams.count == 1) {
+                DataManager.sharedInstance.currentTeam = teams.first
+                Preferences.sharedInstance.currentTeamId = teams.first?.identifier
+                Preferences.sharedInstance.save()
+                DispatchQueue.main.async {
+                    completion(false, nil)
                 }
-                if (teams.count == 1) {
-                    DataManager.sharedInstance.currentTeam = teams.first
-                    Preferences.sharedInstance.currentTeamId = teams.first?.identifier
-                    Preferences.sharedInstance.save()
-                    DispatchQueue.main.async {
-                        completion(false, nil)
-                    }
-                    
-                } else {
-                    DispatchQueue.main.async {
-                        completion(true, nil)
-                    }
+                
+            } else {
+                DispatchQueue.main.async {
+                    completion(true, nil)
                 }
             }
-            
         }) { (error) in
-            completion(true, error)
+            DispatchQueue.main.async {
+                completion(true, error)
+            }
         }
     }
     
@@ -243,9 +250,13 @@ extension Api: TeamApi {
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             Preferences.sharedInstance.siteName = MappingUtils.fetchSiteName(mappingResult)
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }) { (error) in
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         }
     }
     
@@ -254,9 +265,13 @@ extension Api: TeamApi {
         let params: Dictionary = ["invites" : invites]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }) { (error) in
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         }
     }
     func loadTeamMembersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -264,24 +279,22 @@ extension Api: TeamApi {
         let path = SOCStringFromStringWithObject(TeamPathPatternsContainer.teamMembersIds(), currentTeam)
         
         self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
-            Api.apiHandlerQueue.async()  {
-                let teamMembers = mappingResult?.array() as! [Member]
-                let realm = RealmUtils.realmForCurrentThread()
-                for teamMember in teamMembers {
-                    let user = realm.object(ofType: User.self, forPrimaryKey: teamMember.userId)
-                    try! realm.write {
-                        user?.isOnTeam = true
-                        user?.directChannel()?.isInterlocuterOnTeam = true
-                    }
+            let teamMembers = mappingResult?.array() as! [Member]
+            let realm = RealmUtils.realmForCurrentThread()
+            for teamMember in teamMembers {
+                let user = realm.object(ofType: User.self, forPrimaryKey: teamMember.userId)
+                try! realm.write {
+                    user?.isOnTeam = true
+                    user?.directChannel()?.isInterlocuterOnTeam = true
                 }
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
-                
             }
-            
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }) { (operation, error) in
-            completion(Error.errorWithGenericError(error))
+            DispatchQueue.main.async {
+                completion(Error.errorWithGenericError(error))
+            }
         }
     }
 }
@@ -293,27 +306,25 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.listPathPattern(), DataManager.sharedInstance.currentTeam)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            Api.apiHandlerQueue.async()  {
-                let realm = RealmUtils.realmForCurrentThread()
-                
-                let channels = mappingResult.array() as! [Channel]//MappingUtils.fetchAllChannelsFromList(mappingResult)
-                let oldChannels = try! Realm().objects(Channel.self)
-                try! realm.write({
-                    oldChannels.forEach {
-                        $0.currentUserInChannel = false
-                    }
-                    channels.forEach {
-                        $0.currentUserInChannel = true
-                        $0.computeTeam()
-                        $0.gradientType = Int(arc4random_uniform(5))
-                        realm.add($0, update: true)
-                    }
-                })
-        
+            let realm = RealmUtils.realmForCurrentThread()
+            
+            let channels = mappingResult.array() as! [Channel]//MappingUtils.fetchAllChannelsFromList(mappingResult)
+            let oldChannels = try! Realm().objects(Channel.self)
+            try! realm.write({
+                oldChannels.forEach {
+                    $0.currentUserInChannel = false
+                }
+                channels.forEach {
+                    $0.currentUserInChannel = true
+                    $0.computeTeam()
+                    $0.gradientType = Int(arc4random_uniform(5))
+                    realm.add($0, update: true)
+                }
+            })
+            DispatchQueue.main.async {
                 completion(nil)
             }
-            
-            }, failure: completion)
+        }, failure: completion)
     }
     
     func loadExtraInfoForChannel(_ channelId: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -334,21 +345,26 @@ extension Api: ChannelApi {
                     member.computeDisplayNameWidth()
                 }
             })
-            completion(nil)
-            }, failure: completion)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
     }
     
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updateLastViewDatePathPattern(), channel)
-        
+        let channelId = channel.identifier!
         self.manager.post(path: path, success: { (mappingResult) in
+            let channel = Channel.objectById(channelId)!
             UIApplication.shared.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber - channel.mentionsCount  
             try! RealmUtils.realmForCurrentThread().write({
                 channel.lastViewDate = channel.lastPostDate
                 channel.mentionsCount = 0
             })
-            completion(nil)
-            }, failure: completion)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
     }
     
     func loadChannelsMoreWithCompletion(_ completion: @escaping (_ channels: Array<Channel>?, _ error: Mattermost.Error?) -> Void) {
@@ -356,9 +372,13 @@ extension Api: ChannelApi {
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let allChannels = MappingUtils.fetchAllChannelsFromList(mappingResult)
-            completion(allChannels, nil)
+            DispatchQueue.main.async {
+                completion(allChannels, nil)
+            }
         }, failure: { (error) in
-            completion(nil, error)
+            DispatchQueue.main.async {
+                completion(nil, error)
+            }
         })
     }
     
@@ -367,8 +387,10 @@ extension Api: ChannelApi {
         let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
-            completion(nil)
-            }, failure: completion)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
     }
     
     func updateHeader(_ header:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
@@ -382,8 +404,10 @@ extension Api: ChannelApi {
             try! realm.write {
                 channel?.header = header
             }
-            completion(nil)
-            }, failure: completion)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
     }
     
     func updatePurpose(_ purpose:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
@@ -397,8 +421,10 @@ extension Api: ChannelApi {
             try! realm.write {
                 channel?.purpose = purpose
             }
-            completion(nil)
-            }, failure: completion)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
     }
     
     func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
@@ -421,8 +447,10 @@ extension Api: ChannelApi {
             "update_at"       : Int(NSDate().timeIntervalSince1970)]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
-            completion(nil)
-            }, failure: completion)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
     }
     
     
@@ -448,9 +476,13 @@ extension Api: ChannelApi {
                 channel.gradientType = Int(arc4random_uniform(5))
                 realm.add(channel)
             })
-            completion(channel ,nil)
+            DispatchQueue.main.async {
+                completion(channel ,nil)
+            }
         }) { (error) in
-            completion(nil, error)
+            DispatchQueue.main.async {
+                completion(nil, error)
+            }
         }
     }
 
@@ -467,9 +499,13 @@ extension Api: ChannelApi {
                 channel.computeDispayNameIfNeeded()
                 realm.add(channel)
             })
-            completion(nil ,nil)
-            }) { (error) in
+            DispatchQueue.main.async {
+                completion(nil ,nil)
+            }
+        }) { (error) in
+            DispatchQueue.main.async {
                 completion(nil, error)
+            }
         }
     }
     
@@ -485,8 +521,9 @@ extension Api: ChannelApi {
             
             let notificationName = Constants.NotificationsNames.UserJoinNotification
             NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: channel)
-            
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
             }, failure: completion)
     }
     
@@ -499,7 +536,9 @@ extension Api: ChannelApi {
             try! RealmUtils.realmForCurrentThread().write {
                 Channel.objectById(channelId!)?.currentUserInChannel = true
             }
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
             }, failure: completion)
     }
     
@@ -507,9 +546,13 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.deleteChannelPathPattern(), channel)
         
         self.manager.post(path: path, success: { (mappingResult) in
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }, failure: { (error) in
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         })
     }
     
@@ -533,7 +576,9 @@ extension Api: ChannelApi {
                 channel.extraUpdateDate = obtainedChannel?.extraUpdateDate
                 channel.mentionsCount = obtainedChannel!.mentionsCount
             })
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }, failure: completion)
     }
     
@@ -547,13 +592,15 @@ extension Api: ChannelApi {
             try! realm.write({
                 responseArray.forEach {
                     let newMentionsCount = ($0["mention_count"]! as! NSNumber).intValue
-                    guard let updateChannel = try! Realm().objects(Channel.self).filter("identifier = %@", $0["channel_id"]).first else { return }
+                    guard let updateChannel = try! Realm().objects(Channel.self).filter("identifier = %@", $0["channel_id"]!).first else { return }
                     updateChannel.lastViewDate = Date(timeIntervalSince1970: TimeInterval(($0["last_viewed_at"]! as! NSNumber).doubleValue) / 1000)
                     updateChannel.messagesCount! = String(describing: ($0["msg_count"]! as! NSNumber).intValue)
                     updateChannel.mentionsCount = newMentionsCount
                 }
             })
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }, failure: completion)
     }
 }
@@ -579,7 +626,6 @@ extension Api: UserApi {
             _ = DataManager.sharedInstance.currentUser
 
             SocketManager.sharedInstance.setNeedsConnect()
-            //completion(nil)
             NotificationsUtils.subscribeToRemoteNotificationsIfNeeded(completion: completion)
             }, failure: completion)
     }
@@ -589,8 +635,10 @@ extension Api: UserApi {
         let parameters = ["user_id" : Preferences.sharedInstance.currentUserId!]
         
         self.manager.post(path: path, parameters: parameters, success: { (mappingResult) in
-            completion(nil)
-            }, failure: completion)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
     }
     
     func loadCurrentUser(completion: @escaping (Error?) -> Void) {
@@ -598,22 +646,29 @@ extension Api: UserApi {
         
         self.manager.get(path: path, success: { (mappingResult, skipMapping) in
             UserUtils.updateCurrentUserWith(serverUser: mappingResult.firstObject as! User)
-            
-            completion(nil)
-            }, failure: completion)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
     }
     
     func loadUsersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = UserPathPatternsContainer.usersByIdsPathPattern()
         
-        self.manager.post(nil, path: path, parametersAs: ids, success: { (operation, mappingResult) in
-            let responseDictionary = operation?.httpRequestOperation.responseString!.toDictionary()
+        self.manager.post(path: path, arrayParameters: ids, success: { (operation, mappingResult) in
+            let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
             users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
-            completion(nil)
-        }) { (operation, error) in
-            completion(Error.errorWithGenericError(error))
-        }
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+
+        }, failure: { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        })
+
     }
     
     func loadCompleteUsersList(_ completion:@escaping (_ error: Mattermost.Error?) -> Void) {
@@ -623,8 +678,9 @@ extension Api: UserApi {
             let users = MappingUtils.fetchUsersFromCompleteList(mappingResult)
             users.forEach {$0.computeDisplayName()}
             RealmUtils.save(users)
-                        
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }, failure: completion)
     }
     
@@ -635,21 +691,24 @@ extension Api: UserApi {
         self.manager.getObjectsAt(path: path!, success: {  (operation, mappingResult) in
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
-            
-            completion(users, nil)
+            DispatchQueue.main.async {
+                completion(users, nil)
+            }
             
         }, failure:{ error in
-            completion(nil, error)
+            DispatchQueue.main.async {
+                completion(nil, error)
+            }
         })
     }
     
     func loadUsersListFrom(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromChannelPathPattern(), channel)!
-        
+        let channelId = channel.identifier!
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             let users = MappingUtils.fetchUsersFrom(response: responseDictionary!)
-            
+            let channel = Channel.objectById(channelId)!
             users.forEach({ UserUtils.updateOnTeamAndPreferedStatesFor(user: $0) })
             for user in users {
                 let existUser = User.objectById(user.identifier)
@@ -658,7 +717,9 @@ extension Api: UserApi {
                     try! realm.write { channel.members.append(existUser!) }
                 }
             }
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }, failure: completion)
     }
     
@@ -669,42 +730,44 @@ extension Api: UserApi {
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
             let ids = Array(responseDictionary!.keys.map{$0})
-            let realm = RealmUtils.realmForCurrentThread()
             for userId in ids {
                 let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
                 users.append(user)
             }
-            completion(nil, users)
+            DispatchQueue.main.async {
+                completion(nil, users)
+            }
         }, failure:{ error in
+            DispatchQueue.main.async {
                 completion(error, nil)
+            }
         })
     }
     
     func loadUsersFromCurrentTeam(completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void) {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.usersFromCurrentTeamPathPattern(), DataManager.sharedInstance.currentTeam)!
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            print(operation.httpRequestOperation.responseString)
-            //Temp cap
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             var users = Array<User>()
             let ids = Array(responseDictionary!.keys.map{$0})
-            let realm = RealmUtils.realmForCurrentThread()
             for userId in ids {
                 let user = UserUtils.userFrom(dictionary: (responseDictionary?[userId])! as! Dictionary<String, Any>)
                 users.append(user)
             }
-            completion(nil, users)
+            DispatchQueue.main.async {
+                completion(nil, users)
+            }
             
         }, failure:{ error in
-            completion(error, nil)
+            DispatchQueue.main.async {
+                completion(error, nil)
+            }
         })
     }
     
     func autocompleteUsersIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ usersInChannel: Array<User>?, _ usersOutOfChannel:  Array<User>?) -> Void) {
         let path = SOCStringFromStringWithObject(UserPathPatternsContainer.autocompleteUsersInChannelPathPattern(), channel)!
         self.manager.getObjectsAt(path: path, success: {  (operation, mappingResult) in
-            print(operation.httpRequestOperation.responseString)
-            //Temp cap
             let responseDictionary = operation.httpRequestOperation.responseString!.toDictionary()
             let inChannelDictionary = responseDictionary?["in_channel"] as! Array<Dictionary<String, Any>>
             let outOfChannelDictionary = responseDictionary?["out_of_channel"] as! Array<Dictionary<String, Any>>
@@ -718,7 +781,9 @@ extension Api: UserApi {
                 let user = UserUtils.userFrom(dictionary: userDescription)
                 usersOutOfChannel.append(user)
             }
-            completion(nil, usersInChannel, usersOutOfChannel)
+            DispatchQueue.main.async {
+                completion(nil, usersInChannel, usersOutOfChannel)
+            }
         }, failure:{ error in
             completion(error, nil, nil)
         })
@@ -751,9 +816,13 @@ extension Api: UserApi {
                 user?.computeDisplayNameWidth()
                 user?.email = email ?? user?.email
             }
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }) { (error) in
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         }
     }
     
@@ -765,10 +834,13 @@ extension Api: UserApi {
                       "new_password" : newPassword] as [String : Any]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
-            
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }) { (error) in
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         }
     }
     
@@ -778,11 +850,17 @@ extension Api: UserApi {
         let path = UserPathPatternsContainer.userUpdateImagePathPattern()
     
         self.manager.post(image: profileImage, identifier: "image_id", name: "image", path: path, parameters: nil, success: { (mappingResult) in
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }, failure: { (error) in
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         }) { (value) in
-            progress(value)
+            DispatchQueue.main.async {
+                progress(value)
+            }
         }
     }
     
@@ -792,7 +870,9 @@ extension Api: UserApi {
         let params = ["device_id" : "apple:" + deviceUUID!]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }, failure: { (error) in
             completion(error)
         })
@@ -803,9 +883,13 @@ extension Api: UserApi {
         let params = [ "email" : email ]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }, failure: { (error) in
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         })
     }
     
@@ -813,7 +897,7 @@ extension Api: UserApi {
         var missingUserIds = Array<String>()
         for post in posts {
             let authorId = post.authorId
-            if (User.objectById(authorId!) == nil) && !missingUserIds.contains(authorId!) {
+            if User.objectById(authorId!) == nil && !missingUserIds.contains(authorId!) {
                 missingUserIds.append(post.authorId!)
             }
         }
@@ -821,8 +905,6 @@ extension Api: UserApi {
         guard missingUserIds.count > 0 else { completion(nil); return }
         
         self.loadUsersListBy(ids: missingUserIds, completion: { (error) in
-            if error != nil { print(error!) }
-            
             completion(error)
         })
     }
@@ -836,17 +918,16 @@ extension Api: PostApi {
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             guard !skipMapping else { completion(nil); return }
-
-            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-//            RealmUtils.save(posts)
-            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
+            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
                 if error != nil { print(error.debugDescription) }
-                
                 self.loadFileInfosFor(posts: posts, completion: { (error) in
+
                     RealmUtils.save(posts)
-                    completion(error)
+                    DispatchQueue.main.async {
+                        completion(error)
+                    }
                 })
             })
         }) { (error) in
@@ -870,29 +951,21 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.nextPagePathPattern(), wrapper)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            Api.apiHandlerQueue.async() {
-                let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
-                guard !skipMapping else { completion(isLastPage, nil); return }
-                
-                let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-                
-                for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
-                
-                self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
-                    if error != nil { print(error.debugDescription) }
-                    
-                    self.loadFileInfosFor(posts: posts, completion: { (error) in
-                        Api.apiHandlerQueue.async() {
-                            RealmUtils.save(posts)
-//                            DispatchQueue.main.async {
-                                completion(isLastPage, nil)
-//                            }
-                        }
-                        
-                    })
-                })
-            }
+            let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
+            guard !skipMapping else { completion(isLastPage, nil); return }
             
+            let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
+            
+            self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
+                if error != nil { print(error.debugDescription) }
+                
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    RealmUtils.save(posts)
+                    DispatchQueue.main.async {
+                        completion(isLastPage, nil)
+                    }
+                })
+            })
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
             completion(isLastPage, error)
@@ -905,28 +978,18 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.beforePostPathPattern(), wrapper)
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            /*        guard !skipMapping else {
-                completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                return
-            }
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
-                DispatchQueue.main.sync {
-                    completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                }
-            })*/
-            
             let isLastPage = MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size)
             guard !skipMapping else { completion(isLastPage, nil); return }
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-            RealmUtils.save(posts)
+            
             for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
                 if error != nil { print(error.debugDescription) }
                 
                 self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    RealmUtils.save(posts)
                     completion(isLastPage, nil)
                 })
             })
@@ -947,27 +1010,19 @@ extension Api: PostApi {
             guard !skipMapping else { completion(isLastPage, nil); return }
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-            RealmUtils.save(posts)
+            
             for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
                 if error != nil { print(error.debugDescription) }
                 
                 self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    RealmUtils.save(posts)
                     completion(isLastPage, nil)
                 })
             })
             
-        /*    guard !skipMapping else {
-                completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                return
-            }
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                RealmUtils.save(MappingUtils.fetchConfiguredPosts(mappingResult))
-                DispatchQueue.main.sync {
-                    completion(MappingUtils.isLastPage(mappingResult, pageSize: wrapper.size), nil)
-                }
-            })*/
+
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
             completion(isLastPage, error)
@@ -980,18 +1035,11 @@ extension Api: PostApi {
         let array: NSMutableArray = NSMutableArray()
         post.files.forEach({array.add($0.identifier as! NSString)})
         self.manager.post(post, path: path, parameters: ["file_ids" : array.copy()], success: { (operation, mappingResult) in
-//            if let data = operation?.httpRequestOperation.request.httpBody {
-//                print(try! RKNSJSONSerialization.object(from: data))
-//            }
-            
             let resultPost = mappingResult?.firstObject as! Post
             try! RealmUtils.realmForCurrentThread().write {
                 //addition parameters
                 post.status = .default
                 post.identifier = resultPost.identifier
-                var previousPost: Post?
-//                post.isFollowUp = FeedCellBuilder.isFollowUp($0, previous: previousPost)
-//                post.cellType = FeedCellBuilder.typeForPost($0, previous: previousPost)
             }
         }) { (operation, error) in
             completion(Mattermost.Error(error: error))
@@ -1109,14 +1157,24 @@ extension Api : FileApi {
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let fileInfos = mappingResult.array() as! [File]
-            //PostUtils.update(post: post, fileInfos: fileInfos)
-            for fileInfo in fileInfos {
-                FileUtils.updateFileWith(info: fileInfo)
+
+            post.files.removeAll()
+            
+            
+            for file in fileInfos {
+                file.computeIsImage()
+                file.computeRawLink()
+                post.files.append(file)
+
             }
             
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }) { (error) in
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         }
         
     }
@@ -1133,12 +1191,12 @@ extension Api : FileApi {
                 filesGroup.leave()
             })
         }
-        
-        filesGroup.notify(queue: DispatchQueue.main) { 
-            DispatchQueue.main.async {
-                completion(commonError)
-            }
+
+        filesGroup.notify(queue: ObjectManager.responseHandlerQueue) {
+            completion(commonError)
         }
+        
+
     }
     
     func getInfo(fileId: String) {

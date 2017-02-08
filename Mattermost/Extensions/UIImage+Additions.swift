@@ -38,8 +38,6 @@ extension UIImage {
         let rect = CGRect(x: 0, y: 0, width: 40, height: 40) as CGRect
         let bundleImage = UIImage.avatarPlaceholderImage
         UIGraphicsBeginImageContextWithOptions(rect.size, true, 0);
-        let context = UIGraphicsGetCurrentContext()!
-
         bundleImage.draw(in: rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()! as UIImage;
         UIGraphicsEndImageContext()

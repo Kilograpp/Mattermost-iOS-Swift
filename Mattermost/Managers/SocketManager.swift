@@ -205,13 +205,18 @@ extension SocketManager: Notifications {
     
     func handleReceivingDeletedPost(_ deletedPost:Post) {
         // if user is not author
-        let day = deletedPost.day
-        if postExistsWithIdentifier(deletedPost.identifier!, pendingIdentifier: deletedPost.pendingId!) {
-            let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first
-            guard post != nil else { return }
-            RealmUtils.deleteObject(post!)
-            if day?.posts.count == 0 {
-                RealmUtils.deleteObject(day!)
+        guard postExistsWithIdentifier(deletedPost.identifier!, pendingIdentifier: deletedPost.pendingId!) else { return }
+        let post = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", "identifier", deletedPost.identifier!).first
+        guard post != nil else { return }
+        let day = post?.day
+        let daysCount = day?.posts.count
+        
+        try! RealmUtils.realmForCurrentThread().write {
+            RealmUtils.realmForCurrentThread().delete(post!)
+            if daysCount == 1 {
+                RealmUtils.realmForCurrentThread().delete(day!)
+            } else {
+                day?.updateDate = Date()
             }
         }
     }

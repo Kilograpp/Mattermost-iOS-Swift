@@ -91,9 +91,6 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        
-        
         replaceStatusBar()
     }
     
@@ -388,23 +385,25 @@ extension ChatViewController : Private {
         let replyAction = UIAlertAction(title: "Reply", style: .default) { action -> Void in
             self.selectedPost = post
             self.completePost.configureWithPost(self.selectedPost, action: ActionType.Reply)
-            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendReply)
+            self.configureRightButtonWithTitle("Send".localized, action: Constants.PostActionType.SendReply)
             self.completePost.isHidden = false
             self.presentKeyboard(true)
         }
         actionSheetController.addAction(replyAction)
         
-        let copyAction = UIAlertAction(title: "Copy", style: .default) { action -> Void in
+        let copyAction = UIAlertAction(title: "Copy".localized, style: .default) { action -> Void in
             UIPasteboard.general.string = post.message
+            AlertManager.sharedManager.showTextCopyMessage()
         }
         actionSheetController.addAction(copyAction)
         
-        let permalinkAction = UIAlertAction(title: "Permalink", style: .default) { action -> Void in
+        let permalinkAction = UIAlertAction(title: "Permalink".localized, style: .default) { action -> Void in
             UIPasteboard.general.string = post.permalink()
+            AlertManager.sharedManager.showLinkCopyMessage()
         }
         actionSheetController.addAction(permalinkAction)
         
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel".localized, style: .cancel) { action -> Void in
             self.selectedPost = nil
         }
         actionSheetController.addAction(cancelAction)
@@ -625,6 +624,7 @@ extension ChatViewController: Request {
         if isInitial {  self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0) }
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             DispatchQueue.main.async {
+            self.tableView.reloadData()
             if isInitial {   self.hideLoaderView() }
                 self.hideLoaderView()
                 self.isLoadingInProgress = false
@@ -647,8 +647,9 @@ extension ChatViewController: Request {
         Api.sharedInstance.loadPostsBeforePost(post: post) { (isLastPage, error) in
             self.hasNextPage = !isLastPage
             self.isLoadingInProgress = false
-            
-            self.hideTopActivityIndicator()
+            if isLastPage {
+                self.hideTopActivityIndicator()
+            }
             if needScroll! {
                 let indexPath = self.resultsObserver.indexPathForPost(post)
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
@@ -1140,7 +1141,7 @@ extension ChatViewController {
             self.resendAction(post)
         }))
         
-        controller.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [unowned self](action:UIAlertAction) in
+        controller.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action:UIAlertAction) in
             print("add implementation")
 //            deletePost(post)
         }))
