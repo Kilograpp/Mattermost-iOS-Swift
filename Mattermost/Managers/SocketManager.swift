@@ -108,13 +108,28 @@ extension SocketManager: MessageHandling {
             case .default:
                 break
             case .receivingPost:
-//                print("New post")
                 let channelName = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.ChannelName] as! String
                 let channelType = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.ChannelType] as! String
                 let senderName = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.SenderName] as! String
                 let postString = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.Post] as! String
-                let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
-                handleReceivingNewPost(channelId!,channelName: channelName,channelType: channelType,senderName: senderName,post: post)
+                
+                //Refactor -jufina
+                ObjectManager.responseHandlerQueue.async {
+                    let post = SocketNotificationUtils.postFromDictionary(postString.toDictionary()!)
+                    Api.sharedInstance.fetchFilesForPost(channelId: post.channelId!, postId: post.identifier!, completion: { (error, files: [File]) in
+                        if (error != nil) {
+                            //TODO: error handler
+                        } else {
+                            files.forEach({ (file) in
+                                post.files.append(file)
+                            })
+                            post.computeCellType()
+                        }
+                        DispatchQueue.main.async {
+                            self.handleReceivingNewPost(channelId!,channelName: channelName,channelType: channelType,senderName: senderName,post: post)
+                        }
+                    })
+                }
             case .receivingUpdatedPost:
 //                print("Updated post")
                 let postString = dictionary[NotificationKeys.Data]?[NotificationKeys.DataKeys.Post] as! String
@@ -165,15 +180,11 @@ extension SocketManager: Notifications {
     func handleReceivingNewPost(_ channelId:String,channelName:String,channelType:String,senderName:String,post:Post) {
         // if user is not author
         if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.pendingId!) {
-//            RealmUtils.save(post) // -> 2 transactions brings error with realm transaction. Placed to second transaction with post channel.
-            
-            for file in post.files {
-                if file.identifier != nil {
-                    Api.sharedInstance.getInfo(fileId: file.identifier!)
-                }
-            }
             let realm = RealmUtils.realmForCurrentThread()
             try! realm.write({
+                post.files.forEach({ (file) in
+                    realm.add(file, update: true)
+                })
                 realm.add(post, update: true)
                 if post.channel != nil {
                     post.channel.lastPostDate = post.createdAt
@@ -184,7 +195,7 @@ extension SocketManager: Notifications {
             guard let channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: channelId) else {
                 return
             }
-            Api.sharedInstance.getChannel(channel: channel, completion: { error in
+            Api.sharedInstance.fetchChannel(channelId: channel.identifier!, completion: { error in
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
             

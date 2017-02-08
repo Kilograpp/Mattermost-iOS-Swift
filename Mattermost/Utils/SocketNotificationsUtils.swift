@@ -110,16 +110,14 @@ final class SocketNotificationUtils {
         post.channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
         post.pendingId = dictionary[NotificationKeys.PendingPostIdentifier] as? String
         post.parentId = dictionary[NotificationKeys.DataKeys.PostKeys.ParentIdentifier] as? String
-        if let files = dictionary[NotificationKeys.DataKeys.PostKeys.Files] {
-            (files as! [String]).forEach { (fileName) in
-                let file = File()
-                file.rawLink = fileName
-                Api.sharedInstance.getInfo(fileId: fileName)
-                post.files.append(file)
-                //Api.sharedInstance.getInfo(file: file)
-                
-            }
-        }
+//        if let files = dictionary[NotificationKeys.DataKeys.PostKeys.Files] {
+//            (files as! [String]).forEach { (fileId) in
+//                let file = File()
+//                file.identifier = fileId
+//                file.computeRawLink()
+//                post.files.append(file)
+//            }
+//        }
  
         post.createdAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! TimeInterval/1000.0)
         post.updatedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Update_at] as! TimeInterval/1000.0)
@@ -130,6 +128,16 @@ final class SocketNotificationUtils {
         
         return post
     }
+    
+//    private func fetchFilesWithIds(filesIds: [String]) -> [File] {
+//        filesIds.forEach { (fileId) in
+//            Api.sharedInstance.getFileInfoWithCompletion(fileId: fileId, completion: { (error) in
+//                if (error == nil) {
+//                    
+//                }
+//            })
+//        }
+//    }
     
     static func typeForNotification(_ dictionary:[String:AnyObject]) -> NotificationType {
         guard let event = dictionary[NotificationKeys.Event] as? String else {

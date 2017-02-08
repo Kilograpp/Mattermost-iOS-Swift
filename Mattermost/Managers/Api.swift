@@ -556,6 +556,55 @@ extension Api: ChannelApi {
         })
     }
     
+    //TODO: BrightFutures
+    func fetchFilesForPost(channelId: String, postId: String, completion: @escaping (_ error: Mattermost.Error?, _ files: [File]) -> Void) {
+        let wrapper = FileWrapper(channelId: channelId, postId: postId)
+        let path = SOCStringFromStringWithObject(FilePathPatternsContainer.getFileInfosPathPattern(), wrapper)
+        
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
+            let files = mappingResult.array() as! [File]
+            DispatchQueue.main.async {
+                completion(nil, files)
+            }
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error, [File]())
+            }
+        }
+    }
+    //TODO: BrightFutures
+    func fetchChannel(channelId: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        guard let channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: channelId) else {
+            return
+        }
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.getChannelPathPattern(), channel)
+        
+        self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
+            let realm = RealmUtils.realmForCurrentThread()
+            guard let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId) else {
+                return
+            }
+            let obtainedChannel = MappingUtils.fetchAllChannels(mappingResult).first
+            
+            try! realm.write({
+                channel.updateAt = obtainedChannel?.updateAt
+                channel.deleteAt = obtainedChannel?.deleteAt
+                channel.displayName = obtainedChannel?.displayName!
+                channel.name = obtainedChannel?.name!
+                channel.header = obtainedChannel?.header!
+                channel.purpose = obtainedChannel?.purpose!
+                channel.lastPostDate = obtainedChannel?.lastPostDate
+                channel.messagesCount = obtainedChannel?.messagesCount
+                channel.extraUpdateDate = obtainedChannel?.extraUpdateDate
+                channel.mentionsCount = obtainedChannel!.mentionsCount
+            })
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
+ 
+    }
+    
     //FIXMEGETCHANNEL
     func getChannel(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.getChannelPathPattern(), channel)
