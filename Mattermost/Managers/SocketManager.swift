@@ -66,6 +66,8 @@ extension SocketManager: WebSocketDelegate{
         if error != nil {
             setNeedsConnect()
         }
+        //TEMP
+        setNeedsConnect()
     }
     func websocketDidReceiveMessage(socket: Starscream.WebSocket, text: String) {
         self.handleIncomingMessage(text)
@@ -125,9 +127,9 @@ extension SocketManager: MessageHandling {
                             })
                             post.computeCellType()
                         }
-                        DispatchQueue.main.async {
-                            self.handleReceivingNewPost(channelId!,channelName: channelName,channelType: channelType,senderName: senderName,post: post)
-                        }
+//                        DispatchQueue.main.async {
+                        self.handleReceivingNewPost(channelId!,channelName: channelName,channelType: channelType,senderName: senderName,post: post)
+//                        }
                     })
                 }
             case .receivingUpdatedPost:
