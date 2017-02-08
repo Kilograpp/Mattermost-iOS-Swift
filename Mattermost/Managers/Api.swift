@@ -559,11 +559,11 @@ extension Api: ChannelApi {
     //FIXMEGETCHANNEL
     func getChannel(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.getChannelPathPattern(), channel)
-        
+        let channelRef = ThreadSafeReference(to: channel)
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
             let obtainedChannel = MappingUtils.fetchAllChannels(mappingResult).first
-
+            let channel = realm.resolve(channelRef)!
             try! realm.write({
                 channel.updateAt = obtainedChannel?.updateAt
                 channel.deleteAt = obtainedChannel?.deleteAt
@@ -1120,7 +1120,7 @@ extension Api : FileApi {
     
     func uploadFileItemAtChannel(_ item: AssignedAttachmentViewItem,
                                   channel: Channel,
-                                  completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
+                                  completion: @escaping (_ identifier: String?, _ error: Mattermost.Error?) -> Void,
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
         let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
         let params = ["channel_id" : channel.identifier!,
@@ -1129,7 +1129,7 @@ extension Api : FileApi {
         let particialCompletion = { (mappingResult: RKMappingResult) in
             let file = mappingResult.firstObject as! File
             RealmUtils.save(file)
-            completion(file, nil)
+            completion(file.identifier, nil)
         }
         
         if item.isFile {

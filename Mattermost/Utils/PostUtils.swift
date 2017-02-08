@@ -45,15 +45,13 @@ final class PostUtils: NSObject {
     static let sharedInstance = PostUtils()
     fileprivate let upload_files_group = DispatchGroup()
     fileprivate var files = Array<AssignedAttachmentViewItem>()
-    fileprivate var test: File?
-    
     fileprivate func configureBackendPendingId(_ post: Post) {
         let id = (DataManager.sharedInstance.currentUser?.identifier)!
         let time = "\((post.createdAt?.timeIntervalSince1970)!)"
         post.pendingId = "\(id):\(time)"
     }
     
-    fileprivate var assignedFiles: Array<File> = Array()
+    fileprivate var assignedFiles: Array<String> = Array()
 }
 
 
@@ -164,7 +162,7 @@ extension PostUtils: Upload {
         for item in items {
             self.upload_files_group.enter()
             item.uploading = true
-            Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (file, error) in
+            Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (identifier, error) in
                 guard self.files.contains(item) else { return }
                 
                 defer {
@@ -174,10 +172,9 @@ extension PostUtils: Upload {
                 
                 guard error == nil else { self.files.removeObject(item); return }
                 
-                if self.assignedFiles.count == 0 { self.test = file }
                 
                 let index = self.files.index(where: {$0.identifier == item.identifier})
-                if (index != nil) { self.assignedFiles.append(file!) }
+                if (index != nil) { self.assignedFiles.append(identifier!) }
                 }, progress: { (identifier, value) in
                     let index = self.files.index(where: {$0.identifier == identifier})
                     guard (index != nil) else { return }
@@ -192,7 +189,7 @@ extension PostUtils: Upload {
     
     func cancelUpload(item: AssignedAttachmentViewItem) {
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-        let index = self.assignedFiles.index(where: {$0.identifier == item.identifier})
+        let index = self.assignedFiles.index(where: {$0 == item.identifier})
         
         if (index != nil) { self.assignedFiles.remove(at: index!) }
         self.files.removeObject(item)
@@ -243,8 +240,11 @@ extension PostUtils: PostConfiguration {
     
     func assignFilesToPostIfNeeded(_ post: Post) {
         guard self.assignedFiles.count > 0 else { return }
-    
-        self.assignedFiles.forEach({post.files.append($0)})
+        
+        self.assignedFiles.forEach({
+            let file = File.objectById($0)!
+            post.files.append(file)
+        })
     }
     
     func clearUploadedAttachments() {
