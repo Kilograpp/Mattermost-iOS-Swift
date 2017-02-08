@@ -1,4 +1,5 @@
-github "Kilograpp/UITableView-Cache" "master"
+github "SwiftKickMobile/SwiftMessages"
+github "Kilograpp/UITableView-Cache" ~> 0.2.2
 github "yeahdongcn/UIColor-Hex-Swift"
 github "rs/SDWebImage" "3.8.0"
 github "jdg/MBProgressHUD" ~> 1.0.0

@@ -114,7 +114,7 @@ class ChannelSettingsViewController: UIViewController {
     //TEMP TODO:  update statuses
     fileprivate func configureStartUpdating() {
         //Костыль (для инициализации UserStatusObserver)
-        UserStatusObserver.sharedObserver
+        _ = UserStatusObserver.sharedObserver
         self.statusesTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(updateStatuses), userInfo: nil, repeats: true)
     }
     

@@ -42,7 +42,7 @@ extension AllMembersViewController: Setup {
         setupNavigationBar()
         setupSearchBar()
         setupTableView()
-        membersList = channel.members.sorted(byProperty: UserAttributes.username.rawValue)
+        membersList = channel.members.sorted(byKeyPath: UserAttributes.username.rawValue)
         let nib = UINib(nibName: "MemberChannelSettingsCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "memberChannelSettingsCell")
     }
@@ -100,7 +100,7 @@ extension AllMembersViewController: UISearchResultsUpdating {
         let sortName = UserAttributes.username.rawValue
         
         let predicate =  NSPredicate(format: "username CONTAINS[c] '\(searchText)' AND identifier IN %@", membersIdentifiers)
-        searchMembersList = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byProperty: sortName)
+        searchMembersList = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byKeyPath: sortName)
     }
 }
 

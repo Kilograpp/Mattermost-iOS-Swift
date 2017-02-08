@@ -155,16 +155,10 @@ extension AttachmentFileView: AttachmentFileViewConfiguration {
     }
     
     fileprivate func drawTitle(text: String) {
-        var fileName = self.file.name! as NSString
+        let fileName = self.file.name! as NSString
         let textColor = ColorBucket.blueColor
         let textFont =  AttachmentFileView.fileSizeFont
         let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
-//        var height = CGFloat(StringUtils.heightOfString(text, width: frame.width - 64, font: textFont))
-//        if height > 36 {
-//            height = 36
-//            let range = NSMakeRange(38, fileName.length - 38)
-//            fileName = fileName.replacingCharacters(in: range, with: "...") as NSString
-//        }
         let nameFrame = CGRect(x: 54, y: 8, width: frame.width - 64, height: 36).offsetBy(dx: 0, dy: frame.origin.y)
         fileName.draw(in: nameFrame, withAttributes: attributes)
     }
@@ -214,10 +208,10 @@ extension AttachmentFileView: Downloading {
                 }
                 self.downloadingState = DownloadingState.Downloaded
                 
-                AlertManager.sharedManager.showSuccesWithMessage(message: "File was successfully downloaded")
+                AlertManager.sharedManager.showFileDownloadedAlert(fileIdentifier: self.file.identifier!, tapHandler: AttachmentFileView.openDownloadedFileByIdentifier)
                 
                 let notification = UILocalNotification()
-                notification.alertBody = "File was successfully downloaded"
+                notification.alertBody = "File was successfully downloaded".localized
 //                notification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
                 UIApplication.shared.scheduleLocalNotification(notification)
 
@@ -233,6 +227,12 @@ extension AttachmentFileView: Downloading {
         self.downloadingState = DownloadingState.NotDownloaded
         self.progressView.isHidden = true
         Api.sharedInstance.cancelDownloading(fileId: self.file.identifier!)
+    }
+    
+    fileprivate static func openDownloadedFileByIdentifier(identifier: String) {
+        let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.DocumentInteractionNotification),
+                                        object: nil, userInfo: ["fileId" : identifier])
+        NotificationCenter.default.post(notification as Notification)
     }
     
     fileprivate func openDownloadedFile() {

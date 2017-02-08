@@ -14,7 +14,7 @@ extension String {
             do {
                 return try JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
             } catch let error as NSError {
-//                print(error)
+                print(error)
             }
         }
         return nil
@@ -27,7 +27,7 @@ extension NSString {
             do {
                 return try JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
             } catch let error as NSError {
-//                print(error)
+                print(error)
             }
         }
         return nil

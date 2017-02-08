@@ -6,7 +6,12 @@
 import Foundation
 import RestKit
 
-final class ObjectManager: RKObjectManager {}
+final class ObjectManager: RKObjectManager {
+    static let responseHandlerQueue: DispatchQueue = {
+        let queue = DispatchQueue(label: "com.kilograpp.api.handler", qos: .utility)
+        return queue
+    }()
+ }
 
 private protocol GetRequests: class {
     func get(object: AnyObject?, path: String, parameters: [AnyHashable: Any]?, success: ((_ mappingResult: RKMappingResult, _ canSkipMapping: Bool) -> Void)?, failure: ((_ error: Mattermost.Error?) -> Void)?)
@@ -21,6 +26,7 @@ private protocol PostRequests: class {
     func savePreferencesAt(path: String!, parameters: [Dictionary<String, String>], success: ((_ result: Bool) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?)
     func searchPostsWith(terms: String!, path: String!, parameters: Dictionary<String, String>?, success: ((_ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Error) -> Void)?)
     func post(image: UIImage!, identifier: String, name: String!, path: String!, parameters: Dictionary<String, String>?, success: ((_ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?, progress: ((_ progressValue: Float) -> Void)?)
+    func post(path: String, arrayParameters: Array<Any>, success: ((_ operation: RKObjectRequestOperation, _ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?)
     func postFileWith(url: URL!, identifier: String, name: String!, path: String!, parameters: Dictionary<String, String>?, success: ((_ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?, progress: ((_ progressValue: Float) -> Void)?)
 }
 
@@ -40,18 +46,26 @@ extension ObjectManager: GetRequests {
         let cachedETag = (cachedUrlResponse?.response as? HTTPURLResponse)?.allHeaderFields["Etag"] as? String
         
         super.getObject(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            let eTag = operation?.httpRequestOperation.response.allHeaderFields["Etag"] as? String
-            success?(mappingResult!, eTag == cachedETag)
+            ObjectManager.responseHandlerQueue.async {
+                let eTag = operation?.httpRequestOperation.response.allHeaderFields["Etag"] as? String
+                success?(mappingResult!, eTag == cachedETag)
+            }
         }) { (operation, error) in
-            failure?(self.handleOperation(operation!, withError: error!))
+            ObjectManager.responseHandlerQueue.async {
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
         }
     }
     
     func get(object: AnyObject, path: String!, success: ((_ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.getObject(object, path: path, parameters: nil, success: { (_, mappingResult) in
-            success?(mappingResult!)
+            ObjectManager.responseHandlerQueue.async {
+                success?(mappingResult!)
+            }
         }) { (operation, error) in
-            failure?(self.handleOperation(operation!, withError: error!))
+            ObjectManager.responseHandlerQueue.async {
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
         }
     }
     
@@ -59,9 +73,14 @@ extension ObjectManager: GetRequests {
                           success: ((_ operation: RKObjectRequestOperation, _ mappingResult: RKMappingResult) -> Void)?,
                           failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.getObjectsAtPath(path, parameters: parameters, success: { (operation, mappingResult) in
-            success?(operation!, mappingResult!)
+            ObjectManager.responseHandlerQueue.async {
+                success?(operation!, mappingResult!)
+            }
+            
         }) { (operation, error) in
-            failure?(self.handleOperation(operation!, withError: error!))
+            ObjectManager.responseHandlerQueue.async {
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
         }
     }
     
@@ -70,9 +89,13 @@ extension ObjectManager: GetRequests {
                           success: ((_ mappingResult: RKMappingResult) -> Void)?,
                           failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.getObjectsAtPath(path, parameters: parameters, success: { (_, mappingResult) in
-            success?(mappingResult!)
+            ObjectManager.responseHandlerQueue.async {
+                success?(mappingResult!)
+            }
             }, failure: { (operation, error) in
+            ObjectManager.responseHandlerQueue.async {
                 failure?(self.handleOperation(operation!, withError: error!))
+            }
         })
     }
 }
@@ -85,34 +108,47 @@ extension ObjectManager: PostRequests {
               success: ((_ mappingResult: RKMappingResult) -> Void)?,
               failure: ((_ error: Mattermost.Error) -> Void)?) {
         super.post(object, path: path, parameters: parameters, success: { (operation, mappingResult) in
-            
-            if let data = operation?.httpRequestOperation.request.httpBody {
-                 print(try! RKNSJSONSerialization.object(from: data))
-            }
-            
-            success?(mappingResult!)
-           
-        }) { (operation, error) in
-//            print(operation?.httpRequestOperation.responseString ?? "error in post object")
-            let responseString = operation?.httpRequestOperation.responseString
-            guard responseString != nil else {
-                let errorMessage: String!
-                if let errorIndex = Constants.ErrorMessages.code.index(of: (error as! NSError).code) {
-                    errorMessage = Constants.ErrorMessages.message[errorIndex]
-                } else {
-                    errorMessage = (error as! NSError).localizedDescription
+            ObjectManager.responseHandlerQueue.async {
+                if let data = operation?.httpRequestOperation.request.httpBody {
+                    print(try! RKNSJSONSerialization.object(from: data))
                 }
-                AlertManager.sharedManager.showErrorWithMessage(message: errorMessage!)
-                failure?(self.handleOperation(operation!, withError: error!))
-                return
+                success?(mappingResult!)
             }
             
-            let dict = responseString?.toDictionary()
-            if (Int((dict?["status_code"])! as! NSNumber) == 500) {
-                let statusCode = Int((dict?["status_code"])! as! NSNumber)
-                let message = dict?["message"]
-                failure?(Error(errorCode: statusCode, errorMessage: message as! String))
-            } else {
+        }) { (operation, error) in
+            ObjectManager.responseHandlerQueue.async {
+                let responseString = operation?.httpRequestOperation.responseString
+                guard responseString != nil else {
+                    let errorMessage: String!
+                    if let errorIndex = Constants.ErrorMessages.code.index(of: (error as! NSError).code) {
+                        errorMessage = Constants.ErrorMessages.message[errorIndex]
+                    } else {
+                        errorMessage = (error as! NSError).localizedDescription
+                    }
+                    AlertManager.sharedManager.showErrorWithMessage(message: errorMessage!)
+                    failure?(self.handleOperation(operation!, withError: error!))
+                    return
+                }
+                
+                let dict = responseString?.toDictionary()
+                if (Int((dict?["status_code"])! as! NSNumber) == 500) {
+                    let statusCode = Int((dict?["status_code"])! as! NSNumber)
+                    let message = dict?["message"]
+                    failure?(Error(errorCode: statusCode, errorMessage: message as! String))
+                } else {
+                    failure?(self.handleOperation(operation!, withError: error!))
+                }
+            }
+        }
+    }
+    
+    func post(path: String, arrayParameters: Array<Any>, success: ((_ operation: RKObjectRequestOperation, _ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?) {
+        super.post(nil, path: path, parametersAs: arrayParameters, success: { (operation, mappingResult) in
+            ObjectManager.responseHandlerQueue.async {
+                success?(operation!, mappingResult!)
+            }
+        }) { (operation, error) in
+            ObjectManager.responseHandlerQueue.async {
                 failure?(self.handleOperation(operation!, withError: error!))
             }
         }
@@ -124,10 +160,14 @@ extension ObjectManager: PostRequests {
                     failure: ((_ error: Mattermost.Error) -> Void)?) {
         let request: NSMutableURLRequest = self.request(with: nil, method: .POST, path: path, parameters: parameters)
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
-            success?(mappingResult!)
+            ObjectManager.responseHandlerQueue.async {
+                success?(mappingResult!)
+            }
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
-            failure?(self.handleOperation(operation!, withError: error!))
+            ObjectManager.responseHandlerQueue.async {
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
         }
         let operation: RKObjectRequestOperation =  self.objectRequestOperation(with: request as URLRequest!, success: successHandlerBlock, failure: failureHandlerBlock)
         self.enqueue(operation)
@@ -141,11 +181,15 @@ extension ObjectManager: PostRequests {
         request.httpBody = try! JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
         
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
-            success?(true)
+            ObjectManager.responseHandlerQueue.async {
+                success?(true)
+            }
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
-            guard (operation?.httpRequestOperation.responseString != /*"true"*/Constants.CommonStrings.True) else { success!(true); return }
-            failure?(self.handleOperation(operation!, withError: error!))
+            ObjectManager.responseHandlerQueue.async {
+                guard (operation?.httpRequestOperation.responseString != /*"true"*/Constants.CommonStrings.True) else { success!(true); return }
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
         }
         
         let operation: RKObjectRequestOperation = self.objectRequestOperation(with: request as URLRequest!, success: successHandlerBlock, failure: failureHandlerBlock)
@@ -161,14 +205,18 @@ extension ObjectManager: PostRequests {
         request.httpBody = try! JSONSerialization.data(withJSONObject: ["terms" : terms!, "is_or_search": true], options: .prettyPrinted)
         
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
-            success?(mappingResult!)
+            ObjectManager.responseHandlerQueue.async {
+                success?(mappingResult!)
+            }
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
-            if (operation?.httpRequestOperation.responseString == "{\"order\":null,\"posts\":null}") {
-                success?(RKMappingResult())
-            }
-            else {
-                failure?(self.handleOperation(operation!, withError: error!))
+            ObjectManager.responseHandlerQueue.async {
+                if (operation?.httpRequestOperation.responseString == "{\"order\":null,\"posts\":null}") {
+                    success?(RKMappingResult())
+                }
+                else {
+                    failure?(self.handleOperation(operation!, withError: error!))
+                }
             }
         }
         
@@ -196,22 +244,22 @@ extension ObjectManager: PostRequests {
                                                                      constructingBodyWith: constructingBodyWithBlock)
         
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
-            print("upOk"); success?(mappingResult!)
+            ObjectManager.responseHandlerQueue.async {
+                success?(mappingResult!)
+            }
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
+            ObjectManager.responseHandlerQueue.async {
             //MARK: Cap with fixed later
-            guard operation?.httpRequestOperation.responseString != Constants.CommonStrings.True else {
-                success!(RKMappingResult())
-                return
+                guard operation?.httpRequestOperation.responseString != Constants.CommonStrings.True else {
+                    success!(RKMappingResult())
+                    return
+                }
+                failure?(self.handleOperation(operation!, withError: error!))
             }
-            failure?(self.handleOperation(operation!, withError: error!))
             
-//            print(operation?.httpRequestOperation.responseString ?? "")
-            
-//            print("upFail"); failure?(self.handleOperation(operation!, withError: error!))
         }
         
-        print("upStart")
         let operation: RKObjectRequestOperation = self.objectRequestOperation(with: request as URLRequest!, success: successHandlerBlock, failure: failureHandlerBlock)
         
         let kg_operation = operation as! KGObjectRequestOperation
@@ -243,11 +291,14 @@ extension ObjectManager: PostRequests {
                                                                      constructingBodyWith: constructingBodyWithBlock)
         
         let successHandlerBlock = {(operation: RKObjectRequestOperation?, mappingResult: RKMappingResult?) -> Void in
-//            print(try! RKNSJSONSerialization.object(from: operation?.httpRequestOperation.request.httpBody))
-            success?(mappingResult!)
+            ObjectManager.responseHandlerQueue.async {
+                success?(mappingResult!)
+            }
         }
         let failureHandlerBlock = {(operation: RKObjectRequestOperation?, error: Swift.Error?) -> Void in
-            failure?(self.handleOperation(operation!, withError: error!))
+            ObjectManager.responseHandlerQueue.async {
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
         }
         
         let operation: RKObjectRequestOperation = self.objectRequestOperation(with: request as URLRequest!, success: successHandlerBlock, failure: failureHandlerBlock)

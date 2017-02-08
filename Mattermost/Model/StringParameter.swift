@@ -17,8 +17,8 @@ final class StringParameter: Object {
             return NSMakeRange(self._rangeLocation, self._rangeLength)
         }
         set {
-            self._rangeLocation = newValue.location ?? 0
-            self._rangeLength = newValue.length ?? 0
+            self._rangeLocation = newValue.location 
+            self._rangeLength = newValue.length 
         }
        
     }
