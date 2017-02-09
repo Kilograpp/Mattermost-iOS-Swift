@@ -35,7 +35,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     fileprivate var filesAttachmentsModule: AttachmentsModule!
     fileprivate var filesPickingController: FilesPickingController!
     fileprivate lazy var builder: FeedCellBuilder = FeedCellBuilder(tableView: self.tableView)
-    fileprivate var resultsObserver: FeedNotificationsObserver! = nil
+    var resultsObserver: FeedNotificationsObserver! = nil
     //Common
     var channel : Channel!
     

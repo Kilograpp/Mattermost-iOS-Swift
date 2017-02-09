@@ -168,6 +168,7 @@ extension AttachmentImageCell: Updating {
                     
                     // Ensure the post is still the same
                     guard self?.fileName == fileName else { return }
+                    guard self?.file.isInvalidated == false else { return }
                     
                     DispatchQueue.main.async(execute: {
                         let postLocalId = self?.file.post?.localIdentifier

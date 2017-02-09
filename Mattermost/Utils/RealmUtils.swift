@@ -80,7 +80,7 @@ final class RealmUtils {
         let posts = realm.objects(Post.self)
         var users = realm.objects(User.self)
         if !withLogout {
-            users = users.filter(NSPredicate(format: "identifier != %@", Preferences.sharedInstance.currentUserId!))
+            users = users.filter(NSPredicate(format: "NOT identifier IN %@", [Preferences.sharedInstance.currentUserId!, Constants.Realm.SystemUserIdentifier]))
         }
         let attachments = realm.objects(Attachment.self)
         let days = realm.objects(Day.self)
