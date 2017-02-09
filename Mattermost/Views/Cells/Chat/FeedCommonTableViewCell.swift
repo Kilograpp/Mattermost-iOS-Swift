@@ -47,7 +47,7 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         let size = self.parentView.requeredSize()
         
         if self.post.hasParentPost() {
-            self.parentView.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: 36, width: size.width, height: size.height)
+            self.parentView.frame = CGRect(x: Constants.UI.MessagePaddingSize, y: 0, width: size.width, height: size.height)
         }
         
         super.layoutSubviews()
