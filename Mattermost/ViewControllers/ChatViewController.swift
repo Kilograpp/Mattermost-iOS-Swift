@@ -1074,18 +1074,6 @@ extension ChatViewController: ChannelObserverDelegate {
         } else {
             attachmentsView.hideAnimated()
         }
-        
-//        if (self.channel.identifier!.characters.count < 4) {
-//            startHeadDialogueLabel.text = "Тестовый канал!"
-//            startTextDialogueLabel.text = "Для тестирования функционала чата перейдите в существующий на сервере канал!"
-//            startButton.isHidden = true
-//            leftButton.isEnabled = false
-//            textView.isEditable = false
-//        } else {
-//            startButton.isHidden = false
-//            leftButton.isEnabled = true
-//            textView.isEditable = true
-//        }
     }
     
     func startButtonAction(sender: UIButton!) {
