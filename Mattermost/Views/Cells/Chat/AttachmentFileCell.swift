@@ -22,7 +22,9 @@ final class AttachmentFileCell: UITableViewCell, Reusable, Attachable {
         
    //     fileView = AttachmentFileView(file: file, frame: self.bounds)
    //     contentView.addSubview(fileView)
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = .white
+        fileView.backgroundColor = .white
+        contentView.backgroundColor = .white
 
     }
     
@@ -59,5 +61,20 @@ extension AttachmentFileCell: AttachmentFileCellConfiguration {
         //TEMP TODO: files uploading
         self.selectionStyle = .none
 //        self.setNeedsDisplay()
+    }
+}
+
+//MARK: LongTapConfigure
+extension AttachmentFileCell {
+    func configureForSelectedState() {
+        fileView.backgroundColor = UIColor.kg_lightLightGrayColor()
+        contentView.backgroundColor = UIColor.kg_lightLightGrayColor()
+        self.backgroundColor = UIColor.kg_lightLightGrayColor()
+    }
+    
+    func configureForNoSelectedState() {
+        fileView.backgroundColor = .white
+        contentView.backgroundColor = .white
+        self.backgroundColor = .white
     }
 }

@@ -186,9 +186,12 @@ extension LeftMenuViewController: Configuration {
     }
     
     func updateResults() {
-        prepareResults()
-        configureInitialSelectedChannel()
-        self.tableView.reloadData()
+        DispatchQueue.main.async { 
+            self.prepareResults()
+            self.configureInitialSelectedChannel()
+            self.tableView.reloadData()
+            
+        }
     }
 }
 

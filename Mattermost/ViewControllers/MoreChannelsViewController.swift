@@ -165,23 +165,17 @@ extension  MoreChannelsViewController: Configuration {
     }
     
     func prepareChannelResults() {
-        let typeValue = self.isPrivateChannel ? Constants.ChannelType.DirectTypeChannel : Constants.ChannelType.PublicTypeChannel
-        let predicate =  NSPredicate(format: "privateType == %@ AND name != %@ AND team == %@", typeValue, "town-square", DataManager.sharedInstance.currentTeam!)
-        let sortName = ChannelAttributes.displayName.rawValue
-        
+
         showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         Api.sharedInstance.loadChannelsMoreWithCompletion { (channels, error) in
             self.hideLoaderView()
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
             for channel in channels! {
-                let isInChannel = Channel.isUserInChannelWith(channelId: channel.identifier!)
-                self.results.append((channel, isInChannel))
+                guard !Channel.isUserInChannelWith(channelId: channel.identifier!) else { continue }
+                self.results.append((channel, false))
             }
-            let existChannels = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).sorted(byKeyPath: sortName, ascending: true)
-            for channel in existChannels {
-                self.results.append((channel, channel.currentUserInChannel))
-            }
+
             self.results = self.results.sorted(by: { ($0.object as! Channel).displayName! < ($1.object as! Channel).displayName! })
             self.tableView.reloadData()
         }
@@ -199,13 +193,10 @@ extension  MoreChannelsViewController: Configuration {
                                          Preferences.sharedInstance.currentUserId!)
             let preferedUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byKeyPath: sortName, ascending: true)
             for user in preferedUsers {
-                self.results.append((user, user.isPreferedDirectChannel()))
+                guard !user.isPreferedDirectChannel() else { continue }
+                self.results.append((user, false))
             }
-            for user in users! {
-                if !(self.results.contains(where: { ($0.object as! User).identifier == user.identifier && ($0.object as! User).identifier != Preferences.sharedInstance.currentUserId!})) && user.identifier != Preferences.sharedInstance.currentUserId! {
-                    self.results.append((user, false))
-                }
-            }
+
             self.results = self.results.sorted(by: { ($0.object as! User).displayName! < ($1.object as! User).displayName! })
             self.tableView.reloadData()
         }
@@ -293,7 +284,9 @@ extension MoreChannelsViewController: Request {
                 }
                 self.alreadyUpdatedChannelCount = 0
                 self.updatedCahnnelIndexPaths.removeAll()
+                
             }
+            
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         }
     }

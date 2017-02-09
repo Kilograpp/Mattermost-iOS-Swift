@@ -61,6 +61,7 @@ final class AttachmentImageCell: UITableViewCell, Reusable, Attachable {
         self.file = nil
         self.fileImageView.backgroundColor = emptyImageViewBackgroundColor
         self.fileImageView.image = nil
+        self.fileNameLabel.backgroundColor = .white
     }
 }
 
@@ -117,7 +118,7 @@ extension AttachmentImageCell: Setup {
     fileprivate func setupLabel() {
         fileNameLabel.font = TitleFont
         fileNameLabel.textColor = ColorBucket.blueColor
-        fileNameLabel.backgroundColor = ColorBucket.whiteColor
+        fileNameLabel.backgroundColor = .white
         fileNameLabel.numberOfLines = 1
         self.addSubview(fileNameLabel)
     }
@@ -167,6 +168,7 @@ extension AttachmentImageCell: Updating {
                     
                     // Ensure the post is still the same
                     guard self?.fileName == fileName else { return }
+                    guard self?.file.isInvalidated == false else { return }
                     
                     DispatchQueue.main.async(execute: {
                         let postLocalId = self?.file.post?.localIdentifier
@@ -204,5 +206,16 @@ extension AttachmentImageCell: Action {
         let notification = Notification(name: NSNotification.Name(Constants.NotificationsNames.FileImageDidTapNotification),
                                         object: nil, userInfo: ["postLocalId" : postLocalId!, "fileId" : fileId!])
         NotificationCenter.default.post(notification as Notification)
+    }
+}
+
+//MARK: LongTapConfigure
+extension AttachmentImageCell {
+    func configureForSelectedState() {
+        fileNameLabel.backgroundColor = UIColor.kg_lightLightGrayColor()
+    }
+    
+    func configureForNoSelectedState() {
+        fileNameLabel.backgroundColor = .white
     }
 }

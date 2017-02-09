@@ -33,6 +33,7 @@ private protocol PostRequests: class {
 private protocol Helpers: class {
     func handleOperation(_ operation: RKObjectRequestOperation, withError error: Swift.Error) -> Mattermost.Error
     func cancelUploadingOperationForImageItem(_ item: AssignedAttachmentViewItem)
+    func clearCache()
 }
 
 // MARK: Get Requests
@@ -331,5 +332,8 @@ extension ObjectManager: Helpers {
             guard operation.identifier == item.identifier else { continue }
             operation.cancel()
         }
+    }
+    func clearCache() {
+        URLCache.shared.removeAllCachedResponses()
     }
 }

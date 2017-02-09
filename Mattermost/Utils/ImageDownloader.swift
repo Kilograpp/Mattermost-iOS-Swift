@@ -38,7 +38,7 @@ final class ImageDownloader {
                         return
                     }
                     
-                    let processedImage = UIImage.roundedImageOfSize(image!, size: CGSize(width: 40, height: 40))
+                    let processedImage = UIImage.roundedImageOfSize(image!, size: CGSize(width: 40, height: 40), backgroundColor: .white)
                     SDImageCache.shared().store(processedImage, forKey: smallAvatarCacheKey)
                     
                     DispatchQueue.main.sync(execute: {
@@ -76,7 +76,7 @@ final class ImageDownloader {
                         return
                     }
                     
-                    let processedImage = UIImage.roundedImageOfSize(image!, size: CGSize(width: 130, height: 130))
+                    let processedImage = UIImage.roundedImageOfSize(image!, size: CGSize(width: 130, height: 130), backgroundColor: .white)
                     SDImageCache.shared().store(processedImage, forKey: fullAvatarCacheKey)
                     
                     DispatchQueue.main.sync(execute: {

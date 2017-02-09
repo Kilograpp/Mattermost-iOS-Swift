@@ -19,8 +19,8 @@ final class FeedNotificationsObserver {
 
     fileprivate var results: Results<Post>! = nil
     fileprivate var days: Results<Day>! = nil
-    fileprivate var tableView: UITableView
-    fileprivate var resultsNotificationToken: NotificationToken?
+    fileprivate weak var tableView: UITableView!
+    var resultsNotificationToken: NotificationToken?
     fileprivate let channel: Channel!
 
     init(tableView: UITableView, channel: Channel) {
