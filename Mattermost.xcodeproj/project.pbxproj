@@ -28,6 +28,8 @@
 		4B4FE7931D800E2A0088ABEC /* TeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */; };
 		4B4FE7951D802CE00088ABEC /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */; };
 		4B4FE7991D8056CA0088ABEC /* ServerUrlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */; };
+		4B5DEF811E4C98D900B0B9A7 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5DEF801E4C98D900B0B9A7 /* UserNotifications.framework */; };
+		4B5DEF831E4C995A00B0B9A7 /* UIUserNotificationType+AuthorizationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5DEF821E4C995A00B0B9A7 /* UIUserNotificationType+AuthorizationOptions.swift */; };
 		4B6EA9E41D9041EA000F15A2 /* SocketNotificationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */; };
 		4B7B53771D7DB12A00D9F20B /* CAGradientLayer+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */; };
 		4B7DB5A51DA5500F000908FB /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7DB5A41DA5500F000908FB /* Member.swift */; };
@@ -328,6 +330,8 @@
 		4B4FE7921D800E2A0088ABEC /* TeamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeamTableViewCell.swift; path = Teams/TeamTableViewCell.swift; sourceTree = "<group>"; };
 		4B4FE7941D802CE00088ABEC /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginNavigationController.swift; path = NavigationControllers/LoginNavigationController.swift; sourceTree = "<group>"; };
 		4B4FE7981D8056CA0088ABEC /* ServerUrlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerUrlViewController.swift; sourceTree = "<group>"; };
+		4B5DEF801E4C98D900B0B9A7 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		4B5DEF821E4C995A00B0B9A7 /* UIUserNotificationType+AuthorizationOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIUserNotificationType+AuthorizationOptions.swift"; sourceTree = "<group>"; };
 		4B6EA9E31D9041EA000F15A2 /* SocketNotificationsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketNotificationsUtils.swift; sourceTree = "<group>"; };
 		4B7B53761D7DB12A00D9F20B /* CAGradientLayer+Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAGradientLayer+Animation.swift"; sourceTree = "<group>"; };
 		4B7DB5A21DA52303000908FB /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
@@ -619,6 +623,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B5DEF811E4C98D900B0B9A7 /* UserNotifications.framework in Frameworks */,
 				D869BC041E49103200D7F3E4 /* SwiftMessages.framework in Frameworks */,
 				4BFA3E971DAFB82C0088A5EA /* ImagePickerSheetController.framework in Frameworks */,
 				8B6778221DAC2FEB00FB7E01 /* QuartzCore.framework in Frameworks */,
@@ -888,6 +893,7 @@
 				8B3AB4A61E046CDC00010170 /* UIViewController+AlertManager.swift */,
 				D63C81591E43A2B4003E7751 /* UIViewController+SharedBar.swift */,
 				8B3C8CDD1E49BEAF00F13159 /* String+Email.swift */,
+				4B5DEF821E4C995A00B0B9A7 /* UIUserNotificationType+AuthorizationOptions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1315,6 +1321,7 @@
 		F58D8E3D9E818474B8FBB6D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B5DEF801E4C98D900B0B9A7 /* UserNotifications.framework */,
 				D869BC031E49103200D7F3E4 /* SwiftMessages.framework */,
 				4483418C1DF6A83900C39824 /* SkyFloatingLabelTextField.framework */,
 				4BFA3E951DAFB80D0088A5EA /* ImagePickerSheetController.framework */,
@@ -1625,6 +1632,7 @@
 				8B3ED0601E003FF90068945E /* NetworkReachabilityManager.swift in Sources */,
 				8BCDDC851DE6E701006D83BC /* LabelChannelSettingsCell.swift in Sources */,
 				8B3CB3411DD2675F0078DE25 /* ProfileCellBuilder.swift in Sources */,
+				4B5DEF831E4C995A00B0B9A7 /* UIUserNotificationType+AuthorizationOptions.swift in Sources */,
 				D6330ABA1D494CFD006D84F4 /* FontBucket.swift in Sources */,
 				8B3CB3751DD269C30078DE25 /* Api.swift in Sources */,
 				8B3C91611E27EDE80099F3F6 /* Chat+Autocompletion.swift in Sources */,
