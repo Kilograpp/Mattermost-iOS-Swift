@@ -116,7 +116,7 @@ final class SocketNotificationUtils {
         post.deletedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Delete_at] as! TimeInterval/1000.0)
 
         post.computeMissingFields()
-        post.computeFollowUp()
+        post.computeFollowUpIncomingMessage()
         post.setType(dictionary["type"] as! String)
         
         return post

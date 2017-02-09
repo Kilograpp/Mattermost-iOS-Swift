@@ -73,7 +73,7 @@ private protocol PostApi: class {
     func sendPost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func getPostWithId(_ identifier: String, channel: Channel, completion: @escaping ((_ post: Post?, _ error: Error?) -> Void))
     func updatePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
-    func updateSinglePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
+    func updateSinglePost(post: Post, postId: String, channelId: String, message: String, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func deletePost(_ post: Post, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
     func searchPostsWithTerms(terms: String, channel: Channel, completion: @escaping(_ posts: Array<Post>?, _ error: Error?) -> Void)
     func loadFirstPage(_ channel: Channel, completion:  @escaping(_ error: Mattermost.Error?) -> Void)
@@ -1212,14 +1212,33 @@ extension Api: PostApi {
         }
     }
     
-    func updateSinglePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+    func updateSinglePost(post: Post, postId: String, channelId: String, message: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)
-        self.manager.post(object: post, path: path, success: { (mappingResult) in
-            RealmUtils.save(mappingResult.firstObject as! Post)
-            completion(nil)
+        let parameters = ["message" : message, "id": postId, "channel_id" : channelId ]
+        let postReference = ThreadSafeReference(to: post)
+        
+        self.manager.post(object: post, path: path, parameters: parameters, success: { (mappingResult) in
+            RealmUtils.realmQueue.async {
+                let updatedPost = mappingResult.firstObject as! Post
+                let realm = RealmUtils.realmForCurrentThread()
+                guard let post = realm.resolve(postReference) else {
+                    return
+                }
+                try! realm.write ({
+                    post.updatedAt = updatedPost.updatedAt
+                    post.createdAt = updatedPost.createdAt
+                    post.message = updatedPost.message
+                    post.configureBackendPendingId()
+    //                    assignFilesToPostIfNeeded(post)
+                    post.computeMissingFields()
+                })
+            }
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }) { (error) in
             DispatchQueue.main.async {
-                completion(error)
+            completion(error)
             }
         }
     }

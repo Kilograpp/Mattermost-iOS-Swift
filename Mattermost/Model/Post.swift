@@ -277,7 +277,15 @@ extension Post: Computations {
         }
     }
     
-    func computeFollowUp() {
+    func configureBackendPendingId() {
+        let id = (DataManager.sharedInstance.currentUser?.identifier)!
+        let time = "\((self.createdAt?.timeIntervalSince1970)!)"
+        self.pendingId = "\(id):\(time)"
+    }
+    
+    
+    
+    func computeFollowUpIncomingMessage() {
         if let channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: self.channelId) {
             let lastPostInChannel = channel.lastPost()
             let postsInterval = (self.createdAt as NSDate?)?.minutesLaterThan(lastPostInChannel?.createdAt)
