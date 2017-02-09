@@ -85,12 +85,12 @@ extension AttachmentsModule: Interface {
         cache.cacheFilesForChannel(items: attachments, channel: channel)
         PostUtils.sharedInstance.upload(items: attachments, channel: channel, completion: { (finished, error, item) in
             defer {
-//                print(item.identifier)
-//                print(self.items[0].identifier)
                 
                 let index = self.items.index(where: { $0.identifier == item.identifier })
                 if index != nil {
-                    self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index!, value: 1)
+                    DispatchQueue.main.async {
+                        self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index!, value: 1)
+                    }
                 }
                 self.fileUploadingInProgress = true
                 completion(finished, error, item)
@@ -99,10 +99,11 @@ extension AttachmentsModule: Interface {
             guard let error = error else { return }
             self.show(error: error)
             self.items.removeObject(item)
-            self.dataSource.postAttachmentsView(attachmentsModule: self).updateAppearance()
-            
-            guard self.items.count == 0 else { return }
-            self.hideAttachmentsView()
+            DispatchQueue.main.async {
+                self.dataSource.postAttachmentsView(attachmentsModule: self).updateAppearance()
+                guard self.items.count == 0 else { return }
+                self.hideAttachmentsView()
+            }
             
         }) { (value, index) in
             self.items[index].uploaded = value == 1

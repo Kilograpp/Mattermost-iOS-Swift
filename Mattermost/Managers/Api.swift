@@ -525,7 +525,7 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-            }, failure: completion)
+        }, failure: completion)
     }
     
     func joinChannel(_ channel: Channel, completion: @escaping (Error?) -> Void) {
@@ -540,7 +540,7 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-            }, failure: completion)
+        }, failure: completion)
     }
     
     func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -560,11 +560,11 @@ extension Api: ChannelApi {
     //FIXMEGETCHANNEL
     func getChannel(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.getChannelPathPattern(), channel)
-        
+        let channelRef = ThreadSafeReference(to: channel)
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
             let realm = RealmUtils.realmForCurrentThread()
             let obtainedChannel = MappingUtils.fetchAllChannels(mappingResult).first
-
+            let channel = realm.resolve(channelRef)!
             try! realm.write({
                 channel.updateAt = obtainedChannel?.updateAt
                 channel.deleteAt = obtainedChannel?.deleteAt
@@ -938,7 +938,12 @@ extension Api: PostApi {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.firstPagePathPattern(), PageWrapper(channel: channel))
         
         self.manager.get(path: path!, success: { (mappingResult, skipMapping) in
-            guard !skipMapping else { completion(nil); return }
+            guard !skipMapping else {
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+                return
+            }
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
@@ -961,7 +966,9 @@ extension Api: PostApi {
                     NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: channel)
                 }
             }
-            completion(error)
+            DispatchQueue.main.async {
+                completion(error)
+            }
         }
     }
     
@@ -989,7 +996,9 @@ extension Api: PostApi {
             })
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
-            completion(isLastPage, error)
+            DispatchQueue.main.async {
+                completion(isLastPage, error)
+            }
         }
     }
     
@@ -1003,9 +1012,6 @@ extension Api: PostApi {
             guard !skipMapping else { completion(isLastPage, nil); return }
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-            
-            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
-            
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
                 if error != nil { print(error.debugDescription) }
                 
@@ -1017,7 +1023,9 @@ extension Api: PostApi {
             
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
-            completion(isLastPage, error)
+            DispatchQueue.main.async {
+                completion(isLastPage, error)
+            }
         }
     }
     
@@ -1032,21 +1040,23 @@ extension Api: PostApi {
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
             
-            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
-            
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
                 if error != nil { print(error.debugDescription) }
                 
                 self.loadFileInfosFor(posts: posts, completion: { (error) in
                     RealmUtils.save(posts)
-                    completion(isLastPage, nil)
+                    DispatchQueue.main.async {
+                        completion(isLastPage, error)
+                    }
                 })
             })
             
 
         }) { (error) in
             let isLastPage = (error!.code == 1001) ? true : false
-            completion(isLastPage, error)
+            DispatchQueue.main.async {
+                completion(isLastPage, error)
+            }
         }
     }
     
@@ -1109,16 +1119,24 @@ extension Api: PostApi {
         self.manager.searchPostsWith(terms: terms, path: path, parameters: params, success: { (mappingResult) in
             
             let posts = MappingUtils.fetchConfiguredPosts(mappingResult)
-            RealmUtils.save(posts)
-            for post in posts { post.files.forEach({ RealmUtils.save($0) }) }
             
             self.loadMissingAuthorsFor(posts: posts, completion: { (error) in
                 if error != nil { print(error.debugDescription) }
                 
-                completion(posts, nil)
+                self.loadFileInfosFor(posts: posts, completion: { (error) in
+                    DispatchQueue.main.async {
+                        RealmUtils.save(posts)
+                        completion(posts, nil)
+                    }
+                    
+                })
+                
             })
         }) { (error) in
-            completion(nil, error)
+            DispatchQueue.main.async {
+                completion(nil, error)
+            }
+            
         }
     }
     
@@ -1141,7 +1159,7 @@ extension Api : FileApi {
     
     func uploadFileItemAtChannel(_ item: AssignedAttachmentViewItem,
                                   channel: Channel,
-                                  completion: @escaping (_ file: File?, _ error: Mattermost.Error?) -> Void,
+                                  completion: @escaping (_ identifier: String?, _ error: Mattermost.Error?) -> Void,
                                   progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
         let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
         let params = ["channel_id" : channel.identifier!,
@@ -1150,7 +1168,7 @@ extension Api : FileApi {
         let particialCompletion = { (mappingResult: RKMappingResult) in
             let file = mappingResult.firstObject as! File
             RealmUtils.save(file)
-            completion(file, nil)
+            completion(file.identifier, nil)
         }
         
         if item.isFile {

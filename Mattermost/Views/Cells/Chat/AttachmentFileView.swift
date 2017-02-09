@@ -155,11 +155,13 @@ extension AttachmentFileView: AttachmentFileViewConfiguration {
     }
     
     fileprivate func drawTitle(text: String) {
-        let fileName = self.file.name! as NSString
+        var fileName = self.file.name!
         let textColor = ColorBucket.blueColor
         let textFont =  AttachmentFileView.fileSizeFont
         let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
-        let nameFrame = CGRect(x: 54, y: 8, width: frame.width - 64, height: 36).offsetBy(dx: 0, dy: frame.origin.y)
+        
+        if fileName.characters.count > 24 { fileName = fileName.substring(to: fileName.index(fileName.startIndex, offsetBy: 24)) + "..." }
+        let nameFrame = CGRect(x: 54, y: 8, width: frame.width - 64, height: 30).offsetBy(dx: 0, dy: frame.origin.y)
         fileName.draw(in: nameFrame, withAttributes: attributes)
     }
     
@@ -167,10 +169,7 @@ extension AttachmentFileView: AttachmentFileViewConfiguration {
         let attributes = [NSFontAttributeName: FontBucket.messageFont,
                           NSForegroundColorAttributeName: ColorBucket.rightMenuSeparatorColor,
                           NSBackgroundColorAttributeName: self.backgroundColor!] as [String : Any]
-        var titleHeigth = CGFloat(StringUtils.heightOfString(file.name!, width: frame.width - 64, font: AttachmentFileView.fileSizeFont))
-        if titleHeigth > 28 { titleHeigth = 28 }
-        let y = 12 + titleHeigth
-        let textFrame = CGRect(x: 54, y: y, width: frame.width - 64, height: 20).offsetBy(dx: 0, dy: frame.origin.y)
+        let textFrame = CGRect(x: 54, y: 28, width: frame.width - 64, height: 24).offsetBy(dx: 0, dy: frame.origin.y)
         (text as NSString).draw(in: textFrame, withAttributes: attributes)
     }
 }

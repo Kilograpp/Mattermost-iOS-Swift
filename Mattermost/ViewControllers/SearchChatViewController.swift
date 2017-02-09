@@ -213,32 +213,30 @@ extension SearchChatViewController: Requests {
     func searchWithTerms(terms: String) {
         addSearchRequestIfNeeded(terms: terms)
         PostUtils.sharedInstance.search(terms: terms, channel: self.channel!) { (posts, error) in
-            if (error == nil) {
-                self.posts = posts?.reversed()
-                self.dates.removeAll()
-                if (self.posts.count == 0) {
-                    self.configureForSearchStage(SearchStage.SearchNoResults)
-                }
-                else {
-                    for post in self.posts {
-                        let day = post.day!
-                        let index = (self.dates as NSArray).index(of: day.date!)
-                        if (index == NSNotFound) {
-                            self.dates.append(day.date! as NSDate)
-                        }
-                    }
-                    
-                    DispatchQueue.main.async{
-                        self.configureForSearchStage(SearchStage.SearchResultsDisplay)
-                        self.tableView.reloadData()
+            guard error == nil else {
+                guard error!.code != 999 else { return }
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                return
+            }
+            self.posts = posts?.reversed()
+            self.dates.removeAll()
+            if self.posts.count == 0 {
+                self.configureForSearchStage(SearchStage.SearchNoResults)
+            } else {
+                for post in self.posts {
+                    let day = post.day!
+                    let index = (self.dates as NSArray).index(of: day.date!)
+                    if (index == NSNotFound) {
+                        self.dates.append(day.date! as NSDate)
                     }
                 }
-            }
-            else {
-                if (error?.code != -999) {
-                    AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                
+                DispatchQueue.main.async{
+                    self.configureForSearchStage(SearchStage.SearchResultsDisplay)
+                    self.tableView.reloadData()
                 }
             }
+
         }
     }
 }

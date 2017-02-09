@@ -128,7 +128,7 @@ extension PostAttachmentsView : Public {
         self.isShown = false
         self.bottomConstraint!.constant = PostAttachmentsView.attachmentsViewHeight
         UIView.animate(withDuration: 0.3, animations: {
-            self.superview?.layoutIfNeeded()
+            self.superview?.setNeedsDisplay()
         }) 
     }
     

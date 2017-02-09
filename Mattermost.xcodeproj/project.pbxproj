@@ -65,6 +65,7 @@
 		8B3C3ED81DC28487005FCAFE /* CheckSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */; };
 		8B3C3EDA1DC29080005FCAFE /* TextSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3ED91DC29080005FCAFE /* TextSettingsTableViewCell.swift */; };
 		8B3C3EDE1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */; };
+		8B3C8CDE1E49BEAF00F13159 /* String+Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C8CDD1E49BEAF00F13159 /* String+Email.swift */; };
 		8B3C915F1E27EB3B0099F3F6 /* Chat+FileOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C915E1E27EB3B0099F3F6 /* Chat+FileOperations.swift */; };
 		8B3C91611E27EDE80099F3F6 /* Chat+Autocompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3C91601E27EDE80099F3F6 /* Chat+Autocompletion.swift */; };
 		8B3CB33E1DD2675F0078DE25 /* ChannelInfoCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3CB3371DD2675F0078DE25 /* ChannelInfoCellBuilder.swift */; };
@@ -367,6 +368,7 @@
 		8B3C3ED71DC28487005FCAFE /* CheckSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		8B3C3ED91DC29080005FCAFE /* TextSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		8B3C3EDD1DC29ED2005FCAFE /* InviteNewMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteNewMemberTableViewCell.swift; sourceTree = "<group>"; };
+		8B3C8CDD1E49BEAF00F13159 /* String+Email.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Email.swift"; path = "Mattermost/extensions/String+Email.swift"; sourceTree = SOURCE_ROOT; };
 		8B3C915E1E27EB3B0099F3F6 /* Chat+FileOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Chat+FileOperations.swift"; sourceTree = "<group>"; };
 		8B3C91601E27EDE80099F3F6 /* Chat+Autocompletion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Chat+Autocompletion.swift"; sourceTree = "<group>"; };
 		8B3CB3371DD2675F0078DE25 /* ChannelInfoCellBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelInfoCellBuilder.swift; path = Builders/ChannelInfoCellBuilder.swift; sourceTree = "<group>"; };
@@ -885,6 +887,7 @@
 				864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */,
 				8B3AB4A61E046CDC00010170 /* UIViewController+AlertManager.swift */,
 				D63C81591E43A2B4003E7751 /* UIViewController+SharedBar.swift */,
+				8B3C8CDD1E49BEAF00F13159 /* String+Email.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1741,6 +1744,7 @@
 				8BBCA01E1DD252A40059ABED /* WTMSettingsCellBuilder.swift in Sources */,
 				D8087AE71D427E23001918E8 /* Post.swift in Sources */,
 				CD157A8C1D75EA6E0079BD30 /* ChatNavigationController.swift in Sources */,
+				8B3C8CDE1E49BEAF00F13159 /* String+Email.swift in Sources */,
 				CDB6D3CE1D7F0A8A00C3018C /* BaseResponseDescriptorsContainer.swift in Sources */,
 				8BF5A7181E24D0A100544AF6 /* FileWrapper.swift in Sources */,
 				CDB4BC6D1D806C9600662231 /* UserMappingsContainer.swift in Sources */,

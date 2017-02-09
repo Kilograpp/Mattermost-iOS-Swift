@@ -50,10 +50,8 @@ extension FeedCellBuilder: FeedCellBuilderInterface {
         
         
         
-        var cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? FeedBaseTableViewCell
-        if cell == nil {
-            cell = FeedBaseTableViewCell(style: .default, reuseIdentifier: FeedBaseTableViewCell.reuseIdentifier)
-        }
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? FeedBaseTableViewCell
+
         cell!.transform = self.tableView.transform
         cell?.errorHandler = errorHandler
         
