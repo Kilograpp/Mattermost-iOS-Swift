@@ -20,7 +20,6 @@ class ChannelSettingsViewController: UIViewController {
     var usersAreNotInChannel = Array<User>()
     let cellBuilder = ChanenlSettingsCellBuilder()
     var lastSelectedIndexPath: IndexPath? = nil
-//    var reloadChatBlock: (() -> Void)!
     
     //temp timer
     var statusesTimer: Timer?
@@ -44,11 +43,6 @@ class ChannelSettingsViewController: UIViewController {
         
         self.navigationItem.setLeftBarButton(UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backAction)), animated: true)
     }
-    
-    //Reload chat table view after dismissing channel settings (need for showing system messages: https://youtrack.kilograpp.com/oauth?state=%2Fissue%2FMM-1316) -jufina
-//    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-//        super.dismiss(animated: flag, completion: reloadChatBlock)
-//    }
     
     //Имеет смысл передавать идентификатор, а не сам объект
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

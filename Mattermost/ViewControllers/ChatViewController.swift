@@ -578,12 +578,7 @@ extension ChatViewController: Navigation {
         let channelSettingsNavigationController = channelSettingsStoryboard.instantiateViewController(withIdentifier: "ChannelSettingsViewController") as! UINavigationController
         let channelSettingsViewController = channelSettingsNavigationController.topViewController as! ChannelSettingsViewController
         channelSettingsViewController.channel = try! Realm().objects(Channel.self).filter("identifier = %@", channel.identifier!).first!
-        
-        //Reload chat table view after dismissing channel settings (need for showing system messages: https://youtrack.kilograpp.com/oauth?state=%2Fissue%2FMM-1316) -jufina
-//        channelSettingsViewController.reloadChatBlock = { [unowned self] _ in
-////            self.loadChannelUsers()
-//            self.tableView.reloadData()
-//        }
+
         self.navigationController?.present(channelSettingsNavigationController, animated: true, completion: { _ in
         })
     }
