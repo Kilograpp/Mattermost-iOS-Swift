@@ -291,7 +291,8 @@ extension Post: Computations {
         let components = calendar!.dateComponents(unitFlags, from: createdAt!)
         let dayDate = calendar!.date(from: components)
         let key = "\(dayDate!.timeIntervalSince1970)_\(channelId!)"
-
+        guard self.day == nil else { return }
+        
         let day = Day()
         day.date = dayDate
         day.key = key 
