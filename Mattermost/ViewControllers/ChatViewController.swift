@@ -529,9 +529,17 @@ extension ChatViewController: Action {
         openPreviewWith(postLocalId: postLocalId, fileId: fileId)
     }
     
-    func scrollToBottom() {
-        self.tableView.setContentOffset(CGPoint(x:0, y:0), animated: true)
+
+    func scrollToBottom(animated: Bool = false) {
+        self.tableView.setContentOffset(CGPoint.zero, animated: animated)
         self.scrollButton?.isHidden = true
+    }
+    
+    func scrollToBottomWithoutReloading() {
+        let datasource = self.tableView.dataSource
+        self.tableView.dataSource = nil
+        self.scrollToBottom()
+        self.tableView.dataSource = datasource
     }
     
     func scrollBottomUp(keyboardHeight: CGFloat) {
@@ -605,7 +613,6 @@ extension ChatViewController: Request {
     func loadChannelUsers() {
         self.isLoadingInProgress = true
         showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
-        
         Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
             guard error == nil else {
                 self.handleErrorWith(message: error!.message)
@@ -1004,6 +1011,8 @@ extension ChatViewController: ChannelObserverDelegate {
         self.startHeadDialogueLabel.isHidden = true
         self.startButton.isHidden = true
         self.selectedIndexPath = nil
+
+        self.scrollToBottomWithoutReloading()
         
         if self.channel != nil {
             //remove action observer from old channel after relogin
