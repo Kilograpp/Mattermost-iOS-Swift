@@ -155,6 +155,14 @@ extension Channel: Support {
     static func teamIdentifierPath() -> String {
         return ChannelRelationships.team.rawValue + "." + ChannelAttributes.identifier.rawValue
     }
+    
+    static func currentUserIdentifier() -> String {
+        if let identifier = Preferences.sharedInstance.currentUserId {
+            return identifier
+        } else {
+            return ""
+        }
+    }
 
     func computeTeam() {
         //s3 refactor

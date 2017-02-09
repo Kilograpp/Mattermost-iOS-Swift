@@ -48,6 +48,7 @@ private protocol ChannelApi: class {
     func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func getChannel(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func getChannelMembers(completion: @escaping (_ error: Mattermost.Error?) -> Void)
+    func getChannelMember(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
 }
 
 private protocol UserApi: class {
@@ -574,7 +575,7 @@ extension Api: ChannelApi {
                 channel.lastPostDate = obtainedChannel?.lastPostDate
                 channel.messagesCount = obtainedChannel?.messagesCount
                 channel.extraUpdateDate = obtainedChannel?.extraUpdateDate
-                channel.mentionsCount = obtainedChannel!.mentionsCount
+                //channel.mentionsCount = obtainedChannel!.mentionsCount
             })
             DispatchQueue.main.async {
                 completion(nil)
@@ -597,6 +598,26 @@ extension Api: ChannelApi {
                     updateChannel.messagesCount! = String(describing: ($0["msg_count"]! as! NSNumber).intValue)
                     updateChannel.mentionsCount = newMentionsCount
                 }
+            })
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }, failure: completion)
+    }
+    
+    func getChannelMember(channel: Channel, completion: @escaping (Error?) -> Void) {
+        let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.getChannelMemberPathPattern(), channel)
+        self.manager.getObjectsAt(path: path!, success: {  (operation, mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let data = operation.httpRequestOperation.responseData
+            let responseDictionary = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! Dictionary<String, Any>
+            
+            try! realm.write({
+                let newMentionsCount = (responseDictionary["mention_count"]! as! NSNumber).intValue
+                guard let updateChannel = try! Realm().objects(Channel.self).filter("identifier = %@", responseDictionary["channel_id"]!).first else { return }
+                updateChannel.lastViewDate = Date(timeIntervalSince1970: TimeInterval((responseDictionary["last_viewed_at"]! as! NSNumber).doubleValue) / 1000)
+                updateChannel.messagesCount! = String(describing: (responseDictionary["msg_count"]! as! NSNumber).intValue)
+                updateChannel.mentionsCount = newMentionsCount
             })
             DispatchQueue.main.async {
                 completion(nil)
