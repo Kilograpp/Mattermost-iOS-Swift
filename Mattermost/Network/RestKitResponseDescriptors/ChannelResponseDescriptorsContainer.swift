@@ -146,5 +146,12 @@ extension ChannelResponseDescriptorsContainer: ChannelResponseDescriptors {
                                     keyPath: nil,
                                     statusCodes: RKStatusCodeIndexSetForClass(.successful))
     }
+    static func getChannelMemberResponseDescriptor() -> RKResponseDescriptor {
+        return RKResponseDescriptor(mapping: RKObjectMapping(with: NSMutableDictionary.self),
+                                    method: .GET,
+                                    pathPattern: ChannelPathPatternsContainer.getChannelMemberPathPattern(),
+                                    keyPath: nil,
+                                    statusCodes: RKStatusCodeIndexSetForClass(.successful))
+    }
 }
 

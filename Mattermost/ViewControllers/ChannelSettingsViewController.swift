@@ -212,10 +212,9 @@ extension ChannelSettingsViewController: UITableViewDataSource {
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "memberChannelSettingsCell") as! MemberChannelSettingsCell
                 cell.configureWithUser(user: channel.members[indexPath.row-1])
-                if (indexPath.row == membersRowCount){
+                if indexPath.row == membersRowCount {
                     cell.separatorInset = UIEdgeInsets.zero
                     return cell
-                    break
                 }
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 70, bottom: 0, right: 0)
                 return cell

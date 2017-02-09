@@ -9,7 +9,7 @@
 import Foundation
 
 private protocol Interface : class {
-    func configureWithChannel(channel: Channel)
+    func configureWithChannel(channel: Channel?)
 }
 
 protocol ConversationTitleViewDelegate : class {
@@ -48,7 +48,8 @@ final class ConversationTitleView : UIView {
 }
 
 extension ConversationTitleView : Interface {
-    func configureWithChannel(channel: Channel) {
-        titleLabel.text = channel.displayName
+    func configureWithChannel(channel: Channel?) {
+        guard let text = channel?.displayName else { return }
+        titleLabel.text = text
     }
 }
