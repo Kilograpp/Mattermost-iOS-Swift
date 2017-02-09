@@ -235,8 +235,12 @@ extension ChatViewController: Setup {
     
     fileprivate func setupInputViewButtons() {
 //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleTapAction))
+        
         self.navigationItem.titleView = navigationTitleView
-        navigationTitleView.configureWithChannel(channel: self.channel)
+        if self.channel != nil {
+            navigationTitleView.configureWithChannel(channel: self.channel)
+        }
+        
        
 //        self.navigationItem.titleView?.addGestureRecognizer(tapGestureRecognizer)
         
@@ -828,9 +832,9 @@ extension ChatViewController {
         let isntDialogEmpty = (self.resultsObserver.numberOfSections() > 0)
         self.startTextDialogueLabel.isHidden = isntDialogEmpty
         self.startHeadDialogueLabel.isHidden = isntDialogEmpty
-        self.startButton.isHidden = isntDialogEmpty || self.channel.identifier!.characters.count < 4
+        self.startButton.isHidden = isntDialogEmpty
         
-        return self.resultsObserver?.numberOfSections() ?? 0
+        return self.resultsObserver.numberOfSections()
     }
     
     //NewAutocomplite
@@ -1137,9 +1141,10 @@ extension ChatViewController {
     }
     
     func reloadTitle() {
-        if channel != nil {
-            navigationTitleView.configureWithChannel(channel: channel)
-        }
+        guard let channel = self.channel, !channel.isInvalidated else { return }
+
+        navigationTitleView.configureWithChannel(channel: channel)
+        
 //        (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
     }
     

@@ -119,7 +119,7 @@ extension RightMenuViewController: Action {
 //MARK: Navigation
 extension RightMenuViewController: Navigation {
     func proceedToProfile() {
-        let storyboard = UIStoryboard.init(name: "Profile", bundle: nil)
+        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
         let profile = storyboard.instantiateInitialViewController()
         (profile as! ProfileViewController).configureForCurrentUser(displayOnly: true)
         let navigation = self.menuContainerViewController.centerViewController
@@ -127,7 +127,7 @@ extension RightMenuViewController: Navigation {
     }
     
     func proceedToTeams() {
-        let storyboard = UIStoryboard.init(name: "Login", bundle: nil)
+        let storyboard = UIStoryboard(name: "Login", bundle: nil)
         let teamViewController = storyboard.instantiateViewController(withIdentifier: "TeamViewController")
         let loginNavigationController = LoginNavigationController(rootViewController: teamViewController)
         self.present(loginNavigationController, animated: true, completion: nil)
