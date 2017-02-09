@@ -633,7 +633,6 @@ extension Api: ChannelApi {
                 channel.lastPostDate = obtainedChannel?.lastPostDate
                 channel.messagesCount = obtainedChannel?.messagesCount
                 channel.extraUpdateDate = obtainedChannel?.extraUpdateDate
-                channel.mentionsCount = obtainedChannel!.mentionsCount
             })
             DispatchQueue.main.async {
                 completion(nil)

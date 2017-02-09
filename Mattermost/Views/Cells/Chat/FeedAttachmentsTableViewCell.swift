@@ -129,3 +129,36 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
         (cell as! Attachable).configureWithFile(file)
     }
 }
+
+//MARK: LongTapConfigure
+extension FeedAttachmentsTableViewCell {
+    override func configureForSelectedState() {
+        super.configureForSelectedState()
+        var indexPath = IndexPath()
+        for row in 0...attachments.count-1 {
+            indexPath = IndexPath(row: row, section: 0)
+            if var cell = tableView.cellForRow(at: indexPath) {
+                if attachments[row].isImage {
+                    (cell as! AttachmentImageCell).configureForSelectedState()
+                } else {
+                    (cell as! AttachmentFileCell).configureForSelectedState()
+                }
+            }
+        }
+    }
+    
+    override func configureForNoSelectedState() {
+        super.configureForNoSelectedState()
+        var indexPath = IndexPath()
+        for row in 0...attachments.count-1 {
+            indexPath = IndexPath(row: row, section: 0)
+            if var cell = tableView.cellForRow(at: indexPath) {
+                if attachments[row].isImage {
+                    (cell as! AttachmentImageCell).configureForNoSelectedState()
+                } else {
+                    (cell as! AttachmentFileCell).configureForNoSelectedState()
+                }
+            }
+        }
+    }
+}
