@@ -325,7 +325,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func loadExtraInfoForChannel(_ channelId: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -349,7 +353,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func updateLastViewDateForChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -365,7 +373,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func loadChannelsMoreWithCompletion(_ completion: @escaping (_ channels: Array<Channel>?, _ error: Mattermost.Error?) -> Void) {
@@ -391,7 +403,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func updateHeader(_ header:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
@@ -408,7 +424,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func updatePurpose(_ purpose:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
@@ -425,7 +445,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func update(newDisplayName:String, newName: String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
@@ -451,7 +475,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     
@@ -525,7 +553,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func joinChannel(_ channel: Channel, completion: @escaping (Error?) -> Void) {
@@ -540,7 +572,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func delete(channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -602,7 +638,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
  
     }
     
@@ -629,7 +669,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func getChannelMembers(completion: @escaping (Error?) -> Void) {
@@ -651,7 +695,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func getChannelMember(channel: Channel, completion: @escaping (Error?) -> Void) {
@@ -671,7 +719,11 @@ extension Api: ChannelApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
 }
 
@@ -697,7 +749,11 @@ extension Api: UserApi {
 
             SocketManager.sharedInstance.setNeedsConnect()
             NotificationsUtils.subscribeToRemoteNotificationsIfNeeded(completion: completion)
-            }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func logout(_ completion:@escaping (_ error: Mattermost.Error?) -> Void) {
@@ -708,7 +764,11 @@ extension Api: UserApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func loadCurrentUser(completion: @escaping (Error?) -> Void) {
@@ -719,7 +779,11 @@ extension Api: UserApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func loadUsersListBy(ids: [String], completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -751,7 +815,11 @@ extension Api: UserApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func loadUsersList(offset: Int, completion: @escaping (_ users: Array<User>?, _ error: Mattermost.Error?) -> Void) {
@@ -790,7 +858,11 @@ extension Api: UserApi {
             DispatchQueue.main.async {
                 completion(nil)
             }
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func loadUsersAreNotIn(channel: Channel, completion: @escaping (_ error: Mattermost.Error?,_ users: Array<User>? ) -> Void){
@@ -1145,7 +1217,11 @@ extension Api: PostApi {
         self.manager.post(object: post, path: path, success: { (mappingResult) in
             RealmUtils.save(mappingResult.firstObject as! Post)
             completion(nil)
-            }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
     
     func deletePost(_ post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
@@ -1195,7 +1271,11 @@ extension Api: PostApi {
         self.manager.get(object: post, path: path!, success: { (mappingResult, skipMapping) in
             RealmUtils.save(MappingUtils.fetchPostFromUpdate(mappingResult))
             completion(nil)
-        }, failure: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
     }
 }
 
