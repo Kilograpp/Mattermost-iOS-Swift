@@ -31,11 +31,7 @@ class ChannelObserver {
         }
     }
     
-    weak var delegate : ChannelObserverDelegate? {
-        didSet {
-            self.handleSelectedChannel()
-        }
-    }
+    weak var delegate : ChannelObserverDelegate?
     @nonobjc static let sharedObserver = ChannelObserver.sharedInstanse();
     
     //MARK: - Private
