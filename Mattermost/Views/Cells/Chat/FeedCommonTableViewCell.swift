@@ -124,6 +124,8 @@ protocol ParentComment: class {
 extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
     final func setupAvatarImageView() {
         self.avatarImageView.frame = CGRect(x: 8, y: 8, width: 40, height: 40)
+        //self.avatarImageView.layer.cornerRadius = 20.0
+        //self.avatarImageView.clipsToBounds = true
         self.avatarImageView.backgroundColor = ColorBucket.whiteColor
         self.avatarImageView.contentMode = .scaleAspectFill
 
@@ -168,10 +170,29 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
     override func highlightBackground() {
         let color = ColorBucket.selectedPostFromSearchBackgroundColor
         self.backgroundColor = color
-        self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!,
-                                                                size: CGSize(width: 40, height: 40),
-                                                                hightlighted: true)
+        self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!,size: CGSize(width: 40, height: 40),
+                                                                backgroundColor: .white,
+                                                                hightlighted: false)
         
         self.messageLabel.backgroundColor = ColorBucket.modificatedTransparentBrightBlueColor
+    }
+}
+
+//MARK: LongTapConfigure
+extension FeedCommonTableViewCell {
+    override func configureForSelectedState() {
+        super.configureForSelectedState()
+        avatarImageView.backgroundColor = UIColor.kg_lightLightGrayColor()
+        self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!, size: CGSize(width: 40, height: 40),
+                                                                backgroundColor: UIColor.kg_lightLightGrayColor(),
+                                                                hightlighted: false)
+    }
+    
+    override func configureForNoSelectedState() {
+        super.configureForNoSelectedState()
+        avatarImageView.backgroundColor = .white
+        self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!, size: CGSize(width: 40, height: 40),
+                                                                backgroundColor: .white,
+                                                                hightlighted: false)
     }
 }

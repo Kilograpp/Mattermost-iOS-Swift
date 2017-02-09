@@ -502,16 +502,16 @@ extension Api: ChannelApi {
             let obtainedChannel = MappingUtils.fetchAllChannels(mappingResult).first
 
             try! realm.write({
-//                channel.updateAt = obtainedChannel?.updateAt
-//                channel.deleteAt = obtainedChannel?.deleteAt
-//                channel.displayName = obtainedChannel?.displayName!
-//                channel.name = obtainedChannel?.name!
-//                channel.header = obtainedChannel?.header!
-//                channel.purpose = obtainedChannel?.purpose!
-//                channel.lastPostDate = obtainedChannel?.lastPostDate
+                channel.updateAt = obtainedChannel?.updateAt
+                channel.deleteAt = obtainedChannel?.deleteAt
+                channel.displayName = obtainedChannel?.displayName!
+                channel.name = obtainedChannel?.name!
+                channel.header = obtainedChannel?.header!
+                channel.purpose = obtainedChannel?.purpose!
+                channel.lastPostDate = obtainedChannel?.lastPostDate
                 channel.messagesCount = obtainedChannel?.messagesCount
-//                channel.extraUpdateDate = obtainedChannel?.extraUpdateDate
-                channel.mentionsCount = obtainedChannel!.mentionsCount
+                channel.extraUpdateDate = obtainedChannel?.extraUpdateDate
+//                channel.mentionsCount = obtainedChannel!.mentionsCount
             })
             completion(nil)
         }, failure: completion)

@@ -137,6 +137,19 @@ extension FeedBaseTableViewCell {
     }
 }
 
+//MARK: LongTapConfigure
+extension FeedBaseTableViewCell {
+    func configureForSelectedState() {
+        self.backgroundColor = UIColor.kg_lightLightGrayColor()
+        messageLabel.backgroundColor = UIColor.kg_lightLightGrayColor()
+    }
+    
+    func configureForNoSelectedState() {
+        self.backgroundColor = .white
+        messageLabel.backgroundColor = .white
+    }
+}
+
 extension TableViewPostDataSource {
     func configureWithPost(_ post: Post) {}
 }

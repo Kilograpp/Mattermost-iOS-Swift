@@ -42,6 +42,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var channel : Channel!
     
     fileprivate var selectedPost: Post! = nil
+    fileprivate var selectedIndexPath: IndexPath! = nil
     fileprivate var selectedAction: String = Constants.PostActionType.SendNew
     var emojiResult: [String]?
     
@@ -446,16 +447,19 @@ extension ChatViewController : Private {
         
         let copyAction = UIAlertAction(title: "Copy", style: .default) { action -> Void in
             UIPasteboard.general.string = post.message
+            self.hideSelectedStateFromCell()
         }
         actionSheetController.addAction(copyAction)
         
         let permalinkAction = UIAlertAction(title: "Permalink", style: .default) { action -> Void in
             UIPasteboard.general.string = post.permalink()
+            self.hideSelectedStateFromCell()
         }
         actionSheetController.addAction(permalinkAction)
         
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
             self.selectedPost = nil
+            self.hideSelectedStateFromCell()
         }
         actionSheetController.addAction(cancelAction)
         
@@ -472,6 +476,7 @@ extension ChatViewController : Private {
             let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { action -> Void in
                 self.selectedAction = Constants.PostActionType.DeleteOwn
                 self.deletePost()
+                self.hideSelectedStateFromCell()
             }
             actionSheetController.addAction(deleteAction)
         }
@@ -549,8 +554,14 @@ extension ChatViewController: Action {
     }
     
     func longPressAction(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        guard (self.selectedIndexPath == nil) else { return }
         guard let indexPath = self.tableView.indexPathForRow(at: gestureRecognizer.location(in: self.tableView)) else { return }
+        let cell = (tableView.cellForRow(at: indexPath) as! FeedBaseTableViewCell)
+            cell.configureForSelectedState()
+        
+            
         let post = resultsObserver?.postForIndexPath(indexPath)
+        self.selectedIndexPath = indexPath
         showActionSheetControllerForPost(post!)
     }
     
@@ -732,6 +743,7 @@ extension ChatViewController: Request {
             self.hideTopActivityIndicator()
         }
         self.clearTextView()
+        self.hideSelectedStateFromCell()
     }
     
     func sendPostReply() {
@@ -747,6 +759,7 @@ extension ChatViewController: Request {
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
         self.completePost.isHidden = true
+        self.hideSelectedStateFromCell()
     }
     
     func updatePost() {
@@ -759,6 +772,7 @@ extension ChatViewController: Request {
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
         self.completePost.isHidden = true
+        self.hideSelectedStateFromCell()
     }
     
     func deletePost() {
@@ -768,6 +782,7 @@ extension ChatViewController: Request {
             self.selectedAction = Constants.PostActionType.SendNew
             RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
+            self.hideSelectedStateFromCell()
             return
         }
         
@@ -782,6 +797,7 @@ extension ChatViewController: Request {
             
             RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
+            self.hideSelectedStateFromCell()
         }
     }
 }
@@ -986,6 +1002,9 @@ extension ChatViewController {
         let keyboardHeight = keyboardRectangle.height
         self.scrollBottomDown(keyboardHeight: keyboardHeight)
         self.installContentInsents()
+        self.hideSelectedStateFromCell()
+        self.selectedPost = nil
+        self.selectedAction = Constants.PostActionType.SendNew
     }
 }
 
@@ -1023,6 +1042,7 @@ extension ChatViewController: ChannelObserverDelegate {
         self.startTextDialogueLabel.isHidden = true
         self.startHeadDialogueLabel.isHidden = true
         self.startButton.isHidden = true
+        self.selectedIndexPath = nil
         
         if self.channel != nil {
             //remove action observer from old channel after relogin
@@ -1264,5 +1284,16 @@ extension ChatViewController {
         self.rightButton.isEnabled = self.textView.text != "" || self.filesPickingController.attachmentItems.count > 0
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(titleTapAction))
         self.navigationItem.titleView?.addGestureRecognizer(tapGestureRecognizer)
+    }
+}
+
+//MARK: hide selected state from selected cell
+extension ChatViewController {
+    func hideSelectedStateFromCell() {
+        guard (self.selectedIndexPath != nil) else { return }
+        if let cell = self.tableView.cellForRow(at: self.selectedIndexPath) {
+            (cell as! FeedBaseTableViewCell).configureForNoSelectedState()
+            self.selectedIndexPath = nil
+        }
     }
 }

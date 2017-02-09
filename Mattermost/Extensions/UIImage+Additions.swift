@@ -10,12 +10,12 @@ import Foundation
 extension UIImage {
     static let avatarPlaceholderImage = UIImage(named: "feed_system_avatar")!
     
-    class func roundedImageOfSize(_ sourceImage: UIImage, size: CGSize, hightlighted: Bool? = false) -> UIImage {
+    class func roundedImageOfSize(_ sourceImage: UIImage, size: CGSize, backgroundColor: UIColor, hightlighted: Bool? = false) -> UIImage {
         let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, true, 0)
         let context = UIGraphicsGetCurrentContext()
         if !hightlighted! {
-            UIColor.white.setFill()
+            backgroundColor.setFill()
         } else {
             ColorBucket.modificatedTransparentBrightBlueColor.setFill()
         }
@@ -29,6 +29,7 @@ extension UIImage {
 
         return result;
     }
+    
     
     @nonobjc static let sharedFeedSystemAvatar = UIImage.feedSystemAvatar()
     

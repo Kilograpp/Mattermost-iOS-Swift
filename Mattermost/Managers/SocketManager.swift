@@ -183,14 +183,11 @@ extension SocketManager: Notifications {
             guard let channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: channelId) else {
                 return
             }
-            Api.sharedInstance.getChannel(channel: channel, completion: { error in
+            
+            Api.sharedInstance.getChannelMembers(completion: { error in
+                guard error == nil else { return }
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
             })
-            
-//            Api.sharedInstance.getChannelMembers(completion: { error in
-//                guard error == nil else { return }
-//                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
-//            })
         }
     }
     
