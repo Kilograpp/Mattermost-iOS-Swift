@@ -120,7 +120,14 @@ extension InviteNewMemberTableViewController: InviteNewMemberTableViewController
                 AlertManager.sharedManager.showWarningWithMessage(message: "One or more empty emails!")
                 return
             }
-            invites.append(["email" : memberTouple.email, "firstName" : memberTouple.firstName, "lastName" : memberTouple.lastName!])
+            let urlRegEx = "(([a-zA-Z0-9(\\-)(\\.)])+\\@)([a-zA-Z0-9])+((\\.)([a-zA-Z0-9])+)"
+            let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
+            if urlTest.evaluate(with: memberTouple.email) {
+                invites.append(["email" : memberTouple.email, "firstName" : memberTouple.firstName, "lastName" : memberTouple.lastName!])
+            } else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "One or more incorrect emails!")
+                return
+            }
         }
         Api.sharedInstance.sendInvites(invites) { (error) in
             guard (error == nil) else {
