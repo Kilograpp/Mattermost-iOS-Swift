@@ -56,6 +56,7 @@
 		864AF5C01E0124000010F083 /* ChannelCreateField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864AF5BF1E0124000010F083 /* ChannelCreateField.swift */; };
 		864E61D51DF6E7EC00479215 /* UIViewController+LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */; };
 		86DE048E1E3A17DF008128EC /* UnsentPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DE048D1E3A17DF008128EC /* UnsentPost.swift */; };
+		86FFC7DE1E4CBC2000B96FA2 /* EditModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FFC7DD1E4CBC2000B96FA2 /* EditModeView.swift */; };
 		8B0E5C4F1DF8878A00DFB875 /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */; };
 		8B1087AF1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */; };
 		8B31024F1D985455001FE701 /* CompactPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B31024E1D985455001FE701 /* CompactPostView.swift */; };
@@ -359,6 +360,7 @@
 		864AF5BF1E0124000010F083 /* ChannelCreateField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCreateField.swift; sourceTree = "<group>"; };
 		864E61D41DF6E7EC00479215 /* UIViewController+LoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+LoaderView.swift"; sourceTree = "<group>"; };
 		86DE048D1E3A17DF008128EC /* UnsentPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsentPost.swift; sourceTree = "<group>"; };
+		86FFC7DD1E4CBC2000B96FA2 /* EditModeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditModeView.swift; sourceTree = "<group>"; };
 		8B0E5C4E1DF8878A00DFB875 /* SearchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
 		8B1087AE1DB4EF9200251742 /* ChannelsMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8B31024E1D985455001FE701 /* CompactPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompactPostView.swift; sourceTree = "<group>"; };
@@ -1127,6 +1129,7 @@
 				4B4497F31D93ECA9009939A9 /* PostStatusView.swift */,
 				8B31024E1D985455001FE701 /* CompactPostView.swift */,
 				D66BB1521E462D2B00AEB057 /* ConversationTitleView.swift */,
+				86FFC7DD1E4CBC2000B96FA2 /* EditModeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1733,6 +1736,7 @@
 				CDB6D3AD1D75FB2300C3018C /* ChatNavigationBarTitleView.swift in Sources */,
 				D62FEB951D4F2AD700390EBC /* PublicChannelTableViewCell.swift in Sources */,
 				8BE969B11D75E4BE0010A524 /* UIFont+PreparedFont.swift in Sources */,
+				86FFC7DE1E4CBC2000B96FA2 /* EditModeView.swift in Sources */,
 				D83305FE1D564B7B00E92CD6 /* String+Markdown.swift in Sources */,
 				D60C9B1C1D74DB76008BB5CF /* AssetsUtils.swift in Sources */,
 				864AF5C01E0124000010F083 /* ChannelCreateField.swift in Sources */,

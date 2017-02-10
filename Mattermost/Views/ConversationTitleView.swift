@@ -31,7 +31,7 @@ final class ConversationTitleView : UIView {
         titleLabel.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         titleLabel.textColor = ColorBucket.blackColor
         titleLabel.font = FontBucket.titleChannelFont
-        titleLabel.textAlignment = .left
+        titleLabel.textAlignment = .center
     }
     
     required init?(coder aDecoder: NSCoder) {
