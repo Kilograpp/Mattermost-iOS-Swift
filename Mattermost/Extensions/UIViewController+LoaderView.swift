@@ -30,9 +30,9 @@ extension UIViewController: LoaderView {
         guard activityIndicator == nil else { return }
         
         let screenSize = UIScreen.main.bounds
-        let y = UserStatusManager.sharedInstance.isSignedIn() ? 0 : UIApplication.shared.statusBarFrame.height
+        //let y = UserStatusManager.sharedInstance.isSignedIn() ? 0 : UIApplication.shared.statusBarFrame.height
         let loader = UIView.init(frame: CGRect(x: 0,
-                                               y: y+topOffset,
+                                               y: topOffset,
                                                width: screenSize.width,
                                                height: screenSize.height-topOffset-bottomOffset))
         loader.backgroundColor = UIColor.init(red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0)

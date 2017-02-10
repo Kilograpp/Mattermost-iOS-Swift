@@ -263,7 +263,8 @@ extension TeamViewController: UITableViewDelegate {
             DataManager.sharedInstance.currentTeam = team
             Preferences.sharedInstance.currentTeamId = team.identifier
             Preferences.sharedInstance.save()
-            showLoaderView(topOffset: 100.0 + titleLabel.frame.height, bottomOffset: 0.0)
+            let topOffset = titleLabel.frame.height+(self.navigationController?.navigationBar.frame.height)!+20.0
+            showLoaderView(topOffset: topOffset, bottomOffset: 0.0)
             loadTeamChannels()
             guard let controller = ChannelObserver.sharedObserver.delegate as? ChatViewController else { return }
             controller.resultsObserver.unsubscribeNotifications()
