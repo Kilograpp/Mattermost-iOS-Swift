@@ -1232,6 +1232,7 @@ extension Api: PostApi {
                 post.message = updatedPost.message
                 post.configureBackendPendingId()
                 post.computeMissingFields()
+                post.computeRenderedText()
             })
         }) { (error) in
             DispatchQueue.main.async {

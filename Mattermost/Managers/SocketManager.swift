@@ -207,14 +207,13 @@ extension SocketManager: Notifications {
     func handleReceivingUpdatedPost(_ updatedPost:Post) {
         if postExistsWithIdentifier(updatedPost.identifier!, pendingIdentifier: updatedPost.pendingId!) {
             guard let existedPost = RealmUtils.realmForCurrentThread().objects(Post.self).filter("%K == %@", PostAttributes.identifier.rawValue, updatedPost.identifier!).first else { return }
-            guard updatedPost.updatedAt != existedPost.updatedAt else {
-                return
-            }
+            guard updatedPost.updatedAt != existedPost.updatedAt else { return }
             try! RealmUtils.realmForCurrentThread().write {
                 existedPost.message = updatedPost.message
                 existedPost.updatedAt = updatedPost.updatedAt
                 existedPost.computeMissingFields()
                 existedPost.configureBackendPendingId()
+                existedPost.computeRenderedText()
             }
         } else {
             RealmUtils.save(updatedPost)

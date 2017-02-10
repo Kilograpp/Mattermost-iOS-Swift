@@ -359,6 +359,15 @@ extension Post: Computations {
         computeCellType()
         computeLocalIdentifier()
     }
+    
+    func computeRenderedText() {
+        let attrStr = self.attributedMessage!
+        if self.messageType == .system {
+            let range = NSRange(location: 0, length: (attrStr.string as NSString).length)
+            self.attributedMessage?.addAttribute(NSForegroundColorAttributeName, value: ColorBucket.lightGrayColor, range: range)
+        }
+        self.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+    }
 }
 
 // MARK: - KVO
