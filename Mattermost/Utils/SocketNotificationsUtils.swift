@@ -116,22 +116,11 @@ final class SocketNotificationUtils {
         post.deletedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Delete_at] as! TimeInterval/1000.0)
 
         post.computeMissingFields()
-        post.computeFollowUpIncomingMessage()
         post.setType(dictionary["type"] as! String)
         
         return post
     }
-    
-//    private func fetchFilesWithIds(filesIds: [String]) -> [File] {
-//        filesIds.forEach { (fileId) in
-//            Api.sharedInstance.getFileInfoWithCompletion(fileId: fileId, completion: { (error) in
-//                if (error == nil) {
-//                    
-//                }
-//            })
-//        }
-//    }
-    
+        
     static func typeForNotification(_ dictionary:[String:AnyObject]) -> NotificationType {
         guard let event = dictionary[NotificationKeys.Event] as? String else {
             guard let reply = dictionary[NotificationKeys.Status] as? String else {

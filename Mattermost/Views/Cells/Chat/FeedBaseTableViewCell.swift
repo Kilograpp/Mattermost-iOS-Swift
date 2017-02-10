@@ -139,6 +139,9 @@ extension FeedBaseTableViewCell {
                 if properties.first(where: { $0.name == "status" }) != nil {
                     self.postStatusView.configureWithStatus(self.post)
                 }
+                if properties.first(where: { $0.name == "message" }) != nil {
+                    self.configureMessage()
+                }
 
             case .deleted:
                 print("deleted")

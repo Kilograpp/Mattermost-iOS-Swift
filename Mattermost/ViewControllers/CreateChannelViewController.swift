@@ -95,7 +95,7 @@ fileprivate protocol Action: class {
 }
 
 fileprivate protocol Navigation: class {
-    func returnToNew(channel: Channel)
+    func returnToNew(channelId: String)
 }
 
 fileprivate protocol Request: class {
@@ -139,7 +139,10 @@ extension CreateChannelViewController: Action {
 
 //MARK: Navigation
 extension CreateChannelViewController: Navigation {
-    func returnToNew(channel: Channel) {
+    func returnToNew(channelId: String) {
+        let realm =  RealmUtils.realmForCurrentThread()
+        realm.refresh()
+        guard let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId) else { return }
         (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(channel)
         ChannelObserver.sharedObserver.selectedChannel = channel
         _ = self.navigationController?.popViewController(animated: true)
@@ -162,7 +165,7 @@ extension CreateChannelViewController: Request {
             return
         }
         
-        Api.sharedInstance.createChannel(self.privateType, displayName: displayName, name: name, header: header, purpose: purpose) { (channel, error) in
+        Api.sharedInstance.createChannel(self.privateType, displayName: displayName, name: name, header: header, purpose: purpose) { (channelId, error) in
             guard error == nil else {
                 var message = (error?.message)!
                 if error?.code == 500 {
@@ -175,10 +178,10 @@ extension CreateChannelViewController: Request {
                 return
             }
             
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
             let typeName = (self.privateType == "O") ? "Channel" : "Group"
             AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was successfully created")
-            self.returnToNew(channel: channel!)
+            self.returnToNew(channelId: channelId!)
         }
     }
 }
