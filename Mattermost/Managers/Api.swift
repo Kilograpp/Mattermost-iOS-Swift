@@ -493,7 +493,7 @@ extension Api: ChannelApi {
         newChannel.header = header
         newChannel.purpose = purpose
         
-        RealmUtils.save(newChannel)
+//        RealmUtils.save(newChannel)
         
         self.manager.post(object: newChannel, path: path, parameters: nil, success: { (mappingResult) in
             let realm = RealmUtils.realmForCurrentThread()
@@ -504,6 +504,7 @@ extension Api: ChannelApi {
                 channel.computeDispayNameIfNeeded()
                 channel.gradientType = Int(arc4random_uniform(5))
                 realm.add(channel)
+                Swift.print("CHANNEL CREATED IN REALM: \(channel)")
             })
             let channelId = channel.identifier
             DispatchQueue.main.async {
@@ -950,6 +951,7 @@ extension Api: UserApi {
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             let realm = RealmUtils.realmForCurrentThread()
             try! realm.write {
+                let user = DataManager.sharedInstance.currentUser
                 user?.firstName = firstName ?? user?.firstName
                 user?.lastName = lastName ?? user?.lastName
                 user?.nickname = nickName ?? user?.nickname
