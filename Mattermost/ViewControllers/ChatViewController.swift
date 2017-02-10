@@ -523,6 +523,10 @@ extension ChatViewController: Action {
         PostUtils.sharedInstance.resend(post: post) { _ in }
     }
     
+    func deleteAction(_ post:Post) {
+        PostUtils.sharedInstance.delete(post: post) { _ in }
+    }
+    
     func didTapImageAction(notification: NSNotification) {
         let postLocalId = notification.userInfo?["postLocalId"] as! String
         let fileId = notification.userInfo?["fileId"] as! String
@@ -1153,7 +1157,7 @@ extension ChatViewController {
         
         controller.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action:UIAlertAction) in
             print("add implementation")
-//            deletePost(post)
+            self.deleteAction(post)
         }))
         
         controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
