@@ -45,11 +45,7 @@ final class PostUtils: NSObject {
     static let sharedInstance = PostUtils()
     fileprivate let upload_files_group = DispatchGroup()
     fileprivate var files = Array<AssignedAttachmentViewItem>()
-    fileprivate func configureBackendPendingId(_ post: Post) {
-        let id = (DataManager.sharedInstance.currentUser?.identifier)!
-        let time = "\((post.createdAt?.timeIntervalSince1970)!)"
-        post.pendingId = "\(id):\(time)"
-    }
+    
     
     fileprivate var assignedFiles: Array<String> = Array()
 }
@@ -112,8 +108,9 @@ extension PostUtils: Send {
 //MARK: Update
 extension PostUtils: Update {
     func update(post: Post, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        update(post: post, message: message)
-        Api.sharedInstance.updateSinglePost(post) { (error) in
+        let channelId = post.channelId
+        let postId = post.identifier
+        Api.sharedInstance.updateSinglePost(post: post, postId: postId!, channelId: channelId!, message: message) { (error) in
             completion(error)
         }
     }
@@ -202,7 +199,6 @@ extension PostUtils: Upload {
 
 fileprivate protocol PostConfiguration: class {
     func postToSend(channel: Channel, message: String, attachments: NSArray?) -> Post
-    func update(post: Post, message: String)
     func assignFilesToPostIfNeeded(_ post: Post)
     func clearUploadedAttachments()
 }
@@ -220,7 +216,7 @@ extension PostUtils: PostConfiguration {
         post.isFollowUp =  (post.authorId == lastPostInChannel?.authorId) && (postsInterval! < Constants.Post.FollowUpDelay)
         post.channelId = channel.identifier
 
-        self.configureBackendPendingId(post)
+        post.configureBackendPendingId()
         self.assignFilesToPostIfNeeded(post)
         post.computeMissingFields()
         post.status = .sending
@@ -228,15 +224,6 @@ extension PostUtils: PostConfiguration {
         return post
     }
     
-    func update(post: Post, message: String) {
-        try! RealmUtils.realmForCurrentThread().write({
-            post.message = message
-            post.updatedAt = NSDate() as Date
-            configureBackendPendingId(post)
-            assignFilesToPostIfNeeded(post)
-            post.computeMissingFields()
-        })
-    }
     
     func assignFilesToPostIfNeeded(_ post: Post) {
         guard self.assignedFiles.count > 0 else { return }

@@ -11,25 +11,33 @@ import Foundation
 
 
 protocol ChannelObserverDelegate : class {
+    
     func didSelectChannelWithIdentifier(_ identifier: String!) -> Void
 }
 
 
 class ChannelObserver {
-    var selectedChannel: Channel? {
+    fileprivate var selectedChannelIdentifier: String? {
         didSet { self.handleSelectedChannel() }
     }
-    weak var delegate : ChannelObserverDelegate? {
-        didSet {
-            self.handleSelectedChannel()
+    
+    var selectedChannel: Channel? {
+        set(newChannel) {
+            self.selectedChannelIdentifier = newChannel?.identifier
+        }
+        get {
+            guard let identifier = self.selectedChannelIdentifier else { return nil }
+            return Channel.objectById(identifier)
         }
     }
+    
+    weak var delegate : ChannelObserverDelegate?
     @nonobjc static let sharedObserver = ChannelObserver.sharedInstanse();
     
     //MARK: - Private
     fileprivate func handleSelectedChannel() {
         DispatchQueue.main.async {
-            self.delegate?.didSelectChannelWithIdentifier(self.selectedChannel?.identifier)
+            self.delegate?.didSelectChannelWithIdentifier(self.selectedChannelIdentifier)
         }
     }
 }

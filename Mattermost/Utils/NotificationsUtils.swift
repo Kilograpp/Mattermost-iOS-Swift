@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import UserNotifications
 
 final class NotificationsUtils: NSObject {
     static func shouldRegisterForRemoteNotifications() -> Bool {
@@ -22,10 +22,19 @@ final class NotificationsUtils: NSObject {
         }
     }
     
-   static func registerForRemoteNotifications() {
-        let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-        UIApplication.shared.registerUserNotificationSettings(settings)
-        UIApplication.shared.registerForRemoteNotifications()
+   static func registerForRemoteNotifications(types: UIUserNotificationType) {
+        if #available(iOS 10.0, *) {
+            let options = types.authorizationOptions()
+            UNUserNotificationCenter.current().requestAuthorization(options: options) { (granted, error) in
+                if granted {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            }
+        } else {
+            let settings = UIUserNotificationSettings(types: types, categories: nil)
+            UIApplication.shared.registerUserNotificationSettings(settings)
+            UIApplication.shared.registerForRemoteNotifications()
+        }
     }
     
     static func saveNotificationsToken(token: Data) {

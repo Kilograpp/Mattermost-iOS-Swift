@@ -161,11 +161,14 @@ extension AllMembersViewController: UITableViewDelegate {
                 })
             })
         } else {
-            ChannelObserver.sharedObserver.selectedChannel = member.directChannel()
-            self.dismiss(animated: true, completion: {
-                self.lastSelectedIndexPath = nil
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
-            })
+            let channelRef = ThreadSafeReference(to: member.directChannel()!)
+            DispatchQueue.main.async() {
+                ChannelObserver.sharedObserver.selectedChannel = RealmUtils.realmForCurrentThread().resolve(channelRef)
+                self.dismiss(animated: true, completion: {
+                    self.lastSelectedIndexPath = nil
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+                })
+            }
         }
     }
 }

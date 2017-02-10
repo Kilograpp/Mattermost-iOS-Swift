@@ -11,9 +11,10 @@ import UIKit
 import RealmSwift
 import Fabric
 import Crashlytics
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -57,7 +58,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NotificationsUtils.saveNotificationsToken(token: deviceToken)
     }
     
+    
     func registerForRemoteNotifications() {
-        NotificationsUtils.registerForRemoteNotifications()
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self
+        }
+        let types: UIUserNotificationType = [ .badge, .alert, .sound ]
+        NotificationsUtils.registerForRemoteNotifications(types: types)
+    }
+    
+    @available(iOS 10, *)
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound, .badge])
     }
 }

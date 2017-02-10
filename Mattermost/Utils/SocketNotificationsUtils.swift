@@ -110,20 +110,13 @@ final class SocketNotificationUtils {
         post.channelId = dictionary[NotificationKeys.ChannelIdentifier] as? String
         post.pendingId = dictionary[NotificationKeys.PendingPostIdentifier] as? String
         post.parentId = dictionary[NotificationKeys.DataKeys.PostKeys.ParentIdentifier] as? String
-//        if let files = dictionary[NotificationKeys.DataKeys.PostKeys.Files] {
-//            (files as! [String]).forEach { (fileId) in
-//                let file = File()
-//                file.identifier = fileId
-//                file.computeRawLink()
-//                post.files.append(file)
-//            }
-//        }
  
         post.createdAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Create_at] as! TimeInterval/1000.0)
         post.updatedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Update_at] as! TimeInterval/1000.0)
         post.deletedAt = Date(timeIntervalSince1970: dictionary[NotificationKeys.DataKeys.PostKeys.Delete_at] as! TimeInterval/1000.0)
 
         post.computeMissingFields()
+        post.computeFollowUpIncomingMessage()
         post.setType(dictionary["type"] as! String)
         
         return post

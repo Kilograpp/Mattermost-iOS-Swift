@@ -276,13 +276,31 @@ extension Post: Computations {
             self.cellType = .attachment
         }
     }
+    
+    func configureBackendPendingId() {
+        let id = (DataManager.sharedInstance.currentUser?.identifier)!
+        let time = "\((self.createdAt?.timeIntervalSince1970)!)"
+        self.pendingId = "\(id):\(time)"
+    }
+    
+    
+    
+    func computeFollowUpIncomingMessage() {
+        if let channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: self.channelId) {
+            let lastPostInChannel = channel.lastPost()
+            let postsInterval = (self.createdAt as NSDate?)?.minutesLaterThan(lastPostInChannel?.createdAt)
+            self.isFollowUp =  (self.authorId == lastPostInChannel?.authorId) && (postsInterval! < Constants.Post.FollowUpDelay)
+        }
+    }
+    
     fileprivate func computeDay() {
         let unitFlags: Set<Calendar.Component> = [.year, .month, .day]
         let calendar = Calendar.sharedGregorianCalendar
         let components = calendar!.dateComponents(unitFlags, from: createdAt!)
         let dayDate = calendar!.date(from: components)
         let key = "\(dayDate!.timeIntervalSince1970)_\(channelId!)"
-
+        guard self.day == nil else { return }
+        
         let day = Day()
         day.date = dayDate
         day.key = key 
