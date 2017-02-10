@@ -1,4 +1,4 @@
-//
+ //
 // Created by Maxim Gubin on 28/06/16.
 // Copyright (c) 2016 Kilograpp. All rights reserved.
 //
@@ -1214,27 +1214,25 @@ extension Api: PostApi {
     func updateSinglePost(post: Post, postId: String, channelId: String, message: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(PostPathPatternsContainer.updatingPathPattern(), post)
         let parameters = ["message" : message, "id": postId, "channel_id" : channelId ]
-        let postReference = ThreadSafeReference(to: post)
-        
+        let localId = post.localIdentifier
         self.manager.post(object: post, path: path, parameters: parameters, success: { (mappingResult) in
-            RealmUtils.realmQueue.async {
-                let updatedPost = mappingResult.firstObject as! Post
-                let realm = RealmUtils.realmForCurrentThread()
-                guard let post = realm.resolve(postReference) else {
-                    return
+            defer {
+                DispatchQueue.main.async {
+                    completion(nil)
                 }
-                try! realm.write ({
-                    post.updatedAt = updatedPost.updatedAt
-                    post.createdAt = updatedPost.createdAt
-                    post.message = updatedPost.message
-                    post.configureBackendPendingId()
-    //                    assignFilesToPostIfNeeded(post)
-                    post.computeMissingFields()
-                })
             }
-            DispatchQueue.main.async {
-                completion(nil)
+            let updatedPost = mappingResult.firstObject as! Post
+            let realm = RealmUtils.realmForCurrentThread()
+            guard let post = realm.object(ofType: Post.self, forPrimaryKey: localId) else {
+                return
             }
+            guard updatedPost.updatedAt != post.updatedAt else { return }
+            try! realm.write ({
+                post.updatedAt = updatedPost.updatedAt
+                post.message = updatedPost.message
+                post.configureBackendPendingId()
+                post.computeMissingFields()
+            })
         }) { (error) in
             DispatchQueue.main.async {
             completion(error)
