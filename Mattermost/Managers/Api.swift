@@ -41,7 +41,7 @@ private protocol ChannelApi: class {
     //func loadChannelsMoreWithCompletion(_ completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func loadChannelsMoreWithCompletion(_ completion: @escaping (_ channels: Array<Channel>?, _ error: Mattermost.Error?) -> Void)
     func addUserToChannel(_ user:User, channel:Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
-    func createChannel(_ type: String, displayName: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void)
+    func createChannel(_ type: String, displayName: String, name: String, header: String, purpose: String, completion: @escaping (_ channelId: String?, _ error: Error?) -> Void)
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void)
     func leaveChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
     func joinChannel(_ channel: Channel, completion: @escaping (_ error: Mattermost.Error?) -> Void)
@@ -483,7 +483,7 @@ extension Api: ChannelApi {
     }
     
     
-    func createChannel(_ type: String, displayName: String, name: String, header: String, purpose: String, completion: @escaping (_ channel: Channel?, _ error: Error?) -> Void) {
+    func createChannel(_ type: String, displayName: String, name: String, header: String, purpose: String, completion: @escaping (_ channelId: String?, _ error: Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createChannelPathPattern(), DataManager.sharedInstance.currentTeam)
       
         let newChannel = Channel()
@@ -505,8 +505,9 @@ extension Api: ChannelApi {
                 channel.gradientType = Int(arc4random_uniform(5))
                 realm.add(channel)
             })
+            let channelId = channel.identifier
             DispatchQueue.main.async {
-                completion(channel ,nil)
+                completion(channelId ,nil)
             }
         }) { (error) in
             DispatchQueue.main.async {

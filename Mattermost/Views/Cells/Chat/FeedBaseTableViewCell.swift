@@ -140,7 +140,7 @@ extension FeedBaseTableViewCell {
                     self.postStatusView.configureWithStatus(self.post)
                 }
                 if properties.first(where: { $0.name == "message" }) != nil {
-                    self.messageLabel.layoutData = post.renderedText
+                    self.configureMessage()
                 }
 
             case .deleted:
