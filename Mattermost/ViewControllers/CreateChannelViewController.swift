@@ -140,7 +140,9 @@ extension CreateChannelViewController: Action {
 //MARK: Navigation
 extension CreateChannelViewController: Navigation {
     func returnToNew(channelId: String) {
-        guard let channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: channelId) else { return }
+        let realm =  RealmUtils.realmForCurrentThread()
+        realm.refresh()
+        guard let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId) else { return }
         (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(channel)
         ChannelObserver.sharedObserver.selectedChannel = channel
         _ = self.navigationController?.popViewController(animated: true)
@@ -176,7 +178,7 @@ extension CreateChannelViewController: Request {
                 return
             }
             
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
             let typeName = (self.privateType == "O") ? "Channel" : "Group"
             AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was successfully created")
             self.returnToNew(channelId: channelId!)
