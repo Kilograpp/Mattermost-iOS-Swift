@@ -64,6 +64,7 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         
+        guard !self.post.isInvalidated else { return }
         guard self.post.author != nil else { return }
         guard !self.post.isFollowUp else { return }
         

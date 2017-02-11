@@ -29,6 +29,7 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        guard !self.post.isInvalidated else { return }
         let x = Constants.UI.MessagePaddingSize
         var y: CGFloat = self.post.isFollowUp ? 0 : 36
         y += self.post.hasParentPost() ? (64 + Constants.UI.ShortPaddingSize) : 0
