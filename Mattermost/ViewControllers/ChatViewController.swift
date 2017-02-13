@@ -1030,7 +1030,7 @@ extension ChatViewController: ChannelObserverDelegate {
         
         //old channel
         //unsubscribing from realm and channelActions
-
+        self.resultsObserver?.unsubscribeNotifications()
         self.resultsObserver = nil
         self.startTextDialogueLabel.isHidden = true
         self.startHeadDialogueLabel.isHidden = true
@@ -1177,7 +1177,6 @@ extension ChatViewController {
         }))
         
         controller.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action:UIAlertAction) in
-            print("add implementation")
             self.deleteAction(post)
         }))
         

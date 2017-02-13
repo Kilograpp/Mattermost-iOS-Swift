@@ -40,6 +40,7 @@ final class FeedNotificationsObserver {
 //MARK: Interface
 extension FeedNotificationsObserver: Interface {
     @objc func unsubscribeNotifications() {
+        guard self.resultsNotificationToken != nil else { return }
         self.resultsNotificationToken?.stop()
         NotificationCenter.default.removeObserver(self)
     }
