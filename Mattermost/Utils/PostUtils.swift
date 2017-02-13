@@ -69,7 +69,12 @@ extension PostUtils: Interface {
 //MARK: Send
 extension PostUtils: Send {
     func sendPost(channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
-        let post = postToSend(channel: channel, message: message, attachments: attachments)
+        let trimmedMessage = message.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let post = postToSend(channel: channel, message: trimmedMessage, attachments: attachments)
+        guard trimmedMessage != StringUtils.emptyString() || post.files.count > 0  else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Text shouldn't contain only whitespaces and newlines")
+            return
+        }
         RealmUtils.save(post)
         clearUploadedAttachments()
         send(post: post, completion: completion)
