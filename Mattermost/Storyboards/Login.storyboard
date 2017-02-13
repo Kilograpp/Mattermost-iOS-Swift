@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="VqN-sf-Nn3">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="VqN-sf-Nn3">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -143,6 +143,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Login" id="Mu6-VB-uGL"/>
                     <connections>
+                        <outlet property="headerView" destination="IOi-YG-yKZ" id="nIc-Z4-qRk"/>
                         <outlet property="loaderView" destination="GXp-iK-xZE" id="zin-eE-clZ"/>
                         <outlet property="loginButton" destination="MwB-Xc-MT1" id="5Zb-Ne-g13"/>
                         <outlet property="loginTextField" destination="VBY-jz-cKC" id="igE-Du-nZD"/>

@@ -38,7 +38,7 @@ extension UIViewController: LoaderView {
         loader.backgroundColor = UIColor.init(red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0)
         
         let frame = CGRect(x: (screenSize.width-screenSize.width/7)/2,
-                           y: (screenSize.height-screenSize.height/7)/2-topOffset,
+                           y: (screenSize.height-topOffset-bottomOffset-screenSize.height*1.25/7)/2,
                            width: screenSize.width/7,
                            height: screenSize.height/7)
         

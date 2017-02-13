@@ -12,6 +12,7 @@ final class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var passwordTextField: KGTextField!
     @IBOutlet weak var loginTextField: KGTextField!
+    @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var recoveryButton: UIButton!
     @IBOutlet weak var loaderView: UIView!
@@ -224,7 +225,7 @@ extension LoginViewController: Navigation {
 //MARK: Request
 extension LoginViewController: Request {
     func login() {
-        let topOffset = titleLabel.frame.height+(self.navigationController?.navigationBar.frame.height)!+20.0
+        let topOffset = self.headerView.frame.height
         showLoaderView(topOffset: topOffset, bottomOffset: 0.0)
         passwordTextField.endEditing(false)
         loginTextField.endEditing(false)
