@@ -66,7 +66,7 @@ extension SocketManager: WebSocketDelegate{
         if error != nil {
             setNeedsConnect()
         }
-        setNeedsConnect()
+//        setNeedsConnect()
     }
     func websocketDidReceiveMessage(socket: Starscream.WebSocket, text: String) {
         self.handleIncomingMessage(text)

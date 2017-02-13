@@ -999,7 +999,7 @@ extension ChatViewController {
         self.selectedPost = nil
         self.selectedAction = Constants.PostActionType.SendNew
         self.editModeView.isHidden = true
-        self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
+//        self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
     }
 }
 
