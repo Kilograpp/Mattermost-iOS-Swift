@@ -334,11 +334,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         picker.dismiss(animated: true, completion: nil)
         
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        if picker.sourceType == .camera {
-            self.avatarImageView.image = image.fixedOrientation()//ImageOrientationUtils.fixImageOrientation(src: image)
-        } else {
-            self.avatarImageView.image = image
-        }
+        self.avatarImageView.image = image.fixedOrientation()
         self.saveButton.isEnabled = true
     }
 }
