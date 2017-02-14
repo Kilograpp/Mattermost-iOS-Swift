@@ -736,12 +736,12 @@ extension ChatViewController: Request {
             if error != nil {
                 self.handleErrorWith(message: (error?.message!)!)
             }
-            self.selectedPost = nil
+            self.hideTopActivityIndicator()
+            self.hideSelectedStateFromCell()
         }
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
         self.completePost.isHidden = true
-        self.hideSelectedStateFromCell()
     }
     
     func updatePost() {
