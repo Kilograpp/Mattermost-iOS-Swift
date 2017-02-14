@@ -211,12 +211,6 @@ extension AttachmentFileView: Downloading {
                 self.downloadingState = DownloadingState.Downloaded
                 
                 AlertManager.sharedManager.showFileDownloadedAlert(fileIdentifier: self.file.identifier!, tapHandler: AttachmentFileView.openDownloadedFileByIdentifier)
-                
-                let notification = UILocalNotification()
-                notification.alertBody = "File was successfully downloaded".localized
-//                notification.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-                UIApplication.shared.scheduleLocalNotification(notification)
-
             }) { (identifier, progress) in
                 if fileId == identifier {
                     self.progressView.progress = progress
