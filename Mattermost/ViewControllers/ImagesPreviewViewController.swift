@@ -186,6 +186,11 @@ extension ImagesPreviewViewController {
     }
     
     func saveDisplayedImage() {
+        guard Api.sharedInstance.isNetworkReachable()  else {
+            AlertManager.sharedManager.showErrorWithMessage(message: "No Internet connectivity detected")
+            return
+        }
+        
         let row = Int((self.imageCollectionView?.contentOffset.x)! / (self.imageCollectionView?.frame.width)!)
         let url = self.imageFiles?[row].downloadURL()
         let image = SDImageCache.shared().imageFromMemoryCache(forKey: url?.absoluteString)
