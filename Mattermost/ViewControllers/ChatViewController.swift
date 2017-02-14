@@ -771,8 +771,9 @@ extension ChatViewController: Request {
         let postIdentifier = self.selectedPost.identifier!
         PostUtils.sharedInstance.delete(post: self.selectedPost) { (error) in
             defer {
-               self.selectedAction = Constants.PostActionType.SendNew
+                self.selectedAction = Constants.PostActionType.SendNew
                 self.selectedPost = nil
+                self.hideSelectedStateFromCell()
             }
             
             guard error == nil else {
@@ -780,14 +781,13 @@ extension ChatViewController: Request {
                 return
             }
 
-            let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("parentId == %@", postIdentifier)
-            guard comments.count > 0 else { return }
-            
-            RealmUtils.deletePostObjects(comments)
-            
-            RealmUtils.deleteObject(self.selectedPost)
-            self.selectedPost = nil
-            self.hideSelectedStateFromCell()
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write {
+                let comments = realm.objects(Post.self).filter("parentId == %@", postIdentifier)
+                if comments.count > 0  {
+                    realm.delete(comments)
+                }
+            }
         }
     }
 }
