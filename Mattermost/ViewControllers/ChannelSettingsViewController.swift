@@ -156,7 +156,11 @@ extension ChannelSettingsViewController: Request {
     
     func leaveChannel() {
         Api.sharedInstance.leaveChannel(channel, completion: { (error) in
-            guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
+            guard (error == nil) else {
+                self.lastSelectedIndexPath = nil
+                AlertManager.sharedManager.showErrorWithMessage(message: error!.message)
+                return
+            }
             let leavedCannel = self.channel
             let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
             leftMenu.configureInitialSelectedChannel()

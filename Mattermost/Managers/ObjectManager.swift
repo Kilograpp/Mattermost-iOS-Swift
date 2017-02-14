@@ -132,13 +132,13 @@ extension ObjectManager: PostRequests {
                 }
                 
                 let dict = responseString?.toDictionary()
-                if (Int((dict?["status_code"])! as! NSNumber) == 500) {
+//                if (Int((dict?["status_code"])! as! NSNumber) == 500) {
                     let statusCode = Int((dict?["status_code"])! as! NSNumber)
                     let message = dict?["message"]
                     failure?(Error(errorCode: statusCode, errorMessage: message as! String))
-                } else {
-                    failure?(self.handleOperation(operation!, withError: error!))
-                }
+//                } else {
+//                    failure?(self.handleOperation(operation!, withError: error!))
+//                }
             }
         }
     }
