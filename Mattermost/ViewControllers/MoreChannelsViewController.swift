@@ -38,6 +38,8 @@ final class MoreChannelsViewController: UIViewController {
     var isPrivateChannel: Bool = false
     var isSearchActive: Bool = false
     
+    let channelChangingGroup = DispatchGroup()
+    
 //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -224,6 +226,9 @@ extension  MoreChannelsViewController: Configuration {
                 leave(channel: channel)
             }
         }
+        channelChangingGroup.notify(queue: DispatchQueue.main) { 
+            self.returnToChannel()
+        }
         self.addDoneButton.isEnabled = false
     }
     
@@ -270,8 +275,11 @@ extension MoreChannelsViewController: Request {
             channel.computeDisplayNameWidth()
             realm.add(channel)
         }
-        
+        channelChangingGroup.enter()
         Api.sharedInstance.joinChannel(channel) { (error) in
+            defer {
+                self.channelChangingGroup.leave()
+            }
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
             self.alreadyUpdatedChannelCount += 1
@@ -292,7 +300,11 @@ extension MoreChannelsViewController: Request {
     }
     
     func leave(channel: Channel) {
+        channelChangingGroup.enter()
         Api.sharedInstance.leaveChannel(channel) { (error) in
+            defer {
+                self.channelChangingGroup.leave()
+            }
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
             let nameOfDeletedChannel = channel.displayName!
