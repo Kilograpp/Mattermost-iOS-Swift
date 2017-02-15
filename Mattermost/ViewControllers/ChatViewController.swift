@@ -639,6 +639,11 @@ extension ChatViewController: Request {
         Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
             guard error == nil else {
                 self.handleErrorWith(message: error!.message)
+                if ChannelObserver.sharedObserver.selectedChannel!.lastPost() != nil {
+                    self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: ChannelObserver.sharedObserver.selectedChannel!)
+                } else {
+                    self.tableView.reloadData()
+                }
                 return
             }
             
@@ -660,6 +665,9 @@ extension ChatViewController: Request {
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             
             if isInitial {
+                self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
+            }
+            if error == nil && self.resultsObserver == nil {
                 self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
             }
             self.hideLoaderView()
@@ -859,7 +867,7 @@ extension ChatViewController {
         guard self.resultsObserver != nil else { return 0 }
         guard tableView == self.tableView else { return numberOfSection }
         
-        let isntDialogEmpty = (self.resultsObserver.numberOfSections() > 0)
+        let isntDialogEmpty = (Int(self.channel.messagesCount!)! > 0 || self.resultsObserver.numberOfSections() > 0)
         self.startTextDialogueLabel.isHidden = isntDialogEmpty
         self.startHeadDialogueLabel.isHidden = isntDialogEmpty
         self.startButton.isHidden = isntDialogEmpty
@@ -1054,7 +1062,7 @@ extension ChatViewController: ChannelObserverDelegate {
         navigationTitleView.configureWithChannel(channel: channel)
         
         self.textView.resignFirstResponder()
-
+        
         guard !self.hasNewestPage else { return }
         
         self.loadChannelUsers()
