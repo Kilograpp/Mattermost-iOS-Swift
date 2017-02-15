@@ -184,6 +184,7 @@ extension FeedCommonTableViewCell {
     override func configureForSelectedState() {
         super.configureForSelectedState()
         avatarImageView.backgroundColor = UIColor.kg_lightLightGrayColor()
+        parentView.backgroundColor = UIColor.kg_lightLightGrayColor()
         self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!, size: CGSize(width: 40, height: 40),
                                                                 backgroundColor: UIColor.kg_lightLightGrayColor(),
                                                                 hightlighted: false)
@@ -192,6 +193,7 @@ extension FeedCommonTableViewCell {
     override func configureForNoSelectedState() {
         super.configureForNoSelectedState()
         avatarImageView.backgroundColor = .white
+        parentView.backgroundColor = .white
         self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!, size: CGSize(width: 40, height: 40),
                                                                 backgroundColor: .white,
                                                                 hightlighted: false)
