@@ -10,6 +10,10 @@ import Foundation
 import MBProgressHUD
 import MRProgress
 
+
+//Temp solution
+let supportedFileTypes = [ "txt", "pdf", "doc", "gif" ] //TODO: add others
+
 fileprivate struct DownloadingState {
     static let NotDownloaded: Int = 0
     static let Downloading: Int   = 1
@@ -210,13 +214,22 @@ extension AttachmentFileView: Downloading {
                 }
                 self.downloadingState = DownloadingState.Downloaded
                 
-                AlertManager.sharedManager.showFileDownloadedAlert(fileIdentifier: self.file.identifier!, tapHandler: AttachmentFileView.openDownloadedFileByIdentifier)
+                AlertManager.sharedManager.showFileDownloadedAlert(fileIdentifier: self.file.identifier!, canBeOpenned: self.canOpenFilePreview(fileId: self.file.identifier!), tapHandler: AttachmentFileView.openDownloadedFileByIdentifier)
             }) { (identifier, progress) in
                 if fileId == identifier {
                     self.progressView.progress = progress
                 }
             }
         })
+    }
+    
+    fileprivate func canOpenFilePreview(fileId: String) -> Bool {
+        let file = RealmUtils.realmForCurrentThread().object(ofType: File.self, forPrimaryKey: fileId)
+//        let filePath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (file?.name)!
+//
+//        let documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
+//        return documentInteractionController.presentOpenInMenu(from: .zero, in: UIView(), animated: false)
+        return supportedFileTypes.contains(file!.ext!)
     }
     
     fileprivate func stopDownloadingFile() {

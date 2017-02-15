@@ -189,8 +189,8 @@ extension LeftMenuViewController: Configuration {
         DispatchQueue.main.async { 
             self.prepareResults()
             self.configureInitialSelectedChannel()
+            RealmUtils.realmForCurrentThread().refresh()
             self.tableView.reloadData()
-            
         }
     }
 }
