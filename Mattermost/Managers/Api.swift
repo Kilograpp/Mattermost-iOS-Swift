@@ -1195,6 +1195,7 @@ extension Api: PostApi {
                 post.status = .default
                 post.identifier = resultPost.identifier
             }
+            completion(nil)
         }) { (operation, error) in
             completion(Mattermost.Error(error: error))
         }
