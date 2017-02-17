@@ -1,4 +1,4 @@
-//
+ //
 //  MoreChannelViewController.swift
 //  Mattermost
 //
@@ -60,18 +60,12 @@ fileprivate protocol Configuration {
     func prepareResults()
 }
 
-fileprivate protocol Action {
-    func backAction()
-    func addDoneAction()
-}
-
 fileprivate protocol Navigation {
     func returnToChannel()
 }
 
 fileprivate protocol Request {
     func joinTo(channel: Channel)
-    func leave(channel: Channel)
 }
 
 fileprivate protocol CompletionMessages {
@@ -187,18 +181,6 @@ extension  MoreChannelsViewController: Configuration {
 }
 
 
-//MARK: Action
-extension MoreChannelsViewController: Action {
-    func backAction() {
-        self.returnToChannel()
-    }
-    
-    func addDoneAction() {
-//        saveResults()
-    }
-}
-
-
 //MARK: Navigation
 extension MoreChannelsViewController: Navigation {
     func returnToChannel() {
@@ -217,25 +199,14 @@ extension MoreChannelsViewController: Request {
             channel.computeDisplayNameWidth()
             realm.add(channel)
         }
-        
+
         Api.sharedInstance.joinChannel(channel) { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
-        }
-    }
-    
-    func leave(channel: Channel) {
-        Api.sharedInstance.leaveChannel(channel) { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            
-            let nameOfDeletedChannel = channel.displayName!
-            let realm = RealmUtils.realmForCurrentThread()
-            try! realm.write {
-                realm.delete(channel)
+            guard error == nil else {
+                self.handleErrorWith(message: (error?.message)!); return
             }
-            
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+
+            ChannelObserver.sharedObserver.selectedChannel = channel
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
@@ -243,11 +214,11 @@ extension MoreChannelsViewController: Request {
     func createDirectChannelWith(_ user: User) {
         Api.sharedInstance.createDirectChannelWith(user) { (channel, error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            self.updatePreferencesSave(user)
+            self.updatePreferencesSave(user, channelT: channel)
         }
     }
     
-    func updatePreferencesSave(_ user: User) {
+    func updatePreferencesSave(_ user: User, channelT: Channel? = nil) {
         let predicate =  NSPredicate(format: "displayName == %@", user.username!)
         let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).first
         
@@ -281,7 +252,11 @@ extension MoreChannelsViewController: Request {
                     preferences.forEach{ usersIds.append($0.name!) }
 
                     Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
-                        guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                        guard error == nil else {
+                            self.handleErrorWith(message: (error?.message)!)
+                            return
+                        }
+                        
                         let predicate = NSPredicate(format: "identifier != %@ AND identifier != %@", Preferences.sharedInstance.currentUserId!,
                                             Constants.Realm.SystemUserIdentifier)
                         let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate)
@@ -290,7 +265,9 @@ extension MoreChannelsViewController: Request {
                 
                         Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
                             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                            ChannelObserver.sharedObserver.selectedChannel = channel
+                            
+                            _ = self.navigationController?.popViewController(animated: true)
+                            
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                         }

@@ -18,9 +18,6 @@ final class RealmUtils {
     }()
    
     static func realmForCurrentThread() -> Realm {
-        if Thread.isMainThread {
-            return realmForMainThread
-        }
         return try! Realm()
     }
     

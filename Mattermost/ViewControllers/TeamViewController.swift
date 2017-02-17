@@ -89,7 +89,7 @@ extension TeamViewController: Setup {
         setupTableView()
     }
     
-    func needToSetupNavigationBar() -> Bool {
+    func isPresentedModally() -> Bool {
         if (self.presentingViewController != nil) {
             return true
         }
@@ -100,7 +100,7 @@ extension TeamViewController: Setup {
     }
     
     func setupNavigationBar() {
-        if needToSetupNavigationBar() {
+        if isPresentedModally() {
             let backButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(backAction))
 //            let backButton = UIBarButtonItem.init(image: UIImage(named: "navbar_back_icon2"), style: .done, target: self, action: #selector(backAction))
             backButton.tintColor = UIColor.white
@@ -209,16 +209,20 @@ extension TeamViewController: Request {
                 Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
                 Preferences.sharedInstance.save()
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
-                return }
+                return
+            }
             
-            
-            RouterUtils.loadInitialScreen()
           //  NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
-            
+
             DispatchQueue.main.async{
-                self.dismiss(animated: true, completion:{ _ in
-                    self.hideLoaderView()
-                })
+                if self.isPresentedModally() {
+                    self.dismiss(animated: true, completion:{ _ in
+                        self.hideLoaderView()
+                        RouterUtils.loadInitialScreen()
+                    })
+                } else {
+                    RouterUtils.loadInitialScreen()
+                }
             }
         }
     }

@@ -196,6 +196,11 @@ extension UFSettingsTableViewController: Request {
                     AlertManager.sharedManager.showErrorWithMessage(message: "Wrong old password")
                     return
                 }
+                //Костыль (message on rus)
+                guard error?.message != "Ваш пароль должен содержать по крайней мере 5 символов." else {
+                    AlertManager.sharedManager.showErrorWithMessage(message: "Password must contain 5 characters at least.")
+                    return
+                }
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }

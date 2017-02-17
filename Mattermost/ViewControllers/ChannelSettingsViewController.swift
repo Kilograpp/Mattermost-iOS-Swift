@@ -156,15 +156,15 @@ extension ChannelSettingsViewController: Request {
     
     func leaveChannel() {
         Api.sharedInstance.leaveChannel(channel, completion: { (error) in
-            guard (error == nil) else { self.lastSelectedIndexPath = nil; return }
-            let leavedCannel = self.channel
+            guard (error == nil) else {
+                self.lastSelectedIndexPath = nil
+                AlertManager.sharedManager.showErrorWithMessage(message: error!.message)
+                return
+            }
             let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
             leftMenu.configureInitialSelectedChannel()
+
             self.dismiss(animated: true, completion: {
-                let realm = RealmUtils.realmForCurrentThread()
-                try! realm.write {
-                    realm.delete(leavedCannel!)
-                }
                 leftMenu.reloadChannels()
             })
             let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"

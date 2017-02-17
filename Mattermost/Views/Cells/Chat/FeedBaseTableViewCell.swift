@@ -59,8 +59,15 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     }
     
     fileprivate func configureMessage() {
+        switch self.post.messageType {
+        case .system:
+            break
+        case .default:
+            self.messageLabel.layoutData = post.renderedText
+        case .slackAttachment:
+            post.renderedText = AttributedTextLayoutData(text: post.attachments.first!.attributedText!, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+        }
         self.messageLabel.layoutData = post.renderedText
-        guard self.post.messageType == .system else { return }
     }
     
     
@@ -131,8 +138,6 @@ extension FeedBaseTableViewCell {
         postStatusView.configureWithStatus(post)
         postStatusView.errorHandler = self.errorHandler
         
-        
-//       guard post.identifier == nil else {return}
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):

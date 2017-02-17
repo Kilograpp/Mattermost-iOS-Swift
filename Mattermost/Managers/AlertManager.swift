@@ -17,18 +17,21 @@ enum AlertType {
 class AlertManager {
     static let sharedManager: AlertManager = AlertManager()
     
-    func showFileDownloadedAlert(fileIdentifier: String, tapHandler: @escaping (_ fileIdentifier: String) -> Void) {
+    func showFileDownloadedAlert(fileIdentifier: String, canBeOpenned: Bool, tapHandler: @escaping (_ fileIdentifier: String) -> Void) {
         let view = MessageView.viewFromNib(layout: .CardView)
         
         // Theme message elements with the warning style.
         view.configureTheme(.success)
-        view.button?.setTitle("Open".localized, for: .normal)
-        view.configureDropShadow()
-        view.buttonTapHandler = { _ in
-            SwiftMessages.hide()
-            tapHandler(fileIdentifier)
+        if canBeOpenned {
+            view.button?.setTitle("Open".localized, for: .normal)
+            view.buttonTapHandler = { _ in
+                SwiftMessages.hide()
+                tapHandler(fileIdentifier)
+            }
+        } else {
+            view.button?.isHidden = true
         }
-        
+        view.configureDropShadow()
         view.configureContent(title: "Success".localized, body: "File was successfully downloaded".localized)
         SwiftMessages.show(view: view)
     }

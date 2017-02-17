@@ -107,32 +107,32 @@ final class CTLabel : UIView {
         guard let dataToDisplay = highlighted ? highlightedLayoutData : layoutData else {return}
         dataToDisplay.drawTextInContext(ctx: UIGraphicsGetCurrentContext()!)
     }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let point = touches.first?.location(in: self) else {return}
-        let charIdx = charachterIndexAtPoint(point: point)
-        
-        if charIdx != NSNotFound {
-            var range = NSRange()
-            guard let ld = layoutData else {
-                return
-            }
-
-            let text = ld.attributedText
-            let username = text.mentionAtIndex(charIdx, effectiveRange: &range)
-            let hashTag = text.hashTagAtIndex(charIdx, effectiveRange: &range)
-            let email = text.emailAtIndex(charIdx, effectiveRange: &range)
-            let url = text.URLAtIndex(charIdx, effectiveRange: &range)
-            let phone = text.phoneAtIndex(charIdx, effectiveRange: &range)
-            
-            if (username != nil) || (hashTag != nil) || (email != nil) || (url != nil) || (phone != nil) {
-                let mutableString = text.mutableCopy() as! NSMutableAttributedString
-                mutableString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.blue, range: range)
-                let highlightedText = (mutableString.copy() as! NSAttributedString)
-                highlightedLayoutData = AttributedTextLayoutData(text: highlightedText, maxWidth: width)
-                setNeedsDisplay()
-            }
-        }
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        guard let point = touches.first?.location(in: self) else {return}
+//        let charIdx = charachterIndexAtPoint(point: point)
+//        
+//        if charIdx != NSNotFound {
+//            var range = NSRange()
+//            guard let ld = layoutData else {
+//                return
+//            }
+//
+//            let text = ld.attributedText
+//            let username = text.mentionAtIndex(charIdx, effectiveRange: &range)
+//            let hashTag = text.hashTagAtIndex(charIdx, effectiveRange: &range)
+//            let email = text.emailAtIndex(charIdx, effectiveRange: &range)
+//            let url = text.URLAtIndex(charIdx, effectiveRange: &range)
+//            let phone = text.phoneAtIndex(charIdx, effectiveRange: &range)
+//            
+//            if (username != nil) || (hashTag != nil) || (email != nil) || (url != nil) || (phone != nil) {
+//                let mutableString = text.mutableCopy() as! NSMutableAttributedString
+//                mutableString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.blue, range: range)
+//                let highlightedText = (mutableString.copy() as! NSAttributedString)
+//                highlightedLayoutData = AttributedTextLayoutData(text: highlightedText, maxWidth: width)
+//                setNeedsDisplay()
+//            }
+//        }
+//    }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let point = touches.first?.location(in: self) else {return}
@@ -192,18 +192,31 @@ final class CTLabel : UIView {
         guard let lines = layoutData?.lines else {
             return NSNotFound
         }
-        
+        //Temp solution: line width'inversion
+        var linesWidth = [Int: Double]()
+        var index = 0
         for line in lines {
             var ascent: CGFloat = 0
             var descent: CGFloat = 0
             var leading: CGFloat = 0
             let lineWidth = CTLineGetTypographicBounds(line.line, &ascent, &descent, &leading)
+            linesWidth[index] = lineWidth
+            index = index + 1
+        }
+        index = 0
+        
+        for line in lines {
+            var ascent: CGFloat = 0
+            var descent: CGFloat = 0
+            var leading: CGFloat = 0
+            let _ = CTLineGetTypographicBounds(line.line, &ascent, &descent, &leading)
+            let lineWidth = linesWidth[lines.count - index - 1]!
             var origin = line.origin
             origin.y = self.bounds.size.height - origin.y
+            index = index + 1
             let size = CGSize(width: CGFloat(lineWidth), height: ascent+descent+leading)
             let lineRect = CGRect(origin: origin, size: size)
-//            lineRect = lineRect.offsetBy(dx: 0, dy: -ascent)
-
+            
             if lineRect.contains(point) {
                 let linePoint = CGPoint(x: point.x - origin.x, y: origin.y - point.y)
                 return max(0, CTLineGetStringIndexForPosition(line.line, linePoint) - 1)

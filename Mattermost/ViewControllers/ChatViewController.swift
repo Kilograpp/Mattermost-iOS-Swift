@@ -639,6 +639,11 @@ extension ChatViewController: Request {
         Api.sharedInstance.loadUsersListFrom(channel: ChannelObserver.sharedObserver.selectedChannel!, completion:{ (error) in
             guard error == nil else {
                 self.handleErrorWith(message: error!.message)
+                if ChannelObserver.sharedObserver.selectedChannel!.lastPost() != nil {
+                    self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: ChannelObserver.sharedObserver.selectedChannel!)
+                } else {
+                    self.tableView.reloadData()
+                }
                 return
             }
             
@@ -660,6 +665,9 @@ extension ChatViewController: Request {
         Api.sharedInstance.loadFirstPage(self.channel!, completion: { (error) in
             
             if isInitial {
+                self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
+            }
+            if error == nil && self.resultsObserver == nil {
                 self.resultsObserver = FeedNotificationsObserver(tableView: self.tableView, channel: self.channel!)
             }
             self.hideLoaderView()
@@ -736,12 +744,12 @@ extension ChatViewController: Request {
             if error != nil {
                 self.handleErrorWith(message: (error?.message!)!)
             }
-            self.selectedPost = nil
+            self.hideTopActivityIndicator()
+            self.hideSelectedStateFromCell()
         }
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
         self.completePost.isHidden = true
-        self.hideSelectedStateFromCell()
     }
     
     func updatePost() {
@@ -771,8 +779,9 @@ extension ChatViewController: Request {
         let postIdentifier = self.selectedPost.identifier!
         PostUtils.sharedInstance.delete(post: self.selectedPost) { (error) in
             defer {
-               self.selectedAction = Constants.PostActionType.SendNew
+                self.selectedAction = Constants.PostActionType.SendNew
                 self.selectedPost = nil
+                self.hideSelectedStateFromCell()
             }
             
             guard error == nil else {
@@ -780,14 +789,13 @@ extension ChatViewController: Request {
                 return
             }
 
-            let comments = RealmUtils.realmForCurrentThread().objects(Post.self).filter("parentId == %@", postIdentifier)
-            guard comments.count > 0 else { return }
-            
-            RealmUtils.deletePostObjects(comments)
-            
-            RealmUtils.deleteObject(self.selectedPost)
-            self.selectedPost = nil
-            self.hideSelectedStateFromCell()
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write {
+                let comments = realm.objects(Post.self).filter("parentId == %@", postIdentifier)
+                if comments.count > 0  {
+                    realm.delete(comments)
+                }
+            }
         }
     }
 }
@@ -859,7 +867,7 @@ extension ChatViewController {
         guard self.resultsObserver != nil else { return 0 }
         guard tableView == self.tableView else { return numberOfSection }
         
-        let isntDialogEmpty = (self.resultsObserver.numberOfSections() > 0)
+        let isntDialogEmpty = (Int(self.channel.messagesCount!)! > 0 || self.resultsObserver.numberOfSections() > 0)
         self.startTextDialogueLabel.isHidden = isntDialogEmpty
         self.startHeadDialogueLabel.isHidden = isntDialogEmpty
         self.startButton.isHidden = isntDialogEmpty
@@ -1054,7 +1062,7 @@ extension ChatViewController: ChannelObserverDelegate {
         navigationTitleView.configureWithChannel(channel: channel)
         
         self.textView.resignFirstResponder()
-
+        
         guard !self.hasNewestPage else { return }
         
         self.loadChannelUsers()
@@ -1075,7 +1083,7 @@ extension ChatViewController: ChannelObserverDelegate {
         
         self.startButton.frame = CGRect(x       : 0,
                                         y       : 0,
-                                        width   : UIScreen.main.bounds.size.width*0.90,
+                                        width   : UIScreen.main.bounds.size.width * 0.9,
                                         height  : 30)
         self.startButton.center = CGPoint(x: UIScreen.screenWidth() / 2,
                                           y: UIScreen.screenHeight() / 1.65)
@@ -1102,7 +1110,9 @@ extension ChatViewController: ChannelObserverDelegate {
         addChannelObservers()
         
         guard let _ = filesAttachmentsModule else {return}
-        
+        self.filesPickingController.reset()
+        self.filesAttachmentsModule.reset()
+        PostUtils.sharedInstance.clearUploadedAttachments()
         if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
             filesAttachmentsModule.presentWithCachedItems()
         } else {
@@ -1166,8 +1176,6 @@ extension ChatViewController {
         guard let channel = self.channel, !channel.isInvalidated else { return }
 
         navigationTitleView.configureWithChannel(channel: channel)
-        
-//        (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
     }
     
     func errorAction(_ post: Post) {

@@ -519,7 +519,7 @@ extension Api: ChannelApi {
 
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createDirrectChannelPathPattern(), DataManager.sharedInstance.currentTeam)
-        let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
+        let params: [String : String] = [ "user_id" : user.identifier ]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             let realm = RealmUtils.realmForCurrentThread()
@@ -528,10 +528,10 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
-                realm.add(channel)
+                realm.add(channel, update: true)
             })
             DispatchQueue.main.async {
-                completion(nil ,nil)
+                completion(channel ,nil)
             }
         }) { (error) in
             DispatchQueue.main.async {
@@ -1195,6 +1195,7 @@ extension Api: PostApi {
                 post.status = .default
                 post.identifier = resultPost.identifier
             }
+            completion(nil)
         }) { (operation, error) in
             completion(Mattermost.Error(error: error))
         }
