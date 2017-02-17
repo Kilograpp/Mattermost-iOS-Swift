@@ -146,9 +146,12 @@ extension FeedBaseTableViewCell {
                 if properties.first(where: { $0.name == "status" }) != nil {
                     self.postStatusView.configureWithStatus(self.post)
                 }
-                if properties.first(where: { $0.name == "message" }) != nil {
+                if let attributeMessageProperty = properties.first(where: { $0.name == "_attributedMessageData" }) {
+                    let newAttributedString = (attributeMessageProperty.newValue as! RealmAttributedString).attributedString!
+                    post.computeRenderedTextWith(attrStr: newAttributedString)
                     self.configureMessage()
                 }
+                
 
             case .deleted:
                 print("deleted")
