@@ -7,8 +7,15 @@
 //
 
 import Foundation
+import RealmSwift
+
+protocol ApplicationStateManagerDelegate : class {
+    func didReceivedNewPostInChannel(channel: Channel)
+}
 
 final class ApplicationStateManager {
+    weak var delegate : ApplicationStateManagerDelegate?
+    
     static let sharedInstance = ApplicationStateManager()
     
     fileprivate init()  {
@@ -16,6 +23,18 @@ final class ApplicationStateManager {
     }
     deinit {
         self.unsubscribeFromNotifications()
+    }
+    
+    func obtainRemoteNotificationWithUserInfo(userInfo: [AnyHashable : Any]) {
+        let ddd = userInfo["aps"] as! [String : Any]
+        let alertBody = ddd["alert"] as! String
+        let index = alertBody.range(of: ":")
+        let channelNameFromAlertBody = alertBody.substring(to: (index?.lowerBound)!) as NSString
+        let final = channelNameFromAlertBody.substring(from: 1)
+        
+        guard let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(NSPredicate(format: "displayName == %@", final)).first else {return}
+        
+        ChannelObserver.sharedObserver.selectedChannel = channel
     }
 }
 

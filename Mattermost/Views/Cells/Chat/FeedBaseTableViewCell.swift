@@ -139,7 +139,6 @@ extension FeedBaseTableViewCell {
         postStatusView.errorHandler = self.errorHandler
         
         
-//       guard post.rootId == nil else {return}
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
