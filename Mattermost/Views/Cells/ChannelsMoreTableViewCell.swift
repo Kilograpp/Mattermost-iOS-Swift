@@ -19,13 +19,12 @@ private protocol Configuration {
     func configureAvatarForPublic(channel: Channel)
 }
 
-class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
-    
-//MARK: Properties
+
+final class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
+
     fileprivate let avatarImageView = UIImageView()
     fileprivate let channelLetterLabel = UILabel()
     fileprivate let nameLabel = UILabel()
-    let checkBoxButton = UIButton()
     fileprivate let separatorLayer = CALayer()
     
     fileprivate var channelId: String = ""
@@ -52,10 +51,6 @@ class ChannelsMoreTableViewCell: UITableViewCell, Reusable {
                                       width: width,
                                       height: Constants.UI.DoublePaddingSize)
         
-        checkBoxButton.frame = CGRect(x: self.nameLabel.frame.maxX + Constants.UI.DoublePaddingSize,
-                                           y: Constants.UI.DoublePaddingSize,
-                                           width: Constants.UI.DoublePaddingSize,
-                                           height: Constants.UI.DoublePaddingSize)
         
         let separatorHeight = CGFloat(0.5)
         separatorLayer.frame = CGRect(x: 70, y: 60 - separatorHeight, width: UIScreen.screenWidth() - 70, height: separatorHeight)
@@ -80,7 +75,6 @@ extension ChannelsMoreTableViewCell: Configuration {
         } else {
             configureWith(user: (resultTuple.object as! User))
         }
-        self.checkBoxButton.isSelected = resultTuple.checked
     }
     
     func cellHeigth() -> CGFloat {
@@ -138,7 +132,6 @@ fileprivate protocol Setup {
     func setupAvatarImageView()
     func setupChannelLetterLabel()
     func setupNameLabel()
-    func setupCheckBoxButton()
 }
 
 
@@ -149,7 +142,6 @@ extension ChannelsMoreTableViewCell: Setup {
         setupAvatarImageView()
         setupChannelLetterLabel()
         setupNameLabel()
-        setupCheckBoxButton()
         setupSeparatorView()
     }
     
@@ -180,18 +172,6 @@ extension ChannelsMoreTableViewCell: Setup {
         self.nameLabel.textColor = ColorBucket.authorColor
         self.nameLabel.font = FontBucket.postAuthorNameFont
         self.addSubview(self.nameLabel)
-    }
-    
-    func setupCheckBoxButton() {
-        checkBoxButton.frame = CGRect(x: 0, y: 0, width: Constants.UI.DoublePaddingSize, height: Constants.UI.DoublePaddingSize)
-        checkBoxButton.backgroundColor = ColorBucket.whiteColor
-        checkBoxButton.layer.cornerRadius = Constants.UI.DoublePaddingSize / 2
-        checkBoxButton.layer.borderColor = ColorBucket.checkButtonBorderColor.cgColor
-        checkBoxButton.layer.borderWidth = 1
-        checkBoxButton.layer.masksToBounds = true
-        checkBoxButton.setImage(UIImage(named: "check_blue"), for: .selected)
-        checkBoxButton.isUserInteractionEnabled = false
-        addSubview(checkBoxButton)
     }
     
     func setupSeparatorView() {

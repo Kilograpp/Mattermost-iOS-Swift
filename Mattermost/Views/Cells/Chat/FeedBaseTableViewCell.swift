@@ -132,7 +132,7 @@ extension FeedBaseTableViewCell {
         postStatusView.errorHandler = self.errorHandler
         
         
-       guard post.rootId == nil else {return}
+//       guard post.identifier == nil else {return}
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
@@ -140,6 +140,14 @@ extension FeedBaseTableViewCell {
                     self.postStatusView.configureWithStatus(self.post)
                 }
                 if properties.first(where: { $0.name == "message" }) != nil {
+//                    let attrStr = post.attributedMessage!
+//                    if post.messageType == .system {
+//                        let range = NSRange(location: 0, length: (attrStr.string as NSString).length)
+//                        post.attributedMessage?.addAttribute(NSForegroundColorAttributeName, value: ColorBucket.lightGrayColor, range: range)
+//                    }
+//                    
+//                    post.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+                    post.computeRenderedText()
                     self.configureMessage()
                 }
 

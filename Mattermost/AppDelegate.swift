@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         launchApplicationStateManager()
+        
+        
         RouterUtils.loadInitialScreen()
         registerForRemoteNotifications()
         Fabric.with([Crashlytics.self])
@@ -70,5 +72,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     @available(iOS 10, *)
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .sound, .badge])
+    }
+    
+    @available(iOS 10.0, *)
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        
+        ApplicationStateManager.sharedInstance.obtainRemoteNotificationWithUserInfo(userInfo: userInfo)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.DidReceiveRemoteNotification), object: userInfo)
+        completionHandler()
     }
 }
