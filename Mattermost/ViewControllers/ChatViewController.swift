@@ -543,7 +543,11 @@ extension ChatViewController: Action {
     }
     
     func deleteAction(_ post:Post) {
-        PostUtils.sharedInstance.delete(post: post) { _ in }
+        PostUtils.sharedInstance.delete(post: post) {
+            _ in
+            //TEMP RELOAD
+            self.tableView.reloadData()
+        }
     }
     
     func didTapImageAction(notification: NSNotification) {

@@ -144,17 +144,12 @@ extension FeedBaseTableViewCell {
                 if properties.first(where: { $0.name == "status" }) != nil {
                     self.postStatusView.configureWithStatus(self.post)
                 }
-                if properties.first(where: { $0.name == "message" }) != nil {
-//                    let attrStr = post.attributedMessage!
-//                    if post.messageType == .system {
-//                        let range = NSRange(location: 0, length: (attrStr.string as NSString).length)
-//                        post.attributedMessage?.addAttribute(NSForegroundColorAttributeName, value: ColorBucket.lightGrayColor, range: range)
-//                    }
-//                    
-//                    post.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
-                    post.computeRenderedText()
+                if let attributeMessageProperty = properties.first(where: { $0.name == "_attributedMessageData" }) {
+                    let newAttributedString = (attributeMessageProperty.newValue as! RealmAttributedString).attributedString!
+                    post.computeRenderedTextWith(attrStr: newAttributedString)
                     self.configureMessage()
                 }
+                
 
             case .deleted:
                 print("deleted")

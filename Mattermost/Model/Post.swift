@@ -360,6 +360,10 @@ extension Post: Computations {
         computeLocalIdentifier()
     }
     
+    func computeRenderedTextWith(attrStr: NSAttributedString) {
+       self.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+    }
+    
     func computeRenderedText() {
         let attrStr = self.attributedMessage!
         if self.messageType == .system {
