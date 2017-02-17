@@ -528,7 +528,7 @@ extension Api: ChannelApi {
                 channel.currentUserInChannel = true
                 channel.computeTeam()
                 channel.computeDispayNameIfNeeded()
-                realm.add(channel)
+                realm.add(channel, update: true)
             })
             DispatchQueue.main.async {
                 completion(nil ,nil)

@@ -16,6 +16,7 @@ final class DirectChannelTableViewCell: UITableViewCell {
     @IBOutlet fileprivate weak var titleLabel: UILabel!
     @IBOutlet fileprivate weak var badgeLabel: UILabel!
     @IBOutlet fileprivate weak var highlightView: UIView!
+    @IBOutlet weak var leaveButton: UIButton!
 
     var channel : Channel?
     var test : (() -> Void)?
@@ -32,7 +33,6 @@ final class DirectChannelTableViewCell: UITableViewCell {
         super.setHighlighted(highlighted, animated: animated)
         self.titleLabel.backgroundColor = highlighted ? UIColor.clear : self.highlightViewBackgroundColor()
         self.highlightView.backgroundColor = highlighted ? ColorBucket.whiteColor.withAlphaComponent(0.5) : self.highlightViewBackgroundColor()
-        
     }
     
     override func prepareForReuse() {
@@ -42,6 +42,34 @@ final class DirectChannelTableViewCell: UITableViewCell {
     
     func configureStatusViewWithNotification(_ notification: Notification) {
         setupStatusViewWithBackendStatus(notification.object as! String)
+    }
+    
+    
+    @IBAction func leaveAction(_ sender: UIButton) {
+        showLeaveChannelAlert()
+    }
+    
+    func showLeaveChannelAlert() {
+        let alert = UIAlertController(title: "Leaving chat", message: "Do you really want to remove this chat?", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+            
+        }))
+        alert.addAction(UIAlertAction(title: "Leave", style: .destructive, handler: { (action) in
+            self.leaveChannel()
+        }))
+        let topWindow = UIApplication.shared.windows.last!
+        topWindow.rootViewController?.present(alert, animated: true, completion: nil)
+    }
+    
+    func leaveChannel() {
+        let channelId = self.channel?.identifier
+        let realm = RealmUtils.realmForCurrentThread()
+        try! realm.write {
+            guard let channelToRemove = realm.object(ofType: Channel.self, forPrimaryKey: channelId) else { return }
+            channelToRemove.currentUserInChannel = false
+            channelToRemove.isDirectPrefered = false
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
     }
 }
 
@@ -53,6 +81,8 @@ private protocol DirectChannelTableViewCellSetup {
     func setupHighlightView()
     func setupUserFormPrivateChannel()
     func setupBadgeLabel()
+    func setupLeaveButton()
+    func configureLeaveButton(selected: Bool)
     func setupStatusViewWithBackendStatus(_ backendStatus: String)
     func highlightViewBackgroundColor() -> UIColor
 }
@@ -81,6 +111,7 @@ extension DirectChannelTableViewCell: LeftMenuTableViewCellProtocol {
         } else {
             self.titleLabel.textColor = (channel.hasNewMessages()) ? ColorBucket.whiteColor : ColorBucket.sideMenuCommonTextColor
         }
+        configureLeaveButton(selected: selected)
     }
     
     func subscribeToNotifications() {
@@ -106,6 +137,15 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellSetup {
         setupStatusView()
         setupHighlightView()
         setupBadgeLabel()
+        setupLeaveButton()
+    }
+    func setupLeaveButton() {
+//        let buttonSize: CGFloat = 40
+//        self.leaveButton = UIButton(frame: CGRect(x: self.bounds.width - buttonSize, y: self.bounds.height/2 - buttonSize/2, width: buttonSize, height: buttonSize))
+//        self.leaveButton.addTarget(self, action: #selector(leaveChannel), for: .touchUpInside)
+//        self.leaveButton.backgroundColor = UIColor.red
+////        self.leaveButton.setBackgroundImage(UIImage(named:"close_button"), for: .normal)
+//        self.addSubview(leaveButton)
     }
     
     func setupContentView() {
@@ -156,6 +196,14 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellSetup {
             self.statusView.backgroundColor = UIColor.black
             self.statusView.layer.borderWidth = 0
             break
+        }
+    }
+    
+    func configureLeaveButton(selected: Bool) {
+        if selected {
+            leaveButton.isHidden = false
+        } else {
+            leaveButton.isHidden = true
         }
     }
     
