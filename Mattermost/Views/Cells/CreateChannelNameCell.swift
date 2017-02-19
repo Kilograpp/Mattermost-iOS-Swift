@@ -8,71 +8,106 @@
 
 import UIKit
 
-class CreateChannelNameCell: UITableViewCell, UITextFieldDelegate {
+let maxTextLength = 22
 
-    
-    @IBOutlet weak var placeholder: UILabel!
+protocol CreateChannelNameCellDelegate {
+    func cellWasUpdatedWith(text: String, height: CGFloat)
+}
+
+private protocol Interface: class {
+    static func cellHeight() -> CGFloat
+    func configureWith(placeholderText: String)
+    func highligthError()
+}
+
+class CreateChannelNameCell: UITableViewCell {
+
+//MARK: Properties
+    @IBOutlet weak var firstCharacterLabel: UILabel!
+    @IBOutlet weak var placeholderLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var cancleButton: UIButton!
-    @IBOutlet weak var channelFirstSymbol: UILabel!
-    var field: ChannelCreateField!
-    var handleField : ChannelCreateField!
-    let limitLength = 22
-    var delegate : CellUpdated?
+    @IBOutlet weak var clearButton: UIButton!
     
-    @IBAction func deleteTextAction(_ sender: Any) {
-        textField.text = ""
-        field.value = ""
-        channelFirstSymbol.text = ""
-        placeholder.isHidden = false
-        if let iuDelegate = self.delegate {
-            iuDelegate.cellUpdated(text: "")
-        }
-    }
+    var delegate : CreateChannelNameCellDelegate?
+    
+    var localizatedName = String()
+    
 
+//MARK: LifeCycle
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        initialSetup()
+    }
+}
+
+
+//MARK: Interface
+extension CreateChannelNameCell: Interface {
+    static func cellHeight() -> CGFloat {
+        return 90
+    }
+    
+    func configureWith(placeholderText: String) {
+        self.placeholderLabel.text = placeholderText
+    }
+    
+    func highligthError() {
+        self.placeholderLabel.textColor = ColorBucket.errorAlertColor
+    }
+}
+
+
+fileprivate protocol Setup: class {
+    func initialSetup()
+    func setupFirstCharacterLabel()
+}
+
+fileprivate protocol Action: class {
+    func clearAction()
+}
+
+
+//MARK: Setup
+extension CreateChannelNameCell: Setup {
+    func initialSetup() {
+        setupFirstCharacterLabel()
+    }
+    
+    func setupFirstCharacterLabel() {
+        self.firstCharacterLabel.layer.cornerRadius = 30.0
+        self.firstCharacterLabel.clipsToBounds = true
+    }
+}
+
+
+//MARK: Action
+extension CreateChannelNameCell: Action {
+    @IBAction func clearAction() {
+        self.firstCharacterLabel.text = ""
+        self.textField.text = ""
+        self.placeholderLabel.isHidden = false
+        self.clearButton.isHidden = true
         
-        channelFirstSymbol.layer.cornerRadius = 30.0
-        channelFirstSymbol.clipsToBounds = true
-        
-        textField.delegate = self
-        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        setupPlaceholder()
-        // Initialization code
+        self.delegate?.cellWasUpdatedWith(text: self.textField.text!, height: 0)
     }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        placeholder.text = field.placeholder
-        // Configure the view for the selected state
-    }
-    
-    func setupPlaceholder() {
-        if textField.text == "" {
-            placeholder.isHidden = false
-        } else {
-            placeholder.isHidden = true
-        }
-    }
-    
+}
+
+
+//MARK: UITextFieldDelegate
+extension CreateChannelNameCell: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
-        guard let text = textField.text else { return true }
-        let newLength = text.characters.count + string.characters.count - range.length
-        return newLength <= limitLength
-    }
-    
-    func textFieldDidChange() {
-        setupPlaceholder()
-        if let text = textField.text {
-            channelFirstSymbol.text = text.characters.count > 0 ? String(text[0]).uppercased() : ""
-            field.value = text
-            let theCFMutableString = NSMutableString(string: text) as CFMutableString
-            _ = CFStringTransform(theCFMutableString, nil, kCFStringTransformToLatin, false)
-            handleField.value = (theCFMutableString as String).replacingOccurrences(of: " ", with: "-", options: NSString.CompareOptions.literal, range:nil)
-        }
-        if let iuDelegate = self.delegate {
-            iuDelegate.cellUpdated(text: "")
-        }
+        self.placeholderLabel.textColor = ColorBucket.lightGrayColor
+        var newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        
+        let localizatedString = NSMutableString(string: newString.replacingOccurrences(of: " ", with: "-"))
+        CFStringTransform(localizatedString, nil, kCFStringTransformToLatin, false)
+        
+        self.firstCharacterLabel.text = !newString.isEmpty ? String(newString.characters.prefix(1)).capitalized : ""
+        self.placeholderLabel.isHidden = !newString.isEmpty
+        self.clearButton.isHidden = newString.isEmpty
+        if newString.characters.count <= limitLength { self.localizatedName = localizatedString as String }
+        
+        return newString.characters.count <= limitLength
     }
 }

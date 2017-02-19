@@ -214,8 +214,8 @@ extension CreateChannelViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell!
-        switch (indexPath.section) {
+        var cell: UITableViewCell! = UITableViewCell()
+      /*  switch (indexPath.section) {
         case 0:
             let cell0 = tableView.dequeueReusableCell(withIdentifier: "createChannelNameCell") as! CreateChannelNameCell
             cell0.field = self.fields[indexPath.section]
@@ -246,10 +246,10 @@ extension CreateChannelViewController: UITableViewDelegate {
             cell3.delegate = self
             cell = cell3
             default: break
-        }
+        }*/
         return cell
     }
-    
+ /*
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 { return 90 }
         return ChannelInfoCell.heightWithObject(fields[indexPath.section].value)
@@ -259,9 +259,9 @@ extension CreateChannelViewController: UITableViewDelegate {
         if section == 0 { return 1.0 }
         if section == 2 { return 35.0 }
         return 15.0
-    }
+    }*/
 }
-
+/*
 extension CreateChannelViewController: CellUpdated {
     func cellUpdated(text: String) {
         if let handleCell = tableView.cellForRow(at: IndexPath.init(row: 0, section: 1)) {
@@ -284,4 +284,4 @@ extension CreateChannelViewController: CellUpdated {
         tableView.endUpdates()
     }
 }
-
+*/

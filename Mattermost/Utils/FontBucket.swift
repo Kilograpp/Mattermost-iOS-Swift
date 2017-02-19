@@ -70,9 +70,14 @@ private protocol TeamsFonts: class {
 
 private protocol CommonFonts: class {
     static var alertFont: UIFont { get }
+    static var infoTextFont: UIFont { get }
 }
 
 final class FontBucket {
+}
+
+private protocol ChannelSettingsFonts: class {
+    static var addMemberFont: UIFont { get }
 }
 
 extension FontBucket: PostFonts {
@@ -132,6 +137,11 @@ extension FontBucket: CommonFonts {
     static let alertFont = FontBucket.boldSystemFontOfSize(13)
 }
 
+extension FontBucket: ChannelSettingsFonts {
+    static let addMemberFont = FontBucket.systemFontOfSize(17)
+    static let infoTextFont = FontBucket.systemFontOfSize(14)
+}
+
 //MARK: Helpers
 
 extension FontBucket: MarkdownFonts {
@@ -161,6 +171,10 @@ extension FontBucket {
     
     fileprivate static func regularDisplayFontOfSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: FontNames.RegularDisplay, size: size)!
+    }
+    
+    fileprivate static func systemFontOfSize(_ size: CGFloat) -> UIFont {
+        return UIFont.systemFont(ofSize: size)
     }
     
     fileprivate static func boldSystemFontOfSize(_ size: CGFloat) -> UIFont {

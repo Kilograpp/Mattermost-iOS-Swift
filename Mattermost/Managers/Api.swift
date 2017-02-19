@@ -410,7 +410,7 @@ extension Api: ChannelApi {
         }
     }
     
-    func updateHeader(_ header:String, channel:Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
+    func updateHeader(_ header: String, channel: Channel, completion:@escaping (_ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.updateHeader(), channel)
         let channelId = channel.identifier
         let params: Dictionary<String, String> = [ "channel_header" : header, "channel_id" : channel.identifier! ]
