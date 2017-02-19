@@ -68,7 +68,9 @@ extension PostMappingsContainer: ResponseMappings {
             "(\(PostAttributes.identifier)).update_at"  : PostAttributes.updatedAt.rawValue,
             "(\(PostAttributes.identifier)).user_id"    : PostAttributes.authorId.rawValue
             ])
-        
+        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).props.attachments",
+            toKeyPath: PostRelationships.attachments.rawValue,
+            with: AttachmentMappingsContainer.mapping()))
         
 /*        mapping.addPropertyMapping(RKRelationshipMapping(fromKeyPath: "(\(PostAttributes.identifier)).filenames",
             toKeyPath: PostRelationships.files.rawValue,

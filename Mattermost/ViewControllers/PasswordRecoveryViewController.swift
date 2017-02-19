@@ -34,6 +34,12 @@ class PasswordRecoveryViewController: UIViewController {
         
         setupNavigationBar()
     }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        emailTextField.resignFirstResponder()
+    }
 }
 
 

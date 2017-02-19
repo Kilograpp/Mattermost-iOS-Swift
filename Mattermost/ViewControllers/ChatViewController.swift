@@ -543,7 +543,11 @@ extension ChatViewController: Action {
     }
     
     func deleteAction(_ post:Post) {
-        PostUtils.sharedInstance.delete(post: post) { _ in }
+        PostUtils.sharedInstance.delete(post: post) {
+            _ in
+            //TEMP RELOAD
+            self.tableView.reloadData()
+        }
     }
     
     func didTapImageAction(notification: NSNotification) {
@@ -1110,7 +1114,9 @@ extension ChatViewController: ChannelObserverDelegate {
         addChannelObservers()
         
         guard let _ = filesAttachmentsModule else {return}
-        
+        self.filesPickingController.reset()
+        self.filesAttachmentsModule.reset()
+        PostUtils.sharedInstance.clearUploadedAttachments()
         if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
             filesAttachmentsModule.presentWithCachedItems()
         } else {
