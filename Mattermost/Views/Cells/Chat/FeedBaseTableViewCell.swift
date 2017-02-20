@@ -138,7 +138,6 @@ extension FeedBaseTableViewCell {
         postStatusView.configureWithStatus(post)
         postStatusView.errorHandler = self.errorHandler
         
-        
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
