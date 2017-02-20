@@ -97,6 +97,12 @@ extension ChannelNameAndHandleTableViewController: Setup {
 //MARK: Action
 extension ChannelNameAndHandleTableViewController: Action {
     func saveAction() {
+        if (self.nameTextFiled.text?.isEmpty)! || (self.displayNameTextField.text?.isEmpty)! {
+            let message = (self.nameTextFiled.text?.isEmpty)! ? "Incorrect name" : "Incorrect handle"
+            self.handleErrorWith(message: message);
+            return
+        }
+        
         update()
     }
     
