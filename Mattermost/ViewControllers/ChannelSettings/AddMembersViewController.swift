@@ -98,10 +98,10 @@ extension AddMembersViewController: Request {
             self.channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: channelId)
             
             var index = self.users.index(where: { $0.identifier == user.identifier })
-            if index != NSNotFound { self.users.remove(at: index!) }
+            if index != NSNotFound && index != nil { self.users.remove(at: index!) }
             
             index = self.searchUsers.index(where: { $0.identifier == user.identifier })
-            if index != NSNotFound { self.searchUsers.remove(at: index!) }
+            if index != NSNotFound && index != nil { self.searchUsers.remove(at: index!) }
             
             self.tableView.reloadData()
             
