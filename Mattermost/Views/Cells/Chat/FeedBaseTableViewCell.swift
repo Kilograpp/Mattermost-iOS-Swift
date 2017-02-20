@@ -132,7 +132,6 @@ extension FeedBaseTableViewCell {
         postStatusView.errorHandler = self.errorHandler
         
         
-       guard post.rootId == nil else {return}
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
@@ -140,7 +139,13 @@ extension FeedBaseTableViewCell {
                     self.postStatusView.configureWithStatus(self.post)
                 }
                 if properties.first(where: { $0.name == "message" }) != nil {
+                    RealmUtils.configuratePost(post: self.post)
                     self.configureMessage()
+                }
+                if properties.first(where: { $0.name == "isFollowUp" }) != nil {
+                    (self.superview?.superview as! UITableView).beginUpdates()
+                    self.configureWithPost(post)
+                    (self.superview?.superview as! UITableView).endUpdates()
                 }
 
             case .deleted:
@@ -162,9 +167,18 @@ extension FeedBaseTableViewCell {
 
 //MARK: LongTapConfigure
 extension FeedBaseTableViewCell {
-    func configureForSelectedState() {
-        self.backgroundColor = UIColor.kg_lightLightGrayColor()
-        messageLabel.backgroundColor = UIColor.kg_lightLightGrayColor()
+    func configureForSelectedState(action: String) {
+        let selectingColor: UIColor!
+        switch action {
+        case Constants.PostActionType.SendReply:
+                selectingColor = UIColor.kg_lightLightGrayColor()
+        case Constants.PostActionType.SendUpdate:
+                selectingColor = UIColor.yellow
+        default:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        }
+        self.backgroundColor = selectingColor
+        messageLabel.backgroundColor = selectingColor
     }
     
     func configureForNoSelectedState() {

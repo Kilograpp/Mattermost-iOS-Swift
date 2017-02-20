@@ -211,8 +211,17 @@ extension AttachmentImageCell: Action {
 
 //MARK: LongTapConfigure
 extension AttachmentImageCell {
-    func configureForSelectedState() {
-        fileNameLabel.backgroundColor = UIColor.kg_lightLightGrayColor()
+    func configureForSelectedState(action: String) {
+        let selectingColor: UIColor!
+        switch action {
+        case Constants.PostActionType.SendReply:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        case Constants.PostActionType.SendUpdate:
+            selectingColor = UIColor.yellow
+        default:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        }
+        fileNameLabel.backgroundColor = selectingColor
     }
     
     func configureForNoSelectedState() {
