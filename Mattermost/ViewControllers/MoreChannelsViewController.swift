@@ -299,8 +299,9 @@ extension MoreChannelsViewController: Request {
                 
                         Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
                             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                            self.returnToChannel()
                             ChannelObserver.sharedObserver.selectedChannel = channel
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+//                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                         }
                     }
