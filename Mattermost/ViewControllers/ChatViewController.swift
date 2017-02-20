@@ -688,9 +688,16 @@ extension ChatViewController: Request {
             if (error != nil) {
                 var message = (error?.message!)!
                 if error?.code == -1011{
-                    let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-                    //REVIEW: localization
-                    message = "You left this " + channelType
+                    switch self.channel.privateType! {
+                    case Constants.ChannelType.PrivateTypeChannel:
+                        message = "You are not in this group at server"
+                    case Constants.ChannelType.PublicTypeChannel:
+                        message = "You are not in this channel at server"
+                    case Constants.ChannelType.DirectTypeChannel:
+                        message = "Direct with this user is not active at server"
+                    default:
+                        break
+                    }
                 }
                 //REVIEW: hardcode
                 if error?.code == -1009 {
