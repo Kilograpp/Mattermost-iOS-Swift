@@ -231,7 +231,9 @@ extension LoginViewController: Request {
         loginTextField.endEditing(false)
         Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in
             guard (error == nil) else {
-                let message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
+                var message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
+                if error?.code == 401 { message = "Login failed because of invalid password" }
+                
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
                 self.hideLoaderView()
                 self.recoveryButton.tintColor = UIColor.red
