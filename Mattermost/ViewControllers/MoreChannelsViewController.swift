@@ -267,8 +267,8 @@ extension MoreChannelsViewController: Request {
                             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                             
                             _ = self.navigationController?.popViewController(animated: true)
-                            
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+                            ChannelObserver.sharedObserver.selectedChannel = channelT
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: channelT)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                         }
                     }

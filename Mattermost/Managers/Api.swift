@@ -94,8 +94,8 @@ final class Api {
 //MARK: Properties
     static let sharedInstance = Api()
     fileprivate var _managerCache: ObjectManager?
-    fileprivate var downloadOperationsArray = Array<AFRKHTTPRequestOperation>()
-    fileprivate var networkReachabilityManager = NetworkReachabilityManager.init()
+    fileprivate var downloadOperationsArray = [AFRKHTTPRequestOperation]()
+    fileprivate var networkReachabilityManager = NetworkReachabilityManager()
     fileprivate var manager: ObjectManager  {
         if _managerCache == nil {
             _managerCache = ObjectManager(baseURL: self.computeAndReturnApiRootUrl())
@@ -530,8 +530,11 @@ extension Api: ChannelApi {
                 channel.computeDispayNameIfNeeded()
                 realm.add(channel, update: true)
             })
+            let id = channel.identifier
+            
             DispatchQueue.main.async {
-                completion(channel ,nil)
+                let ch = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: id)
+                completion(ch ,nil)
             }
         }) { (error) in
             DispatchQueue.main.async {

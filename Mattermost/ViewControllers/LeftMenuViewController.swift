@@ -188,11 +188,12 @@ extension LeftMenuViewController: Configuration {
             return
         }
         
-        ChannelObserver.sharedObserver.selectedChannel = channelToSelect as? Channel
+//        let ch_ = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: ch.resolve.identifier)
+        ChannelObserver.sharedObserver.selectedChannel = channelToSelect as! Channel
     }
     
         func updateResults(channelNotif: NSNotification) {
-        DispatchQueue.main.async { 
+        DispatchQueue.main.async {
             self.prepareResults()
             self.configureInitialSelectedChannel(channelNotif)
             RealmUtils.realmForCurrentThread().refresh()
