@@ -39,7 +39,6 @@ extension MoreCellBuilder: Inteface {
     func cell(resultTuple: ResultTuple) -> UITableViewCell {
         let reuseIdentifier = ChannelsMoreTableViewCell.reuseIdentifier
         let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! ChannelsMoreTableViewCell
-        cell.transform = self.tableView.transform
         cell.configureWith(resultTuple: resultTuple)
         
         return cell

@@ -23,7 +23,10 @@ class ChannelObserver {
     
     var selectedChannel: Channel? {
         set(newChannel) {
-            self.selectedChannelIdentifier = newChannel?.identifier
+            DispatchQueue.main.async {
+                self.selectedChannelIdentifier = newChannel?.identifier
+            }
+            
         }
         get {
             guard let identifier = self.selectedChannelIdentifier else { return nil }

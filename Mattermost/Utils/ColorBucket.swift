@@ -64,6 +64,15 @@ private protocol MoreTableColors {
     static var separatorViewBackgroundColor: UIColor {get}
 }
 
+private protocol ChannelSettingsColor {
+    static var addMemberColor: UIColor { get }
+    static var onlineStatusColor: UIColor { get }
+    static var offlineStatusColor: UIColor { get }
+    static var seeAllMembersColor: UIColor { get }
+    static var actionColor: UIColor { get }
+    static var searchBarBackground: UIColor { get }
+}
+
 private protocol GradientColors {
     static var topBlueColorForGradient: UIColor {get}
     static var bottomBlueColorForGradient: UIColor {get}
@@ -144,6 +153,14 @@ extension ColorBucket: MoreTableColors {
     static let checkButtonBorderColor = ColorBucket.lightLightGray()
     static let avatarImageViewColor = ColorBucket.randomBrightColor()
     static let separatorViewBackgroundColor = try! UIColor(rgba_throws: "#C9D2D8")
+}
+
+extension ColorBucket: ChannelSettingsColor {
+    static let addMemberColor = ColorBucket.brightBlue()
+    static let offlineStatusColor = ColorBucket.lightGray()
+    static let seeAllMembersColor = ColorBucket.blue()
+    static let actionColor = UIColor.red
+    static let searchBarBackground = ColorBucket.darkWhite()
 }
 
 extension ColorBucket : GradientColors {

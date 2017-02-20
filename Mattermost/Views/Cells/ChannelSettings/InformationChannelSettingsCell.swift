@@ -7,29 +7,45 @@
 //
 
 import UIKit
-//Нужен ли ксиб?
-class InformationChannelSettingsCell: UITableViewCell {
 
-    @IBOutlet weak var infoName: UILabel!
-    @IBOutlet weak var infoDetail: UILabel! {
+private protocol Interface: class {
+    static func cellHeight() -> CGFloat
+    func configureWith(name: String, detail: String, copyEnabled: Bool)
+}
+
+class InformationChannelSettingsCell: UITableViewCell, Reusable {
+
+//MARK: Properties
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var detailLabel: UILabel! {
         didSet { isCopyEnabled = false }
     }
     
     var isCopyEnabled = false
     
+//MARK: LifeCycle
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         setupGestureRecognizers()
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }
+
+
+//MARK: Interface
+extension InformationChannelSettingsCell: Interface {
+    static func cellHeight() -> CGFloat {
+        return 50
+    }
+    
+    func configureWith(name: String, detail: String, copyEnabled: Bool) {
+        self.nameLabel.text = name
+        self.detailLabel.text = detail
+        self.isCopyEnabled = copyEnabled
+        self.accessoryType = copyEnabled ? .none : .disclosureIndicator 
+    }
+}
+
 
 fileprivate protocol Setup {
     func setupGestureRecognizers()
@@ -56,7 +72,7 @@ extension InformationChannelSettingsCell: Action {
         guard self.isCopyEnabled else { return }
         guard recognizer.state == .ended else { return }
         
-        UIPasteboard.general.string = self.infoDetail?.text
+        UIPasteboard.general.string = self.detailLabel?.text
         AlertManager.sharedManager.showSuccesWithMessage(message: "Information was copied to clipboard")
     }
 }

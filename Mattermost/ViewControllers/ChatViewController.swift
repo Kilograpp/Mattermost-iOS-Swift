@@ -508,7 +508,11 @@ extension ChatViewController: Action {
     }
     
     func deleteAction(_ post:Post) {
-        PostUtils.sharedInstance.delete(post: post) { _ in }
+        PostUtils.sharedInstance.delete(post: post) {
+            _ in
+            //TEMP RELOAD
+            self.tableView.reloadData()
+        }
     }
     
     func didTapImageAction(notification: NSNotification) {
@@ -1046,7 +1050,7 @@ extension ChatViewController: ChannelObserverDelegate {
         
         self.startButton.frame = CGRect(x       : 0,
                                         y       : 0,
-                                        width   : UIScreen.main.bounds.size.width*0.90,
+                                        width   : UIScreen.main.bounds.size.width * 0.9,
                                         height  : 30)
         self.startButton.center = CGPoint(x: UIScreen.screenWidth() / 2,
                                           y: UIScreen.screenHeight() / 1.65)
@@ -1074,7 +1078,9 @@ extension ChatViewController: ChannelObserverDelegate {
         addChannelObservers()
         
         guard let _ = filesAttachmentsModule else {return}
-        
+        self.filesPickingController.reset()
+        self.filesAttachmentsModule.reset()
+        PostUtils.sharedInstance.clearUploadedAttachments()
         if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
             filesAttachmentsModule.presentWithCachedItems()
         } else {
@@ -1139,8 +1145,6 @@ extension ChatViewController {
         guard let channel = self.channel, !channel.isInvalidated else { return }
 
         navigationTitleView.configureWithChannel(channel: channel)
-        
-//        (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
     }
     
     func errorAction(_ post: Post) {

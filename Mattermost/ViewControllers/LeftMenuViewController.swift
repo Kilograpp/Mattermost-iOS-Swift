@@ -48,7 +48,7 @@ final class LeftMenuViewController: UIViewController {
 extension LeftMenuViewController: Interface {
     //refactor later -> ObserverUtils
     func setupChannelsObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateResults),
+        NotificationCenter.default.addObserver(self, selector: #selector(updateResults(channelNotif:)),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification),
                                                object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadChannels),
@@ -110,8 +110,8 @@ fileprivate protocol Setup: class {
 
 fileprivate protocol Configuration: class {
     func prepareResults()
-    func configureInitialSelectedChannel()
-    func updateResults()
+    func configureInitialSelectedChannel(_ channelNotif : NSNotification?)
+    func updateResults(channelNotif: NSNotification)
 }
 
 private protocol Navigation : class {
@@ -180,15 +180,22 @@ extension LeftMenuViewController: Configuration {
         self.resultsOutsideDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == false")).sorted(byKeyPath: sortName, ascending: true)
     }
     
-    func configureInitialSelectedChannel() {
+    func configureInitialSelectedChannel(_ channelNotif : NSNotification? = nil) {
         guard self.resultsPublic.count > 0 else { return }
-        ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[0]
+        
+        guard let channelToSelect = channelNotif?.object  else {
+            ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[0]
+            return
+        }
+        
+//        let ch_ = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: ch.resolve.identifier)
+        ChannelObserver.sharedObserver.selectedChannel = channelToSelect as! Channel
     }
     
-    func updateResults() {
-        DispatchQueue.main.async { 
+        func updateResults(channelNotif: NSNotification) {
+        DispatchQueue.main.async {
             self.prepareResults()
-            self.configureInitialSelectedChannel()
+            self.configureInitialSelectedChannel(channelNotif)
             RealmUtils.realmForCurrentThread().refresh()
             self.tableView.reloadData()
         }
@@ -244,11 +251,12 @@ extension LeftMenuViewController : Navigation {
         }
         
         let center = (self.menuContainerViewController!.centerViewController as AnyObject)
-        guard !(center.topViewController??.isKind(of: CreateChannelViewController.self))! else { return }
+        guard !(center.topViewController??.isKind(of: CreateChannelTableViewController.self))! else { return }
         
         let moreStoryboard = UIStoryboard(name:  "More", bundle: Bundle.main)
-        let createChannel = moreStoryboard.instantiateViewController(withIdentifier: "CreateChannelViewController") as! CreateChannelViewController
-        createChannel.configure(privateType: privateType)
+        let createChannel = moreStoryboard.instantiateViewController(withIdentifier: "CreateChannelTableViewController") as! CreateChannelTableViewController
+        createChannel.configureWith(channelType: privateType)
+        //createChannel.configure(privateType: privateType)
         center.pushViewController(createChannel, animated: true)
         toggleLeftSideMenu()
     }

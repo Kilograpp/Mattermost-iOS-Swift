@@ -59,8 +59,15 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     }
     
     fileprivate func configureMessage() {
+        switch self.post.messageType {
+        case .system:
+            break
+        case .default:
+            self.messageLabel.layoutData = post.renderedText
+        case .slackAttachment:
+            post.renderedText = AttributedTextLayoutData(text: post.attachments.first!.attributedText!, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+        }
         self.messageLabel.layoutData = post.renderedText
-        guard self.post.messageType == .system else { return }
     }
     
     
@@ -131,7 +138,6 @@ extension FeedBaseTableViewCell {
         postStatusView.configureWithStatus(post)
         postStatusView.errorHandler = self.errorHandler
         
-        
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
@@ -147,7 +153,11 @@ extension FeedBaseTableViewCell {
                     self.configureWithPost(post)
                     (self.superview?.superview as! UITableView).endUpdates()
                 }
-
+                if let attributeMessageProperty = properties.first(where: { $0.name == "_attributedMessageData" }) {
+                    let newAttributedString = (attributeMessageProperty.newValue as! RealmAttributedString).attributedString!
+                    post.computeRenderedTextWith(attrStr: newAttributedString)
+                    self.configureMessage()
+                }
             case .deleted:
                 print("deleted")
             case .error(let error):

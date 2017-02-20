@@ -1,4 +1,4 @@
-//
+ //
 //  MoreChannelViewController.swift
 //  Mattermost
 //
@@ -19,20 +19,11 @@ final class MoreChannelsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    fileprivate var addDoneButton: UIBarButtonItem!
-    fileprivate let emptySearchLabel = EmptyDialogueLabel()
-    
     fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
-    //CODEREVIEW -> private constants
-
-    
+    fileprivate let emptySearchLabel = EmptyDialogueLabel()
     fileprivate var results: [ResultTuple] = []
     fileprivate var filteredResults: [ResultTuple] = []
     fileprivate var updatedCahnnelIndexPaths: [IndexPath] = []
-    fileprivate var alreadyUpdatedChannelCount: Int = 0
-    fileprivate var addedChannelCount: Int = 0
-    fileprivate var deletedChannelCount: Int = 0
-    
     fileprivate var searchController: UISearchController!
     
     var isPrivateChannel: Bool = false
@@ -69,20 +60,12 @@ fileprivate protocol Configuration {
     func prepareResults()
 }
 
-fileprivate protocol Action {
-    func backAction()
-    func addDoneAction()
-}
-
 fileprivate protocol Navigation {
     func returnToChannel()
 }
 
 fileprivate protocol Request {
     func joinTo(channel: Channel)
-    func leave(channel: Channel)
-    func createDirectChannelWith(result: ResultTuple)
-    func updatePreferencesSave(result: ResultTuple)
 }
 
 fileprivate protocol CompletionMessages {
@@ -106,11 +89,6 @@ extension MoreChannelsViewController: Setup {
     
     func setupNavigationBar() {
         self.title = self.isPrivateChannel ? "Add Users".localized : "More Channel".localized
-        
-        let addDoneTitle = self.isPrivateChannel ? "Done".localized : "Save".localized
-        self.addDoneButton = UIBarButtonItem.init(title: addDoneTitle, style: .done, target: self, action: #selector(addDoneAction))
-        self.addDoneButton.isEnabled = false
-        self.navigationItem.rightBarButtonItem = self.addDoneButton
     }
     
     func setupSearchBar() {
@@ -140,7 +118,6 @@ extension MoreChannelsViewController: Setup {
     
     func setupTableView() {
         self.tableView.backgroundColor = ColorBucket.whiteColor
-//        self.tableView.separatorColor = ColorBucket.rightMenuSeparatorColor
         self.tableView.keyboardDismissMode = .onDrag
         self.tableView.register(ChannelsMoreTableViewCell.self, forCellReuseIdentifier: ChannelsMoreTableViewCell.reuseIdentifier, cacheSize: 15)
     }
@@ -201,54 +178,6 @@ extension  MoreChannelsViewController: Configuration {
             self.tableView.reloadData()
         }
     }
-    
-    func saveResults() {
-        self.addedChannelCount = 0
-        self.deletedChannelCount = 0
-        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
-        if self.isPrivateChannel {
-            saveUserResults()
-        } else {
-            saveChannelResults()
-        }
-    }
-    
-    func saveChannelResults() {
-        for resultTuple in self.results {
-            let channel = (resultTuple.object as! Channel)
-            guard channel.currentUserInChannel != resultTuple.checked else { continue }
-            
-            if resultTuple.checked {
-                joinTo(channel: channel)
-            } else {
-                leave(channel: channel)
-            }
-        }
-        self.addDoneButton.isEnabled = false
-    }
-    
-    func saveUserResults() {
-        for resultTuple in self.results {
-            if !(resultTuple.object as! User).hasChannel() {
-                createDirectChannelWith(result: resultTuple)
-            } else {
-                updatePreferencesSave(result: resultTuple)
-            }
-        }
-        self.addDoneButton.isEnabled = false
-    }
-}
-
-
-//MARK: Action
-extension MoreChannelsViewController: Action {
-    func backAction() {
-        self.returnToChannel()
-    }
-    
-    func addDoneAction() {
-        saveResults()
-    }
 }
 
 
@@ -270,108 +199,47 @@ extension MoreChannelsViewController: Request {
             channel.computeDisplayNameWidth()
             realm.add(channel)
         }
-        
+
         Api.sharedInstance.joinChannel(channel) { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            
-            self.alreadyUpdatedChannelCount += 1
-            self.addedChannelCount += 1
-            if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
-                if self.alreadyUpdatedChannelCount == 1 {
-                    self.singleChannelMessage(name: channel.displayName!)
-                } else {
-                    self.multipleChannelsMessage()
-                }
-                self.alreadyUpdatedChannelCount = 0
-                self.updatedCahnnelIndexPaths.removeAll()
-                
+            guard error == nil else {
+                self.handleErrorWith(message: (error?.message)!); return
             }
-            
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
-        }
-    }
-    
-    func leave(channel: Channel) {
-        Api.sharedInstance.leaveChannel(channel) { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            
-            let nameOfDeletedChannel = channel.displayName!
-            let realm = RealmUtils.realmForCurrentThread()
-            try! realm.write {
-                realm.delete(channel)
-            }
-            
-            self.alreadyUpdatedChannelCount += 1
-            self.deletedChannelCount += 1
-            if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
-                if self.alreadyUpdatedChannelCount == 1 {
-                    self.singleChannelMessage(name: nameOfDeletedChannel)
-                } else {
-                    self.multipleChannelsMessage()
-                }
-                self.alreadyUpdatedChannelCount = 0
-                self.updatedCahnnelIndexPaths.removeAll()
-            }
-            
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+
+            ChannelObserver.sharedObserver.selectedChannel = channel
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
 //Direct channel
-    func createDirectChannelWith(result: ResultTuple) {
-        guard  result.checked != (result.object as! User).hasChannel() else { return }
-        
-        Api.sharedInstance.createDirectChannelWith((result.object as! User)) { (channel, error) in
+    func createDirectChannelWith(_ user: User) {
+        Api.sharedInstance.createDirectChannelWith(user) { (channel, error) in
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-            
-            self.updatePreferencesSave(result: result)
+            self.updatePreferencesSave(user, channelT: channel)
         }
     }
     
-    func updatePreferencesSave(result: ResultTuple) {
-        let user = (result.object as! User)
-        
-        guard user.isPreferedDirectChannel() != result.checked else { return }
-        
+    func updatePreferencesSave(_ user: User, channelT: Channel? = nil) {
         let predicate =  NSPredicate(format: "displayName == %@", user.username!)
         let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).first
         
         try! RealmUtils.realmForCurrentThread().write {
-            channel?.currentUserInChannel = result.checked ? true : false
-            channel?.isDirectPrefered = result.checked ? true : false
+            channel?.currentUserInChannel =  true
+            channel?.isDirectPrefered = true
         }
         
         var value: String
-        if result.checked {
-            value = Constants.CommonStrings.True//"true"
-            self.addedChannelCount += 1
-        } else {
-            value = Constants.CommonStrings.False//"false"
-            self.deletedChannelCount += 1
-        }
+        value = Constants.CommonStrings.True
         
-        let preferences: Dictionary<String, String> = [ "user_id" : (DataManager.sharedInstance.currentUser?.identifier)!,
-                                                        "category" : "direct_channel_show",
-                                                        "name" : (result.object as! User).identifier,
-                                                        "value" : value
-        ]
+        let preferences: [String : String] = [ "user_id"    : (DataManager.sharedInstance.currentUser?.identifier)!,
+                                               "category"   : "direct_channel_show",
+                                               "name"       : user.identifier,
+                                               "value"      : value
+                                            ]
         
         Api.sharedInstance.savePreferencesWith(preferences) { (error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
-            }
-            self.addDoneButton.isEnabled = false
-            
-            self.alreadyUpdatedChannelCount += 1
-            if (self.updatedCahnnelIndexPaths.count == self.alreadyUpdatedChannelCount) {
-                if (self.alreadyUpdatedChannelCount == 1) {
-                    self.singleUserMessage(name: user.username!)
-                } else {
-                    self.multipleUsersMessage()
-                }
-                self.alreadyUpdatedChannelCount = 0
-                self.updatedCahnnelIndexPaths.removeAll()
             }
             
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
@@ -380,67 +248,33 @@ extension MoreChannelsViewController: Request {
                 guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                 
                     let preferences = Preference.preferedUsersList()
-                    var usersIds = Array<String>()
+                    var usersIds = [String]()
                     preferences.forEach{ usersIds.append($0.name!) }
 
                     Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
-                        guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
+                        guard error == nil else {
+                            self.handleErrorWith(message: (error?.message)!)
+                            return
+                        }
+                        
                         let predicate = NSPredicate(format: "identifier != %@ AND identifier != %@", Preferences.sharedInstance.currentUserId!,
                                             Constants.Realm.SystemUserIdentifier)
                         let users = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate)
-                        var ids = Array<String>()
+                        var ids = [String]()
                         users.forEach{ ids.append($0.identifier) }
                 
                         Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
                             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
+                            
+                            _ = self.navigationController?.popViewController(animated: true)
+                            ChannelObserver.sharedObserver.selectedChannel = channelT
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: channelT)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                         }
                     }
                 }
             })
         }
-    }
-}
-
-
-//MARK: CompletionMessages
-extension MoreChannelsViewController: CompletionMessages {
-    func singleChannelMessage(name: String) {
-        let action = (self.addedChannelCount > 0) ? "joined " : "left "
-        let  message = "You've " + action + name + " channel"
-        AlertManager.sharedManager.showSuccesWithMessage(message: message)
-    }
-    
-    func multipleChannelsMessage() {
-        var message = ""
-        if (self.addedChannelCount > 0) {
-            message = "You've joined to " + String(self.addedChannelCount)
-            message += (self.deletedChannelCount > 0) ? " channels.\n" : " channels."
-        }
-        if (self.deletedChannelCount > 0) {
-            message += "You've left the " + String(self.deletedChannelCount) + " channels."
-        }
-        AlertManager.sharedManager.showSuccesWithMessage(message: message)
-    }
-    
-    func singleUserMessage(name: String) {
-        let action = (self.addedChannelCount > 0) ? "added." : "removed."
-        
-        let message = "Conversation with " + name + " has been " + action
-        AlertManager.sharedManager.showSuccesWithMessage(message: message)
-    }
-    
-    func multipleUsersMessage() {
-        var message = ""
-        if (self.addedChannelCount > 0) {
-            message = String(self.addedChannelCount) + " conversations have been "
-            message += (self.deletedChannelCount > 0) ? "added.\n" : "added."
-        }
-        if (self.deletedChannelCount > 0) {
-            message += String(self.deletedChannelCount) + " conversations have been removed."
-        }
-        AlertManager.sharedManager.showSuccesWithMessage(message: message)
     }
 }
 
@@ -463,24 +297,14 @@ extension MoreChannelsViewController: UITableViewDataSource {
 //MARK: UITableViewDelegate
 extension MoreChannelsViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! ChannelsMoreTableViewCell
-        cell.checkBoxButton.isSelected = !cell.checkBoxButton.isSelected
-        
-        self.addDoneButton.isEnabled = true
-        
-        if !self.updatedCahnnelIndexPaths.contains(indexPath) {
-            self.updatedCahnnelIndexPaths.append(indexPath)
+        if isPrivateChannel {
+         let user = (self.isSearchActive ? self.filteredResults[indexPath.row].object : self.results[indexPath.row].object) as! User
+         createDirectChannelWith(user)
+         return
         }
         
-        var resultTuple = self.isSearchActive ? self.filteredResults[indexPath.row] : self.results[indexPath.row]
-        resultTuple.checked = !resultTuple.checked
-        if self.isSearchActive {
-            self.filteredResults[indexPath.row] = resultTuple
-            let realIndex = self.results.index(where: { return ($0.object == resultTuple.object) })
-            self.results[realIndex!] = resultTuple
-        } else {
-            self.results[indexPath.row] = resultTuple
-        }
+        let channel = (self.isSearchActive ? self.filteredResults[indexPath.row].object : self.results[indexPath.row].object) as! Channel
+        joinTo(channel: channel)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
