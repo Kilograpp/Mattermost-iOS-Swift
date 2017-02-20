@@ -18,6 +18,7 @@ private protocol Interface: class {
     static func cellHeight() -> CGFloat
     func configureWith(placeholderText: String)
     func highligthError()
+    func hideKeyboardIfNeeded()
 }
 
 class CreateChannelNameCell: UITableViewCell {
@@ -54,6 +55,10 @@ extension CreateChannelNameCell: Interface {
     
     func highligthError() {
         self.placeholderLabel.textColor = ColorBucket.errorAlertColor
+    }
+    
+    func hideKeyboardIfNeeded() {
+        if textField.isEditing { self.textField.resignFirstResponder() }
     }
 }
 

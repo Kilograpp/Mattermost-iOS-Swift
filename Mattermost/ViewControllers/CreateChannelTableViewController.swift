@@ -45,6 +45,7 @@ fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
     func setupCells()
+    func setupGestureRecognizers()
 }
 
 fileprivate protocol Action: class {
@@ -65,6 +66,7 @@ extension CreateChannelTableViewController: Setup {
     internal func initialSetup() {
         setupNavigationBar()
         setupCells()
+        setupGestureRecognizers()
     }
     
     func setupNavigationBar() {
@@ -80,6 +82,11 @@ extension CreateChannelTableViewController: Setup {
         self.headerCell.configureWith(delegate: self)
         self.purposeCell.configureWith(delegate: self)
     }
+    
+    func setupGestureRecognizers() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        self.tableView.addGestureRecognizer(tapGestureRecognizer)
+    }
 }
 
 
@@ -93,6 +100,13 @@ extension CreateChannelTableViewController: Action {
         }
         
         createChannel()
+    }
+    
+    func tapAction() {
+        self.nameCell.hideKeyboardIfNeeded()
+        self.handleCell.hideKeyboardIfNeeded()
+        self.headerCell.hideKeyboardIfNeeded()
+        self.purposeCell.hideKeyboardIfNeeded()
     }
 }
 
