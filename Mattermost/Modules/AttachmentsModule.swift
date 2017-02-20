@@ -129,7 +129,6 @@ extension AttachmentsModule: PostAttachmentViewDelegate {
     func attachmentsViewWillAppear() {
         DispatchQueue.main.async { [unowned self] in
             var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
-            //oldInset.bottom = PostAttachmentsView.attachmentsViewHeight
             oldInset.top = PostAttachmentsView.attachmentsViewHeight
             self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
             self.dataSource.tableView(attachmentsModule: self).scrollIndicatorInsets = oldInset
@@ -140,7 +139,7 @@ extension AttachmentsModule: PostAttachmentViewDelegate {
     
     func attachmentViewWillDisappear() {
         var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
-        oldInset.top = 0
+        oldInset.top = oldInset.top - PostAttachmentsView.attachmentsViewHeight
         self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
         self.dataSource.tableView(attachmentsModule: self).scrollIndicatorInsets = oldInset
         self.dataSource.scrollButton(attachmentsModule: self).frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100, width: 50, height: 50)

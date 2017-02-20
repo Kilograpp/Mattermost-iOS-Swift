@@ -21,8 +21,6 @@ protocol ChatViewControllerInterface: class {
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     //UserInterface
     override var tableView: UITableView { return super.tableView! }
-    fileprivate let completePost: CompactPostView = CompactPostView.compactPostView(ActionType.Edit)
-    fileprivate let editModeView: EditModeView = EditModeView.editModeView()
     internal let attachmentsView = PostAttachmentsView()
     fileprivate var startHeadDialogueLabel = EmptyDialogueLabel()
     fileprivate var startTextDialogueLabel = EmptyDialogueLabel()
@@ -115,6 +113,19 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
         self.scrollButton?.center = center!
     }
+    
+    override func didCommitTextEditing(_ sender: Any) {
+        self.sendPostAction()
+        self.hideSelectedStateFromCell()
+        super.didCancelTextEditing(sender)
+        super.didCommitTextEditing(sender)
+    }
+    
+    override func didCancelTextEditing(_ sender: Any) {
+        self.hideSelectedStateFromCell()
+        self.configureSendAction(Constants.PostActionType.SendNew)
+        super.didCancelTextEditing(sender)
+    }
 }
 
 
@@ -144,8 +155,6 @@ fileprivate protocol Setup {
     func setupPostAttachmentsView()
     func setupTopActivityIndicator()
     func setupBottomActivityIndicator()
-    func setupCompactPost()
-    func setupEditModeView()
     func setupModules()
     //func loadUsersFromTeam()
 }
@@ -199,8 +208,6 @@ extension ChatViewController: Setup {
         setupTopActivityIndicator()
         setupBottomActivityIndicator()
         setupLongCellSelection()
-        setupCompactPost()
-        setupEditModeView()
         setupModules()
     }
     
@@ -291,51 +298,6 @@ extension ChatViewController: Setup {
         self.tableView.addGestureRecognizer(longPressGestureRecognizer)
     }
     
-    fileprivate func setupCompactPost() {
-        let size = self.completePost.requeredSize()
-        self.completePost.translatesAutoresizingMaskIntoConstraints = false
-        self.completePost.isHidden = true
-        self.completePost.cancelHandler = {
-            self.selectedPost = nil
-            self.clearTextView()
-            self.dismissKeyboard(true)
-            self.completePost.isHidden = true
-            self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendNew)
-        }
-        
-        self.view.addSubview(self.completePost)
-        
-        let horizontal = NSLayoutConstraint(item: self.completePost, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
-        view.addConstraint(horizontal)
-        let vertical = NSLayoutConstraint(item: self.completePost, attribute: .bottom, relatedBy: .equal, toItem: self.textView, attribute: .top, multiplier: 1, constant: 0)
-        view.addConstraint(vertical)
-        
-        let width = NSLayoutConstraint(item: self.completePost, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.width)
-        view.addConstraint(width)
-        
-        let height = NSLayoutConstraint(item: self.completePost, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height)
-        view.addConstraint(height)
-    }
-    
-    fileprivate func setupEditModeView() {
-        let size = self.editModeView.requeredSize()
-        self.editModeView.translatesAutoresizingMaskIntoConstraints = false
-        self.editModeView.isHidden = true
-        
-        self.view.addSubview(self.editModeView)
-        
-        let horizontal = NSLayoutConstraint(item: self.editModeView, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
-        view.addConstraint(horizontal)
-        let vertical = NSLayoutConstraint(item: self.editModeView, attribute: .bottom, relatedBy: .equal, toItem: self.textView, attribute: .top, multiplier: 1, constant: 0)
-        view.addConstraint(vertical)
-        
-        let width = NSLayoutConstraint(item: self.editModeView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.width)
-        view.addConstraint(width)
-        
-        let height = NSLayoutConstraint(item: self.editModeView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: size.height)
-        view.addConstraint(height)
-    }
-    
     fileprivate func setupScrollButton() {
         self.scrollButton = UIButton.init(type: UIButtonType.system)
         self.scrollButton?.frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100, width: 50, height: 50)
@@ -396,8 +358,7 @@ extension ChatViewController : Private {
         self.textView.text = nil
     }
     
-    func configureRightButtonWithTitle(_ title: String, action: String) {
-        self.rightButton.setTitle(title, for: UIControlState())
+    func configureSendAction(_ action: String) {
         self.selectedAction = action
     }
     
@@ -408,9 +369,10 @@ extension ChatViewController : Private {
         
         let replyAction = UIAlertAction(title: "Reply", style: .default) { action -> Void in
             self.selectedPost = post
-            self.completePost.configureWithPost(self.selectedPost, action: ActionType.Reply)
-            self.configureRightButtonWithTitle("Send".localized, action: Constants.PostActionType.SendReply)
-            self.completePost.isHidden = false
+            self.configureSendAction(Constants.PostActionType.SendReply)
+            self.textInputbar.editorTitle.text = "Reply message"
+            self.textInputbar.beginTextEditing()
+            
             self.presentKeyboard(true)
         }
         actionSheetController.addAction(replyAction)
@@ -437,10 +399,13 @@ extension ChatViewController : Private {
         
         if (post.author.identifier == Preferences.sharedInstance.currentUserId) {
             let editAction = UIAlertAction(title: "Edit", style: .default) { action -> Void in
-                self.editModeView.isHidden = false
-                self.configureRightButtonWithTitle("Save", action: Constants.PostActionType.SendUpdate)
-                self.presentKeyboard(true)
+                self.configureSendAction(Constants.PostActionType.SendUpdate)
                 self.textView.text = self.selectedPost.message
+                self.textInputbar.editorTitle.text = "Edit message"
+                self.textInputbar.editorRightButton.titleLabel?.text = "Save"
+                (self.tableView.cellForRow(at: self.selectedIndexPath) as! FeedBaseTableViewCell).configureForSelectedState(action: self.selectedAction)
+                self.textInputbar.beginTextEditing()
+                self.presentKeyboard(true)
             }
             actionSheetController.addAction(editAction)
             
@@ -530,7 +495,7 @@ extension ChatViewController: Action {
         guard (self.selectedIndexPath == nil) else { return }
         guard let indexPath = self.tableView.indexPathForRow(at: gestureRecognizer.location(in: self.tableView)) else { return }
         let cell = (tableView.cellForRow(at: indexPath) as! FeedBaseTableViewCell)
-            cell.configureForSelectedState()
+            cell.configureForSelectedState(action: self.selectedAction)
         
             
         let post = resultsObserver?.postForIndexPath(indexPath)
@@ -753,7 +718,6 @@ extension ChatViewController: Request {
         }
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
-        self.completePost.isHidden = true
     }
     
     func updatePost() {
@@ -762,10 +726,9 @@ extension ChatViewController: Request {
         guard self.selectedPost.identifier != nil else { return }
         
         PostUtils.sharedInstance.update(post: self.selectedPost, message: self.textView.text, attachments: nil) {_ in self.selectedPost = nil }
-        self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
+        self.configureSendAction(Constants.PostActionType.SendUpdate)
         self.selectedAction = Constants.PostActionType.SendNew
         self.clearTextView()
-        self.editModeView.isHidden = true
         self.hideSelectedStateFromCell()
     }
     
@@ -923,6 +886,11 @@ extension ChatViewController {
                     self.proceedToProfileFor(user: post!.author)
                 }
             }
+            if self.selectedIndexPath != nil {
+                if indexPath == self.selectedIndexPath {
+                    (cell as? FeedBaseTableViewCell)?.configureForSelectedState(action: self.selectedAction)
+                }
+            }
             
             return cell
         } else {
@@ -987,7 +955,7 @@ extension ChatViewController {
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let actualPosition = self.tableView.contentOffset.y
-        if actualPosition > UIScreen.screenHeight() { self.scrollButton?.isHidden = false }
+        if actualPosition > UIScreen.screenHeight() { self.scrollButton?.isHidden = false || selectedIndexPath != nil }
         if actualPosition < 50 { self.scrollButton?.isHidden = true }
     }
     
@@ -996,8 +964,8 @@ extension ChatViewController {
         let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardRectangle = keyboardFrame.cgRectValue
         let keyboardHeight = keyboardRectangle.height
-        self.scrollBottomUp(keyboardHeight: keyboardHeight)
         self.installContentInsents()
+        self.scrollToSelectedCell(keyboardHeight: keyboardHeight)
     }
     
     func keyboardWillHide(_ notification:NSNotification) {
@@ -1007,11 +975,6 @@ extension ChatViewController {
         let keyboardHeight = keyboardRectangle.height
         self.scrollBottomDown(keyboardHeight: keyboardHeight)
         self.installContentInsents()
-        self.hideSelectedStateFromCell()
-        self.selectedPost = nil
-        self.selectedAction = Constants.PostActionType.SendNew
-        self.editModeView.isHidden = true
-//        self.configureRightButtonWithTitle("Send", action: Constants.PostActionType.SendUpdate)
     }
 }
 
@@ -1087,7 +1050,7 @@ extension ChatViewController: ChannelObserverDelegate {
         
         self.startButton.frame = CGRect(x       : 0,
                                         y       : 0,
-                                        width   : UIScreen.main.bounds.size.width*0.90,
+                                        width   : UIScreen.main.bounds.size.width * 0.9,
                                         height  : 30)
         self.startButton.center = CGPoint(x: UIScreen.screenWidth() / 2,
                                           y: UIScreen.screenHeight() / 1.65)
@@ -1109,8 +1072,9 @@ extension ChatViewController: ChannelObserverDelegate {
         //ENDREFACTORING
         
         //update with UnsentPost
+        self.configureSendAction(Constants.PostActionType.SendNew)
+        self.textInputbar.endTextEdition()
         configureWithSentPost()
-        
         addChannelObservers()
         
         guard let _ = filesAttachmentsModule else {return}
@@ -1142,6 +1106,7 @@ extension ChatViewController: ChannelObserverDelegate {
     
     func installContentInsents() {
         DispatchQueue.main.async {
+            
             //Change TableView contentInsents if atachmentView is active
             if (self.attachmentsView.isShown) {
                 var oldInset = self.tableView.contentInset
@@ -1180,8 +1145,6 @@ extension ChatViewController {
         guard let channel = self.channel, !channel.isInvalidated else { return }
 
         navigationTitleView.configureWithChannel(channel: channel)
-        
-//        (self.navigationItem.titleView as! UILabel).text = self.channel?.displayName
     }
     
     func errorAction(_ post: Post) {
@@ -1226,8 +1189,6 @@ extension ChatViewController {
     }
     
     func handleKeyboardWillHideeNotification() {
-        self.completePost.isHidden = true
-        self.editModeView.isHidden = true
     }
     
     override func textViewDidChange(_ textView: UITextView) {
@@ -1304,6 +1265,15 @@ extension ChatViewController {
         if let cell = self.tableView.cellForRow(at: self.selectedIndexPath) {
             (cell as! FeedBaseTableViewCell).configureForNoSelectedState()
             self.selectedIndexPath = nil
+        }
+    }
+    
+    func scrollToSelectedCell(keyboardHeight: CGFloat) {
+        if (self.selectedIndexPath != nil) {
+            self.tableView.scrollToRow(at: self.selectedIndexPath, at: .top, animated: true)
+            if self.tableView.rectForRow(at: self.selectedIndexPath).height > (self.tableView.frame.height - keyboardHeight) {
+                self.tableView.contentOffset.y = self.tableView.contentOffset.y + self.tableView.rectForRow(at: self.selectedIndexPath).height - (self.tableView.frame.height - (UIScreen.screenHeight() - keyboardHeight))
+            }
         }
     }
 }

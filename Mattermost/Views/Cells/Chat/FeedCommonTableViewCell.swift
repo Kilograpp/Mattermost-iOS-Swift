@@ -181,12 +181,21 @@ extension FeedCommonTableViewCell : TableViewPostDataSource {
 
 //MARK: LongTapConfigure
 extension FeedCommonTableViewCell {
-    override func configureForSelectedState() {
-        super.configureForSelectedState()
-        avatarImageView.backgroundColor = UIColor.kg_lightLightGrayColor()
-        parentView.backgroundColor = UIColor.kg_lightLightGrayColor()
+    override func configureForSelectedState(action: String) {
+        let selectingColor: UIColor!
+        switch action {
+        case Constants.PostActionType.SendReply:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        case Constants.PostActionType.SendUpdate:
+            selectingColor = UIColor.yellow
+        default:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        }
+        super.configureForSelectedState(action: action)
+        avatarImageView.backgroundColor = selectingColor
+        parentView.backgroundColor = selectingColor
         self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!, size: CGSize(width: 40, height: 40),
-                                                                backgroundColor: UIColor.kg_lightLightGrayColor(),
+                                                                backgroundColor: selectingColor,
                                                                 hightlighted: false)
     }
     

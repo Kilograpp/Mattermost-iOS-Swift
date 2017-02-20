@@ -211,9 +211,6 @@ extension SocketManager: Notifications {
             try! RealmUtils.realmForCurrentThread().write {
                 existedPost.message = updatedPost.message
                 existedPost.updatedAt = updatedPost.updatedAt
-                existedPost.computeMissingFields()
-                existedPost.configureBackendPendingId()
-                existedPost.computeRenderedText()
             }
         } else {
             RealmUtils.save(updatedPost)

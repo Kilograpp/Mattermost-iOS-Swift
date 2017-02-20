@@ -138,20 +138,26 @@ extension FeedBaseTableViewCell {
         postStatusView.configureWithStatus(post)
         postStatusView.errorHandler = self.errorHandler
         
-        
        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
                 if properties.first(where: { $0.name == "status" }) != nil {
                     self.postStatusView.configureWithStatus(self.post)
                 }
+                if properties.first(where: { $0.name == "message" }) != nil {
+                    RealmUtils.configuratePost(post: self.post)
+                    self.configureMessage()
+                }
+                if properties.first(where: { $0.name == "isFollowUp" }) != nil {
+                    (self.superview?.superview as! UITableView).beginUpdates()
+                    self.configureWithPost(post)
+                    (self.superview?.superview as! UITableView).endUpdates()
+                }
                 if let attributeMessageProperty = properties.first(where: { $0.name == "_attributedMessageData" }) {
                     let newAttributedString = (attributeMessageProperty.newValue as! RealmAttributedString).attributedString!
                     post.computeRenderedTextWith(attrStr: newAttributedString)
                     self.configureMessage()
                 }
-                
-
             case .deleted:
                 print("deleted")
             case .error(let error):
@@ -171,9 +177,18 @@ extension FeedBaseTableViewCell {
 
 //MARK: LongTapConfigure
 extension FeedBaseTableViewCell {
-    func configureForSelectedState() {
-        self.backgroundColor = UIColor.kg_lightLightGrayColor()
-        messageLabel.backgroundColor = UIColor.kg_lightLightGrayColor()
+    func configureForSelectedState(action: String) {
+        let selectingColor: UIColor!
+        switch action {
+        case Constants.PostActionType.SendReply:
+                selectingColor = UIColor.kg_lightLightGrayColor()
+        case Constants.PostActionType.SendUpdate:
+                selectingColor = UIColor.yellow
+        default:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        }
+        self.backgroundColor = selectingColor
+        messageLabel.backgroundColor = selectingColor
     }
     
     func configureForNoSelectedState() {

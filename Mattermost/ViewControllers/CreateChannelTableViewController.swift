@@ -114,6 +114,7 @@ extension CreateChannelTableViewController: Action {
 //MARK: Navigation
 extension CreateChannelTableViewController {
     func returnToNewChannelWith(channelId: String) {
+        RealmUtils.realmForCurrentThread().refresh()
         let channel = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: channelId)
         (self.menuContainerViewController.leftMenuViewController as! LeftMenuViewController).updateSelectionFor(channel!)
         ChannelObserver.sharedObserver.selectedChannel = channel

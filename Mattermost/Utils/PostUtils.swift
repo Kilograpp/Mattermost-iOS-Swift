@@ -126,17 +126,28 @@ extension PostUtils: Update {
 extension PostUtils: Delete {
     func delete(post: Post, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let dayPrimaryKey = post.day?.key
+        let countOfPostsInDay = post.day?.posts.count
+        let postWasFollowUp = post.isFollowUp
+        let index = post.day?.sortedPosts().index(of: post)
         guard post.identifier != nil else {
             deleteLocalPost(postId: post.localIdentifier!, dayId: dayPrimaryKey!)
             completion(nil)
             return
         }
         Api.sharedInstance.deletePost(post) { (error) in
-            completion(error)
             let realm = RealmUtils.realmForCurrentThread()
-            let day = realm.object(ofType: Day.self, forPrimaryKey: dayPrimaryKey)
-            guard day?.posts.count == 0 else { return }
-            RealmUtils.deleteObject(day!)
+            
+            try! realm.write {
+                let day = realm.object(ofType: Day.self, forPrimaryKey: dayPrimaryKey)
+                if countOfPostsInDay! > 1 && !postWasFollowUp && (day?.sortedPosts().indices.contains(index!))! {
+                    let oldNextPost = day?.sortedPosts()[index!]
+                    oldNextPost?.isFollowUp = false
+                    realm.add(oldNextPost!, update: true)
+                }
+                guard day?.posts.count == 0 else { return }
+                RealmUtils.deleteObject(day!)
+            }
+            completion(error)
         }
     }
     

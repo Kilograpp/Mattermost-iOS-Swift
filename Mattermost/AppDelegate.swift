@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         launchApplicationStateManager()
         
-        
         RouterUtils.loadInitialScreen()
         registerForRemoteNotifications()
         Fabric.with([Crashlytics.self])
