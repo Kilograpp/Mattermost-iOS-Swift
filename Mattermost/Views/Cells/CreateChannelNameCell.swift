@@ -11,12 +11,12 @@ import UIKit
 let maxTextLength = 22
 
 protocol CreateChannelNameCellDelegate {
-    func cellWasUpdatedWith(text: String, height: CGFloat)
+    func nameCellWasUpdatedWith(text: String, height: CGFloat)
 }
 
 private protocol Interface: class {
     static func cellHeight() -> CGFloat
-    func configureWith(placeholderText: String)
+    func configureWith(delegate: CreateChannelNameCellDelegate, placeholderText: String)
     func highligthError()
     func hideKeyboardIfNeeded()
 }
@@ -49,8 +49,9 @@ extension CreateChannelNameCell: Interface {
         return 90
     }
     
-    func configureWith(placeholderText: String) {
+    func configureWith(delegate: CreateChannelNameCellDelegate, placeholderText: String) {
         self.placeholderLabel.text = placeholderText
+        self.delegate = delegate
     }
     
     func highligthError() {
@@ -94,7 +95,7 @@ extension CreateChannelNameCell: Action {
         self.placeholderLabel.isHidden = false
         self.clearButton.isHidden = true
         
-        self.delegate?.cellWasUpdatedWith(text: self.textField.text!, height: 0)
+        self.delegate?.nameCellWasUpdatedWith(text: self.textField.text!, height: 0)
     }
 }
 
@@ -112,6 +113,8 @@ extension CreateChannelNameCell: UITextFieldDelegate {
         self.placeholderLabel.isHidden = !newString.isEmpty
         self.clearButton.isHidden = newString.isEmpty
         if newString.characters.count <= limitLength { self.localizatedName = localizatedString as String }
+        
+        self.delegate?.nameCellWasUpdatedWith(text: self.textField.text!, height: 0)
         
         return newString.characters.count <= limitLength
     }
