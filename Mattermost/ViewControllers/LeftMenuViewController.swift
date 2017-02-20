@@ -325,11 +325,11 @@ extension LeftMenuViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return (section == 1) || (section == 3) ? CGFloat(0.00001) : 30
+        return (section == 1) || (section == 2) ? CGFloat(0.00001) : 30
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard (section != 1) && (section != 3) else { return nil }
+        guard (section != 1) && (section != 2)  else { return nil }
         
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: LeftMenuSectionFooter.reuseIdentifier) as! LeftMenuSectionFooter
         view.moreTapHandler = { self.navigateToMoreChannel(section) }
