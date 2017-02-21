@@ -13,14 +13,16 @@ private protocol Interface: class {
     func configureWith(channelId: String)
 }
 
+fileprivate let kSearchBarBackgroundColor = UIColor(red: 239.0/255.0, green: 239.0/255.0, blue: 244.0/255.0, alpha: 1.0)
 
 class AllMembersViewController: UIViewController {
     
 //MARK: Properties
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBar: UISearchBar!
 
+    fileprivate let emptySearchLabel = EmptyDialogueLabel()
     fileprivate lazy var builder: AllMembersCellBuilder = AllMembersCellBuilder(tableView: self.tableView)
+    fileprivate var searchController: UISearchController!
     
     var channel: Channel!
     var userResults: Results<User>! {
@@ -29,7 +31,9 @@ class AllMembersViewController: UIViewController {
     var filteredUserResults: Results<User>! {
         didSet { if self.tableView != nil { self.tableView.reloadData() } }
     }
-    var isSearchActive: Bool { return !(searchBar.text?.isEmpty)! }
+    var isSearchActive: Bool {
+        return self.searchController != nil ? !(self.searchController.searchBar.text?.isEmpty)! : false
+    }
     
     
 //MARK: LifeCycle
@@ -55,6 +59,7 @@ fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
     func setupSearchBar()
+    func setupEmptyDialogueLabel()
 }
 
 fileprivate protocol Navigation: class {
@@ -71,6 +76,7 @@ extension AllMembersViewController: Setup {
     func initialSetup(){
         setupNavigationBar()
         setupSearchBar()
+        setupEmptyDialogueLabel()
     }
     
     func setupNavigationBar() {
@@ -78,8 +84,37 @@ extension AllMembersViewController: Setup {
     }
     
     func setupSearchBar() {
-        let textField = self.searchBar.value(forKey: "searchField") as? UITextField
-        textField?.backgroundColor = ColorBucket.searchBarBackground
+        /*let textField = self.searchBar.value(forKey: "searchField") as? UITextField
+        textField?.backgroundColor = ColorBucket.searchBarBackground*/
+        
+            searchController = UISearchController(searchResultsController: nil)
+            searchController.searchBar.searchBarStyle = .prominent
+            searchController.searchBar.backgroundColor = .white
+            searchController.searchBar.barTintColor = .white
+            let view: UIView = searchController.searchBar.subviews[0] as UIView
+            for subView: UIView in view.subviews {
+                if let textView = subView as? UITextField {
+                    textView.backgroundColor = kSearchBarBackgroundColor
+                }
+            }
+            let rect = searchController.searchBar.frame
+            let lineView = UIView(frame: CGRect(x: 0, y: rect.size.height-2, width: rect.size.width, height: 2))
+            lineView.backgroundColor = UIColor.white
+            searchController.searchBar.addSubview(lineView)
+            
+            self.definesPresentationContext = false
+            self.extendedLayoutIncludesOpaqueBars = true
+            self.edgesForExtendedLayout = .all
+            searchController.searchBar.isTranslucent = false
+            tableView.tableHeaderView = searchController.searchBar
+            searchController.searchResultsUpdater = self
+            searchController.dimsBackgroundDuringPresentation = false
+    }
+    
+    func setupEmptyDialogueLabel() {
+        self.emptySearchLabel.backgroundColor = self.tableView.backgroundColor
+        self.emptySearchLabel.text = "No results found. Try again?"
+        self.view.insertSubview(self.emptySearchLabel, aboveSubview: self.tableView)
     }
 }
 
@@ -146,9 +181,18 @@ extension AllMembersViewController: UITableViewDelegate {
 }
 
 
-//MARK: UISearchBarDelegate
-extension AllMembersViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//MARK: Search updating
+extension AllMembersViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            filterContent(searchText: searchText)
+            tableView.reloadData()
+        }
+    }
+    
+    func filterContent(searchText: String){
         self.filteredUserResults = self.userResults.filter(NSPredicate(format: "username CONTAINS[c] %@", searchText))
+        self.emptySearchLabel.isHidden = (self.filteredUserResults.count > 0)
+        self.tableView.isHidden = (self.filteredUserResults.count == 0)
     }
 }
