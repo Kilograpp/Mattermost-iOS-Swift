@@ -251,6 +251,10 @@ extension UFSettingsTableViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if (self.userFieldType == Constants.UserFieldType.NickName) {
+            self.saveButton.isEnabled = true
+            return ((textField.text?.characters.count)!+string.characters.count) <= 22
+        }
         self.saveButton.isEnabled = true
         return true
     }

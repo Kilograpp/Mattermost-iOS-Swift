@@ -40,4 +40,8 @@ extension UIColor {
         let color = UIColor.init(red: 151/255, green: 151/255, blue: 151/255, alpha: 1)
         return color
     }
+    class func kg_editColor() -> UIColor {
+        let color = try! UIColor(rgba_throws: "#ffff85")
+        return color
+    }
 }

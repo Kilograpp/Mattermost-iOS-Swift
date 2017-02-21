@@ -140,7 +140,7 @@ extension CreateChannelTableViewController: Request {
             }
             
             let typeName = self.channelType == "O" ? "Channel" : "Group"
-            AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was successfully created")
+            AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " \(displayName) was successfully created")
             self.returnToNewChannelWith(channelId: channelId!)
         }
     }
