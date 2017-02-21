@@ -66,10 +66,20 @@ extension AttachmentFileCell: AttachmentFileCellConfiguration {
 
 //MARK: LongTapConfigure
 extension AttachmentFileCell {
-    func configureForSelectedState() {
-        fileView.backgroundColor = UIColor.kg_lightLightGrayColor()
-        contentView.backgroundColor = UIColor.kg_lightLightGrayColor()
-        self.backgroundColor = UIColor.kg_lightLightGrayColor()
+    func configureForSelectedState(action: String) {
+        let selectingColor: UIColor!
+        switch action {
+        case Constants.PostActionType.SendReply:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        case Constants.PostActionType.SendUpdate:
+            selectingColor = UIColor.yellow
+        default:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        }
+        
+        fileView.backgroundColor = selectingColor
+        contentView.backgroundColor = selectingColor
+        self.backgroundColor = selectingColor
     }
     
     func configureForNoSelectedState() {

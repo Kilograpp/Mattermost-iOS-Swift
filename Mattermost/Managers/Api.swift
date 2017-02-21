@@ -94,8 +94,8 @@ final class Api {
 //MARK: Properties
     static let sharedInstance = Api()
     fileprivate var _managerCache: ObjectManager?
-    fileprivate var downloadOperationsArray = Array<AFRKHTTPRequestOperation>()
-    fileprivate var networkReachabilityManager = NetworkReachabilityManager.init()
+    fileprivate var downloadOperationsArray = [AFRKHTTPRequestOperation]()
+    fileprivate var networkReachabilityManager = NetworkReachabilityManager()
     fileprivate var manager: ObjectManager  {
         if _managerCache == nil {
             _managerCache = ObjectManager(baseURL: self.computeAndReturnApiRootUrl())
@@ -519,7 +519,7 @@ extension Api: ChannelApi {
 
     func createDirectChannelWith(_ user: User, completion: @escaping (_ channel: Channel?, _ error: Mattermost.Error?) -> Void) {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.createDirrectChannelPathPattern(), DataManager.sharedInstance.currentTeam)
-        let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
+        let params: [String : String] = [ "user_id" : user.identifier ]
         
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             let realm = RealmUtils.realmForCurrentThread()
@@ -530,8 +530,11 @@ extension Api: ChannelApi {
                 channel.computeDispayNameIfNeeded()
                 realm.add(channel, update: true)
             })
+            let id = channel.identifier
+            
             DispatchQueue.main.async {
-                completion(nil ,nil)
+                let ch = RealmUtils.realmForCurrentThread().object(ofType: Channel.self, forPrimaryKey: id)
+                completion(ch ,nil)
             }
         }) { (error) in
             DispatchQueue.main.async {

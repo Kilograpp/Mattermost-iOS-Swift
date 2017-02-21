@@ -157,7 +157,7 @@ extension ColorBucket: MoreTableColors {
 
 extension ColorBucket: ChannelSettingsColor {
     static let addMemberColor = ColorBucket.brightBlue()
-    static let offlineStatusColor = ColorBucket.lightGray()
+    static let offlineStatusColor = ColorBucket.brightBlue()
     static let seeAllMembersColor = ColorBucket.blue()
     static let actionColor = UIColor.red
     static let searchBarBackground = ColorBucket.darkWhite()

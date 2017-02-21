@@ -24,6 +24,8 @@ private protocol Interface: class {
     func configureWith(delegate: ChannelInfoCellDelegate)
     func configureWith(delegate: ChannelInfoCellDelegate, text: String, infoType: InfoType)
     func configureWith(delegate: ChannelInfoCellDelegate, placeholderText: String)
+    func hideKeyboardIfNeeded()
+    func updateWith(text: String)
 }
 
 class ChannelInfoCell: UITableViewCell {
@@ -72,6 +74,18 @@ extension ChannelInfoCell: Interface {
         
         self.placeholderLabel.text = placeholderText
         self.placeholderLabel.isHidden = false
+    }
+    
+    func hideKeyboardIfNeeded() {
+        self.textView.resignFirstResponder()
+    }
+    
+    func updateWith(text: String) {
+        self.textView.text = text
+        self.placeholderLabel.isHidden = !text.isEmpty
+        guard self.delegate != nil else { return }
+        
+        self.delegate?.cellWasUpdatedWith(text: "", height: ChannelInfoCell.heightWith(text: text))
     }
 }
 

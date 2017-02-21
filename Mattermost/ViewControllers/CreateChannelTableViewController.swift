@@ -12,7 +12,7 @@ private protocol Interface: class {
     func configureWith(channelType: String)
 }
 
-class CreateChannelTableViewController: UITableViewController, ChannelInfoCellDelegate {
+class CreateChannelTableViewController: UITableViewController {
 
 //MARK: Properties
     @IBOutlet weak var nameCell: CreateChannelNameCell!
@@ -45,6 +45,7 @@ fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
     func setupCells()
+    func setupGestureRecognizers()
 }
 
 fileprivate protocol Action: class {
@@ -65,6 +66,7 @@ extension CreateChannelTableViewController: Setup {
     internal func initialSetup() {
         setupNavigationBar()
         setupCells()
+        setupGestureRecognizers()
     }
     
     func setupNavigationBar() {
@@ -75,10 +77,15 @@ extension CreateChannelTableViewController: Setup {
     }
     
     func setupCells() {
-        self.nameCell.configureWith(placeholderText: self.channelType == "P" ? "Group Name" : "Channel Name")
+        self.nameCell.configureWith(delegate: self, placeholderText: self.channelType == "P" ? "Group Name" : "Channel Name")
         self.handleCell.configureWith(delegate: self)
         self.headerCell.configureWith(delegate: self)
         self.purposeCell.configureWith(delegate: self)
+    }
+    
+    func setupGestureRecognizers() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        self.tableView.addGestureRecognizer(tapGestureRecognizer)
     }
 }
 
@@ -93,6 +100,13 @@ extension CreateChannelTableViewController: Action {
         }
         
         createChannel()
+    }
+    
+    func tapAction() {
+        self.nameCell.hideKeyboardIfNeeded()
+        self.handleCell.hideKeyboardIfNeeded()
+        self.headerCell.hideKeyboardIfNeeded()
+        self.purposeCell.hideKeyboardIfNeeded()
     }
 }
 
@@ -153,8 +167,17 @@ extension CreateChannelTableViewController {
 }
 
 
+//MARK: CreateChannelNameCellDelegate
+extension CreateChannelTableViewController: CreateChannelNameCellDelegate {
+    func nameCellWasUpdatedWith(text: String, height: CGFloat) {
+        let locilizedText = self.nameCell.localizatedName
+        self.handleCell.updateWith(text: locilizedText)
+    }
+}
+
+
 //MARK: ChannelInfoCellDelegate
-extension CreateChannelTableViewController {
+extension CreateChannelTableViewController: ChannelInfoCellDelegate {
     func cellWasUpdatedWith(text: String, height: CGFloat) {
         self.tableView.beginUpdates()
         self.tableView.endUpdates()

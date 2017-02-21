@@ -92,11 +92,15 @@ extension MemberChannelSettingsCell: Configuration {
     }
     
     func configureUserStatusWith(_ backendStatus: String) {
+        print("stats = ", backendStatus)
         switch backendStatus {
         case "online":
             self.statusLabel.textColor = ColorBucket.onlineStatusColor
             self.statusLabel.text = backendStatus
         case "away":
+            self.statusLabel.textColor = ColorBucket.offlineStatusColor
+            self.statusLabel.text = backendStatus
+        case "offline":
             self.statusLabel.textColor = ColorBucket.offlineStatusColor
             self.statusLabel.text = backendStatus
         default:

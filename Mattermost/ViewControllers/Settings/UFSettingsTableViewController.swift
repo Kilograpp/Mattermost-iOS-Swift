@@ -201,6 +201,12 @@ extension UFSettingsTableViewController: Request {
                     AlertManager.sharedManager.showErrorWithMessage(message: "Password must contain 5 characters at least.")
                     return
                 }
+                
+                guard error?.code != 403 else {
+                    self.handleErrorWith(message: "The \"Current Password\" you entered is incorrect. Please check that Caps Lock is off and try again.");
+                    return
+                }
+                
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
                 return
             }

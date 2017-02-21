@@ -61,6 +61,14 @@ final class RealmUtils {
         })
     }
     
+    static func deletePostAtChannel(_ objects: Results<Post>) {
+        let realm = realmForCurrentThread()
+        
+        try! realm.write({
+            realm.delete(objects)
+        })
+    }
+    
     static func deleteObject(_ object:RealmObject) {
         let realm = realmForCurrentThread()
         
@@ -92,6 +100,15 @@ final class RealmUtils {
             realm.delete(days)
             realm.delete(members)
         })
+    }
+    
+    static func configuratePost(post: Post) {
+        let realm = realmForCurrentThread()
+        try! realm.write {
+            post.computeMissingFields()
+            post.configureBackendPendingId()
+            post.computeRenderedText()
+        }
     }
     
     static func clearChannelWith(channelId: String, exept: Post? = nil) {

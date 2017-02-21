@@ -133,16 +133,26 @@ extension FeedAttachmentsTableViewCell : UITableViewDelegate {
 
 //MARK: LongTapConfigure
 extension FeedAttachmentsTableViewCell {
-    override func configureForSelectedState() {
-        super.configureForSelectedState()
+    override func configureForSelectedState(action: String) {
+        let selectingColor: UIColor!
+        switch action {
+        case Constants.PostActionType.SendReply:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        case Constants.PostActionType.SendUpdate:
+            selectingColor = UIColor.yellow
+        default:
+            selectingColor = UIColor.kg_lightLightGrayColor()
+        }
+        
+        super.configureForSelectedState(action: action)
         var indexPath = IndexPath()
         for row in 0...attachments.count-1 {
             indexPath = IndexPath(row: row, section: 0)
             if var cell = tableView.cellForRow(at: indexPath) {
                 if attachments[row].isImage {
-                    (cell as! AttachmentImageCell).configureForSelectedState()
+                    (cell as! AttachmentImageCell).configureForSelectedState(action: action)
                 } else {
-                    (cell as! AttachmentFileCell).configureForSelectedState()
+                    (cell as! AttachmentFileCell).configureForSelectedState(action: action)
                 }
             }
         }
