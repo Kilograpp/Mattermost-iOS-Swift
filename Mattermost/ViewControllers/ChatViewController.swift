@@ -16,6 +16,7 @@ import NVActivityIndicatorView
 
 protocol ChatViewControllerInterface: class {
     func loadPostsBeforeSelectedPostFromSearch(post: Post)
+    func updateChannelTitle()
 }
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -136,6 +137,11 @@ extension ChatViewController: ChatViewControllerInterface {
         self.hasNewestPage = true
         ChannelObserver.sharedObserver.selectedChannel = post.channel
         loadPostsBeforePost(post: post, needScroll: true)
+    }
+    
+    func updateChannelTitle() {
+        self.navigationTitleView.configureWithChannel(channel: self.channel)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
     }
 }
 

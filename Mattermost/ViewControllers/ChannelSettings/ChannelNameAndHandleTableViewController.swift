@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MFSideMenu
 
 let limitLength = 22
 
@@ -155,6 +156,10 @@ extension ChannelNameAndHandleTableViewController: Request {
                 channel?.name = name
                 channel?.displayName = displayName
             }
+            
+            let container = self.presentingViewController as! MFSideMenuContainerViewController
+            let chat = (container.centerViewController as! UINavigationController).topViewController as! ChatViewController
+            chat.updateChannelTitle()
             
             let typeName = (self.channel.privateType! == "P") ? "Group" : "Channel"
             self.handleSuccesWith(message: typeName + " was updated")
