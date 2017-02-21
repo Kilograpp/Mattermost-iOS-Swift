@@ -167,7 +167,11 @@ extension AttachmentFileView: AttachmentFileViewConfiguration {
         let textFont =  AttachmentFileView.fileSizeFont
         let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
         
-        if fileName.characters.count > 24 { fileName = fileName.substring(to: fileName.index(fileName.startIndex, offsetBy: 24)) + "..." }
+        if fileName.characters.count > 24 {
+            let name = (fileName as NSString).deletingPathExtension.substring(to: fileName.index(fileName.startIndex, offsetBy: 20))
+            let ext = (fileName as NSString).pathExtension
+            fileName = name + "..." + ext
+        }
         let nameFrame = CGRect(x: 54, y: 8, width: frame.width - 64, height: 30).offsetBy(dx: 0, dy: frame.origin.y)
         fileName.draw(in: nameFrame, withAttributes: attributes)
     }
