@@ -180,6 +180,8 @@ extension SocketManager: Notifications {
     
     func handleReceivingNewPost(_ channelId:String,channelName:String,channelType:String,senderName:String,post:Post) {
         // if user is not author
+        guard post.authorId! != Preferences.sharedInstance.currentUserId else { return }
+        
         if !postExistsWithIdentifier(post.identifier!, pendingIdentifier: post.pendingId!) {
             let realm = RealmUtils.realmForCurrentThread()
             try! realm.write({
