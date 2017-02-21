@@ -798,6 +798,9 @@ extension ChatViewController: NotificationObserver {
         center.addObserver(self, selector: #selector(reloadTitle),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification),
                                                object: nil)
+        center.addObserver(self, selector: #selector(refreshControlValueChanged),
+                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification),
+                           object: nil)
     }
     
     func addSLKKeyboardObservers() {

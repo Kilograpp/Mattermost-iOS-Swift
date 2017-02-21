@@ -151,9 +151,7 @@ extension FeedBaseTableViewCell {
                     self.configureMessage()
                 }
                 if properties.first(where: { $0.name == "isFollowUp" }) != nil {
-                    (self.superview?.superview as! UITableView).beginUpdates()
-                    self.configureWithPost(post)
-                    (self.superview?.superview as! UITableView).endUpdates()
+                    (self.superview?.superview as! UITableView).reloadData()
                 }
                 if let attributeMessageProperty = properties.first(where: { $0.name == "_attributedMessageData" }) {
                     let newAttributedString = (attributeMessageProperty.newValue as! RealmAttributedString).attributedString!
