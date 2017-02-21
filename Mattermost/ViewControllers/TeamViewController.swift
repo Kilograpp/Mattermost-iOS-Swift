@@ -80,6 +80,25 @@ fileprivate protocol Request {
     func loadTeamMembers()
 }
 
+fileprivate protocol Helpers {
+    func returnLastTeam()
+}
+
+//MARK: TeamViewController
+extension TeamViewController: Helpers {
+    func returnLastTeam() {
+        self.refreshCurrentTeamIfNeeded()
+        guard self.lastTeam != nil else {
+            AlertManager.sharedManager.showErrorWithMessage(message: "Can't change team")
+            
+            return
+        }
+        DataManager.sharedInstance.currentTeam = self.lastTeam
+        Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
+        Preferences.sharedInstance.save()
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+    }
+}
 
 //MARK: Setup
 extension TeamViewController: Setup {
@@ -162,15 +181,12 @@ extension TeamViewController: Configuration {
 extension TeamViewController: Request {
     func loadTeamChannels() {
         Api.sharedInstance.loadChannels { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!);
-                    self.refreshCurrentTeamIfNeeded()
-                    DataManager.sharedInstance.currentTeam = self.lastTeam
-                    Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
-                    Preferences.sharedInstance.save()
+            guard error == nil else {
+                self.handleErrorWith(message: (error?.message)!)
+                self.returnLastTeam()
                 
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
-                
-                return }
+                return
+            }
             
             self.loadPreferedDirectChannelsInterlocuters()
         }
@@ -182,14 +198,13 @@ extension TeamViewController: Request {
         preferences.forEach{ usersIds.append($0.name!) }
         
         Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!);
-                    self.refreshCurrentTeamIfNeeded()
-                    DataManager.sharedInstance.currentTeam = self.lastTeam
-                    Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
-                    Preferences.sharedInstance.save()
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+            guard error == nil else {
+                self.handleErrorWith(message: (error?.message)!)
+                self.returnLastTeam()
 
-                return }
+                return
+            }
+            
             self.loadTeamMembers()
         }
     }
@@ -203,17 +218,13 @@ extension TeamViewController: Request {
         
         Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
             
-            guard error == nil else { self.handleErrorWith(message: (error?.message)!);
-                self.refreshCurrentTeamIfNeeded()
-                DataManager.sharedInstance.currentTeam = self.lastTeam
-                Preferences.sharedInstance.currentTeamId = self.lastTeam!.identifier
-                Preferences.sharedInstance.save()
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+            guard error == nil else {
+                self.handleErrorWith(message: (error?.message)!)
+                self.returnLastTeam()
+                
                 return
             }
             
-          //  NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: Constants.NotificationsNames.ChatLoadingStopNotification), object: nil))
-
             DispatchQueue.main.async{
                 if self.isPresentedModally() {
                     self.dismiss(animated: true, completion:{ _ in
@@ -271,6 +282,7 @@ extension TeamViewController: UITableViewDelegate {
             showLoaderView(topOffset: topOffset, bottomOffset: 0.0)
             loadTeamChannels()
             guard let controller = ChannelObserver.sharedObserver.delegate as? ChatViewController else { return }
+            guard controller.resultsObserver != nil else { return }
             controller.resultsObserver.unsubscribeNotifications()
         } else {
             self.dismiss(animated: true, completion: nil)
