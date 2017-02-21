@@ -72,7 +72,7 @@ extension AttachmentFileCell {
         case Constants.PostActionType.SendReply:
             selectingColor = UIColor.kg_lightLightGrayColor()
         case Constants.PostActionType.SendUpdate:
-            selectingColor = UIColor.yellow
+            selectingColor = UIColor.kg_editColor()
         default:
             selectingColor = UIColor.kg_lightLightGrayColor()
         }
