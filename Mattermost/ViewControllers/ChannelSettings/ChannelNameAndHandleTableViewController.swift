@@ -17,10 +17,10 @@ private protocol Interface: class {
 class ChannelNameAndHandleTableViewController: UITableViewController {
 
 //MARK: Properties
-    @IBOutlet weak var nameTextFiled: UITextField!
-    @IBOutlet weak var clearNameButton: UIButton!
     @IBOutlet weak var displayNameTextField: UITextField!
     @IBOutlet weak var clearDisplayNameButton: UIButton!
+    @IBOutlet weak var nameTextFiled: UITextField!
+    @IBOutlet weak var clearNameButton: UIButton!
     
     var saveButton: UIBarButtonItem!
     
@@ -52,8 +52,8 @@ fileprivate protocol Setup: class {
 
 fileprivate protocol Action: class {
     func saveAction()
-    func clearNameAction()
     func clearDisplayNameAction()
+    func clearNameAction()
 }
 
 fileprivate protocol Navigation: class {
@@ -69,8 +69,8 @@ fileprivate protocol Request: class {
 extension ChannelNameAndHandleTableViewController: Setup {
     func initialSetup() {
         setupNavigationBar()
-        setupNameSection()
         setupDisplayNameSection()
+        setupNameSection()
     }
     
     func setupNavigationBar() {
@@ -80,16 +80,16 @@ extension ChannelNameAndHandleTableViewController: Setup {
         self.navigationItem.rightBarButtonItem = self.saveButton
     }
     
+    func setupDisplayNameSection() {
+        self.displayNameTextField.text = self.channel.displayName
+        self.clearDisplayNameButton.isHidden = (self.displayNameTextField.text?.isEmpty)!
+    }
+    
     func setupNameSection() {
         self.nameTextFiled.text = self.channel.name
         self.nameTextFiled.isEnabled = channel.name! != "town-square"
         
         self.clearNameButton.isHidden = ((self.nameTextFiled.text?.isEmpty)! || channel.name! == "town-square")
-    }
-    
-    func setupDisplayNameSection() {
-        self.displayNameTextField.text = self.channel.displayName
-        self.clearDisplayNameButton.isHidden = (self.displayNameTextField.text?.isEmpty)!
     }
 }
 
@@ -97,23 +97,20 @@ extension ChannelNameAndHandleTableViewController: Setup {
 //MARK: Action
 extension ChannelNameAndHandleTableViewController: Action {
     func saveAction() {
-        if (self.nameTextFiled.text?.isEmpty)! || (self.displayNameTextField.text?.isEmpty)! {
-            let message = (self.nameTextFiled.text?.isEmpty)! ? "Incorrect name" : "Incorrect handle"
-            self.handleErrorWith(message: message);
-            return
-        }
+        guard !(self.displayNameTextField.text?.isEmpty)! else { self.handleErrorWith(message: "Incorrect name"); return }
+        guard !(self.nameTextFiled.text?.isEmpty)! else { self.handleErrorWith(message: "Incorrect handle"); return }
         
         update()
-    }
-    
-    @IBAction func clearNameAction() {
-        self.saveButton.isEnabled = !(self.nameTextFiled.text?.isEmpty)!
-        self.nameTextFiled.text = ""
     }
     
     @IBAction func clearDisplayNameAction() {
         self.saveButton.isEnabled = !(self.displayNameTextField.text?.isEmpty)!
         self.displayNameTextField.text = ""
+    }
+    
+    @IBAction func clearNameAction() {
+        self.saveButton.isEnabled = !(self.nameTextFiled.text?.isEmpty)!
+        self.nameTextFiled.text = ""
     }
 }
 
