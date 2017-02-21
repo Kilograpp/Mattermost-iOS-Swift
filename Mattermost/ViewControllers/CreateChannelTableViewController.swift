@@ -78,7 +78,7 @@ extension CreateChannelTableViewController: Setup {
     
     func setupCells() {
         self.nameCell.configureWith(delegate: self, placeholderText: self.channelType == "P" ? "Group Name" : "Channel Name")
-        self.handleCell.configureWith(delegate: self)
+        self.handleCell.configureWith(delegate: self, placeholderText: self.channelType == "P" ? "Group handle" : "Channel handle")
         self.headerCell.configureWith(delegate: self)
         self.purposeCell.configureWith(delegate: self)
     }
