@@ -66,6 +66,7 @@ private protocol MoreTableColors {
 
 private protocol ChannelSettingsColor {
     static var addMemberColor: UIColor { get }
+    static var awayTextStatusColor: UIColor { get }
     static var onlineStatusColor: UIColor { get }
     static var offlineStatusColor: UIColor { get }
     static var seeAllMembersColor: UIColor { get }
@@ -157,6 +158,7 @@ extension ColorBucket: MoreTableColors {
 
 extension ColorBucket: ChannelSettingsColor {
     static let addMemberColor = ColorBucket.brightBlue()
+    static let awayTextStatusColor = ColorBucket.lightGray()
     static let offlineStatusColor = ColorBucket.brightBlue()
     static let seeAllMembersColor = ColorBucket.blue()
     static let actionColor = UIColor.red
