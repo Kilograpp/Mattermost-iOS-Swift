@@ -368,11 +368,9 @@ extension ChatViewController : Private {
         self.selectedPost = post
         
         let replyAction = UIAlertAction(title: "Reply", style: .default) { action -> Void in
-            self.selectedPost = post
             self.configureSendAction(Constants.PostActionType.SendReply)
             self.textInputbar.editorTitle.text = "Reply message"
             self.textInputbar.beginTextEditing()
-            
             self.presentKeyboard(true)
         }
         actionSheetController.addAction(replyAction)
@@ -534,11 +532,11 @@ extension ChatViewController: Action {
         self.tableView.dataSource = datasource
     }
     
-    func scrollBottomUp(keyboardHeight: CGFloat) {
-        self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100 - keyboardHeight;
+    func scrollButtonUp(keyboardHeight: CGFloat) {
+        self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100 - keyboardHeight
     }
     
-    func scrollBottomDown(keyboardHeight: CGFloat) {
+    func scrollButtonDown(keyboardHeight: CGFloat) {
         self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100
     }
 }
@@ -893,8 +891,8 @@ extension ChatViewController {
                     self.proceedToProfileFor(user: post!.author)
                 }
             }
-            if self.selectedIndexPath != nil {
-                if indexPath == self.selectedIndexPath {
+            if self.selectedPost != nil {
+                if post == self.selectedPost {
                     (cell as? FeedBaseTableViewCell)?.configureForSelectedState(action: self.selectedAction)
                 }
             }
@@ -962,7 +960,7 @@ extension ChatViewController {
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let actualPosition = self.tableView.contentOffset.y
-        if actualPosition > UIScreen.screenHeight() { self.scrollButton?.isHidden = false || selectedIndexPath != nil }
+        if actualPosition > UIScreen.screenHeight() { self.scrollButton?.isHidden = false }
         if actualPosition < 50 { self.scrollButton?.isHidden = true }
     }
     
@@ -973,6 +971,7 @@ extension ChatViewController {
         let keyboardHeight = keyboardRectangle.height
         self.installContentInsents()
         self.scrollToSelectedCell(keyboardHeight: keyboardHeight)
+        self.scrollButtonUp(keyboardHeight: keyboardHeight)
     }
     
     func keyboardWillHide(_ notification:NSNotification) {
@@ -980,8 +979,8 @@ extension ChatViewController {
         let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardRectangle = keyboardFrame.cgRectValue
         let keyboardHeight = keyboardRectangle.height
-        self.scrollBottomDown(keyboardHeight: keyboardHeight)
         self.installContentInsents()
+        self.scrollButtonDown(keyboardHeight: keyboardHeight)
     }
 }
 

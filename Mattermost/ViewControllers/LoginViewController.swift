@@ -233,7 +233,7 @@ extension LoginViewController: Request {
             guard (error == nil) else {
                 var message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
                 if error?.code == 401 { message = "Login failed because of invalid password" }
-                
+                if error?.code == 400 { message = "Incorrect email or password!" }
                 AlertManager.sharedManager.showErrorWithMessage(message: message)
                 self.hideLoaderView()
                 self.recoveryButton.tintColor = UIColor.red
