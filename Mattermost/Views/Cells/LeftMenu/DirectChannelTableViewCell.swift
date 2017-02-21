@@ -69,6 +69,7 @@ final class DirectChannelTableViewCell: UITableViewCell {
             channelToRemove.currentUserInChannel = false
             channelToRemove.isDirectPrefered = false
         }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
     }
 }
@@ -81,7 +82,6 @@ private protocol DirectChannelTableViewCellSetup {
     func setupHighlightView()
     func setupUserFormPrivateChannel()
     func setupBadgeLabel()
-    func setupLeaveButton()
     func configureLeaveButton(selected: Bool)
     func setupStatusViewWithBackendStatus(_ backendStatus: String)
     func highlightViewBackgroundColor() -> UIColor
@@ -137,15 +137,6 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellSetup {
         setupStatusView()
         setupHighlightView()
         setupBadgeLabel()
-        setupLeaveButton()
-    }
-    func setupLeaveButton() {
-//        let buttonSize: CGFloat = 40
-//        self.leaveButton = UIButton(frame: CGRect(x: self.bounds.width - buttonSize, y: self.bounds.height/2 - buttonSize/2, width: buttonSize, height: buttonSize))
-//        self.leaveButton.addTarget(self, action: #selector(leaveChannel), for: .touchUpInside)
-//        self.leaveButton.backgroundColor = UIColor.red
-////        self.leaveButton.setBackgroundImage(UIImage(named:"close_button"), for: .normal)
-//        self.addSubview(leaveButton)
     }
     
     func setupContentView() {
