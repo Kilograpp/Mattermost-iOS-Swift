@@ -48,12 +48,14 @@ fileprivate protocol Setup: class {
     func setupNavigationBar()
     func setupNameSection()
     func setupDisplayNameSection()
+    func setupGestureRecognizers()
 }
 
 fileprivate protocol Action: class {
     func saveAction()
     func clearDisplayNameAction()
     func clearNameAction()
+    func tapAction()
 }
 
 fileprivate protocol Navigation: class {
@@ -71,6 +73,7 @@ extension ChannelNameAndHandleTableViewController: Setup {
         setupNavigationBar()
         setupDisplayNameSection()
         setupNameSection()
+        setupGestureRecognizers()
     }
     
     func setupNavigationBar() {
@@ -90,6 +93,11 @@ extension ChannelNameAndHandleTableViewController: Setup {
         self.nameTextFiled.isEnabled = channel.name! != "town-square"
         
         self.clearNameButton.isHidden = ((self.nameTextFiled.text?.isEmpty)! || channel.name! == "town-square")
+    }
+
+    func setupGestureRecognizers() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        self.tableView.addGestureRecognizer(tapGestureRecognizer)
     }
 }
 
@@ -111,6 +119,11 @@ extension ChannelNameAndHandleTableViewController: Action {
     @IBAction func clearNameAction() {
         self.saveButton.isEnabled = !(self.nameTextFiled.text?.isEmpty)!
         self.nameTextFiled.text = ""
+    }
+    
+    func tapAction() {
+        if self.displayNameTextField.isEditing { self.displayNameTextField.resignFirstResponder() }
+        if self.nameTextFiled.isEditing { self.nameTextFiled.resignFirstResponder() }
     }
 }
 
