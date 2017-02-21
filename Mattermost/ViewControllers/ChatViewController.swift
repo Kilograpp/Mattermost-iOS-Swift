@@ -773,10 +773,14 @@ extension ChatViewController: Request {
         guard self.selectedPost != nil else { return }
         
         guard self.selectedPost.identifier != nil else {
+            let dayPrimaryKey = selectedPost.day?.key
+            PostUtils.sharedInstance.deleteLocalPost(postId: selectedPost.localIdentifier!, dayId: dayPrimaryKey!)
             self.selectedAction = Constants.PostActionType.SendNew
-            RealmUtils.deleteObject(self.selectedPost)
             self.selectedPost = nil
             self.hideSelectedStateFromCell()
+            //TEMP reload for delete
+            self.tableView.reloadData()
+            
             return
         }
         

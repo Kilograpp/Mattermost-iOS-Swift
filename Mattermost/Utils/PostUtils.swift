@@ -140,14 +140,14 @@ extension PostUtils: Delete {
         }
     }
     
-    fileprivate func deleteLocalPost(postId: String, dayId: String) {
+    func deleteLocalPost(postId: String, dayId: String) {
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write {
             let post = realm.object(ofType: Post.self, forPrimaryKey: postId)
             realm.delete(post!)
             let day = realm.object(ofType: Day.self, forPrimaryKey: dayId)
             guard day?.posts.count == 0 else { return }
-            RealmUtils.deleteObject(day!)
+            realm.delete(day!)
         }
  
     }
