@@ -891,8 +891,8 @@ extension ChatViewController {
                     self.proceedToProfileFor(user: post!.author)
                 }
             }
-            if self.selectedPost != nil {
-                if post == self.selectedPost {
+            if self.selectedIndexPath != nil {
+                if indexPath == self.selectedIndexPath {
                     (cell as? FeedBaseTableViewCell)?.configureForSelectedState(action: self.selectedAction)
                 }
             }
@@ -1270,8 +1270,8 @@ extension ChatViewController {
         guard (self.selectedIndexPath != nil) else { return }
         if let cell = self.tableView.cellForRow(at: self.selectedIndexPath) {
             (cell as! FeedBaseTableViewCell).configureForNoSelectedState()
-            self.selectedIndexPath = nil
         }
+        self.selectedIndexPath = nil
     }
     
     func scrollToSelectedCell(keyboardHeight: CGFloat) {

@@ -49,6 +49,8 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         self.postIdentifier = nil
         self.parentPostIdentifier = nil
         notificationToken?.stop()
+        self.backgroundColor = .white
+        messageLabel.backgroundColor = .white
     }
     
     override func layoutSubviews() {
