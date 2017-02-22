@@ -93,7 +93,7 @@ extension CreateChannelTableViewController: Setup {
 //MARK: Action
 extension CreateChannelTableViewController: Action {
     func createAction() {
-        guard self.nameCell.localizatedName.characters.count > 0 else {
+        guard self.nameCell.localizatedName.replacingOccurrences(of: " ", with: "").characters.count > 0 else {
             let type = self.channelType == "P" ? "Group" : "Channel"
             self.handleErrorWith(message: "Incorrect " + type + " Name")
             self.nameCell.highligthError()
