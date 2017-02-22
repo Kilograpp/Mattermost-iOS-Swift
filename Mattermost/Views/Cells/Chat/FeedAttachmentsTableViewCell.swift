@@ -42,6 +42,18 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        var indexPath = IndexPath()
+        for row in 0...attachments.count-1 {
+            indexPath = IndexPath(row: row, section: 0)
+            if var cell = tableView.cellForRow(at: indexPath) {
+                if attachments[row].isImage {
+                    (cell as! AttachmentImageCell).configureForNoSelectedState()
+                } else {
+                    (cell as! AttachmentFileCell).configureForNoSelectedState()
+                }
+            }
+        }
+        
         tableView.delegate = nil
         tableView.dataSource = nil
     }
