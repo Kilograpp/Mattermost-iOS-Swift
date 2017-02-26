@@ -161,7 +161,7 @@ extension TSMarkdownParser {
     }
     
     fileprivate func addPhoneParsing() {
-        let pattern = "(^|\\D{1})([0-9]{6,11})(\\D{1}|$)"
+        let pattern = "(\\b[0-9]{7,13}\\b)"
         let phoneExpression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         self.addParsingRule(with: phoneExpression) { (match, attributedString) in
             var range = NSMakeRange(match.range.location, match.range.length)
