@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import MFSideMenu
 
 final class TeamViewController: UIViewController {
     
@@ -280,6 +281,11 @@ extension TeamViewController: UITableViewDelegate {
             Preferences.sharedInstance.save()
             let topOffset = navigationView.frame.height
             showLoaderView(topOffset: topOffset, bottomOffset: 0.0)
+            
+            let container = self.presentingViewController as! MFSideMenuContainerViewController
+            let chat = (container.centerViewController as! UINavigationController).topViewController as! ChatViewController
+            chat.isNeededInitialLoader = true
+            
             loadTeamChannels()
             guard let controller = ChannelObserver.sharedObserver.delegate as? ChatViewController else { return }
             guard controller.resultsObserver != nil else { return }

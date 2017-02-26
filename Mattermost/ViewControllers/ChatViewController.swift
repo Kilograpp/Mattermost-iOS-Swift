@@ -57,6 +57,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var hasNewestPage: Bool = false
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
+    var isNeededInitialLoader: Bool = false
     
     fileprivate let navigationTitleView = ConversationTitleView(frame: CGRect(x: 15, y: 0, width: UIScreen.screenWidth() * 0.75 - 20, height: 44))
     
@@ -83,6 +84,12 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
             return
         }
         addSLKKeyboardObservers()
+        
+        if self.isNeededInitialLoader {
+            hideLoaderView()
+            showLoaderView(topOffset: 20.0, bottomOffset: 45.0)
+            self.isNeededInitialLoader = false
+        }
         
         self.textView.resignFirstResponder()
         addBaseObservers()
