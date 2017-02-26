@@ -46,7 +46,7 @@ final class FeedAttachmentsTableViewCell: FeedCommonTableViewCell {
         for row in 0...attachments.count-1 {
             indexPath = IndexPath(row: row, section: 0)
             if var cell = tableView.cellForRow(at: indexPath) {
-                if attachments[row].isImage {
+                if /*attachments[row].isImage*/FileUtils.fileIsImage(attachments[row]) {
                     (cell as! AttachmentImageCell).configureForNoSelectedState()
                 } else {
                     (cell as! AttachmentFileCell).configureForNoSelectedState()
@@ -74,7 +74,7 @@ extension FeedAttachmentsTableViewCell {
         var heigth: CGFloat = !post.isFollowUp ? 36 : 0
         heigth += CGFloat(post.attributedMessageHeight + 15.0)
         post.files.forEach({
-            heigth += $0.isImage ? AttachmentImageCell.heightWithFile($0) : 56
+            heigth += /*$0.isImage*/FileUtils.fileIsImage($0) ? AttachmentImageCell.heightWithFile($0) : 56
         })
         
         return heigth
@@ -121,7 +121,8 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let file = self.attachments[indexPath.row]
-        if file.isImage {
+        //For gif files can be used solution from search for monkeys 
+        if FileUtils.fileIsImage(file) {
             return self.tableView.dequeueReusableCell(withIdentifier: AttachmentImageCell.reuseIdentifier) as! AttachmentImageCell
         } else {
             return self.tableView.dequeueReusableCell(withIdentifier: AttachmentFileCell.reuseIdentifier) as! AttachmentFileCell
@@ -134,7 +135,7 @@ extension FeedAttachmentsTableViewCell : UITableViewDataSource {
 extension FeedAttachmentsTableViewCell : UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let file = self.attachments[indexPath.row]
-        return file.isImage ? AttachmentImageCell.heightWithFile(file) : 56
+        return FileUtils.fileIsImage(file) ? AttachmentImageCell.heightWithFile(file) : 56
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -161,7 +162,7 @@ extension FeedAttachmentsTableViewCell {
         for row in 0...attachments.count-1 {
             indexPath = IndexPath(row: row, section: 0)
             if var cell = tableView.cellForRow(at: indexPath) {
-                if attachments[row].isImage {
+                if /*attachments[row].isImage*/FileUtils.fileIsImage(attachments[row]) {
                     (cell as! AttachmentImageCell).configureForSelectedState(action: action)
                 } else {
                     (cell as! AttachmentFileCell).configureForSelectedState(action: action)
@@ -176,7 +177,7 @@ extension FeedAttachmentsTableViewCell {
         for row in 0...attachments.count-1 {
             indexPath = IndexPath(row: row, section: 0)
             if var cell = tableView.cellForRow(at: indexPath) {
-                if attachments[row].isImage {
+                if /*attachments[row].isImage*/FileUtils.fileIsImage(attachments[row]) {
                     (cell as! AttachmentImageCell).configureForNoSelectedState()
                 } else {
                     (cell as! AttachmentFileCell).configureForNoSelectedState()
