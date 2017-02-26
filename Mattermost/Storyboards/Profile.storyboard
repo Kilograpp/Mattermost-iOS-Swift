@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="fkQ-Jl-hJG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="fkQ-Jl-hJG">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,12 +23,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="cns-FX-dAE">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="8zU-3B-P4A">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="230"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V5c-mI-3eK">
+                                            <rect key="frame" x="122.5" y="30" width="130" height="130"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="V5c-mI-3eK" secondAttribute="height" multiplier="1:1" id="SIO-sf-yvx"/>
                                                 <constraint firstAttribute="width" constant="130" id="VAV-kQ-AW2"/>
@@ -37,11 +42,13 @@
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nickname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeN-Xe-dr2">
+                                            <rect key="frame" x="149.5" y="170" width="76.5" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Full Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xwU-b8-tuX">
+                                            <rect key="frame" x="16" y="197" width="343" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -49,12 +56,13 @@
                                     </subviews>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
+                                        <constraint firstItem="xwU-b8-tuX" firstAttribute="leading" secondItem="8zU-3B-P4A" secondAttribute="leading" constant="16" id="H5B-rk-jua"/>
                                         <constraint firstItem="V5c-mI-3eK" firstAttribute="centerY" secondItem="8zU-3B-P4A" secondAttribute="centerY" constant="-20" id="P2B-DU-YA4"/>
-                                        <constraint firstItem="xwU-b8-tuX" firstAttribute="centerX" secondItem="8zU-3B-P4A" secondAttribute="centerX" id="TxZ-xa-q2p"/>
                                         <constraint firstItem="V5c-mI-3eK" firstAttribute="centerX" secondItem="8zU-3B-P4A" secondAttribute="centerX" id="Zac-93-3eh"/>
                                         <constraint firstItem="eeN-Xe-dr2" firstAttribute="top" secondItem="V5c-mI-3eK" secondAttribute="bottom" constant="10" id="efP-SO-42C"/>
                                         <constraint firstItem="eeN-Xe-dr2" firstAttribute="centerX" secondItem="8zU-3B-P4A" secondAttribute="centerX" id="kwI-cR-9t7"/>
                                         <constraint firstItem="xwU-b8-tuX" firstAttribute="top" secondItem="eeN-Xe-dr2" secondAttribute="bottom" constant="6.5" id="rQs-Jw-gJn"/>
+                                        <constraint firstAttribute="trailing" secondItem="xwU-b8-tuX" secondAttribute="trailing" constant="16" id="s4R-sp-hRK"/>
                                     </constraints>
                                 </view>
                                 <sections/>
