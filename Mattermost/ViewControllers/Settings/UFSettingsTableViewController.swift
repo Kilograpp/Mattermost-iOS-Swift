@@ -138,6 +138,11 @@ extension UFSettingsTableViewController: Request {
     
     func updateUserName() {
         let userName = self.builder.infoFor(section: 0)
+        guard userName.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != StringUtils.emptyString() else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Username must contain a letters")
+            
+            return
+        }
         Api.sharedInstance.update(userName: userName) { (error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
@@ -151,6 +156,11 @@ extension UFSettingsTableViewController: Request {
     
     internal func updateNickName() {
         let nickName = self.builder.infoFor(section: 0)
+        guard nickName.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != StringUtils.emptyString() else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Nickname must contain a letters")
+            
+            return
+        }
         Api.sharedInstance.update(nickName: nickName) { (error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
