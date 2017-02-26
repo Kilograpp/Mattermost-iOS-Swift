@@ -178,7 +178,7 @@ extension UFSettingsTableViewController: Request {
     internal func updatePassword() {
         guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
         
-        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
+        self.showLoaderView(topOffset: 0.0, bottomOffset: 0.0)
         
         let oldPassword = self.builder.infoFor(section: 0)
         let newPassword = self.builder.infoFor(section: 1)
