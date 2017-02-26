@@ -72,7 +72,8 @@ extension FeedAttachmentsTableViewCell {
     
     override class func heightWithPost(_ post: Post) -> CGFloat {
         var heigth: CGFloat = !post.isFollowUp ? 36 : 0
-        heigth += CGFloat(post.attributedMessageHeight + 15.0)
+        heigth += CGFloat(post.attributedMessageHeight)
+        if (post.message?.characters.count)! > 0 { heigth += 15 }
         post.files.forEach({
             heigth += /*$0.isImage*/FileUtils.fileIsImage($0) ? AttachmentImageCell.heightWithFile($0) : 56
         })
