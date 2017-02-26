@@ -1072,7 +1072,7 @@ extension ChatViewController: ChannelObserverDelegate {
                                         width   : UIScreen.main.bounds.size.width * 0.9,
                                         height  : 30)
         self.startButton.center = CGPoint(x: UIScreen.screenWidth() / 2,
-                                          y: UIScreen.screenHeight() / 1.65)
+                                          y: UIScreen.screenHeight() / 1.5)
         
         if (channel.privateType == "P") {
             self.startButton.setTitle("+ Invite others to this private group",for: .normal)

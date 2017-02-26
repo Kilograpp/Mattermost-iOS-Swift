@@ -8,6 +8,7 @@
 
 import Foundation
 import ImagePickerSheetController
+import AVFoundation
 
 fileprivate protocol Interface {
     func pick(max: Int)
@@ -17,21 +18,27 @@ final class ImagePickingModule: FilesPickingModuleBase {}
 
 extension ImagePickingModule: Interface {
     func pick(max: Int) {
-        
         let presentImagePickerController: (UIImagePickerControllerSourceType, UIImagePickerControllerCameraCaptureMode) -> () = { source, cameraMode in
-            let picker = UIImagePickerController()
-            picker.delegate = self
-            picker.sourceType = source
             
-            if cameraMode == .video {
-                picker.mediaTypes = [kUTTypeMovie as String]
+            switch AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) {
+            case .denied:
+                AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
+                return
+            default:
+                let picker = UIImagePickerController()
+                picker.delegate = self
+                picker.sourceType = source
+                
+                if cameraMode == .video {
+                    picker.mediaTypes = [kUTTypeMovie as String]
+                }
+                
+                if source == .camera {
+                    picker.cameraCaptureMode = cameraMode
+                }
+                
+                self.dataSource.viewController(filesPickingModule: self).present(picker, animated: true, completion: nil)
             }
-            
-            if source == .camera {
-                picker.cameraCaptureMode = cameraMode
-            }
-        
-            self.dataSource.viewController(filesPickingModule: self).present(picker, animated: true, completion: nil)
         }
         
         let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
@@ -70,6 +77,11 @@ extension ImagePickingModule: Interface {
 
 extension ImagePickingModule: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        guard AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied else {
+            AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
+            picker.dismiss(animated: true) { }
+            return
+        }
         if (info[UIImagePickerControllerMediaType] as! String != kUTTypeImage as String) {
             let fileItem = AssignedAttachmentViewItem(image: UIImage(named: "attach_file_icon")!)
             let url = info[UIImagePickerControllerMediaURL] as! URL
@@ -87,5 +99,4 @@ extension ImagePickingModule: UIImagePickerControllerDelegate {
         }
         picker.dismiss(animated: true) { }
     }
-    
 }

@@ -51,7 +51,7 @@ final class EmptyDialogueLabel: UILabel {
                                 width   : UIScreen.main.bounds.size.width*0.90,
                                 height  : 60)
             self.center = CGPoint(x: UIScreen.main.bounds.size.width / 2,
-                                  y: UIScreen.main.bounds.size.height / 2.5)
+                                  y: UIScreen.main.bounds.size.height / 2.45)
         default:
             if channel.privateType! == "P" {
                 self.text = "This is the start of the \(channel.displayName!) private group, created on \(channel.createdAt!.startDialogDateFormat()). Only invited members can see this private group."
@@ -67,7 +67,7 @@ final class EmptyDialogueLabel: UILabel {
                                 width   : UIScreen.main.bounds.size.width*0.90,
                                 height  : 90)
             self.center = CGPoint(x: UIScreen.main.bounds.size.width / 2,
-                                  y: UIScreen.main.bounds.size.height / 1.95)
+                                  y: UIScreen.main.bounds.size.height / 1.85)
         }
         self.textAlignment = .left
         self.numberOfLines = 0
