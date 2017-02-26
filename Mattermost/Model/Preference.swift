@@ -25,7 +25,7 @@ class Preference: RealmObject {
     }
     
     func computeKey() {
-        self.key = "\(userId)__\(category)__\(name)"
+        self.key = userId!+"__"+category!+"__"+name!
     }
     
     static func preferedUsersList() -> Results<Preference> {
