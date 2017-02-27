@@ -70,8 +70,9 @@ final class FileUtils {
     }
     
     static func stringContainsImagePrefix(_ string: String?) -> Bool {
-        return string?.hasPrefix("image") ?? false
+        guard string != nil else { return false }
         
+        return (string?.hasPrefix("image"))! && !(string?.hasSuffix("gif"))!
     }
 
     

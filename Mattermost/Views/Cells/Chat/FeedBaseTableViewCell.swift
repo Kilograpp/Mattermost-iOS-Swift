@@ -140,7 +140,7 @@ extension FeedBaseTableViewCell {
         postStatusView.configureWithStatus(post)
         postStatusView.errorHandler = self.errorHandler
         
-       notificationToken = post.addNotificationBlock { change in
+        notificationToken = post.addNotificationBlock { change in
             switch change {
             case .change(let properties):
                 if properties.first(where: { $0.name == "status" }) != nil {
@@ -150,10 +150,11 @@ extension FeedBaseTableViewCell {
                     RealmUtils.configuratePost(post: self.post)
                     self.configureMessage()
                 }
-                if properties.first(where: { $0.name == "isFollowUp" }) != nil {
+                if properties.first(where: { $0.name == "isFollowUp" }) != nil && properties.count == 1 {
+                    self.configureWithPost(self.post)
                     (self.superview?.superview as! UITableView).beginUpdates()
-                    self.configureWithPost(post)
                     (self.superview?.superview as! UITableView).endUpdates()
+
                 }
                 if let attributeMessageProperty = properties.first(where: { $0.name == "_attributedMessageData" }) {
                     let newAttributedString = (attributeMessageProperty.newValue as! RealmAttributedString).attributedString!
@@ -185,7 +186,7 @@ extension FeedBaseTableViewCell {
         case Constants.PostActionType.SendReply:
                 selectingColor = UIColor.kg_lightLightGrayColor()
         case Constants.PostActionType.SendUpdate:
-                selectingColor = UIColor.yellow
+                selectingColor = UIColor.kg_editColor()
         default:
             selectingColor = UIColor.kg_lightLightGrayColor()
         }

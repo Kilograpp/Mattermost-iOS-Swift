@@ -78,7 +78,7 @@ extension CreateChannelTableViewController: Setup {
     
     func setupCells() {
         self.nameCell.configureWith(delegate: self, placeholderText: self.channelType == "P" ? "Group Name" : "Channel Name")
-        self.handleCell.configureWith(delegate: self)
+        self.handleCell.configureWith(delegate: self, placeholderText: self.channelType == "P" ? "Group handle" : "Channel handle")
         self.headerCell.configureWith(delegate: self)
         self.purposeCell.configureWith(delegate: self)
     }
@@ -93,8 +93,9 @@ extension CreateChannelTableViewController: Setup {
 //MARK: Action
 extension CreateChannelTableViewController: Action {
     func createAction() {
-        guard self.nameCell.localizatedName.characters.count > 0 else {
-            self.handleErrorWith(message: "Incorrect Channel Name")
+        guard self.nameCell.localizatedName.replacingOccurrences(of: " ", with: "").characters.count > 0 else {
+            let type = self.channelType == "P" ? "Group" : "Channel"
+            self.handleErrorWith(message: "Incorrect " + type + " Name")
             self.nameCell.highligthError()
             return
         }
@@ -133,14 +134,14 @@ extension CreateChannelTableViewController: Request {
         
         Api.sharedInstance.createChannel(self.channelType, displayName: displayName, name: name, header: header, purpose: purpose) { (channelId, error) in
             guard error == nil else {
-                let message = error?.code != 500 ? (error?.message)! : "Incorrect Handle"
+                let message = error?.code != 500 ? (error?.message)! : "A channel with that handle was previously created"
                 self.handleErrorWith(message: message)
                 self.createButton.isEnabled = true
                 return
             }
             
             let typeName = self.channelType == "O" ? "Channel" : "Group"
-            AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " was successfully created")
+            AlertManager.sharedManager.showSuccesWithMessage(message: typeName + " \(displayName) was successfully created")
             self.returnToNewChannelWith(channelId: channelId!)
         }
     }

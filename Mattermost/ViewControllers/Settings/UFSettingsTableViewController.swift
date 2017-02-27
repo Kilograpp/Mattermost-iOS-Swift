@@ -188,7 +188,7 @@ extension UFSettingsTableViewController: Request {
     internal func updatePassword() {
         guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
         
-        self.showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
+        self.showLoaderView(topOffset: 0.0, bottomOffset: 0.0)
         
         let oldPassword = self.builder.infoFor(section: 0)
         let newPassword = self.builder.infoFor(section: 1)
@@ -261,6 +261,12 @@ extension UFSettingsTableViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard string != " " else { return false }
+        
+        if (self.userFieldType == Constants.UserFieldType.NickName) {
+            self.saveButton.isEnabled = true
+            return ((textField.text?.characters.count)!+string.characters.count) <= 22
+        }
         self.saveButton.isEnabled = true
         return true
     }

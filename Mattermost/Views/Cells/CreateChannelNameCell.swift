@@ -94,6 +94,7 @@ extension CreateChannelNameCell: Action {
         self.textField.text = ""
         self.placeholderLabel.isHidden = false
         self.clearButton.isHidden = true
+        self.localizatedName = String()
         
         self.delegate?.nameCellWasUpdatedWith(text: self.textField.text!, height: 0)
     }

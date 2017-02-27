@@ -16,6 +16,7 @@ import NVActivityIndicatorView
 
 protocol ChatViewControllerInterface: class {
     func loadPostsBeforeSelectedPostFromSearch(post: Post)
+    func updateChannelTitle()
 }
 
 final class ChatViewController: SLKTextViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -56,6 +57,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var hasNewestPage: Bool = false
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
+    var isNeededInitialLoader: Bool = false
+    fileprivate var keyboardIsActive: Bool = false
     
     fileprivate let navigationTitleView = ConversationTitleView(frame: CGRect(x: 15, y: 0, width: UIScreen.screenWidth() * 0.75 - 20, height: 44))
     
@@ -83,6 +86,12 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         }
         addSLKKeyboardObservers()
         
+        if self.isNeededInitialLoader {
+            hideLoaderView()
+            showLoaderView(topOffset: 20.0, bottomOffset: 45.0)
+            self.isNeededInitialLoader = false
+        }
+        
         self.textView.resignFirstResponder()
         addBaseObservers()
     }
@@ -109,9 +118,9 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        var center = self.scrollButton?.center
-        center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
-        self.scrollButton?.center = center!
+        //var center = self.scrollButton?.center
+        //center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
+        //self.scrollButton?.center = center!
     }
     
     override func didCommitTextEditing(_ sender: Any) {
@@ -136,6 +145,11 @@ extension ChatViewController: ChatViewControllerInterface {
         self.hasNewestPage = true
         ChannelObserver.sharedObserver.selectedChannel = post.channel
         loadPostsBeforePost(post: post, needScroll: true)
+    }
+    
+    func updateChannelTitle() {
+        self.navigationTitleView.configureWithChannel(channel: self.channel)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
     }
 }
 
@@ -306,7 +320,7 @@ extension ChatViewController: Setup {
         self.scrollButton?.addTarget(self, action: #selector(scrollToBottom), for: .touchUpInside)
         self.view.addSubview(self.scrollButton!)
         self.view.bringSubview(toFront: self.scrollButton!)
-        self.scrollButton?.isHidden = true;
+        self.scrollButton?.isHidden = true
     }
     
     override func textWillUpdate() {
@@ -464,7 +478,7 @@ extension ChatViewController: Action {
     }
     
     func sendPostAction() {
-        guard self.filesAttachmentsModule.fileUploadingInProgress else { self.handleWarningWith(message: "Please, wait until download finishes"); return }
+        guard self.filesAttachmentsModule.fileUploadingInProgress else { self.handleWarningWith(message: "Please, wait until download finished"); return }
         
         guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
         
@@ -521,7 +535,11 @@ extension ChatViewController: Action {
     
 
     func scrollToBottom(animated: Bool = false) {
-        self.tableView.setContentOffset(CGPoint.zero, animated: animated)
+        if filesAttachmentsModule.isPresented {
+            self.tableView.setContentOffset(CGPoint.init(x: 0.0, y: -80.0), animated: animated)
+        } else {
+            self.tableView.setContentOffset(CGPoint.zero, animated: animated)
+        }
         self.scrollButton?.isHidden = true
     }
     
@@ -533,11 +551,21 @@ extension ChatViewController: Action {
     }
     
     func scrollButtonUp(keyboardHeight: CGFloat) {
-        self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100 - keyboardHeight
+        if filesAttachmentsModule.isPresented {
+            self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 170 - keyboardHeight - self.textView.frame.height
+        } else {
+            self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100 - keyboardHeight
+        }
     }
     
     func scrollButtonDown(keyboardHeight: CGFloat) {
-        self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100
+        if filesAttachmentsModule.isPresented {
+            DispatchQueue.main.async {
+                self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 170 - self.textView.frame.height
+            }
+        } else {
+            self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100
+        }
     }
 }
 
@@ -802,6 +830,9 @@ extension ChatViewController: NotificationObserver {
         center.addObserver(self, selector: #selector(reloadTitle),
                                                name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification),
                                                object: nil)
+        center.addObserver(self, selector: #selector(refreshControlValueChanged),
+                           name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification),
+                           object: nil)
     }
     
     func addSLKKeyboardObservers() {
@@ -964,11 +995,12 @@ extension ChatViewController {
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let actualPosition = self.tableView.contentOffset.y
-        if actualPosition > UIScreen.screenHeight() { self.scrollButton?.isHidden = false }
+        if actualPosition > UIScreen.screenHeight() { self.scrollButton?.isHidden = false || self.keyboardIsActive}
         if actualPosition < 50 { self.scrollButton?.isHidden = true }
     }
     
     func keyboardWillShow(_ notification:NSNotification) {
+        keyboardIsActive = true
         let userInfo:NSDictionary = notification.userInfo! as NSDictionary
         let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardRectangle = keyboardFrame.cgRectValue
@@ -979,6 +1011,7 @@ extension ChatViewController {
     }
     
     func keyboardWillHide(_ notification:NSNotification) {
+        keyboardIsActive = false
         let userInfo:NSDictionary = notification.userInfo! as NSDictionary
         let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardRectangle = keyboardFrame.cgRectValue
@@ -1021,7 +1054,8 @@ extension ChatViewController: ChannelObserverDelegate {
         self.startHeadDialogueLabel.isHidden = true
         self.startButton.isHidden = true
         self.selectedIndexPath = nil
-
+        self.keyboardIsActive = false
+        
         self.scrollToBottomWithoutReloading()
         
         if self.channel != nil {
@@ -1063,7 +1097,7 @@ extension ChatViewController: ChannelObserverDelegate {
                                         width   : UIScreen.main.bounds.size.width * 0.9,
                                         height  : 30)
         self.startButton.center = CGPoint(x: UIScreen.screenWidth() / 2,
-                                          y: UIScreen.screenHeight() / 1.65)
+                                          y: UIScreen.screenHeight() / 1.5)
         
         if (channel.privateType == "P") {
             self.startButton.setTitle("+ Invite others to this private group",for: .normal)

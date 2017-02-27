@@ -476,19 +476,9 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="jou-N8-jnF">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" placeholder="Поиск" id="h9N-Vy-YOE">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                    <connections>
-                                        <outlet property="delegate" destination="EN6-ZU-d02" id="k5X-KB-1kf"/>
-                                    </connections>
-                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MemberChannelSettingsCellIdentifier" rowHeight="50" id="IVy-tx-nAx" customClass="MemberChannelSettingsCell" customModule="Mattermost" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="72" width="320" height="50"/>
+                                        <rect key="frame" x="0.0" y="28" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IVy-tx-nAx" id="ADF-iD-YQ8">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -550,7 +540,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="searchBar" destination="h9N-Vy-YOE" id="Tqe-9s-4rp"/>
                         <outlet property="tableView" destination="jou-N8-jnF" id="k78-zF-sMe"/>
                     </connections>
                 </viewController>

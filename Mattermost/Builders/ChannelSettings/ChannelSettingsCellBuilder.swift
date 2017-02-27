@@ -99,7 +99,11 @@ extension ChannelSettingsCellBuilder: Interface {
     }
     
     func titleForHeader(channel: Channel, section: Int) -> String? {
-        return (section == 2) ? String(channel.members.count) + " members" : nil
+        guard section == 2 else { return nil }
+        
+        var title = String(channel.members.count) + " member"
+        if channel.members.count > 1 { title.append("s") }
+        return title
     }
 }
 
@@ -160,7 +164,7 @@ extension ChannelSettingsCellBuilder: CellCreate {
         
         let type = (channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group" : "Channel"
         let action = (channel.members.count > 1) ? "Leave " : "Delete "
-        cell.configureWith(text: type + action, color: ColorBucket.actionColor)
+        cell.configureWith(text: action + type, color: ColorBucket.actionColor)
         
         return cell
     }

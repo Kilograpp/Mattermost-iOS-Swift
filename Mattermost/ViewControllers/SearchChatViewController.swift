@@ -184,7 +184,7 @@ extension SearchChatViewController {
         let realm = RealmUtils.realmForCurrentThread()
         try! realm.write { post.computeMissingFields() }
         
-        chat.loadPostsBeforeSelectedPostFromSearch(post: post);
+        chat.loadPostsBeforeSelectedPostFromSearch(post: post)
         
         returnToChat()
     }

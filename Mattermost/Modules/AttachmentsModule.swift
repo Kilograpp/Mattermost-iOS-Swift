@@ -132,17 +132,17 @@ extension AttachmentsModule: PostAttachmentViewDelegate {
             oldInset.top = PostAttachmentsView.attachmentsViewHeight
             self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
             self.dataSource.tableView(attachmentsModule: self).scrollIndicatorInsets = oldInset
-            self.dataSource.scrollButton(attachmentsModule: self).frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100 - PostAttachmentsView.attachmentsViewHeight, width: 50, height: 50)
+            self.dataSource.scrollButton(attachmentsModule: self).frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 90 - PostAttachmentsView.attachmentsViewHeight - (self.delegate as! ChatViewController).textView.frame.height, width: 50, height: 50)
 
         }
     }
-    
+
     func attachmentViewWillDisappear() {
         var oldInset = self.dataSource.tableView(attachmentsModule: self).contentInset
         oldInset.top = oldInset.top - PostAttachmentsView.attachmentsViewHeight
         self.dataSource.tableView(attachmentsModule: self).contentInset = oldInset
         self.dataSource.tableView(attachmentsModule: self).scrollIndicatorInsets = oldInset
-        self.dataSource.scrollButton(attachmentsModule: self).frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100, width: 50, height: 50)
+        self.dataSource.scrollButton(attachmentsModule: self).frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 90, width: 50, height: 50)
     }
 }
 
