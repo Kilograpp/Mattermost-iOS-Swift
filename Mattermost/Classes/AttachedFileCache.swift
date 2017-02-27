@@ -50,6 +50,7 @@ extension AttachedFileCache : Public {
     }
     
     func clearFilesForChannel(_ channel: Channel) {
+        print(channel.identifier)
         cacheDict[channel.identifier!] = []
     }
     
@@ -58,6 +59,7 @@ extension AttachedFileCache : Public {
     }
     
     func hasCachedItemsForChannel(_ channel: Channel) -> Bool {
+        print(channel.identifier)
         guard let itemsForChannel = cacheDict[channel.identifier!] else {
             return false
         }

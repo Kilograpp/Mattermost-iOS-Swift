@@ -57,8 +57,11 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     var hasNewestPage: Bool = false
     var isLoadingInProgress: Bool = false
     var isNeededAutocompletionRequest: Bool = false
+<<<<<<< HEAD
     var isNeededInitialLoader: Bool = false
+=======
     fileprivate var keyboardIsActive: Bool = false
+>>>>>>> 0e46f0b18237f29487c26239e5c89ab11f15aaca
     
     fileprivate let navigationTitleView = ConversationTitleView(frame: CGRect(x: 15, y: 0, width: UIScreen.screenWidth() * 0.75 - 20, height: 44))
     

@@ -88,7 +88,8 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         
         if self.isNeededInitialLoader {
             hideLoaderView()
-            showLoaderView(topOffset: 20.0, bottomOffset: 45.0)
+            //showLoaderView(topOffset: -20.0, bottomOffset: 45.0)
+            self.showFullscreenLoaderView()
             self.isNeededInitialLoader = false
         }
         
@@ -1122,9 +1123,10 @@ extension ChatViewController: ChannelObserverDelegate {
         addChannelObservers()
         
         guard let _ = filesAttachmentsModule else {return}
-        self.filesPickingController.reset()
-        self.filesAttachmentsModule.reset()
+        //self.filesPickingController.reset()
+      //  self.filesAttachmentsModule.reset()
         PostUtils.sharedInstance.clearUploadedAttachments()
+        
         if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
             filesAttachmentsModule.presentWithCachedItems()
         } else {
