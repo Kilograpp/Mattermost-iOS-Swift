@@ -85,7 +85,7 @@ extension AddMembersViewController: Setup {
     
     func setupEmptyDialogLabel() {
         emptyDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 1)
-        emptyDialogueLabel.text = "No users to add!"
+        emptyDialogueLabel.text = "No users found!"
         emptyDialogueLabel.font = FontBucket.feedbackTitleFont
         emptyDialogueLabel.backgroundColor = .clear
         emptyDialogueLabel.textAlignment = .center
