@@ -209,7 +209,7 @@ extension AttachmentFileView: Downloading {
         self.progressView.isHidden = false
         self.downloadingState = DownloadingState.Downloading
         let fileId = self.file.identifier
-        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async(execute: {
             Api.sharedInstance.download(fileId: fileId!, completion: { (error) in
                 self.progressView.isHidden = true
                 guard error == nil else {
