@@ -168,7 +168,7 @@ extension AttachmentFileView: AttachmentFileViewConfiguration {
         let attributes = [NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor]
         
         if fileName.characters.count > 24 {
-            let name = (fileName as NSString).deletingPathExtension.substring(to: fileName.index(fileName.startIndex, offsetBy: 20))
+            let name = (fileName as NSString).deletingPathExtension.substring(to: fileName.index(fileName.startIndex, offsetBy: 16))
             let ext = (fileName as NSString).pathExtension
             fileName = name + "..." + ext
         }
