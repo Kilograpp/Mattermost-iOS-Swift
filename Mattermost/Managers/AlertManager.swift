@@ -95,6 +95,6 @@ class AlertManager {
         SwiftMessages.defaultConfig.presentationContext = .window(windowLevel: UIWindowLevelStatusBar)
         SwiftMessages.defaultConfig.duration = SwiftMessages.Duration.seconds(seconds: 1.5)
         SwiftMessages.defaultConfig.interactiveHide = true
-        SwiftMessages.defaultConfig.preferredStatusBarStyle = .lightContent
+        SwiftMessages.defaultConfig.preferredStatusBarStyle = UIApplication.shared.statusBarStyle
     }
 }
