@@ -181,6 +181,7 @@ extension LeftMenuViewController: Configuration {
     }
     
     func configureInitialSelectedChannel(_ channelNotif : NSNotification? = nil) {
+        guard self.resultsPublic != nil else { return }
         guard self.resultsPublic.count > 0 else { return }
         
         guard let channelToSelect = channelNotif?.object  else {

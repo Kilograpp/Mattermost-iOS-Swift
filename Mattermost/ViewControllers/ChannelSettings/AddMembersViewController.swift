@@ -85,9 +85,11 @@ extension AddMembersViewController: Setup {
     
     func setupEmptyDialogLabel() {
         emptyDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 1)
-        emptyDialogueLabel.text = "No users to add"
+        emptyDialogueLabel.text = "No users found!"
         emptyDialogueLabel.font = FontBucket.feedbackTitleFont
         emptyDialogueLabel.backgroundColor = .clear
+        emptyDialogueLabel.textAlignment = .center
+        self.view.insertSubview(self.emptyDialogueLabel, aboveSubview: self.tableView)
     }
 }
 
@@ -154,6 +156,10 @@ extension AddMembersViewController: UITableViewDataSource {
 //MARK: UITableViewDelegate
 extension AddMembersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard Api.sharedInstance.isNetworkReachable() else {
+            AlertManager.sharedManager.showErrorWithMessage(message: "No Internet connectivity detected")
+            return
+        }
         let user = !self.isSearchActive ? self.users[indexPath.row] : self.searchUsers[indexPath.row]
         addToChannel(user: user)
     }
