@@ -283,9 +283,16 @@ extension ProfileViewController {
         let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
             guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Camera is not available on this device.")
+                return
+            }
+            let cameraMediaType = AVMediaTypeVideo
+            let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(forMediaType: cameraMediaType)
+            guard cameraAuthorizationStatus == .authorized else {
                 AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Camera.")
                 return
             }
+            
             self.presentImagePickerControllerWithType(.camera)
         }
         let openGalleryAction = UIAlertAction.init(title: "Take from library", style: .default) { (action) in
