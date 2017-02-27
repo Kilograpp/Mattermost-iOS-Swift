@@ -176,16 +176,19 @@ extension ChannelSettingsViewController: Request {
         }
         Api.sharedInstance.delete(channel: self.channel) { (error) in
             let deletedCannel = self.channel
+            let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group " : "Channel "
+            let channelName = self.channel.displayName!
+            
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write { realm.delete(deletedCannel!) }
             
             let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
             leftMenu.configureInitialSelectedChannel()
+            leftMenu.reloadChannels()
+
             self.dismiss(animated: true, completion: {
-                let realm = RealmUtils.realmForCurrentThread()
-                try! realm.write { realm.delete(deletedCannel!) }
-                leftMenu.reloadChannels()
             })
-            let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group " : "Channel "
-            self.handleSuccesWith(message: channelType + self.channel.displayName! + " was deleted")
+            self.handleSuccesWith(message: channelType + channelName + " was deleted")
         }
     }
     
