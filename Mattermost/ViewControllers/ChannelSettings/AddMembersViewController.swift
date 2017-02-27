@@ -88,6 +88,7 @@ extension AddMembersViewController: Setup {
         emptyDialogueLabel.text = "No users to add"
         emptyDialogueLabel.font = FontBucket.feedbackTitleFont
         emptyDialogueLabel.backgroundColor = .clear
+        self.view.insertSubview(self.emptyDialogueLabel, aboveSubview: self.tableView)
     }
 }
 
