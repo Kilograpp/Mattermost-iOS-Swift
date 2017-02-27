@@ -1323,7 +1323,7 @@ extension Api : FileApi {
     func uploadFileItemAtChannel(_ item: AssignedAttachmentViewItem,
                                   channel: Channel,
                                   completion: @escaping (_ identifier: String?, _ error: Mattermost.Error?) -> Void,
-                                  progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
+                                  progress: @escaping (_ item: AssignedAttachmentViewItem, _ value: Float) -> Void) {
         let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
         let params = ["channel_id" : channel.identifier!,
                       "client_ids" : item.identifier]
@@ -1340,7 +1340,7 @@ extension Api : FileApi {
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in
-                progress(item.identifier, value)
+                progress(item, value)
             }
         } else {
             self.manager.post(image: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
@@ -1348,7 +1348,7 @@ extension Api : FileApi {
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in
-                progress(item.identifier, value)
+                progress(item, value)
             }
         }
     }

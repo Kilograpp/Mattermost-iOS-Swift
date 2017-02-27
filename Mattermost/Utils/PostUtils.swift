@@ -33,8 +33,7 @@ protocol Search: class {
 }
 
 protocol Upload: class {
-    func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel,
-                completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void)
+    func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ item: AssignedAttachmentViewItem) -> Void)
     func cancelUpload(item: AssignedAttachmentViewItem)
 }
 
@@ -186,42 +185,54 @@ extension PostUtils: Search {
 
 //MARK: Upload
 extension PostUtils: Upload {
-    func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+    func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ item: AssignedAttachmentViewItem) -> Void) {
         self.files.append(contentsOf: items)
         for item in items {
             self.upload_files_group.enter()
+            Swift.print("ENTERED \(item.identifier)")
             item.uploading = true
             Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (identifier, error) in
-                guard self.files.contains(item) else { return }
+//                guard self.files.contains(item) else {
+//                    return
+//                }
                 
                 defer {
-                    completion(false, error, item)
+                    Swift.print("LEFT \(item.identifier)")
                     self.upload_files_group.leave()
+                    completion(false, error, item)
                 }
                 
-                guard error == nil else { self.files.removeObject(item); return }
+                guard error == nil else {
+                    self.files.removeObject(item); return
+                }
                 
                 
                 let index = self.files.index(where: {$0.identifier == item.identifier})
-                if (index != nil) { self.assignedFiles.append(identifier!) }
-                }, progress: { (identifier, value) in
-                    let index = self.files.index(where: {$0.identifier == identifier})
-                    guard (index != nil) else { return }
-                    progress(value, index!)
+                if (index != nil) {
+                    self.assignedFiles.append(identifier!)
+                }
+                }, progress: { (item, value) in
+                    guard let index = self.files.index(where: {$0.identifier == item.identifier}) else { return }
+                    let item = self.files[index]
+                    if value >= 1 {
+                        Swift.print("Finished \(item.identifier)")
+                    }
+                    progress(value, item)
             })
         }
         
         self.upload_files_group.notify(queue: DispatchQueue.main, execute: {
+            Swift.print("NOTIFY")
             completion(true, nil, AssignedAttachmentViewItem(image: UIImage()))
         })
     }
     
     func cancelUpload(item: AssignedAttachmentViewItem) {
+        Swift.print("CANCELLED \(item.identifier)")
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
         let index = self.assignedFiles.index(where: {$0 == item.identifier})
-        
         if (index != nil) { self.assignedFiles.remove(at: index!) }
-        self.files.removeObject(item)
+//        self.files.removeObject(item)
         
         guard item.uploaded else { return }
         guard self.assignedFiles.count > 0 else { return }
