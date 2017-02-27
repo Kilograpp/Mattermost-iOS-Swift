@@ -282,9 +282,11 @@ extension TeamViewController: UITableViewDelegate {
             let topOffset = navigationView.frame.height
             showLoaderView(topOffset: topOffset, bottomOffset: 0.0)
             
-            let container = self.presentingViewController as! MFSideMenuContainerViewController
-            let chat = (container.centerViewController as! UINavigationController).topViewController as! ChatViewController
-            chat.isNeededInitialLoader = true
+            if self.presentingViewController != nil {
+                let container = self.presentingViewController as! MFSideMenuContainerViewController
+                let chat = (container.centerViewController as! UINavigationController).topViewController as! ChatViewController
+                chat.isNeededInitialLoader = true
+            }
             
             loadTeamChannels()
             guard let controller = ChannelObserver.sharedObserver.delegate as? ChatViewController else { return }
