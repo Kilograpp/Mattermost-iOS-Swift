@@ -288,8 +288,18 @@ extension ProfileViewController {
             }
             let cameraMediaType = AVMediaTypeVideo
             let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(forMediaType: cameraMediaType)
+            if cameraAuthorizationStatus == .notDetermined {
+                AVCaptureDevice.requestAccess(forMediaType: cameraMediaType, completionHandler: { (granted) in
+                    guard granted else { AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings")
+                        return
+                    }
+                    self.presentImagePickerControllerWithType(.camera)
+                })
+            }
             guard cameraAuthorizationStatus == .authorized else {
-                AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Camera.")
+                if cameraAuthorizationStatus != .notDetermined {
+                    AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings")
+                }
                 return
             }
             
@@ -343,6 +353,10 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.avatarImageView.image = image.fixedOrientation()
         self.saveButton.isEnabled = true
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
 }
 
