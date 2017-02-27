@@ -11,6 +11,7 @@ import Realm
 
 private protocol Interface: class {
     func removeAttachmentAtIdex(_ index: Int)
+    func updateCached(files: [AssignedAttachmentViewItem])
 }
 
 protocol Send: class {
@@ -53,14 +54,14 @@ final class PostUtils: NSObject {
 
 //MARK: Interface
 extension PostUtils: Interface {
-
-    
     func removeAttachmentAtIdex(_ index: Int) {
-        if files.indices.contains(index) {
-            files.remove(at: index)
-        }
-        if assignedFiles.indices.contains(index) {
-            assignedFiles.remove(at: index)
+        if files.indices.contains(index) { files.remove(at: index) }
+        if assignedFiles.indices.contains(index) { assignedFiles.remove(at: index) }
+    }
+    
+    func updateCached(files: [AssignedAttachmentViewItem]) {
+        for file in files {
+            //if !self.assignedFiles.contains(file.identifier) { self.assignedFiles.append(file.identifier) }
         }
     }
 }
@@ -71,6 +72,7 @@ extension PostUtils: Send {
     func sendPost(channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let trimmedMessage = message.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let post = postToSend(channel: channel, message: trimmedMessage, attachments: attachments)
+        print(post.files.count)
         guard trimmedMessage != StringUtils.emptyString() || post.files.count > 0  else {
             AlertManager.sharedManager.showWarningWithMessage(message: "Text shouldn't contain only whitespaces and newlines")
             return
@@ -261,6 +263,7 @@ extension PostUtils: PostConfiguration {
         guard self.assignedFiles.count > 0 else { return }
         
         self.assignedFiles.forEach({
+            print($0)
             let file = File.objectById($0)!
             post.files.append(file)
         })

@@ -1126,9 +1126,11 @@ extension ChatViewController: ChannelObserverDelegate {
         guard let _ = filesAttachmentsModule else {return}
         //self.filesPickingController.reset()
       //  self.filesAttachmentsModule.reset()
-        PostUtils.sharedInstance.clearUploadedAttachments()
+      //  PostUtils.sharedInstance.clearUploadedAttachments()
         
         if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
+            let files = filesAttachmentsModule.cache.cachedFilesForChannel(channel)
+            PostUtils.sharedInstance.updateCached(files: files!)
             filesAttachmentsModule.presentWithCachedItems()
         } else {
             attachmentsView.hideAnimated()
