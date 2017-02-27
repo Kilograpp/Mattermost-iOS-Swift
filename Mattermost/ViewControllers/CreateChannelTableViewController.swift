@@ -134,7 +134,7 @@ extension CreateChannelTableViewController: Request {
         
         Api.sharedInstance.createChannel(self.channelType, displayName: displayName, name: name, header: header, purpose: purpose) { (channelId, error) in
             guard error == nil else {
-                let message = error?.code != 500 ? (error?.message)! : "Incorrect Handle"
+                let message = error?.code != 500 ? (error?.message)! : "A channel with that handle was previously created"
                 self.handleErrorWith(message: message)
                 self.createButton.isEnabled = true
                 return

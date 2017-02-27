@@ -185,6 +185,7 @@ extension WTMSettingsCellBuilder: Configuration {
     func configure(cell: TextSettingsTableViewCell) {
         cell.wordsTextView?.text = self.sensetiveWordsString.replacingOccurrences(of: ",", with: ", ")
         cell.placeholderLabel?.isHidden = ((cell.wordsTextView?.text.characters.count)! > 0)
+        cell.clearButton?.isHidden = !((cell.wordsTextView?.text.characters.count)! > 0)
     }
 }
 

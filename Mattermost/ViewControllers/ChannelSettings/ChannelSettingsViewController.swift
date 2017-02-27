@@ -170,6 +170,10 @@ extension ChannelSettingsViewController: Request {
     }
     
     func deleteChannel() {
+        guard Api.sharedInstance.isNetworkReachable() else {
+            AlertManager.sharedManager.showErrorWithMessage(message: "No Internet connectivity detected")
+            return
+        }
         Api.sharedInstance.delete(channel: self.channel) { (error) in
             let deletedCannel = self.channel
             
@@ -186,9 +190,12 @@ extension ChannelSettingsViewController: Request {
     }
     
     func leaveChannel() {
+        guard Api.sharedInstance.isNetworkReachable() else {
+            AlertManager.sharedManager.showErrorWithMessage(message: "No Internet connectivity detected")
+            return
+        }
         Api.sharedInstance.leaveChannel(channel, completion: { (error) in
             let leavedCannel = self.channel
-            
             let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
             leftMenu.configureInitialSelectedChannel()
             self.dismiss(animated: true, completion: {

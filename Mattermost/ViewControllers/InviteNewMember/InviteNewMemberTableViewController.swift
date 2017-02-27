@@ -149,8 +149,11 @@ extension InviteNewMemberTableViewController {
         self.tableView.insertSections(NSIndexSet(index: section) as IndexSet, with: .automatic)
         self.tableView.insertRows(at: [IndexPath(row: 0, section: section), IndexPath(row: 1, section: section), IndexPath(row: 2, section: section)], with: .automatic)
         //self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .none)
-      self.tableView.reloadData()
+        self.tableView.reloadData()
         self.tableView.endUpdates()
+        let lastIndexPath = IndexPath(row: 2, section: self.memberTuplesArray.count - 1)
+        self.tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
+        self.tableView.contentOffset.y += 45
     //    self.tableView.reloadData()
     }
     

@@ -50,6 +50,30 @@ extension UIViewController: LoaderView {
         self.view.addSubview(loader)
     }
     
+    func showFullscreenLoaderView() {
+        let activityIndicator = self.addedLoaderView()
+        guard activityIndicator == nil else { return }
+        
+        let screenSize = UIScreen.main.bounds
+        //let y = UserStatusManager.sharedInstance.isSignedIn() ? 0 : UIApplication.shared.statusBarFrame.height
+        let loader = UIView.init(frame: screenSize)
+        loader.backgroundColor = UIColor.init(red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0)
+        
+        let frame = CGRect(x: (screenSize.width-screenSize.width/7)/2,
+                           y: (screenSize.height-screenSize.height*1.25/7)/2,
+                           width: screenSize.width/7,
+                           height: screenSize.height/7)
+        
+        let color = UIColor.kg_blueColor()
+        let spinner = NVActivityIndicatorView(frame: frame, type: .ballPulse, color: color, padding: 0.0)
+        loader.addSubview(spinner)
+        spinner.startAnimating()
+        loader.tag = loadetViewTag
+        //self.view.window?.addSubview(loader)
+        let window = UIApplication.shared.keyWindow!
+        window.addSubview(loader)
+    }
+    
     func hideLoaderView(){
         let activityIndicator = self.addedLoaderView()
         guard activityIndicator != nil else { return }

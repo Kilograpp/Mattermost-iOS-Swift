@@ -20,6 +20,8 @@ class MemberChannelSettingsCell: UITableViewCell, Reusable {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     
+    fileprivate let separatorLayer = CALayer()
+    
     var user: User!
     
 //MARK: LifeCycle
@@ -31,6 +33,12 @@ class MemberChannelSettingsCell: UITableViewCell, Reusable {
     
     func configureStatusViewWithNotification(_ notification: Notification) {
         configureUserStatusWith(notification.object as! String)
+    }
+    
+    override func layoutSubviews() {
+        self.separatorLayer.frame = CGRect(x: 70, y: 50 - CGFloat(0.5), width: UIScreen.screenWidth() - 70, height: CGFloat(0.5))
+        
+        super.layoutSubviews()
     }
 }
 
@@ -71,6 +79,7 @@ fileprivate protocol Configuration: class {
 extension MemberChannelSettingsCell: Setup {
     func initialSetup() {
         setupAvatarImageView()
+        setupSeparatorView()
     }
     
     func setupAvatarImageView() {
@@ -81,6 +90,11 @@ extension MemberChannelSettingsCell: Setup {
     func subscribeToNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateUserStatusWith(_:)),
                                                name: NSNotification.Name((user.identifier)!), object: nil)
+    }
+    
+    func setupSeparatorView() {
+        self.separatorLayer.backgroundColor = ColorBucket.separatorViewBackgroundColor.cgColor
+        self.layer.addSublayer(self.separatorLayer)
     }
 }
 

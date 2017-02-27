@@ -64,12 +64,33 @@ final class DirectChannelTableViewCell: UITableViewCell {
     func leaveChannel() {
         let channelId = self.channel?.identifier
         let realm = RealmUtils.realmForCurrentThread()
+        
+        var value: String
+        value = Constants.CommonStrings.False
+        let preferences: [String : String] = [ "user_id"    : (DataManager.sharedInstance.currentUser?.identifier)!,
+                                               "category"   : "direct_channel_show",
+                                               "name"       : user.identifier,
+                                               "value"      : value
+        ]
+        
         try! realm.write {
             guard let channelToRemove = realm.object(ofType: Channel.self, forPrimaryKey: channelId) else { return }
             channelToRemove.currentUserInChannel = false
             channelToRemove.isDirectPrefered = false
+            let key = "\((DataManager.sharedInstance.currentUser?.identifier)!)__\(preferences["category"]!)__\(user.identifier!)"
+            guard let preference = realm.object(ofType: Preference.self, forPrimaryKey: key) else { return }
+            preference.value = value
         }
+        
+        Api.sharedInstance.savePreferencesWith(preferences) { (error) in
+            guard error == nil else {
+                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
+                return
+            }
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+
     }
 }
 
@@ -81,7 +102,6 @@ private protocol DirectChannelTableViewCellSetup {
     func setupHighlightView()
     func setupUserFormPrivateChannel()
     func setupBadgeLabel()
-    func setupLeaveButton()
     func configureLeaveButton(selected: Bool)
     func setupStatusViewWithBackendStatus(_ backendStatus: String)
     func highlightViewBackgroundColor() -> UIColor
@@ -137,15 +157,6 @@ extension DirectChannelTableViewCell: DirectChannelTableViewCellSetup {
         setupStatusView()
         setupHighlightView()
         setupBadgeLabel()
-        setupLeaveButton()
-    }
-    func setupLeaveButton() {
-//        let buttonSize: CGFloat = 40
-//        self.leaveButton = UIButton(frame: CGRect(x: self.bounds.width - buttonSize, y: self.bounds.height/2 - buttonSize/2, width: buttonSize, height: buttonSize))
-//        self.leaveButton.addTarget(self, action: #selector(leaveChannel), for: .touchUpInside)
-//        self.leaveButton.backgroundColor = UIColor.red
-////        self.leaveButton.setBackgroundImage(UIImage(named:"close_button"), for: .normal)
-//        self.addSubview(leaveButton)
     }
     
     func setupContentView() {
