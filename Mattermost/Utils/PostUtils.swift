@@ -274,5 +274,6 @@ extension PostUtils: PostConfiguration {
     func clearUploadedAttachments() {
         self.assignedFiles.removeAll()
         self.files.removeAll()
+        self.unsortedIdentifiers.removeAll()
     }
 }
