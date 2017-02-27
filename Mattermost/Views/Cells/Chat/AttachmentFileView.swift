@@ -12,7 +12,7 @@ import MRProgress
 
 
 //Temp solution
-let supportedFileTypes = [ "txt", "pdf", "doc", "gif" ] //TODO: add others
+let supportedFileTypes = [ "txt", "pdf", "doc", "gif", "ppt", "pptx", "docx", "xls", "xlsx", "mov", "mp3", "zip", "mp4" ] //TODO: add others
 
 fileprivate struct DownloadingState {
     static let NotDownloaded: Int = 0
@@ -233,7 +233,7 @@ extension AttachmentFileView: Downloading {
 //
 //        let documentInteractionController = UIDocumentInteractionController(url: URL(fileURLWithPath: filePath))
 //        return documentInteractionController.presentOpenInMenu(from: .zero, in: UIView(), animated: false)
-        return supportedFileTypes.contains(file!.ext!)
+        return supportedFileTypes.contains(file!.ext!.lowercased())
     }
     
     fileprivate func stopDownloadingFile() {
