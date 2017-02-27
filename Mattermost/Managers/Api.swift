@@ -524,12 +524,22 @@ extension Api: ChannelApi {
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             let realm = RealmUtils.realmForCurrentThread()
             let channel = mappingResult.firstObject as! Channel
-            try! realm.write({
-                channel.currentUserInChannel = true
-                channel.computeTeam()
-                channel.computeDispayNameIfNeeded()
-                realm.add(channel, update: true)
-            })
+            if let existedChannel = realm.object(ofType: Channel.self, forPrimaryKey: channel.identifier) {
+                try! realm.write({
+                    existedChannel.currentUserInChannel = true
+                    existedChannel.computeTeam()
+                    existedChannel.computeDispayNameIfNeeded()
+                })
+
+            } else {
+                try! realm.write({
+                    channel.currentUserInChannel = true
+                    channel.computeTeam()
+                    channel.computeDispayNameIfNeeded()
+                    realm.add(channel)
+                })
+            }
+            
             let id = channel.identifier
             
             DispatchQueue.main.async {

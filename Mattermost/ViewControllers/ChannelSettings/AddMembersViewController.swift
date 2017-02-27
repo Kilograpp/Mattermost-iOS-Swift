@@ -19,6 +19,7 @@ class AddMembersViewController: UIViewController {
 //MARK: Properties
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    fileprivate var emptyDialogueLabel = EmptyDialogueLabel()
     
     fileprivate lazy var builder: AddMembersCellBuilder = AddMembersCellBuilder(tableView: self.tableView)
     
@@ -55,6 +56,7 @@ fileprivate protocol Setup: class {
     func initialSetup()
     func setupNavigationBar()
     func setupSearchBar()
+    func setupEmptyDialogLabel()
 }
 
 fileprivate protocol Request: class {
@@ -66,8 +68,10 @@ fileprivate protocol Request: class {
 //MARK: Setup
 extension AddMembersViewController: Setup {
     func initialSetup() {
+        tableView.tableFooterView = UIView(frame: .zero)
         setupNavigationBar()
         setupSearchBar()
+        setupEmptyDialogLabel()
     }
     
     func setupNavigationBar() {
@@ -77,6 +81,13 @@ extension AddMembersViewController: Setup {
     func setupSearchBar() {
         let textField = self.searchBar.value(forKey: "searchField") as? UITextField
         textField?.backgroundColor = ColorBucket.searchBarBackground
+    }
+    
+    func setupEmptyDialogLabel() {
+        emptyDialogueLabel = EmptyDialogueLabel(channel: self.channel, type: 1)
+        emptyDialogueLabel.text = "No users to add"
+        emptyDialogueLabel.font = FontBucket.feedbackTitleFont
+        emptyDialogueLabel.backgroundColor = .clear
     }
 }
 
@@ -125,6 +136,11 @@ extension AddMembersViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.users.count == 0 || (self.searchUsers.count == 0 && self.isSearchActive) {
+            emptyDialogueLabel.isHidden = false
+        } else {
+            emptyDialogueLabel.isHidden = true
+        }
         return !self.isSearchActive ? self.users.count : self.searchUsers.count
     }
     
