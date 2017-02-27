@@ -494,6 +494,7 @@ extension ChatViewController: Action {
         
         self.filesPickingController.reset()
         self.filesAttachmentsModule.reset()
+        scrollToBottom(animated: true)
     }
     
     

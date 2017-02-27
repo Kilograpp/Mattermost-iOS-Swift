@@ -283,9 +283,26 @@ extension ProfileViewController {
         let alertController = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
         let openCameraAction = UIAlertAction.init(title: "Take photo", style: .default) { (action) in
             guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-                AlertManager.sharedManager.showWarningWithMessage(message: "Application is not allowed to access Camera.")
+                AlertManager.sharedManager.showWarningWithMessage(message: "Camera is not available on this device.")
                 return
             }
+            let cameraMediaType = AVMediaTypeVideo
+            let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(forMediaType: cameraMediaType)
+            if cameraAuthorizationStatus == .notDetermined {
+                AVCaptureDevice.requestAccess(forMediaType: cameraMediaType, completionHandler: { (granted) in
+                    guard granted else { AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings")
+                        return
+                    }
+                    self.presentImagePickerControllerWithType(.camera)
+                })
+            }
+            guard cameraAuthorizationStatus == .authorized else {
+                if cameraAuthorizationStatus != .notDetermined {
+                    AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings")
+                }
+                return
+            }
+            
             self.presentImagePickerControllerWithType(.camera)
         }
         let openGalleryAction = UIAlertAction.init(title: "Take from library", style: .default) { (action) in
@@ -336,6 +353,10 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.avatarImageView.image = image.fixedOrientation()
         self.saveButton.isEnabled = true
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
 }
 
