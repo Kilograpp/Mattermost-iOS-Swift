@@ -164,16 +164,33 @@ extension  MoreChannelsViewController: Configuration {
         Api.sharedInstance.loadUsersList(offset: 0) { (users, error) in
             self.hideLoaderView()
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return  }
-         
+        
             let sortName = UserAttributes.username.rawValue
+//            let sortName                      = ChannelAttributes.displayName.rawValue
             let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@", Constants.Realm.SystemUserIdentifier,
                                          Preferences.sharedInstance.currentUserId!)
             let preferedUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byKeyPath: sortName, ascending: true)
+            
             for user in preferedUsers {
                 guard !user.isPreferedDirectChannel() else { continue }
                 self.results.append((user, false))
             }
-
+//            let currentTeamPredicate          = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
+//            let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == false")
+//            let directTypePredicate           = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
+//            let directPreferedPredicate       = NSPredicate(format: "isDirectPrefered == false")
+//            let realm = RealmUtils.realmForCurrentThread()
+//            realm.refresh()
+//            let allDirects = realm.objects(Channel.self).filter(currentTeamPredicate).filter(directTypePredicate)
+//            let directUserInChannel = allDirects.filter(currentUserInChannelPredicate)
+//            let directsInMore = directUserInChannel.filter(directPreferedPredicate)
+//            let directsInTeam = directsInMore.filter(NSPredicate(format: "isInterlocuterOnTeam == true")).sorted(byKeyPath: sortName, ascending: true)
+//
+//            directsInTeam.forEach({ (channel) in
+//                let user = channel.interlocuterFromPrivateChannel()
+//                self.results.append((user, false))
+//            })
+            
             self.results = self.results.sorted(by: { ($0.object as! User).displayName! < ($1.object as! User).displayName! })
             self.tableView.reloadData()
         }
@@ -266,9 +283,11 @@ extension MoreChannelsViewController: Request {
                         Api.sharedInstance.loadTeamMembersListBy(ids: ids) { (error) in
                             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                             
-                            _ = self.navigationController?.popViewController(animated: true)
-                            ChannelObserver.sharedObserver.selectedChannel = channelT
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: channelT)
+                            self.returnToChannel()
+                            let predicate =  NSPredicate(format: "displayName == %@", user.username!)
+                            let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).first
+                            ChannelObserver.sharedObserver.selectedChannel = channel
+//                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: channelT)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                         }
                     }

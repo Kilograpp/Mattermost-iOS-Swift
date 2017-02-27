@@ -127,6 +127,7 @@ extension ProfileViewController: Setup {
         
         self.fullnameLabel.font = UIFont.kg_semibold20Font()
         self.fullnameLabel.textColor = UIColor.kg_blackColor()
+        self.fullnameLabel.adjustsFontSizeToFitWidth = true
         self.fullnameLabel.text = (self.user?.firstName)! + " " + (self.user?.lastName)!
     }
     

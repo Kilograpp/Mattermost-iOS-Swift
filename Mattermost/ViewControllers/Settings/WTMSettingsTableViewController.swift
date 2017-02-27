@@ -162,9 +162,17 @@ extension WTMSettingsTableViewController: UITextViewDelegate {
         cell.placeholderLabel?.isHidden = true
     }
     
+    func textViewDidChange(_ textView: UITextView) {
+        self.builder.sensetiveWordsString = ""
+        self.saveButton.isEnabled = true
+    }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         textView.text = (textView.text as NSString).replacingCharacters(in: range, with: text)
         self.builder.sensetiveWordsString = textView.text
+        
+        let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! TextSettingsTableViewCell
+        cell.clearButton?.isHidden = textView.text.isEmpty
         
         return false
     }
