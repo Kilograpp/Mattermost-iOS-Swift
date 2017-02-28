@@ -185,7 +185,8 @@ extension TeamViewController: Request {
             guard error == nil else {
                 self.handleErrorWith(message: (error?.message)!)
                 self.returnLastTeam()
-                
+                self.navigationItem.leftBarButtonItem?.isEnabled = true
+
                 return
             }
             
@@ -202,6 +203,7 @@ extension TeamViewController: Request {
             guard error == nil else {
                 self.handleErrorWith(message: (error?.message)!)
                 self.returnLastTeam()
+                self.navigationItem.leftBarButtonItem?.isEnabled = true
 
                 return
             }
@@ -222,7 +224,8 @@ extension TeamViewController: Request {
             guard error == nil else {
                 self.handleErrorWith(message: (error?.message)!)
                 self.returnLastTeam()
-                
+                self.navigationItem.leftBarButtonItem?.isEnabled = true
+
                 return
             }
             
@@ -230,9 +233,11 @@ extension TeamViewController: Request {
                 if self.isPresentedModally() {
                     self.dismiss(animated: true, completion:{ _ in
                         self.hideLoaderView()
+                        self.navigationItem.leftBarButtonItem?.isEnabled = true
                         RouterUtils.loadInitialScreen()
                     })
                 } else {
+                    self.navigationItem.leftBarButtonItem?.isEnabled = true
                     RouterUtils.loadInitialScreen()
                 }
             }
@@ -272,7 +277,9 @@ extension TeamViewController: UITableViewDelegate {
         if (Preferences.sharedInstance.currentTeamId != nil) {
             lastTeam = DataManager.sharedInstance.currentTeam
         }
+        self.navigationItem.leftBarButtonItem?.isEnabled = false
         let team = self.results[indexPath.row]
+        
         if Preferences.sharedInstance.currentTeamId != team.identifier {
             ObjectManager.shared().clearCache()
             refreshCurrentTeamIfNeeded()
@@ -293,6 +300,7 @@ extension TeamViewController: UITableViewDelegate {
             guard controller.resultsObserver != nil else { return }
             controller.resultsObserver.unsubscribeNotifications()
         } else {
+            self.navigationItem.leftBarButtonItem?.isEnabled = true
             self.dismiss(animated: true, completion: nil)
         }
     }

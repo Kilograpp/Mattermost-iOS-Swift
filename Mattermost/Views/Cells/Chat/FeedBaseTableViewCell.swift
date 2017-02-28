@@ -153,8 +153,7 @@ extension FeedBaseTableViewCell {
                 }
                 if properties.first(where: { $0.name == "isFollowUp" }) != nil && properties.count == 1 {
                     self.configureWithPost(self.post)
-                    (self.superview?.superview as! UITableView).beginUpdates()
-                    (self.superview?.superview as! UITableView).endUpdates()
+                    (self.superview?.superview as! UITableView).reloadData()
 
                 }
                 if let attributeMessageProperty = properties.first(where: { $0.name == "_attributedMessageData" }) {
