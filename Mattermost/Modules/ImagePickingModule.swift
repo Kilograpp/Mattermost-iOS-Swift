@@ -55,6 +55,10 @@ extension ImagePickingModule: Interface {
             }
             presentImagePickerController(.camera, .video)
         }) { (_, numberOfPhotos) in
+            guard AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
+                return
+            }
             presentImagePickerController(.camera, .video)
         }
         controller.addAction(videoAction)
@@ -66,6 +70,10 @@ extension ImagePickingModule: Interface {
             }
             presentImagePickerController(.camera, .photo)
         }) { (_, numberOfPhotos) in
+            guard AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
+                return
+            }
             presentImagePickerController(.camera, .photo)
         }
         controller.addAction(photoAction)
