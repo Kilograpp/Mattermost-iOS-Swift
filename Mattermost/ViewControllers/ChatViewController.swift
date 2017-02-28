@@ -777,7 +777,7 @@ extension ChatViewController: Request {
             self.selectedPost = nil
             self.hideSelectedStateFromCell()
             //TEMP reload for delete
-            self.tableView.reloadData()
+            //self.tableView.reloadData()
             
             return
         }
