@@ -11,6 +11,7 @@ import Realm
 
 private protocol Interface: class {
     func removeAttachmentAtIdex(_ index: Int)
+    func updateCached(files: [AssignedAttachmentViewItem])
 }
 
 protocol Send: class {
@@ -39,12 +40,11 @@ protocol Upload: class {
 
 
 final class PostUtils: NSObject {
-
 //MARK: Properies
     static let sharedInstance = PostUtils()
     fileprivate let upload_files_group = DispatchGroup()
     fileprivate var files = Array<AssignedAttachmentViewItem>()
-    
+    fileprivate var unsortedIdentifiers = [(Int, String)]()
     
     fileprivate var assignedFiles: Array<String> = Array()
 }
@@ -52,14 +52,14 @@ final class PostUtils: NSObject {
 
 //MARK: Interface
 extension PostUtils: Interface {
-
-    
     func removeAttachmentAtIdex(_ index: Int) {
-        if files.indices.contains(index) {
-            files.remove(at: index)
-        }
-        if assignedFiles.indices.contains(index) {
-            assignedFiles.remove(at: index)
+        if files.indices.contains(index) { files.remove(at: index) }
+        if assignedFiles.indices.contains(index) { assignedFiles.remove(at: index) }
+    }
+    
+    func updateCached(files: [AssignedAttachmentViewItem]) {
+        for file in files {
+            //if !self.assignedFiles.contains(file.identifier) { self.assignedFiles.append(file.identifier) }
         }
     }
 }
@@ -70,6 +70,7 @@ extension PostUtils: Send {
     func sendPost(channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let trimmedMessage = message.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let post = postToSend(channel: channel, message: trimmedMessage, attachments: attachments)
+        print(post.files.count)
         guard trimmedMessage != StringUtils.emptyString() || post.files.count > 0  else {
             AlertManager.sharedManager.showWarningWithMessage(message: "Text shouldn't contain only whitespaces and newlines")
             return
@@ -210,6 +211,7 @@ extension PostUtils: Upload {
                 let index = self.files.index(where: {$0.identifier == item.identifier})
                 if (index != nil) {
                     self.assignedFiles.append(identifier!)
+                    self.unsortedIdentifiers.append((index!, identifier!))
                 }
                 }, progress: { (item, value) in
                     guard let index = self.files.index(where: {$0.identifier == item.identifier}) else { return }
@@ -222,7 +224,6 @@ extension PostUtils: Upload {
         }
         
         self.upload_files_group.notify(queue: DispatchQueue.main, execute: {
-            Swift.print("NOTIFY")
             completion(true, nil, AssignedAttachmentViewItem(image: UIImage()))
         })
     }
@@ -271,8 +272,10 @@ extension PostUtils: PostConfiguration {
     func assignFilesToPostIfNeeded(_ post: Post) {
         guard self.assignedFiles.count > 0 else { return }
         
-        self.assignedFiles.forEach({
-            let file = File.objectById($0)!
+        let sortedIdentifiers = unsortedIdentifiers.sorted(by: {$0.0 < $1.0})
+        
+        sortedIdentifiers.forEach({
+            let file = File.objectById($0.1)!
             post.files.append(file)
         })
     }
@@ -280,5 +283,6 @@ extension PostUtils: PostConfiguration {
     func clearUploadedAttachments() {
         self.assignedFiles.removeAll()
         self.files.removeAll()
+        self.unsortedIdentifiers.removeAll()
     }
 }

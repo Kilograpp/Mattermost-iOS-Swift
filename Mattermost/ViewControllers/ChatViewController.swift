@@ -1126,9 +1126,11 @@ extension ChatViewController: ChannelObserverDelegate {
         guard let _ = filesAttachmentsModule else {return}
         //self.filesPickingController.reset()
       //  self.filesAttachmentsModule.reset()
-        PostUtils.sharedInstance.clearUploadedAttachments()
+      //  PostUtils.sharedInstance.clearUploadedAttachments()
         
         if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
+            let files = filesAttachmentsModule.cache.cachedFilesForChannel(channel)
+            PostUtils.sharedInstance.updateCached(files: files!)
             filesAttachmentsModule.presentWithCachedItems()
         } else {
             attachmentsView.hideAnimated()
@@ -1136,9 +1138,13 @@ extension ChatViewController: ChannelObserverDelegate {
     }
     
     func startButtonAction(sender: UIButton!) {
+        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
         self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
         Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
-            guard (error==nil) else { self.hideLoaderView(); return }
+            guard (error==nil) else { self.hideLoaderView()
+                AlertManager.sharedManager.showErrorWithMessage(message: error!.message)
+                return
+            }
             
             let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
             let addMembersViewController = channelSettingsStoryboard.instantiateViewController(withIdentifier: "AddMembersViewController") as! AddMembersViewController

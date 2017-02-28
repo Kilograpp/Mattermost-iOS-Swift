@@ -127,6 +127,12 @@ extension MoreChannelsViewController: Setup {
         let moreType = (self.isPrivateChannel) ? "direct chats" : "channels"
         self.emptySearchLabel.text = "No " + moreType + " found!"
         self.view.insertSubview(self.emptySearchLabel, aboveSubview: self.tableView)
+        self.emptySearchLabel.frame = CGRect(x       : 0,
+                            y       : 0,
+                            width   : UIScreen.main.bounds.size.width*0.90,
+                            height  : 90)
+        self.emptySearchLabel.center = CGPoint(x: UIScreen.main.bounds.size.width / 2,
+                              y: UIScreen.main.bounds.size.height / 1.85)
     }
 }
 
@@ -301,6 +307,7 @@ extension MoreChannelsViewController: Request {
 //MARK: UITableViewDataSource
 extension MoreChannelsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.emptySearchLabel.isHidden = (self.isSearchActive) ? self.filteredResults.count > 0 : self.results.count > 0
         return (self.isSearchActive) ? self.filteredResults.count : self.results.count
     }
     
