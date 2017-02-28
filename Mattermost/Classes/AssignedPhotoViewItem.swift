@@ -23,6 +23,7 @@ final class AssignedAttachmentViewItem {
     var fileName: String?
     var isFile = false
     var url: URL?
+    var backendIdentifier:String?
 }
 
 extension AssignedAttachmentViewItem: Equatable {}

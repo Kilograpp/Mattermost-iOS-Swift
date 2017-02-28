@@ -1037,8 +1037,8 @@ extension ChatViewController: AttachmentsModuleDelegate {
         let items = self.filesPickingController.attachmentItems.filter { return ($0.identifier == identifier) }
         let idx = self.filesPickingController.attachmentItems.index(of: items.first!)
         guard items.count > 0 else { return }
-        self.filesPickingController.attachmentItems.removeObject(items.first!)
-        PostUtils.sharedInstance.removeAttachmentAtIdex(idx!)
+//        self.filesPickingController.attachmentItems.removeObject(items.first!)
+//        PostUtils.sharedInstance.removeAttachmentAtIdex(identifier)
     }
 }
 
