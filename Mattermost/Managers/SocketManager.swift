@@ -275,8 +275,10 @@ extension SocketManager: Notifications {
         if channel == nil {
             //request for chanel information (temp load all channels)
             Api.sharedInstance.loadChannels(with: { (error) in
+                let realm = RealmUtils.realmForCurrentThread()
                 guard error == nil else { return }
-                channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter("%K == %@", "identifier", channelIdentifier).first
+                realm.refresh()
+                channel = realm.objects(Channel.self).filter("%K == %@", "identifier", channelIdentifier).first
                 if channel != nil {
                     self.handleUserJoined(user: user!, channel: channel!)
                 }
