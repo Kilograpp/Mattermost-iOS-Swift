@@ -60,13 +60,18 @@ extension SocketManager: WebSocketDelegate{
         NSLog("Socket did connect")
 //        publishBackendNotificationFetchStatuses()
     }
+    func websocketDidReceivePong(socket: Starscream.WebSocket, data: Data?) {
+        //Not called
+        Swift.print("RECEIVE POING")
+        setNeedsConnect()
+    }
     func websocketDidReceiveData(socket: Starscream.WebSocket, data: Data) {}
     func websocketDidDisconnect(socket: Starscream.WebSocket, error: NSError?) {
         NSLog("Socket did disconnect")
         if error != nil {
             setNeedsConnect()
         }
-//        setNeedsConnect()
+        setNeedsConnect()
     }
     func websocketDidReceiveMessage(socket: Starscream.WebSocket, text: String) {
         self.handleIncomingMessage(text)
@@ -151,7 +156,9 @@ extension SocketManager: MessageHandling {
                 publishLocalNotificationWithChannelIdentifier(channelId!, userIdentifier: userId!, action: Event.Typing.rawValue)
             case .joinedUser:
                 publishLocalNotificationJoin(userIdentifier: userId!, to: channelId!)
-            default: break
+            default:
+                print(text)
+            break
 //                print("UNKNW: "+text)
                 //reply with event:"hello"
 //                publishBackendNotificationFetchStatuses()

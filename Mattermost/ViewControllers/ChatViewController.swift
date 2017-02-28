@@ -119,9 +119,10 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        //var center = self.scrollButton?.center
-        //center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
-        //self.scrollButton?.center = center!
+        var center = self.scrollButton?.center
+        center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
+        self.scrollButton?.center = center!
+        self.scrollButton?.isHidden = self.keyboardIsActive
     }
     
     override func didCommitTextEditing(_ sender: Any) {
@@ -563,7 +564,7 @@ extension ChatViewController: Action {
     func scrollButtonDown(keyboardHeight: CGFloat) {
         if filesAttachmentsModule.isPresented {
             DispatchQueue.main.async {
-                self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 170 - self.textView.frame.height
+                self.scrollButton?.frame.origin.y = self.textInputbar.isEditing ? UIScreen.screenHeight() - 200 - self.textView.frame.height : UIScreen.screenHeight() - 170 - self.textView.frame.height
             }
         } else {
             self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100
@@ -777,7 +778,7 @@ extension ChatViewController: Request {
             self.selectedPost = nil
             self.hideSelectedStateFromCell()
             //TEMP reload for delete
-            self.tableView.reloadData()
+            //self.tableView.reloadData()
             
             return
         }
@@ -1037,8 +1038,8 @@ extension ChatViewController: AttachmentsModuleDelegate {
         let items = self.filesPickingController.attachmentItems.filter { return ($0.identifier == identifier) }
         let idx = self.filesPickingController.attachmentItems.index(of: items.first!)
         guard items.count > 0 else { return }
-        self.filesPickingController.attachmentItems.removeObject(items.first!)
-        PostUtils.sharedInstance.removeAttachmentAtIdex(idx!)
+//        self.filesPickingController.attachmentItems.removeObject(items.first!)
+//        PostUtils.sharedInstance.removeAttachmentAtIdex(identifier)
     }
 }
 
@@ -1126,9 +1127,11 @@ extension ChatViewController: ChannelObserverDelegate {
         guard let _ = filesAttachmentsModule else {return}
         //self.filesPickingController.reset()
       //  self.filesAttachmentsModule.reset()
-        PostUtils.sharedInstance.clearUploadedAttachments()
+      //  PostUtils.sharedInstance.clearUploadedAttachments()
         
         if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
+            let files = filesAttachmentsModule.cache.cachedFilesForChannel(channel)
+            PostUtils.sharedInstance.updateCached(files: files!)
             filesAttachmentsModule.presentWithCachedItems()
         } else {
             attachmentsView.hideAnimated()
@@ -1136,9 +1139,13 @@ extension ChatViewController: ChannelObserverDelegate {
     }
     
     func startButtonAction(sender: UIButton!) {
+        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
         self.showLoaderView(topOffset: 64.0, bottomOffset: 45.0)
         Api.sharedInstance.loadUsersAreNotIn(channel: self.channel, completion: { (error, users) in
-            guard (error==nil) else { self.hideLoaderView(); return }
+            guard (error==nil) else { self.hideLoaderView()
+                AlertManager.sharedManager.showErrorWithMessage(message: error!.message)
+                return
+            }
             
             let channelSettingsStoryboard = UIStoryboard(name: "ChannelSettings", bundle:nil)
             let addMembersViewController = channelSettingsStoryboard.instantiateViewController(withIdentifier: "AddMembersViewController") as! AddMembersViewController
@@ -1161,7 +1168,7 @@ extension ChatViewController: ChannelObserverDelegate {
                 oldInset.top = PostAttachmentsView.attachmentsViewHeight
                 self.tableView.contentInset = oldInset
                 self.tableView.scrollIndicatorInsets = oldInset
-                self.scrollButton?.frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100 - self.attachmentsView.frame.height, width: 50, height: 50)
+                self.scrollButtonDown(keyboardHeight: 0.0)
             }
         }
     }

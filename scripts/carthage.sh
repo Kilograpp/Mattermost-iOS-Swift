@@ -1,1 +1,1 @@
-bundle exec carthage_cache install || carthage bootstrap --platform iOS
+bundle exec carthage_cache install

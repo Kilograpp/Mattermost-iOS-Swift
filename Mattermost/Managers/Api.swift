@@ -399,7 +399,23 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.addUserPathPattern(), channel)
         let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
         
+        let userId = user.identifier
+        let channelId = channel.identifier
+        
+        let realm = RealmUtils.realmForCurrentThread()
+        if realm.object(ofType: User.self, forPrimaryKey: userId) == nil {
+            try! realm.write { realm.add(user, update: true) }
+        }
+        
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId)
+            
+            if !(channel?.members.contains(where: { $0.identifier == userId }))! {
+            let user = realm.object(ofType: User.self, forPrimaryKey: userId)
+                try! realm.write { channel?.members.append(user!) }
+            }
+            
             DispatchQueue.main.async {
                 completion(nil)
             }
@@ -1323,7 +1339,7 @@ extension Api : FileApi {
     func uploadFileItemAtChannel(_ item: AssignedAttachmentViewItem,
                                   channel: Channel,
                                   completion: @escaping (_ identifier: String?, _ error: Mattermost.Error?) -> Void,
-                                  progress: @escaping (_ identifier: String, _ value: Float) -> Void) {
+                                  progress: @escaping (_ item: AssignedAttachmentViewItem, _ value: Float) -> Void) {
         let path = SOCStringFromStringWithObject(FilePathPatternsContainer.uploadPathPattern(), DataManager.sharedInstance.currentTeam)
         let params = ["channel_id" : channel.identifier!,
                       "client_ids" : item.identifier]
@@ -1340,7 +1356,7 @@ extension Api : FileApi {
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in
-                progress(item.identifier, value)
+                progress(item, value)
             }
         } else {
             self.manager.post(image: item.image, identifier: params["client_ids"]!, name: "files", path: path, parameters: params, success: { (mappingResult) in
@@ -1348,7 +1364,7 @@ extension Api : FileApi {
                 }, failure: { (error) in
                     completion(nil, error)
             }) { (value) in
-                progress(item.identifier, value)
+                progress(item, value)
             }
         }
     }

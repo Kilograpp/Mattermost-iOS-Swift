@@ -10,7 +10,8 @@ import RealmSwift
 import Realm
 
 private protocol Interface: class {
-    func removeAttachmentAtIdex(_ index: Int)
+    func removeAttachmentAtIdex(_ identifier: String)
+    func updateCached(files: [AssignedAttachmentViewItem])
 }
 
 protocol Send: class {
@@ -33,8 +34,7 @@ protocol Search: class {
 }
 
 protocol Upload: class {
-    func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel,
-                completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void)
+    func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ item: AssignedAttachmentViewItem) -> Void)
     func cancelUpload(item: AssignedAttachmentViewItem)
 }
 
@@ -52,14 +52,16 @@ final class PostUtils: NSObject {
 
 //MARK: Interface
 extension PostUtils: Interface {
-
+    func removeAttachmentAtIdex(_ identifier: String) {
+        guard let index = self.files.index(where: {$0.identifier == identifier}) else { return }
+        if files.indices.contains(index) { files.remove(at: index) }
+        guard let assignIndex = self.assignedFiles.index(where: {$0 == identifier}) else { return }
+        if assignedFiles.indices.contains(assignIndex) { assignedFiles.remove(at: index) }
+    }
     
-    func removeAttachmentAtIdex(_ index: Int) {
-        if files.indices.contains(index) {
-            files.remove(at: index)
-        }
-        if assignedFiles.indices.contains(index) {
-            assignedFiles.remove(at: index)
+    func updateCached(files: [AssignedAttachmentViewItem]) {
+        for file in files {
+            //if !self.assignedFiles.contains(file.identifier) { self.assignedFiles.append(file.identifier) }
         }
     }
 }
@@ -70,6 +72,7 @@ extension PostUtils: Send {
     func sendPost(channel: Channel, message: String, attachments: NSArray?, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
         let trimmedMessage = message.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let post = postToSend(channel: channel, message: trimmedMessage, attachments: attachments)
+        print(post.files.count)
         guard trimmedMessage != StringUtils.emptyString() || post.files.count > 0  else {
             AlertManager.sharedManager.showWarningWithMessage(message: "Text shouldn't contain only whitespaces and newlines")
             return
@@ -185,45 +188,58 @@ extension PostUtils: Search {
 
 //MARK: Upload
 extension PostUtils: Upload {
-    func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ index: Int) -> Void) {
+    func upload(items: Array<AssignedAttachmentViewItem>, channel: Channel, completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void, progress:@escaping (_ value: Float, _ item: AssignedAttachmentViewItem) -> Void) {
         self.files.append(contentsOf: items)
         for item in items {
             self.upload_files_group.enter()
             item.uploading = true
             Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (identifier, error) in
-                guard self.files.contains(item) else { return }
+//                guard self.files.contains(item) else {
+//                    return
+//                }
                 
                 defer {
-                    completion(false, error, item)
                     self.upload_files_group.leave()
+                    completion(false, error, item)
                 }
                 
-                guard error == nil else { self.files.removeObject(item); return }
+                guard error == nil else {
+                    guard self.files.contains(item) else {
+                        return
+                    }
+                    self.files.removeObject(item);
+                    return
+                }
                 
                 
                 let index = self.files.index(where: {$0.identifier == item.identifier})
                 if (index != nil) {
+                    item.backendIdentifier = identifier
                     self.assignedFiles.append(identifier!)
                     self.unsortedIdentifiers.append((index!, identifier!))
                 }
-                }, progress: { (identifier, value) in
-                    let index = self.files.index(where: {$0.identifier == identifier})
-                    guard (index != nil) else { return }
-                    progress(value, index!)
+                if index == nil {
+                    
+                }
+                }, progress: { (item, value) in
+                    guard let index = self.files.index(where: {$0.identifier == item.identifier}) else { return }
+                    let item = self.files[index]
+                    progress(value, item)
             })
         }
         
         self.upload_files_group.notify(queue: DispatchQueue.main, execute: {
-            
             completion(true, nil, AssignedAttachmentViewItem(image: UIImage()))
         })
     }
     
     func cancelUpload(item: AssignedAttachmentViewItem) {
+        //identifiers in assignedFiles != item.identifier
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-        let index = self.assignedFiles.index(where: {$0 == item.identifier})
-        
+        let index = self.assignedFiles.index(where: {$0 == item.backendIdentifier})
         if (index != nil) { self.assignedFiles.remove(at: index!) }
+        let sortedIndex = self.unsortedIdentifiers.index(where: {$0.1 == item.backendIdentifier})
+        if (sortedIndex != nil) { unsortedIdentifiers.remove(at: sortedIndex!) }
         self.files.removeObject(item)
         
         guard item.uploaded else { return }
@@ -274,5 +290,6 @@ extension PostUtils: PostConfiguration {
     func clearUploadedAttachments() {
         self.assignedFiles.removeAll()
         self.files.removeAll()
+        self.unsortedIdentifiers.removeAll()
     }
 }

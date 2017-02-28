@@ -307,7 +307,7 @@ extension MoreChannelsViewController: Request {
 //MARK: UITableViewDataSource
 extension MoreChannelsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.emptySearchLabel.isHidden = (self.results.count > 0)
+        self.emptySearchLabel.isHidden = (self.isSearchActive) ? self.filteredResults.count > 0 : self.results.count > 0
         return (self.isSearchActive) ? self.filteredResults.count : self.results.count
     }
     

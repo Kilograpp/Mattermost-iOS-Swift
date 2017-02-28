@@ -176,16 +176,20 @@ extension ChannelSettingsViewController: Request {
         }
         Api.sharedInstance.delete(channel: self.channel) { (error) in
             let deletedCannel = self.channel
+            let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group " : "Channel "
+            let channelName = self.channel.displayName!
+            
+            let realm = RealmUtils.realmForCurrentThread()
+            try! realm.write { realm.delete(deletedCannel!) }
             
             let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
+            
+            leftMenu.reloadChannels()
             leftMenu.configureInitialSelectedChannel()
+            
             self.dismiss(animated: true, completion: {
-                let realm = RealmUtils.realmForCurrentThread()
-                try! realm.write { realm.delete(deletedCannel!) }
-                leftMenu.reloadChannels()
             })
-            let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "Group " : "Channel "
-            self.handleSuccesWith(message: channelType + self.channel.displayName! + " was deleted")
+            self.handleSuccesWith(message: channelType + channelName + " was deleted")
         }
     }
     
@@ -196,15 +200,17 @@ extension ChannelSettingsViewController: Request {
         }
         Api.sharedInstance.leaveChannel(channel, completion: { (error) in
             let leavedCannel = self.channel
-            let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
-            leftMenu.configureInitialSelectedChannel()
-            self.dismiss(animated: true, completion: {
-                let realm = RealmUtils.realmForCurrentThread()
-                try! realm.write { realm.delete(leavedCannel!) }
-                leftMenu.reloadChannels()
-            })
+            let displayName = self.channel.displayName!
             let channelType = (self.channel.privateType == Constants.ChannelType.PrivateTypeChannel) ? "group" : "channel"
-            self.handleSuccesWith(message: "You left ".localized + self.channel.displayName! + " " + channelType)
+            
+            let leftMenu = self.presentingViewController?.menuContainerViewController.leftMenuViewController as! LeftMenuViewController
+
+            leftMenu.reloadChannels()
+            leftMenu.configureInitialSelectedChannel()
+            
+            self.dismiss(animated: true, completion: {
+            })
+            self.handleSuccesWith(message: "You left ".localized + displayName + " " + channelType)
         })
     }
     

@@ -156,11 +156,6 @@ extension UFSettingsTableViewController: Request {
     
     internal func updateNickName() {
         let nickName = self.builder.infoFor(section: 0)
-        guard nickName.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != StringUtils.emptyString() else {
-            AlertManager.sharedManager.showWarningWithMessage(message: "Nickname must contain a letters")
-            
-            return
-        }
         Api.sharedInstance.update(nickName: nickName) { (error) in
             guard error == nil else {
                 AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
@@ -193,6 +188,11 @@ extension UFSettingsTableViewController: Request {
         let oldPassword = self.builder.infoFor(section: 0)
         let newPassword = self.builder.infoFor(section: 1)
         let retryNewPassword = self.builder.infoFor(section: 2)
+        
+        guard !oldPassword.isEmpty && !newPassword.isEmpty && !retryNewPassword.isEmpty else {
+            handleErrorWith(message: "Filelds are empty!"); return
+        }
+        
         guard newPassword == retryNewPassword else {
             AlertManager.sharedManager.showErrorWithMessage(message: "New password in fields isn't same.")
             self.hideLoaderView()
