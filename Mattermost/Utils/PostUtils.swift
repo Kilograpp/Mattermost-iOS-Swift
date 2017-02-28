@@ -10,7 +10,7 @@ import RealmSwift
 import Realm
 
 private protocol Interface: class {
-    func removeAttachmentAtIdex(_ index: Int)
+    func removeAttachmentAtIdex(_ identifier: String)
     func updateCached(files: [AssignedAttachmentViewItem])
 }
 
@@ -52,9 +52,11 @@ final class PostUtils: NSObject {
 
 //MARK: Interface
 extension PostUtils: Interface {
-    func removeAttachmentAtIdex(_ index: Int) {
+    func removeAttachmentAtIdex(_ identifier: String) {
+        guard let index = self.files.index(where: {$0.identifier == identifier}) else { return }
         if files.indices.contains(index) { files.remove(at: index) }
-        if assignedFiles.indices.contains(index) { assignedFiles.remove(at: index) }
+        guard let assignIndex = self.assignedFiles.index(where: {$0 == identifier}) else { return }
+        if assignedFiles.indices.contains(assignIndex) { assignedFiles.remove(at: index) }
     }
     
     func updateCached(files: [AssignedAttachmentViewItem]) {
@@ -190,7 +192,6 @@ extension PostUtils: Upload {
         self.files.append(contentsOf: items)
         for item in items {
             self.upload_files_group.enter()
-            Swift.print("ENTERED \(item.identifier)")
             item.uploading = true
             Api.sharedInstance.uploadFileItemAtChannel(item, channel: channel, completion: { (identifier, error) in
 //                guard self.files.contains(item) else {
@@ -198,27 +199,31 @@ extension PostUtils: Upload {
 //                }
                 
                 defer {
-                    Swift.print("LEFT \(item.identifier)")
                     self.upload_files_group.leave()
                     completion(false, error, item)
                 }
                 
                 guard error == nil else {
-                    self.files.removeObject(item); return
+                    guard self.files.contains(item) else {
+                        return
+                    }
+                    self.files.removeObject(item);
+                    return
                 }
                 
                 
                 let index = self.files.index(where: {$0.identifier == item.identifier})
                 if (index != nil) {
+                    item.backendIdentifier = identifier
                     self.assignedFiles.append(identifier!)
                     self.unsortedIdentifiers.append((index!, identifier!))
+                }
+                if index == nil {
+                    
                 }
                 }, progress: { (item, value) in
                     guard let index = self.files.index(where: {$0.identifier == item.identifier}) else { return }
                     let item = self.files[index]
-                    if value >= 1 {
-                        Swift.print("Finished \(item.identifier)")
-                    }
                     progress(value, item)
             })
         }
@@ -229,11 +234,13 @@ extension PostUtils: Upload {
     }
     
     func cancelUpload(item: AssignedAttachmentViewItem) {
-        Swift.print("CANCELLED \(item.identifier)")
+        //identifiers in assignedFiles != item.identifier
         Api.sharedInstance.cancelUploadingOperationForImageItem(item)
-        let index = self.assignedFiles.index(where: {$0 == item.identifier})
+        let index = self.assignedFiles.index(where: {$0 == item.backendIdentifier})
         if (index != nil) { self.assignedFiles.remove(at: index!) }
-//        self.files.removeObject(item)
+        let sortedIndex = self.unsortedIdentifiers.index(where: {$0.1 == item.backendIdentifier})
+        if (sortedIndex != nil) { unsortedIdentifiers.remove(at: sortedIndex!) }
+        self.files.removeObject(item)
         
         guard item.uploaded else { return }
         guard self.assignedFiles.count > 0 else { return }

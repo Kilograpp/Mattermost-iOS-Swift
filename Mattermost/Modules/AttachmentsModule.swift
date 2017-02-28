@@ -91,7 +91,9 @@ extension AttachmentsModule: Interface {
                         self.dataSource.postAttachmentsView(attachmentsModule: self).updateProgressValueAtIndex(index!, value: 1)
                     }
                 }
-                self.fileUploadingInProgress = true
+                if !self.fileUploadingInProgress {
+                    self.fileUploadingInProgress = finished
+                }
                 completion(finished, error, item)
             }
 
@@ -106,7 +108,6 @@ extension AttachmentsModule: Interface {
             
         }) { (value, item) in
             guard self.items.contains(item) else {
-                Swift.print("item deleted")
                 return
             }
             let index = self.items.index(of: item)!
@@ -174,6 +175,9 @@ extension AttachmentsModule: UserInteraction {
         var message = error.message!
         if error.code == -1011 {
             message = "You can't upload file more than 50 mb"
+        }
+        if error.code == -999 {
+            message = "Image's downloading was cancelled"
         }
         AlertManager.sharedManager.showErrorWithMessage(message: message)
     }
