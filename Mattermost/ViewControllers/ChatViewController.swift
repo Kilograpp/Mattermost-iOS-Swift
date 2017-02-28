@@ -122,7 +122,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         var center = self.scrollButton?.center
         center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
         self.scrollButton?.center = center!
-        self.scrollButton?.isHidden = self.keyboardIsActive
+        self.scrollButton?.isHidden = self.keyboardIsActive || self.tableView.contentOffset.y <= UIScreen.screenHeight()
     }
     
     override func didCommitTextEditing(_ sender: Any) {
@@ -481,8 +481,6 @@ extension ChatViewController: Action {
     
     func sendPostAction() {
         guard self.filesAttachmentsModule.fileUploadingInProgress else { self.handleWarningWith(message: "Please, wait until download finished"); return }
-        
-        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
         
         switch self.selectedAction {
         case Constants.PostActionType.SendReply:

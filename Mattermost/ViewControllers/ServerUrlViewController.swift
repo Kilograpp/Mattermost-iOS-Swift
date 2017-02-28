@@ -192,7 +192,7 @@ extension ServerUrlViewController {
     }
     
     fileprivate func validateServerUrlForTextFieldDelegate() {
-        let urlRegEx = "((http|https)://)(([a-zA-Z0-9(\\-)])+\\.)([a-zA-Z0-9(\\-)])+((\\.)com)"
+        let urlRegEx = "((http|https)://)(([a-zA-Z0-9(\\-)])([a-zA-Z0-9(\\-)(\\.)])+\\.)([a-zA-Z0-9(\\-)])+"
         let urlTest = NSPredicate.init(format: "SELF MATCHES[c] %@", urlRegEx)
         if urlTest.evaluate(with: Preferences.sharedInstance.serverUrl) {
             self.errorLabel.isHidden = true
