@@ -1915,7 +1915,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0.1;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
