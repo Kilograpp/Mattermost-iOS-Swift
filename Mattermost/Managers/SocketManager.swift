@@ -151,7 +151,9 @@ extension SocketManager: MessageHandling {
                 publishLocalNotificationWithChannelIdentifier(channelId!, userIdentifier: userId!, action: Event.Typing.rawValue)
             case .joinedUser:
                 publishLocalNotificationJoin(userIdentifier: userId!, to: channelId!)
-            default: break
+            default:
+                print(text)
+            break
 //                print("UNKNW: "+text)
                 //reply with event:"hello"
 //                publishBackendNotificationFetchStatuses()

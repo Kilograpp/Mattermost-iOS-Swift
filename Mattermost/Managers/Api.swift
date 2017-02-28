@@ -399,7 +399,18 @@ extension Api: ChannelApi {
         let path = SOCStringFromStringWithObject(ChannelPathPatternsContainer.addUserPathPattern(), channel)
         let params: Dictionary<String, String> = [ "user_id" : user.identifier ]
         
+        let userId = user.identifier
+        let channelId = channel.identifier
+        
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
+            let realm = RealmUtils.realmForCurrentThread()
+            let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId)
+            
+            if !(channel?.members.contains(where: { $0.identifier == userId }))! {
+            let user = realm.object(ofType: User.self, forPrimaryKey: userId)
+                try! realm.write { channel?.members.append(user!) }
+            }
+            
             DispatchQueue.main.async {
                 completion(nil)
             }
