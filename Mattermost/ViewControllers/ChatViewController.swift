@@ -482,8 +482,6 @@ extension ChatViewController: Action {
     func sendPostAction() {
         guard self.filesAttachmentsModule.fileUploadingInProgress else { self.handleWarningWith(message: "Please, wait until download finished"); return }
         
-        guard Api.sharedInstance.isNetworkReachable() else { self.handleErrorWith(message: "No Internet connectivity detected"); return }
-        
         switch self.selectedAction {
         case Constants.PostActionType.SendReply:
             sendPostReply()

@@ -19,26 +19,19 @@ final class ImagePickingModule: FilesPickingModuleBase {}
 extension ImagePickingModule: Interface {
     func pick(max: Int) {
         let presentImagePickerController: (UIImagePickerControllerSourceType, UIImagePickerControllerCameraCaptureMode) -> () = { source, cameraMode in
+            let picker = UIImagePickerController()
+            picker.delegate = self
+            picker.sourceType = source
             
-            switch AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) {
-            case .denied:
-                AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
-                return
-            default:
-                let picker = UIImagePickerController()
-                picker.delegate = self
-                picker.sourceType = source
-                
-                if cameraMode == .video {
-                    picker.mediaTypes = [kUTTypeMovie as String]
-                }
-                
-                if source == .camera {
-                    picker.cameraCaptureMode = cameraMode
-                }
-                
-                self.dataSource.viewController(filesPickingModule: self).present(picker, animated: true, completion: nil)
+            if cameraMode == .video {
+                picker.mediaTypes = [kUTTypeMovie as String]
             }
+                
+            if source == .camera {
+                picker.cameraCaptureMode = cameraMode
+            }
+                
+            self.dataSource.viewController(filesPickingModule: self).present(picker, animated: true, completion: nil)
         }
         
         let controller = ImagePickerSheetController(mediaType: .imageAndVideo)
@@ -56,15 +49,31 @@ extension ImagePickingModule: Interface {
         controller.addAction(cameraAction)
         
         let videoAction = ImagePickerAction(title: "Take Video", secondaryTitle: "Take Video", style: .default, handler: { _ in
+            guard AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
+                return
+            }
             presentImagePickerController(.camera, .video)
         }) { (_, numberOfPhotos) in
+            guard AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
+                return
+            }
             presentImagePickerController(.camera, .video)
         }
         controller.addAction(videoAction)
         
         let photoAction = ImagePickerAction(title: "Take Photo", secondaryTitle: "Take Photo", style: .default, handler: { _ in
+            guard AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
+                return
+            }
             presentImagePickerController(.camera, .photo)
         }) { (_, numberOfPhotos) in
+            guard AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied else {
+                AlertManager.sharedManager.showWarningWithMessage(message: "Access denied. You can unlock camera in the system settings.")
+                return
+            }
             presentImagePickerController(.camera, .photo)
         }
         controller.addAction(photoAction)
