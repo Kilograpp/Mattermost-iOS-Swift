@@ -74,7 +74,6 @@ extension AttachmentsModule: Interface {
         self.cache.clearFilesForChannel(channel)
     }
     
-    //Комплишн необходим (т.к при ошибке нужно удалять и из FilesPickerController..
     func upload(attachments: [AssignedAttachmentViewItem] , completion: @escaping (_ finished: Bool, _ error: Mattermost.Error?, _ item: AssignedAttachmentViewItem) -> Void ) {
         showAttachmentsView()
         self.fileUploadingInProgress = false
@@ -105,7 +104,12 @@ extension AttachmentsModule: Interface {
                 self.hideAttachmentsView()
             }
             
-        }) { (value, index) in
+        }) { (value, item) in
+            guard self.items.contains(item) else {
+                Swift.print("item deleted")
+                return
+            }
+            let index = self.items.index(of: item)!
             self.items[index].uploaded = value == 1
             self.items[index].uploading = value < 1
             self.items[index].uploadProgress = value
