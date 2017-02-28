@@ -119,9 +119,10 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        //var center = self.scrollButton?.center
-        //center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
-        //self.scrollButton?.center = center!
+        var center = self.scrollButton?.center
+        center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
+        self.scrollButton?.center = center!
+        self.scrollButton?.isHidden = self.keyboardIsActive
     }
     
     override func didCommitTextEditing(_ sender: Any) {
@@ -563,7 +564,7 @@ extension ChatViewController: Action {
     func scrollButtonDown(keyboardHeight: CGFloat) {
         if filesAttachmentsModule.isPresented {
             DispatchQueue.main.async {
-                self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 170 - self.textView.frame.height
+                self.scrollButton?.frame.origin.y = self.textInputbar.isEditing ? UIScreen.screenHeight() - 200 - self.textView.frame.height : UIScreen.screenHeight() - 170 - self.textView.frame.height
             }
         } else {
             self.scrollButton?.frame.origin.y = UIScreen.screenHeight() - 100
@@ -1167,7 +1168,7 @@ extension ChatViewController: ChannelObserverDelegate {
                 oldInset.top = PostAttachmentsView.attachmentsViewHeight
                 self.tableView.contentInset = oldInset
                 self.tableView.scrollIndicatorInsets = oldInset
-                self.scrollButton?.frame = CGRect(x: UIScreen.screenWidth() - 60, y: UIScreen.screenHeight() - 100 - self.attachmentsView.frame.height, width: 50, height: 50)
+                self.scrollButtonDown(keyboardHeight: 0.0)
             }
         }
     }
