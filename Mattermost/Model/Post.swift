@@ -324,6 +324,7 @@ extension Post: Computations {
             
             let range = NSRange(location: 0, length: (atrStr.string as NSString).length)
             self.attributedMessage?.addAttribute(NSForegroundColorAttributeName, value: ColorBucket.lightGrayColor, range: range)
+            self.renderedText = AttributedTextLayoutData(text: atrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
         }
     }
     fileprivate func computeAttributedStringData() {
@@ -361,7 +362,8 @@ extension Post: Computations {
     }
     
     func computeRenderedTextWith(attrStr: NSAttributedString) {
-       self.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+        guard self.messageType != .system else { return }
+        self.renderedText = AttributedTextLayoutData(text: attrStr, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
     }
     
     func computeRenderedText() {
