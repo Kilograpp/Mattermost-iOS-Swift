@@ -20,6 +20,7 @@ class AddMembersViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     fileprivate var emptyDialogueLabel = EmptyDialogueLabel()
+    fileprivate var viewisLoaded = false
     
     fileprivate lazy var builder: AddMembersCellBuilder = AddMembersCellBuilder(tableView: self.tableView)
     
@@ -39,6 +40,14 @@ class AddMembersViewController: UIViewController {
         super.viewDidLoad()
         
         initialSetup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        viewisLoaded = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        viewisLoaded = true
     }
 }
 
@@ -138,7 +147,7 @@ extension AddMembersViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.users.count == 0 || (self.searchUsers.count == 0 && self.isSearchActive) {
+        if (self.users.count == 0 || (self.searchUsers.count == 0 && self.isSearchActive)) && viewisLoaded {
             emptyDialogueLabel.isHidden = false
         } else {
             emptyDialogueLabel.isHidden = true
