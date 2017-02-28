@@ -402,6 +402,11 @@ extension Api: ChannelApi {
         let userId = user.identifier
         let channelId = channel.identifier
         
+        let realm = RealmUtils.realmForCurrentThread()
+        if realm.object(ofType: User.self, forPrimaryKey: userId) == nil {
+            try! realm.write { realm.add(user, update: true) }
+        }
+        
         self.manager.post(object: nil, path: path, parameters: params, success: { (mappingResult) in
             let realm = RealmUtils.realmForCurrentThread()
             let channel = realm.object(ofType: Channel.self, forPrimaryKey: channelId)

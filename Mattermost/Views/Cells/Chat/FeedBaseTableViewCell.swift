@@ -63,6 +63,7 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
     fileprivate func configureMessage() {
         switch self.post.messageType {
         case .system:
+            self.messageLabel.layoutData = post.renderedText
             break
         case .default:
             self.messageLabel.layoutData = post.renderedText
