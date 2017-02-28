@@ -207,6 +207,7 @@ extension AttachmentFileView: Action {
 extension AttachmentFileView: Downloading {
     fileprivate func startDownloadingFile() {
         self.progressView.isHidden = false
+        self.progressView.setProgress(0.05, animated: true)
         self.downloadingState = DownloadingState.Downloading
         let fileId = self.file.identifier
         DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async(execute: {
@@ -221,7 +222,7 @@ extension AttachmentFileView: Downloading {
                 AlertManager.sharedManager.showFileDownloadedAlert(fileIdentifier: self.file.identifier!, canBeOpenned: self.canOpenFilePreview(fileId: self.file.identifier!), tapHandler: AttachmentFileView.openDownloadedFileByIdentifier)
             }) { (identifier, progress) in
                 if fileId == identifier {
-                    self.progressView.progress = progress
+                    self.progressView.progress = max(progress, 0.05)
                 }
             }
         })
