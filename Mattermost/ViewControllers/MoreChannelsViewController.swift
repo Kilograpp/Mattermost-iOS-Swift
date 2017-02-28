@@ -242,6 +242,8 @@ extension MoreChannelsViewController: Request {
     }
     
     func updatePreferencesSave(_ user: User, channelT: Channel? = nil) {
+      //  print(channelT?.displayName ?? <#default value#>)
+      //  print(user.displayName)
         let predicate =  NSPredicate(format: "displayName == %@", user.username!)
         let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).first
         
