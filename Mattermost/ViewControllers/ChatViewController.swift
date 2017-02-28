@@ -122,7 +122,7 @@ final class ChatViewController: SLKTextViewController, UIImagePickerControllerDe
         var center = self.scrollButton?.center
         center?.y = (self.typingIndicatorView?.frame.origin.y)! - 50
         self.scrollButton?.center = center!
-        self.scrollButton?.isHidden = self.keyboardIsActive
+        self.scrollButton?.isHidden = self.keyboardIsActive || self.tableView.contentOffset.y <= UIScreen.screenHeight()
     }
     
     override func didCommitTextEditing(_ sender: Any) {
