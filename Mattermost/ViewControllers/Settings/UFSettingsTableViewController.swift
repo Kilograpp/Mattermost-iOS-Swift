@@ -188,6 +188,11 @@ extension UFSettingsTableViewController: Request {
         let oldPassword = self.builder.infoFor(section: 0)
         let newPassword = self.builder.infoFor(section: 1)
         let retryNewPassword = self.builder.infoFor(section: 2)
+        
+        guard !oldPassword.isEmpty && !newPassword.isEmpty && !retryNewPassword.isEmpty else {
+            handleErrorWith(message: "Filelds are empty!"); return
+        }
+        
         guard newPassword == retryNewPassword else {
             AlertManager.sharedManager.showErrorWithMessage(message: "New password in fields isn't same.")
             self.hideLoaderView()
