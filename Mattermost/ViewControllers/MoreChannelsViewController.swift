@@ -11,13 +11,11 @@ import RealmSwift
 
 typealias ResultTuple = (object: RealmObject, checked: Bool)
 fileprivate let kShowChatSegueIdentifier = "showChatViewController"
-fileprivate let kSearchBarBackgroundColor = UIColor(red: 239.0/255.0, green: 239.0/255.0, blue: 244.0/255.0, alpha: 1.0)
 
 final class MoreChannelsViewController: UIViewController {
     
 //MARK: Property
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBar: UISearchBar!
     
     fileprivate lazy var builder: MoreCellBuilder = MoreCellBuilder(tableView: self.tableView)
     fileprivate let emptySearchLabel = EmptyDialogueLabel()
@@ -97,11 +95,10 @@ extension MoreChannelsViewController: Setup {
         searchController.searchBar.backgroundColor = .white
         searchController.searchBar.barTintColor = .white
         let view: UIView = searchController.searchBar.subviews[0] as UIView
-        for subView: UIView in view.subviews {
-            if let textView = subView as? UITextField {
-                textView.backgroundColor = kSearchBarBackgroundColor
-            }
+        view.subviews.forEach {
+            if $0.isKind(of: UITextField.self) { $0.backgroundColor = ColorBucket.searchBarBackground }
         }
+
         let rect = searchController.searchBar.frame
         let lineView = UIView(frame: CGRect(x: 0, y: rect.size.height-2, width: rect.size.width, height: 2))
         lineView.backgroundColor = UIColor.white
@@ -127,12 +124,8 @@ extension MoreChannelsViewController: Setup {
         let moreType = (self.isPrivateChannel) ? "direct chats" : "channels"
         self.emptySearchLabel.text = "No " + moreType + " found!"
         self.view.insertSubview(self.emptySearchLabel, aboveSubview: self.tableView)
-        self.emptySearchLabel.frame = CGRect(x       : 0,
-                            y       : 0,
-                            width   : UIScreen.main.bounds.size.width*0.90,
-                            height  : 90)
-        self.emptySearchLabel.center = CGPoint(x: UIScreen.main.bounds.size.width / 2,
-                              y: UIScreen.main.bounds.size.height / 1.85)
+        self.emptySearchLabel.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width * 0.90, height: 90)
+        self.emptySearchLabel.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 1.85)
     }
 }
 
@@ -140,15 +133,12 @@ extension MoreChannelsViewController: Setup {
 //MARK: Configuration
 extension  MoreChannelsViewController: Configuration {
     func prepareResults() {
-        if (self.isPrivateChannel) {
-            prepareUserResults()
-        } else {
-            prepareChannelResults()
-        }
+        guard !self.isPrivateChannel else { prepareUserResults(); return }
+        
+        prepareChannelResults()
     }
     
     func prepareChannelResults() {
-
         showLoaderView(topOffset: 64.0, bottomOffset: 0.0)
         Api.sharedInstance.loadChannelsMoreWithCompletion { (channels, error) in
             self.hideLoaderView()
@@ -172,7 +162,6 @@ extension  MoreChannelsViewController: Configuration {
             guard error == nil else { self.handleErrorWith(message: (error?.message)!); return  }
         
             let sortName = UserAttributes.username.rawValue
-//            let sortName                      = ChannelAttributes.displayName.rawValue
             let predicate =  NSPredicate(format: "identifier != %@ AND identifier != %@", Constants.Realm.SystemUserIdentifier,
                                          Preferences.sharedInstance.currentUserId!)
             let preferedUsers = RealmUtils.realmForCurrentThread().objects(User.self).filter(predicate).sorted(byKeyPath: sortName, ascending: true)
@@ -181,21 +170,6 @@ extension  MoreChannelsViewController: Configuration {
                 guard !user.isPreferedDirectChannel() else { continue }
                 self.results.append((user, false))
             }
-//            let currentTeamPredicate          = NSPredicate(format: "team == %@", DataManager.sharedInstance.currentTeam!)
-//            let currentUserInChannelPredicate = NSPredicate(format: "currentUserInChannel == false")
-//            let directTypePredicate           = NSPredicate(format: "privateType == %@", Constants.ChannelType.DirectTypeChannel)
-//            let directPreferedPredicate       = NSPredicate(format: "isDirectPrefered == false")
-//            let realm = RealmUtils.realmForCurrentThread()
-//            realm.refresh()
-//            let allDirects = realm.objects(Channel.self).filter(currentTeamPredicate).filter(directTypePredicate)
-//            let directUserInChannel = allDirects.filter(currentUserInChannelPredicate)
-//            let directsInMore = directUserInChannel.filter(directPreferedPredicate)
-//            let directsInTeam = directsInMore.filter(NSPredicate(format: "isInterlocuterOnTeam == true")).sorted(byKeyPath: sortName, ascending: true)
-//
-//            directsInTeam.forEach({ (channel) in
-//                let user = channel.interlocuterFromPrivateChannel()
-//                self.results.append((user, false))
-//            })
             
             self.results = self.results.sorted(by: { ($0.object as! User).displayName! < ($1.object as! User).displayName! })
             self.tableView.reloadData()
@@ -224,9 +198,7 @@ extension MoreChannelsViewController: Request {
         }
 
         Api.sharedInstance.joinChannel(channel) { (error) in
-            guard error == nil else {
-                self.handleErrorWith(message: (error?.message)!); return
-            }
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
 
             ChannelObserver.sharedObserver.selectedChannel = channel
             _ = self.navigationController?.popViewController(animated: true)
@@ -242,8 +214,6 @@ extension MoreChannelsViewController: Request {
     }
     
     func updatePreferencesSave(_ user: User, channelT: Channel? = nil) {
-      //  print(channelT?.displayName ?? <#default value#>)
-      //  print(user.displayName)
         let predicate =  NSPredicate(format: "displayName == %@", user.username!)
         let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).first
         
@@ -252,20 +222,14 @@ extension MoreChannelsViewController: Request {
             channel?.isDirectPrefered = true
         }
         
-        var value: String
-        value = Constants.CommonStrings.True
-        
+        let value: String = Constants.CommonStrings.True
         let preferences: [String : String] = [ "user_id"    : (DataManager.sharedInstance.currentUser?.identifier)!,
                                                "category"   : "direct_channel_show",
                                                "name"       : user.identifier,
-                                               "value"      : value
-                                            ]
+                                               "value"      : value ]
         
         Api.sharedInstance.savePreferencesWith(preferences) { (error) in
-            guard error == nil else {
-                AlertManager.sharedManager.showErrorWithMessage(message: (error?.message)!)
-                return
-            }
+            guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
             
             Api.sharedInstance.loadTeams(with: { (userShouldSelectTeam, error) in
                 guard (error == nil) else { self.hideLoaderView(); return }
@@ -277,10 +241,7 @@ extension MoreChannelsViewController: Request {
                     preferences.forEach{ usersIds.append($0.name!) }
 
                     Api.sharedInstance.loadUsersListBy(ids: usersIds) { (error) in
-                        guard error == nil else {
-                            self.handleErrorWith(message: (error?.message)!)
-                            return
-                        }
+                        guard error == nil else { self.handleErrorWith(message: (error?.message)!); return }
                         
                         let predicate = NSPredicate(format: "identifier != %@ AND identifier != %@", Preferences.sharedInstance.currentUserId!,
                                             Constants.Realm.SystemUserIdentifier)
@@ -295,7 +256,6 @@ extension MoreChannelsViewController: Request {
                             let predicate =  NSPredicate(format: "displayName == %@", user.username!)
                             let channel = RealmUtils.realmForCurrentThread().objects(Channel.self).filter(predicate).first
                             ChannelObserver.sharedObserver.selectedChannel = channel
-//                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.UserJoinNotification), object: channelT)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
                         }
                     }
@@ -315,9 +275,7 @@ extension MoreChannelsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let resultTuple = self.isSearchActive ? self.filteredResults[indexPath.row] : self.results[indexPath.row]
-        let cell = self.builder.cell(resultTuple: resultTuple)
-
-        return cell
+        return self.builder.cell(resultTuple: resultTuple)
     }
 }
 
@@ -325,14 +283,10 @@ extension MoreChannelsViewController: UITableViewDataSource {
 //MARK: UITableViewDelegate
 extension MoreChannelsViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if isPrivateChannel {
-         let user = (self.isSearchActive ? self.filteredResults[indexPath.row].object : self.results[indexPath.row].object) as! User
-         createDirectChannelWith(user)
-         return
-        }
+        let result = self.isSearchActive ? self.filteredResults[indexPath.row] : self.results[indexPath.row]
+        guard !isPrivateChannel else { createDirectChannelWith(result.object as! User); return }
         
-        let channel = (self.isSearchActive ? self.filteredResults[indexPath.row].object : self.results[indexPath.row].object) as! Channel
-        joinTo(channel: channel)
+        joinTo(channel: result.object as! Channel)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
