@@ -16,6 +16,7 @@ final class ObjectManager: RKObjectManager {
 private protocol GetRequests: class {
     func get(object: AnyObject?, path: String, parameters: [AnyHashable: Any]?, success: ((_ mappingResult: RKMappingResult, _ canSkipMapping: Bool) -> Void)?, failure: ((_ error: Mattermost.Error?) -> Void)?)
     func get(object: AnyObject, path: String!, success: ((_ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?)
+    func getWithToken(path: String, token: String, parameters: [AnyHashable: Any]?, success: ((_ operation: RKObjectRequestOperation, _ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?)
     func getObjectsAt(path: String, parameters: [AnyHashable: Any]?, success: ((_ operation: RKObjectRequestOperation, _ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?)
     func getObjectsAt(path: String, parameters: [AnyHashable: Any]?, success: ((_ mappingResult: RKMappingResult) -> Void)?, failure: ((_ error: Mattermost.Error) -> Void)?);
 }
@@ -69,6 +70,25 @@ extension ObjectManager: GetRequests {
             }
         }
     }
+    
+    
+    func getWithToken(path: String, token: String, parameters: [AnyHashable: Any]? = nil,
+                      success: ((_ operation: RKObjectRequestOperation, _ mappingResult: RKMappingResult) -> Void)?,
+                      failure: ((_ error: Mattermost.Error) -> Void)?) {
+        
+        super.httpClient.setDefaultHeader("Cookie", value: "MMAUTHTOKEN="+token)
+        super.getObjectsAtPath(path, parameters: parameters, success: { (operation, mappingResult) in
+            ObjectManager.responseHandlerQueue.async {
+                success?(operation!, mappingResult!)
+            }
+            
+        }) { (operation, error) in
+            ObjectManager.responseHandlerQueue.async {
+                failure?(self.handleOperation(operation!, withError: error!))
+            }
+        }
+    }
+    
     
     func getObjectsAt(path: String, parameters: [AnyHashable: Any]? = nil,
                           success: ((_ operation: RKObjectRequestOperation, _ mappingResult: RKMappingResult) -> Void)?,

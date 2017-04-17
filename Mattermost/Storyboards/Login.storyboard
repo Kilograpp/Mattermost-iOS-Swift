@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="VqN-sf-Nn3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="VqN-sf-Nn3">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -36,7 +36,7 @@
         <!--Login-->
         <scene sceneID="GIJ-L4-Rd4">
             <objects>
-                <viewController id="k6n-Wu-QkU" customClass="LoginViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="k6n-Wu-QkU" customClass="LoginViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="OkX-WL-axv"/>
                         <viewControllerLayoutGuide type="bottom" id="BkS-Ap-HVy"/>
@@ -84,6 +84,14 @@
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="loginAction:" destination="k6n-Wu-QkU" eventType="touchUpInside" id="hHz-Sb-Skq"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0sk-fa-dtq" userLabel="GitLab Button">
+                                <rect key="frame" x="138" y="520" width="45" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <state key="normal" title="GitLab"/>
+                                <connections>
+                                    <action selector="gitlabAction:" destination="k6n-Wu-QkU" eventType="touchUpInside" id="otb-dP-vB8"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jJC-XP-PjQ">
@@ -395,6 +403,71 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="obh-5Z-EQG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1833" y="1303"/>
+        </scene>
+        <!--GitLab-->
+        <scene sceneID="Kvw-aG-UtN">
+            <objects>
+                <viewController storyboardIdentifier="GitLabViewController" id="yF7-dC-Iiw" userLabel="GitLab" customClass="GitLabViewController" customModule="Mattermost" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uJa-tK-2UB"/>
+                        <viewControllerLayoutGuide type="bottom" id="BXc-dp-eSl"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ml3-gf-9AB">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ocm-v5-eq8">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96470588239999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a4h-z8-LQs" userLabel="Header View">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="51"/>
+                                <color key="backgroundColor" red="0.10980392160000001" green="0.4549019608" blue="0.81568627449999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="a4h-z8-LQs" secondAttribute="height" multiplier="375:60" id="3ZL-Jo-93n"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="igH-Yy-S4D" userLabel="Loader View">
+                                <rect key="frame" x="0.0" y="55" width="320" height="513"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="rvT-4s-gvc">
+                                        <rect key="frame" x="142" y="209" width="37" height="37"/>
+                                        <color key="color" red="0.52941176469999995" green="0.59607843140000005" blue="0.64313725489999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="rvT-4s-gvc" firstAttribute="centerX" secondItem="igH-Yy-S4D" secondAttribute="centerX" id="Ara-fr-5Sd"/>
+                                    <constraint firstItem="rvT-4s-gvc" firstAttribute="centerY" secondItem="igH-Yy-S4D" secondAttribute="centerY" constant="-29" id="PJj-PE-f09"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="a4h-z8-LQs" firstAttribute="leading" secondItem="Ocm-v5-eq8" secondAttribute="leading" id="EUR-aq-Ls3"/>
+                            <constraint firstItem="a4h-z8-LQs" firstAttribute="leading" secondItem="Ml3-gf-9AB" secondAttribute="leading" id="Fpr-Ys-B1j"/>
+                            <constraint firstItem="a4h-z8-LQs" firstAttribute="top" secondItem="Ocm-v5-eq8" secondAttribute="top" id="T5J-ca-gxY"/>
+                            <constraint firstItem="igH-Yy-S4D" firstAttribute="leading" secondItem="Ocm-v5-eq8" secondAttribute="leading" id="VrZ-GZ-MlR"/>
+                            <constraint firstItem="Ocm-v5-eq8" firstAttribute="bottom" secondItem="BXc-dp-eSl" secondAttribute="top" id="bWP-5M-TWo"/>
+                            <constraint firstItem="a4h-z8-LQs" firstAttribute="trailing" secondItem="Ocm-v5-eq8" secondAttribute="trailing" id="cOD-pq-mg7"/>
+                            <constraint firstItem="igH-Yy-S4D" firstAttribute="bottom" secondItem="BXc-dp-eSl" secondAttribute="top" id="dEJ-ci-QoT"/>
+                            <constraint firstItem="a4h-z8-LQs" firstAttribute="width" secondItem="a4h-z8-LQs" secondAttribute="height" multiplier="375:60" id="fCI-Bo-0AG"/>
+                            <constraint firstItem="a4h-z8-LQs" firstAttribute="top" secondItem="Ml3-gf-9AB" secondAttribute="top" id="jk6-m7-yVt"/>
+                            <constraint firstAttribute="trailing" secondItem="a4h-z8-LQs" secondAttribute="trailing" id="qBF-tW-SYx"/>
+                            <constraint firstItem="igH-Yy-S4D" firstAttribute="top" secondItem="uJa-tK-2UB" secondAttribute="bottom" constant="35" id="vCs-HC-I8h"/>
+                            <constraint firstItem="igH-Yy-S4D" firstAttribute="trailing" secondItem="a4h-z8-LQs" secondAttribute="trailing" id="yUQ-3r-gdT"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Title" id="16q-j3-xNQ" userLabel="GitLab"/>
+                    <connections>
+                        <outlet property="headerView" destination="a4h-z8-LQs" id="Mgh-rj-IOn"/>
+                        <outlet property="loader" destination="igH-Yy-S4D" id="zg0-jj-Nx4"/>
+                        <outlet property="webView" destination="Ocm-v5-eq8" id="voB-me-g6C"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lC2-1a-4kL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1831.875" y="-209.1549295774648"/>
         </scene>
     </scenes>
 </document>

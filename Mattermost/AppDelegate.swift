@@ -13,11 +13,21 @@ import Fabric
 import Crashlytics
 import UserNotifications
 
+#if DEBUG
+import RestKit
+#endif
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        #if DEBUG
+        RKlcl_configure_by_name("RestKit/Network", RKlcl_vTrace.rawValue)
+        RKlcl_configure_by_name("RestKit/ObjectMapping", RKlcl_vOff.rawValue)
+        #endif
+        
         launchApplicationStateManager()
         
         RouterUtils.loadInitialScreen()
