@@ -9,6 +9,7 @@
 import Foundation
 import TSMarkdownParser
 import RealmSwift
+import Emoji
 
 extension TSMarkdownParser {
     @nonobjc static let sharedInstance = TSMarkdownParser.customParser()
@@ -54,6 +55,7 @@ extension TSMarkdownParser {
         self.addHashtagParsing()
         self.addPhoneParsing()
         self.addEmailParsing()
+        self.addEmojiParsing()
     }
     
     fileprivate func setupSettings() -> Void {
@@ -241,4 +243,15 @@ extension TSMarkdownParser {
             
         }
     }
+    
+    fileprivate func addEmojiParsing() {
+        let emojiExpression = try! NSRegularExpression(pattern: "(?:(?<=\\s)|^):(\\w*[A-Za-z_]+\\w*):", options: .caseInsensitive)
+        self.addParsingRule(with: emojiExpression) { (match, attributedString) in
+            let range = NSMakeRange(match.range.location, match.range.length)
+            let emoji = (attributedString.string as NSString).substring(with: range)
+            
+            attributedString.replaceCharacters(in: range, with: emoji.emojiUnescapedString)
+        }
+    }
+    
 }

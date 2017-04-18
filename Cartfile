@@ -11,3 +11,4 @@ github "slackhq/SlackTextViewController"
 github "ninjaprox/NVActivityIndicatorView" ~> 3.3
 github "Kilograpp/ImagePickerSheetController" "0.9.7"
 github "Skyscanner/SkyFloatingLabelTextField"
+github "safx/Emoji-Swift" "0.1.0"
