@@ -87,9 +87,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0sk-fa-dtq" userLabel="GitLab Button">
-                                <rect key="frame" x="138" y="520" width="45" height="30"/>
+                                <rect key="frame" x="62" y="520" width="195" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
-                                <state key="normal" title="GitLab"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Login with GitLab"/>
                                 <connections>
                                     <action selector="gitlabAction:" destination="k6n-Wu-QkU" eventType="touchUpInside" id="otb-dP-vB8"/>
                                 </connections>
