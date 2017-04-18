@@ -185,7 +185,39 @@ extension LeftMenuViewController: Configuration {
         guard self.resultsPublic.count > 0 else { return }
         
         guard let channelToSelect = channelNotif?.object  else {
-            ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[0]
+            
+            if let lastChannel = Preferences.sharedInstance.lastChannel {
+                for channel in self.resultsPublic {
+                    if channel.identifier == lastChannel {
+                        ChannelObserver.sharedObserver.selectedChannel = channel
+                        return
+                    }
+                }
+                
+                for channel in self.resultsPrivate {
+                    if channel.identifier == lastChannel {
+                        ChannelObserver.sharedObserver.selectedChannel = channel
+                        return
+                    }
+                }
+                
+                for channel in self.resultsDirect {
+                    if channel.identifier == lastChannel {
+                        ChannelObserver.sharedObserver.selectedChannel = channel
+                        return
+                    }
+                }
+                
+                for channel in self.resultsOutsideDirect {
+                    if channel.identifier == lastChannel {
+                        ChannelObserver.sharedObserver.selectedChannel = channel
+                        return
+                    }
+                }
+            } else {
+                ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[0]
+            }
+            
             return
         }
         
@@ -219,6 +251,15 @@ extension LeftMenuViewController : Navigation {
         default: break
 //            print("unknown channel type")
         }
+        
+        DispatchQueue.main.async {
+            if ChannelObserver.sharedObserver.selectedChannel != nil {
+                let channel = ChannelObserver.sharedObserver.selectedChannel!
+                Preferences.sharedInstance.lastChannel = channel.identifier!
+                Preferences.sharedInstance.save()
+            }
+        }
+        
         self.tableView.reloadData()
         toggleLeftSideMenu()
     }

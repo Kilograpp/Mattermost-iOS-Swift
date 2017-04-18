@@ -25,6 +25,7 @@ enum PreferencesAttributes: String {
     case currentTeamId        = "currentTeamId"
     case shouldCompressImages = "shouldCompressImages"
     case deviceUUID           = "deviceUUID"
+    case lastChannel          = "lastChannel"
 }
 
 
@@ -39,6 +40,7 @@ final class Preferences: NSObject, NSCoding {
     dynamic var siteName: String?
     dynamic var shouldCompressImages: NSNumber?
     dynamic var deviceUUID: String?
+    dynamic var lastChannel: String?
     
 //MARK: LifeCycle
     fileprivate override init() {
