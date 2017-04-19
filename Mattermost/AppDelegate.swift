@@ -41,8 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         guard UserStatusManager.sharedInstance.isSignedIn() else { return }
         Api.sharedInstance.getChannelMembers { (error) in
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadLeftMenuNotification), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification), object: nil)
         }
-        //NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.NotificationsNames.ReloadChatNotification), object: nil)
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
