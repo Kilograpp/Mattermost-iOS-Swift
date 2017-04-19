@@ -74,11 +74,18 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         guard self.post.author != nil else { return }
         guard !self.post.isFollowUp else { return }
         
-        let nameWidth = CGFloat(self.post.author.displayNameWidth)
+        var username = self.post.author.displayName!
+        var displayNameWidth = self.post.author.displayNameWidth
+        if self.post.overrideUsername! != "" {
+            username = self.post.overrideUsername!
+            displayNameWidth = StringUtils.widthOfString(username as NSString!, font: FontBucket.postAuthorNameFont)
+        }
+
+        let nameWidth = CGFloat(displayNameWidth)
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
         let authorStringFrame = CGRect(x: Constants.UI.MessagePaddingSize, y: 8, width: nameWidth, height: 20)
         let authorStringAttributes = [NSFontAttributeName : FontBucket.postAuthorNameFont, NSForegroundColorAttributeName : ColorBucket.blackColor]
-        (self.post.author.displayName! as NSString).draw(in: authorStringFrame, withAttributes: authorStringAttributes)
+        (username as NSString).draw(in: authorStringFrame, withAttributes: authorStringAttributes)
         
         let dateStringFrame = CGRect(x: Constants.UI.MessagePaddingSize + nameWidth + 5, y: 11, width: dateWidth, height: 15)
         let dateStringAttributes = [NSFontAttributeName : FontBucket.postDateFont, NSForegroundColorAttributeName : ColorBucket.grayColor]
@@ -96,8 +103,11 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellConfiguration {
         guard !self.post.isFollowUp else { self.avatarImageView.isHidden = true; return }
         
         self.avatarImageView.isHidden = false
-        self.avatarImageView.image = UIImage.avatarPlaceholder()
-        ImageDownloader.downloadFeedAvatarForUser(self.post.author) { [weak self] (image, error) in
+        var author = self.post.author
+        if self.post.fromWebhook == true {
+            author = DataManager.sharedInstance.systemUser
+        }
+        ImageDownloader.downloadFeedAvatarForUser(author!) { [weak self] (image, error) in
             guard self?.postIdentifier == postIdentifier else { return }
             self?.avatarImageView.image = image
         }
@@ -149,7 +159,7 @@ extension FeedCommonTableViewCell : _FeedCommonTableViewCellSetup  {
 //MARK: FeedCommonTableViewCellAction
 extension FeedCommonTableViewCell: _FeedCommonTableViewCellAction {
     func avatarTapAction() {
-        if (self.avatarTapHandler != nil) { self.avatarTapHandler!() }
+        if (self.post.fromWebhook == false && self.avatarTapHandler != nil) { self.avatarTapHandler!() }
     }
 }
 

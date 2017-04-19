@@ -63,6 +63,9 @@ extension PostMappingsContainer: ResponseMappings {
             "(\(PostAttributes.identifier)).parent_id"       : PostAttributes.parentId.rawValue,
             "(\(PostAttributes.identifier)).pending_post_id" : PostAttributes.pendingId.rawValue,
             //props here
+            "(\(PostAttributes.identifier)).props.from_webhook"         : PostAttributes.fromWebhook.rawValue,
+            "(\(PostAttributes.identifier)).props.override_username"    : PostAttributes.overrideUsername.rawValue,
+            
             "(\(PostAttributes.identifier)).root_id"    : PostAttributes.rootId.rawValue,
             "(\(PostAttributes.identifier)).type"       : PostAttributes.type.rawValue,
             "(\(PostAttributes.identifier)).update_at"  : PostAttributes.updatedAt.rawValue,

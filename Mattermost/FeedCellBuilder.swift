@@ -32,7 +32,7 @@ final class FeedCellBuilder {
         guard previous != nil else { return false }
         
         let postsInterval = (post.createdAt as NSDate?)?.minutesLaterThan(previous?.createdAt)
-        return (post.authorId == previous?.authorId) && (postsInterval! < Constants.Post.FollowUpDelay)
+        return (post.fromWebhook == false) && (post.authorId == previous?.authorId) && (postsInterval! < Constants.Post.FollowUpDelay)
         
     }
     

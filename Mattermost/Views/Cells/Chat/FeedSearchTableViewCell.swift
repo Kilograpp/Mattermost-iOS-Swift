@@ -53,9 +53,16 @@ class FeedSearchTableViewCell: FeedBaseTableViewCell {
         
         guard self.post.author != nil else { return }
         
-        let nameWidth = CGFloat(self.post.author.displayNameWidth)
+        var username = self.post.author.displayName!
+        var displayNameWidth = self.post.author.displayNameWidth
+        if self.post.overrideUsername! != "" {
+            username = self.post.overrideUsername!
+            displayNameWidth = StringUtils.widthOfString(username as NSString!, font: FontBucket.postAuthorNameFont)
+        }
+
+        let nameWidth = CGFloat(displayNameWidth)
         let nameRect = CGRect(x: Constants.UI.MessagePaddingSize, y: channelRect.maxY + Constants.UI.MiddlePaddingSize, width: nameWidth, height: 20)
-        (self.post.author.displayName! as NSString).draw(in: nameRect, withAttributes: [NSFontAttributeName : FontBucket.postAuthorNameFont, NSForegroundColorAttributeName : ColorBucket.blackColor])
+        (username as NSString).draw(in: nameRect, withAttributes: [NSFontAttributeName : FontBucket.postAuthorNameFont, NSForegroundColorAttributeName : ColorBucket.blackColor])
         
         let dateWidth = CGFloat(self.post.createdAtStringWidth)
         let dateRect = CGRect(x: Constants.UI.MessagePaddingSize + nameWidth + 5, y: nameRect.origin.y + 2, width: dateWidth, height: 20)
@@ -113,11 +120,14 @@ extension FeedSearchTableViewCell: FeedSearchTableViewCellConfiguration {
     final func configureAvatarImageView() {
         let postIdentifier = self.post.identifier
         self.postIdentifier = postIdentifier
-        self.avatarImageView.image = UIImage.sharedAvatarPlaceholder
+        var author = self.post.author
+        if self.post.fromWebhook == true {
+            author = DataManager.sharedInstance.systemUser
+        }
         
-        guard self.post.author != nil else { return }
+        guard author != nil else { return }
         
-        ImageDownloader.downloadFeedAvatarForUser(self.post.author) { (image, error) in
+        ImageDownloader.downloadFeedAvatarForUser(author!) { (image, error) in
             guard (self.postIdentifier == postIdentifier) else { return }
             self.avatarImageView.image = image
         }

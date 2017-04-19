@@ -44,6 +44,8 @@ enum PostAttributes: String {
     case hasObserverAttached     = "hasObserverAttached"
     case localId                 = "localIdentifier"
     case fileIds                 = "fileIds"
+    case fromWebhook             = "fromWebhook"
+    case overrideUsername        = "overrideUsername"
     
 }
 
@@ -151,7 +153,9 @@ final class Post: RealmObject {
         }
     }*/
     
-
+    dynamic var fromWebhook: Bool = false
+    dynamic var overrideUsername: String? = ""
+    
     deinit {
         self.removeStatusObserverIfNeeded()
     }
