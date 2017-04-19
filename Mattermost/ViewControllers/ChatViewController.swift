@@ -491,8 +491,11 @@ extension ChatViewController: Action {
             sendPost()
         }
         
-        self.filesPickingController.reset()
-        self.filesAttachmentsModule.reset()
+        if self.filesAttachmentsModule.isPresented {
+            self.filesAttachmentsModule.reset()
+            self.filesAttachmentsModule.reset()
+        }
+        
         scrollToBottom(animated: true)
     }
     
