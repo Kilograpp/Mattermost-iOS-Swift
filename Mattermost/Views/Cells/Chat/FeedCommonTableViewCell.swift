@@ -62,9 +62,9 @@ class FeedCommonTableViewCell: FeedBaseTableViewCell {
         self.messageLabel.backgroundColor = UIColor.white
         
         avatarImageView.backgroundColor = .white
-        self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!, size: CGSize(width: 40, height: 40),
-                                                                backgroundColor: .white,
-                                                                hightlighted: false)
+        if self.avatarImageView.image != nil {
+            self.avatarImageView.image = UIImage.roundedImageOfSize(self.avatarImageView.image!, size: CGSize(width: 40, height: 40), backgroundColor: .white, hightlighted: false)
+        }
     }
     
     override func draw(_ rect: CGRect) {
