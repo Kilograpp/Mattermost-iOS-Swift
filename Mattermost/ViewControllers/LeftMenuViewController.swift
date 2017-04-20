@@ -71,8 +71,10 @@ extension LeftMenuViewController: Interface {
     }
     
     func reloadChannels() {
-        prepareResults()
-        self.tableView.reloadData()
+        Api.sharedInstance.getChannelMembers { (error) in
+            self.prepareResults()
+            self.tableView.reloadData()
+        }
     }
     
     func updateSelectionFor(_ channel: Channel) {
@@ -178,6 +180,17 @@ extension LeftMenuViewController: Configuration {
         
         self.resultsDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == true")).sorted(byKeyPath: sortName, ascending: true)
         self.resultsOutsideDirect = allDirect.filter(NSPredicate(format: "isInterlocuterOnTeam == false")).sorted(byKeyPath: sortName, ascending: true)
+        
+        let allChannels: Array<Channel> = Array(self.resultsPublic) + Array(self.resultsPrivate) + Array(self.resultsDirect) + Array(self.resultsOutsideDirect)
+        
+        var mentions = 0
+        for channel in allChannels {
+            mentions += channel.mentionsCount
+        }
+        
+        if UIApplication.shared.applicationIconBadgeNumber > mentions {
+            UIApplication.shared.applicationIconBadgeNumber = mentions
+        }
     }
     
     func configureInitialSelectedChannel(_ channelNotif : NSNotification? = nil) {
@@ -193,7 +206,7 @@ extension LeftMenuViewController: Configuration {
         ChannelObserver.sharedObserver.selectedChannel = channelToSelect as! Channel
     }
     
-        func updateResults(channelNotif: NSNotification) {
+    func updateResults(channelNotif: NSNotification) {
         DispatchQueue.main.async {
             self.prepareResults()
             self.configureInitialSelectedChannel(channelNotif)
