@@ -187,33 +187,15 @@ extension LeftMenuViewController: Configuration {
         guard let channelToSelect = channelNotif?.object  else {
             
             if let lastChannel = Preferences.sharedInstance.lastChannel {
-                for channel in self.resultsPublic {
+                let allChannels: Array<Channel> = Array(self.resultsPublic) + Array(self.resultsPrivate) + Array(self.resultsDirect) + Array(self.resultsOutsideDirect)
+                
+                for channel in allChannels {
                     if channel.identifier == lastChannel {
                         ChannelObserver.sharedObserver.selectedChannel = channel
                         return
                     }
                 }
                 
-                for channel in self.resultsPrivate {
-                    if channel.identifier == lastChannel {
-                        ChannelObserver.sharedObserver.selectedChannel = channel
-                        return
-                    }
-                }
-                
-                for channel in self.resultsDirect {
-                    if channel.identifier == lastChannel {
-                        ChannelObserver.sharedObserver.selectedChannel = channel
-                        return
-                    }
-                }
-                
-                for channel in self.resultsOutsideDirect {
-                    if channel.identifier == lastChannel {
-                        ChannelObserver.sharedObserver.selectedChannel = channel
-                        return
-                    }
-                }
             } else {
                 ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[0]
             }
@@ -225,7 +207,7 @@ extension LeftMenuViewController: Configuration {
         ChannelObserver.sharedObserver.selectedChannel = channelToSelect as! Channel
     }
     
-        func updateResults(channelNotif: NSNotification) {
+    func updateResults(channelNotif: NSNotification) {
         DispatchQueue.main.async {
             self.prepareResults()
             self.configureInitialSelectedChannel(channelNotif)
