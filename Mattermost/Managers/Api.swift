@@ -786,6 +786,32 @@ extension Api: UserApi {
         }
     }
     
+    func loginWithToken(_ token: String, completion: @escaping (_ error: Mattermost.Error?) -> Void) {
+        let path = UserPathPatternsContainer.loadCurrentUser()
+        
+        self.manager.getWithToken(path: path, token: token, success: { (operation, mappingResult) in
+            
+            let user = mappingResult.firstObject as! User
+            let notifyProps = user.notifyProps
+            notifyProps?.userId = user.identifier
+            notifyProps?.computeKey()
+            let systemUser = DataManager.sharedInstance.instantiateSystemUser()
+            user.computeDisplayName()
+            DataManager.sharedInstance.currentUser = user
+            RealmUtils.save([user, systemUser])
+            RealmUtils.save(notifyProps!)
+            
+            _ = DataManager.sharedInstance.currentUser
+            
+            SocketManager.sharedInstance.setNeedsConnect()
+            NotificationsUtils.subscribeToRemoteNotificationsIfNeeded(completion: completion)
+        }) { (error) in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
+    }
+
     func logout(_ completion:@escaping (_ error: Mattermost.Error?) -> Void) {
         let path = UserPathPatternsContainer.logoutPathPattern()
         let parameters = ["user_id" : Preferences.sharedInstance.currentUserId!]

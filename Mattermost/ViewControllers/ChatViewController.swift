@@ -361,13 +361,17 @@ extension ChatViewController : Private {
     }
     
     func hideTopActivityIndicator() {
-        self.topActivityIndicatorView!.stopAnimating()
-        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+        DispatchQueue.main.async(){
+            self.topActivityIndicatorView!.stopAnimating()
+            self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+        }
     }
     
     func hideBottomActivityIndicator() {
-        self.bottomActivityIndicatorView!.stopAnimating()
-        self.tableView.tableHeaderView = UIView(frame: CGRect.zero)
+        DispatchQueue.main.async(){
+            self.bottomActivityIndicatorView!.stopAnimating()
+            self.tableView.tableHeaderView = UIView(frame: CGRect.zero)
+        }
     }
     
     func clearTextView() {
