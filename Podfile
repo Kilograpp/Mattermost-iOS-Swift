@@ -10,6 +10,7 @@ target 'Mattermost' do
   pod 'RestKit'
   pod 'MRProgress'
   pod 'SwiftyJSON'
+  pod 'Emoji-swift'
 end
 
 
