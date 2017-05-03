@@ -185,7 +185,21 @@ extension LeftMenuViewController: Configuration {
         guard self.resultsPublic.count > 0 else { return }
         
         guard let channelToSelect = channelNotif?.object  else {
-            ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[0]
+            
+            if let lastChannel = Preferences.sharedInstance.lastChannel {
+                let allChannels: Array<Channel> = Array(self.resultsPublic) + Array(self.resultsPrivate) + Array(self.resultsDirect) + Array(self.resultsOutsideDirect)
+                
+                for channel in allChannels {
+                    if channel.identifier == lastChannel {
+                        ChannelObserver.sharedObserver.selectedChannel = channel
+                        return
+                    }
+                }
+                
+            } else {
+                ChannelObserver.sharedObserver.selectedChannel = self.resultsPublic[0]
+            }
+            
             return
         }
         
@@ -193,7 +207,7 @@ extension LeftMenuViewController: Configuration {
         ChannelObserver.sharedObserver.selectedChannel = channelToSelect as! Channel
     }
     
-        func updateResults(channelNotif: NSNotification) {
+    func updateResults(channelNotif: NSNotification) {
         DispatchQueue.main.async {
             self.prepareResults()
             self.configureInitialSelectedChannel(channelNotif)
@@ -219,6 +233,15 @@ extension LeftMenuViewController : Navigation {
         default: break
 //            print("unknown channel type")
         }
+        
+        DispatchQueue.main.async {
+            if ChannelObserver.sharedObserver.selectedChannel != nil {
+                let channel = ChannelObserver.sharedObserver.selectedChannel!
+                Preferences.sharedInstance.lastChannel = channel.identifier!
+                Preferences.sharedInstance.save()
+            }
+        }
+        
         self.tableView.reloadData()
         toggleLeftSideMenu()
     }
