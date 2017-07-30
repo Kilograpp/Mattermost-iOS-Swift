@@ -51,6 +51,6 @@ extension UserStatusManager {
         HTTPCookieStorage.shared.deleteCookie(cookie!)
     }
     func isSignedIn() -> Bool {
-        return self.cookie() != nil
+        return self.cookie() != nil && Preferences.sharedInstance.currentUserId != nil
     }
 }

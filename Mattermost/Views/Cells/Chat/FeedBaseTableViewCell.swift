@@ -68,7 +68,9 @@ class FeedBaseTableViewCell: UITableViewCell, Reusable {
         case .default:
             self.messageLabel.layoutData = post.renderedText
         case .slackAttachment:
-            post.renderedText = AttributedTextLayoutData(text: post.attachments.first!.attributedText!, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+            if post.attachments.count > 0 {
+                post.renderedText = AttributedTextLayoutData(text: post.attachments.first!.attributedText!, maxWidth: UIScreen.screenWidth() - Constants.UI.FeedCellMessageLabelPaddings - Constants.UI.PostStatusViewSize)
+            }
         }
         self.messageLabel.layoutData = post.renderedText
     }

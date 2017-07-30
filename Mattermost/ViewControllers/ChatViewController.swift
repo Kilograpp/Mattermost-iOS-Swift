@@ -361,13 +361,17 @@ extension ChatViewController : Private {
     }
     
     func hideTopActivityIndicator() {
-        self.topActivityIndicatorView!.stopAnimating()
-        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+        DispatchQueue.main.async(){
+            self.topActivityIndicatorView!.stopAnimating()
+            self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+        }
     }
     
     func hideBottomActivityIndicator() {
-        self.bottomActivityIndicatorView!.stopAnimating()
-        self.tableView.tableHeaderView = UIView(frame: CGRect.zero)
+        DispatchQueue.main.async(){
+            self.bottomActivityIndicatorView!.stopAnimating()
+            self.tableView.tableHeaderView = UIView(frame: CGRect.zero)
+        }
     }
     
     func clearTextView() {
@@ -491,8 +495,11 @@ extension ChatViewController: Action {
             sendPost()
         }
         
-        self.filesPickingController.reset()
-        self.filesAttachmentsModule.reset()
+        if self.filesAttachmentsModule.isPresented {
+            self.filesAttachmentsModule.reset()
+            self.filesAttachmentsModule.reset()
+        }
+        
         scrollToBottom(animated: true)
     }
     
@@ -1128,8 +1135,8 @@ extension ChatViewController: ChannelObserverDelegate {
       //  PostUtils.sharedInstance.clearUploadedAttachments()
         
         if filesAttachmentsModule.cache.hasCachedItemsForChannel(channel) {
-            let files = filesAttachmentsModule.cache.cachedFilesForChannel(channel)
-            PostUtils.sharedInstance.updateCached(files: files!)
+           // let files = filesAttachmentsModule.cache.cachedFilesForChannel(channel)
+           // PostUtils.sharedInstance.updateCached(files: files!)
             filesAttachmentsModule.presentWithCachedItems()
         } else {
             attachmentsView.hideAnimated()

@@ -288,6 +288,7 @@
 		D8D601341D5DCE5400951F18 /* UITableView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601331D5DCE5400951F18 /* UITableView+Additions.swift */; };
 		D8D601381D5E007700951F18 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D601371D5E007700951F18 /* Day.swift */; };
 		D8E98EDD1D4A0FE500682922 /* Dictionary+Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */; };
+		E47A5EAD1EA3EB2400393F80 /* GitLabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47A5EAC1EA3EB2400393F80 /* GitLabViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -603,6 +604,7 @@
 		D8D601371D5E007700951F18 /* Day.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
 		D8E98EDC1D4A0FE500682922 /* Dictionary+Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Json.swift"; sourceTree = "<group>"; };
 		D8F6BD001D22E909000AC690 /* Mattermost-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mattermost-Bridging-Header.h"; sourceTree = "<group>"; };
+		E47A5EAC1EA3EB2400393F80 /* GitLabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitLabViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1052,6 +1054,7 @@
 				8B5A54951DF75F1A003E9B0E /* PasswordRecoveryViewController.swift */,
 				8B3CB37F1DD28DD20078DE25 /* CreateChannelViewController.swift */,
 				8BB805171E564E0E00CA71E5 /* CreateChannelTableViewController.swift */,
+				E47A5EAC1EA3EB2400393F80 /* GitLabViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1409,7 +1412,7 @@
 						LastSwiftMigration = 0800;
 					};
 					9B822B33AE7605DB4C6B3995 = {
-						DevelopmentTeam = X4SVWSJYVW;
+						DevelopmentTeam = 3E7B5VAA59;
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
@@ -1530,7 +1533,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */ = {
@@ -1735,6 +1738,7 @@
 				D86EF7F21D57772400BD49A3 /* StringAttribute.swift in Sources */,
 				D6E1659E1D47C5A10014C831 /* FeedCommonTableViewCell.swift in Sources */,
 				D85D92ED1D400C42002F8800 /* RealmObject.swift in Sources */,
+				E47A5EAD1EA3EB2400393F80 /* GitLabViewController.swift in Sources */,
 				8B3CB3741DD269C30078DE25 /* AlertManager.swift in Sources */,
 				CDB4BC6B1D806C8100662231 /* TeamMappingsContainer.swift in Sources */,
 				8B3CB33F1DD2675F0078DE25 /* LeftMenuCellBuilder.swift in Sources */,
@@ -1899,7 +1903,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Maxim Gubin (26358JFF57)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Maxim Gubin (26358JFF57)";
-				DEVELOPMENT_TEAM = X4SVWSJYVW;
+				DEVELOPMENT_TEAM = 3E7B5VAA59;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1911,8 +1915,8 @@
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kilograpp.mattermost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8fbce05f-29b6-41a8-8a0e-431a894c8698";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.kilograpp.mattermost";
+				PROVISIONING_PROFILE = "3692ebf9-dcd3-41d8-b56c-4322fdd95be0";
+				PROVISIONING_PROFILE_SPECIFIER = "XC: *";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

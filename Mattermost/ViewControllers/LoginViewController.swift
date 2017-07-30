@@ -15,6 +15,7 @@ final class LoginViewController: UIViewController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var recoveryButton: UIButton!
+    @IBOutlet weak var gitlabButton: UIButton!
     @IBOutlet weak var loaderView: UIView!
     let titleName =  NSLocalizedString("Sign In", comment: "")
     let email = NSLocalizedString("Email", comment: "")
@@ -80,6 +81,7 @@ fileprivate protocol Setup {
 
 fileprivate protocol Action {
     func loginAction(_ sender: AnyObject)
+    func gitlabAction(_ sender: AnyObject)
     func changeLogin(_ sender: AnyObject)
     func changePassword(_ sender: AnyObject)
     func recoveryPassword(_ sender: AnyObject)
@@ -191,7 +193,9 @@ extension LoginViewController: Action {
     @IBAction func loginAction(_ sender: AnyObject) {
         login()
     }
-    
+    @IBAction func gitlabAction(_ sender: AnyObject) {
+        loginWithGitLab()
+    }
     @IBAction func changeLogin(_ sender: AnyObject) {
         self.loginButton.isEnabled = ((loginTextField.text != "") && (passwordTextField.text != ""))
     }
@@ -214,6 +218,11 @@ extension LoginViewController: Navigation {
     func proceedToPasswordRecovery() {
         let passwordRecoveryController = self.storyboard?.instantiateViewController(withIdentifier: "PasswordRecoveryViewController") as! PasswordRecoveryViewController
         self.navigationController?.pushViewController(passwordRecoveryController, animated: true)
+    }
+    
+    func proceedToGitLabLogin() {
+        let gitLabController = self.storyboard?.instantiateViewController(withIdentifier: "GitLabViewController") as! GitLabViewController
+        self.navigationController?.pushViewController(gitLabController, animated: true)
     }
     
     func proceedToChat() {
@@ -246,6 +255,10 @@ extension LoginViewController: Request {
             //self.recoveryButton.tintColor = UIColor.kg_lightGrayTextColor()
             self.loadTeams()
         }
+    }
+    
+    func loginWithGitLab() {
+        proceedToGitLabLogin()
     }
     
     func loadTeams() {

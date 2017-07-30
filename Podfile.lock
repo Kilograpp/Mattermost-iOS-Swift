@@ -2,6 +2,7 @@ PODS:
   - Crashlytics (3.8.3):
     - Fabric (~> 1.6.3)
   - DateTools (1.7.0)
+  - Emoji-swift (0.1.0)
   - Fabric (1.6.11)
   - ISO8601DateFormatterValueTransformer (0.6.1):
     - RKValueTransformers (~> 1.1.0)
@@ -59,6 +60,7 @@ PODS:
 DEPENDENCIES:
   - Crashlytics
   - DateTools
+  - Emoji-swift
   - Fabric
   - MRProgress
   - RestKit
@@ -67,6 +69,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
+  Emoji-swift: 20010383183f4d85e6e5a2b9642b96ebdb4f06ae
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
   ISO8601DateFormatterValueTransformer: 52da467d6ec899d6aedda8e48280ac92e8ee97e6
   MRProgress: 16de7cc9f347e8846797a770db102a323fe7ef09
@@ -76,6 +79,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: f0be2e604f83e8405a624e9f891898bf6ed4e019
   TransitionKit: 9ceccda4cd0cdc0a05ef85eb235e5a3292c3c250
 
-PODFILE CHECKSUM: 18db3a31480982f367bd46a36bec4a8952a78719
+PODFILE CHECKSUM: 520e96aae9f24300fc2578533185fbc2db73c0c1
 
 COCOAPODS: 1.1.1
