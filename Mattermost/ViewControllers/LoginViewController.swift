@@ -234,27 +234,43 @@ extension LoginViewController: Navigation {
 //MARK: Request
 extension LoginViewController: Request {
     func login() {
-        let topOffset = self.headerView.frame.height
-        showLoaderView(topOffset: topOffset, bottomOffset: 0.0)
-        passwordTextField.endEditing(false)
-        loginTextField.endEditing(false)
-        Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in
-            guard (error == nil) else {
-                var message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
-                //if error?.code == 401 { message = "Email is not verified" }
-                if error?.code == 400 { message = "Incorrect email or password!" }
-                AlertManager.sharedManager.showErrorWithMessage(message: message)
-                self.hideLoaderView()
-                self.recoveryButton.tintColor = UIColor.red
-                self.recoveryButton.setTitleColor(UIColor.red, for:UIControlState())
-                return
+        let addres = "http://35.156.119.28:8065"
+        
+//        let urlAddress = String(format: "http://", addres!)
+        Preferences.sharedInstance.serverUrl = addres
+        Api.sharedInstance.checkURL(with: { ( error) in
+            if (error != nil) {
+                self.handleErrorWith(message: Constants.ErrorMessages.message[1])
+            } else {
+                let topOffset = self.headerView.frame.height
+                self.showLoaderView(topOffset: topOffset, bottomOffset: 0.0)
+                self.passwordTextField.endEditing(false)
+                self.loginTextField.endEditing(false)
+                Api.sharedInstance.login(self.loginTextField.text!, password: self.passwordTextField.text!) { (error) in
+                    guard (error == nil) else {
+                        var message = (error?.code == -1011) ? "Incorrect email or password!" : (error?.message)!
+                        //if error?.code == 401 { message = "Email is not verified" }
+                        if error?.code == 400 { message = "Incorrect email or password!" }
+                        AlertManager.sharedManager.showErrorWithMessage(message: message)
+                        self.hideLoaderView()
+                        self.recoveryButton.tintColor = UIColor.red
+                        self.recoveryButton.setTitleColor(UIColor.red, for:UIControlState())
+                        return
+                    }
+                    
+                    if self.loginTextField.isEditing { _ = self.loginTextField.resignFirstResponder() }
+                    if self.passwordTextField.isEditing { _ = self.passwordTextField.resignFirstResponder() }
+                    //self.recoveryButton.tintColor = UIColor.kg_lightGrayTextColor()
+                    self.loadTeams()
+                }
+//                self.performSegue(withIdentifier: "showLogin", sender: nil)
             }
-            
-            if self.loginTextField.isEditing { _ = self.loginTextField.resignFirstResponder() }
-            if self.passwordTextField.isEditing { _ = self.passwordTextField.resignFirstResponder() }
-            //self.recoveryButton.tintColor = UIColor.kg_lightGrayTextColor()
-            self.loadTeams()
-        }
+        })
+
+        
+        
+        
+
     }
     
     func loginWithGitLab() {

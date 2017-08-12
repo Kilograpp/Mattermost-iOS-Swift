@@ -22,7 +22,7 @@ private protocol Interface: class {
     static var seqNumber = 1
     fileprivate var lastNotificationDate: Date?
     fileprivate lazy var socket: WebSocket = {
-        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().appendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WSS)!)
+        let webSocket = WebSocket(url: Api.sharedInstance.baseURL().appendingPathComponent(UserPathPatternsContainer.socketPathPattern()).URLWithScheme(.WS)!)
         webSocket.delegate = self
         webSocket.setCookie(UserStatusManager.sharedInstance.cookie())
         return webSocket

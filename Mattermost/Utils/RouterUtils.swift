@@ -22,7 +22,7 @@ class RouterUtils {
     }
     
     fileprivate class func loadLoginScene() -> Void {
-        let sb = UIStoryboard.init(name: "Login", bundle: nil)
+        let sb = UIStoryboard(name: "Login", bundle: nil)
         let vc = sb.instantiateInitialViewController()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController = vc
