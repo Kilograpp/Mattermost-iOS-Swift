@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import HEXColor
 
 private protocol PostColors: class {
     static var channelColor: UIColor {get}

@@ -230,6 +230,7 @@
 		D6C0B46D1D5DC6C7006C506A /* LeftMenuSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C0B46C1D5DC6C7006C506A /* LeftMenuSectionHeader.xib */; };
 		D6C0B4721D5E0A26006C506A /* RKObjectManager+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */; };
 		D6C0B4741D5E28D2006C506A /* UserStatusObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */; };
+		D6CD095E1F3DC01700736ADE /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6CD095D1F3DC01700736ADE /* UIColor+Hex.swift */; };
 		D6D7B9BB1E30E39A00F98967 /* AttachedFileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */; };
 		D6E165811D47539E0014C831 /* PostUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165801D47539E0014C831 /* PostUtils.swift */; };
 		D6E165871D47C1200014C831 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E165861D47C1200014C831 /* Reusable.swift */; };
@@ -530,7 +531,6 @@
 		D65626681D49678100981057 /* FeedTableViewSectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedTableViewSectionHeader.swift; path = Feed/FeedTableViewSectionHeader.swift; sourceTree = "<group>"; };
 		D66BB1521E462D2B00AEB057 /* ConversationTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationTitleView.swift; sourceTree = "<group>"; };
 		D67A42F81D74871E003E2466 /* PostAttachmentsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsViewCell.swift; path = PostAttachmentsViewCell/PostAttachmentsViewCell.swift; sourceTree = "<group>"; };
-		D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DisableBitcode.xcconfig; sourceTree = "<group>"; };
 		D69A1F171E29520F00AB6334 /* CTLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTLabel.swift; sourceTree = "<group>"; };
 		D6A887B01D4A0A1100C13191 /* ColorBucket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorBucket.swift; sourceTree = "<group>"; };
 		D6BE52EF1D7435BD00FCC1D6 /* PostAttachmentsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostAttachmentsView.swift; path = PostAttachmentsView/PostAttachmentsView.swift; sourceTree = "<group>"; };
@@ -539,6 +539,7 @@
 		D6C0B4701D5E0A26006C506A /* RKObjectManager+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RKObjectManager+Additions.h"; sourceTree = "<group>"; };
 		D6C0B4711D5E0A26006C506A /* RKObjectManager+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RKObjectManager+Additions.m"; sourceTree = "<group>"; };
 		D6C0B4731D5E28D2006C506A /* UserStatusObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserStatusObserver.swift; path = Observers/UserStatusObserver.swift; sourceTree = "<group>"; };
+		D6CD095D1F3DC01700736ADE /* UIColor+Hex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+Hex.swift"; path = "Mattermost/extensions/UIColor+Hex.swift"; sourceTree = SOURCE_ROOT; };
 		D6D7B9BA1E30E39A00F98967 /* AttachedFileCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachedFileCache.swift; sourceTree = "<group>"; };
 		D6E165801D47539E0014C831 /* PostUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostUtils.swift; sourceTree = "<group>"; };
 		D6E165861D47C1200014C831 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
@@ -920,6 +921,7 @@
 				D63C81591E43A2B4003E7751 /* UIViewController+SharedBar.swift */,
 				8B3C8CDD1E49BEAF00F13159 /* String+Email.swift */,
 				4B5DEF821E4C995A00B0B9A7 /* UIUserNotificationType+AuthorizationOptions.swift */,
+				D6CD095D1F3DC01700736ADE /* UIColor+Hex.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -927,7 +929,6 @@
 		9B822D8772CC01B506FE072D = {
 			isa = PBXGroup;
 			children = (
-				D68596E31E37D07A00B46C23 /* DisableBitcode.xcconfig */,
 				9B8226364A9CB357915ABAC5 /* Mattermost */,
 				9B82243559F26A9911CEBFB1 /* MattermostTests */,
 				0DD091C44E54D1A5B34DF000 /* Pods */,
@@ -1533,7 +1534,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		743212A33CAD753554CEF89E /* [CP] Copy Pods Resources */ = {
@@ -1617,6 +1618,7 @@
 				CDF07EC81D7F11F000172D1E /* BaseMappingsContainer.swift in Sources */,
 				8B8F70021D7747A900ACF626 /* ProfileTableViewCell.swift in Sources */,
 				D6FB96421E3BC4FA00202CCC /* GradientImagesBuilder.swift in Sources */,
+				D6CD095E1F3DC01700736ADE /* UIColor+Hex.swift in Sources */,
 				8B3CB3671DD268690078DE25 /* ChannelObserver.swift in Sources */,
 				8B3CB3441DD2675F0078DE25 /* TeamCellBuilder.swift in Sources */,
 				8BB804F41E56344500CA71E5 /* AddMembersCellBuilder.swift in Sources */,
@@ -1919,7 +1921,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "XC: *";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0.1;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
@@ -1965,6 +1967,7 @@
 				PROVISIONING_PROFILE = "41c923ca-0156-4473-b579-4f04388467ef";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.kilograpp.mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0.1;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
@@ -2152,6 +2155,7 @@
 				PROVISIONING_PROFILE = "f04ccae7-c78d-465d-ab85-1f59e64c5fdc";
 				PROVISIONING_PROFILE_SPECIFIER = "Appstore Mattermost";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mattermost/Supporting Files/Mattermost-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0.1;
 				USER_HEADER_SEARCH_PATHS = "\"Mattermost/Objective-C Categories\"";
 				USE_HEADERMAP = NO;
